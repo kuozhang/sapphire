@@ -108,7 +108,6 @@ public final class FormEditorPage extends SapphireEditorFormPage
         
         final FormToolkit toolkit = managedForm.getToolkit();
         toolkit.decorateFormHeading( managedForm.getForm().getForm() );
-        managedForm.getForm().setText( getDefinition().getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
         managedForm.getForm().getBody().setLayout( glayout( 2, 0, 0 ) );
         
         final FormEditorRenderingContext context = new FormEditorRenderingContext( getPart(), managedForm );

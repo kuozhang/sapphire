@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "form editor page" )
 @GenerateImpl
 
-public interface FormEditorPageDef extends IEditorPageDef
+public interface FormEditorPageDef extends EditorPageDef
 {
     ModelElementType TYPE = new ModelElementType(FormEditorPageDef.class);
 

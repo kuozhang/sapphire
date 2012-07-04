@@ -9,7 +9,8 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef
- *    Konstantin Komissarchik - [382431] Inconsistent terminology: layout storage and layout persistence 
+ *    Konstantin Komissarchik - [382431] Inconsistent terminology: layout storage and layout persistence
+ *    Konstantin Komissarchik - [382449] Support EL in EditorPageDef.PageHeaderText 
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.IEditorPageDef;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 /**
@@ -41,7 +42,7 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 public interface IDiagramEditorPageDef 
     
-    extends IEditorPageDef, IPropertiesViewContributorDef
+    extends EditorPageDef, IPropertiesViewContributorDef
     
 {
     ModelElementType TYPE = new ModelElementType( IDiagramEditorPageDef.class);

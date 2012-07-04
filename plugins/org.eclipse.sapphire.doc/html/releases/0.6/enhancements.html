@@ -24,6 +24,11 @@
 
 <ol>
   <li><a href="#VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
+  <li><a href="#ExpressionLanguage">Expression Language</a></li>
+  <ol type="A">
+    <li><a href="#ExpressionLanguage-UseInPageHeaderText">Use in Page Header Text</a></li>
+    <li><a href="#ExpressionLanguage-UseInOutlineHeaderText">Use in Outline Header Text</a></li>
+  </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></li>
@@ -111,7 +116,29 @@ view page.</p>
 &lt;/properties-view></font></code></pre>
 
 
-<h2><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></h2>
+<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-UseInPageHeaderText">Use EL in Page Header Text</a></a></h2>
+
+<p>Use expression language when specifying editor page header text.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;editor-page>
+    &lt;page-header-text></font>contacts (${ Contacts.Size })<font color="#888888">&lt;/page-header-text>
+&lt;/editor-page></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInOutlineHeaderText">Use EL in Outline Header Text</a></h2>
+
+<p>Use expression language when specifying master details outline header text.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;editor-page>
+    &lt;outline-header-text></font>outline (${ Contacts.Size })<font color="#888888">&lt;/outline-header-text>
+&lt;/editor-page></font></code></pre>
+
+
+<h2><a name="Miscellaneous"><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></a></h2>
 
 <p>Two static utility methods have been added to XmlUtil to make it easier to convert documents to and from namespace-qualified form.</p>
 

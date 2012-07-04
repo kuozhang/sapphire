@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal;
 
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeChildDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeInclude;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeChildDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeInclude;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,10 +21,10 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsCont
 
 public final class MasterDetailsContentNodeIncludeMethods
 {
-    public static IMasterDetailsContentNodeChildDef resolve( final IMasterDetailsContentNodeInclude ref )
+    public static MasterDetailsContentNodeChildDef resolve( final MasterDetailsContentNodeInclude ref )
     {
         final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return (IMasterDetailsContentNodeChildDef) rootdef.getPartDef( ref.getPart().getText(), true, IMasterDetailsContentNodeChildDef.class );
+        return (MasterDetailsContentNodeChildDef) rootdef.getPartDef( ref.getPart().getText(), true, MasterDetailsContentNodeChildDef.class );
     }
     
 }

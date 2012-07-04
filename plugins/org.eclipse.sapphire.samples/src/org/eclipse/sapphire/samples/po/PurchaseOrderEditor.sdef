@@ -17,7 +17,7 @@
     <form-editor-page>
         <id>GeneralPage</id>
         <page-name>general</page-name>
-        <page-header-text>purchase order</page-header-text>
+        <page-header-text>purchase order ${ Id == null ? &quot;&quot; : Concat( &quot;(&quot;, Id, &quot;)&quot; ) }</page-header-text>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
@@ -98,11 +98,12 @@
                 </block>
             </split-form>
         </content>
+        <page-header-image>PurchaseOrder-${ Entries.Size &gt; 3 ? 3 : Entries.Size }.png</page-header-image>
     </form-editor-page>
     <form-editor-page>
         <id>EntriesPage</id>
         <page-name>entries</page-name>
-        <page-header-text>purchase order</page-header-text>
+        <page-header-text>purchase order ${ Id == null ? &quot;&quot; : Concat( &quot;(&quot;, Id, &quot;)&quot; ) }</page-header-text>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
@@ -170,8 +171,10 @@
                 </block>
             </split-form>
         </content>
+        <page-header-image>PurchaseOrder-${ Entries.Size &gt; 3 ? 3 : Entries.Size }.png</page-header-image>
     </form-editor-page>
     <import>
         <package>org.eclipse.sapphire.samples</package>
+        <package>org.eclipse.sapphire.samples.po</package>
     </import>
 </definition>

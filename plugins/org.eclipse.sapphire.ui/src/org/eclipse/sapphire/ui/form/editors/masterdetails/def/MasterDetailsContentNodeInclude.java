@@ -33,12 +33,12 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDet
 @Label( standard = "content outline node include" )
 @GenerateImpl
 
-public interface IMasterDetailsContentNodeInclude
+public interface MasterDetailsContentNodeInclude
 
-    extends IMasterDetailsContentNodeChildDef
+    extends MasterDetailsContentNodeChildDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeInclude.class );
+    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeInclude.class );
     
     // *** Part ***
     
@@ -64,6 +64,6 @@ public interface IMasterDetailsContentNodeInclude
     
     @DelegateImplementation( MasterDetailsContentNodeIncludeMethods.class )
     
-    IMasterDetailsContentNodeChildDef resolve();
+    MasterDetailsContentNodeChildDef resolve();
 
 }

@@ -20,14 +20,16 @@ import java.util.Set;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
 
 /**
@@ -37,6 +39,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEdi
 public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
 {
     private MasterDetailsEditorPageState state;
+    private FunctionResult outlineHeaderTextFunctionResult;
     private MasterDetailsContentOutline contentOutline;
     
     @Override
@@ -44,6 +47,9 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
     {
         super.init();
         
+        final IModelElement element = getModelElement();
+        final MasterDetailsEditorPageDef def = definition();
+
         try
         {
             final File stateFile = adapt( SapphireEditor.class ).getDefaultStateStorageFile( this );
@@ -53,6 +59,21 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         {
             this.state = MasterDetailsEditorPageState.TYPE.instantiate();
         }
+        
+        this.outlineHeaderTextFunctionResult = initExpression
+        (
+            element,
+            def.getOutlineHeaderText().getContent(),
+            String.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    broadcast( new OutlineHeaderTextEvent( MasterDetailsEditorPagePart.this ) );
+                }
+            }
+        );
 
         this.contentOutline = new MasterDetailsContentOutline( this );
         
@@ -83,9 +104,14 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
     }
 
     @Override
-    public IMasterDetailsEditorPageDef definition()
+    public MasterDetailsEditorPageDef definition()
     {
-        return (IMasterDetailsEditorPageDef) super.definition();
+        return (MasterDetailsEditorPageDef) super.definition();
+    }
+    
+    public final String getOutlineHeaderText()
+    {
+        return (String) this.outlineHeaderTextFunctionResult.value();
     }
     
     @Override
@@ -132,6 +158,25 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
     public final void setFocusOnDetails()
     {
         broadcast( new DetailsFocusRequested( this ) );
+    }
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.outlineHeaderTextFunctionResult != null )
+        {
+            this.outlineHeaderTextFunctionResult.dispose();
+        }
+    }
+    
+    public static final class OutlineHeaderTextEvent extends PartEvent
+    {
+        public OutlineHeaderTextEvent( final MasterDetailsEditorPagePart part )
+        {
+            super( part );
+        }
     }
     
     public static final class DetailsFocusRequested extends PartEvent

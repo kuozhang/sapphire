@@ -1085,7 +1085,7 @@
         </case>
 
         <case>
-            <model-element-type>IMasterDetailsContentNodeDef</model-element-type>
+            <model-element-type>MasterDetailsContentNodeDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Content Outline Node" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1104,7 +1104,7 @@
                 <node-factory>
                     <property>Sections</property>
                     <case>
-                        <model-element-type>IMasterDetailsSectionDef</model-element-type>
+                        <model-element-type>MasterDetailsSectionDef</model-element-type>
                         <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                         <image>${ Image() }</image>
                         <section>
@@ -1167,7 +1167,7 @@
         </case>
         
         <case>
-            <model-element-type>IMasterDetailsContentNodeFactoryDef</model-element-type>
+            <model-element-type>MasterDetailsContentNodeFactoryDef</model-element-type>
             <label>${ Id == null ? ( Property == null ? &quot;Content Outline Node Factory&quot; : Property ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1182,7 +1182,7 @@
             <node-factory>
                 <property>Cases</property>
                 <case>
-                    <model-element-type>IMasterDetailsContentNodeFactoryCaseDef</model-element-type>
+                    <model-element-type>MasterDetailsContentNodeFactoryCaseDef</model-element-type>
                     <label>${ Type == null ? "Default Case" : Type }</label>
                     <section>
                         <label>Case</label>
@@ -1197,7 +1197,7 @@
                         <node-factory>
                             <property>Sections</property>
                             <case>
-                                <model-element-type>IMasterDetailsSectionDef</model-element-type>
+                                <model-element-type>MasterDetailsSectionDef</model-element-type>
                                 <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                                 <image>${ Image() }</image>
                                 <section>
@@ -1262,7 +1262,7 @@
         </case>
         
         <case>
-            <model-element-type>IMasterDetailsContentNodeInclude</model-element-type>
+            <model-element-type>MasterDetailsContentNodeInclude</model-element-type>
             <label>${ Part == null ? &quot;Content Outline Node Include&quot; : Part }</label>
             <image>${ Image() }</image>
             <section>
@@ -1276,7 +1276,7 @@
         </case>
         
         <case>
-            <model-element-type>IMasterDetailsEditorPageDef</model-element-type>
+            <model-element-type>MasterDetailsEditorPageDef</model-element-type>
             <label>${ Id == null ? "Form Editor Page" : Id }</label>
             <image>${ Image() }</image>
             <section>

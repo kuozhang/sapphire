@@ -20,9 +20,10 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.IEditorPageDef;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,15 +32,13 @@ import org.eclipse.sapphire.ui.def.IEditorPageDef;
 @Label( standard = "master details editor page" )
 @GenerateImpl
 
-public interface IMasterDetailsEditorPageDef
-
-    extends IEditorPageDef
-    
+public interface MasterDetailsEditorPageDef extends EditorPageDef
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsEditorPageDef.class );
+    ModelElementType TYPE = new ModelElementType( MasterDetailsEditorPageDef.class );
     
     // *** OutlineHeaderText ***
     
+    @Type( base = Function.class )
     @Label( standard = "outline header text" )
     @DefaultValue( text = "outline" )
     @Localizable
@@ -47,8 +46,9 @@ public interface IMasterDetailsEditorPageDef
     
     ValueProperty PROP_OUTLINE_HEADER_TEXT = new ValueProperty( TYPE, "OutlineHeaderText" );
     
-    Value<String> getOutlineHeaderText();
-    void setOutlineHeaderText( String outlineHeaderText );
+    Value<Function> getOutlineHeaderText();
+    void setOutlineHeaderText( String value );
+    void setOutlineHeaderText( Function value );
     
     // *** InitialSelectionPath ***
     
@@ -62,11 +62,11 @@ public interface IMasterDetailsEditorPageDef
     
     // *** RootNode ***
 
-    @Type( base = IMasterDetailsContentNodeDef.class )
+    @Type( base = MasterDetailsContentNodeDef.class )
     @XmlBinding( path = "root-node" )
     
     ImpliedElementProperty PROP_ROOT_NODE = new ImpliedElementProperty( TYPE, "RootNode" );
 
-    IMasterDetailsContentNodeDef getRootNode();
+    MasterDetailsContentNodeDef getRootNode();
     
 }

@@ -26,12 +26,12 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDet
 @Label( standard = "section" )
 @GenerateImpl
 
-public interface IMasterDetailsSectionDef
+public interface MasterDetailsSectionDef
 
     extends ISapphireSectionDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsSectionDef.class );
+    ModelElementType TYPE = new ModelElementType( MasterDetailsSectionDef.class );
     
     // *** Label ***
     

@@ -32,12 +32,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "content outline node factory case" )
 @GenerateImpl
 
-public interface IMasterDetailsContentNodeFactoryCaseDef
+public interface MasterDetailsContentNodeFactoryCaseDef
 
-    extends IMasterDetailsContentNodeDef
+    extends MasterDetailsContentNodeDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeFactoryCaseDef.class );
+    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeFactoryCaseDef.class );
     
     // *** Type ***
     

@@ -59,11 +59,11 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeChildDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryCaseDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeInclude;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeChildDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryCaseDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeInclude;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.sapphire.util.ReadOnlyMapFactory;
 
@@ -86,7 +86,7 @@ public final class MasterDetailsContentNode
     public static final String HINT_HIDE_IF_DISABLED = "hide.if.disabled"; //$NON-NLS-1$
     
     private MasterDetailsContentOutline contentTree;
-    private IMasterDetailsContentNodeDef definition;
+    private MasterDetailsContentNodeDef definition;
     private IModelElement modelElement;
     private ImpliedElementProperty modelElementProperty;
     private Listener modelElementListener;
@@ -120,7 +120,7 @@ public final class MasterDetailsContentNode
         }
         
         this.contentTree = nearest( MasterDetailsEditorPagePart.class ).outline();
-        this.definition = (IMasterDetailsContentNodeDef) super.definition;
+        this.definition = (MasterDetailsContentNodeDef) super.definition;
         
         this.modelElementProperty = (ImpliedElementProperty) resolve( this.definition.getProperty().getContent() );
         
@@ -169,7 +169,7 @@ public final class MasterDetailsContentNode
         if( visibleWhenConditionClass == null && this.modelElementProperty != null )
         {
             final String hideIfDisabled 
-                = this.definition.getHint( IMasterDetailsContentNodeDef.HINT_HIDE_IF_DISABLED );
+                = this.definition.getHint( MasterDetailsContentNodeDef.HINT_HIDE_IF_DISABLED );
             
             if( Boolean.parseBoolean( hideIfDisabled ) )
             {
@@ -277,13 +277,13 @@ public final class MasterDetailsContentNode
             this.sections.add( section );
         }
         
-        for( IMasterDetailsContentNodeChildDef entry : this.definition.getChildNodes() )
+        for( MasterDetailsContentNodeChildDef entry : this.definition.getChildNodes() )
         {
             final Map<String,String> params = new HashMap<String,String>( this.params );
             
-            if( entry instanceof IMasterDetailsContentNodeInclude )
+            if( entry instanceof MasterDetailsContentNodeInclude )
             {
-                final IMasterDetailsContentNodeInclude inc = (IMasterDetailsContentNodeInclude) entry;
+                final MasterDetailsContentNodeInclude inc = (MasterDetailsContentNodeInclude) entry;
                 entry = inc.resolve();
                 
                 if( entry == null )
@@ -304,9 +304,9 @@ public final class MasterDetailsContentNode
                 }
             }
 
-            if( entry instanceof IMasterDetailsContentNodeDef )
+            if( entry instanceof MasterDetailsContentNodeDef )
             {
-                final IMasterDetailsContentNodeDef def = (IMasterDetailsContentNodeDef) entry;
+                final MasterDetailsContentNodeDef def = (MasterDetailsContentNodeDef) entry;
                 
                 final MasterDetailsContentNode node = new MasterDetailsContentNode();
                 node.init( this, this.modelElement, def, params );
@@ -314,9 +314,9 @@ public final class MasterDetailsContentNode
                 
                 this.rawChildren.add( node );
             }
-            else if( entry instanceof IMasterDetailsContentNodeFactoryDef )
+            else if( entry instanceof MasterDetailsContentNodeFactoryDef )
             {
-                final IMasterDetailsContentNodeFactoryDef def = (IMasterDetailsContentNodeFactoryDef) entry;
+                final MasterDetailsContentNodeFactoryDef def = (MasterDetailsContentNodeFactoryDef) entry;
                 
                 final ModelProperty property = resolve( getLocalModelElement(), def.getProperty().getContent(), params );
                 final NodeFactory factory;
@@ -848,12 +848,12 @@ public final class MasterDetailsContentNode
     
     private abstract class NodeFactory
     {
-        private final IMasterDetailsContentNodeFactoryDef definition;
+        private final MasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
         private SapphireCondition visibleWhenCondition;
         private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
         
-        public NodeFactory( final IMasterDetailsContentNodeFactoryDef definition,
+        public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
         {
             this.definition = definition;
@@ -898,9 +898,9 @@ public final class MasterDetailsContentNode
                 
                 if( node == null )
                 {
-                    IMasterDetailsContentNodeDef relevantCaseDef = null;
+                    MasterDetailsContentNodeDef relevantCaseDef = null;
                     
-                    for( IMasterDetailsContentNodeFactoryCaseDef entry : this.definition.getCases() )
+                    for( MasterDetailsContentNodeFactoryCaseDef entry : this.definition.getCases() )
                     {
                         final JavaType type = entry.getType().resolve();
                         

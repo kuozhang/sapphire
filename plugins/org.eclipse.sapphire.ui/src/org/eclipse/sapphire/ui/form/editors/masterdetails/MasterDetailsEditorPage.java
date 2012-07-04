@@ -60,6 +60,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
@@ -69,6 +70,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
@@ -81,13 +83,14 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
-import org.eclipse.sapphire.ui.def.IEditorPageDef;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart.OutlineHeaderTextEvent;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.SapphireToolTip;
@@ -161,7 +164,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public final class MasterDetailsEditorPage extends SapphireEditorFormPage implements ISapphireEditorActionContributor
 {
-    private IMasterDetailsEditorPageDef definition;
+    private MasterDetailsEditorPageDef definition;
     private RootSection mainSection;
     private ContentOutline contentOutlinePage;
     private IPartListener2 partListener;
@@ -222,7 +225,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         final String relPath = pageDefinitionLocation.removeFirstSegments( 1 ).removeLastSegments( 1 ).toPortableString();
         
         final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, relPath );
-        final IEditorPageDef editorPageDef = (IEditorPageDef) def.getPartDef( pageId, true, IEditorPageDef.class );
+        final EditorPageDef editorPageDef = (EditorPageDef) def.getPartDef( pageId, true, EditorPageDef.class );
         
         if( editorPageDef == null )
         {
@@ -241,7 +244,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         return (MasterDetailsEditorPagePart) super.getPart();
     }
     
-    public IMasterDetailsEditorPageDef getDefinition()
+    public MasterDetailsEditorPageDef getDefinition()
     {
         return getPart().definition();
     }
@@ -272,8 +275,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         {
             FormToolkit toolkit = managedForm.getToolkit();
             toolkit.decorateFormHeading(managedForm.getForm().getForm());
-            
-            form.setText( this.definition.getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
             
             this.mainSection = new RootSection();
             this.mainSection.createContent( managedForm );
@@ -1793,15 +1794,17 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         }
     }
     
-    private final class MasterSection 
-
-        extends Section
-        
+    private final class MasterSection extends Section
     {
         private IManagedForm managedForm;
         private SectionPart sectionPart;
         private TreeViewer treeViewer;
         private Tree tree;
+        
+        private void refreshOutlineHeaderText()
+        {
+            setText( LabelTransformer.transform( getPart().getOutlineHeaderText(), CapitalizationType.TITLE_STYLE, false ) );
+        }
         
         public MasterSection( final IManagedForm managedForm,
                               final Composite parent) 
@@ -1832,7 +1835,20 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             setLayoutData( gdfill() );
             setLayout( glayout( 1, 0, 0 ) );
             
-            setText( MasterDetailsEditorPage.this.definition.getOutlineHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false ) );
+            final SapphireEditorPagePart part = getPart();
+            
+            final Listener pagePartListener = new FilteredListener<OutlineHeaderTextEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final OutlineHeaderTextEvent event )
+                {
+                    refreshOutlineHeaderText();
+                }
+            };
+            
+            part.attach( pagePartListener );
+            
+            refreshOutlineHeaderText();
             
             final Composite client = toolkit.createComposite( this );
             client.setLayout( glayout( 1, 0, 0 ) );
@@ -1850,24 +1866,18 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     
             contentTree.attach
             (
-                new Listener()
+                new FilteredListener<MasterDetailsContentOutline.SelectionChangedEvent>()
                 {
                     @Override
-                    public void handle( final org.eclipse.sapphire.Event event )
+                    protected void handleTypedEvent( final MasterDetailsContentOutline.SelectionChangedEvent event )
                     {
-                        if( event instanceof MasterDetailsContentOutline.SelectionChangedEvent )
-                        {
-                            final MasterDetailsContentOutline.SelectionChangedEvent evt = (MasterDetailsContentOutline.SelectionChangedEvent) event;
-                            handleSelectionChangedEvent( evt.selection() );
-                        }
+                        handleSelectionChangedEvent( event.selection() );
                     }
                 }
             );
             
             final ToolBar toolbar = new ToolBar( this, SWT.FLAT | SWT.HORIZONTAL );
             setTextClient( toolbar );
-            
-            final SapphireEditorPagePart part = getPart();
             
             final SapphireActionGroup actions = part.getActions( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
             
@@ -1885,6 +1895,17 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             
             toolkit.paintBordersFor( this );
             setClient( client );
+            
+            this.tree.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        part.detach( pagePartListener );
+                    }
+                }
+            );
         }
         
         private Font createBoldFont(Display display, Font regularFont) {

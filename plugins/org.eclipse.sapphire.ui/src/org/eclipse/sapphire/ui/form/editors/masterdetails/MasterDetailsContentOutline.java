@@ -21,8 +21,8 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.ContentOutlineNodeState;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -35,7 +35,7 @@ import org.eclipse.sapphire.util.ReadOnlyListFactory;
 public final class MasterDetailsContentOutline
 {
     private final MasterDetailsEditorPagePart editorPagePart;
-    private final IMasterDetailsEditorPageDef editorPageDef;
+    private final MasterDetailsEditorPageDef editorPageDef;
     private final IModelElement rootModelElement;
     private MasterDetailsContentNode root;
     private List<MasterDetailsContentNode> selection;
@@ -56,7 +56,7 @@ public final class MasterDetailsContentOutline
     {
         if( this.root == null )
         {
-            final IMasterDetailsContentNodeDef rootNodeDef = this.editorPageDef.getRootNode();
+            final MasterDetailsContentNodeDef rootNodeDef = this.editorPageDef.getRootNode();
             
             this.root = new MasterDetailsContentNode();
             this.root.init( this.editorPagePart, this.rootModelElement, rootNodeDef, Collections.<String,String>emptyMap() );

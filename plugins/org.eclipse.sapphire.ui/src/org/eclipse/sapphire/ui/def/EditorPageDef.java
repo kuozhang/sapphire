@@ -27,14 +27,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "form editor page" )
+@Label( standard = "editor page" )
 
-public interface IEditorPageDef
-
-    extends PartDef
-    
+public interface EditorPageDef extends PartDef
 {
-    ModelElementType TYPE = new ModelElementType( IEditorPageDef.class );
+    ModelElementType TYPE = new ModelElementType( EditorPageDef.class );
     
     // *** PageName ***
     
@@ -50,6 +47,7 @@ public interface IEditorPageDef
     
     // *** PageHeaderText ***
     
+    @Type( base = Function.class )
     @Label( standard = "page header text" )
     @DefaultValue( text = "design view" )
     @Localizable
@@ -57,8 +55,9 @@ public interface IEditorPageDef
     
     ValueProperty PROP_PAGE_HEADER_TEXT = new ValueProperty( TYPE, "PageHeaderText" );
     
-    Value<String> getPageHeaderText();
-    void setPageHeaderText( String pageHeaderText );
+    Value<Function> getPageHeaderText();
+    void setPageHeaderText( String value );
+    void setPageHeaderText( Function value );
     
     // *** PageHeaderImage ***
     

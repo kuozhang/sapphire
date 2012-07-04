@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireUiDefMethods;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsContentNodeFactoryDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -104,9 +104,9 @@ public interface ISapphireUiDef extends IModelElement
             HtmlPanelDef.class,
             FormDef.class,
             SplitFormDef.class,
-            IMasterDetailsContentNodeDef.class,
-            IMasterDetailsContentNodeFactoryDef.class,
-            IMasterDetailsEditorPageDef.class,
+            MasterDetailsContentNodeDef.class,
+            MasterDetailsContentNodeFactoryDef.class,
+            MasterDetailsEditorPageDef.class,
             IDiagramEditorPageDef.class,
             ISapphireDialogDef.class,
             ISapphireWizardDef.class,
@@ -134,9 +134,9 @@ public interface ISapphireUiDef extends IModelElement
             @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class ),
             @XmlListBinding.Mapping( element = "form", type = FormDef.class ),
             @XmlListBinding.Mapping( element = "split-form", type = SplitFormDef.class ),
-            @XmlListBinding.Mapping( element = "node", type = IMasterDetailsContentNodeDef.class ),
-            @XmlListBinding.Mapping( element = "node-factory", type = IMasterDetailsContentNodeFactoryDef.class ),
-            @XmlListBinding.Mapping( element = "editor-page", type = IMasterDetailsEditorPageDef.class ),
+            @XmlListBinding.Mapping( element = "node", type = MasterDetailsContentNodeDef.class ),
+            @XmlListBinding.Mapping( element = "node-factory", type = MasterDetailsContentNodeFactoryDef.class ),
+            @XmlListBinding.Mapping( element = "editor-page", type = MasterDetailsEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramEditorPageDef.class ),
             @XmlListBinding.Mapping( element = "dialog", type = ISapphireDialogDef.class ),
             @XmlListBinding.Mapping( element = "wizard", type = ISapphireWizardDef.class ),

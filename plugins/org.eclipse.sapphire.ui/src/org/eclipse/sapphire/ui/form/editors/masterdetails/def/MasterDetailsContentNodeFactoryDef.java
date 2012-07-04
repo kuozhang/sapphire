@@ -23,25 +23,22 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node" )
+@Label( standard = "content outline node factory" )
 @GenerateImpl
 
-public interface IMasterDetailsContentNodeDef
+public interface MasterDetailsContentNodeFactoryDef
 
-    extends IMasterDetailsContentNodeChildDef, IPropertiesViewContributorDef
+    extends MasterDetailsContentNodeChildDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeDef.class );
+    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeFactoryDef.class );
     
     // *** Property ***
     
@@ -51,71 +48,17 @@ public interface IMasterDetailsContentNodeDef
     ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
     
     Value<String> getProperty();
-    void setProperty( String property );
+    void setProperty( String value );
     
-    // *** Label ***
+    // *** Cases ***
     
-    @Type( base = Function.class )
-    @Label( standard = "label" )
-    @Localizable
-    @XmlBinding( path = "label" )
+    @Label( standard = "cases" )
+    @Type( base = MasterDetailsContentNodeFactoryCaseDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "case", type = MasterDetailsContentNodeFactoryCaseDef.class ) )
     
-    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
+    ListProperty PROP_CASES = new ListProperty( TYPE, "Cases" );
     
-    Value<Function> getLabel();
-    void setLabel( String value );
-    void setLabel( Function value );
-    
-    // *** Image ***
-    
-    @Type( base = Function.class )
-    @Label( standard = "image" )
-    @XmlBinding( path = "image" )
-    
-    ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
-    
-    Value<Function> getImage();
-    void setImage( String value );
-    void setImage( Function value );
-    
-    // *** Sections ***
-    
-    @Label( standard = "sections" )
-    @Type( base = IMasterDetailsSectionDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "section", type = IMasterDetailsSectionDef.class ) )
-    
-    ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
-    
-    ModelElementList<IMasterDetailsSectionDef> getSections();
-    
-    // *** ChildNodes ***
-    
-    @Label( standard = "child nodes" )
-    
-    @Type
-    ( 
-        base = IMasterDetailsContentNodeChildDef.class, 
-        possible = 
-        { 
-            IMasterDetailsContentNodeDef.class,
-            IMasterDetailsContentNodeFactoryDef.class,
-            IMasterDetailsContentNodeInclude.class
-        } 
-    )
-    
-    @XmlListBinding
-    (
-        mappings = 
-        { 
-            @XmlListBinding.Mapping( element = "node", type = IMasterDetailsContentNodeDef.class ),
-            @XmlListBinding.Mapping( element = "node-factory", type = IMasterDetailsContentNodeFactoryDef.class ),
-            @XmlListBinding.Mapping( element = "node-include", type = IMasterDetailsContentNodeInclude.class )
-        }
-    )
-    
-    ListProperty PROP_CHILD_NODES = new ListProperty( TYPE, "ChildNodes" );
-    
-    ModelElementList<IMasterDetailsContentNodeChildDef> getChildNodes();
+    ModelElementList<MasterDetailsContentNodeFactoryCaseDef> getCases();
     
     // *** VisibleWhenConditionClass ***
     

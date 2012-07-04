@@ -19,7 +19,7 @@ import org.eclipse.help.IContext;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.def.IEditorPageDef;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
@@ -36,7 +36,8 @@ public class SapphireEditorPagePart
     
 {
     private PropertiesViewContributionPart propertiesViewContributionPart;
-    private FunctionResult imageFunctionResult;
+    private FunctionResult pageHeaderTextFunctionResult;
+    private FunctionResult pageHeaderImageFunctionResult;
     
     @Override
     protected void init() 
@@ -44,9 +45,24 @@ public class SapphireEditorPagePart
         super.init();
         
         final IModelElement element = getModelElement();
-        final IEditorPageDef def = definition();
+        final EditorPageDef def = definition();
         
-        this.imageFunctionResult = initExpression
+        this.pageHeaderTextFunctionResult = initExpression
+        (
+            element,
+            def.getPageHeaderText().getContent(),
+            String.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    broadcast( new PageHeaderTextEvent( SapphireEditorPagePart.this ) );
+                }
+            }
+        );
+
+        this.pageHeaderImageFunctionResult = initExpression
         (
             element,
             def.getPageHeaderImage().getContent(),
@@ -56,16 +72,16 @@ public class SapphireEditorPagePart
             {
                 public void run()
                 {
-                    broadcast( new ImageChangedEvent( SapphireEditorPagePart.this ) );
+                    broadcast( new PageHeaderImageEvent( SapphireEditorPagePart.this ) );
                 }
             }
         );
     }
     
     @Override
-    public IEditorPageDef definition()
+    public EditorPageDef definition()
     {
-        return (IEditorPageDef) super.definition();
+        return (EditorPageDef) super.definition();
     }
 
     @Override
@@ -115,9 +131,14 @@ public class SapphireEditorPagePart
         }
     }
     
+    public String getPageHeaderText()
+    {
+        return (String) this.pageHeaderTextFunctionResult.value();
+    }
+    
     public ImageData getPageHeaderImage()
     {
-        return (ImageData) this.imageFunctionResult.value();
+        return (ImageData) this.pageHeaderImageFunctionResult.value();
     }
 
     @Override
@@ -125,9 +146,30 @@ public class SapphireEditorPagePart
     {
         super.dispose();
         
-        if( this.imageFunctionResult != null )
+        if( this.pageHeaderTextFunctionResult != null )
         {
-            this.imageFunctionResult.dispose();
+            this.pageHeaderTextFunctionResult.dispose();
+        }
+        
+        if( this.pageHeaderImageFunctionResult != null )
+        {
+            this.pageHeaderImageFunctionResult.dispose();
+        }
+    }
+    
+    public static final class PageHeaderTextEvent extends PartEvent
+    {
+        public PageHeaderTextEvent( final SapphireEditorPagePart part )
+        {
+            super( part );
+        }
+    }
+    
+    public static final class PageHeaderImageEvent extends PartEvent
+    {
+        public PageHeaderImageEvent( final SapphireEditorPagePart part )
+        {
+            super( part );
         }
     }
     

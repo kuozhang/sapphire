@@ -22,7 +22,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.IMasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 
 /**
  * Tests class resolution via import statements in the Sapphire UI Definition model.
@@ -55,7 +55,7 @@ public final class TestUiDef0001
     {
         final ISapphireUiDef sdef = SapphireUiDefFactory.load( "org.eclipse.sapphire.tests", "org/eclipse/sapphire/tests/ui/def/t0001/TestDefinition.sdef" );
 
-        final IMasterDetailsEditorPageDef page = (IMasterDetailsEditorPageDef) sdef.getPartDef( "TestPage", false, IMasterDetailsEditorPageDef.class );
+        final MasterDetailsEditorPageDef page = (MasterDetailsEditorPageDef) sdef.getPartDef( "TestPage", false, MasterDetailsEditorPageDef.class );
         assertNotNull( page );
         
         final ModelElementList<ActionHandlerDef> handlers = page.getActionHandlers();

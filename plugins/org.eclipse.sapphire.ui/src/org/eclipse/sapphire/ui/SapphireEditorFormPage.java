@@ -17,9 +17,12 @@ import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescr
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderImageEvent;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderTextEvent;
 import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -53,9 +56,13 @@ public abstract class SapphireEditorFormPage extends FormPage implements EditorP
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof ImageChangedEvent )
+                if( event instanceof PageHeaderTextEvent )
                 {
-                    refreshImage();
+                    refreshPageHeaderText();
+                }
+                else if( event instanceof PageHeaderImageEvent )
+                {
+                    refreshPageHeaderImage();
                 }
             }
         };
@@ -83,10 +90,20 @@ public abstract class SapphireEditorFormPage extends FormPage implements EditorP
     {
        super.createPartControl( parent );
        
-       refreshImage();
+       refreshPageHeaderText();
+       refreshPageHeaderImage();
     } 
     
-    private final void refreshImage()
+    private final void refreshPageHeaderText()
+    {
+        if( getManagedForm() != null )
+        {
+            final ScrolledForm form = getManagedForm().getForm();
+            form.setText( LabelTransformer.transform( this.part.getPageHeaderText(), CapitalizationType.TITLE_STYLE, false ) );
+        }
+    }
+
+    private final void refreshPageHeaderImage()
     {
         if( getManagedForm() != null )
         {

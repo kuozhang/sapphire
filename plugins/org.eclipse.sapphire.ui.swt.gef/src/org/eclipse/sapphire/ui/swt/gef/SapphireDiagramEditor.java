@@ -14,6 +14,7 @@
  *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
+ *    Konstantin Komissarchik - [382449] Support EL in EditorPageDef.PageHeaderText
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef;
@@ -48,7 +49,6 @@ import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.ui.palette.FlyoutPaletteComposite;
 import org.eclipse.gef.ui.palette.FlyoutPaletteComposite.FlyoutPreferences;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
@@ -71,10 +71,11 @@ import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderImageEvent;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderTextEvent;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
-import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
@@ -373,9 +374,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof ImageChangedEvent )
+                if( event instanceof PageHeaderTextEvent )
                 {
-                    refreshFormHeaderImage();
+                    refreshPageHeaderText();
+                }
+                else if( event instanceof PageHeaderImageEvent )
+                {
+                    refreshPageHeaderImage();
                 }
                 else if( event instanceof ZoomLevelEvent )
                 {
@@ -1148,24 +1153,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         }
 	}
 	
-	/**
-	 * Sets the text displayed by the diagram header
-	 * @param text
-	 */
-	public void setDiagramHeaderText(String text)
-	{
-		this.headerText = LabelTransformer.transform( text, CapitalizationType.TITLE_STYLE, false );
-		if (this.header != null)
-		{
-			this.header.setText(this.headerText);
-			this.header.layout();
-		}
-	}
-	
 	private void configureDiagramHeading()
 	{
 		decorateHeading();
-		this.header.setText( this.headerText );
 		
         final SapphireActionGroup actions = this.diagramPart.getActions( SapphireActionSystem.CONTEXT_DIAGRAM_HEADER );
         if (actions != null && !actions.isEmpty())
@@ -1177,7 +1167,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	        actionPresentation.render();
         }
         
-        refreshFormHeaderImage();
+        refreshPageHeaderText();
+        refreshPageHeaderImage();
 	}
 	
 	/**
@@ -1211,7 +1202,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		this.header.setForeground(this.formColors.getColor(IFormColors.TITLE));
 	}
 	
-	private void refreshFormHeaderImage()
+    private void refreshPageHeaderText()
+    {
+        this.header.setText( LabelTransformer.transform( this.diagramPart.getPageHeaderText(), CapitalizationType.TITLE_STYLE, false ) );
+        this.header.layout();
+    }
+	
+	private void refreshPageHeaderImage()
 	{
         final Image oldImage = this.header.getImage();
         

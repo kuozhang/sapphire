@@ -1,0 +1,74 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2012 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Migration Guide for Sapphire 0.6</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+</style></head>
+
+<body>
+
+<h1>Migration Guide for 0.6</h1>
+
+<p>This documents covers code changes that need to be made by Sapphire adopters as part of migrating 
+to 0.6 release. Only changes from the previous release are covered.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
+</ol>
+
+
+<h2><a name="SapphireDiagramEditor">SapphireDiagramEditor</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>page.setDiagramHeaderText( text )</font></code></pre>
+    </td>
+    <td>
+<p>No direct equivalent has been provided, but page header text can now be specified as an expression. This accounts
+for the dynamic header text use cases. For further guidance on this migration, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
+<div class="copyright">Copyright (c) 2012 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

@@ -18,11 +18,11 @@ import org.eclipse.sapphire.ui.def.PartDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IMasterDetailsContentNodeChildDef
+public interface MasterDetailsContentNodeChildDef
 
     extends PartDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IMasterDetailsContentNodeChildDef.class );
+    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeChildDef.class );
 
 }
