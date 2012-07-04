@@ -29,7 +29,8 @@ public abstract class DerivedValueService extends DataService<DerivedValueServic
     
     public final String value()
     {
-        return data().value();
+        final DerivedValueServiceData data = data();
+        return ( data == null ? null : data.value() );
     }
     
 }
