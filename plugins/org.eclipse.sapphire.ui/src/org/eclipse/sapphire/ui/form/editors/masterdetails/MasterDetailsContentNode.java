@@ -254,6 +254,45 @@ public final class MasterDetailsContentNode
         
         attach( validationStateListener );
         
+        // Label
+        
+        this.labelFunctionResult = initExpression
+        ( 
+            this.modelElement, 
+            this.definition.getLabel().getContent(),
+            String.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                }
+            }
+        );
+        
+        // Image
+        
+        final Literal defaultImageLiteral = Literal.create( ( this.definition.getChildNodes().isEmpty() ? IMG_LEAF_NODE : IMG_CONTAINER_NODE ) );
+        final Function imageFunction = this.definition.getImage().getContent();
+        
+        this.imageManager = new ImageManager( this.modelElement, imageFunction, defaultImageLiteral );
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof SapphirePart.ImageChangedEvent )
+                    {
+                        getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                    }
+                }
+            }
+        );
+
         // Sections and Child Nodes
         
         this.sections = new ArrayList<SapphireSection>();
@@ -380,45 +419,6 @@ public final class MasterDetailsContentNode
                 throw new IllegalStateException();
             }
         }
-        
-        // Label
-        
-        this.labelFunctionResult = initExpression
-        ( 
-            this.modelElement, 
-            this.definition.getLabel().getContent(),
-            String.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
-                }
-            }
-        );
-        
-        // Image
-        
-        final Literal defaultImageLiteral = Literal.create( ( hasChildNodes() ? IMG_CONTAINER_NODE : IMG_LEAF_NODE ) );
-        final Function imageFunction = this.definition.getImage().getContent();
-        
-        this.imageManager = new ImageManager( this.modelElement, imageFunction, defaultImageLiteral );
-        
-        attach
-        (
-            new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof SapphirePart.ImageChangedEvent )
-                    {
-                        getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
-                    }
-                }
-            }
-        );
     }
     
     public MasterDetailsContentOutline getContentTree()
