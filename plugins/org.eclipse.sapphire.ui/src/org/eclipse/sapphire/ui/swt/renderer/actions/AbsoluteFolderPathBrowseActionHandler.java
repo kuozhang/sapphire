@@ -41,7 +41,7 @@ public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionH
 
         setId( ID );
         setLabel( Resources.label );
-        addImage( ImageData.createFromClassLoader( getClass(), "Folder.png" ) );
+        addImage( ImageData.createFromClassLoader( AbsoluteFolderPathBrowseActionHandler.class, "Folder.png" ) );
     }
 
     @Override

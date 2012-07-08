@@ -35,7 +35,7 @@ public final class WorkspaceRelativePathBrowseActionHandler extends RelativePath
         super.init( action, def );
         
         setLabel( Resources.label );
-        addImage( ImageData.createFromClassLoader( getClass(), "Project.png" ) );
+        addImage( ImageData.createFromClassLoader( WorkspaceRelativePathBrowseActionHandler.class, "Project.png" ) );
     }
 
     @Override
