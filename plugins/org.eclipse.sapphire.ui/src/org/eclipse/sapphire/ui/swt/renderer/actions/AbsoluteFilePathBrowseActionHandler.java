@@ -50,7 +50,7 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
 
         setId( ID );
         setLabel( Resources.label );
-        addImage( ImageData.createFromClassLoader( getClass(), "File.png" ) );
+        addImage( ImageData.createFromClassLoader( AbsoluteFilePathBrowseActionHandler.class, "File.png" ) );
         
         final IModelElement element = getModelElement();
         final ModelProperty property = getProperty();
