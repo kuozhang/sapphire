@@ -1102,29 +1102,18 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     
     public final IModelElement getSelectedElement()
     {
-        final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
-        
-        if( sel == null )
-        {
-            return null;
-        }
-        else
-        {
-            return ( (TableRow) sel.getFirstElement() ).element();
-        }
+        final IStructuredSelection sel = (IStructuredSelection) this.selectionProvider.getSelection();
+        return (IModelElement) sel.getFirstElement();
     }
     
     public final List<IModelElement> getSelectedElements()
     {
-        final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
+        final IStructuredSelection sel = (IStructuredSelection) this.selectionProvider.getSelection();
         final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
         
-        if( sel != null )
+        for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
         {
-            for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
-            {
-                elements.add( ( (TableRow) itr.next() ).element() );
-            }
+            elements.add( (IModelElement) itr.next() );
         }
         
         return elements.export();
@@ -1157,15 +1146,11 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     
     private final List<TableRow> getSelectedRows()
     {
-        final IStructuredSelection sel = (IStructuredSelection) DefaultListPropertyEditorRenderer.this.tableViewer.getSelection();
         final List<TableRow> rows = new ArrayList<TableRow>();
         
-        if( sel != null )
+        for( Iterator<?> itr = this.selectionProvider.getSelectedRows().iterator(); itr.hasNext(); )
         {
-            for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
-            {
-                rows.add( (TableRow) itr.next() );
-            }
+            rows.add( (TableRow) itr.next() );
         }
         
         return rows;
@@ -2154,13 +2139,17 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 }
             );
         }
+        
+        public IStructuredSelection getSelectedRows()
+        {
+            return (IStructuredSelection) ( this.fakeSelection != null ? this.fakeSelection : this.tableViewer.getSelection() );
+        }
 
         public ISelection getSelection()
         {
-            final ISelection original = ( this.fakeSelection != null ? this.fakeSelection : this.tableViewer.getSelection() );
             final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
             
-            for( Iterator<?> itr = ( (IStructuredSelection) original ).iterator(); itr.hasNext(); )
+            for( Iterator<?> itr = getSelectedRows().iterator(); itr.hasNext(); )
             {
                 final TableRow row = (TableRow) itr.next();
                 elements.add( row.element() );
