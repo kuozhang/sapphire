@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2012 Oracle
+ * Copyright (c) 2012 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [384683] PossibleValuesServiceFromModel does not load values initially
  ******************************************************************************/
 
 package org.eclipse.sapphire.services.internal;
@@ -34,12 +35,10 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public final class PossibleValuesServiceFactory
-
-    extends ServiceFactory
-    
+public final class PossibleValuesServiceFactory extends ServiceFactory
 {
     @Override
     public boolean applicable( final ServiceContext context,
@@ -186,6 +185,8 @@ public final class PossibleValuesServiceFactory
             };
             
             element.attach( listener, this.path );
+            
+            refresh();
             
             element.attach
             (
