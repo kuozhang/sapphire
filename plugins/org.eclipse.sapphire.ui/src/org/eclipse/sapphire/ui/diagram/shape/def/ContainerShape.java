@@ -73,7 +73,7 @@ public interface ContainerShape extends Shape
 	        @XmlListBinding.Mapping( element = "image", type = Image.class ),
 	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarker.class ),
 	        @XmlListBinding.Mapping( element = "rectangle", type = Rectangle.class ),
-	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactory.class ),
+	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactory.class )
 	    }
 	)	
 	

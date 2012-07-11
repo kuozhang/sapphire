@@ -105,7 +105,7 @@ public interface Rectangle extends ContainerShape
         mappings = 
         {
             @XmlElementBinding.Mapping( element = "color", type = SolidBackground.class ),
-            @XmlElementBinding.Mapping( element = "gradient", type = GradientBackground.class ),
+            @XmlElementBinding.Mapping( element = "gradient", type = GradientBackground.class )
         }
     )
     
