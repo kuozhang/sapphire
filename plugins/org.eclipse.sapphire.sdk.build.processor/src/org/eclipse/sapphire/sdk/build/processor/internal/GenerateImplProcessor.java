@@ -495,7 +495,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         // Determine the getter method name.
         
-        final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
+        final String variableName = "p" + propField.propertyName;
         
         String getterMethodName = null;
         
@@ -790,7 +790,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         final String getterMethodName = getterMethodInInterface.getSimpleName();
         propField.setGetterMethodName( getterMethodName );
         
-        final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
+        final String variableName = "p" + propField.propertyName;
         
         TypeReference memberType = null;
         
@@ -928,7 +928,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         final String getterMethodName = getterMethodInInterface.getSimpleName();
         propField.setGetterMethodName( getterMethodName );
         
-        final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
+        final String variableName = "p" + propField.propertyName;
         
         TypeReference memberType = null;
         
@@ -1082,7 +1082,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         // Determine the variable, getter and setter names.
         
-        final String variableName = propField.propertyName.substring( 0, 1 ).toLowerCase() + propField.propertyName.substring( 1 );
+        final String variableName = "p" + propField.propertyName;
         
         final MethodDeclaration getterMethodInInterface = findMethodDeclaration( interfaceDeclaration, "get" + propField.propertyName );
         
