@@ -31,10 +31,7 @@ import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestWorkspace0001
-
-    extends TestWorkspace
-    
+public final class TestWorkspace0001 extends TestWorkspace
 {
     private IProject a;
     private IFile aa;
@@ -95,8 +92,8 @@ public final class TestWorkspace0001
         testValidationOk( element, property, this.b.getFullPath() );
         testValidationOk( element, property, this.baaaaa.getFullPath() );
         
-        testValidationError( element, property, this.ab.getFile( "b.txt" ).getFullPath() );
-        testValidationError( element, property, this.b.getLocation() );
+        testValidationErrorNotFound( element, property, this.ab.getFile( "b.txt" ).getFullPath() );
+        testValidationErrorNotResolved( element, property, this.b.getLocation() );
     }
     
     public void testProjectRelativePath() throws Exception
@@ -109,12 +106,12 @@ public final class TestWorkspace0001
         testValidationOk( element, property, this.ab.getProjectRelativePath() );
         testValidationOk( element, property, this.aba.getProjectRelativePath() );
 
-        testValidationError( element, property, this.ab.getFile( "b.txt" ).getFullPath() );
-        testValidationError( element, property, this.b.getLocation() );
-        testValidationError( element, property, this.a.getFullPath() );
-        testValidationError( element, property, this.aa.getFullPath() );
-        testValidationError( element, property, this.ab.getFullPath() );
-        testValidationError( element, property, this.baaaaa.getProjectRelativePath() );
+        testValidationErrorNotFound( element, property, this.ab.getFile( "b.txt" ).getFullPath() );
+        testValidationErrorNotFound( element, property, this.b.getLocation() );
+        testValidationErrorNotFound( element, property, this.a.getFullPath() );
+        testValidationErrorNotFound( element, property, this.aa.getFullPath() );
+        testValidationErrorNotFound( element, property, this.ab.getFullPath() );
+        testValidationErrorNotFound( element, property, this.baaaaa.getProjectRelativePath() );
         
         element = TestElement.TYPE.instantiate();
         
@@ -131,18 +128,25 @@ public final class TestWorkspace0001
     
     private void testValidationError( final TestElement element,
                                       final ValueProperty property,
-                                      final IPath path )
-    {
-        testValidationError( element, property, path, "File or folder \"" + path.toPortableString() + "\" does not exist." );
-    }
-
-    private void testValidationError( final TestElement element,
-                                      final ValueProperty property,
                                       final IPath path,
                                       final String expectedErrorMessage )
     {
         element.write( property, new Path( path.toPortableString() ) );
         assertValidationError( element.read( property ), expectedErrorMessage );
+    }
+
+    private void testValidationErrorNotFound( final TestElement element,
+                                              final ValueProperty property,
+                                              final IPath path )
+    {
+        testValidationError( element, property, path, "File or folder \"" + path.toPortableString() + "\" does not exist." );
+    }
+
+    private void testValidationErrorNotResolved( final TestElement element,
+                                                 final ValueProperty property,
+                                                 final IPath path )
+    {
+        testValidationError( element, property, path, "Relative path \"" + path.toPortableString() + "\" could not be resolved." );
     }
 
 }
