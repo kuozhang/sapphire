@@ -29,6 +29,7 @@ import org.eclipse.sapphire.tests.modeling.misc.t0011.TestModelingMisc0011;
 import org.eclipse.sapphire.tests.modeling.misc.t0012.TestModelingMisc0012;
 import org.eclipse.sapphire.tests.modeling.misc.t0013.TestModelingMisc0013;
 import org.eclipse.sapphire.tests.modeling.misc.t0014.TestModelingMisc0014;
+import org.eclipse.sapphire.tests.modeling.misc.t0015.TestModelingMisc0015;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -61,6 +62,7 @@ public final class ModelingMiscTests extends TestCase
         suite.addTest( TestModelingMisc0012.suite() );
         suite.addTest( TestModelingMisc0013.suite() );
         suite.addTest( TestModelingMisc0014.suite() );
+        suite.addTest( TestModelingMisc0015.suite() );
         
         return suite;
     }
