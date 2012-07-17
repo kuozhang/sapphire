@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.workspace.internal;
 
-import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -21,6 +21,7 @@ import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 /**
@@ -32,9 +33,60 @@ public final class WorkspaceRelativePathService extends RelativePathService
     @Override
     public List<Path> roots()
     {
-        return Collections.singletonList( new Path( ResourcesPlugin.getWorkspace().getRoot().getLocation().toPortableString() ) );
+        final ReadOnlyListFactory<Path> paths = ReadOnlyListFactory.create();
+        
+        for( IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
+        {
+            if( project.isAccessible() )
+            {
+                paths.add( new Path( project.getLocation().toPortableString() ) );
+            }
+        }
+        
+        return paths.export();
     }
     
+    @Override
+    public Path convertToRelative( final Path path )
+    {
+        for( IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
+        {
+            if( project.isAccessible() )
+            {
+                final Path location = new Path( project.getLocation().toPortableString() );
+                
+                if( location.isPrefixOf( path ) )
+                {
+                    return new Path( project.getName() ).append( path.makeRelativeTo( location ) );
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public Path convertToAbsolute( final Path path )
+    {
+        if( path.segmentCount() > 0 )
+        {
+            final String projectName = path.segment( 0 );
+            
+            for( IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
+            {
+                if( project.isAccessible() )
+                {
+                    if( projectName.equals( project.getName() ) )
+                    {
+                        return new Path( project.getLocation().toPortableString() ).append( path.removeFirstSegments( 1 ) );
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+
     public static final class Factory extends ServiceFactory
     {
         @Override
