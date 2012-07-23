@@ -38,8 +38,7 @@ public interface Image extends Shape
     
     Value<Function> getPath();
     void setPath( String value );
-    void setPath( Function value );
-	
+    void setPath( Function value );	
 	
 	// *** Resizable ***
 	
