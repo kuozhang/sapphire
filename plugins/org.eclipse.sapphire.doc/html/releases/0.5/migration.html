@@ -57,6 +57,7 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireActionHandler">SapphireActionHandler</a></li>
   <li><a href="#SapphireDiagramActionHandler">SapphireDiagramActionHandler</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
+  <li><a href="#SapphireWizardPageListener">SapphireWizardPageListener</a></li>
   <li><a href="#Actuator">Actuator</a></li>
   <li><a href="#ContentOutlineNodeImage">Content Outline Node Image</a></li>
   <li><a href="#DiagramDragAndDrop">Diagram Drag-n-Drop</a></li>
@@ -762,6 +763,84 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
     <td>
       <p>Remove method call. It is no longer necessary.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireWizardPageListener">SapphireWizardPageListener</a></h2>
+
+<p>The wizard page part has been converted to use common listener framework.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListener extends</font> SapphireWizardPageListener
+<font color="#888888">{
+    @Override</font>
+    public void handleShowPageEvent( SapphirePartEvent event )
+    {
+        <font color="#888888">...</font>
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListener extends</font> FilteredListener&ltVisibilityChangedEvent>
+<font color="#888888">{
+    @Override</font>
+    protected void handleTypedEvent( VisibilityChangedEvent event )
+    {
+        if( ( (SapphireWizardPagePart) event.part() ).isVisible() )
+        {
+            <font color="#888888">...</font>
+        }
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListener extends</font> SapphireWizardPageListener
+<font color="#888888">{
+    @Override</font>
+    public void handleHidePageEvent( SapphirePartEvent event )
+    {
+        <font color="#888888">...</font>
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleListener extends</font> FilteredListener&ltVisibilityChangedEvent>
+<font color="#888888">{
+    @Override</font>
+    protected void handleTypedEvent( VisibilityChangedEvent event )
+    {
+        if( ! ( (SapphireWizardPagePart) event.part() ).isVisible() )
+        {
+            <font color="#888888">...</font>
+        }
+    }
+<font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part</font>.addListener<font color="#888888">( listener )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part</font>.attach<font color="#888888">( listener )</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part</font>.removeListener<font color="#888888">( listener )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part</font>.dettach<font color="#888888">( listener )</font></code></pre>
     </td>
   </tr>
 </table>
