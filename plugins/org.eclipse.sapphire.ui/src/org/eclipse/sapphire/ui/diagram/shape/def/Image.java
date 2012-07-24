@@ -40,7 +40,7 @@ public interface Image extends Shape
     void setPath( String value );
     void setPath( Function value );	
 	
-	// *** Resizable23 ***
+	// *** Resizable ***
 	
     @Type( base = Boolean.class )
     @XmlBinding( path = "resizable" )
