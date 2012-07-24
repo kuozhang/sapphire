@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleTypesServiceData extends Data
+public final class PossibleTypesServiceData
 {
     private static final Comparator<ModelElementType> COMPARATOR = new Comparator<ModelElementType>()
     {

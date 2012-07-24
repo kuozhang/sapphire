@@ -24,7 +24,7 @@ import org.eclipse.sapphire.modeling.ModelPath;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DependenciesServiceData extends Data
+public final class DependenciesServiceData
 {
     private final Set<ModelPath> dependencies;
     

@@ -22,7 +22,7 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 public class CompositeMarginLeftRightDefaultValueProvider extends DefaultValueService
 {
     @Override
-    protected DefaultValueServiceData data()
+    public DefaultValueServiceData data()
     {
         refresh();
         return super.data();

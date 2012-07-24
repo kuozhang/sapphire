@@ -23,7 +23,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsConte
 public final class MasterDetailsSectionDefLabelDefaultValueProvider extends DefaultValueService
 {
     @Override
-    protected DefaultValueServiceData data()
+    public DefaultValueServiceData data()
     {
         refresh();
         return super.data();

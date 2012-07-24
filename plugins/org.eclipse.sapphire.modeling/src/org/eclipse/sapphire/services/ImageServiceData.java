@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.ImageData;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ImageServiceData extends Data
+public final class ImageServiceData
 {
     private final ImageData image;
     

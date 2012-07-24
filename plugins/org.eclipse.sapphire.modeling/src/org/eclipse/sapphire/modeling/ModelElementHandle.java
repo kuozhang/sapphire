@@ -29,8 +29,8 @@ public final class ModelElementHandle<T extends IModelElement>
     private final PossibleTypesService possibleTypesService;
     private final ElementBindingImpl binding;
     private T element;
-    private Status validationStateLocal;
-    private Status validationStateFull;
+    private Status validationResultLocal;
+    private Status validationResultFull;
     
     public ModelElementHandle( final IModelElement parent,
                                final ElementProperty property )
@@ -166,16 +166,13 @@ public final class ModelElementHandle<T extends IModelElement>
     {
         synchronized( this )
         {
-            return ( includeChildValidation ? this.validationStateFull : this.validationStateLocal );
+            return ( includeChildValidation ? this.validationResultFull : this.validationResultLocal );
         }
     }
     
     public boolean enabled()
     {
-        synchronized( this )
-        {
-            return this.parent.enabled( this.property );
-        }
+        return parent().enabled( this.property );
     }
     
     public boolean remove()
@@ -272,38 +269,29 @@ public final class ModelElementHandle<T extends IModelElement>
         
         synchronized( this )
         {
-            final Status newValidationStateLocal;
-            final Status.CompositeStatusFactory newValidationStateFullFactory = Status.factoryForComposite();
+            final Status newValidationResultLocal = parent().service( this.property, ValidationAggregationService.class ).validation();
+            final Status.CompositeStatusFactory newValidationResultFullFactory = Status.factoryForComposite();
             
-            if( enabled() )
+            newValidationResultFullFactory.merge( newValidationResultLocal );
+            
+            if( this.element != null )
             {
-                newValidationStateLocal = parent().service( this.property, ValidationAggregationService.class ).validation();
-                
-                newValidationStateFullFactory.merge( newValidationStateLocal );
-                
-                if( this.element != null )
-                {
-                    newValidationStateFullFactory.merge( this.element.validation() );
-                }
-            }
-            else
-            {
-                newValidationStateLocal = Status.createOkStatus();
+                newValidationResultFullFactory.merge( this.element.validation() );
             }
             
-            final Status newValidationStateFull = newValidationStateFullFactory.create();
-            final Status oldValidationStateFull = this.validationStateFull;
+            final Status newValidationResultFull = newValidationResultFullFactory.create();
+            final Status oldValidationResultFull = this.validationResultFull;
     
-            if( ! newValidationStateFull.equals( oldValidationStateFull ) )
+            if( ! newValidationResultFull.equals( oldValidationResultFull ) )
             {
-                this.validationStateLocal = newValidationStateLocal;
-                this.validationStateFull = newValidationStateFull;
+                this.validationResultLocal = newValidationResultLocal;
+                this.validationResultFull = newValidationResultFull;
                 
-                if( oldValidationStateFull != null )
+                if( oldValidationResultFull != null )
                 {
                     changed = true;
-                    before = oldValidationStateFull;
-                    after = this.validationStateFull;
+                    before = oldValidationResultFull;
+                    after = this.validationResultFull;
                 }
             }
         }

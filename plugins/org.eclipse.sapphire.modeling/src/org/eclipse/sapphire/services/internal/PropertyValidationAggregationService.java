@@ -86,7 +86,7 @@ public final class PropertyValidationAggregationService extends ValidationAggreg
     }
     
     @Override
-    protected Status data()
+    public Status data()
     {
         refresh();
         return super.data();

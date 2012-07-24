@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 public final class SapphireHintValueDefaultValueService extends DefaultValueService
 {
     @Override
-    protected DefaultValueServiceData data()
+    public DefaultValueServiceData data()
     {
         refresh();
         return super.data();

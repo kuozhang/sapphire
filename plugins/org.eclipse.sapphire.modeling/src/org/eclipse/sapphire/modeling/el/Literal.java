@@ -19,12 +19,11 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class Literal
-
-    extends Function
-
+public final class Literal extends Function
 {
     public static final Literal NULL = create( null );
+    public static final Literal TRUE = create( Boolean.TRUE );
+    public static final Literal FALSE = create( Boolean.FALSE );
     
     private Object value;
     

@@ -17,7 +17,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class InitialValueServiceData extends Data
+public final class InitialValueServiceData
 {
     private final String value;
     

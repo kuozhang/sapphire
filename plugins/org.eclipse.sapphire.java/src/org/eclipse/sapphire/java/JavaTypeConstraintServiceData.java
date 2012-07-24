@@ -16,13 +16,11 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.eclipse.sapphire.services.Data;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JavaTypeConstraintServiceData extends Data
+public final class JavaTypeConstraintServiceData
 {
     private final SortedSet<JavaTypeKind> kinds;
     private final SortedSet<String> types;

@@ -17,7 +17,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DefaultValueServiceData extends Data
+public final class DefaultValueServiceData
 {
     private final String value;
     

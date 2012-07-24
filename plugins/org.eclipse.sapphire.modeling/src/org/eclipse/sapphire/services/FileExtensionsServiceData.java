@@ -22,7 +22,7 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FileExtensionsServiceData extends Data
+public final class FileExtensionsServiceData
 {
     private final List<String> extensions;
     

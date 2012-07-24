@@ -178,10 +178,6 @@ public class FunctionContext
         return SourceLanguageLocalizationService.INSTANCE;
     }
     
-    public void dispose()
-    {
-    }
-    
     private static final class Resources extends NLS
     {
         public static String undefinedPropertyMessage;

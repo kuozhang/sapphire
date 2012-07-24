@@ -121,6 +121,27 @@
         <context>Sapphire.Element.Instance</context>
     </service>
     <service>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.VersionCompatibilityValidationService$ValuePropertyService$Factory</factory>
+        <id>Sapphire.ValidationService.Property.VersionCompatibility.Value</id>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <description>Implementation of ValidationService that produces a validation error when a value property is not compatible with the version compatibility target yet it has a value.</description>
+    </service>
+    <service>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.VersionCompatibilityValidationService$ElementPropertyService$Factory</factory>
+        <id>Sapphire.ValidationService.Property.VersionCompatibility.Element</id>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <description>Implementation of ValidationService that produces a validation error when an element property is not compatible with the version compatibility target yet it contains an element.</description>
+    </service>
+    <service>
+        <context>Sapphire.Property.Instance</context>
+        <factory>org.eclipse.sapphire.services.internal.VersionCompatibilityValidationService$ListPropertyService$Factory</factory>
+        <id>Sapphire.ValidationService.Property.VersionCompatibility.List</id>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <description>Implementation of ValidationService that produces a validation error when a list property is not compatible with the version compatibility target yet the list is not empty.</description>
+    </service>
+    <service>
         <type>org.eclipse.sapphire.services.EnablementService</type>
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.ParentBasedEnablementService$Factory</factory>
@@ -131,6 +152,13 @@
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.FunctionBasedEnablementService$Factory</factory>
         <id>Sapphire.EnablementService.FunctionBased</id>
+    </service>
+    <service>
+        <id>Sapphire.EnablementService.VersionCompatibility</id>
+        <type>org.eclipse.sapphire.services.EnablementService</type>
+        <factory>org.eclipse.sapphire.services.internal.VersionCompatibilityEnablementService$Factory</factory>
+        <context>Sapphire.Property.Instance</context>
+        <description>Implementation of EnablementService that determines property's enablement state based on property's compatibility with the version compatibility target.</description>
     </service>
     <service>
         <type>org.eclipse.sapphire.services.ValueNormalizationService</type>
@@ -521,4 +549,33 @@
         <target>org.eclipse.sapphire.VersionConstraint</target>
         <impl>org.eclipse.sapphire.modeling.el.internal.StringToVersionConstraintTypeCast</impl>
     </type-cast>
+    <service>
+        <id>Sapphire.VersionCompatibilityTargetService.Declarative</id>
+        <type>org.eclipse.sapphire.services.VersionCompatibilityTargetService</type>
+        <factory>org.eclipse.sapphire.services.internal.DeclarativeVersionCompatibilityTargetService$Factory</factory>
+        <context>Sapphire.Element.Instance</context>
+        <context>Sapphire.Property.Instance</context>
+        <description>Implementation of VersionCompatibilityTargetService that derives its behavior from @VersionCompatibilityTarget annotation.</description>
+    </service>
+    <service>
+        <context>Sapphire.Property.Instance</context>
+        <description>Aggregates the data from all applicable version compatibility services in order to produce a single statement about version compatibility. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
+        <factory>org.eclipse.sapphire.services.internal.VersionCompatibilityAggregationServiceFactory</factory>
+        <id>Sapphire.VersionCompatibilityAggregationService</id>
+        <type>org.eclipse.sapphire.services.VersionCompatibilityAggregationService</type>
+    </service>
+    <service>
+        <id>Sapphire.VersionCompatibilityService.Declarative</id>
+        <factory>org.eclipse.sapphire.services.internal.DeclarativeVersionCompatibilityService$Factory</factory>
+        <context>Sapphire.Property.Instance</context>
+        <type>org.eclipse.sapphire.services.VersionCompatibilityService</type>
+        <description>Implementation of VersionCompatibilityService that derives its behavior from @VersionCompatibility and @Since annotations.</description>
+    </service>
+    <service>
+        <id>Sapphire.VersionCompatibilityService.ParentBased</id>
+        <type>org.eclipse.sapphire.services.VersionCompatibilityService</type>
+        <factory>org.eclipse.sapphire.services.internal.ParentBasedVersionCompatibilityService$Factory</factory>
+        <context>Sapphire.Property.Instance</context>
+        <description>Implementation of VersionCompatibilityService that derives its behavior from version compatibility of the containing element's parent property.</description>
+    </service>
 </extension>

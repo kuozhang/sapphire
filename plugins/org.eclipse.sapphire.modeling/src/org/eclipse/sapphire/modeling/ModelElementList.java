@@ -95,6 +95,11 @@ public final class ModelElementList<T extends IModelElement>
         
         return this.validation;
     }
+    
+    public boolean enabled()
+    {
+        return parent().enabled( this.property );
+    }
 
     public boolean refresh()
     {
@@ -219,20 +224,20 @@ public final class ModelElementList<T extends IModelElement>
             factory.merge( item.validation() );
         }
         
-        final Status st = factory.create();
+        final Status newValidationResult = factory.create();
         
         if( this.validation == null )
         {
-            this.validation = st;
+            this.validation = newValidationResult;
         }
-        else if( ! this.validation.equals( st ) )
+        else if( ! this.validation.equals( newValidationResult ) )
         {
             final Status before = this.validation;
-            this.validation = st;
+            this.validation = newValidationResult;
             
             if( broadcastChangeIfNecessary )
             {
-                ( (ModelElement) parent() ).broadcastPropertyValidationEvent( this.property, before, st );
+                ( (ModelElement) parent() ).broadcastPropertyValidationEvent( this.property, before, newValidationResult );
             }
         }
     }

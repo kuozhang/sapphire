@@ -17,7 +17,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DerivedValueServiceData extends Data
+public final class DerivedValueServiceData
 {
     private final String value;
     
