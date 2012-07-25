@@ -64,7 +64,7 @@ public interface Shape extends PartDef
         }
     )
     
-    ElementProperty PROP_LAYOUT_CONSTRAINT = new ElementProperty( TYPE, "LayoutConstaint" );
+    ElementProperty PROP_LAYOUT_CONSTRAINT = new ElementProperty( TYPE, "LayoutConstraint" );
     
     ModelElementHandle<LayoutConstraint> getLayoutConstraint();
     
