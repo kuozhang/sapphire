@@ -277,6 +277,5 @@ public interface IDiagramNodeDef
     
     ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
     
-    ModelElementHandle<Shape> getShape();
-    
+    ModelElementHandle<Shape> getShape();    
 }
