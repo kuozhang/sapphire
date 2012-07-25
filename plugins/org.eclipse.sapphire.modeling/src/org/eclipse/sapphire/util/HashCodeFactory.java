@@ -9,13 +9,41 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire.util;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class Data
+public final class HashCodeFactory
 {
+    private final int result;
+    
+    private HashCodeFactory( final int result )
+    {
+        this.result = result;
+    }
+    
+    public static HashCodeFactory start()
+    {
+        return new HashCodeFactory( 1 );
+    }
+    
+    public HashCodeFactory add( final Object object )
+    {
+        if( object == null )
+        {
+            return this;
+        }
+        else
+        {
+            return new HashCodeFactory( this.result * object.hashCode() );
+        }
+    }
+    
+    public int result()
+    {
+        return this.result;
+    }
     
 }

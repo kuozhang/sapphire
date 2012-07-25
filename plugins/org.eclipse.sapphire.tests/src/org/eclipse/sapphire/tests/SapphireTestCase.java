@@ -27,6 +27,8 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
@@ -126,6 +128,16 @@ public abstract class SapphireTestCase extends TestCase
         assertValidationOk( value.validation() );
     }
     
+    protected static final void assertValidationOk( final ModelElementHandle<?> handle )
+    {
+        assertValidationOk( handle.validation() );
+    }
+    
+    protected static final void assertValidationOk( final ModelElementList<?> list )
+    {
+        assertValidationOk( list.validation() );
+    }
+    
     protected static final void assertValidationOk( final IModelElement element )
     {
         assertValidationOk( element.validation() );
@@ -140,6 +152,18 @@ public abstract class SapphireTestCase extends TestCase
                                                          final String expectedMessage )
     {
         assertValidationWarning( value.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationWarning( final ModelElementHandle<?> handle,
+                                                         final String expectedMessage )
+    {
+        assertValidationWarning( handle.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationWarning( final ModelElementList<?> list,
+                                                         final String expectedMessage )
+    {
+        assertValidationWarning( list.validation(), expectedMessage );
     }
 
     protected static final void assertValidationWarning( final IModelElement element,
@@ -159,6 +183,18 @@ public abstract class SapphireTestCase extends TestCase
                                                        final String expectedMessage )
     {
         assertValidationError( value.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationError( final ModelElementHandle<?> handle,
+                                                       final String expectedMessage )
+    {
+        assertValidationError( handle.validation(), expectedMessage );
+    }
+
+    protected static final void assertValidationError( final ModelElementList<?> list,
+                                                       final String expectedMessage )
+    {
+        assertValidationError( list.validation(), expectedMessage );
     }
 
     protected static final void assertValidationError( final IModelElement element,

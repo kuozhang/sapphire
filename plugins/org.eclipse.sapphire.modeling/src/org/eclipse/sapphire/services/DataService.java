@@ -32,7 +32,7 @@ public abstract class DataService<T> extends Service
     
     // TODO: Make final when override to call refresh() workaround is no longer necessary.
     
-    protected T data()
+    public T data()
     {
         return this.data;
     }

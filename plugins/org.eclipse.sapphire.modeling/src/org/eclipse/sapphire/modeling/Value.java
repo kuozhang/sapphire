@@ -195,6 +195,11 @@ public class Value<T> extends ModelParticle
         return this.validation;
     }
     
+    public boolean enabled()
+    {
+        return parent().enabled( this.property );
+    }
+    
     @Override
     public boolean equals( final Object val )
     {

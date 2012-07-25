@@ -21,7 +21,7 @@ import org.eclipse.sapphire.services.DefaultValueServiceData;
 public final class TestDefaultValueService extends DefaultValueService
 {
     @Override
-    protected DefaultValueServiceData data()
+    public DefaultValueServiceData data()
     {
         refresh();
         return super.data();

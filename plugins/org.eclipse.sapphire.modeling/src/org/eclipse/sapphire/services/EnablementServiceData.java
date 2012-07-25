@@ -15,7 +15,7 @@ package org.eclipse.sapphire.services;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EnablementServiceData extends Data
+public final class EnablementServiceData
 {
     private final boolean enablement;
     

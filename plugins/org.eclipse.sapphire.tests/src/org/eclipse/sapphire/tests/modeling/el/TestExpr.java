@@ -24,10 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class TestExpr
-
-    extends SapphireTestCase
-    
+public abstract class TestExpr extends SapphireTestCase
 {
     protected TestExpr( final String name )
     {
@@ -61,16 +58,7 @@ public abstract class TestExpr
                                                 final String expr,
                                                 final Object expected )
     {
-        final ModelElementFunctionContext context = new ModelElementFunctionContext( element );
-        
-        try
-        {
-            testForExpectedValue( context, expr, expected );
-        }
-        finally
-        {
-            context.dispose();
-        }
+        testForExpectedValue( new ModelElementFunctionContext( element ), expr, expected );
     }
     
     protected static void testForExpectedError( final FunctionContext context,

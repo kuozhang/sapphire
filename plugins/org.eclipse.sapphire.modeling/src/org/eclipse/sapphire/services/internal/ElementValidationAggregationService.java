@@ -70,7 +70,7 @@ public final class ElementValidationAggregationService extends ValidationAggrega
     }
     
     @Override
-    protected Status data()
+    public Status data()
     {
         refresh();
         return super.data();
