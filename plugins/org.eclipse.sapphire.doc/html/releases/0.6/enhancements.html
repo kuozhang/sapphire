@@ -26,6 +26,7 @@
   <li><a href="#VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
+    <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
     <li><a href="#ExpressionLanguage-UseInPageHeaderText">Use in Page Header Text</a></li>
     <li><a href="#ExpressionLanguage-UseInOutlineHeaderText">Use in Outline Header Text</a></li>
   </ol>
@@ -116,7 +117,22 @@ view page.</p>
 &lt;/properties-view></font></code></pre>
 
 
-<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-UseInPageHeaderText">Use EL in Page Header Text</a></a></h2>
+<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
+
+<p>Determines if a property is enabled. Can be used either with two arguments (element and property name) or with
+a single property name argument. In the single argument form, the context element is used.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<p style="margin-left: 20px;">In these examples, the context element is Employee which has Assistant and Manager
+properties. The first example asks if Assistant property is enabled for this employee. The second example asks
+if Assistant property is enable for this employee's manager.</p>
+
+<pre class="source-code"><code>${ Enabled( 'Assistant' ) }
+${ Enabled( Manager, 'Assistant' ) }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInPageHeaderText">Use EL in Page Header Text</a></h2>
 
 <p>Use expression language when specifying editor page header text.</p>
 

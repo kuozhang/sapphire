@@ -578,4 +578,9 @@
         <context>Sapphire.Property.Instance</context>
         <description>Implementation of VersionCompatibilityService that derives its behavior from version compatibility of the containing element's parent property.</description>
     </service>
+    <function>
+        <name>Enabled</name>
+        <impl>org.eclipse.sapphire.modeling.el.EnabledFunction</impl>
+        <description>Determines if a property is enabled. Can be used either with two arguments (element and property name) or with a single property name argument. In the single argument form, the context element is used.</description>
+    </function>
 </extension>
