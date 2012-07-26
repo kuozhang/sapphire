@@ -11,22 +11,18 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -35,37 +31,22 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "if" )
 @GenerateImpl
 
-public interface ISapphireIfElseDirectiveDef
-
-    extends FormPartDef
-    
+public interface ConditionalDef extends FormPartDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireIfElseDirectiveDef.class );
- 
-    // *** ConditionClass ***
+    ModelElementType TYPE = new ModelElementType( ConditionalDef.class );
     
-    @Type( base = JavaTypeName.class )
-    @Reference( target = JavaType.class )
-    @Label( standard = "condition class" )
+    // *** Condition ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "condition" )
     @Required
-    @MustExist
-    @XmlBinding( path = "condition/class" )
+    @XmlValueBinding( path = "condition" )
     
-    ValueProperty PROP_CONDITION_CLASS = new ValueProperty( TYPE, "ConditionClass" );
+    ValueProperty PROP_CONDITION = new ValueProperty( TYPE, "Condition" );
     
-    ReferenceValue<JavaTypeName,JavaType> getConditionClass();
-    void setConditionClass( String value );
-    void setConditionClass( JavaTypeName value );
-    
-    // *** ConditionParameter ***
-    
-    @Label( standard = "condition parameter" )
-    @XmlBinding( path = "condition/parameter" )
-    
-    ValueProperty PROP_CONDITION_PARAMETER = new ValueProperty( TYPE, "ConditionParameter" );
-    
-    Value<String> getConditionParameter();
-    void setConditionParameter( String conditionParameter );
+    Value<Function> getCondition();
+    void setCondition( String value );
+    void setCondition( Function value );
     
     // *** ThenContent ***
     
@@ -80,7 +61,7 @@ public interface ISapphireIfElseDirectiveDef
             ISapphireLabelDef.class,
             ISapphireGroupDef.class,
             ISapphireWithDirectiveDef.class,
-            ISapphireIfElseDirectiveDef.class,
+            ConditionalDef.class,
             ISapphireCompositeDef.class,
             ActuatorDef.class,
             ISapphireCustomPartDef.class,
@@ -104,7 +85,7 @@ public interface ISapphireIfElseDirectiveDef
             @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
             @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
             @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
             @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
@@ -134,7 +115,7 @@ public interface ISapphireIfElseDirectiveDef
             ISapphireLabelDef.class,
             ISapphireGroupDef.class,
             ISapphireWithDirectiveDef.class,
-            ISapphireIfElseDirectiveDef.class,
+            ConditionalDef.class,
             ISapphireCompositeDef.class,
             ActuatorDef.class,
             ISapphireCustomPartDef.class,
@@ -158,7 +139,7 @@ public interface ISapphireIfElseDirectiveDef
             @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
             @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @XmlListBinding.Mapping( element = "if", type = ISapphireIfElseDirectiveDef.class ),
+            @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
             @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
             @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),

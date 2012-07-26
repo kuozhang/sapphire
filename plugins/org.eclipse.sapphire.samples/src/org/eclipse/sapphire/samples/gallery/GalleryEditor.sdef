@@ -1795,46 +1795,34 @@
                 <property>SectionsGallery</property>
             </node>
             <node>
-                <property>IfThenElseGallery</property>
-                <label>if then else</label>
+                <property>ConditionalGallery</property>
+                <label>conditionals</label>
                 <section>
                     <content>
                         <property-editor>ShapeType</property-editor>
                         <if>
+                            <condition>${ Enabled( 'Radius' ) }</condition>
                             <then>
                                 <property-editor>Radius</property-editor>
                             </then>
-                            <condition>
-                                <class>PropertyEnabledCondition</class>
-                                <parameter>Radius</parameter>
-                            </condition>
                         </if>
                         <if>
+                            <condition>${ Enabled( 'EdgeLength1' ) }</condition>
                             <then>
                                 <property-editor>EdgeLength1</property-editor>
                             </then>
-                            <condition>
-                                <class>PropertyEnabledCondition</class>
-                                <parameter>EdgeLength1</parameter>
-                            </condition>
                         </if>
                         <if>
+                            <condition>${ Enabled( 'EdgeLength2' ) }</condition>
                             <then>
                                 <property-editor>EdgeLength2</property-editor>
                             </then>
-                            <condition>
-                                <class>PropertyEnabledCondition</class>
-                                <parameter>EdgeLength2</parameter>
-                            </condition>
                         </if>
                         <if>
+                            <condition>${ Enabled( 'EdgeLength3' ) }</condition>
                             <then>
                                 <property-editor>EdgeLength3</property-editor>
                             </then>
-                            <condition>
-                                <class>PropertyEnabledCondition</class>
-                                <parameter>EdgeLength3</parameter>
-                            </condition>
                         </if>
                     </content>
                 </section>
@@ -2301,7 +2289,7 @@
             <action>Sapphire.Gallery.Open.Homepage</action>
             <id>Sapphire.Gallery.Open.Homepage</id>
             <label>Sapphire Homepage</label>
-            <impl>OpenHomepageActionHandler</impl>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
         </action-handler>
         <page-name>gallery</page-name>
     </editor-page>

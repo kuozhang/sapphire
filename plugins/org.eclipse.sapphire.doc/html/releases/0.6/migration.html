@@ -43,6 +43,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
 
 <ol>
   <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
+  <li><a href="#Conditional">Conditional</a></li>
 </ol>
 
 
@@ -65,6 +66,45 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
 </table>
 
+
+<h2><a name="Conditional">Conditional</a></h2>
+
+<p>The conditional construct in sdef has been converted to use <a href="../../el/index.html">Sapphire EL</a> instead 
+of a class implementing SapphireCondition.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;if>
+    &lt;condition></font>
+        &lt;class>ExampleCondition&lt;/class>
+        &lt;parameter>...&lt;/parameter>
+    <font color="#888888">&lt;/condition>
+    &lt;then>
+        ...
+    &lt;/then>
+    &lt;else>
+        ...
+    &lt;/else>
+&lt;/if></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;if>
+    &lt;condition></font>${ <i>corresponding logic as an expression</i> }<font color="#888888">&lt;/condition>
+    &lt;then>
+        ...
+    &lt;/then>
+    &lt;else>
+        ...
+    &lt;/else>
+&lt;/if></font></code></pre>
+    </td>
+  </tr>
+</table>
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

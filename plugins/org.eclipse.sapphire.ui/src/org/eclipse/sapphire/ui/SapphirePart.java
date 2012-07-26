@@ -55,7 +55,7 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
-import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
+import org.eclipse.sapphire.ui.def.ConditionalDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
@@ -904,9 +904,9 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new TabGroupPart();
         }
-        else if( definition instanceof ISapphireIfElseDirectiveDef )
+        else if( definition instanceof ConditionalDef )
         {
-            part = new IfThenElsePart();
+            part = new ConditionalPart();
         }
         else if( definition instanceof HtmlPanelDef )
         {

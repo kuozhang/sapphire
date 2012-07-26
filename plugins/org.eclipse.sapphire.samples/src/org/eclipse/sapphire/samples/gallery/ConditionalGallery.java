@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IIfThenElseGallery extends IModelElement
+public interface ConditionalGallery extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IIfThenElseGallery.class );
+    ModelElementType TYPE = new ModelElementType( ConditionalGallery.class );
     
     // *** ShapeType ***
     

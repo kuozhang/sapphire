@@ -44,7 +44,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.IfThenElsePart;
+import org.eclipse.sapphire.ui.ConditionalPart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -182,9 +182,9 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
                 collectProperties( related, result );
             }
         }
-        else if( part instanceof IfThenElsePart )
+        else if( part instanceof ConditionalPart )
         {
-            final IfThenElsePart ifelse = (IfThenElsePart) part;
+            final ConditionalPart ifelse = (ConditionalPart) part;
             
             for( ISapphirePart child : ifelse.getCurrentBranchContent() )
             {

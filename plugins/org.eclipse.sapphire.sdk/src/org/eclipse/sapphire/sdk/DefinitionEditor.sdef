@@ -275,9 +275,7 @@
         <id>PartId</id>
         <content>
             <if>
-                <condition>
-                    <class>NamedPartCondition</class>
-                </condition>
+                <condition>${ InstanceOf( Parent(), 'org.eclipse.sapphire.ui.def.ISapphireUiDef' ) }</condition>
                 <then>
                     <property-editor>Id</property-editor>
                 </then>
@@ -572,14 +570,13 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireIfElseDirectiveDef</model-element-type>
+            <model-element-type>ConditionalDef</model-element-type>
             <label>If</label>
             <image>${ Image() }</image>
             <section>
                 <label>If</label>
                 <content>
-                    <property-editor>ConditionClass</property-editor>
-                    <property-editor>ConditionParameter</property-editor>
+                    <property-editor>Condition</property-editor>
                 </content>
             </section>
             <node>

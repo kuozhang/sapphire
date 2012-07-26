@@ -29,6 +29,7 @@
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
     <li><a href="#ExpressionLanguage-UseInPageHeaderText">Use in Page Header Text</a></li>
     <li><a href="#ExpressionLanguage-UseInOutlineHeaderText">Use in Outline Header Text</a></li>
+    <li><a href="#ExpressionLanguage-UseInConditional">Use in Conditional</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
@@ -152,6 +153,23 @@ ${ Enabled( Manager, 'Assistant' ) }</code></pre>
 <pre class="source-code"><code><font color="#888888">&lt;editor-page>
     &lt;outline-header-text></font>outline (${ Contacts.Size })<font color="#888888">&lt;/outline-header-text>
 &lt;/editor-page></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInConditional">Use EL in Conditional</a></h2>
+
+<p>Use expression language when specifying a conditional (if-then-else).</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;if>
+    &lt;condition></font>${ Contacts.Size > 3 }<font color="#888888">&lt;/condition>
+    &lt;then>
+        ...
+    &lt;/then>
+    &lt;else>
+        ...
+    &lt;/else>
+&lt;/if></font></code></pre>
 
 
 <h2><a name="Miscellaneous"><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></a></h2>

@@ -18,19 +18,20 @@ import java.util.List;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.def.ISapphireIfElseDirectiveDef;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.ui.def.ConditionalDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class IfThenElsePart extends SapphirePart
+public final class ConditionalPart extends SapphirePart
 {
-    private ISapphireIfElseDirectiveDef def;
-    private SapphireCondition condition;
+    private ConditionalDef def;
+    private FunctionResult conditionFunctionResult;
     private List<SapphirePart> currentBranchContent;
     private List<SapphirePart> currentBranchContentReadOnly;
     
@@ -39,41 +40,22 @@ public final class IfThenElsePart extends SapphirePart
     {
         super.init();
         
-        this.def = (ISapphireIfElseDirectiveDef) this.definition;
+        this.def = (ConditionalDef) this.definition;
         
-        final Class<?> conditionClass;
-        final Status conditionClassValidation = this.def.getConditionClass().validation();
-        
-        if( conditionClassValidation.severity() != Status.Severity.ERROR )
-        {
-            conditionClass = this.def.getConditionClass().resolve().artifact();
-        }
-        else
-        {
-            LoggingService.log( conditionClassValidation );
-            conditionClass = null;
-        }
-        
-        if( conditionClass != null )
-        {
-            final String conditionParameter = this.def.getConditionParameter().getText();
-            this.condition = SapphireCondition.create( this, conditionClass, conditionParameter );
-            
-            if( this.condition != null )
+        this.conditionFunctionResult = initExpression
+        (
+            getModelElement(),
+            this.def.getCondition().getContent(), 
+            Boolean.class,
+            Literal.FALSE,
+            new Runnable()
             {
-                this.condition.attach
-                (
-                    new Listener()
-                    {
-                        @Override
-                        public void handle( final Event event )
-                        {
-                            IfThenElsePart.this.handleConditionChanged();
-                        }
-                    }
-                );
+                public void run()
+                {
+                    handleConditionChanged();
+                }
             }
-        }
+        );
         
         this.currentBranchContent = new ArrayList<SapphirePart>();
         this.currentBranchContentReadOnly = Collections.unmodifiableList( this.currentBranchContent );
@@ -88,6 +70,8 @@ public final class IfThenElsePart extends SapphirePart
     
     private void handleConditionChanged( final boolean initializing )
     {
+        boolean newConditionState = (Boolean) this.conditionFunctionResult.value();
+        
         for( SapphirePart part : this.currentBranchContent )
         {
             part.dispose();
@@ -95,41 +79,33 @@ public final class IfThenElsePart extends SapphirePart
         
         this.currentBranchContent.clear();
         
-        if( this.condition != null )
-        {
-            final IModelElement element = getLocalModelElement();
-            
-            final Listener childPartListener = new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof ValidationChangedEvent )
-                    {
-                        updateValidationState();
-                    }
-                }
-            };
+        final IModelElement element = getLocalModelElement();
         
-            for( PartDef childPartDef : ( this.condition.getConditionState() ? this.def.getThenContent() : this.def.getElseContent() ) )
+        final Listener childPartListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
             {
-                final SapphirePart childPart = create( this, element, childPartDef, this.params );
-                this.currentBranchContent.add( childPart );
-                childPart.attach( childPartListener );
+                if( event instanceof ValidationChangedEvent )
+                {
+                    updateValidationState();
+                }
             }
+        };
+    
+        for( PartDef childPartDef : ( newConditionState ? this.def.getThenContent() : this.def.getElseContent() ) )
+        {
+            final SapphirePart childPart = create( this, element, childPartDef, this.params );
+            this.currentBranchContent.add( childPart );
+            childPart.attach( childPartListener );
         }
         
         updateValidationState();
         
         if( ! initializing )
         {
-            broadcast( new StructureChangedEvent( IfThenElsePart.this ) );
+            broadcast( new StructureChangedEvent( ConditionalPart.this ) );
         }
-    }
-    
-    public boolean getConditionState()
-    {
-        return ( this.condition != null ? this.condition.getConditionState() : false );
     }
     
     public List<SapphirePart> getCurrentBranchContent()
@@ -168,9 +144,9 @@ public final class IfThenElsePart extends SapphirePart
             child.dispose();
         }
         
-        if( this.condition != null )
+        if( this.conditionFunctionResult != null )
         {
-            this.condition.dispose();
+            this.conditionFunctionResult.dispose();
         }
     }
 

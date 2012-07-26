@@ -179,15 +179,15 @@ public interface IGallery extends IModelElement
     
     ISectionsGallery getSectionsGallery();
 
-    // *** IfThenElseGallery ***
+    // *** ConditionalGallery ***
     
-    @Type( base = IIfThenElseGallery.class )
-    @Label( standard = "if then else" )
-    @XmlBinding( path = "if-then-else-gallery" )
+    @Type( base = ConditionalGallery.class )
+    @Label( standard = "conditional gallery" )
+    @XmlBinding( path = "conditional-gallery" )
     
-    ImpliedElementProperty PROP_IF_THEN_ELSE_GALLERY = new ImpliedElementProperty( TYPE, "IfThenElseGallery" );
+    ImpliedElementProperty PROP_CONDITIONAL_GALLERY = new ImpliedElementProperty( TYPE, "ConditionalGallery" );
     
-    IIfThenElseGallery getIfThenElseGallery();
+    ConditionalGallery getConditionalGallery();
 
     // *** HelpGallery ***
     
