@@ -583,4 +583,14 @@
         <impl>org.eclipse.sapphire.modeling.el.EnabledFunction</impl>
         <description>Determines if a property is enabled. Can be used either with two arguments (element and property name) or with a single property name argument. In the single argument form, the context element is used.</description>
     </function>
+    <function>
+        <name>UpperCase</name>
+        <impl>org.eclipse.sapphire.modeling.el.UpperCaseFunction</impl>
+        <description>Converts a string to upper case. Can be used either as UpperCase( Name ) or as Name.UpperCase().</description>
+    </function>
+    <function>
+        <name>LowerCase</name>
+        <impl>org.eclipse.sapphire.modeling.el.LowerCaseFunction</impl>
+        <description>Converts a string to lower case. Can be used either as LowerCase( Name ) or as Name.LowerCase().</description>
+    </function>
 </extension>

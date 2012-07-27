@@ -27,6 +27,8 @@
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
+    <li><a href="#ExpressionLanguage-UpperCaseFunction">UpperCase Function</a></li>
+    <li><a href="#ExpressionLanguage-LowerCaseFunction">LowerCase Function</a></li>
     <li><a href="#ExpressionLanguage-UseInPageHeaderText">Use in Page Header Text</a></li>
     <li><a href="#ExpressionLanguage-UseInOutlineHeaderText">Use in Outline Header Text</a></li>
     <li><a href="#ExpressionLanguage-UseInConditional">Use in Conditional</a></li>
@@ -131,6 +133,26 @@ if Assistant property is enable for this employee's manager.</p>
 
 <pre class="source-code"><code>${ Enabled( 'Assistant' ) }
 ${ Enabled( Manager, 'Assistant' ) }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-UpperCaseFunction">UpperCase Function</a></h2>
+
+<p>Converts a string to upper case.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ UpperCase( Name ) }
+${ Name.UpperCase() }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-LowerCaseFunction">LowerCase Function</a></h2>
+
+<p>Converts a string to lower case.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ LowerCase( Name ) }
+${ Name.LowerCase() }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-UseInPageHeaderText">Use EL in Page Header Text</a></h2>
