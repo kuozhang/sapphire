@@ -127,6 +127,16 @@ public final class Version implements Comparable<Version>
         return this.length;
     }
     
+    public boolean matches( final String constraint )
+    {
+        return matches( new VersionConstraint( constraint ) );
+    }
+    
+    public boolean matches( final VersionConstraint constraint )
+    {
+        return constraint.check( this );
+    }
+    
     public int compareTo( final Version version )
     {
         for( int i = 0, n = max( length(), version.length ); i < n; i++ )
