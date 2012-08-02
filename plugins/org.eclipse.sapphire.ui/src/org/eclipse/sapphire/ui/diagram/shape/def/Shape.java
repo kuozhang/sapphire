@@ -14,12 +14,8 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.ui.def.PartDef;
 
@@ -30,18 +26,6 @@ import org.eclipse.sapphire.ui.def.PartDef;
 public interface Shape extends PartDef
 {
 	ModelElementType TYPE = new ModelElementType( Shape.class );
-	
-    // *** VisibleWhen ***
-    
-    @Type( base = Function.class )
-    @XmlBinding( path = "visible-when" )
-    @Label( standard = "visible when" )
-    
-    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty(TYPE, "VisibleWhen");
-    
-    Value<Function> getVisibleWhen();
-    void setVisibleWhen( String value );
-    void setVisibleWhen( Function value );        
 	
     // *** LayoutConstraint ***
     

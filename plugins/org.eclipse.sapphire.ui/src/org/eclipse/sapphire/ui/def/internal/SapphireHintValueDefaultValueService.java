@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.def.internal;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 
 /**
@@ -40,11 +39,7 @@ public final class SapphireHintValueDefaultValueService extends DefaultValueServ
     {
         if( hint != null )
         {
-            if( hint.equals( PartDef.HINT_HIDE_IF_DISABLED ) )
-            {
-                return String.valueOf( Boolean.FALSE );
-            }
-            else if( hint.equals( PropertyEditorDef.HINT_CHECKBOX_LAYOUT ) )
+            if( hint.equals( PropertyEditorDef.HINT_CHECKBOX_LAYOUT ) )
             {
                 return PropertyEditorDef.HINT_VALUE_CHECKBOX_LAYOUT_TRAILING_LABEL;
             }

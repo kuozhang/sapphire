@@ -63,6 +63,11 @@ public class SapphireComposite extends SapphirePartContainer
     @Override
     public final void render( final SapphireRenderingContext context )
     {
+        if( ! visible() )
+        {
+            return;
+        }
+        
         final SapphireRenderingContext ctxt;
         Composite parent = context.getComposite();
         

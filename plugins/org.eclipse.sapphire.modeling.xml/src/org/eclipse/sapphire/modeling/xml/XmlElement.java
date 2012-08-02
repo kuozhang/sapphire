@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
 import org.eclipse.sapphire.util.IdentityCache;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -307,7 +307,7 @@ public final class XmlElement extends XmlNode
     
     public List<XmlAttribute> getAttributes()
     {
-        final ReadOnlyListFactory<XmlAttribute> result = ReadOnlyListFactory.create();
+        final ListFactory<XmlAttribute> result = ListFactory.start();
         final NamedNodeMap attributes = getDomNode().getAttributes();
         
         this.attributesCache.track();
@@ -328,7 +328,7 @@ public final class XmlElement extends XmlNode
         
         this.attributesCache.purge();
         
-        return result.export();
+        return result.result();
     }
     
     public XmlAttribute getAttribute( final String name,
@@ -405,7 +405,7 @@ public final class XmlElement extends XmlNode
     
     public List<XmlElement> getChildElements()
     {
-        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.create();
+        final ListFactory<XmlElement> result = ListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.elementsCache.track();
@@ -431,12 +431,12 @@ public final class XmlElement extends XmlNode
         
         this.elementsCache.purge();
         
-        return result.export();
+        return result.result();
     }
 
     public List<XmlElement> getChildElements( final QName name )
     {
-        final ReadOnlyListFactory<XmlElement> result = ReadOnlyListFactory.create();
+        final ListFactory<XmlElement> result = ListFactory.start();
         
         for( XmlElement element : getChildElements() )
         {
@@ -447,7 +447,7 @@ public final class XmlElement extends XmlNode
             }
         }
         
-        return result.export();
+        return result.result();
     }
     
     public List<XmlElement> getChildElements( final String name )
@@ -892,7 +892,7 @@ public final class XmlElement extends XmlNode
             final Element domElement = getDomNode();
             final Node domParentNode = domElement.getParentNode();
 
-            final ReadOnlyListFactory<Node> domNodesToMove = ReadOnlyListFactory.create();
+            final ListFactory<Node> domNodesToMove = ListFactory.start();
             
             domNodesToMove.add( domElement );
             
@@ -912,7 +912,7 @@ public final class XmlElement extends XmlNode
                 domRefNode = prev;
             }
             
-            for( Node node : domNodesToMove.export() )
+            for( Node node : domNodesToMove.result() )
             {
                 domParentNode.removeChild( node );
                 domParentNode.insertBefore( node, domRefNode );
@@ -1009,7 +1009,7 @@ public final class XmlElement extends XmlNode
     
     public List<XmlComment> getComments()
     {
-        final ReadOnlyListFactory<XmlComment> result = ReadOnlyListFactory.create();
+        final ListFactory<XmlComment> result = ListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.commentsCache.track();
@@ -1035,7 +1035,7 @@ public final class XmlElement extends XmlNode
         
         this.commentsCache.purge();
         
-        return result.export();
+        return result.result();
     }
     
     public XmlComment addComment( final String commentText )
@@ -1092,7 +1092,7 @@ public final class XmlElement extends XmlNode
     
     public List<XmlMetaComment> getMetaComments()
     {
-        final ReadOnlyListFactory<XmlMetaComment> result = ReadOnlyListFactory.create();
+        final ListFactory<XmlMetaComment> result = ListFactory.start();
         final NodeList children = getDomNode().getChildNodes();
         
         this.metaCommentsCache.track();
@@ -1118,7 +1118,7 @@ public final class XmlElement extends XmlNode
         
         this.metaCommentsCache.purge();
         
-        return result.export();
+        return result.result();
     }
      
     public XmlMetaComment getMetaComment( final String name,

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -33,7 +33,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class ValidFileSystemResourceTypeFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         final ValidFileSystemResourceType a = context( ModelProperty.class ).getAnnotation( ValidFileSystemResourceType.class );
         final FileSystemResourceType type = a.value();

@@ -14,6 +14,7 @@ package org.eclipse.sapphire.java.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
@@ -41,7 +42,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class JavaTypeConstraintFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         final IModelElement element = context( IModelElement.class );
         final ValueProperty property = context( ValueProperty.class );

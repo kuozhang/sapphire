@@ -189,6 +189,14 @@ public interface IGallery extends IModelElement
     
     ConditionalGallery getConditionalGallery();
 
+    // *** VisibleWhenGallery ***
+    
+    @Type( base = VisibleWhenGallery.class )
+    
+    ImpliedElementProperty PROP_VISIBLE_WHEN_GALLERY = new ImpliedElementProperty( TYPE, "VisibleWhenGallery" );
+    
+    VisibleWhenGallery getVisibleWhenGallery();
+
     // *** HelpGallery ***
     
     @Type( base = IHelpGallery.class )

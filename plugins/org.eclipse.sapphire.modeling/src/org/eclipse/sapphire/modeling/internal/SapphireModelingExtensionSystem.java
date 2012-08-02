@@ -33,7 +33,7 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ServiceFactoryProxy;
-import org.eclipse.sapphire.util.ReadOnlySetFactory;
+import org.eclipse.sapphire.util.SetFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -255,7 +255,7 @@ public final class SapphireModelingExtensionSystem
     private static Set<String> set( final Element root,
                                     final String entryElementName )
     {
-        final ReadOnlySetFactory<String> factory = ReadOnlySetFactory.create();
+        final SetFactory<String> factory = SetFactory.start();
         final NodeList nodes = root.getChildNodes();
     
         for( int i = 0, n = nodes.getLength(); i < n; i++ )
@@ -273,7 +273,7 @@ public final class SapphireModelingExtensionSystem
             }
         }
         
-        return factory.export();
+        return factory.result();
     }
 
     public static final class InvalidExtensionException extends RuntimeException

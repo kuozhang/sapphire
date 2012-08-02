@@ -48,6 +48,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
+import org.eclipse.sapphire.ui.def.ConditionalDef;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.def.IFormPartInclude;
@@ -55,7 +56,6 @@ import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
-import org.eclipse.sapphire.ui.def.ConditionalDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
@@ -96,6 +96,7 @@ public abstract class SapphirePart implements ISapphirePart
     private SapphireImageCache imageCache;
     private Map<String,SapphireActionGroup> actions;
     private PartServiceContext serviceContext;
+    private FunctionResult visibleWhenFunctionResult;
     
     public final void init( final ISapphirePart parent,
                             final IModelElement modelElement,
@@ -160,6 +161,22 @@ public abstract class SapphirePart implements ISapphirePart
             }
         }
         
+        this.visibleWhenFunctionResult = initExpression
+        (
+            getModelElement(),
+            initVisibleWhenFunction(), 
+            Boolean.class,
+            Literal.TRUE,
+            new Runnable()
+            {
+                public void run()
+                {
+                    broadcast( new VisibilityChangedEvent( SapphirePart.this ) );
+                    broadcast( new StructureChangedEvent( SapphirePart.this ) );
+                }
+            }
+        );
+        
         init();
         
         updateValidationState();
@@ -168,6 +185,14 @@ public abstract class SapphirePart implements ISapphirePart
     protected void init()
     {
         // The default implement doesn't do anything.
+    }
+    
+    public final FunctionResult initExpression( final IModelElement contextModelElement,
+                                                final Function function,
+                                                final Class<?> expectedType,
+                                                final Function defaultValue )
+    {
+        return initExpression( contextModelElement, function, expectedType, defaultValue, null );
     }
     
     public final FunctionResult initExpression( final IModelElement contextModelElement,
@@ -196,27 +221,35 @@ public abstract class SapphirePart implements ISapphirePart
         
         final FunctionResult fr = f.evaluate( context );
         
-        fr.attach
-        (
-            new Listener()
-            {
-                @Override
-                public void handle( final Event event )
+        if( refreshOp != null )
+        {
+            fr.attach
+            (
+                new Listener()
                 {
-                    final Runnable notifyOfUpdateOperation = new Runnable()
+                    @Override
+                    public void handle( final Event event )
                     {
-                        public void run()
+                        final Runnable notifyOfUpdateOperation = new Runnable()
                         {
-                            refreshOp.run();
-                        }
-                    };
-                 
-                    Display.getDefault().asyncExec( notifyOfUpdateOperation );
+                            public void run()
+                            {
+                                refreshOp.run();
+                            }
+                        };
+                     
+                        Display.getDefault().asyncExec( notifyOfUpdateOperation );
+                    }
                 }
-            }
-        );
+            );
+        }
         
         return fr;
+    }
+    
+    protected Function initVisibleWhenFunction()
+    {
+        return this.definition.getVisibleWhen().getContent();
     }
 
     public abstract void render( final SapphireRenderingContext context );
@@ -285,6 +318,11 @@ public abstract class SapphirePart implements ISapphirePart
             this.validationState = newValidationState;
             broadcast( new ValidationChangedEvent( this ) );
         }
+    }
+    
+    public final boolean visible()
+    {
+        return (Boolean) this.visibleWhenFunctionResult.value();
     }
     
     public boolean setFocus()
@@ -592,6 +630,11 @@ public abstract class SapphirePart implements ISapphirePart
             this.serviceContext.dispose();
         }
         
+        if( this.visibleWhenFunctionResult != null )
+        {
+            this.visibleWhenFunctionResult.dispose();
+        }
+        
         broadcast( new DisposeEvent() );
     }
     
@@ -722,7 +765,7 @@ public abstract class SapphirePart implements ISapphirePart
             this.part = part;
         }
         
-        public final SapphirePart part()
+        public SapphirePart part()
         {
             return this.part;
         }

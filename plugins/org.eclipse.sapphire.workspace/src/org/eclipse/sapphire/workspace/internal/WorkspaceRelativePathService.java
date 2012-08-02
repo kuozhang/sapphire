@@ -21,7 +21,7 @@ import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 /**
@@ -33,7 +33,7 @@ public final class WorkspaceRelativePathService extends RelativePathService
     @Override
     public List<Path> roots()
     {
-        final ReadOnlyListFactory<Path> paths = ReadOnlyListFactory.create();
+        final ListFactory<Path> paths = ListFactory.start();
         
         for( IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
         {
@@ -43,7 +43,7 @@ public final class WorkspaceRelativePathService extends RelativePathService
             }
         }
         
-        return paths.export();
+        return paths.result();
     }
     
     @Override

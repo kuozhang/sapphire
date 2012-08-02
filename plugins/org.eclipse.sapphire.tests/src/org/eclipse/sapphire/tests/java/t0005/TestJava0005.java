@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.java.t0005;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.SortedSet;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -115,9 +114,9 @@ public final class TestJava0005 extends SapphireTestCase
                               final ModelProperty property,
                               final String... factsExpected )
     {
-        final List<String> factsActual = element.service( property, FactsAggregationService.class ).facts();
+        final SortedSet<String> factsActual = element.service( property, FactsAggregationService.class ).facts();
         
-        assertEquals( Arrays.asList( factsExpected ), factsActual );
+        assertEquals( set( factsExpected ), factsActual );
     }
 
 }

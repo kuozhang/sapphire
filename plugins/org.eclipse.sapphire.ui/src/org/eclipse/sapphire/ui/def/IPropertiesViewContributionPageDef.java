@@ -57,16 +57,4 @@ public interface IPropertiesViewContributionPageDef extends FormDef
     void setImage( String value );
     void setImage( Function value );
     
-    // *** VisibleWhen ***
-    
-    @Type( base = Function.class )
-    @Label( standard = "visible when" )
-    @XmlBinding( path = "visible-when" )
-    
-    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty( TYPE, "VisibleWhen" );
-    
-    Value<Function> getVisibleWhen();
-    void setVisibleWhen( String value );
-    void setVisibleWhen( Function value );        
-    
 }

@@ -43,13 +43,12 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ConditionalPart;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartContainer;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.swt.SWT;
@@ -76,7 +75,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final ISapphirePart part = getPart();
+        final SapphirePart part = (SapphirePart) getPart();
 
         final Set<PropertyRef> properties = new LinkedHashSet<PropertyRef>();
         collectProperties( part, properties );
@@ -148,47 +147,50 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         return null;
     }
     
-    public static void collectProperties( final ISapphirePart part,
+    public static void collectProperties( final SapphirePart part,
                                           final Set<PropertyRef> result )
     {
-        if( part instanceof SapphirePartContainer )
+        if( part.visible() )
         {
-            for( ISapphirePart child : ( (SapphirePartContainer) part ).getChildParts() )
+            if( part instanceof SapphirePartContainer )
             {
-                collectProperties( child, result );
+                for( SapphirePart child : ( (SapphirePartContainer) part ).getChildParts() )
+                {
+                    collectProperties( child, result );
+                }
             }
-        }
-        else if( part instanceof SapphireWithDirective )
-        {
-            final SapphireWithDirective w = ( (SapphireWithDirective) part );
-            result.add( new PropertyRef( w.getLocalModelElement(), w.getProperty() ) );
-        }
-        else if( part instanceof SapphireEnumControlledPageBook )
-        {
-            final SapphirePartContainer currentPage = ( (SapphireEnumControlledPageBook) part ).getCurrentPage();
-            
-            if( currentPage != null )
+            else if( part instanceof SapphireWithDirective )
             {
-                collectProperties( currentPage, result );
+                final SapphireWithDirective w = ( (SapphireWithDirective) part );
+                result.add( new PropertyRef( w.getLocalModelElement(), w.getProperty() ) );
             }
-        }
-        else if( part instanceof PropertyEditorPart )
-        {
-            final PropertyEditorPart editor = (PropertyEditorPart) part;
-            result.add( new PropertyRef( editor.getLocalModelElement(), editor.getProperty() ) );
-            
-            for( SapphirePart related : editor.getRelatedContent() )
+            else if( part instanceof SapphireEnumControlledPageBook )
             {
-                collectProperties( related, result );
+                final SapphirePartContainer currentPage = ( (SapphireEnumControlledPageBook) part ).getCurrentPage();
+                
+                if( currentPage != null )
+                {
+                    collectProperties( currentPage, result );
+                }
             }
-        }
-        else if( part instanceof ConditionalPart )
-        {
-            final ConditionalPart ifelse = (ConditionalPart) part;
-            
-            for( ISapphirePart child : ifelse.getCurrentBranchContent() )
+            else if( part instanceof PropertyEditorPart )
             {
-                collectProperties( child, result );
+                final PropertyEditorPart editor = (PropertyEditorPart) part;
+                result.add( new PropertyRef( editor.getLocalModelElement(), editor.getProperty() ) );
+                
+                for( SapphirePart related : editor.getRelatedContent() )
+                {
+                    collectProperties( related, result );
+                }
+            }
+            else if( part instanceof ConditionalPart )
+            {
+                final ConditionalPart ifelse = (ConditionalPart) part;
+                
+                for( SapphirePart child : ifelse.getCurrentBranchContent() )
+                {
+                    collectProperties( child, result );
+                }
             }
         }
     }

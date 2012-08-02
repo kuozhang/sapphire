@@ -35,14 +35,15 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -52,9 +53,7 @@ import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePropertyEnabledCondition;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
@@ -64,14 +63,14 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsConte
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryCaseDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeInclude;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
-import org.eclipse.sapphire.util.ReadOnlyMapFactory;
+import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.MapFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsContentNode
+public class MasterDetailsContentNode
 
     extends SapphirePart
     implements IPropertiesViewContributorPart
@@ -83,8 +82,6 @@ public final class MasterDetailsContentNode
     private static final ImageData IMG_LEAF_NODE
         = ImageData.createFromClassLoader( MasterDetailsContentNode.class, "LeafNode.png" );
 
-    public static final String HINT_HIDE_IF_DISABLED = "hide.if.disabled"; //$NON-NLS-1$
-    
     private MasterDetailsContentOutline contentTree;
     private MasterDetailsContentNodeDef definition;
     private IModelElement modelElement;
@@ -95,12 +92,11 @@ public final class MasterDetailsContentNode
     private ImageManager imageManager;
     private Listener childPartListener;
     private List<Object> rawChildren;
+    private MasterDetailsContentNodeList nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNode>emptyList() );
     private List<SapphireSection> sections;
     private List<SapphireSection> sectionsReadOnly;
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private boolean expanded;
-    private SapphireCondition visibleWhenCondition;
-    private final List<SapphireCondition> allConditions = new ArrayList<SapphireCondition>();
     private boolean transformLabelCase = true;
     
     @Override
@@ -144,62 +140,6 @@ public final class MasterDetailsContentNode
             this.modelElement = getModelElement();
         }
         
-        this.visibleWhenCondition = null;
-
-        Class<?> visibleWhenConditionClass = null;
-        String visibleWhenConditionParameter = null;
-        
-        final Status visibleWhenConditionClassValidation = this.definition.getVisibleWhenConditionClass().validation();
-        
-        if( visibleWhenConditionClassValidation.severity() != Status.Severity.ERROR )
-        {
-            final JavaType visibleWhenConditionType = this.definition.getVisibleWhenConditionClass().resolve();
-            
-            if( visibleWhenConditionType != null )
-            {
-                visibleWhenConditionClass = visibleWhenConditionType.artifact();
-                visibleWhenConditionParameter = this.definition.getVisibleWhenConditionParameter().getText();
-            }
-        }
-        else
-        {
-            LoggingService.log( visibleWhenConditionClassValidation );
-        }
-        
-        if( visibleWhenConditionClass == null && this.modelElementProperty != null )
-        {
-            final String hideIfDisabled 
-                = this.definition.getHint( MasterDetailsContentNodeDef.HINT_HIDE_IF_DISABLED );
-            
-            if( Boolean.parseBoolean( hideIfDisabled ) )
-            {
-                visibleWhenConditionClass = SapphirePropertyEnabledCondition.class;
-                visibleWhenConditionParameter = this.modelElementProperty.getName();
-            }
-        }
-        
-        if( visibleWhenConditionClass != null )
-        {
-            this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass, visibleWhenConditionParameter );
-            
-            if( this.visibleWhenCondition != null )
-            {
-                this.allConditions.add( this.visibleWhenCondition );
-                
-                this.visibleWhenCondition.attach
-                (
-                    new Listener()
-                    {
-                        @Override
-                        public void handle( final Event event )
-                        {
-                            getContentTree().refresh();
-                        }
-                    }
-                );
-            }
-        }
-        
         this.expanded = false;
         
         final Listener elementValidationListener = new FilteredListener<ElementValidationEvent>()
@@ -213,21 +153,6 @@ public final class MasterDetailsContentNode
         
         this.modelElement.attach( elementValidationListener );
         
-        attach
-        (
-            new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof DisposeEvent )
-                    {
-                        getModelElement().detach( elementValidationListener );
-                    }
-                }
-            }
-        );
-        
         this.childPartListener = new Listener()
         {
             @Override
@@ -239,20 +164,6 @@ public final class MasterDetailsContentNode
                 }
             }
         };
-        
-        final Listener validationStateListener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
-            {
-                if( event instanceof ValidationChangedEvent )
-                {
-                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
-                }
-            }
-        };
-        
-        attach( validationStateListener );
         
         // Label
         
@@ -266,7 +177,7 @@ public final class MasterDetailsContentNode
             {
                 public void run()
                 {
-                    getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
+                    broadcast( new LabelChangedEvent( MasterDetailsContentNode.this ) );
                 }
             }
         );
@@ -278,21 +189,6 @@ public final class MasterDetailsContentNode
         
         this.imageManager = new ImageManager( this.modelElement, imageFunction, defaultImageLiteral );
         
-        attach
-        (
-            new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof SapphirePart.ImageChangedEvent )
-                    {
-                        getContentTree().notifyOfNodeUpdate( MasterDetailsContentNode.this );
-                    }
-                }
-            }
-        );
-
         // Sections and Child Nodes
         
         this.sections = new ArrayList<SapphireSection>();
@@ -375,7 +271,7 @@ public final class MasterDetailsContentNode
                         @Override
                         protected List<IModelElement> elements()
                         {
-                            return ReadOnlyListFactory.create( getLocalModelElement().read( prop ) );
+                            return ListFactory.unmodifiable( getLocalModelElement().read( prop ) );
                         }
                     };
                 }
@@ -419,6 +315,27 @@ public final class MasterDetailsContentNode
                 throw new IllegalStateException();
             }
         }
+        
+        refreshNodes();
+        
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof VisibilityChangedEvent || event instanceof NodeListEvent )
+                    {
+                        getContentTree().refreshSelection();
+                    }
+                    else if( event instanceof DisposeEvent )
+                    {
+                        getModelElement().detach( elementValidationListener );
+                    }
+                }
+            }
+        );
     }
     
     public MasterDetailsContentOutline getContentTree()
@@ -483,16 +400,6 @@ public final class MasterDetailsContentNode
         return this.imageManager.getImage();
     }
 
-    public boolean isVisible()
-    {
-        if( this.visibleWhenCondition != null )
-        {
-            return this.visibleWhenCondition.getConditionState();
-        }
-        
-        return true;
-    }
-
     public boolean isExpanded()
     {
         return this.expanded;
@@ -532,9 +439,9 @@ public final class MasterDetailsContentNode
             
         if( applyToChildren )
         {
-            for( MasterDetailsContentNode child : getChildNodes() )
+            for( MasterDetailsContentNode child : this.nodes )
             {
-                if( child.hasChildNodes() )
+                if( ! child.nodes().visible().isEmpty() )
                 {
                     child.setExpanded( expanded, applyToChildren );
                 }
@@ -564,7 +471,7 @@ public final class MasterDetailsContentNode
         {
             result.add( this );
             
-            for( MasterDetailsContentNode child : getChildNodes() )
+            for( MasterDetailsContentNode child : this.nodes )
             {
                 child.getExpandedNodes( result );
             }
@@ -622,47 +529,14 @@ public final class MasterDetailsContentNode
         return false;
     }
     
-    public boolean hasChildNodes()
+    public final MasterDetailsContentNodeList nodes()
     {
-        return ! this.rawChildren.isEmpty();
+        return this.nodes;
     }
     
-    public List<MasterDetailsContentNode> getChildNodes()
+    public MasterDetailsContentNode findNode( final String label )
     {
-        final ArrayList<MasterDetailsContentNode> nodes = new ArrayList<MasterDetailsContentNode>();
-        
-        for( Object entry : this.rawChildren )
-        {
-            if( entry instanceof MasterDetailsContentNode )
-            {
-                final MasterDetailsContentNode node = (MasterDetailsContentNode) entry;
-                
-                if( node.isVisible() )
-                {
-                    nodes.add( node );
-                }
-            }
-            else if( entry instanceof NodeFactory )
-            {
-                final NodeFactory factory = (NodeFactory) entry;
-                
-                if( factory.visible() )
-                {
-                    nodes.addAll( factory.nodes() );
-                }
-            }
-            else
-            {
-                throw new IllegalStateException( entry.getClass().getName() );
-            }
-        }
-        
-        return nodes;
-    }
-    
-    public MasterDetailsContentNode getChildNodeByLabel( final String label )
-    {
-        for( MasterDetailsContentNode child : getChildNodes() )
+        for( MasterDetailsContentNode child : this.nodes )
         {
             if( label.equals( child.getLabel() ) )
             {
@@ -673,16 +547,16 @@ public final class MasterDetailsContentNode
         return null;
     }
     
-    public MasterDetailsContentNode findNodeByModelElement( final IModelElement element )
+    public MasterDetailsContentNode findNode( final IModelElement element )
     {
         if( getModelElement() == element )
         {
             return this;
         }
 
-        for( MasterDetailsContentNode child : getChildNodes() )
+        for( MasterDetailsContentNode child : this.nodes )
         {
-            final MasterDetailsContentNode res = child.findNodeByModelElement( element );
+            final MasterDetailsContentNode res = child.findNode( element );
             
             if( res != null )
             {
@@ -691,6 +565,35 @@ public final class MasterDetailsContentNode
         }
         
         return null;
+    }
+    
+    private void refreshNodes()
+    {
+        final ListFactory<MasterDetailsContentNode> nodeListFactory = ListFactory.start();
+        
+        for( Object entry : this.rawChildren )
+        {
+            if( entry instanceof MasterDetailsContentNode )
+            {
+                nodeListFactory.add( (MasterDetailsContentNode) entry );
+            }
+            else if( entry instanceof NodeFactory )
+            {
+                nodeListFactory.add( ( ((NodeFactory) entry) ).nodes() );
+            }
+            else
+            {
+                throw new IllegalStateException( entry.getClass().getName() );
+            }
+        }
+        
+        final MasterDetailsContentNodeList nodes = new MasterDetailsContentNodeList( nodeListFactory.result() );
+        
+        if( ! this.nodes.equals( nodes ) )
+        {
+            this.nodes = nodes;
+            broadcast( new NodeListEvent( this ) );
+        }
     }
     
     public PropertiesViewContributionPart getPropertiesViewContribution()
@@ -719,14 +622,20 @@ public final class MasterDetailsContentNode
             factory.merge( getModelElement().validation() );
         }
         
-        for( SapphirePart child : this.sections )
+        for( SapphirePart section : this.sections )
         {
-            factory.merge( child.getValidationState() );
+            if( section.visible() )
+            {
+                factory.merge( section.getValidationState() );
+            }
         }
 
-        for( SapphirePart child : getChildNodes() )
+        for( SapphirePart node : this.nodes )
         {
-            factory.merge( child.getValidationState() );
+            if( node.visible() )
+            {
+                factory.merge( node.getValidationState() );
+            }
         }
         
         return factory.create();
@@ -760,16 +669,7 @@ public final class MasterDetailsContentNode
         {
             if( event instanceof PropertyContentEvent )
             {
-                runOnDisplayThread
-                (
-                    new Runnable()
-                    {
-                        public void run()
-                        {
-                            getContentTree().notifyOfNodeStructureChange( MasterDetailsContentNode.this );
-                        }
-                    }
-                );
+                refreshNodes();
             }
             else if( event instanceof PropertyValidationEvent )
             {
@@ -797,19 +697,14 @@ public final class MasterDetailsContentNode
             this.modelElement.detach( this.modelElementListener );
         }
         
-        for( SapphirePart child : this.sections )
+        for( SapphirePart section : this.sections )
         {
-            child.dispose();
+            section.dispose();
         }
         
-        for( SapphirePart child : getChildNodes() )
+        for( SapphirePart node : this.nodes )
         {
-            child.dispose();
-        }
-        
-        for( SapphireCondition condition : this.allConditions )
-        {
-            condition.dispose();
+            node.dispose();
         }
         
         if( this.labelFunctionResult != null )
@@ -820,6 +715,14 @@ public final class MasterDetailsContentNode
         if( this.imageManager != null )
         {
             this.imageManager.dispose();
+        }
+        
+        for( Object object : this.rawChildren )
+        {
+            if( object instanceof NodeFactory )
+            {
+                ( (NodeFactory) object ).dispose();
+            }
         }
     }
 
@@ -850,7 +753,7 @@ public final class MasterDetailsContentNode
     {
         private final MasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
-        private SapphireCondition visibleWhenCondition;
+        private final FunctionResult visibleWhenFunctionResult;
         private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
         
         public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
@@ -859,28 +762,18 @@ public final class MasterDetailsContentNode
             this.definition = definition;
             this.params = params;
             
-            final JavaType visibleWhenConditionClass = this.definition.getVisibleWhenConditionClass().resolve();
-            
-            if( visibleWhenConditionClass != null )
-            {
-                final String parameter = this.definition.getVisibleWhenConditionParameter().getText();
-                this.visibleWhenCondition = SapphireCondition.create( MasterDetailsContentNode.this, visibleWhenConditionClass.artifact(), parameter );
-                
-                if( this.visibleWhenCondition != null )
-                {
-                    MasterDetailsContentNode.this.allConditions.add( this.visibleWhenCondition );
-                }
-            }
+            this.visibleWhenFunctionResult = initExpression
+            (
+                getLocalModelElement(),
+                definition.getVisibleWhen().getContent(), 
+                Boolean.class,
+                Literal.TRUE
+            );
         }
         
         public final boolean visible()
         {
-            if( this.visibleWhenCondition != null )
-            {
-                return this.visibleWhenCondition.getConditionState();
-            }
-            
-            return true;
+            return (Boolean) this.visibleWhenFunctionResult.value();
         }
         
         public abstract ModelProperty property();
@@ -889,8 +782,8 @@ public final class MasterDetailsContentNode
         
         public final List<MasterDetailsContentNode> nodes()
         {
-            final Map<IModelElement,MasterDetailsContentNode> oldCache = ReadOnlyMapFactory.create( this.nodesCache );
-            final ReadOnlyListFactory<MasterDetailsContentNode> nodes = ReadOnlyListFactory.create();
+            final Map<IModelElement,MasterDetailsContentNode> oldCache = MapFactory.unmodifiable( this.nodesCache );
+            final ListFactory<MasterDetailsContentNode> nodes = ListFactory.start();
             
             for( IModelElement element : elements() )
             {
@@ -926,7 +819,72 @@ public final class MasterDetailsContentNode
                         throw new RuntimeException();
                     }
                     
-                    node = new MasterDetailsContentNode();
+                    node = new MasterDetailsContentNode()
+                    {
+                        @Override
+                        protected Function initVisibleWhenFunction()
+                        {
+                            final Function baseVisibleWhenFunction = super.initVisibleWhenFunction();
+                            
+                            final Function nodeFactoryVisibleFunction = new Function()
+                            {
+                                @Override
+                                public String name()
+                                {
+                                    return "NodeFactoryVisible";
+                                }
+
+                                @Override
+                                public FunctionResult evaluate( final FunctionContext context )
+                                {
+                                    return new FunctionResult( this, context )
+                                    {
+                                        private Listener listener;
+                                        
+                                        @Override
+                                        protected void init()
+                                        {
+                                            this.listener = new Listener()
+                                            {
+                                                @Override
+                                                public void handle( final Event event )
+                                                {
+                                                    refresh();
+                                                }
+                                            };
+                                            
+                                            NodeFactory.this.visibleWhenFunctionResult.attach( this.listener );
+                                        }
+
+                                        @Override
+                                        protected Object evaluate()
+                                        {
+                                            return NodeFactory.this.visible();
+                                        }
+
+                                        @Override
+                                        public void dispose()
+                                        {
+                                            super.dispose();
+                                            
+                                            NodeFactory.this.visibleWhenFunctionResult.detach( this.listener );
+                                        }
+                                    };
+                                }
+                            };
+                            
+                            nodeFactoryVisibleFunction.init();
+                            
+                            if( baseVisibleWhenFunction == null )
+                            {
+                                return nodeFactoryVisibleFunction;
+                            }
+                            else
+                            {
+                                return AndFunction.create( nodeFactoryVisibleFunction, baseVisibleWhenFunction );
+                            }
+                        }
+                    };
                     
                     // It is very important to put the node into the cache prior to initializing the node as
                     // initialization can case a re-entrant call into this function and we must avoid creating
@@ -950,7 +908,29 @@ public final class MasterDetailsContentNode
                 }
             }
             
-            return nodes.export();
+            return nodes.result();
+        }
+        
+        public void dispose()
+        {
+            if( this.visibleWhenFunctionResult != null )
+            {
+                this.visibleWhenFunctionResult.dispose();
+            }
+        }
+    }
+    
+    public static final class NodeListEvent extends PartEvent
+    {
+        public NodeListEvent( final MasterDetailsContentNode node )
+        {
+            super( node );
+        }
+
+        @Override
+        public MasterDetailsContentNode part()
+        {
+            return (MasterDetailsContentNode) super.part();
         }
     }
     

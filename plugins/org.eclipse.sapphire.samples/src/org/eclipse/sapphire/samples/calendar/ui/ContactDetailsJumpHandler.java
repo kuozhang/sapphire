@@ -78,7 +78,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
             {
                 final MasterDetailsEditorPagePart contactsFormPage = (MasterDetailsEditorPagePart) editor.getEditorPagePart( "Contacts" );
                 final MasterDetailsContentOutline outline = contactsFormPage.outline();
-                final MasterDetailsContentNode contactNode = outline.getRoot().findNodeByModelElement( contact );
+                final MasterDetailsContentNode contactNode = outline.getRoot().findNode( contact );
                 
                 if( contactNode != null )
                 {

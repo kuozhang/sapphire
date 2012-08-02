@@ -14,7 +14,7 @@ package org.eclipse.sapphire.modeling;
 import java.net.URL;
 import java.util.List;
 
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -46,7 +46,7 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
                 if( this.handles == null )
                 {
                     final BundleContext context = FrameworkUtil.getBundle( ExtensionsLocatorFactory.class ).getBundleContext();
-                    final ReadOnlyListFactory<Handle> handlesListFactory = ReadOnlyListFactory.create();
+                    final ListFactory<Handle> handlesListFactory = ListFactory.start();
                     
                     for( final Bundle bundle : context.getBundles() )
                     {
@@ -95,7 +95,7 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
                         }
                     }
                     
-                    this.handles = handlesListFactory.export();
+                    this.handles = handlesListFactory.result();
                 }
                 
                 return this.handles;

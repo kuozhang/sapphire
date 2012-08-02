@@ -20,35 +20,40 @@ import java.util.Set;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ReadOnlySetFactory<E>
+public final class SetFactory<E>
 {
     private E firstElement = null;
     private Set<E> set = null;
     private boolean exported = false;
     
-    private ReadOnlySetFactory() {}
+    private SetFactory() {}
     
-    public static <E> ReadOnlySetFactory<E> create()
+    public static <E> Set<E> empty()
     {
-        return new ReadOnlySetFactory<E>();
+        return Collections.emptySet();
     }
     
-    public static <E> Set<E> create( final E element )
+    public static <E> Set<E> singleton( final E element )
     {
         return Collections.singleton( element );
     }
     
-    public static <E> Set<E> create( final E... elements )
+    public static <E> Set<E> unmodifiable( final E... elements )
     {
-        return ReadOnlySetFactory.<E>create().add( elements ).export();
+        return SetFactory.<E>start().add( elements ).result();
     }
     
-    public static <E> Set<E> create( final Collection<E> elements )
+    public static <E> Set<E> unmodifiable( final Collection<E> elements )
     {
-        return ReadOnlySetFactory.<E>create().add( elements ).export();
+        return SetFactory.<E>start().add( elements ).result();
     }
-
-    public ReadOnlySetFactory<E> add( final E element )
+    
+    public static <E> SetFactory<E> start()
+    {
+        return new SetFactory<E>();
+    }
+    
+    public SetFactory<E> add( final E element )
     {
         if( this.exported )
         {
@@ -74,7 +79,7 @@ public final class ReadOnlySetFactory<E>
         return this;
     }
     
-    public ReadOnlySetFactory<E> add( final E... elements )
+    public SetFactory<E> add( final E... elements )
     {
         for( E element : elements )
         {
@@ -84,7 +89,7 @@ public final class ReadOnlySetFactory<E>
         return this;
     }
     
-    public ReadOnlySetFactory<E> add( final Collection<E> elements )
+    public SetFactory<E> add( final Collection<E> elements )
     {
         for( E element : elements )
         {
@@ -153,7 +158,7 @@ public final class ReadOnlySetFactory<E>
         return size;
     }
 
-    public Set<E> export()
+    public Set<E> result()
     {
         if( this.exported )
         {

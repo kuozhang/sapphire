@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -172,7 +172,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         
         try
         {
-            final ReadOnlyListFactory<IModelElement> elementsListFactory = ReadOnlyListFactory.create();
+            final ListFactory<IModelElement> elementsListFactory = ListFactory.start();
             final int size = in.readInt();
             
             for( int i = 0; i < size; i++ )
@@ -184,7 +184,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
                 elementsListFactory.add( element );
             }
             
-            return elementsListFactory.export();
+            return elementsListFactory.result();
         }
         catch( IOException e )
         {

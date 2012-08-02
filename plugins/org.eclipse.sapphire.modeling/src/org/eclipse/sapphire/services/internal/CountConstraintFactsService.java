@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -32,7 +32,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class CountConstraintFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         final CountConstraint constraint = context( ModelProperty.class ).getAnnotation( CountConstraint.class );
         final int min = constraint.min();

@@ -55,7 +55,6 @@ public interface PropertyEditorDef extends FormPartDef
     String HINT_SHOW_HEADER = "show.header";
     String HINT_AUX_TEXT = "aux.text";
     String HINT_AUX_TEXT_PROVIDER = "aux.text.provider";
-    String HINT_HIDE_IF_DISABLED = "hide.if.disabled";
     String HINT_BROWSE_ONLY = "browse.only";
     String HINT_READ_ONLY = "read.only";
     String HINT_BORDER = "border";

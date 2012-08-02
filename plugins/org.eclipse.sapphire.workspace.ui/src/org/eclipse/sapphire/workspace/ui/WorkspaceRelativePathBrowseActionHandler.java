@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -42,7 +42,7 @@ public final class WorkspaceRelativePathBrowseActionHandler extends RelativePath
     @Override
     public List<Path> getBasePaths()
     {
-        final ReadOnlyListFactory<Path> paths = ReadOnlyListFactory.create();
+        final ListFactory<Path> paths = ListFactory.start();
         
         for( IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
         {
@@ -52,7 +52,7 @@ public final class WorkspaceRelativePathBrowseActionHandler extends RelativePath
             }
         }
         
-        return paths.export();
+        return paths.result();
     }
     
     @Override

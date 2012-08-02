@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEdito
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.ContentOutlineNodeState;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -73,10 +73,6 @@ public final class MasterDetailsContentOutline
                         if( event instanceof NodeExpandedStateChangedEvent || event instanceof SelectionChangedEvent )
                         {
                             saveTreeState();
-                        }
-                        else if( event instanceof NodeStructureChangedEvent )
-                        {
-                            handleNodeStructureChange();
                         }
                     }
                 }
@@ -150,7 +146,7 @@ public final class MasterDetailsContentOutline
         {
             boolean segmentMatched = false;
             
-            for( MasterDetailsContentNode n : node.getChildNodes() )
+            for( MasterDetailsContentNode n : node.nodes().visible() )
             {
                 if( n.getLabel().equals( segment ) )
                 {
@@ -172,11 +168,62 @@ public final class MasterDetailsContentOutline
         }
     }
     
+    void refreshSelection()
+    {
+        final List<MasterDetailsContentNode> newSelection = new ArrayList<MasterDetailsContentNode>();
+        
+        for( MasterDetailsContentNode node : this.selection )
+        {
+            final LinkedList<MasterDetailsContentNode> path = new LinkedList<MasterDetailsContentNode>();
+            
+            while( node != this.root )
+            {
+                path.addFirst( node );
+                node = node.getParentNode();
+            }
+            
+            node = this.root;
+            
+            for( MasterDetailsContentNode n : path )
+            {
+                if( node.nodes().visible().contains( n ) )
+                {
+                    node = n;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+            if( node == this.root )
+            {
+                final List<MasterDetailsContentNode> topLevelNodes = this.root.nodes().visible();
+                
+                if( topLevelNodes.size() > 0 )
+                {
+                    node = topLevelNodes.get( 0 );
+                }
+                else
+                {
+                    node = null;
+                }
+            }
+            
+            if( ! newSelection.contains( node ) )
+            {
+                newSelection.add( node );
+            }
+        }
+        
+        setSelectedNodes( newSelection );
+    }
+
     public List<MasterDetailsContentNode> getExpandedNodes()
     {
         final List<MasterDetailsContentNode> result = new ArrayList<MasterDetailsContentNode>();
         
-        for( MasterDetailsContentNode node : this.root.getChildNodes() )
+        for( MasterDetailsContentNode node : this.root.nodes().visible() )
         {
             node.getExpandedNodes( result );
         }
@@ -186,7 +233,7 @@ public final class MasterDetailsContentOutline
     
     public void setExpandedNodes( final Set<MasterDetailsContentNode> expandedNodes )
     {
-        for( MasterDetailsContentNode node : this.root.getChildNodes() )
+        for( MasterDetailsContentNode node : this.root.nodes().visible() )
         {
             setExpandedNodes( node, expandedNodes );
         }
@@ -195,7 +242,7 @@ public final class MasterDetailsContentOutline
     private static void setExpandedNodes( final MasterDetailsContentNode node,
                                           final Set<MasterDetailsContentNode> expandedNodes )
     {
-        for( MasterDetailsContentNode child : node.getChildNodes() )
+        for( MasterDetailsContentNode child : node.nodes().visible() )
         {
             setExpandedNodes( child, expandedNodes );
         }
@@ -237,31 +284,9 @@ public final class MasterDetailsContentOutline
         return this.listeners.detach( listener );
     }
     
-    public void notifyOfNodeUpdate( final MasterDetailsContentNode node )
-    {
-        this.listeners.broadcast( new NodeUpdatedEvent( node ) );
-        
-        final MasterDetailsContentNode parent = node.getParentNode();
-        
-        if( parent != null )
-        {
-            notifyOfNodeUpdate( parent );
-        }
-    }
-    
-    public void notifyOfNodeStructureChange( final MasterDetailsContentNode node )
-    {
-        this.listeners.broadcast( new NodeStructureChangedEvent( node ) );
-    }
-    
     public void notifyOfNodeExpandedStateChange( final MasterDetailsContentNode node )
     {
         this.listeners.broadcast( new NodeExpandedStateChangedEvent( node ) );
-    }
-    
-    public void refresh()
-    {
-        notifyOfNodeStructureChange( null );
     }
     
     public void dispose()
@@ -270,58 +295,6 @@ public final class MasterDetailsContentOutline
         {
             this.root.dispose();
         }
-    }
-    
-    private void handleNodeStructureChange()
-    {
-        
-        final List<MasterDetailsContentNode> newSelection = new ArrayList<MasterDetailsContentNode>();
-        
-        for( MasterDetailsContentNode node : this.selection )
-        {
-            final LinkedList<MasterDetailsContentNode> path = new LinkedList<MasterDetailsContentNode>();
-            
-            while( node != this.root )
-            {
-                path.addFirst( node );
-                node = node.getParentNode();
-            }
-            
-            node = this.root;
-            
-            for( MasterDetailsContentNode n : path )
-            {
-                if( node.getChildNodes().contains( n ) )
-                {
-                    node = n;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            
-            if( node == this.root )
-            {
-                final List<MasterDetailsContentNode> topLevelNodes = this.root.getChildNodes();
-                
-                if( topLevelNodes.size() > 0 )
-                {
-                    node = topLevelNodes.get( 0 );
-                }
-                else
-                {
-                    node = null;
-                }
-            }
-            
-            if( ! newSelection.contains( node ) )
-            {
-                newSelection.add( node );
-            }
-        }
-        
-        setSelectedNodes( newSelection );
     }
     
     private void loadTreeState()
@@ -334,7 +307,7 @@ public final class MasterDetailsContentOutline
         {
             final ContentOutlineNodeState rootNodeState = editorPageState.getContentOutlineState().getRoot();
             
-            for( MasterDetailsContentNode node : this.root.getChildNodes() )
+            for( MasterDetailsContentNode node : this.root.nodes().visible() )
             {
                 loadTreeState( rootNodeState, node, selection );
             }
@@ -354,9 +327,9 @@ public final class MasterDetailsContentOutline
             {
                 for( String segment : defaultInitialNodePath.split( "/" ) )
                 {
-                    node = node.getChildNodeByLabel( segment );
+                    node = node.findNode( segment );
                     
-                    if( node != null )
+                    if( node != null && node.visible() )
                     {
                         node.setExpanded( true );
                     }
@@ -391,7 +364,7 @@ public final class MasterDetailsContentOutline
                     selection.add( node );
                 }
 
-                for( MasterDetailsContentNode child : node.getChildNodes() )
+                for( MasterDetailsContentNode child : node.nodes().visible() )
                 {
                     loadTreeState( childNodeState, child, selection );
                 }
@@ -413,7 +386,7 @@ public final class MasterDetailsContentOutline
             
             final List<MasterDetailsContentNode> selection = getSelectedNodes();
             
-            for( MasterDetailsContentNode node : this.root.getChildNodes() )
+            for( MasterDetailsContentNode node : this.root.nodes().visible() )
             {
                 saveTreeState( rootNodeState, node, selection );
             }
@@ -452,40 +425,10 @@ public final class MasterDetailsContentOutline
                 childNodeState.setSelected( isSelected );
             }
             
-            for( MasterDetailsContentNode child : node.getChildNodes() )
+            for( MasterDetailsContentNode child : node.nodes().visible() )
             {
                 saveTreeState( childNodeState, child, selection );
             }
-        }
-    }
-    
-    public static final class NodeUpdatedEvent extends Event
-    {
-        private final MasterDetailsContentNode node;
-        
-        public NodeUpdatedEvent( final MasterDetailsContentNode node )
-        {
-            this.node = node;
-        }
-        
-        public MasterDetailsContentNode node()
-        {
-            return this.node;
-        }
-    }
-    
-    public static final class NodeStructureChangedEvent extends Event
-    {
-        private final MasterDetailsContentNode node;
-        
-        public NodeStructureChangedEvent( final MasterDetailsContentNode node )
-        {
-            this.node = node;
-        }
-        
-        public MasterDetailsContentNode node()
-        {
-            return this.node;
         }
     }
     
@@ -510,7 +453,7 @@ public final class MasterDetailsContentOutline
         
         public SelectionChangedEvent( final List<MasterDetailsContentNode> selection )
         {
-            this.selection = ReadOnlyListFactory.create( selection );
+            this.selection = ListFactory.unmodifiable( selection );
         }
         
         public List<MasterDetailsContentNode> selection()

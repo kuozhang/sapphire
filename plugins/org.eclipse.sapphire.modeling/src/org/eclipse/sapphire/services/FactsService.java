@@ -11,9 +11,10 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
  * Produces a list of short statements about a property meant to convey property's semantics. This service is
@@ -25,13 +26,13 @@ import java.util.List;
 
 public abstract class FactsService extends Service
 {
-    public final List<String> facts()
+    public final SortedSet<String> facts()
     {
-        final List<String> facts = new ArrayList<String>();
+        final SortedSet<String> facts = new TreeSet<String>();
         
         facts( facts );
         
-        final List<String> clean = new ArrayList<String>();
+        final SortedSetFactory<String> clean = SortedSetFactory.start();
         
         for( String fact : facts )
         {
@@ -46,9 +47,9 @@ public abstract class FactsService extends Service
             }
         }
         
-        return Collections.unmodifiableList( clean );
+        return clean.result();
     }
     
-    protected abstract void facts( final List<String> facts );
+    protected abstract void facts( final SortedSet<String> facts );
 
 }

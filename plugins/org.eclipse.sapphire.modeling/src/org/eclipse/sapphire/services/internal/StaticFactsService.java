@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -33,7 +33,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class StaticFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         final ModelProperty property = context( ModelProperty.class );
         
@@ -55,7 +55,7 @@ public final class StaticFactsService extends FactsService
         }
     }
     
-    private void facts( final List<String> facts,
+    private void facts( final SortedSet<String> facts,
                         final Fact fact )
     {
         final LocalizationService localization = context( ModelProperty.class ).getLocalizationService();

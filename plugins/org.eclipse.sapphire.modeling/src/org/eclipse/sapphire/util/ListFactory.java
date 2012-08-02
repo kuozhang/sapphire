@@ -20,35 +20,40 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ReadOnlyListFactory<E>
+public final class ListFactory<E>
 {
     private E firstElement = null;
     private ArrayList<E> list = null;
     private boolean exported = false;
     
-    private ReadOnlyListFactory() {}
+    private ListFactory() {}
     
-    public static <E> ReadOnlyListFactory<E> create()
+    public static <E> List<E> empty()
     {
-        return new ReadOnlyListFactory<E>();
+        return Collections.emptyList();
     }
     
-    public static <E> List<E> create( final E element )
+    public static <E> List<E> singleton( final E element )
     {
         return Collections.singletonList( element );
     }
     
-    public static <E> List<E> create( final E... elements )
+    public static <E> List<E> unmodifiable( final E... elements )
     {
-        return ReadOnlyListFactory.<E>create().add( elements ).export();
+        return ListFactory.<E>start().add( elements ).result();
     }
     
-    public static <E> List<E> create( final Collection<E> elements )
+    public static <E> List<E> unmodifiable( final Collection<E> elements )
     {
-        return ReadOnlyListFactory.<E>create().add( elements ).export();
+        return ListFactory.<E>start().add( elements ).result();
     }
-
-    public ReadOnlyListFactory<E> add( final E element )
+    
+    public static <E> ListFactory<E> start()
+    {
+        return new ListFactory<E>();
+    }
+    
+    public ListFactory<E> add( final E element )
     {
         if( this.exported )
         {
@@ -74,7 +79,7 @@ public final class ReadOnlyListFactory<E>
         return this;
     }
     
-    public ReadOnlyListFactory<E> add( final E... elements )
+    public ListFactory<E> add( final E... elements )
     {
         for( E element : elements )
         {
@@ -84,7 +89,7 @@ public final class ReadOnlyListFactory<E>
         return this;
     }
 
-    public ReadOnlyListFactory<E> add( final Collection<E> elements )
+    public ListFactory<E> add( final Collection<E> elements )
     {
         for( E element : elements )
         {
@@ -192,7 +197,7 @@ public final class ReadOnlyListFactory<E>
         return size;
     }
     
-    public List<E> export()
+    public List<E> result()
     {
         if( this.exported )
         {

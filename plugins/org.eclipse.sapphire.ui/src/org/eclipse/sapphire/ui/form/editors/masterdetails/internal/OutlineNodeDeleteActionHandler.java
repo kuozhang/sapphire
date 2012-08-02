@@ -31,10 +31,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPag
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeDeleteActionHandler
-
-    extends SapphireActionHandler
-    
+public final class OutlineNodeDeleteActionHandler extends SapphireActionHandler
 {
     public static final String ID = "Sapphire.Outline.Delete";
     
@@ -63,7 +60,7 @@ public final class OutlineNodeDeleteActionHandler
         }
         
         final MasterDetailsContentNode parent = nodesToDelete.get( 0 ).getParentNode();
-        final List<MasterDetailsContentNode> allSiblingNodes = parent.getChildNodes();
+        final List<MasterDetailsContentNode> allSiblingNodes = parent.nodes().visible();
         
         MasterDetailsContentNode selectionPostDelete = findSelectionPostDelete( allSiblingNodes, nodesToDelete );
         

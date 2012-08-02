@@ -25,8 +25,8 @@ import org.eclipse.sapphire.services.ServiceFactoryProxy;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ServiceDef;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
-import org.eclipse.sapphire.util.ReadOnlySetFactory;
+import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -78,14 +78,14 @@ public final class PartServiceContext extends ServiceContext
     @Override
     protected List<ServiceFactoryProxy> local()
     {
-        final ReadOnlyListFactory<ServiceFactoryProxy> local = ReadOnlyListFactory.create();
+        final ListFactory<ServiceFactoryProxy> local = ListFactory.start();
         final PartDef partDef = this.part.definition();
         
         for( ServiceDef serviceDef : partDef.getServices() )
         {
             final Class<? extends Service> serviceImplClass = resolve( serviceDef.getImplementation() );
             
-            final ReadOnlySetFactory<String> overridesSetFactory = ReadOnlySetFactory.create();
+            final SetFactory<String> overridesSetFactory = SetFactory.start();
             
             for( ServiceDef.Override override : serviceDef.getOverrides() )
             {
@@ -102,7 +102,7 @@ public final class PartServiceContext extends ServiceContext
                 }
             }
             
-            final Set<String> overrides = overridesSetFactory.export();
+            final Set<String> overrides = overridesSetFactory.result();
             
             if( serviceImplClass != null )
             {
@@ -144,7 +144,7 @@ public final class PartServiceContext extends ServiceContext
             }
         }
         
-        return local.export();
+        return local.result();
     }
     
     @SuppressWarnings( "unchecked" )

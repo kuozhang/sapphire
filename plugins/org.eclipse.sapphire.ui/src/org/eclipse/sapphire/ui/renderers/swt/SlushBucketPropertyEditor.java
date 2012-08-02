@@ -57,7 +57,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -458,7 +458,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
             
             if( list != null )
             {
-                final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
+                final ListFactory<IModelElement> elements = ListFactory.start();
                 
                 for( String str : this.input )
                 {
@@ -467,7 +467,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                     elements.add( element );
                 }
                 
-                setSelectedElements( elements.export() );
+                setSelectedElements( elements.result() );
                 setFocusOnTable();
             }
             

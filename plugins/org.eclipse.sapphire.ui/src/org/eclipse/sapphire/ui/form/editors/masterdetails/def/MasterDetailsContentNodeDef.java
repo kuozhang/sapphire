@@ -11,17 +11,13 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
-import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -117,27 +113,4 @@ public interface MasterDetailsContentNodeDef
     
     ModelElementList<MasterDetailsContentNodeChildDef> getChildNodes();
     
-    // *** VisibleWhenConditionClass ***
-    
-    @Type( base = JavaTypeName.class )
-    @Reference( target = JavaType.class )
-    @Label( standard = "visible when condition class" )
-    @XmlBinding( path = "visible-when/condition/class" )
-    
-    ValueProperty PROP_VISIBLE_WHEN_CONDITION_CLASS = new ValueProperty( TYPE, "VisibleWhenConditionClass" );
-    
-    ReferenceValue<JavaTypeName,JavaType> getVisibleWhenConditionClass();
-    void setVisibleWhenConditionClass( String value );
-    void setVisibleWhenConditionClass( JavaTypeName value );
-    
-    // *** VisibleWhenConditionParameter ***
-    
-    @Label( standard = "visible when condition parameter" )
-    @XmlBinding( path = "visible-when/condition/parameter" )
-    
-    ValueProperty PROP_VISIBLE_WHEN_CONDITION_PARAMETER = new ValueProperty( TYPE, "VisibleWhenConditionParameter" );
-    
-    Value<String> getVisibleWhenConditionParameter();
-    void setVisibleWhenConditionParameter( String visibleWhenConditionParameter );
-
 }

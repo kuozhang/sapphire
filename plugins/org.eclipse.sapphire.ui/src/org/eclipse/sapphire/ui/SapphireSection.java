@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
-import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -51,7 +50,6 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class SapphireSection extends SapphireComposite
 {
-    private SapphireCondition visibleWhenCondition;
     private Section section;
     private FunctionResult titleFunctionResult;
     private boolean expanded;
@@ -62,16 +60,6 @@ public class SapphireSection extends SapphireComposite
         super.init();
         
         final ISapphireSectionDef def = definition();
-        
-        this.visibleWhenCondition = null;
-        
-        final JavaType visibleWhenConditionClass = def.getVisibleWhenConditionClass().resolve();
-        
-        if( visibleWhenConditionClass != null )
-        {
-            final String parameter = def.getVisibleWhenConditionParameter().getText();
-            this.visibleWhenCondition = SapphireCondition.create( this, visibleWhenConditionClass.artifact(), parameter );
-        }
         
         this.expanded = ! def.getCollapsedInitially().getContent();
     }
@@ -214,32 +202,6 @@ public class SapphireSection extends SapphireComposite
         }
         
         return null;
-    }
-
-    public SapphireCondition getVisibleWhenCondition()
-    {
-        return this.visibleWhenCondition;
-    }
-    
-    public boolean checkVisibleWhenCondition()
-    {
-        if( this.visibleWhenCondition != null )
-        {
-            return this.visibleWhenCondition.getConditionState();
-        }
-        
-        return true;
-    }
-    
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        
-        if( this.visibleWhenCondition != null )
-        {
-            this.visibleWhenCondition.dispose();
-        }
     }
 
 }

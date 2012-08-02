@@ -70,7 +70,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -453,7 +453,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     public final List<IModelElement> getSelectedElements()
     {
         final IStructuredSelection sel = (IStructuredSelection) CheckBoxListPropertyEditorRenderer.this.tableViewer.getSelection();
-        final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
+        final ListFactory<IModelElement> elements = ListFactory.start();
         
         if( sel != null )
         {
@@ -468,14 +468,14 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             }
         }
         
-        return elements.export();
+        return elements.result();
     }
     
     public final void setSelectedElements( final List<IModelElement> elements )
     {
         if( ! equalsBasedOnEntryIdentity( getSelectedElements(), elements ) )
         {
-            final ReadOnlyListFactory<Entry> entries = ReadOnlyListFactory.create();
+            final ListFactory<Entry> entries = ListFactory.start();
             
             for( IModelElement element : elements )
             {
@@ -490,7 +490,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 }
             }
             
-            this.tableViewer.setSelection( new StructuredSelection( entries.export() ) );
+            this.tableViewer.setSelection( new StructuredSelection( entries.result() ) );
         }
     }
     

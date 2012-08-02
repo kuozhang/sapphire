@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.services.internal;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -39,7 +40,7 @@ public final class StandardPropertyDocumentationService extends StandardDocument
         
         init( property, content, topics );
         
-        final List<String> facts = element.service( property, FactsAggregationService.class ).facts();
+        final SortedSet<String> facts = element.service( property, FactsAggregationService.class ).facts();
         
         if( ! facts.isEmpty() )
         {

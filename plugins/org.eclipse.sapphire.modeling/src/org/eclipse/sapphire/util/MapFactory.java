@@ -19,33 +19,36 @@ import java.util.Map;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ReadOnlyMapFactory<K,V>
+public final class MapFactory<K,V>
 {
     private K firstKey = null;
     private V firstValue = null;
     private Map<K,V> map = null;
     private boolean exported = false;
     
-    private ReadOnlyMapFactory() {}
+    private MapFactory() {}
     
-    public static <K,V> ReadOnlyMapFactory<K,V> create()
+    public static <K,V> Map<K,V> empty()
     {
-        return new ReadOnlyMapFactory<K,V>();
+        return Collections.emptyMap();
     }
-
-    public static <K,V> Map<K,V> create( final K key,
-                                         final V value )
+    
+    public static <K,V> Map<K,V> singleton( final K key, final V value )
     {
         return Collections.singletonMap( key, value );
     }
     
-    public static <K,V> Map<K,V> create( final Map<K,V> map )
+    public static <K,V> Map<K,V> unmodifiable( final Map<K,V> map )
     {
-        return ReadOnlyMapFactory.<K,V>create().add( map ).export();
+        return MapFactory.<K,V>start().add( map ).result();
     }
     
-    public ReadOnlyMapFactory<K,V> add( final K key,
-                                        final V value )
+    public static <K,V> MapFactory<K,V> start()
+    {
+        return new MapFactory<K,V>();
+    }
+
+    public MapFactory<K,V> add( final K key, final V value )
     {
         if( this.exported )
         {
@@ -73,7 +76,7 @@ public final class ReadOnlyMapFactory<K,V>
         return this;
     }
     
-    public ReadOnlyMapFactory<K,V> add( final Map<K,V> map )
+    public MapFactory<K,V> add( final Map<K,V> map )
     {
         for( Map.Entry<K,V> entry : map.entrySet() )
         {
@@ -182,7 +185,7 @@ public final class ReadOnlyMapFactory<K,V>
         return size;
     }
     
-    public Map<K,V> export()
+    public Map<K,V> result()
     {
         if( this.exported )
         {

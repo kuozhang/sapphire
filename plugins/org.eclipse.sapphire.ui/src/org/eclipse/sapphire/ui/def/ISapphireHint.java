@@ -34,10 +34,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHintValuePossibleValuesServi
 @Label( standard = "hint" )
 @GenerateImpl
 
-public interface ISapphireHint
-
-    extends IModelElement
-    
+public interface ISapphireHint extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ISapphireHint.class );
     
@@ -59,7 +56,6 @@ public interface ISapphireHint
             PropertyEditorDef.HINT_CHECKBOX_LAYOUT,
             PropertyEditorDef.HINT_COLUMN_WIDTHS,
             PropertyEditorDef.HINT_FACTORY,
-            PartDef.HINT_HIDE_IF_DISABLED,
             PropertyEditorDef.HINT_LISTENERS,
             PropertyEditorDef.HINT_PREFER_COMBO,
             PartDef.HINT_PREFER_FORM_STYLE,

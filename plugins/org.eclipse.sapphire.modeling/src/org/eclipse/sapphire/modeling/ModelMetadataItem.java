@@ -18,8 +18,8 @@ import java.util.Map;
 
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
-import org.eclipse.sapphire.util.ReadOnlyMapFactory;
+import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.MapFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -41,23 +41,23 @@ public abstract class ModelMetadataItem
         {
             if( this.annotations == null )
             {
-                final ReadOnlyListFactory<Annotation> annotationsListFactory = ReadOnlyListFactory.create();
+                final ListFactory<Annotation> annotationsListFactory = ListFactory.start();
                 initAnnotations( annotationsListFactory );
-                this.annotations = annotationsListFactory.export();
+                this.annotations = annotationsListFactory.result();
                 
-                final ReadOnlyMapFactory<Class<? extends Annotation>,Annotation> annotationByTypeMapFactory = ReadOnlyMapFactory.create();
+                final MapFactory<Class<? extends Annotation>,Annotation> annotationByTypeMapFactory = MapFactory.start();
                 
                 for( Annotation annotation : this.annotations )
                 {
                     annotationByTypeMapFactory.add( annotation.annotationType(), annotation );
                 }
                 
-                this.annotationByType = annotationByTypeMapFactory.export();
+                this.annotationByType = annotationByTypeMapFactory.result();
             }
         }
     }
     
-    protected abstract void initAnnotations( ReadOnlyListFactory<Annotation> annotations );
+    protected abstract void initAnnotations( ListFactory<Annotation> annotations );
     
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {

@@ -60,7 +60,6 @@ public final class SapphireHintValuePossibleValuesService extends PossibleValues
                 }
             }
             else if( hint.equals( PropertyEditorDef.HINT_SHOW_HEADER ) || 
-                     hint.equals( PropertyEditorDef.HINT_HIDE_IF_DISABLED ) ||
                      hint.equals( PropertyEditorDef.HINT_BROWSE_ONLY ) ||
                      hint.equals( PropertyEditorDef.HINT_READ_ONLY ) ||
                      hint.equals( PropertyEditorDef.HINT_BORDER ) ||

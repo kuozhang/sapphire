@@ -15,9 +15,9 @@ package org.eclipse.sapphire.modeling.xml.schema;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
@@ -41,9 +41,9 @@ public final class XmlDocumentSchema
     {
         this.namespace = namespace;
         this.schemaLocation = schemaLocation;
-        this.importedNamespaces = new HashMap<String,String>( importedNamespaces );
+        this.importedNamespaces = new TreeMap<String,String>( importedNamespaces );
         
-        this.contentModels = new HashMap<String,XmlContentModel>();
+        this.contentModels = new TreeMap<String,XmlContentModel>();
         
         for( Map.Entry<String,XmlContentModel.Factory> entry : contentModels.entrySet() )
         {
@@ -55,7 +55,7 @@ public final class XmlDocumentSchema
             }
         }
         
-        this.topLevelElements = new HashMap<String,XmlElementDefinition>();
+        this.topLevelElements = new TreeMap<String,XmlElementDefinition>();
         
         for( XmlElementDefinition.Factory factory : topLevelElements )
         {
@@ -115,7 +115,7 @@ public final class XmlDocumentSchema
     
     public Map<String,String> getSchemaLocations()
     {
-        final Map<String,String> schemaLocations = new HashMap<String,String>();
+        final Map<String,String> schemaLocations = new TreeMap<String,String>();
         
         if( this.namespace != null && this.schemaLocation != null )
         {
@@ -236,8 +236,8 @@ public final class XmlDocumentSchema
     {
         private String namespace;
         private String schemaLocation;
-        private final Map<String,String> importedNamespaces = new HashMap<String,String>();
-        private final Map<String,XmlContentModel.Factory> contentModels = new HashMap<String,XmlContentModel.Factory>();
+        private final Map<String,String> importedNamespaces = new TreeMap<String,String>();
+        private final Map<String,XmlContentModel.Factory> contentModels = new TreeMap<String,XmlContentModel.Factory>();
         private final List<XmlElementDefinition.Factory> topLevelElements = new ArrayList<XmlElementDefinition.Factory>();
 
         public String getNamespace()

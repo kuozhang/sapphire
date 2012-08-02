@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -108,7 +108,7 @@ public class ServiceContext
             
             // Process local service definitions.
             
-            final ReadOnlyListFactory<Service> servicesListFactory = ReadOnlyListFactory.create();
+            final ListFactory<Service> servicesListFactory = ListFactory.start();
             
             for( ServiceFactoryProxy factory : local() )
             {
@@ -162,7 +162,7 @@ public class ServiceContext
             
             // Store the list of services for future use.
             
-            services = servicesListFactory.export();
+            services = servicesListFactory.result();
             this.services.put( serviceType, services );
             
             // Initialize services. This happens last because initialization can cause a reentrant call

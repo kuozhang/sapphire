@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class RequiredPropertyFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         facts.add( Resources.statement );
     }

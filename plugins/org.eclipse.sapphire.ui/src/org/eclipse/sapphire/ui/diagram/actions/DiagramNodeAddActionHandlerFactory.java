@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -61,7 +61,7 @@ public final class DiagramNodeAddActionHandlerFactory extends SapphireActionHand
     @Override
 	public List<SapphireActionHandler> create() 
 	{
-        final ReadOnlyListFactory<SapphireActionHandler> handlers = ReadOnlyListFactory.create();
+        final ListFactory<SapphireActionHandler> handlers = ListFactory.start();
         
         for( DiagramNodeTemplate nodeTemplate : ( (SapphireDiagramEditorPagePart) getPart() ).getNodeTemplates() )
         {
@@ -72,7 +72,7 @@ public final class DiagramNodeAddActionHandlerFactory extends SapphireActionHand
             }
         }
         
-		return handlers.export();
+		return handlers.result();
 	}
 
     @Override

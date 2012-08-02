@@ -442,6 +442,11 @@ public final class PropertyEditorPart extends FormPart
     @Override
     public void render( final SapphireRenderingContext context )
     {
+        if( ! visible() )
+        {
+            return;
+        }
+        
         PropertyEditorRenderer presentation = null;
         final String style = definition().getStyle().getText();
         

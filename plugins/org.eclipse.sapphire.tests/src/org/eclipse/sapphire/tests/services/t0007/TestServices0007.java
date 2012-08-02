@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.tests.services.t0007;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -55,11 +56,11 @@ public final class TestServices0007 extends SapphireTestCase
         assertContainsInstanceOf( services, BaseValidationService.class );
         assertContainsInstanceOf( services, DerivedValidationService.class );
         
-        final List<Status> validation = element.validation().children();
+        final SortedSet<Status> validation = element.validation().children();
         
         assertEquals( 2, validation.size() );
-        assertValidationError( validation.get( 0 ), "derived" );
-        assertValidationError( validation.get( 1 ), "base" );
+        assertValidationError( item( validation, 0 ), "base" );
+        assertValidationError( item( validation, 1 ), "derived" );
     }
 
 }

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
@@ -32,7 +32,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class NumericRangeFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         final ValueProperty property = context( ValueProperty.class );
         final NumericRange range = property.getAnnotation( NumericRange.class );

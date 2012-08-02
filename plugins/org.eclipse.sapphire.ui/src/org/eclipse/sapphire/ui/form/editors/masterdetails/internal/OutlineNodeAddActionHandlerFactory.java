@@ -238,9 +238,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
 
             if( newModelElement != null )
             {
-                node.getContentTree().notifyOfNodeStructureChange( node );
-                
-                for( MasterDetailsContentNode n : node.getChildNodes() )
+                for( MasterDetailsContentNode n : node.nodes().visible() )
                 {
                     if( n.getModelElement() == newModelElement )
                     {

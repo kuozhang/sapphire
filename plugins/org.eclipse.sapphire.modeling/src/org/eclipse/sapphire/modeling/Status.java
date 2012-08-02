@@ -13,12 +13,12 @@ package org.eclipse.sapphire.modeling;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,7 +29,7 @@ public final class Status
     public static final String TYPE_MISC_OK = "Sapphire.Miscellaneous.Ok";
     public static final String TYPE_MISC_PROBLEM = "Sapphire.Miscellaneous.Problem";
     
-    private static final Status OK_STATUS = new Status( Severity.OK, TYPE_MISC_OK, Resources.defaultOkMessage, null, Collections.<Status>emptyList() );
+    private static final Status OK_STATUS = new Status( Severity.OK, TYPE_MISC_OK, Resources.defaultOkMessage, null, SortedSetFactory.<Status>empty() );
     
     public static Status createOkStatus()
     {
@@ -96,13 +96,13 @@ public final class Status
     private final String type;
     private final String message;
     private final Throwable exception;
-    private final List<Status> children;
+    private final SortedSet<Status> children;
     
     private Status( final Severity severity,
                     final String type,
                     final String message,
                     final Throwable exception,
-                    final List<Status> children )
+                    final SortedSet<Status> children )
     {
         this.severity = severity;
         this.type = ( type == null ? ( severity == Severity.OK ? TYPE_MISC_OK : TYPE_MISC_PROBLEM ) : type );
@@ -136,7 +136,7 @@ public final class Status
         return this.exception;
     }
 
-    public List<Status> children()
+    public SortedSet<Status> children()
     {
         return this.children;
     }
@@ -270,16 +270,13 @@ public final class Status
                 throw new IllegalStateException();
             }
             
-            return new Status( this.severity, this.type, this.message, this.exception, Collections.<Status>emptyList() );
+            return new Status( this.severity, this.type, this.message, this.exception, SortedSetFactory.<Status>empty() );
         }
     }
     
     public static final class CompositeStatusFactory
     {
-        private Severity severity = Severity.OK;
-        private String message = "";
-        private Throwable exception = null;
-        private final List<Status> children = new ArrayList<Status>();
+        private final SortedSetFactory<Status> children = SortedSetFactory.start( StatusComparator.INSTANCE );
         
         private CompositeStatusFactory()
         {
@@ -290,7 +287,7 @@ public final class Status
         {
             if( status != null )
             {
-                final List<Status> children = status.children();
+                final SortedSet<Status> children = status.children();
                 
                 if( children.isEmpty() )
                 {
@@ -298,17 +295,7 @@ public final class Status
                     
                     if( sev != Severity.OK )
                     {
-                        if( ! this.children.contains( status ) )
-                        {
-                            if( sev.code() > this.severity.code() )
-                            {
-                                this.severity = sev;
-                                this.message = status.message();
-                                this.exception = status.exception();
-                            }
-                            
-                            this.children.add( status );
-                        }
+                        this.children.add( status );
                     }
                 }
                 else
@@ -331,14 +318,82 @@ public final class Status
             {
                 return createOkStatus();
             }
-            else if( count == 1 )
-            {
-                return this.children.get( 0 );
-            }
             else
             {
-                return new Status( this.severity, TYPE_MISC_PROBLEM, this.message, this.exception, Collections.unmodifiableList( this.children ) );
+                final Status first = this.children.first();
+                
+                if( count == 1 )
+                {
+                    return first;
+                }
+                else
+                {
+                    return new Status( first.severity(), TYPE_MISC_PROBLEM, first.message(), first.exception(), this.children.result() );
+                }
             }
+        }
+    }
+    
+    private static final class StatusComparator implements Comparator<Status>
+    {
+        private static final StatusComparator INSTANCE = new StatusComparator();
+        
+        public int compare( final Status x,
+                            final Status y )
+        {
+            int result = x.severity.code() - y.severity.code();
+            
+            if( result == 0 )
+            {
+                result = x.message.compareTo( y.message );
+                
+                if( result == 0 )
+                {
+                    result = x.type.compareTo( y.type );
+                    
+                    if( result == 0 )
+                    {
+                        if( x.exception != y.exception )
+                        {
+                            if( x.exception == null )
+                            {
+                                result = -1;
+                            }
+                            else if( y.exception == null )
+                            {
+                                result = 1;
+                            }
+                            else
+                            {
+                                result = x.exception.getClass().getName().compareTo( y.exception.getClass().getName() );
+                                
+                                if( result == 0 )
+                                {
+                                    result = System.identityHashCode( x.exception ) - System.identityHashCode( y.exception );
+                                }
+                            }
+                        }
+                        
+                        if( result == 0 )
+                        {
+                            result = x.children.size() - y.children.size();
+                            
+                            if( result == 0 )
+                            {
+                                final Iterator<Status> xChildren = x.children.iterator();
+                                final Iterator<Status> yChildren = y.children.iterator();
+                                
+                                while( xChildren.hasNext() && result == 0 )
+                                {
+                                    result = compare( xChildren.next(), yChildren.next() );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return result;
         }
     }
     

@@ -40,7 +40,7 @@ import org.eclipse.sapphire.ui.def.ImageReference;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -107,7 +107,7 @@ public final class ActuatorPart extends SapphirePart
         
         if( this.showImage )
         {
-            final ReadOnlyListFactory<FunctionResult> imageFunctionResultsFactory = ReadOnlyListFactory.create();
+            final ListFactory<FunctionResult> imageFunctionResultsFactory = ListFactory.start();
             
             for( ImageReference imageReference : def.getImages() )
             {
@@ -129,7 +129,7 @@ public final class ActuatorPart extends SapphirePart
                 imageFunctionResultsFactory.add( imageFunctionResult );
             }
             
-            this.imageFunctionResults = imageFunctionResultsFactory.export();
+            this.imageFunctionResults = imageFunctionResultsFactory.result();
         }
         
         this.style = def.getStyle().getContent();

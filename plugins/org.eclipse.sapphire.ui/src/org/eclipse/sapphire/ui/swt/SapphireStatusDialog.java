@@ -20,7 +20,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.Iterator;
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -138,7 +138,7 @@ public final class SapphireStatusDialog extends Dialog
             }
             
             private Status findParent( final Status parent,
-                                       final List<Status> children,
+                                       final SortedSet<Status> children,
                                        final Status element )
             {
                 for( Status child : children )

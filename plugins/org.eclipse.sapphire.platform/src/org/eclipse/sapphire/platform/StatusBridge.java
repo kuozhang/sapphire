@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.platform;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.sapphire.modeling.Status;
@@ -32,12 +32,15 @@ public final class StatusBridge
     
     public static IStatus create( final Status status )
     {
-        final List<Status> childrenOriginal = status.children();
+        final SortedSet<Status> childrenOriginal = status.children();
         final IStatus[] childrenBridged = new IStatus[ childrenOriginal.size() ];
         
-        for( int i = 0; i < childrenBridged.length; i++ )
+        int i = 0;
+        
+        for( Status child : childrenOriginal )
         {
-            childrenBridged[ i ] = create( childrenOriginal.get( i ) );
+            childrenBridged[ i ]  = create( child );
+            i++;
         }
         
         final int severity;

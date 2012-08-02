@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributionPageDef;
 
 /**
@@ -25,7 +24,6 @@ public final class PropertiesViewContributionPagePart extends SapphirePartContai
 {
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
-    private FunctionResult visibleWhenFunctionResult;
 
     @Override
     protected void init()
@@ -51,21 +49,6 @@ public final class PropertiesViewContributionPagePart extends SapphirePartContai
         );
         
         this.imageManager = new ImageManager( element, def.getImage().getContent() );
-
-        this.visibleWhenFunctionResult = initExpression
-        (
-            element,
-            def.getVisibleWhen().getContent(), 
-            Boolean.class,
-            Literal.create( Boolean.TRUE ),
-            new Runnable()
-            {
-                public void run()
-                {
-                    broadcast( new VisibilityChangedEvent( PropertiesViewContributionPagePart.this ) );
-                }
-            }
-        );
     }
 
     @Override
@@ -84,11 +67,6 @@ public final class PropertiesViewContributionPagePart extends SapphirePartContai
         return this.imageManager.getImage();
     }
 
-    public boolean visible()
-    {
-        return (Boolean) this.visibleWhenFunctionResult.value();
-    }
-    
     @Override
     public void dispose()
     {
@@ -102,11 +80,6 @@ public final class PropertiesViewContributionPagePart extends SapphirePartContai
         if( this.imageManager != null )
         {
             this.imageManager.dispose();
-        }
-        
-        if( this.visibleWhenFunctionResult != null )
-        {
-            this.visibleWhenFunctionResult.dispose();
         }
     }
     

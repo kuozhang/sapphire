@@ -20,10 +20,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNo
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class OutlineNodeMoveDownActionHandler
-
-    extends OutlineNodeMoveActionHandler
-    
+public class OutlineNodeMoveDownActionHandler extends OutlineNodeMoveActionHandler
 {
     public static final String ID = "Sapphire.Outline.Move.Down";
     
@@ -42,7 +39,6 @@ public class OutlineNodeMoveDownActionHandler
         final ModelElementList<IModelElement> list = (ModelElementList<IModelElement>) modelElement.parent();
         
         list.moveDown( modelElement );
-        node.getContentTree().notifyOfNodeStructureChange( node.getParentNode() );
         
         return null;
     }

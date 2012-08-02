@@ -16,7 +16,7 @@ import java.util.Set;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.util.ReadOnlySetFactory;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * Aggregates the data from all applicable dependencies services in order to produce a single set of dependencies.
@@ -32,14 +32,14 @@ public final class DependenciesAggregationService extends DataService<Dependenci
     @Override
     protected DependenciesServiceData compute()
     {
-        final ReadOnlySetFactory<ModelPath> dependencies = ReadOnlySetFactory.create();
+        final SetFactory<ModelPath> dependencies = SetFactory.start();
         
         for( DependenciesService ds : context( IModelElement.class ).services( context( ModelProperty.class ), DependenciesService.class ) )
         {
             dependencies.add( ds.dependencies() );
         }
         
-        return new DependenciesServiceData( dependencies.export() );
+        return new DependenciesServiceData( dependencies.result() );
     }
     
     public final Set<ModelPath> dependencies()

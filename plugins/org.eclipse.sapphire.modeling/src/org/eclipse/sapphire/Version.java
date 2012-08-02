@@ -16,7 +16,7 @@ import static java.lang.Math.max;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * Represents a version as a sequence of long integers. In string format, it is represented as a dot-separated
@@ -62,7 +62,7 @@ public final class Version implements Comparable<Version>
             throw new IllegalArgumentException( str );
         }
         
-        final ReadOnlyListFactory<Long> segments = ReadOnlyListFactory.create();
+        final ListFactory<Long> segments = ListFactory.start();
         
         for( String segment : str.split( "\\." ) )
         {
@@ -97,7 +97,7 @@ public final class Version implements Comparable<Version>
             }
         }
         
-        this.segments = segments.export();
+        this.segments = segments.result();
         this.length = this.segments.size();
     }
     

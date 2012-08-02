@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.workspace.internal;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.workspace.ProjectRelativePath;
 public final class ProjectRelativePathFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         facts.add( Resources.statement );
     }

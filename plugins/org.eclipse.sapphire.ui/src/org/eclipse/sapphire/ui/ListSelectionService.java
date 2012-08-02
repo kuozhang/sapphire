@@ -20,7 +20,7 @@ import java.util.List;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * Serves as a conduit between the presentation layer and anything that may want 
@@ -79,7 +79,7 @@ public final class ListSelectionService extends Service
         {
             final List<IModelElement> before = this.elements;
             
-            this.elements = ReadOnlyListFactory.create( elements );
+            this.elements = ListFactory.unmodifiable( elements );
 
             broadcast( new ListSelectionChangedEvent( before, this.elements ) );
         }

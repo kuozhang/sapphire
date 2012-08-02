@@ -34,7 +34,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -61,7 +61,7 @@ public final class ModelElementType extends ModelMetadataItem
         this.properties = new ArrayList<ModelProperty>();
         this.localizationService = LocalizationSystem.service( this.typeClass );
         
-        final ReadOnlyListFactory<ModelElementType> baseTypesFactory = ReadOnlyListFactory.create();
+        final ListFactory<ModelElementType> baseTypesFactory = ListFactory.start();
         
         for( Class<?> baseInterface : this.typeClass.getInterfaces() )
         {
@@ -73,7 +73,7 @@ public final class ModelElementType extends ModelMetadataItem
             }
         }
         
-        this.baseTypes = baseTypesFactory.export();
+        this.baseTypes = baseTypesFactory.result();
         
         this.listeners = new ListenerContext();
         
@@ -404,7 +404,7 @@ public final class ModelElementType extends ModelMetadataItem
     }
     
     @Override
-    protected void initAnnotations( final ReadOnlyListFactory<Annotation> annotations )
+    protected void initAnnotations( final ListFactory<Annotation> annotations )
     {
         annotations.add( this.typeClass.getDeclaredAnnotations() );
     }
@@ -412,7 +412,7 @@ public final class ModelElementType extends ModelMetadataItem
     @Override
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.create();
+        final ListFactory<A> annotationsListFactory = ListFactory.start();
         
         annotationsListFactory.add( super.getAnnotations( type ) );
         
@@ -421,7 +421,7 @@ public final class ModelElementType extends ModelMetadataItem
             annotationsListFactory.add( baseType.getAnnotations( type ) );
         }
         
-        return annotationsListFactory.export();
+        return annotationsListFactory.result();
     }
     
     @Override

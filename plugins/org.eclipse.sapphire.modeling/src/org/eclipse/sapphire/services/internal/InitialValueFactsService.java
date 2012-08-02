@@ -13,7 +13,7 @@ package org.eclipse.sapphire.services.internal;
 
 import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.getValueLabel;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -34,7 +34,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class InitialValueFactsService extends FactsService
 {
     @Override
-    protected void facts( final List<String> facts )
+    protected void facts( final SortedSet<String> facts )
     {
         final IModelElement element = context( IModelElement.class );
         final ValueProperty property = context( ValueProperty.class );

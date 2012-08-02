@@ -240,18 +240,6 @@ public interface IDiagramNodeDef
     
     ModelElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
             
-    // *** VisibleWhen ***
-    
-    @Type( base = Function.class )
-    @XmlBinding( path = "visible-when" )
-    @Label( standard = "visible when" )
-    
-    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty(TYPE, "VisibleWhen");
-    
-    Value<Function> getVisibleWhen();
-    void setVisibleWhen( String value );
-    void setVisibleWhen( Function value );
-    
     // *** Shape ***
     
     @Type

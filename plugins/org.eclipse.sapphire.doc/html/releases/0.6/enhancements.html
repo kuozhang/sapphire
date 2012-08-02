@@ -32,11 +32,19 @@
     <li><a href="#ExpressionLanguage-UseInPageHeaderText">Use in Page Header Text</a></li>
     <li><a href="#ExpressionLanguage-UseInOutlineHeaderText">Use in Outline Header Text</a></li>
     <li><a href="#ExpressionLanguage-UseInConditional">Use in Conditional</a></li>
+    <li><a href="#ExpressionLanguage-UseInSectionVisibilityConstraint">Use in Section Visibility Constraint</a></li>
+    <li><a href="#ExpressionLanguage-UseInNodeVisibilityConstraint">Use in Node Visibility Constraint</a></li>
+    <li><a href="#ExpressionLanguage-UseInNodeFactoryVisibilityConstraint">Use in Node Factory Visibility Constraint</a></li>
+    <li><a href="#ExpressionLanguage-UseInPropertyEditorVisibilityConstraint">Use in Property Editor Visibility Constraint</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></li>
-    <li><a href="#Miscellaneous-ReadOnlyCollectionFactoriesEnhancements">Enhancements to Read-Only Collection Factories</a></li>
+    <li><a href="#Miscellaneous-CollectionFactoriesEnhancements">Enhancements to Collection Factories</a></li>
+    <li><a href="#Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></li>
+    <li><a href="#Miscellaneous-ModelElementList">ModelElementList</a></li>
+    <li><a href="#Miscellaneous-SapphirePart">SapphirePart</a></li>
+    <li><a href="#Miscellaneous-Value">Value</a></li>
   </ol>
 </ol>
 
@@ -184,7 +192,7 @@ ${ Name.LowerCase() }</code></pre>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code><font color="#888888">&lt;if>
-    &lt;condition></font>${ Contacts.Size > 3 }<font color="#888888">&lt;/condition>
+    &lt;condition></font>${ VersionMatches( Root().Version, "[1.1" ) }<font color="#888888">&lt;/condition>
     &lt;then>
         ...
     &lt;/then>
@@ -192,6 +200,61 @@ ${ Name.LowerCase() }</code></pre>
         ...
     &lt;/else>
 &lt;/if></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInSectionVisibilityConstraint">Use EL in Section Visibility Constraint</a></h2>
+
+<p>Use expression language when specifying visibility of a section.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;section>
+    &lt;visible-when></font>${ VersionMatches( Root().Version, "[1.1" ) }<font color="#888888">&lt;/condition>
+    &lt;content>
+        ...
+    &lt;/content>
+&lt;/section></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInNodeVisibilityConstraint">Use EL in Node Visibility Constraint</a></h2>
+
+<p>Use expression language when specifying visibility of a master-details content node.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;node>
+    &lt;visible-when></font>${ VersionMatches( Root().Version, "[1.1" ) }<font color="#888888">&lt;/condition>
+    &lt;section>
+        ...
+    &lt;/section>
+&lt;/node></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInNodeFactoryVisibilityConstraint">Use EL in Node Factory Visibility Constraint</a></h2>
+
+<p>Use expression language when specifying visibility of a master-details content node factory.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;node-factory>
+    &lt;property>Entities&lt;/property>
+    &lt;visible-when></font>${ VersionMatches( Root().Version, "[1.1" ) }<font color="#888888">&lt;/condition>
+    &lt;case>
+        ...
+    &lt;case>
+&lt;/node-factory></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInPropertyEditorVisibilityConstraint">Use EL in Property Editor Visibility Constraint</a></h2>
+
+<p>Use expression language when specifying visibility of a property editor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;property-editor>
+    &lt;property>Description&lt;/property>
+    &lt;visible-when></font>${ VersionMatches( Root().Version, "[1.1" ) }<font color="#888888">&lt;/condition>
+&lt;/property-editor></font></code></pre>
 
 
 <h2><a name="Miscellaneous"><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></a></h2>
@@ -203,34 +266,173 @@ public static void convertToNamespaceForm( Document document, String namespace, 
 public static void convertFromNamespaceForm( Document document )</code></pre>
 
 
-<h2><a name="Miscellaneous-ReadOnlyCollectionFactoriesEnhancements">Enhancements to Read-Only Collection Factories</a></h2>
+<h2><a name="Miscellaneous-CollectionFactoriesEnhancements">Enhancements to Collection Factories</a></h2>
 
-<p>The read-only collection factories have been enhanced with new methods to support broader range of use cases.</p>
+<p>The collection factories have been enhanced with new methods to support broader range of use cases and a 
+brand new SortedSetFactory.</p>
 
-<pre class="source-code"><code><font color="#888888">ReadOnlyListFactory
+<pre class="source-code"><code><font color="#888888">ListFactory
 {</font>
+    static List&lt;E> empty()
+    static List&lt;E> singleton( E element )
+    static List&lt;E> unmodifiable( E... elements )
+    static List&lt;E> unmodifiable( Collection&lt;E> elements )
+    
+    <font color="#888888">static ListFactory&lt;E> start()
+
+    ListFactory&lt;E> add( E element )
+    ListFactory&lt;E> add( E... element )
+    ListFactory&lt;E> add( Collection&lt;E> element )</font>
     E remove( int index )
     E get( int index )
     boolean contains( E element )
     int size()
-<font color="#888888">}
-
-ReadOnlySetFactory
+    
+    <font color="#888888">ListFactory&lt;E> result()
+}
+ 
+SetFactory
 {</font>
+    static Set&lt;E> empty()
+    static Set&lt;E> singleton( E element )
+    static Set&lt;E> unmodifiable( E... elements )
+    static Set&lt;E> unmodifiable( Collection&lt;E> elements )
+    
+    <font color="#888888">static SetFactory&lt;E> start()
+
+    SetFactory&lt;E> add( E element )
+    SetFactory&lt;E> add( E... element )
+    SetFactory&lt;E> add( Collection&lt;E> element )</font>
     boolean remove( E element )
     boolean contains( E element )
     int size()
-<font color="#888888">}
-
-ReadOnlyMapFactory
+    
+    <font color="#888888">SortedSet&lt;E> result()
+}</font>
+ 
+SortedSetFactory
+{
+    static SortedSet&lt;E> empty()
+    static SortedSet&lt;E> singleton( E element )
+    static SortedSet&lt;E> unmodifiable( E... elements )
+    static SortedSet&lt;E> unmodifiable( Collection&lt;E> elements )
+    
+    static SortedSetFactory&lt;E> start()
+    static SortedSetFactory&lt;E> start( Comparator&lt;E> comparator )
+    
+    SortedSetFactory&lt;E> add( E element )
+    SortedSetFactory&lt;E> add( E... element )
+    SortedSetFactory&lt;E> add( Collection&lt;E> element )
+    boolean remove( E element )
+    E first()
+    E last()
+    boolean contains( E element )
+    int size()
+    
+    SortedSet&lt;E> result()
+}
+ 
+<font color="#888888">MapFactory
 {</font>
+    static Map&lt;K,V> empty()
+    static Map&lt;K,V> singleton( K key, V value )
+    static Map&lt;K,V> unmodifiable( Map&lt;K,V> map )
+    
+    <font color="#888888">static MapFactory&lt;K,V> start()
+
+    MapFactory&lt;K,V> add( K key, V value )
+    MapFactory&lt;K,V> add( Map&lt;K,V> map )</font>
     V remove( K key )
     V get( K key )
     boolean contains( K key )
     boolean containsKey( K key )
     boolean containsValue( V value )
     int size()
-<font color="#888888">}</font></code></pre>
+    
+    <font color="#888888">Map&lt;K,V> result()
+}</font></code></pre>
+
+
+<h2><a name="Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></h2>
+
+<p>The method for accessing child nodes has been enhanced. The MasterDetailsContentNode.nodes() method now
+returns a customized list object that provides additional operations specific to list of nodes. For instance,
+there is a method to filter list of nodes to contain only visible nodes.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following produces all nodes whether or not they are visible.</p>
+
+<pre class="source-code"><code>root.nodes()</font></code></pre>
+
+<p style="margin-left: 20px;">A slight variation on the above statement produces only the visible nodes.</p>
+
+<pre class="source-code"><code>root.nodes().visible()</font></code></pre>
+
+<p>The new NodeListEvent provides notification when the list of child nodes changes. Note that this event
+does not fire when child node visibility changes. See VisibilityChangedEvent for that functionality.</p>
+
+<pre class="source-code"><code>node.attach
+(
+    new FilteredListener&lt;NodeListEvent>()
+    {
+        @Override
+        protected void handleTypedEvent( NodeListEvent event )
+        {
+            ...
+        }
+    }
+)</code></pre>
+
+
+<h2><a name="Miscellaneous-ModelElementList">ModelElementList</a></h2>
+
+<p>The new ModelElementList.enabled() method provides a simpler way to check list property's enablement
+directly through the property accessor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two statements are equivalent.</p>
+
+<pre class="source-code"><code>container.getEntities().enabled()</font></code></pre>
+
+<pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
+
+
+<h2><a name="Miscellaneous-SapphirePart">SapphirePart</a></h2>
+
+<p>Check part's visibility using SapphirePart.visible() method. To get notified of changes to part's visibility,
+listen for VisibilityChangedEvent.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>boolean visible = editor.visible()
+ 
+editor.attach
+(
+    new FilteredListener&lt;VisibilityChangedEvent>()
+    {
+        @Override
+        protected void handleTypedEvent( VisibilityChangedEvent event )
+        {
+            ...
+        }
+    }
+)</code></pre>
+
+
+<h2><a name="Miscellaneous-Value">Value</a></h2>
+
+<p>The new Value.enabled() method provides a simpler way to check value property's enablement
+directly through the property accessor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two statements are equivalent.</p>
+
+<pre class="source-code"><code>entity.getName().enabled()</font></code></pre>
+
+<pre class="source-code"><code>entity.enabled( Entity.PROP_NAME )</code></pre>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>

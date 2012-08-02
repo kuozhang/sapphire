@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
  * Aggregates the data from all applicable facts services in order to produce a single list of facts. A fact
@@ -29,16 +29,16 @@ import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 public final class FactsAggregationService extends Service
 {
-    public final List<String> facts()
+    public final SortedSet<String> facts()
     {
-        final ReadOnlyListFactory<String> facts = ReadOnlyListFactory.create();
+        final SortedSetFactory<String> facts = SortedSetFactory.start();
         
         for( FactsService fs : context( IModelElement.class ).services( context( ModelProperty.class ), FactsService.class ) )
         {
             facts.add( fs.facts() );
         }
         
-        return facts.export();
+        return facts.result();
     }
 
 }

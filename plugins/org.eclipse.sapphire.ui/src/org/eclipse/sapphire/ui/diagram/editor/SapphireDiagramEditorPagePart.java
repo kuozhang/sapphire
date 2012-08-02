@@ -58,7 +58,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -544,19 +544,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public List<DiagramNodePart> getNodes()
     {
-        final ReadOnlyListFactory<DiagramNodePart> nodes = ReadOnlyListFactory.create();
+        final ListFactory<DiagramNodePart> nodes = ListFactory.start();
         
         for( DiagramNodeTemplate template : getNodeTemplates() )
         {
             nodes.add( template.getDiagramNodes() );
         }
         
-        return nodes.export();
+        return nodes.result();
     }
     
     public List<DiagramConnectionPart> getConnections()
     {
-        final ReadOnlyListFactory<DiagramConnectionPart> connections = ReadOnlyListFactory.create();
+        final ListFactory<DiagramConnectionPart> connections = ListFactory.start();
         
         for( DiagramConnectionTemplate template : getConnectionTemplates() )
         {
@@ -572,7 +572,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             }
         }
         
-        return connections.export();
+        return connections.result();
     }
     
     public DiagramNodePart getDiagramNodePart(IModelElement nodeElement)

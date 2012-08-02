@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -318,6 +320,35 @@ public abstract class SapphireTestCase extends TestCase
     protected static <T> Set<T> set( final T... items )
     {
         return MiscUtil.set( items );
+    }
+    
+    protected static <T> T item( final Collection<T> collection,
+                                 final int index )
+    {
+        if( collection instanceof List<?> )
+        {
+            return (T) ( (List<T>) collection ).get( index );
+        }
+        else
+        {
+            final int size = collection.size();
+            
+            if( index >= 0 && index < size )
+            {
+                final Iterator<T> itr = collection.iterator();
+                
+                T item = null;
+                
+                for( int i = 0; i <= index; i++ )
+                {
+                    item = itr.next();
+                }
+                
+                return item;
+            }
+            
+            throw new NoSuchElementException();
+        }
     }
 
 }

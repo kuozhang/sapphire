@@ -340,6 +340,7 @@
                 <content>
                     <include>PartId</include>
                     <property-editor>Property</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                     <property-editor>Listeners</property-editor>
                 </content>
             </section>
@@ -733,8 +734,7 @@
                 <label>Section</label>
                 <content>
                     <property-editor>Label</property-editor>
-                    <property-editor>VisibleWhenConditionClass</property-editor>
-                    <property-editor>VisibleWhenConditionParameter</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
             <section>
@@ -1092,8 +1092,7 @@
                     <property-editor>Label</property-editor>
                     <property-editor>Image</property-editor>
                     <property-editor>Property</property-editor>
-                    <property-editor>VisibleWhenConditionClass</property-editor>
-                    <property-editor>VisibleWhenConditionParameter</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
             <node>
@@ -1108,8 +1107,7 @@
                             <label>Section</label>
                             <content>
                                 <property-editor>Label</property-editor>
-                                <property-editor>VisibleWhenConditionClass</property-editor>
-                                <property-editor>VisibleWhenConditionParameter</property-editor>
+                                <property-editor>VisibleWhen</property-editor>
                             </content>
                         </section>
                         <section>
@@ -1172,8 +1170,7 @@
                 <content>
                     <include>PartId</include>
                     <property-editor>Property</property-editor>
-                    <property-editor>VisibleWhenConditionClass</property-editor>
-                    <property-editor>VisibleWhenConditionParameter</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
             <node-factory>
@@ -1201,8 +1198,7 @@
                                     <label>Section</label>
                                     <content>
                                         <property-editor>Label</property-editor>
-                                        <property-editor>VisibleWhenConditionClass</property-editor>
-                                        <property-editor>VisibleWhenConditionParameter</property-editor>
+                                        <property-editor>VisibleWhen</property-editor>
                                     </content>
                                 </section>
                                 <section>

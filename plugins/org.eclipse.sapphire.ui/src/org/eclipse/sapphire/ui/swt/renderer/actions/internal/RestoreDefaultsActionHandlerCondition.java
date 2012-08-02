@@ -25,10 +25,7 @@ import org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActi
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class RestoreDefaultsActionHandlerCondition 
-
-    extends SapphireCondition 
-    
+public final class RestoreDefaultsActionHandlerCondition extends SapphireCondition 
 {
     public boolean evaluate()
     {
@@ -37,7 +34,7 @@ public final class RestoreDefaultsActionHandlerCondition
         if( part instanceof SapphireSection )
         {
             final Set<PropertyRef> properties = new HashSet<PropertyRef>();
-            collectProperties( getPart(), properties );        
+            collectProperties( (SapphireSection) part, properties );        
             return ! properties.isEmpty();
         }
         

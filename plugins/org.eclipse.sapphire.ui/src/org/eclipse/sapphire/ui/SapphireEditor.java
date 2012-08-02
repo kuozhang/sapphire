@@ -53,7 +53,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.sapphire.ui.swt.SapphirePropertySheetPage;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
@@ -730,7 +730,7 @@ public abstract class SapphireEditor
     
     public final List<SapphireEditorPagePart> getEditorPageParts()
     {
-        final ReadOnlyListFactory<SapphireEditorPagePart> parts = ReadOnlyListFactory.create();
+        final ListFactory<SapphireEditorPagePart> parts = ListFactory.start();
         
         for( Object page : this.pages )
         {
@@ -740,7 +740,7 @@ public abstract class SapphireEditor
             }
         }
         
-        return parts.export();
+        return parts.result();
     }
 
     public final SapphireEditorPagePart getEditorPagePart( final String name )

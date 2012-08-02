@@ -14,7 +14,7 @@ package org.eclipse.sapphire.modeling;
 import java.util.List;
 
 import org.eclipse.sapphire.util.IdentityCache;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,7 +29,7 @@ public abstract class LayeredListBindingImpl extends ListBindingImpl
     {
         this.cache.track();
 
-        final ReadOnlyListFactory<Resource> list = ReadOnlyListFactory.create();
+        final ListFactory<Resource> list = ListFactory.start();
         
         for( Object obj : readUnderlyingList() )
         {
@@ -46,7 +46,7 @@ public abstract class LayeredListBindingImpl extends ListBindingImpl
         
         this.cache.purge();
         
-        return list.export();
+        return list.result();
     }
     
     protected abstract List<?> readUnderlyingList();

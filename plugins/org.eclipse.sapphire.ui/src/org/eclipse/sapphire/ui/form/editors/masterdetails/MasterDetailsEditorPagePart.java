@@ -136,7 +136,7 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
     
     public final void expandAllNodes()
     {
-        for( MasterDetailsContentNode node : this.contentOutline.getRoot().getChildNodes() )
+        for( MasterDetailsContentNode node : this.contentOutline.getRoot().nodes().visible() )
         {
             node.setExpanded( true, true );
         }
@@ -144,7 +144,7 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
 
     public final void collapseAllNodes()
     {
-        for( MasterDetailsContentNode node : this.contentOutline.getRoot().getChildNodes() )
+        for( MasterDetailsContentNode node : this.contentOutline.getRoot().nodes().visible() )
         {
             node.setExpanded( false, true );
         }

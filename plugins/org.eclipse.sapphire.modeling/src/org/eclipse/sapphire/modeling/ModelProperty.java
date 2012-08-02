@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyMetaModelServiceContext;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -148,7 +148,7 @@ public abstract class ModelProperty extends ModelMetadataItem
     }
     
     @Override
-    protected void initAnnotations( final ReadOnlyListFactory<Annotation> annotations )
+    protected void initAnnotations( final ListFactory<Annotation> annotations )
     {
         Field propField = null;
         
@@ -177,7 +177,7 @@ public abstract class ModelProperty extends ModelMetadataItem
     @Override
     public <A extends Annotation> List<A> getAnnotations( final Class<A> type )
     {
-        final ReadOnlyListFactory<A> annotationsListFactory = ReadOnlyListFactory.create();
+        final ListFactory<A> annotationsListFactory = ListFactory.start();
         
         annotationsListFactory.add( super.getAnnotations( type ) );
         
@@ -186,7 +186,7 @@ public abstract class ModelProperty extends ModelMetadataItem
             annotationsListFactory.add( this.baseProperty.getAnnotations( type ) );
         }
         
-        return annotationsListFactory.export();
+        return annotationsListFactory.result();
     }
     
     @Override

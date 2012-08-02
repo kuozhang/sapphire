@@ -20,11 +20,10 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -38,7 +37,6 @@ public interface PartDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( PartDef.class );
     
-    String HINT_HIDE_IF_DISABLED = "hide.if.disabled";
     String HINT_PREFER_FORM_STYLE = "prefer.form.style";
     String HINT_STYLE = "style";
     
@@ -51,6 +49,18 @@ public interface PartDef extends IModelElement
     
     Value<String> getId();
     void setId( String value );
+    
+    // *** VisibleWhen ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "visible when" )
+    @XmlBinding( path = "visible-when" )
+    
+    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty( TYPE, "VisibleWhen" );
+    
+    Value<Function> getVisibleWhen();
+    void setVisibleWhen( String value );
+    void setVisibleWhen( Function value );        
     
     // *** Documentation ***
     

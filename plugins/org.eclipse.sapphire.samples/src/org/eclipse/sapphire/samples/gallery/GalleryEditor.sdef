@@ -1828,6 +1828,54 @@
                 </section>
             </node>
             <node>
+                <label>visible when</label>
+                <section>
+                    <content>
+                        <property-editor>ValueVisible</property-editor>
+                        <property-editor>ListVisible</property-editor>
+                    </content>
+                </section>
+                <section>
+                    <content>
+                        <label>In this example, each of the property editors along with the section itself have visibility conditions. The section is specified to be visible when either of its two property editors are visible.</label>
+                        <spacer></spacer>
+                        <property-editor>
+                            <visible-when>${ ValueVisible }</visible-when>
+                            <property>Value</property>
+                        </property-editor>
+                        <property-editor>
+                            <visible-when>${ ListVisible }</visible-when>
+                            <property>List</property>
+                        </property-editor>
+                    </content>
+                    <visible-when>${ ValueVisible || ListVisible }</visible-when>
+                    <label>example</label>
+                </section>
+                <property>VisibleWhenGallery</property>
+                <node>
+                    <label>value</label>
+                    <visible-when>${ ValueVisible }</visible-when>
+                    <section>
+                        <content>
+                            <property-editor>Value</property-editor>
+                        </content>
+                    </section>
+                </node>
+                <node-factory>
+                    <property>List</property>
+                    <visible-when>${ ListVisible }</visible-when>
+                    <case>
+                        <section>
+                            <label>entry</label>
+                            <content>
+                                <property-editor>Value</property-editor>
+                            </content>
+                        </section>
+                        <label>${ Value == null ? &quot;&lt;entry&gt;&quot; : Value }</label>
+                    </case>
+                </node-factory>
+            </node>
+            <node>
                 <label>help</label>
                 <section>
                     <documentation-ref>
@@ -2271,26 +2319,6 @@
                 </section>
             </node>
         </root-node>
-        <action>
-            <id>Sapphire.Gallery.Open.Homepage</id>
-            <label>Sapphire Homepage</label>
-            <tooltip>Open Sapphire Homepage (Ctrl+Alt+Shift+S)</tooltip>
-            <image>Web.png</image>
-            <description>Open Sapphire project homepage.</description>
-            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
-            <key-binding-behavior>propagated</key-binding-behavior>
-            <context>Sapphire.EditorPage</context>
-            <hint>
-                <name>style</name>
-                <value>image+text</value>
-            </hint>
-        </action>
-        <action-handler>
-            <action>Sapphire.Gallery.Open.Homepage</action>
-            <id>Sapphire.Gallery.Open.Homepage</id>
-            <label>Sapphire Homepage</label>
-            <impl>OpenSapphireWebSiteActionHandler</impl>
-        </action-handler>
         <page-name>gallery</page-name>
     </editor-page>
     <dialog>

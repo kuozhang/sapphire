@@ -117,7 +117,7 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.util.MutableReference;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -1109,14 +1109,14 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     public final List<IModelElement> getSelectedElements()
     {
         final IStructuredSelection sel = (IStructuredSelection) this.selectionProvider.getSelection();
-        final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
+        final ListFactory<IModelElement> elements = ListFactory.start();
         
         for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
         {
             elements.add( (IModelElement) itr.next() );
         }
         
-        return elements.export();
+        return elements.result();
     }
     
     public final void setSelectedElement( final IModelElement element )
@@ -1128,7 +1128,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     {
         if( ! equalsBasedOnEntryIdentity( getSelectedElements(), elements ) )
         {
-            final ReadOnlyListFactory<TableRow> rows = ReadOnlyListFactory.create();
+            final ListFactory<TableRow> rows = ListFactory.start();
             
             for( IModelElement element : elements )
             {
@@ -1140,7 +1140,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 }
             }
             
-            this.tableViewer.setSelection( new StructuredSelection( rows.export() ) );
+            this.tableViewer.setSelection( new StructuredSelection( rows.result() ) );
         }
     }
     
@@ -2147,7 +2147,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
 
         public ISelection getSelection()
         {
-            final ReadOnlyListFactory<IModelElement> elements = ReadOnlyListFactory.create();
+            final ListFactory<IModelElement> elements = ListFactory.start();
             
             for( Iterator<?> itr = getSelectedRows().iterator(); itr.hasNext(); )
             {
@@ -2155,7 +2155,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 elements.add( row.element() );
             }
             
-            return new StructuredSelection( elements.export() );
+            return new StructuredSelection( elements.result() );
         }
         
         public void setSelection( final ISelection selection )

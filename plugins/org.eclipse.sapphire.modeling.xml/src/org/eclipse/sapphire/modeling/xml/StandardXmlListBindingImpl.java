@@ -35,7 +35,7 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -202,7 +202,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
         }
         else
         {
-            final ReadOnlyListFactory<XmlElement> list = ReadOnlyListFactory.create();
+            final ListFactory<XmlElement> list = ListFactory.start();
             
             for( XmlElement element : parent.getChildElements() )
             {
@@ -214,7 +214,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
                 }
             }
             
-            return list.export();
+            return list.result();
         }
     }
 
