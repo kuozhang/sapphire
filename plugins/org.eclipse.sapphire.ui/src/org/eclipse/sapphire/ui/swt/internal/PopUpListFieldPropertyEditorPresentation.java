@@ -218,7 +218,24 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         {
             public void run()
             {
-                element.write( property, combo.getText() );
+                String value = null;
+                final int index = combo.getSelectionIndex();
+                
+                if( index != -1 )
+                {
+                    final String[] possible = possibleValuesRef.get();
+                    
+                    if( index < possible.length )
+                    {
+                        value = possible[ index ];
+                    }
+                    else
+                    {
+                        value = combo.getText();
+                    }
+                }
+                
+                element.write( property, value );
             }
         };
         
