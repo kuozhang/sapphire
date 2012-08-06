@@ -19,7 +19,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
-import java.util.SortedSet;
+import java.util.List;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
@@ -28,7 +28,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -88,10 +87,9 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         this.combo = combo;
         
         final PossibleValuesService possibleValuesService = element.service( property, PossibleValuesService.class );
-        final ValueLabelService valueLabelService = element.service( property, ValueLabelService.class );
         final ValueNormalizationService valueNormalizationService = element.service( property, ValueNormalizationService.class );
         
-        final MutableReference<String[]> possibleValuesRef = new MutableReference<String[]>();
+        final MutableReference<List<PossibleValue>> possibleValuesRef = new MutableReference<List<PossibleValue>>();
         
         final Runnable updateComboSelectionOp = new Runnable()
         {
@@ -108,12 +106,13 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                 {
                     if( PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.STRICT )
                     {
-                        final String[] possibleValues = possibleValuesRef.get();
+                        final List<PossibleValue> possibleValues = possibleValuesRef.get();
+                        final int possibleValuesCount = possibleValues.size();
                         int possibleValueIndex = -1;
                         
-                        for( int i = 0; i < possibleValues.length && possibleValueIndex == -1; i++ )
+                        for( int i = 0; i < possibleValuesCount && possibleValueIndex == -1; i++ )
                         {
-                            if( equal( possibleValues[ i ], value ) )
+                            if( equal( possibleValues.get( i ).value(), value ) )
                             {
                                 possibleValueIndex = i;
                             }
@@ -121,27 +120,27 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                         
                         if( possibleValueIndex == -1 )
                         {
-                            if( possibleValues.length == combo.getItemCount() )
+                            if( possibleValues.size() == combo.getItemCount() )
                             {
                                 combo.add( value );
                             }
                             else
                             {
-                                final String existingNonConformingValue = combo.getItem( possibleValues.length );
+                                final String existingNonConformingValue = combo.getItem( possibleValuesCount );
                                 
                                 if( ! existingNonConformingValue.equals( value ) )
                                 {
-                                    combo.setItem( possibleValues.length, value );
+                                    combo.setItem( possibleValuesCount, value );
                                 }
                             }
                             
-                            possibleValueIndex = possibleValues.length;
+                            possibleValueIndex = possibleValuesCount;
                         }
                         else
                         {
-                            if( possibleValues.length < combo.getItemCount() )
+                            if( possibleValuesCount < combo.getItemCount() )
                             {
-                                combo.remove( possibleValues.length );
+                                combo.remove( possibleValuesCount );
                             }
                         }
                         
@@ -163,29 +162,21 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
 
         final Runnable updateComboContentOp = new Runnable()
         {
+            private final PossibleValue.Factory factory = PossibleValue.factory( element, property );
+            
             public void run()
             {
-                final SortedSet<String> possibleValues = possibleValuesService.values();
+                final List<PossibleValue> possibleValues = this.factory.entries();
+                final String[] contentForCombo = new String[ possibleValues.size() ];
                 
-                final String[] possibleValuesArray = new String[ possibleValues.size() ];
-                final String[] contentForCombo = new String[ possibleValuesArray.length ];
-                
+                for( int i = 0, n = possibleValues.size(); i < n; i++ )
                 {
-                    int i = 0;
-
-                    for( String possibleValue : possibleValues )
-                    {
-                        final String normalizedPossibleValue = valueNormalizationService.normalize( possibleValue );
-                        possibleValuesArray[ i ] = normalizedPossibleValue;
-                        contentForCombo[ i ] = valueLabelService.provide( normalizedPossibleValue );
-                        
-                        i++;
-                    }
+                    contentForCombo[ i ] = possibleValues.get( i ).label();
                 }
                 
                 combo.setItems( contentForCombo );
                 
-                possibleValuesRef.set( possibleValuesArray );
+                possibleValuesRef.set( possibleValues );
                 updateComboSelectionOp.run();
             }
         };
@@ -223,11 +214,11 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                 
                 if( index != -1 )
                 {
-                    final String[] possible = possibleValuesRef.get();
+                    final List<PossibleValue> possible = possibleValuesRef.get();
                     
-                    if( index < possible.length )
+                    if( index < possible.size() )
                     {
-                        value = possible[ index ];
+                        value = possible.get( index ).value();
                     }
                     else
                     {
