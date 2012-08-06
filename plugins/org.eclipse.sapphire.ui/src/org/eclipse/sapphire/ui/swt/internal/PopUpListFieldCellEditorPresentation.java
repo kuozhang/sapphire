@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.ui.swt.internal;
 
-import java.util.SortedSet;
+import java.util.List;
 
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.ISelection;
@@ -21,8 +21,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.swt.SWT;
@@ -43,7 +41,7 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
     private final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider;
     private final IModelElement element;
     private final ValueProperty property;
-    private String[] possibleValues;
+    private List<PossibleValue> possibleValues;
     private boolean isDefaultValue;
     private CCombo combo;
     private boolean disableFocusLostHandler;
@@ -91,26 +89,12 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
             }
         );
         
-        final PossibleValuesService possibleValuesService = element.service( property, PossibleValuesService.class );
-        final ValueLabelService valueLabelService = element.service( property, ValueLabelService.class );
-        final ValueNormalizationService valueNormalizationService = element.service( property, ValueNormalizationService.class );
+        this.possibleValues = PossibleValue.factory( element, property ).entries();
+        final String[] contentForCombo = new String[ this.possibleValues.size() ];
         
-        final SortedSet<String> possibleValuesFromService = possibleValuesService.values();
-        
-        this.possibleValues = new String[ possibleValuesFromService.size() ];
-        final String[] contentForCombo = new String[ this.possibleValues.length ];
-        
+        for( int i = 0, n = this.possibleValues.size(); i < n; i++ )
         {
-            int i = 0;
-
-            for( String possibleValue : possibleValuesFromService )
-            {
-                final String normalizedPossibleValue = valueNormalizationService.normalize( possibleValue );
-                this.possibleValues[ i ] = normalizedPossibleValue;
-                contentForCombo[ i ] = valueLabelService.provide( normalizedPossibleValue );
-                
-                i++;
-            }
+            contentForCombo[ i ] = this.possibleValues.get( i ).label();
         }
         
         setItems( contentForCombo );
@@ -143,7 +127,7 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
             }
             else
             {
-                return this.possibleValues[ index ];
+                return this.possibleValues.get( index ).value();
             }
         }
     }
@@ -158,9 +142,9 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
         final String text = valueNormalizationService.normalize( val.getText() );
         int index = -1;
         
-        for( int i = 0; index == -1 && i < this.possibleValues.length; i++ )
+        for( int i = 0, n = this.possibleValues.size(); index == -1 && i < n; i++ )
         {
-            if( this.possibleValues[ i ].equals( text ) )
+            if( this.possibleValues.get( i ).value().equals( text ) )
             {
                 index = i;
             }
