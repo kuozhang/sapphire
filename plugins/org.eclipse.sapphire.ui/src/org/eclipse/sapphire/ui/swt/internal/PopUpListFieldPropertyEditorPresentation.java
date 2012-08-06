@@ -13,9 +13,14 @@ package org.eclipse.sapphire.ui.swt.internal;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.EMPTY_STRING;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_BROWSE;
+import static org.eclipse.sapphire.ui.SapphireActionSystem.createFilterByActionId;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
@@ -33,12 +38,14 @@ import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.renderers.swt.ValuePropertyEditorRenderer;
+import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -70,8 +77,14 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         final IModelElement element = part.getLocalModelElement();
         final ValueProperty property = (ValueProperty) part.getProperty();
         
+        final SapphireToolBarActionPresentation toolBarActionsPresentation = new SapphireToolBarActionPresentation( getActionPresentationManager() );
+        toolBarActionsPresentation.addFilter( createFilterByActionId( ACTION_ASSIST ) );
+        toolBarActionsPresentation.addFilter( createFilterByActionId( ACTION_BROWSE ) );
+        
+        final boolean isActionsToolBarNeeded = toolBarActionsPresentation.hasActions();
+        
         final Composite composite = createMainComposite( parent );
-        composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
+        composite.setLayout( glspacing( glayout( ( isActionsToolBarNeeded ? 3 : 2 ), 0, 0 ), 2 ) );
         
         final PropertyEditorAssistDecorator decorator = createDecorator( composite );
         decorator.addEditorControl( composite );
@@ -85,6 +98,17 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         addControl( combo );
         this.context.adapt( combo );
         this.combo = combo;
+        
+        if( isActionsToolBarNeeded )
+        {
+            final ToolBar toolbar = new ToolBar( composite, SWT.FLAT | SWT.HORIZONTAL );
+            toolbar.setLayoutData( gdhindent( gdvfill(), 3 ) );
+            toolBarActionsPresentation.setToolBar( toolbar );
+            toolBarActionsPresentation.render();
+            addControl( toolbar );
+            this.context.adapt( toolbar );
+            decorator.addEditorControl( toolbar );
+        }
         
         final PossibleValuesService possibleValuesService = element.service( property, PossibleValuesService.class );
         final ValueNormalizationService valueNormalizationService = element.service( property, ValueNormalizationService.class );
