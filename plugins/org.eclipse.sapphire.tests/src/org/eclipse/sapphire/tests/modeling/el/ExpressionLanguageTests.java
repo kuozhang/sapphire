@@ -40,6 +40,7 @@ import org.eclipse.sapphire.tests.modeling.el.t0013.TestExpr0013;
 import org.eclipse.sapphire.tests.modeling.el.t0014.TestExpr0014;
 import org.eclipse.sapphire.tests.modeling.el.t0015.TestExpr0015;
 import org.eclipse.sapphire.tests.modeling.el.t0016.TestExpr0016;
+import org.eclipse.sapphire.tests.modeling.el.t0017.TestExpr0017;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -214,6 +215,7 @@ public final class ExpressionLanguageTests
         suite.addTest( TestExpr0014.suite() );
         suite.addTest( TestExpr0015.suite() );
         suite.addTest( TestExpr0016.suite() );
+        suite.addTest( TestExpr0017.suite() );
         
         return suite;
     }

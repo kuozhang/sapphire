@@ -11,11 +11,10 @@
 
 package org.eclipse.sapphire.modeling.el;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,55 +25,15 @@ public abstract class Function
     private Object origin;
     private boolean originInitialized;
     private List<Function> operands;
-    private List<Function> operandsReadOnly;
     
     public final void init( final Function... operands )
     {
-        final int count = operands.length;
-        
-        if( count == 0 )
-        {
-            this.operands = Collections.emptyList();
-            this.operandsReadOnly = this.operands;
-        }
-        else if( count == 1 )
-        {
-            this.operands = Collections.singletonList( operands[ 0 ] );
-            this.operandsReadOnly = this.operands;
-        }
-        else
-        {
-            this.operands = new ArrayList<Function>( count );
-            
-            for( Function operand : operands )
-            {
-                this.operands.add( operand );
-            }
-            
-            this.operandsReadOnly = Collections.unmodifiableList( this.operands );
-        }
+        this.operands = ListFactory.unmodifiable( operands );
     }
-
+    
     public final void init( final List<Function> operands )
     {
-        final int count = operands.size();
-        
-        if( count == 0 )
-        {
-            this.operands = Collections.emptyList();
-            this.operandsReadOnly = this.operands;
-        }
-        else if( count == 1 )
-        {
-            this.operands = Collections.singletonList( operands.get( 0 ) );
-            this.operandsReadOnly = this.operands;
-        }
-        else
-        {
-            this.operands = new ArrayList<Function>( count );
-            this.operands.addAll( operands );
-            this.operandsReadOnly = Collections.unmodifiableList( this.operands );
-        }
+        this.operands = ListFactory.unmodifiable( operands );
     }
     
     public final void initOrigin( final Object origin,
@@ -115,7 +74,7 @@ public abstract class Function
     
     public final List<Function> operands()
     {
-        return this.operandsReadOnly;
+        return this.operands;
     }
     
     public final Function operand( final int position )

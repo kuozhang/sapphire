@@ -11,23 +11,50 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import java.util.List;
+
 /**
  * Logical OR function. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OrFunction
-
-    extends Function
-
+public final class OrFunction extends Function
 {
-    public static OrFunction create( final Function a,
-                                     final Function b )
+    public static Function create( final Function... operands )
     {
-        final OrFunction function = new OrFunction();
-        function.init( a, b );
-        return function;
+        if( operands.length == 0 )
+        {
+            return null;
+        }
+        else if( operands.length == 1 )
+        {
+            return operands[ 0 ];
+        }
+        else
+        {
+            final OrFunction function = new OrFunction();
+            function.init( operands );
+            return function;
+        }
+    }
+    
+    public static Function create( final List<Function> operands )
+    {
+        if( operands.isEmpty() )
+        {
+            return null;
+        }
+        else if( operands.size() == 1 )
+        {
+            return operands.get( 0 );
+        }
+        else
+        {
+            final OrFunction function = new OrFunction();
+            function.init( operands );
+            return function;
+        }
     }
 
     @Override
@@ -56,9 +83,14 @@ public final class OrFunction
             @Override
             protected Object evaluate()
             {
-                final boolean a = cast( operand( 0 ).value(), Boolean.class );
-                final boolean b = cast( operand( 1 ).value(), Boolean.class );
-                return ( a || b );
+                boolean result = false;
+                
+                for( FunctionResult operand : operands() )
+                {
+                    result = result || cast( operand.value(), Boolean.class );
+                }
+                
+                return result;
             }
         };
     }
