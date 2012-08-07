@@ -577,7 +577,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             
             if( status == null )
             {
-                refreshPropertyEnablement( property, true );
+                refreshProperty( property, true );
                 status = this.enablementStatuses.get( property );
             }
             

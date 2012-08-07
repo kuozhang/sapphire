@@ -19,6 +19,7 @@ import org.eclipse.sapphire.tests.modeling.events.t0001.TestModelingEvents0001;
 import org.eclipse.sapphire.tests.modeling.events.t0002.TestModelingEvents0002;
 import org.eclipse.sapphire.tests.modeling.events.t0003.TestModelingEvents0003;
 import org.eclipse.sapphire.tests.modeling.events.t0004.TestModelingEvents0004;
+import org.eclipse.sapphire.tests.modeling.events.t0005.TestModelingEvents0005;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -41,6 +42,7 @@ public final class EventSystemTests extends TestCase
         suite.addTest( TestModelingEvents0002.suite() );
         suite.addTest( TestModelingEvents0003.suite() );
         suite.addTest( TestModelingEvents0004.suite() );
+        suite.addTest( TestModelingEvents0005.suite() );
         
         return suite;
     }
