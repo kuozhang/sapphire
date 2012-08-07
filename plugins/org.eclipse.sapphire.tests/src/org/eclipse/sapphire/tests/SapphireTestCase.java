@@ -179,7 +179,7 @@ public abstract class SapphireTestCase extends TestCase
                                                         final Status before,
                                                         final Status after )
     {
-        assertTrue( event instanceof ElementValidationEvent );
+        assertInstanceOf( event, ElementValidationEvent.class );
         
         final ElementValidationEvent evt = (ElementValidationEvent) event;
         
@@ -191,7 +191,7 @@ public abstract class SapphireTestCase extends TestCase
     protected static void assertElementDisposeEvent( final Event event,
                                                      final IModelElement element )
     {
-        assertTrue( event instanceof ElementDisposeEvent );
+        assertInstanceOf( event, ElementDisposeEvent.class );
         
         final ElementDisposeEvent evt = (ElementDisposeEvent) event;
         
@@ -202,7 +202,7 @@ public abstract class SapphireTestCase extends TestCase
                                                              final IModelElement element,
                                                              final ModelProperty property )
     {
-        assertTrue( event instanceof PropertyInitializationEvent );
+        assertInstanceOf( event, PropertyInitializationEvent.class );
         
         final PropertyInitializationEvent evt = (PropertyInitializationEvent) event;
         
@@ -214,7 +214,7 @@ public abstract class SapphireTestCase extends TestCase
                                                       final IModelElement element,
                                                       final ModelProperty property )
     {
-        assertTrue( event instanceof PropertyContentEvent );
+        assertInstanceOf( event, PropertyContentEvent.class );
         
         final PropertyContentEvent evt = (PropertyContentEvent) event;
         
@@ -228,7 +228,7 @@ public abstract class SapphireTestCase extends TestCase
                                                          final Status before,
                                                          final Status after )
     {
-        assertTrue( event instanceof PropertyValidationEvent );
+        assertInstanceOf( event, PropertyValidationEvent.class );
         
         final PropertyValidationEvent evt = (PropertyValidationEvent) event;
         
@@ -244,7 +244,7 @@ public abstract class SapphireTestCase extends TestCase
                                                          final boolean before,
                                                          final boolean after )
     {
-        assertTrue( event instanceof PropertyEnablementEvent );
+        assertInstanceOf( event, PropertyEnablementEvent.class );
         
         final PropertyEnablementEvent evt = (PropertyEnablementEvent) event;
         
@@ -271,6 +271,15 @@ public abstract class SapphireTestCase extends TestCase
         if( ! found )
         {
             fail( "Collection does not contain instance of " + type.getName() + " type." );
+        }
+    }
+    
+    protected static void assertInstanceOf( final Object object,
+                                            final Class<?> type )
+    {
+        if( ! type.isInstance( object ) )
+        {
+            fail( "Expected " + type.getSimpleName() + ". Found " + object.getClass().getSimpleName() + "." );
         }
     }
     
