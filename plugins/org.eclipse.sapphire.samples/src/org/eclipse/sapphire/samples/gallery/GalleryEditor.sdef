@@ -486,15 +486,16 @@
                     <label>initial value</label>
                     <section>
                         <content>
+                            <label>The initial value is assigned when the containing model element is created. Since the initial value is explicitly assigned to the property, it is written to the backing resource, such as an XML document.</label>
+                            <spacer></spacer>
                             <with>
                                 <path>InitialValueGallery</path>
-                                <default-panel>
+                                <panel>
+                                    <key>InitialValueGallery</key>
                                     <content>
-                                        <label>The initial value is assigned when the containing model element is created. Since the initial value is explicitly assigned to the property, it is written to the backing resource, such as an XML document.</label>
-                                        <spacer></spacer>
                                         <property-editor>String</property-editor>
                                     </content>
-                                </default-panel>
+                                </panel>
                             </with>
                         </content>
                     </section>

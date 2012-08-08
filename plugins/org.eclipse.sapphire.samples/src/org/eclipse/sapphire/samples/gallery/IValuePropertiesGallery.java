@@ -11,8 +11,10 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -50,9 +52,9 @@ public interface IValuePropertiesGallery extends IModelElement
     @Type( base = InitialValueGallery.class )
     @XmlBinding( path = "initial-value" )
 
-    ImpliedElementProperty PROP_INITIAL_VALUE_GALLERY = new ImpliedElementProperty( TYPE, "InitialValueGallery" );
+    ElementProperty PROP_INITIAL_VALUE_GALLERY = new ElementProperty( TYPE, "InitialValueGallery" );
     
-    InitialValueGallery getInitialValueGallery();
+    ModelElementHandle<InitialValueGallery> getInitialValueGallery();
     
     // *** PossibleValuesGallery ***
     
