@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.Event;
@@ -21,6 +19,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributionDef;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributionPageDef;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,7 +28,6 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributionPageDef;
 public final class PropertiesViewContributionPart extends SapphirePart
 {
     private List<PropertiesViewContributionPagePart> pages;
-    private List<PropertiesViewContributionPagePart> pagesReadOnly;
     private PropertiesViewContributionPagePart selectedPage;
     
     @Override
@@ -38,38 +36,36 @@ public final class PropertiesViewContributionPart extends SapphirePart
         super.init();
 
         final IModelElement element = getModelElement();
+        final ListFactory<PropertiesViewContributionPagePart> pagesListFactory = ListFactory.start();
         
-        this.pages = new ArrayList<PropertiesViewContributionPagePart>();
-        this.pagesReadOnly = Collections.unmodifiableList( this.pages );
+        final Listener pagePartListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                if( event instanceof ValidationChangedEvent )
+                {
+                    updateValidationState();
+                }
+            }
+        };
         
         for( IPropertiesViewContributionPageDef pageDef : ( (IPropertiesViewContributionDef) this.definition ).getPages() )
         {
             final PropertiesViewContributionPagePart pagePart = new PropertiesViewContributionPagePart();
             pagePart.init( this, element, pageDef, this.params );
-            
-            this.pages.add( pagePart );
-
-            final Listener pagePartListener = new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof ValidationChangedEvent )
-                    {
-                        updateValidationState();
-                    }
-                }
-            };
-            
             pagePart.attach( pagePartListener );
+            pagesListFactory.add( pagePart );
         }
+        
+        this.pages = pagesListFactory.result();
         
         this.selectedPage = this.pages.get( 0 );
     }
     
     public List<PropertiesViewContributionPagePart> getPages()
     {
-        return this.pagesReadOnly;
+        return this.pages;
     }
     
     public PropertiesViewContributionPagePart getSelectedPage()

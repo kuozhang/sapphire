@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -21,6 +19,7 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
 import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,7 +29,6 @@ public final class SapphireWizardPart extends SapphirePart
 {
     private FunctionResult imageFunctionResult;
     private List<SapphireWizardPagePart> pages;
-    private List<SapphireWizardPagePart> pagesReadOnly;
     
     @Override
     protected void init()
@@ -55,14 +53,14 @@ public final class SapphireWizardPart extends SapphirePart
             }
         );
         
-        this.pages = new ArrayList<SapphireWizardPagePart>();
-        this.pagesReadOnly = Collections.unmodifiableList( this.pages );
+        final ListFactory<SapphireWizardPagePart> pagesListFactory = ListFactory.start();
         
         for( ISapphireWizardPageDef pageDef : def.getPages() )
         {
-            final SapphireWizardPagePart pagePart = (SapphireWizardPagePart) SapphirePart.create( null, element, pageDef, this.params );
-            this.pages.add( pagePart );
+            pagesListFactory.add( (SapphireWizardPagePart) create( this, element, pageDef, this.params ) );
         }
+        
+        this.pages = pagesListFactory.result();
     }
 
     @Override
@@ -88,7 +86,7 @@ public final class SapphireWizardPart extends SapphirePart
     
     public List<SapphireWizardPagePart> getPages()
     {
-        return this.pagesReadOnly;
+        return this.pages;
     }
 
     @Override

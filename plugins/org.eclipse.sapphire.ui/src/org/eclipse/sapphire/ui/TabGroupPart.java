@@ -17,7 +17,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.TabGroupDef;
 import org.eclipse.sapphire.ui.def.TabGroupPageDef;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -53,30 +53,29 @@ public final class TabGroupPart extends SapphirePart
         super.init();
         
         final IModelElement element = getModelElement();
+        final ListFactory<TabGroupPagePart> pagesListFactory = ListFactory.start();
 
-        this.pages = new ArrayList<TabGroupPagePart>();
+        final Listener tabPartListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                if( event instanceof ValidationChangedEvent )
+                {
+                    updateValidationState();
+                }
+            }
+        };
         
         for( TabGroupPageDef pageDef : definition().getTabs() )
         {
             final TabGroupPagePart pagePart = new TabGroupPagePart();
             pagePart.init( this, element, pageDef, this.params );
-            
-            this.pages.add( pagePart );
-
-            final Listener tabPartListener = new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof ValidationChangedEvent )
-                    {
-                        updateValidationState();
-                    }
-                }
-            };
-            
             pagePart.attach( tabPartListener );
+            pagesListFactory.add( pagePart );
         }
+        
+        this.pages = pagesListFactory.result();
     }
     
     @Override

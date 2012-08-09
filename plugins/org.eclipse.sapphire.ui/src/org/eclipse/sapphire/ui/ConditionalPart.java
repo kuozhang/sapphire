@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.Event;
@@ -23,6 +21,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.def.ConditionalDef;
 import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -33,7 +32,6 @@ public final class ConditionalPart extends SapphirePart
     private ConditionalDef def;
     private FunctionResult conditionFunctionResult;
     private List<SapphirePart> currentBranchContent;
-    private List<SapphirePart> currentBranchContentReadOnly;
     
     @Override
     protected void init()
@@ -57,8 +55,7 @@ public final class ConditionalPart extends SapphirePart
             }
         );
         
-        this.currentBranchContent = new ArrayList<SapphirePart>();
-        this.currentBranchContentReadOnly = Collections.unmodifiableList( this.currentBranchContent );
+        this.currentBranchContent = ListFactory.empty();
         
         handleConditionChanged( true );
     }
@@ -70,16 +67,14 @@ public final class ConditionalPart extends SapphirePart
     
     private void handleConditionChanged( final boolean initializing )
     {
-        boolean newConditionState = (Boolean) this.conditionFunctionResult.value();
-        
         for( SapphirePart part : this.currentBranchContent )
         {
             part.dispose();
         }
         
-        this.currentBranchContent.clear();
-        
         final IModelElement element = getLocalModelElement();
+        final boolean newConditionState = (Boolean) this.conditionFunctionResult.value();
+        final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         
         final Listener childPartListener = new Listener()
         {
@@ -92,14 +87,16 @@ public final class ConditionalPart extends SapphirePart
                 }
             }
         };
-    
+        
         for( PartDef childPartDef : ( newConditionState ? this.def.getThenContent() : this.def.getElseContent() ) )
         {
-            final SapphirePart childPart = create( this, element, childPartDef, this.params );
-            this.currentBranchContent.add( childPart );
-            childPart.attach( childPartListener );
+            final SapphirePart part = create( this, element, childPartDef, this.params );
+            part.attach( childPartListener );
+            partsListFactory.add( part );
         }
         
+        this.currentBranchContent = partsListFactory.result();
+    
         updateValidationState();
         
         if( ! initializing )
@@ -110,7 +107,7 @@ public final class ConditionalPart extends SapphirePart
     
     public List<SapphirePart> getCurrentBranchContent()
     {
-        return this.currentBranchContentReadOnly;
+        return this.currentBranchContent;
     }
     
     public void render( final SapphireRenderingContext context )

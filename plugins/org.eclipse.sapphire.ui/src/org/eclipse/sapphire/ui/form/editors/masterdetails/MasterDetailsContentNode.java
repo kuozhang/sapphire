@@ -94,7 +94,6 @@ public class MasterDetailsContentNode
     private List<Object> rawChildren;
     private MasterDetailsContentNodeList nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNode>emptyList() );
     private List<SapphireSection> sections;
-    private List<SapphireSection> sectionsReadOnly;
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private boolean expanded;
     private boolean transformLabelCase = true;
@@ -191,9 +190,9 @@ public class MasterDetailsContentNode
         
         // Sections and Child Nodes
         
-        this.sections = new ArrayList<SapphireSection>();
-        this.sectionsReadOnly = Collections.unmodifiableList( this.sections );
         this.rawChildren = new ArrayList<Object>();
+        
+        final ListFactory<SapphireSection> sectionsListFactory = ListFactory.start();
         
         for( ISapphireSectionDef secdef : this.definition.getSections() )
         {
@@ -209,8 +208,10 @@ public class MasterDetailsContentNode
             section.init( this, this.modelElement, secdef, this.params );
             section.attach( this.childPartListener );
             
-            this.sections.add( section );
+            sectionsListFactory.add( section );
         }
+        
+        this.sections = sectionsListFactory.result();
         
         for( MasterDetailsContentNodeChildDef entry : this.definition.getChildNodes() )
         {
@@ -485,7 +486,7 @@ public class MasterDetailsContentNode
     
     public List<SapphireSection> getSections()
     {
-        return this.sectionsReadOnly;
+        return this.sections;
     }
     
     public List<ModelProperty> getChildNodeFactoryProperties()

@@ -17,13 +17,13 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
@@ -38,15 +38,14 @@ public final class SplitFormPart extends SapphirePartContainer
     protected List<SapphirePart> initChildParts()
     {
         final IModelElement element = getLocalModelElement();
-        final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
+        final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         
         for( SplitFormBlockDef splitFormBlockDef : definition().getBlocks() )
         {
-            final SapphirePart childPart = create( this, element, splitFormBlockDef, this.params );
-            childParts.add( childPart );
+            partsListFactory.add( create( this, element, splitFormBlockDef, this.params ) );
         }
         
-        return childParts;
+        return partsListFactory.result();
     }
 
     @Override

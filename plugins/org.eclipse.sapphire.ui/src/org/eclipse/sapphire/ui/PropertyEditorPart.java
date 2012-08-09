@@ -61,6 +61,7 @@ import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
 import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -93,7 +94,6 @@ public final class PropertyEditorPart extends FormPart
     private Map<IModelElement,Map<ModelProperty,PropertyEditorPart>> childPropertyEditors;
     private Map<String,Object> hints;
     private List<SapphirePart> relatedContentParts;
-    private List<SapphirePart> relatedContentPartsReadOnly;
     private Listener listener;
     private FunctionResult labelFunctionResult;
     
@@ -251,8 +251,7 @@ public final class PropertyEditorPart extends FormPart
             this.hints.put( name, parsedValue );
         }
         
-        this.relatedContentParts = new ArrayList<SapphirePart>();
-        this.relatedContentPartsReadOnly = Collections.unmodifiableList( this.relatedContentParts );
+        final ListFactory<SapphirePart> relatedContentPartsListFactory = ListFactory.start();
         
         final Listener relatedContentPartListener = new Listener()
         {
@@ -270,8 +269,10 @@ public final class PropertyEditorPart extends FormPart
         {
             final SapphirePart relatedContentPart = create( this, this.element, relatedContentPartDef, this.params );
             relatedContentPart.attach( relatedContentPartListener );
-            this.relatedContentParts.add( relatedContentPart );
+            relatedContentPartsListFactory.add( relatedContentPart );
         }
+        
+        this.relatedContentParts = relatedContentPartsListFactory.result();
         
         this.labelFunctionResult = initExpression
         (
@@ -312,7 +313,7 @@ public final class PropertyEditorPart extends FormPart
     }
     
     public PropertyEditorPart getChildPropertyEditor( final IModelElement element,
-                                                          final ModelProperty property )
+                                                      final ModelProperty property )
     {
         Map<ModelProperty,PropertyEditorPart> propertyEditorsForElement = this.childPropertyEditors.get( element );
         
@@ -422,7 +423,7 @@ public final class PropertyEditorPart extends FormPart
     
     public List<SapphirePart> getRelatedContent()
     {
-        return this.relatedContentPartsReadOnly;
+        return this.relatedContentParts;
     }
     
     public int getRelatedContentWidth()

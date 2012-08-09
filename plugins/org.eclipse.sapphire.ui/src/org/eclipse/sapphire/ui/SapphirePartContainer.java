@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.Event;
@@ -22,6 +20,7 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -35,10 +34,9 @@ public class SapphirePartContainer extends FormPart
     protected void init()
     {
         super.init();
-
-        final List<SapphirePart> childPartsFromInit = initChildParts();
-        this.childParts = Collections.unmodifiableList( new ArrayList<SapphirePart>( childPartsFromInit ) );
-
+        
+        this.childParts = ListFactory.unmodifiable( initChildParts() );
+        
         final Listener childPartListener = new Listener()
         {
             @Override
@@ -51,9 +49,9 @@ public class SapphirePartContainer extends FormPart
             }
         };
         
-        for( SapphirePart childPart : this.childParts )
+        for( SapphirePart part : this.childParts )
         {
-            childPart.attach( childPartListener );
+            part.attach( childPartListener );
         }
         
         updateValidationState();
@@ -63,15 +61,14 @@ public class SapphirePartContainer extends FormPart
     {
         final IModelElement element = getLocalModelElement();
         final FormDef def = (FormDef) this.definition;
-        final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
+        final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         
         for( PartDef childPartDef : def.getContent() )
         {
-            final SapphirePart childPart = create( this, element, childPartDef, this.params );
-            childParts.add( childPart );
+            partsListFactory.add( create( this, element, childPartDef, this.params ) );
         }
         
-        return childParts;
+        return partsListFactory.result();
     }
     
     public List<? extends SapphirePart> getChildParts()

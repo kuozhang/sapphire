@@ -106,7 +106,6 @@ public abstract class SapphirePart implements ISapphirePart
         this.parent = parent;
         this.definition = definition;
         this.params = params;
-        this.imageCache = ( this.parent == null ? new SapphireImageCache() : this.parent.getImageCache() );
 
         if( modelElement == null )
         {
@@ -128,7 +127,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         this.validationState = Status.createOkStatus();
         
-        for( ISapphirePartListenerDef listenerDefinition : definition.getListeners() )
+        for( ISapphirePartListenerDef listenerDefinition : this.definition.getListeners() )
         {
             final JavaType listenerClass = listenerDefinition.getListenerClass().resolve();
             
@@ -347,6 +346,11 @@ public abstract class SapphirePart implements ISapphirePart
 
     public SapphireImageCache getImageCache()
     {
+        if( this.imageCache == null )
+        {
+            this.imageCache = ( this.parent == null ? new SapphireImageCache() : this.parent.getImageCache() );
+        }
+        
         return this.imageCache;
     }
     
@@ -819,12 +823,12 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
 
-    public static final SapphirePart create( final SapphirePart parent,
-                                             final IModelElement modelElement,
+    public static final SapphirePart create( final ISapphirePart parent,
+                                             final IModelElement element,
                                              final PartDef definition,
                                              final Map<String,String> params )
     {
-        if( modelElement == null )
+        if( element == null )
         {
             throw new IllegalArgumentException();
         }
@@ -880,7 +884,7 @@ public abstract class SapphirePart implements ISapphirePart
         else if( definition instanceof ISapphireWithDirectiveDef )
         {
             final SapphireWithDirectiveHelper.ResolvePathResult resolvePathResult 
-                = SapphireWithDirectiveHelper.resolvePath( modelElement, (ISapphireWithDirectiveDef) definition, partParams );
+                = SapphireWithDirectiveHelper.resolvePath( element, (ISapphireWithDirectiveDef) definition, partParams );
             
             if( resolvePathResult.property == null )
             {
@@ -973,7 +977,7 @@ public abstract class SapphirePart implements ISapphirePart
             throw new IllegalStateException();
         }
         
-        part.init( parent, modelElement, def, partParams );
+        part.init( parent, element, def, partParams );
         
         return part;
     }

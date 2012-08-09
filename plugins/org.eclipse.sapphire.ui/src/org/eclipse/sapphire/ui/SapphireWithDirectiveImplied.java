@@ -13,15 +13,15 @@ package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.resolvePath;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.def.FormDef;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
+import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -63,15 +63,14 @@ public final class SapphireWithDirectiveImplied extends SapphirePartContainer
     protected List<SapphirePart> initChildParts()
     {
         final IModelElement element = getLocalModelElement();
-        final List<SapphirePart> childParts = new ArrayList<SapphirePart>();
+        final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         
         for( PartDef childPartDef : this.formdef.getContent() )
         {
-            final SapphirePart childPart = create( this, element, childPartDef, this.params );
-            childParts.add( childPart );
+            partsListFactory.add( create( this, element, childPartDef, this.params ) );
         }
         
-        return childParts;
+        return partsListFactory.result();
     }
     
     public ModelPath getPath()

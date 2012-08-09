@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.Event;
@@ -22,6 +20,7 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.FormEditorPageDef;
 import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a> 
@@ -43,7 +42,8 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
         super.init();
 
         final IModelElement element = getLocalModelElement();
-
+        final ListFactory<SapphirePart> childPartsListFactory = ListFactory.start();
+        
         final Listener childPartListener = new Listener()
         {
             @Override
@@ -56,17 +56,15 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
             }
         };
         
-        this.childParts = new ArrayList<SapphirePart>();
-        
         for( PartDef childPartDef : definition().getContent() )
         {
-            final SapphirePart childPart = create( this, element, childPartDef, this.params );
-            childPart.attach( childPartListener );
-            this.childParts.add( childPart );
+            final SapphirePart part = create( this, element, childPartDef, this.params );
+            part.attach( childPartListener );
+            this.childParts.add( part );
         }
         
-        this.childParts = Collections.unmodifiableList( this.childParts );
-        
+        this.childParts = childPartsListFactory.result();
+
         updateValidationState();
     }
     
