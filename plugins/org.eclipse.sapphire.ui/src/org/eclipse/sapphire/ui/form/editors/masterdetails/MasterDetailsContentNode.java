@@ -70,7 +70,7 @@ import org.eclipse.sapphire.util.MapFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class MasterDetailsContentNode
+public final class MasterDetailsContentNode
 
     extends SapphirePart
     implements IPropertiesViewContributorPart
@@ -97,6 +97,17 @@ public class MasterDetailsContentNode
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private boolean expanded;
     private boolean transformLabelCase = true;
+    private final Function nodeFactoryVisibleFunction;
+    
+    public MasterDetailsContentNode()
+    {
+        this( null );
+    }
+    
+    public MasterDetailsContentNode( final Function nodeFactoryVisibleFunction )
+    {
+        this.nodeFactoryVisibleFunction = nodeFactoryVisibleFunction;
+    }
     
     @Override
     protected void init()
@@ -337,6 +348,26 @@ public class MasterDetailsContentNode
                 }
             }
         );
+    }
+    
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        Function function = super.initVisibleWhenFunction();
+        
+        if( this.nodeFactoryVisibleFunction != null )
+        {
+            if( function == null )
+            {
+                function = this.nodeFactoryVisibleFunction;
+            }
+            else
+            {
+                function = AndFunction.create( this.nodeFactoryVisibleFunction, function );
+            }
+        }
+        
+        return function;
     }
     
     public MasterDetailsContentOutline getContentTree()
@@ -755,6 +786,7 @@ public class MasterDetailsContentNode
         private final MasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
         private final FunctionResult visibleWhenFunctionResult;
+        private final Function visibleWhenFunctionForNodes;
         private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
         
         public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
@@ -770,6 +802,55 @@ public class MasterDetailsContentNode
                 Boolean.class,
                 Literal.TRUE
             );
+            
+            this.visibleWhenFunctionForNodes = new Function()
+            {
+                @Override
+                public String name()
+                {
+                    return "NodeFactoryVisible";
+                }
+
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        private Listener listener;
+                        
+                        @Override
+                        protected void init()
+                        {
+                            this.listener = new Listener()
+                            {
+                                @Override
+                                public void handle( final Event event )
+                                {
+                                    refresh();
+                                }
+                            };
+                            
+                            NodeFactory.this.visibleWhenFunctionResult.attach( this.listener );
+                        }
+
+                        @Override
+                        protected Object evaluate()
+                        {
+                            return NodeFactory.this.visible();
+                        }
+
+                        @Override
+                        public void dispose()
+                        {
+                            super.dispose();
+                            
+                            NodeFactory.this.visibleWhenFunctionResult.detach( this.listener );
+                        }
+                    };
+                }
+            };
+            
+            this.visibleWhenFunctionForNodes.init();
         }
         
         public final boolean visible()
@@ -820,72 +901,7 @@ public class MasterDetailsContentNode
                         throw new RuntimeException();
                     }
                     
-                    node = new MasterDetailsContentNode()
-                    {
-                        @Override
-                        protected Function initVisibleWhenFunction()
-                        {
-                            final Function baseVisibleWhenFunction = super.initVisibleWhenFunction();
-                            
-                            final Function nodeFactoryVisibleFunction = new Function()
-                            {
-                                @Override
-                                public String name()
-                                {
-                                    return "NodeFactoryVisible";
-                                }
-
-                                @Override
-                                public FunctionResult evaluate( final FunctionContext context )
-                                {
-                                    return new FunctionResult( this, context )
-                                    {
-                                        private Listener listener;
-                                        
-                                        @Override
-                                        protected void init()
-                                        {
-                                            this.listener = new Listener()
-                                            {
-                                                @Override
-                                                public void handle( final Event event )
-                                                {
-                                                    refresh();
-                                                }
-                                            };
-                                            
-                                            NodeFactory.this.visibleWhenFunctionResult.attach( this.listener );
-                                        }
-
-                                        @Override
-                                        protected Object evaluate()
-                                        {
-                                            return NodeFactory.this.visible();
-                                        }
-
-                                        @Override
-                                        public void dispose()
-                                        {
-                                            super.dispose();
-                                            
-                                            NodeFactory.this.visibleWhenFunctionResult.detach( this.listener );
-                                        }
-                                    };
-                                }
-                            };
-                            
-                            nodeFactoryVisibleFunction.init();
-                            
-                            if( baseVisibleWhenFunction == null )
-                            {
-                                return nodeFactoryVisibleFunction;
-                            }
-                            else
-                            {
-                                return AndFunction.create( nodeFactoryVisibleFunction, baseVisibleWhenFunction );
-                            }
-                        }
-                    };
+                    node = new MasterDetailsContentNode( this.visibleWhenFunctionForNodes );
                     
                     // It is very important to put the node into the cache prior to initializing the node as
                     // initialization can case a re-entrant call into this function and we must avoid creating
