@@ -40,6 +40,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
 {
     private IModelElement element;
     private ListProperty property;
+    private boolean attached;
 
     @Override
     protected void init()
@@ -95,13 +96,85 @@ public final class SapphireListControlledPageBook extends PageBookPart
         return ClassBasedKey.create( cl );
     }
     
+    @Override
+    public void render( final SapphireRenderingContext context )
+    {
+        super.render( context );
+        
+        if( ! this.attached )
+        {
+            this.attached = true;
+            
+            final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( this, this.element, this.property );
+            final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
+            
+            final MutableReference<IModelElement> selectedModelElementRef = new MutableReference<IModelElement>();
+    
+            final Listener listSelectionServiceListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    final List<IModelElement> selection = listSelectionService.selection();
+                    final IModelElement newModelElement;
+                    final ClassBasedKey newPageKey;
+                    
+                    if( ! selection.isEmpty() )
+                    {
+                        newModelElement = selection.get( 0 );
+                        newPageKey = ClassBasedKey.create( newModelElement );
+                    }
+                    else
+                    {
+                        newModelElement = SapphireListControlledPageBook.this.element;
+                        newPageKey = null;
+                    }
+                    
+                    if( selectedModelElementRef.get() != newModelElement )
+                    {
+                        selectedModelElementRef.set( newModelElement );
+                        
+                        final Runnable inputChangeOperation = new Runnable()
+                        {
+                            public void run()
+                            {
+                                changePage( newModelElement, newPageKey );
+                            }
+                        };
+                        
+                        Display.getDefault().syncExec( inputChangeOperation );
+                    }
+                }
+            };
+            
+            listSelectionService.attach( listSelectionServiceListener );
+            
+            attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        if( event instanceof DisposeEvent )
+                        {
+                            listSelectionService.detach( listSelectionServiceListener );
+                        }
+                    }
+                }
+            );
+        }
+
+        changePage( this.element, (String) null );
+    }
+    
     private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
                                                    final IModelElement element,
                                                    final ModelProperty property )
     {
         return findPropertyEditor( part, element, property, new IdentityHashSet<ISapphirePart>() );
     }
-    
+
     private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
                                                    final IModelElement element,
                                                    final ModelProperty property,
@@ -149,73 +222,6 @@ public final class SapphireListControlledPageBook extends PageBookPart
         return null;
     }
 
-    @Override
-    public void render( final SapphireRenderingContext context )
-    {
-        super.render( context );
-
-        final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( this, this.element, this.property );
-        final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
-        
-        final MutableReference<IModelElement> selectedModelElementRef = new MutableReference<IModelElement>();
-
-        final Listener listSelectionServiceListener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
-            {
-                final List<IModelElement> selection = listSelectionService.selection();
-                final IModelElement newModelElement;
-                final ClassBasedKey newPageKey;
-                
-                if( ! selection.isEmpty() )
-                {
-                    newModelElement = selection.get( 0 );
-                    newPageKey = ClassBasedKey.create( newModelElement );
-                }
-                else
-                {
-                    newModelElement = SapphireListControlledPageBook.this.element;
-                    newPageKey = null;
-                }
-                
-                if( selectedModelElementRef.get() != newModelElement )
-                {
-                    selectedModelElementRef.set( newModelElement );
-                    
-                    final Runnable inputChangeOperation = new Runnable()
-                    {
-                        public void run()
-                        {
-                            changePage( newModelElement, newPageKey );
-                        }
-                    };
-                    
-                    Display.getDefault().syncExec( inputChangeOperation );
-                }
-            }
-        };
-        
-        listSelectionService.attach( listSelectionServiceListener );
-        
-        attach
-        (
-            new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof DisposeEvent )
-                    {
-                        listSelectionService.detach( listSelectionServiceListener );
-                    }
-                }
-            }
-        );
-        
-        changePage( this.element, (String) null );
-    }
-    
     private static final class Resources extends NLS
     {
         public static String invalidPath;
