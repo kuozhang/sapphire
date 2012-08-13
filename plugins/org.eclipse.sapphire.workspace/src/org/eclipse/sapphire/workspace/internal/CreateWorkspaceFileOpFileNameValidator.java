@@ -44,18 +44,22 @@ public final class CreateWorkspaceFileOpFileNameValidator extends ValidationServ
             if( lastDot >= 0 && lastDot < fileName.length() )
             {
                 final FileExtensions fileExtensionsAnnotation = value.getProperty().getAnnotation( FileExtensions.class );
-                final List<String> extensions = new ArrayList<String>();
                 
-                for( String extension : fileExtensionsAnnotation.expr().split( "," ) )
+                if( fileExtensionsAnnotation != null )
                 {
-                    extensions.add( extension );
-                }
-                
-                final Status st = PathValidationService.validateExtensions( fileName, extensions );
-                
-                if( ! st.ok() )
-                {
-                    return st;
+                    final List<String> extensions = new ArrayList<String>();
+                    
+                    for( String extension : fileExtensionsAnnotation.expr().split( "," ) )
+                    {
+                        extensions.add( extension );
+                    }
+                    
+                    final Status st = PathValidationService.validateExtensions( fileName, extensions );
+                    
+                    if( ! st.ok() )
+                    {
+                        return st;
+                    }
                 }
             }
             
