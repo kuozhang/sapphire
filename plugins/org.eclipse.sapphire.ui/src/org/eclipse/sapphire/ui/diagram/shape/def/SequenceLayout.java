@@ -15,14 +15,18 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.def.Orientation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
+@GenerateImpl
 
 public interface SequenceLayout extends ShapeLayout 
 {
@@ -31,14 +35,14 @@ public interface SequenceLayout extends ShapeLayout
 	// *** Orientation ***
     
     @Type( base = Orientation.class )
-    @Label( standard = "orientation")
+    @Label( standard = "orientation" )
     @Localizable
     @XmlBinding( path = "orientation" )
     @DefaultValue( text = "vertical" )
     
     ValueProperty PROP_ORIENTATION = new ValueProperty( TYPE, "Orientation" );
     
-    Value<Orientation> getOrientaion();
+    Value<Orientation> getOrientation();
     void setOrientation( String value );
     void setOrientation( Orientation value );
     

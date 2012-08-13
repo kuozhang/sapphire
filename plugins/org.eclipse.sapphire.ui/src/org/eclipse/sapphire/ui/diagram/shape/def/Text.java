@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -26,6 +27,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
+@GenerateImpl
 
 public interface Text extends Shape 
 {
@@ -44,6 +47,18 @@ public interface Text extends Shape
     Value<Function> getContent();
     void setContent( String value );
     void setContent( Function value );
+    
+	// *** Color ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "color")
+    @XmlBinding( path = "color")
+    
+    ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
+    
+    Value<Function> getColor();
+    void setColor( String value );
+    void setColor( Function value );
     
     // *** Font ***
     

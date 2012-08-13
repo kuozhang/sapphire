@@ -16,15 +16,18 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
+@GenerateImpl
 
 public interface Border extends IModelElement 
 {
@@ -32,27 +35,27 @@ public interface Border extends IModelElement
 	
 	// *** Width ***
     
-    @Type( base = Integer.class )
-    @Label( standard = "width" )
+    @Type( base = Function.class )
     @XmlBinding( path = "width" )
+    @Label( standard = "width" )
     
-    ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width" );
+    ValueProperty PROP_WIDTH = new ValueProperty(TYPE, "Width");
     
-    Value<Integer> getWidth();
+    Value<Function> getWidth();
     void setWidth( String value );
-    void setWidth( Integer value );	
-	
+    void setWidth( Function value );        
+		
 	// *** Color ***
 	    
-    @Type( base = Color.class )
+    @Type( base = Function.class )
     @Label( standard = "color")
     @XmlBinding( path = "color")
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
     
-    Value<Color> getColor();
+    Value<Function> getColor();
     void setColor( String value );
-    void setColor( Color value );
+    void setColor( Function value );
     
     // *** Style ***
     

@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -25,6 +26,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
+@GenerateImpl
 
 public interface ShapeFactory extends Shape 
 {
@@ -48,6 +51,6 @@ public interface ShapeFactory extends Shape
                              
     ListProperty PROP_SHAPE_FACTORY_CASES = new ListProperty( TYPE, "ShapeFactoryCases" );
     
-    ModelElementList<ShapeFactoryCase> getShapeFacotryCases();
+    ModelElementList<ShapeFactoryCase> getShapeFactoryCases();
     	
 }

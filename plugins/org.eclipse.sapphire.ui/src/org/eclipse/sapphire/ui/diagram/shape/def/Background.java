@@ -13,10 +13,12 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+@GenerateImpl
 
 public interface Background extends IModelElement
 {

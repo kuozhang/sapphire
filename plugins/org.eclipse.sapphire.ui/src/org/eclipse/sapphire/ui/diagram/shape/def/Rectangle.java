@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -25,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+@GenerateImpl
 
 public interface Rectangle extends ContainerShape 
 {
@@ -101,7 +103,8 @@ public interface Rectangle extends ContainerShape
     )    
     @Label( standard = "background" )
     @XmlElementBinding
-    ( path = "background",
+    ( 
+    	path = "background",
         mappings = 
         {
             @XmlElementBinding.Mapping( element = "color", type = SolidBackground.class ),
