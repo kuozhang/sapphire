@@ -341,7 +341,7 @@ public final class Status
         public int compare( final Status x,
                             final Status y )
         {
-            int result = x.severity.code() - y.severity.code();
+            int result = y.severity.code() - x.severity.code();
             
             if( result == 0 )
             {
