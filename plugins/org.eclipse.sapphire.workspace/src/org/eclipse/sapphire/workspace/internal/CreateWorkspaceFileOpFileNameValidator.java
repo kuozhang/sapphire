@@ -11,16 +11,18 @@
 
 package org.eclipse.sapphire.workspace.internal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.PathValidationService;
 import org.eclipse.sapphire.services.ValidationService;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
@@ -31,6 +33,34 @@ import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 
 public final class CreateWorkspaceFileOpFileNameValidator extends ValidationService
 {
+    private FileExtensionsService fileExtensionsService;
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+        
+        this.fileExtensionsService = element.service( property, FileExtensionsService.class );
+        
+        if( this.fileExtensionsService != null )
+        {
+            this.fileExtensionsService.attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        element.refresh( property );
+                    }
+                }
+            );
+        }
+    }
+    
     @Override
     public Status validate()
     {
@@ -43,17 +73,9 @@ public final class CreateWorkspaceFileOpFileNameValidator extends ValidationServ
             
             if( lastDot >= 0 && lastDot < fileName.length() )
             {
-                final FileExtensions fileExtensionsAnnotation = value.getProperty().getAnnotation( FileExtensions.class );
-                
-                if( fileExtensionsAnnotation != null )
+                if( this.fileExtensionsService != null )
                 {
-                    final List<String> extensions = new ArrayList<String>();
-                    
-                    for( String extension : fileExtensionsAnnotation.expr().split( "," ) )
-                    {
-                        extensions.add( extension );
-                    }
-                    
+                    final List<String> extensions = this.fileExtensionsService.extensions();
                     final Status st = PathValidationService.validateExtensions( fileName, extensions );
                     
                     if( ! st.ok() )
