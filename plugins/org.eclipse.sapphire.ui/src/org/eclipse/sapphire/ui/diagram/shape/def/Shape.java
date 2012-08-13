@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
@@ -23,10 +24,12 @@ import org.eclipse.sapphire.ui.def.PartDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
+@GenerateImpl
+
 public interface Shape extends PartDef
 {
 	ModelElementType TYPE = new ModelElementType( Shape.class );
-	
+		
     // *** LayoutConstraint ***
     
     @Type
