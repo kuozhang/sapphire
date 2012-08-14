@@ -37,6 +37,8 @@ public interface CreateWorkspaceFileOp extends IExecutableModelElement
 {
     ModelElementType TYPE = new ModelElementType( CreateWorkspaceFileOp.class );
     
+    static final String PROBLEM_FILE_EXISTS = "Sapphire.Workspace.CreateFileOp.FileExists";
+    
     // *** Folder ***
     
     @Type( base = Path.class )
@@ -73,7 +75,7 @@ public interface CreateWorkspaceFileOp extends IExecutableModelElement
     // *** OverwriteExistingFile ***
 
     @Type( base = Boolean.class )
-    @Label( standard = "overwrite an e&xisting file" )
+    @Label( standard = "overwrite e&xisting file" )
     @DefaultValue( text = "false" )
     
     ValueProperty PROP_OVERWRITE_EXISTING_FILE = new ValueProperty( TYPE, "OverwriteExistingFile" );

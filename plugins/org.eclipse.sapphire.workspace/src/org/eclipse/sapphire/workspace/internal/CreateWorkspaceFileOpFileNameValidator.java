@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.workspace.internal;
 
+import static org.eclipse.sapphire.workspace.CreateWorkspaceFileOp.PROBLEM_FILE_EXISTS;
+
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -92,7 +94,7 @@ public final class CreateWorkspaceFileOpFileNameValidator extends ValidationServ
                 operation.getOverwriteExistingFile().getContent() == false )
             {
                 final String msg = NLS.bind( Resources.fileExists, fileName );
-                return Status.createErrorStatus( msg );
+                return Status.factoryForLeaf().severity( Status.Severity.ERROR ).type( PROBLEM_FILE_EXISTS ).message( msg ).create();
             }
         }
         
