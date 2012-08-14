@@ -7,16 +7,15 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Ling Hao - showing labels for named values && [bugzilla 329114] rewrite context help binding feature
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.assist.internal;
 
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -44,37 +43,45 @@ public final class FactsAssistContributor extends PropertyEditorAssistContributo
         
         boolean contribute = false;
         
-        if( property instanceof ValueProperty )
+        if( ! element.validation( property ).ok() )
         {
-            final Value<?> val = element.read( (ValueProperty) property );
-
-            if( val.getText( false ) != null )
-            {
-                contribute = true;
-            }
+            contribute = true;
         }
-        else if( property instanceof ListProperty )
+        else
         {
-            final ModelElementList<?> list = element.read( (ListProperty) property );
-            
-            if( list.size() > 0 )
+            if( property instanceof ValueProperty )
             {
-                contribute = true;
+                if( element.read( (ValueProperty) property ).getText( false ) != null )
+                {
+                    contribute = true;
+                }
+            }
+            else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
+            {
+                if( element.read( (ElementProperty) property ).element() != null )
+                {
+                    contribute = true;
+                }
+            }
+            else if( property instanceof ListProperty )
+            {
+                if( element.read( (ListProperty) property ).size() > 0 )
+                {
+                    contribute = true;
+                }
             }
         }
         
-        if( ! contribute )
+        if( contribute )
         {
-            return;
-        }
-        
-        for( String fact : element.service( property, FactsAggregationService.class ).facts() )
-        {
-            final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
-            contribution.text( "<p>" + escapeForXml( fact ) + "</p>" );
-            
-            final PropertyEditorAssistSection section = context.getSection( SECTION_ID_INFO );
-            section.addContribution( contribution.create() );
+            for( String fact : element.service( property, FactsAggregationService.class ).facts() )
+            {
+                final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
+                contribution.text( "<p>" + escapeForXml( fact ) + "</p>" );
+                
+                final PropertyEditorAssistSection section = context.getSection( SECTION_ID_INFO );
+                section.addContribution( contribution.create() );
+            }
         }
     }
     
