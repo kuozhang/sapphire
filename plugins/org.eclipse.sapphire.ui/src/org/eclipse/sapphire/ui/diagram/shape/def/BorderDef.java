@@ -11,18 +11,17 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.LineStyle;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,26 +29,24 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface Text extends Shape 
+public interface BorderDef extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( Text.class );
+	ModelElementType TYPE = new ModelElementType( BorderDef.class );
 	
-	// *** Content ***
-	
+	// *** Width ***
+    
     @Type( base = Function.class )
-    @Label( standard = "content" )
-    @Localizable
-    @Required
-    @XmlBinding( path = "content" )
+    @XmlBinding( path = "width" )
+    @Label( standard = "width" )
     
-    ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );
+    ValueProperty PROP_WIDTH = new ValueProperty(TYPE, "Width");
     
-    Value<Function> getContent();
-    void setContent( String value );
-    void setContent( Function value );
-    
+    Value<Function> getWidth();
+    void setWidth( String value );
+    void setWidth( Function value );        
+		
 	// *** Color ***
-    
+	    
     @Type( base = Function.class )
     @Label( standard = "color")
     @XmlBinding( path = "color")
@@ -60,14 +57,17 @@ public interface Text extends Shape
     void setColor( String value );
     void setColor( Function value );
     
-    // *** Font ***
+    // *** Style ***
     
-    @Type( base = Font.class )
-    @XmlBinding( path = "font" )
+    @Type( base = LineStyle.class )
+    @Label( standard = "style")
+    @XmlBinding( path = "style" )
+    @DefaultValue( text = "solid" )
     
-    ElementProperty PROP_FONT = new ElementProperty( TYPE, "Font" );
+    ValueProperty PROP_STYLE = new ValueProperty( TYPE, "Style" );
     
-    ModelElementHandle<Font> getFont();
-    
-	
+    Value<LineStyle> getStyle();
+    void setStyle( String value );
+    void setStyle( LineStyle value ) ;
+    	
 }

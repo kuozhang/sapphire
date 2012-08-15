@@ -16,9 +16,9 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -29,30 +29,28 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface GradientBackground extends Background 
+public interface ShapeFactoryDef extends ShapeDef 
 {
-	ModelElementType TYPE = new ModelElementType( GradientBackground.class );
+	ModelElementType TYPE = new ModelElementType( ShapeFactoryDef.class );
 	
-	// *** GradientSegments ***
-	
-    @Type( base = GradientSegment.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "gradient-segment", type = GradientSegment.class ) )
+    // *** Property ***
+    
+    @Label( standard = "property" )
+    @XmlBinding( path = "property" )
+    @Required
+    
+    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
+    
+    Value<String> getProperty();
+    void setProperty( String property );
+    
+    // *** ShapeFactoryCases ***
+    
+    @Type( base = ShapeFactoryCaseDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "case", type = ShapeFactoryCaseDef.class ) )
                              
-    ListProperty PROP_GRADIENT_SEGMENTS = new ListProperty( TYPE, "GradientSegments" );
+    ListProperty PROP_SHAPE_FACTORY_CASES = new ListProperty( TYPE, "ShapeFactoryCases" );
     
-    ModelElementList<GradientSegment> getGradientSegments();
-    
-    // ** Vertical ***
-    
-    @Type( base = Boolean.class )
-    @XmlBinding( path = "vertical" )
-    @DefaultValue( text = "true" )
-    @Label( standard = "vertical")
-    
-    ValueProperty PROP_VERTICAL = new ValueProperty(TYPE, "Vertical");
-    
-    Value<Boolean> isVertical();
-    void setVertical( String value );
-    void setVertical( Boolean value );    
-    
+    ModelElementList<ShapeFactoryCaseDef> getShapeFactoryCases();
+    	
 }

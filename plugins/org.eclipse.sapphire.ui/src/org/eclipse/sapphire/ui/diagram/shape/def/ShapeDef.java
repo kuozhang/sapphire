@@ -26,19 +26,19 @@ import org.eclipse.sapphire.ui.def.PartDef;
 
 @GenerateImpl
 
-public interface Shape extends PartDef
+public interface ShapeDef extends PartDef
 {
-	ModelElementType TYPE = new ModelElementType( Shape.class );
+	ModelElementType TYPE = new ModelElementType( ShapeDef.class );
 		
     // *** LayoutConstraint ***
     
     @Type
     ( 
-        base = LayoutConstraint.class, 
+        base = LayoutConstraintDef.class, 
         possible = 
         { 
             SequenceLayoutConstraint.class, 
-            StackLayoutConstraint.class
+            StackLayoutConstraintDef.class
         }
     )    
     @Label( standard = "layout constaint" )
@@ -47,12 +47,12 @@ public interface Shape extends PartDef
         mappings = 
         {
             @XmlElementBinding.Mapping( element = "sequence-layout-constraint", type = SequenceLayoutConstraint.class ),
-            @XmlElementBinding.Mapping( element = "stack-layout-constraint", type = StackLayoutConstraint.class )
+            @XmlElementBinding.Mapping( element = "stack-layout-constraint", type = StackLayoutConstraintDef.class )
         }
     )
     
     ElementProperty PROP_LAYOUT_CONSTRAINT = new ElementProperty( TYPE, "LayoutConstraint" );
     
-    ModelElementHandle<LayoutConstraint> getLayoutConstraint();
+    ModelElementHandle<LayoutConstraintDef> getLayoutConstraint();
     
 }

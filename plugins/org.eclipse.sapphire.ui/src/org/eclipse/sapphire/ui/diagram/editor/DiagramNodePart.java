@@ -43,10 +43,10 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
-import org.eclipse.sapphire.ui.diagram.shape.def.Image;
-import org.eclipse.sapphire.ui.diagram.shape.def.Rectangle;
-import org.eclipse.sapphire.ui.diagram.shape.def.Shape;
-import org.eclipse.sapphire.ui.diagram.shape.def.Text;
+import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -555,16 +555,16 @@ public class DiagramNodePart
     
     private void createShapePart()
     {
-    	Shape shape = this.definition.getShape().element();
-    	if (shape instanceof Text)
+    	ShapeDef shape = this.definition.getShape().element();
+    	if (shape instanceof TextDef)
     	{
 	        this.shapePart = new TextPart();
     	}
-    	else if (shape instanceof Image)
+    	else if (shape instanceof ImageDef)
     	{
     		this.shapePart = new ImagePart();
     	}
-    	else if (shape instanceof Rectangle)
+    	else if (shape instanceof RectangleDef)
     	{
     		this.shapePart = new RectanglePart();
     	}

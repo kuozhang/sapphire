@@ -11,51 +11,53 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NumericRange;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.ui.def.Orientation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
 @GenerateImpl
 
-public interface GradientSegment extends IModelElement 
+public interface SequenceLayoutDef extends ShapeLayoutDef 
 {
-	ModelElementType TYPE = new ModelElementType( GradientSegment.class );
-	
-	// *** Color ***
-	
-    @Type( base = Color.class )
-    @Label( standard = "color")
-    @Required
-    @XmlBinding( path = "color")
+	ModelElementType TYPE = new ModelElementType( SequenceLayoutDef.class );
     
-    ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
+	// *** Orientation ***
     
-    Value<Color> getColor();
-    void setColor( String value );
-    void setColor( Color value );
-	
-	// *** Extent ***
+    @Type( base = Orientation.class )
+    @Label( standard = "orientation" )
+    @Localizable
+    @XmlBinding( path = "orientation" )
+    @DefaultValue( text = "vertical" )
     
+    ValueProperty PROP_ORIENTATION = new ValueProperty( TYPE, "Orientation" );
+    
+    Value<Orientation> getOrientation();
+    void setOrientation( String value );
+    void setOrientation( Orientation value );
+    
+    // *** Spacing ***
+        
     @Type( base = Integer.class )
-    @Label( standard = "extent" )
-    @Required
-    @XmlBinding( path = "extent" )
-    @NumericRange( min = "0", max = "100")
+    @Label( standard = "spacing" )
+    @XmlBinding( path = "spacing" )
+    @DefaultValue( text = "0" )
     
-    ValueProperty PROP_EXTENT = new ValueProperty( TYPE, "Extent" );
+    ValueProperty PROP_SPACING = new ValueProperty( TYPE, "Spacing" );
     
-    Value<Integer> getExtent();
-    void setExtent( String value );
-    void setExtent( Integer value );
+    Value<Integer> getSpacing();
+    void setSpacing( String value );
+    void setSpacing( Integer value );
+    
+	
 }

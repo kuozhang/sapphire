@@ -11,33 +11,16 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.ui.Color;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
-
 @GenerateImpl
 
-public interface SolidBackground extends Background 
+public interface BackgroundDef extends IModelElement
 {
-	ModelElementType TYPE = new ModelElementType( SolidBackground.class );
-	
-	// *** Color ***
-
-    @Type( base = Color.class )
-    @Label( standard = "color")
-    
-    ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
-    
-    Value<Color> getColor();
-    void setColor( String value );
-    void setColor( Color value );
-	
+	ModelElementType TYPE = new ModelElementType( BackgroundDef.class );
 }

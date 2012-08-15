@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 @GenerateImpl
 
-public interface StackLayout extends ShapeLayout 
+public interface StackLayoutDef extends ShapeLayoutDef 
 {
-	ModelElementType TYPE = new ModelElementType( StackLayout.class );
+	ModelElementType TYPE = new ModelElementType( StackLayoutDef.class );
 }

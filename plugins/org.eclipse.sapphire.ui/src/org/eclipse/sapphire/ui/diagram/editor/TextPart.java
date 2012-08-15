@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Color;
-import org.eclipse.sapphire.ui.diagram.shape.def.Text;
+import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -22,7 +22,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.Text;
 
 public class TextPart extends ShapePart 
 {
-	private Text textDef;
+	private TextDef textDef;
 	private IModelElement modelElement;
 	private FunctionResult textFunction;
 	private FunctionResult colorFunction;
@@ -31,7 +31,7 @@ public class TextPart extends ShapePart
     protected void init()
     {
         super.init();
-        this.textDef = (Text)super.definition;
+        this.textDef = (TextDef)super.definition;
         this.modelElement = getModelElement();
         
         this.textFunction = initExpression

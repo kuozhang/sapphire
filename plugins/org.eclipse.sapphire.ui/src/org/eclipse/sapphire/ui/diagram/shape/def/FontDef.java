@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface Font extends IModelElement
+public interface FontDef extends IModelElement
 {
-	ModelElementType TYPE = new ModelElementType( Font.class );
+	ModelElementType TYPE = new ModelElementType( FontDef.class );
 	
 	// *** Name ***
 

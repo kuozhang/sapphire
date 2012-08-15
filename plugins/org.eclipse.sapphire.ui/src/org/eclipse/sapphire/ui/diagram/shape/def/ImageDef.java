@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface Image extends Shape 
+public interface ImageDef extends ShapeDef 
 {
-	ModelElementType TYPE = new ModelElementType( Image.class );
+	ModelElementType TYPE = new ModelElementType( ImageDef.class );
 	
     // *** Path ***
     

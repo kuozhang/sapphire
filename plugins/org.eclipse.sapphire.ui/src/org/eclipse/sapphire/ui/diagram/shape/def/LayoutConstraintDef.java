@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface LayoutConstraint extends IModelElement 
+public interface LayoutConstraintDef extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( LayoutConstraint.class );
+	ModelElementType TYPE = new ModelElementType( LayoutConstraintDef.class );
 	
     // *** Width ***
     

@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraint;
-import org.eclipse.sapphire.ui.diagram.shape.def.Shape;
+import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -23,18 +23,18 @@ import org.eclipse.sapphire.ui.diagram.shape.def.Shape;
 
 public class ShapePart extends SapphirePart 
 {
-	private Shape shapeDef;
+	private ShapeDef shapeDef;
 	private IModelElement modelElement;
 
 	@Override
     protected void init()
     {
         super.init();
-        this.shapeDef = (Shape)super.definition;
+        this.shapeDef = (ShapeDef)super.definition;
         this.modelElement = getModelElement();
     }
 
-	public LayoutConstraint getLayoutConstraint()
+	public LayoutConstraintDef getLayoutConstraint()
 	{
 		return this.shapeDef.getLayoutConstraint().element();
 	}

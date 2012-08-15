@@ -30,19 +30,19 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface ContainerShape extends Shape
+public interface ContainerShapeDef extends ShapeDef
 {
-	ModelElementType TYPE = new ModelElementType( ContainerShape.class );
+	ModelElementType TYPE = new ModelElementType( ContainerShapeDef.class );
 	
 	// *** Layout ***
 	    
     @Type
     ( 
-        base = ShapeLayout.class, 
+        base = ShapeLayoutDef.class, 
         possible = 
         { 
-            SequenceLayout.class, 
-            StackLayout.class
+            SequenceLayoutDef.class, 
+            StackLayoutDef.class
         }
     )    
     @Label( standard = "layout" )
@@ -50,21 +50,21 @@ public interface ContainerShape extends Shape
     ( 
         mappings = 
         {
-            @XmlElementBinding.Mapping( element = "sequence-layout", type = SequenceLayout.class ),
-            @XmlElementBinding.Mapping( element = "stack-layout", type = StackLayout.class )
+            @XmlElementBinding.Mapping( element = "sequence-layout", type = SequenceLayoutDef.class ),
+            @XmlElementBinding.Mapping( element = "stack-layout", type = StackLayoutDef.class )
         }
     )
     @Required
     
     ElementProperty PROP_LAYOUT = new ElementProperty( TYPE, "Layout" );
     
-    ModelElementHandle<ShapeLayout> getLayout();
+    ModelElementHandle<ShapeLayoutDef> getLayout();
     
     // *** Content ***
     
-	@Type( base = Shape.class, 
-			possible = { Text.class, Image.class, ValidationMarker.class, 
-		                Rectangle.class, ShapeFactory.class })
+	@Type( base = ShapeDef.class, 
+			possible = { TextDef.class, ImageDef.class, ValidationMarkerDef.class, 
+		                RectangleDef.class, ShapeFactoryDef.class })
 	@CountConstraint( min = 1 )
 	@Label( standard = "content" )
 	@XmlListBinding
@@ -72,16 +72,16 @@ public interface ContainerShape extends Shape
 	    path = "content",
 	    mappings = 
 	    {
-	        @XmlListBinding.Mapping( element = "text", type = Text.class ),
-	        @XmlListBinding.Mapping( element = "image", type = Image.class ),
-	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarker.class ),
-	        @XmlListBinding.Mapping( element = "rectangle", type = Rectangle.class ),
-	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactory.class )
+	        @XmlListBinding.Mapping( element = "text", type = TextDef.class ),
+	        @XmlListBinding.Mapping( element = "image", type = ImageDef.class ),
+	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
+	        @XmlListBinding.Mapping( element = "rectangle", type = RectangleDef.class ),
+	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class )
 	    }
 	)	
 	
 	ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content");
 	
-	ModelElementList<Shape> getContent();    
+	ModelElementList<ShapeDef> getContent();    
 	
 }

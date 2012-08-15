@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -19,6 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -26,21 +29,30 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface ValidationMarker extends Shape 
+public interface GradientBackgroundDef extends BackgroundDef 
 {
-	ModelElementType TYPE = new ModelElementType( ValidationMarker.class );
+	ModelElementType TYPE = new ModelElementType( GradientBackgroundDef.class );
 	
-    // *** Size ***
-    	
-    @Type( base = ValidationMarkerSize.class )
-    @Label( standard = "size")
-    @DefaultValue( text = "large" )
-    @XmlBinding( path = "size" )
+	// *** GradientSegments ***
+	
+    @Type( base = GradientSegmentDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "gradient-segment", type = GradientSegmentDef.class ) )
+                             
+    ListProperty PROP_GRADIENT_SEGMENTS = new ListProperty( TYPE, "GradientSegments" );
     
-    ValueProperty PROP_SIZE = new ValueProperty( TYPE, "Size" );
+    ModelElementList<GradientSegmentDef> getGradientSegments();
     
-    Value<ValidationMarkerSize> getSize();
-    void setSize( String value );
-    void setSize( ValidationMarkerSize value ) ;
+    // ** Vertical ***
+    
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "vertical" )
+    @DefaultValue( text = "true" )
+    @Label( standard = "vertical")
+    
+    ValueProperty PROP_VERTICAL = new ValueProperty(TYPE, "Vertical");
+    
+    Value<Boolean> isVertical();
+    void setVertical( String value );
+    void setVertical( Boolean value );    
     
 }

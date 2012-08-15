@@ -11,17 +11,14 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -29,28 +26,21 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface ShapeFactory extends Shape 
+public interface ValidationMarkerDef extends ShapeDef 
 {
-	ModelElementType TYPE = new ModelElementType( ShapeFactory.class );
+	ModelElementType TYPE = new ModelElementType( ValidationMarkerDef.class );
 	
-    // *** Property ***
-    
-    @Label( standard = "property" )
-    @XmlBinding( path = "property" )
-    @Required
-    
-    ValueProperty PROP_PROPERTY = new ValueProperty( TYPE, "Property" );
-    
-    Value<String> getProperty();
-    void setProperty( String property );
-    
-    // *** ShapeFactoryCases ***
-    
-    @Type( base = ShapeFactoryCase.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "case", type = ShapeFactoryCase.class ) )
-                             
-    ListProperty PROP_SHAPE_FACTORY_CASES = new ListProperty( TYPE, "ShapeFactoryCases" );
-    
-    ModelElementList<ShapeFactoryCase> getShapeFactoryCases();
+    // *** Size ***
     	
+    @Type( base = ValidationMarkerSize.class )
+    @Label( standard = "size")
+    @DefaultValue( text = "large" )
+    @XmlBinding( path = "size" )
+    
+    ValueProperty PROP_SIZE = new ValueProperty( TYPE, "Size" );
+    
+    Value<ValidationMarkerSize> getSize();
+    void setSize( String value );
+    void setSize( ValidationMarkerSize value ) ;
+    
 }

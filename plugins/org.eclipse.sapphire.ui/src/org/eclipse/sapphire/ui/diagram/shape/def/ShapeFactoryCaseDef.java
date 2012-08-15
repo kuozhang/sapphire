@@ -35,9 +35,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
 @GenerateImpl
 
-public interface ShapeFactoryCase extends IModelElement 
+public interface ShapeFactoryCaseDef extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( ShapeFactoryCase.class );
+	ModelElementType TYPE = new ModelElementType( ShapeFactoryCaseDef.class );
 	
     // *** Type ***
     
@@ -56,21 +56,21 @@ public interface ShapeFactoryCase extends IModelElement
 
     // *** Shape ***
     
-	@Type( base = Shape.class, 
-			possible = {Text.class, Image.class, Rectangle.class })
+	@Type( base = ShapeDef.class, 
+			possible = {TextDef.class, ImageDef.class, RectangleDef.class })
 	@Label( standard = "shape" )
     @XmlElementBinding
     ( 
         mappings = 
         {
-            @XmlElementBinding.Mapping( element = "text", type = Text.class ),
-            @XmlElementBinding.Mapping( element = "image", type = Image.class ),
-            @XmlElementBinding.Mapping( element = "rectangle", type = Rectangle.class )
+            @XmlElementBinding.Mapping( element = "text", type = TextDef.class ),
+            @XmlElementBinding.Mapping( element = "image", type = ImageDef.class ),
+            @XmlElementBinding.Mapping( element = "rectangle", type = RectangleDef.class )
         }
     )
 	
     ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
     
-    ModelElementHandle<Shape> getShape();
+    ModelElementHandle<ShapeDef> getShape();
 
 }

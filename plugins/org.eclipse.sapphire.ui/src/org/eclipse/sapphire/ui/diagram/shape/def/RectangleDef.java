@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
  */
 @GenerateImpl
 
-public interface Rectangle extends ContainerShape 
+public interface RectangleDef extends ContainerShapeDef 
 {
-	ModelElementType TYPE = new ModelElementType( Rectangle.class );
+	ModelElementType TYPE = new ModelElementType( RectangleDef.class );
 	
     // *** CornerRadius ***
     
@@ -47,58 +47,58 @@ public interface Rectangle extends ContainerShape
 	
     // *** Border ***
     
-    @Type( base = Border.class )
+    @Type( base = BorderDef.class )
     @XmlBinding( path = "border" )
 
     ElementProperty PROP_BORDER = new ElementProperty( TYPE, "Border" );
     
-    ModelElementHandle<Border> getBorder();
+    ModelElementHandle<BorderDef> getBorder();
     
     // *** TopBorder ***
     
-    @Type( base = Border.class )
+    @Type( base = BorderDef.class )
     @XmlBinding( path = "top-border" )
 
     ElementProperty PROP_TOP_BORDER = new ElementProperty( TYPE, "TopBorder" );
     
-    ModelElementHandle<Border> getTopBorder();
+    ModelElementHandle<BorderDef> getTopBorder();
     
     // *** BottomBorder ***
     
-    @Type( base = Border.class )
+    @Type( base = BorderDef.class )
     @XmlBinding( path = "bottom-border" )
 
     ElementProperty PROP_BOTTOM_BORDER = new ElementProperty( TYPE, "BottomBorder" );
     
-    ModelElementHandle<Border> getBottomBorder();
+    ModelElementHandle<BorderDef> getBottomBorder();
     
     // *** LeftBorder ***
     
-    @Type( base = Border.class )
+    @Type( base = BorderDef.class )
     @XmlBinding( path = "left-border" )
 
     ElementProperty PROP_LEFT_BORDER = new ElementProperty( TYPE, "LeftBorder" );
     
-    ModelElementHandle<Border> getLeftBorder();
+    ModelElementHandle<BorderDef> getLeftBorder();
     
     // *** RightBorder ***
     
-    @Type( base = Border.class )
+    @Type( base = BorderDef.class )
     @XmlBinding( path = "right-border" )
 
     ElementProperty PROP_RIGHT_BORDER = new ElementProperty( TYPE, "RightBorder" );
     
-    ModelElementHandle<Border> getRightBorder();
+    ModelElementHandle<BorderDef> getRightBorder();
     
     // *** Background ***
     
     @Type
     ( 
-        base = Background.class, 
+        base = BackgroundDef.class, 
         possible = 
         { 
-            SolidBackground.class, 
-            GradientBackground.class
+            SolidBackgroundDef.class, 
+            GradientBackgroundDef.class
         }
     )    
     @Label( standard = "background" )
@@ -107,14 +107,14 @@ public interface Rectangle extends ContainerShape
     	path = "background",
         mappings = 
         {
-            @XmlElementBinding.Mapping( element = "color", type = SolidBackground.class ),
-            @XmlElementBinding.Mapping( element = "gradient", type = GradientBackground.class )
+            @XmlElementBinding.Mapping( element = "color", type = SolidBackgroundDef.class ),
+            @XmlElementBinding.Mapping( element = "gradient", type = GradientBackgroundDef.class )
         }
     )
     
     ElementProperty PROP_BACKGROUND = new ElementProperty( TYPE, "Background" );
     
-    ModelElementHandle<Background> getBackground();
+    ModelElementHandle<BackgroundDef> getBackground();
     
     // ** ScrollHorizontally ***
     

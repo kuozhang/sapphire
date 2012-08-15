@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
@@ -20,8 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 @GenerateImpl
 
-public interface StackLayoutConstraint extends LayoutConstraint 
+public interface ShapeLayoutDef extends IModelElement 
 {
-	ModelElementType TYPE = new ModelElementType( StackLayoutConstraint.class );
-	
+	ModelElementType TYPE = new ModelElementType( ShapeLayoutDef.class );
 }

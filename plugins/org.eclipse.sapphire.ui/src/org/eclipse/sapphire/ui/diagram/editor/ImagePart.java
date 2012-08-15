@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.diagram.shape.def.Image;
+import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.Image;
 
 public class ImagePart extends ShapePart 
 {
-	private Image imageDef;
+	private ImageDef imageDef;
 	private IModelElement modelElement;
 	private FunctionResult imagePathFunction;
 	
@@ -29,7 +29,7 @@ public class ImagePart extends ShapePart
     protected void init()
     {
         super.init();
-        this.imageDef = (Image)super.definition;
+        this.imageDef = (ImageDef)super.definition;
         this.modelElement = getModelElement();
         
         this.imagePathFunction = initExpression

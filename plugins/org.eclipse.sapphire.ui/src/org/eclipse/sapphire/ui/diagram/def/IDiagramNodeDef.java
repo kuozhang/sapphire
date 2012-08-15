@@ -43,10 +43,10 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
-import org.eclipse.sapphire.ui.diagram.shape.def.Image;
-import org.eclipse.sapphire.ui.diagram.shape.def.Rectangle;
-import org.eclipse.sapphire.ui.diagram.shape.def.Shape;
-import org.eclipse.sapphire.ui.diagram.shape.def.Text;
+import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -84,12 +84,12 @@ public interface IDiagramNodeDef
     
     @Type
     ( 
-        base = Shape.class, 
+        base = ShapeDef.class, 
         possible = 
         { 
-            Text.class, 
-            Image.class,
-            Rectangle.class
+            TextDef.class, 
+            ImageDef.class,
+            RectangleDef.class
         }
     )    
     @Label( standard = "shape" )
@@ -97,15 +97,15 @@ public interface IDiagramNodeDef
     ( 
     	mappings = 
         {
-            @XmlElementBinding.Mapping( element = "text", type = Text.class ),
-            @XmlElementBinding.Mapping( element = "image", type = Image.class ),
-            @XmlElementBinding.Mapping( element = "rectangle", type = Rectangle.class )
+            @XmlElementBinding.Mapping( element = "text", type = TextDef.class ),
+            @XmlElementBinding.Mapping( element = "image", type = ImageDef.class ),
+            @XmlElementBinding.Mapping( element = "rectangle", type = RectangleDef.class )
         }
     )
     
     ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
     
-    ModelElementHandle<Shape> getShape(); 
+    ModelElementHandle<ShapeDef> getShape(); 
     
     // *** ToolPaletteLabel ***
     

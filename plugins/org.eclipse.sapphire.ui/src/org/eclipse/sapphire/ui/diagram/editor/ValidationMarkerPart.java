@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarker;
+import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 
 /**
@@ -21,14 +21,14 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 
 public class ValidationMarkerPart extends ShapePart 
 {
-	private ValidationMarker markerDef;
+	private ValidationMarkerDef markerDef;
 	private IModelElement modelElement;
 	
 	@Override
     protected void init()
     {
         super.init();
-        this.markerDef = (ValidationMarker)super.definition;
+        this.markerDef = (ValidationMarkerDef)super.definition;
         this.modelElement = getModelElement();
                 
     }

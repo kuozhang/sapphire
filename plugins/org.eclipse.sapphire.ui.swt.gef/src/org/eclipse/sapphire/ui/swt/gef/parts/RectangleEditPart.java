@@ -21,8 +21,8 @@ import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraint;
-import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayout;
+import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
@@ -73,16 +73,16 @@ public class RectangleEditPart extends ContainerShapeEditPart
 		super.addChildVisual(childEditPart, index);
 		RectangleModel rectModel = (RectangleModel)getModel();
 		RectanglePart rectPart = (RectanglePart)rectModel.getSapphirePart();
-		if (rectPart.getLayout() instanceof SequenceLayout)
+		if (rectPart.getLayout() instanceof SequenceLayoutDef)
 		{
-			SequenceLayout sequenceLayout = (SequenceLayout)rectPart.getLayout();
+			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)rectPart.getLayout();
 			GridLayout layoutManager = (GridLayout)getContentPane().getLayoutManager();
 			if (childEditPart instanceof GraphicalEditPart)
 			{
 				IFigure childFigure = ((GraphicalEditPart)childEditPart).getFigure();
 				ShapeModel childModel = (ShapeModel)childEditPart.getModel();
 				ShapePart shapePart = (ShapePart)childModel.getSapphirePart();
-				LayoutConstraint layoutConstraint = shapePart.getLayoutConstraint();
+				LayoutConstraintDef layoutConstraint = shapePart.getLayoutConstraint();
 				if (layoutConstraint instanceof SequenceLayoutConstraint)
 				{
 					SequenceLayoutConstraint sequenceLayoutConstraint = (SequenceLayoutConstraint)layoutConstraint;

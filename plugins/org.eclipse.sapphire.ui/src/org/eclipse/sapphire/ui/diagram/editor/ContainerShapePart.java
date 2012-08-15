@@ -16,13 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShape;
-import org.eclipse.sapphire.ui.diagram.shape.def.Image;
-import org.eclipse.sapphire.ui.diagram.shape.def.Rectangle;
-import org.eclipse.sapphire.ui.diagram.shape.def.Shape;
-import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayout;
-import org.eclipse.sapphire.ui.diagram.shape.def.Text;
-import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarker;
+import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarker;
 
 public class ContainerShapePart extends ShapePart 
 {
-	private ContainerShape containerShapeDef;
+	private ContainerShapeDef containerShapeDef;
 	private IModelElement modelElement;	
 	private List<ShapePart> children;
 
@@ -38,27 +38,27 @@ public class ContainerShapePart extends ShapePart
     protected void init()
     {
         super.init();
-        this.containerShapeDef = (ContainerShape)super.definition;
+        this.containerShapeDef = (ContainerShapeDef)super.definition;
         this.modelElement = getModelElement();
         
         // create children parts
         this.children = new ArrayList<ShapePart>();
-        for (Shape shape : this.containerShapeDef.getContent())
+        for (ShapeDef shape : this.containerShapeDef.getContent())
         {
         	ShapePart childPart = null;
-        	if (shape instanceof Text)
+        	if (shape instanceof TextDef)
         	{
     	        childPart = new TextPart();
         	}
-        	else if (shape instanceof Image)
+        	else if (shape instanceof ImageDef)
         	{
         		childPart = new ImagePart();
         	}
-        	else if (shape instanceof ValidationMarker)
+        	else if (shape instanceof ValidationMarkerDef)
         	{
         		childPart = new ValidationMarkerPart();
         	}
-        	else if (shape instanceof Rectangle)
+        	else if (shape instanceof RectangleDef)
         	{
         		childPart = new RectanglePart();
         	}
@@ -70,7 +70,7 @@ public class ContainerShapePart extends ShapePart
         }
     }
 
-	public ShapeLayout getLayout()
+	public ShapeLayoutDef getLayout()
 	{
 		return this.containerShapeDef.getLayout().element();
 	}

@@ -21,13 +21,13 @@ import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
-import org.eclipse.sapphire.ui.diagram.shape.def.Background;
-import org.eclipse.sapphire.ui.diagram.shape.def.Border;
-import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackground;
-import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegment;
-import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayout;
-import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayout;
-import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackground;
+import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.BorderDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackgroundDef;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -46,7 +46,7 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 	private RectanglePart rectPart;
 	private int validationMarkerIndex;
 	private IModelElement model;
-	private ShapeLayout layout;
+	private ShapeLayoutDef layout;
 	private DiagramResourceCache resourceCache;
 	private Status validationStatus;
     private boolean selected;
@@ -63,9 +63,9 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 		
 		this.validationStatus = model.validation();
 		
-		if (this.layout instanceof SequenceLayout)
+		if (this.layout instanceof SequenceLayoutDef)
 		{
-			SequenceLayout sequenceLayout = (SequenceLayout)layout;
+			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layout;
 			GridLayout gridLayout = new GridLayout();
 			if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)
 			{
@@ -85,7 +85,7 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 	@Override
 	protected void fillShape(Graphics graphics) 
 	{
-		Background bg = this.rectPart.getBackground();
+		BackgroundDef bg = this.rectPart.getBackground();
 		if (bg != null)
 		{
 			final Dimension cornerDimension = new Dimension(1, 1);
@@ -103,9 +103,9 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 			} 
 			else 
 			{
-				if (bg instanceof SolidBackground)
+				if (bg instanceof SolidBackgroundDef)
 				{
-					org.eclipse.sapphire.ui.Color color = ((SolidBackground)bg).getColor().getContent();
+					org.eclipse.sapphire.ui.Color color = ((SolidBackgroundDef)bg).getColor().getContent();
 					if (color != null)
 					{
 						graphics.setBackgroundColor(resourceCache.getColor(color));
@@ -116,10 +116,10 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 					}
 					graphics.fillRectangle(fillRectangle);
 				}
-				else if (bg instanceof GradientBackground)
+				else if (bg instanceof GradientBackgroundDef)
 				{
-					boolean isVertical = ((GradientBackground)bg).isVertical().getContent();
-					ModelElementList<GradientSegment> segments = ((GradientBackground)bg).getGradientSegments();
+					boolean isVertical = ((GradientBackgroundDef)bg).isVertical().getContent();
+					ModelElementList<GradientSegmentDef> segments = ((GradientBackgroundDef)bg).getGradientSegments();
 					if (segments.size() == 0)
 					{
 						graphics.setForegroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
@@ -127,8 +127,8 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 					}
 					else
 					{
-						GradientSegment segment0 = segments.get(0);
-						GradientSegment segment1 = segments.get(1);
+						GradientSegmentDef segment0 = segments.get(0);
+						GradientSegmentDef segment1 = segments.get(1);
 						graphics.setForegroundColor(resourceCache.getColor(segment0.getColor().getContent()));
 						graphics.setBackgroundColor(resourceCache.getColor(segment1.getColor().getContent()));
 					}
@@ -254,9 +254,9 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 	
 	private boolean isHorizontalSequenceLayout()
 	{		
-		if (this.layout instanceof SequenceLayout)
+		if (this.layout instanceof SequenceLayoutDef)
 		{
-			SequenceLayout sequenceLayout = (SequenceLayout)layout;				
+			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layout;				
 			if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)	
 			{
 				return true;

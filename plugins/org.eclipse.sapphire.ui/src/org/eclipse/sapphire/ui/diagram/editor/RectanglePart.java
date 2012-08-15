@@ -15,8 +15,8 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.diagram.shape.def.Background;
-import org.eclipse.sapphire.ui.diagram.shape.def.Rectangle;
+import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.Rectangle;
 
 public class RectanglePart extends ContainerShapePart
 {
-	private Rectangle rectangleDef;
+	private RectangleDef rectangleDef;
 	private IModelElement modelElement;
 	private FunctionResult borderWidth;	
 	private FunctionResult borderColor;
@@ -33,7 +33,7 @@ public class RectanglePart extends ContainerShapePart
     protected void init()
     {
         super.init();
-        this.rectangleDef = (Rectangle)super.definition;
+        this.rectangleDef = (RectangleDef)super.definition;
         this.modelElement = getModelElement();
         
         this.borderWidth = initExpression
@@ -101,7 +101,7 @@ public class RectanglePart extends ContainerShapePart
 		return style;
 	}
 
-	public Background getBackground()
+	public BackgroundDef getBackground()
 	{
 		return this.rectangleDef.getBackground().element();
 	}
