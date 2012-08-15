@@ -19,21 +19,17 @@ import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.def.DecoratorPlacement;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramDecoratorDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
-import org.eclipse.sapphire.ui.diagram.def.ProblemDecoratorSize;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -101,9 +97,9 @@ public class NodeDecorator {
 		List<ImageDecorator> decoratorList = new ArrayList<ImageDecorator>();
 		DiagramNodePart nodePart = nodeModel.getModelPart();
 
-		if (nodePart.getProblemIndicatorDef().isShowDecorator().getContent()) {
-			addNodeProblemDecorator(nodePart, decoratorList);
-		}
+//		if (nodePart.getProblemIndicatorDef().isShowDecorator().getContent()) {
+//			addNodeProblemDecorator(nodePart, decoratorList);
+//		}
 
 		List<DiagramNodePart.NodeImageDecorator> imageDecorators = nodePart.getImageDecorators();
 		for (DiagramNodePart.NodeImageDecorator nodeImageDecorator : imageDecorators) {
@@ -117,41 +113,41 @@ public class NodeDecorator {
 		return decoratorList;
 	}
 
-	private void addNodeProblemDecorator(DiagramNodePart nodePart, List<ImageDecorator> decoratorList) {
-		IModelElement model = nodePart.getModelElement();
-		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getProblemIndicatorDef();
-		Status status = model.validation();
-		ImageDecorator imageRenderingDecorator = null;
-		if (status.severity() != Status.Severity.OK) {
-			if (status.severity() == Status.Severity.WARNING) {
-				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
-					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_WARNING_SMALL);
-					imageRenderingDecorator = new ImageDecorator(image);
-				} else {
-					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_WARNING);
-					imageRenderingDecorator = new ImageDecorator(image);
-				}
-			} else if (status.severity() == Status.Severity.ERROR) {
-				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
-					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_ERROR_SMALL);
-					imageRenderingDecorator = new ImageDecorator(image);
-				} else {
-					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_ERROR);
-					imageRenderingDecorator = new ImageDecorator(image);
-				}
-			}
-		}
-		if (imageRenderingDecorator != null) {
-            int indicatorWidth = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_WIDTH : SMALL_ERROR_DECORATOR_WIDTH;
-            int indicatorHeight = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_HEIGHT : SMALL_ERROR_DECORATOR_HEIGHT;
-
-			Point pt = getDecoratorPosition(decoratorDef, indicatorWidth, indicatorHeight);
-			imageRenderingDecorator.setX(pt.getX());
-			imageRenderingDecorator.setY(pt.getY());
-			imageRenderingDecorator.setMessage(status.message());
-			decoratorList.add(imageRenderingDecorator);
-		}
-	}
+//	private void addNodeProblemDecorator(DiagramNodePart nodePart, List<ImageDecorator> decoratorList) {
+//		IModelElement model = nodePart.getModelElement();
+//		IDiagramNodeProblemDecoratorDef decoratorDef = nodePart.getProblemIndicatorDef();
+//		Status status = model.validation();
+//		ImageDecorator imageRenderingDecorator = null;
+//		if (status.severity() != Status.Severity.OK) {
+//			if (status.severity() == Status.Severity.WARNING) {
+//				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
+//					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_WARNING_SMALL);
+//					imageRenderingDecorator = new ImageDecorator(image);
+//				} else {
+//					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_WARNING);
+//					imageRenderingDecorator = new ImageDecorator(image);
+//				}
+//			} else if (status.severity() == Status.Severity.ERROR) {
+//				if (decoratorDef.getSize().getContent() == ProblemDecoratorSize.SMALL) {
+//					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_ERROR_SMALL);
+//					imageRenderingDecorator = new ImageDecorator(image);
+//				} else {
+//					Image image = nodeModel.getModelPart().getImageCache().getImage(IMG_ERROR);
+//					imageRenderingDecorator = new ImageDecorator(image);
+//				}
+//			}
+//		}
+//		if (imageRenderingDecorator != null) {
+//            int indicatorWidth = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_WIDTH : SMALL_ERROR_DECORATOR_WIDTH;
+//            int indicatorHeight = decoratorDef.getSize().getContent() == ProblemDecoratorSize.LARGE ? LARGE_ERROR_DECORATOR_HEIGHT : SMALL_ERROR_DECORATOR_HEIGHT;
+//
+//			Point pt = getDecoratorPosition(decoratorDef, indicatorWidth, indicatorHeight);
+//			imageRenderingDecorator.setX(pt.getX());
+//			imageRenderingDecorator.setY(pt.getY());
+//			imageRenderingDecorator.setMessage(status.message());
+//			decoratorList.add(imageRenderingDecorator);
+//		}
+//	}
 
 	private Point getDecoratorPosition(IDiagramDecoratorDef decoratorDef, int decoratorWidth, int decoratorHeight) {
 		Bounds bounds;

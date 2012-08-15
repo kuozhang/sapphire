@@ -19,6 +19,11 @@ import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
+import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
+import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -41,10 +46,29 @@ public class DiagramNodeModel extends DiagramModelBase {
     private DiagramNodePart part;
 	private List<DiagramConnectionModel> sourceConnections = new ArrayList<DiagramConnectionModel>();
 	private List<DiagramConnectionModel> targetConnections = new ArrayList<DiagramConnectionModel>();
+	private ShapeModel shapeModel;
 	
-	public DiagramNodeModel(DiagramModel parent, DiagramNodePart part) {
+	public DiagramNodeModel(DiagramModel parent, DiagramNodePart part) 
+	{
 		this.parent = parent;
 		this.part = part;
+		ShapePart shapePart = this.part.getShapePart();
+		if (shapePart instanceof TextPart)
+		{
+			this.shapeModel = new TextModel(this, null, (TextPart)shapePart);
+		}
+		else if (shapePart instanceof ImagePart)
+		{
+			this.shapeModel = new ImageModel(this, null, (ImagePart)shapePart);
+		}
+		else if (shapePart instanceof ValidationMarkerPart)
+		{
+			this.shapeModel = new ValidationMarkerModel(this, null, (ValidationMarkerPart)shapePart);
+		}
+		else if (shapePart instanceof RectanglePart)
+		{
+			this.shapeModel = new RectangleModel(this, null, (RectanglePart)shapePart);
+		}
 	}
 	
 	public DiagramModel getDiagramModel() {
@@ -57,6 +81,11 @@ public class DiagramNodeModel extends DiagramModelBase {
 
 	public DiagramNodePart getModelPart() {
 		return part;
+	}
+	
+	public ShapeModel getShapeModel()
+	{
+		return this.shapeModel;
 	}
 	
 	public String getLabel() {
@@ -73,14 +102,15 @@ public class DiagramNodeModel extends DiagramModelBase {
 	
 	public Bounds getNodeBounds() {
 		Bounds bounds = getModelPart().getNodeBounds();
-		if (bounds.getWidth() < 0 || bounds.getHeight() < 0) {
-			
-			DiagramNodePart nodePart = getModelPart();
+		Image image = getImage();
+		DiagramNodePart nodePart = getModelPart();
+		if (bounds.getWidth() < 0) {
+						
 			int labelWidth = nodePart.getLabelWidth();
 			if (labelWidth <= 0) {
 				labelWidth = DEFAULT_NODE_WIDTH;
 			}
-			Image image = getImage();
+			
 			if (image != null) {
 				int imageWidth = nodePart.getImageWidth();
 				if (imageWidth == 0) {
@@ -96,7 +126,9 @@ public class DiagramNodeModel extends DiagramModelBase {
 				}
 			}
 			bounds.setWidth(labelWidth);
-	        
+		}
+		
+		if (bounds.getHeight() < 0) {
 	        
 			int labelHeight = nodePart.getLabelHeight();
 			labelHeight = Math.max(labelHeight, DEFAULT_TEXT_HEIGHT);

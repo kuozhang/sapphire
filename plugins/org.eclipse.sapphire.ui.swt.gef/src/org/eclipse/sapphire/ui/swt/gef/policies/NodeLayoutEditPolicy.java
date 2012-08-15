@@ -11,10 +11,18 @@
 
 package org.eclipse.sapphire.ui.swt.gef.policies;
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeBounds;
+import org.eclipse.sapphire.ui.swt.gef.commands.MoveNodeCommand;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.swt.gef.parts.RectangleEditPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -26,7 +34,13 @@ import org.eclipse.gef.requests.CreateRequest;
 
 public class NodeLayoutEditPolicy extends XYLayoutEditPolicy 
 {
-
+	private DiagramNodeModel nodeModel;
+	
+	public NodeLayoutEditPolicy(DiagramNodeModel nodeModel)
+	{
+		this.nodeModel = nodeModel;		
+	}
+	
 	@Override
 	protected Command getCreateCommand(CreateRequest request) 
 	{
@@ -38,7 +52,38 @@ public class NodeLayoutEditPolicy extends XYLayoutEditPolicy
 	protected Command createChangeConstraintCommand(EditPart child,
 			Object constraint) 
 	{
+		if (constraint instanceof Rectangle)
+		{
+			DiagramNodeBounds bounds = this.nodeModel.getModelPart().getNodeBounds();
+			Rectangle rect = (Rectangle)constraint;
+			bounds.setX(bounds.getX() + rect.x);
+			bounds.setY(bounds.getY() + rect.y);
+			return new MoveNodeCommand(this.nodeModel, new Rectangle(bounds.getX(), bounds.getY(), 
+							bounds.getWidth(), bounds.getHeight()));
+		}
 		return null;
+	}
+	
+	@Override
+	protected EditPolicy createChildEditPolicy(EditPart child)
+	{
+		if (child instanceof RectangleEditPart)
+			return new RectangleSelectionEditPolicy();
+		return new NonResizableEditPolicy();
+	}
+	
+	@Override
+	public EditPart getTargetEditPart(Request request)
+	{
+		if (REQ_CREATE.equals(request.getType()))
+			return getHost();
+		if (REQ_ADD.equals(request.getType()))
+			return getHost();
+		if (REQ_MOVE.equals(request.getType()))
+		{
+			return getHost();
+		}
+		return super.getTargetEditPart(request);
 	}
 	
 }

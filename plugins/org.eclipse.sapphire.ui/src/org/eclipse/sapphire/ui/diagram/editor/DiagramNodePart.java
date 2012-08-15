@@ -16,6 +16,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,8 +42,11 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
+import org.eclipse.sapphire.ui.diagram.shape.def.Image;
+import org.eclipse.sapphire.ui.diagram.shape.def.Rectangle;
+import org.eclipse.sapphire.ui.diagram.shape.def.Shape;
+import org.eclipse.sapphire.ui.diagram.shape.def.Text;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -55,6 +59,27 @@ public class DiagramNodePart
     implements IPropertiesViewContributorPart
     
 {
+	
+    public final static class NodeImageDecorator {
+    	
+    	ImageData imageData;
+    	IDiagramImageDecoratorDef imageDecoratorDef;
+    	
+    	public NodeImageDecorator(ImageData imageData, IDiagramImageDecoratorDef imageDecoratorDef) {
+    		this.imageData = imageData;
+    		this.imageDecoratorDef = imageDecoratorDef;
+    	}
+    	
+    	public ImageData getImageData() {
+    		return this.imageData;
+    	}
+    	
+    	public IDiagramImageDecoratorDef getImageDecoratorDef() {
+    		return this.imageDecoratorDef;
+    	}
+    	
+    }
+    	
 	private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
 	
 	private DiagramNodeTemplate nodeTemplate;
@@ -72,6 +97,7 @@ public class DiagramNodePart
 	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
+	private ShapePart shapePart;
 
 	@Override
     protected void init()
@@ -171,6 +197,10 @@ public class DiagramNodePart
             this.imageDecoratorDataFunctionResults.add(imageResult);
         }
         
+        // create shape part
+        
+        createShapePart();
+        
         // Add model property listener. It listens to all the properties so that the
         // validation status change would trigger node update
         this.modelPropertyListener =  new FilteredListener<PropertyEvent>()
@@ -204,7 +234,12 @@ public class DiagramNodePart
     {
         return this.modelElement;
     }    
-           
+         
+    public ShapePart getShapePart()
+    {
+    	return this.shapePart;
+    }
+    
     public List<NodeImageDecorator> getImageDecorators()
     {
         List<NodeImageDecorator> imageDecorators = new ArrayList<NodeImageDecorator>();
@@ -363,7 +398,16 @@ public class DiagramNodePart
 	
 	public DiagramNodeBounds getNodeBounds()
 	{
-		return new DiagramNodeBounds(this.nodeBounds);
+		DiagramNodeBounds bounds = new DiagramNodeBounds(this.nodeBounds);
+		if (bounds.getWidth() < 0 && this.definition.getWidth().getContent() != null )
+		{
+			bounds.setWidth(this.definition.getWidth().getContent());
+		}
+		if (bounds.getHeight() < 0 && this.definition.getHeight().getContent() != null)
+		{
+			bounds.setHeight(this.definition.getHeight().getContent());
+		}
+		return bounds;
 	}
 	
 	public void setNodeBounds(int x, int y)
@@ -472,12 +516,7 @@ public class DiagramNodePart
 		}
 		return 0;
 	}
-	
-	public IDiagramNodeProblemDecoratorDef getProblemIndicatorDef()
-	{
-		return this.definition.getProblemDecorator();
-	}
-					
+						
 	private void notifyNodeUpdate()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -514,24 +553,21 @@ public class DiagramNodePart
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
     }
     
-    public final static class NodeImageDecorator {
-    	
-    	ImageData imageData;
-    	IDiagramImageDecoratorDef imageDecoratorDef;
-    	
-    	public NodeImageDecorator(ImageData imageData, IDiagramImageDecoratorDef imageDecoratorDef) {
-    		this.imageData = imageData;
-    		this.imageDecoratorDef = imageDecoratorDef;
+    private void createShapePart()
+    {
+    	Shape shape = this.definition.getShape().element();
+    	if (shape instanceof Text)
+    	{
+	        this.shapePart = new TextPart();
     	}
-    	
-    	public ImageData getImageData() {
-    		return this.imageData;
+    	else if (shape instanceof Image)
+    	{
+    		this.shapePart = new ImagePart();
     	}
-    	
-    	public IDiagramImageDecoratorDef getImageDecoratorDef() {
-    		return this.imageDecoratorDef;
+    	else if (shape instanceof Rectangle)
+    	{
+    		this.shapePart = new RectanglePart();
     	}
-    	
+        this.shapePart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());    	
     }
-    
 }

@@ -18,7 +18,6 @@ import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -81,6 +80,33 @@ public interface IDiagramNodeDef
     void setInstanceId( String value );
     void setInstanceId( Function value );
         
+    // *** Shape ***
+    
+    @Type
+    ( 
+        base = Shape.class, 
+        possible = 
+        { 
+            Text.class, 
+            Image.class,
+            Rectangle.class
+        }
+    )    
+    @Label( standard = "shape" )
+    @XmlElementBinding
+    ( 
+    	mappings = 
+        {
+            @XmlElementBinding.Mapping( element = "text", type = Text.class ),
+            @XmlElementBinding.Mapping( element = "image", type = Image.class ),
+            @XmlElementBinding.Mapping( element = "rectangle", type = Rectangle.class )
+        }
+    )
+    
+    ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
+    
+    ModelElementHandle<Shape> getShape(); 
+    
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette item label" )
@@ -212,16 +238,7 @@ public interface IDiagramNodeDef
     ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
     
     ModelElementHandle<IDiagramLabelDef> getLabel();
-            
-    // *** ProblemDecorator ***
-    
-    @Type( base = IDiagramNodeProblemDecoratorDef.class )
-    @XmlBinding( path = "problem-decorator" )
-
-    ImpliedElementProperty PROP_PROBLEM_DECORATOR = new ImpliedElementProperty( TYPE, "ProblemDecorator" );
-    
-    IDiagramNodeProblemDecoratorDef getProblemDecorator();
-    
+                
     // *** ImageDecorators ***
     
     @Type( base = IDiagramImageDecoratorDef.class )
@@ -240,31 +257,16 @@ public interface IDiagramNodeDef
     
     ModelElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
             
-    // *** Shape ***
+    // *** VisibleWhen ***
     
-    @Type
-    ( 
-        base = Shape.class, 
-        possible = 
-        { 
-            Text.class, 
-            Image.class,
-            Rectangle.class
-        }
-    )    
-    @Label( standard = "shape" )
-    @XmlElementBinding
-    ( 
-        mappings = 
-        {
-            @XmlElementBinding.Mapping( element = "text", type = Text.class ),
-            @XmlElementBinding.Mapping( element = "image", type = Image.class ),
-            @XmlElementBinding.Mapping( element = "rectangle", type = Rectangle.class )
-        }
-    )
+    @Type( base = Function.class )
+    @XmlBinding( path = "visible-when" )
+    @Label( standard = "visible when" )
     
-    ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
+    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty(TYPE, "VisibleWhen");
     
-    ModelElementHandle<Shape> getShape(); 
-    
+    Value<Function> getVisibleWhen();
+    void setVisibleWhen( String value );
+    void setVisibleWhen( Function value );
+        
 }

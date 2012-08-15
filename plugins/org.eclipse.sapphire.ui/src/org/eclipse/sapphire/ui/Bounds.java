@@ -59,4 +59,11 @@ public class Bounds extends Point
     {
         this.height = h;
     }
+    
+    @Override
+    public String toString()
+    {
+    	return "Rectangle(" + getX() + ", " + getY() + ", " + 
+    			getWidth() + ", " + getHeight() + ")";
+    }
 }

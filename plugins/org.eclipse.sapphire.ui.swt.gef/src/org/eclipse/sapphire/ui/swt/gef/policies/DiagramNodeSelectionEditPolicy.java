@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.policies;
 
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.DiagramNodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 
 /**
@@ -21,38 +21,38 @@ import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 
 public class DiagramNodeSelectionEditPolicy extends NonResizableEditPolicy {
 
-	private NodeFigure getLabel() {
+	private DiagramNodeFigure getNodeFigure() {
 		DiagramNodeEditPart part = (DiagramNodeEditPart) getHost();
-		return ((NodeFigure) part.getFigure());
+		return ((DiagramNodeFigure) part.getFigure());
 	}
 
 	@Override
 	protected void hideFocus() {
-		getLabel().setFocus(false);
+		getNodeFigure().setFocus(false);
 	}
 
 	@Override
 	protected void showFocus() {
-		getLabel().setFocus(true);
+		getNodeFigure().setFocus(true);
 	}
 
 	@Override
 	protected void hideSelection() {
-		getLabel().setSelected(false);
-		getLabel().setFocus(false);
+		getNodeFigure().setSelected(false);
+		getNodeFigure().setFocus(false);
 
 	}
 
 	@Override
 	protected void showPrimarySelection() {
-		getLabel().setSelected(true);
-		getLabel().setFocus(true);
+		getNodeFigure().setSelected(true);
+		getNodeFigure().setFocus(true);
 	}
 
 	@Override
 	protected void showSelection() {
-		getLabel().setSelected(true);
-		getLabel().setFocus(false);
+		getNodeFigure().setSelected(true);
+		getNodeFigure().setFocus(false);
 	}
 
 }

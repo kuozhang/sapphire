@@ -66,11 +66,13 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 
 	@Override
 	protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
-		if (child instanceof DiagramNodeEditPart && constraint instanceof Rectangle) {
+		if (child instanceof DiagramNodeEditPart && constraint instanceof Rectangle) {			
 			// Bug 382542 - Diagram: sometimes moving a node does not move context buttons
 			// Hide the context buttons when moving a node
 			this.model.getSapphireDiagramEditor().getContextButtonManager().hideContextButtonsInstantly();
 			DiagramNodeModel node = ((DiagramNodeEditPart)child).getCastedModel();
+			System.out.println("Current node bounds: " + node.getNodeBounds());
+			System.out.println("DiagramXYLayoutEditPolicy:createChangeConstraintCommand's constraint: " + constraint);
 			return new MoveNodeCommand(node, (Rectangle)constraint);
 		}
 		return super.createChangeConstraintCommand(request, child, constraint);
