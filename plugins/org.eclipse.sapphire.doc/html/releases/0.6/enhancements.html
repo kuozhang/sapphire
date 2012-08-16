@@ -41,6 +41,7 @@
   <ol type="A">
     <li><a href="#Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></li>
     <li><a href="#Miscellaneous-CollectionFactoriesEnhancements">Enhancements to Collection Factories</a></li>
+    <li><a href="#Miscellaneous-JdtUtil">JdtUtil</a></li>
     <li><a href="#Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></li>
     <li><a href="#Miscellaneous-ModelElement">ModelElement</a></li>
     <li><a href="#Miscellaneous-ModelElementList">ModelElementList</a></li>
@@ -354,6 +355,29 @@ SortedSetFactory
     
     <font color="#888888">Map&lt;K,V> result()
 }</font></code></pre>
+
+
+<h2><a name="Miscellaneous-JdtUtil">JdtUtil</a></h2>
+
+<p>Various scenarios in both Sapphire and common usage of Sapphire require locating Java source folders. 
+Sapphire JDT integration now includes a set of utility functions to make this easier.</p>
+
+<pre class="source-code"><code>JdtUtil
+{
+    <font color="#008444">// Finds the nearest Java source folder for the specified resource.
+    // The nearest is defined as either the source folder containing 
+    // the specified resource or the first non-derived source folder 
+    // of the containing project.</font>
+
+    static IContainer findSourceFolder( IResource resource )
+
+    <font color="#008444">// Finds all source folders for a project, which is specified either
+    // directly or indirectly via a contained resource.</font>
+
+    static List&lt;IContainer> findSourceFolders( IResource resource )
+    static List&lt;IContainer> findSourceFolders( IProject project )
+    static List&lt;IContainer> findSourceFolders( IJavaProject project )
+}</code></pre>
 
 
 <h2><a name="Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></h2>
