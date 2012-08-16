@@ -162,9 +162,11 @@ public interface IModelElement extends IModelParticle
     boolean attach( Listener listener );
     void attach( Listener listener, String path );
     void attach( Listener listener, ModelPath path );
+    void attach( Listener listener, ModelProperty property );
     boolean detach( Listener listener );
     void detach( Listener listener, String path );
     void detach( Listener listener, ModelPath path );
+    void detach( Listener listener, ModelProperty property );
     
     void dispose();
     boolean disposed();

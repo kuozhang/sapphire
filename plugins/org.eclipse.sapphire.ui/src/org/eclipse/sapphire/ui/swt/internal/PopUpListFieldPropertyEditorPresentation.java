@@ -227,7 +227,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             }
         };
         
-        element.attach( propertyListener, property.getName() );
+        element.attach( propertyListener, property );
         
         final Runnable updateModelOp = new Runnable()
         {
@@ -272,7 +272,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                 public void run()
                 {
                     possibleValuesService.detach( possibleValuesServiceListener );
-                    element.detach( propertyListener, property.getName() );
+                    element.detach( propertyListener, property );
                 }
             }
         );

@@ -57,7 +57,7 @@ public final class ParentBasedEnablementService extends EnablementService
             }
         };
         
-        this.parentElement.attach( this.listener, this.parentProperty.getName() );
+        this.parentElement.attach( this.listener, this.parentProperty );
     }
 
     @Override
@@ -73,7 +73,7 @@ public final class ParentBasedEnablementService extends EnablementService
         
         if( this.listener != null )
         {
-            this.parentElement.detach( this.listener, this.parentProperty.getName() );
+            this.parentElement.detach( this.listener, this.parentProperty );
         }
     }
     

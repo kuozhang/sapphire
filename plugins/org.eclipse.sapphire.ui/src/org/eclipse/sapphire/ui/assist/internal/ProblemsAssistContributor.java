@@ -55,7 +55,7 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
             }
         };
         
-        this.element.attach( this.propertyValidationListener, this.property.getName() );
+        this.element.attach( this.propertyValidationListener, this.property );
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
     {
         if( this.propertyValidationListener != null )
         {
-            this.element.detach( this.propertyValidationListener, this.property.getName() );
+            this.element.detach( this.propertyValidationListener, this.property );
         }
     }
     

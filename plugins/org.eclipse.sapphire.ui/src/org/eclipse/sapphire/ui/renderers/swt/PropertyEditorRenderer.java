@@ -206,7 +206,7 @@ public abstract class PropertyEditorRenderer
             }
         };
 
-        modelElement.attach( propertyChangeListener, property.getName() );
+        modelElement.attach( propertyChangeListener, property );
         
         handlePropertyChangedEvent();
 
@@ -233,7 +233,7 @@ public abstract class PropertyEditorRenderer
                 public void run()
                 {
                     part.detach( partListener );
-                    modelElement.detach( propertyChangeListener, property.getName() );
+                    modelElement.detach( propertyChangeListener, property );
                 }
             }
         );

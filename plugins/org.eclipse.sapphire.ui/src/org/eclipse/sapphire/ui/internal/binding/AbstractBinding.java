@@ -54,7 +54,7 @@ public abstract class AbstractBinding
             }
         };
 
-        getModelElement().attach( this.propertyChangeListener, this.editor.getProperty().getName() );
+        getModelElement().attach( this.propertyChangeListener, this.editor.getProperty() );
         
         this.control.addDisposeListener
         (
@@ -192,7 +192,7 @@ public abstract class AbstractBinding
     
     public void dispose()
     {
-        getModelElement().detach( this.propertyChangeListener, getProperty().getName() );            
+        getModelElement().detach( this.propertyChangeListener, getProperty() );            
     }
     
     protected void initialize( PropertyEditorPart editor,

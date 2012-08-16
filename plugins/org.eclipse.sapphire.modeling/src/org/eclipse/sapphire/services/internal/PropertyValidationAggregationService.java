@@ -46,7 +46,7 @@ public final class PropertyValidationAggregationService extends ValidationAggreg
             }
         };
         
-        element.attach( listener, property.getName() );
+        element.attach( listener, property );
         
         final Listener validationServiceListener = new Listener()
         {

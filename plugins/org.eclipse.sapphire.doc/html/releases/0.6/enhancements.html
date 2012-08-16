@@ -402,6 +402,30 @@ op.initialize();</font></code></pre>
 
 <pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource ).initialize();</font></code></pre>
 
+<p>A new variant of attach() and detach() methods has been added to make it a bit less verbose to listen for changes
+to a particular property.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{</font>
+    <font color="#888888">boolean attach( Listener listener )
+    void attach( Listener listener, String path )
+    void attach( Listener listener, ModelPath path )</font>
+    void attach( Listener listener, ModelProperty property )
+    
+    <font color="#888888">boolean detach( Listener listener )
+    void detach( Listener listener, String path )
+    void detach( Listener listener, ModelPath path )</font>
+    void detach( Listener listener, ModelProperty property )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME.getName() );</code></pre>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME );</code></pre>
+
 
 <h2><a name="Miscellaneous-ModelElementList">ModelElementList</a></h2>
 

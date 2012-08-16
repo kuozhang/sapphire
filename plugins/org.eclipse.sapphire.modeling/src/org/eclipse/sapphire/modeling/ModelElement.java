@@ -890,6 +890,12 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
     
+    public final void attach( final Listener listener,
+                              final ModelProperty property )
+    {
+        attach( listener, property.getName() );
+    }
+    
     public final boolean detach( final Listener listener )
     {
         return this.listeners.detach( listener );
@@ -1048,6 +1054,12 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 }
             }
         }
+    }
+    
+    public final void detach( final Listener listener,
+                              final ModelProperty property )
+    {
+        detach( listener, property.getName() );
     }
     
     protected final void broadcast( final Event event )
@@ -1395,7 +1407,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 
                 if( clearOnDisableListener != null )
                 {
-                    element.attach( clearOnDisableListener, property.getName() );
+                    element.attach( clearOnDisableListener, property );
                 }
             }
             

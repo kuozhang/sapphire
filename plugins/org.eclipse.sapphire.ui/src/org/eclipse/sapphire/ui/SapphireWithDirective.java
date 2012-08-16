@@ -110,7 +110,7 @@ public final class SapphireWithDirective extends PageBookPart
             }
         };
         
-        this.element.attach( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property );
         
         updateCurrentPage( true );
     }
@@ -467,7 +467,7 @@ public final class SapphireWithDirective extends PageBookPart
                     actionPresentationKeyboard.render();
                     
                     modelPropertyListener.handle( new PropertyContentEvent( element, property ) );
-                    element.attach( modelPropertyListener, property.getName() );
+                    element.attach( modelPropertyListener, property );
                     
                     typeSelectorComposite.layout( true, true );
                     
@@ -477,7 +477,7 @@ public final class SapphireWithDirective extends PageBookPart
                         {
                             public void widgetDisposed( final DisposeEvent event )
                             {
-                                element.detach( modelPropertyListener, property.getName() );
+                                element.detach( modelPropertyListener, property );
                                 actionPresentationManager.dispose();
                                 actionPresentationKeyboard.dispose();
                             }
@@ -595,7 +595,7 @@ public final class SapphireWithDirective extends PageBookPart
         
         if( this.listener != null )
         {
-            this.element.detach( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property );
         }
     }
     

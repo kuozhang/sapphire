@@ -172,7 +172,7 @@ public final class PropertyEditorPart extends FormPart
             }
         };
         
-        this.element.attach( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property );
         
         this.childProperties = new ArrayList<ModelProperty>();
         this.childPropertiesReadOnly = Collections.unmodifiableList( this.childProperties );
@@ -654,7 +654,7 @@ public final class PropertyEditorPart extends FormPart
         
         if( this.listener != null )
         {
-            this.element.detach( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property );
         }
         
         if( this.labelFunctionResult != null )

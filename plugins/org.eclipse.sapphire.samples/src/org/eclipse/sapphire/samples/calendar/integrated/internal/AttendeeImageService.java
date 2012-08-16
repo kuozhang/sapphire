@@ -44,7 +44,7 @@ public final class AttendeeImageService extends ImageService
             }
         };
         
-        context( IModelElement.class ).attach( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        context( IModelElement.class ).attach( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
     }
 
     @Override
@@ -65,7 +65,7 @@ public final class AttendeeImageService extends ImageService
     {
         super.dispose();
         
-        context( IModelElement.class ).detach( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        context( IModelElement.class ).detach( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
     }
     
 }

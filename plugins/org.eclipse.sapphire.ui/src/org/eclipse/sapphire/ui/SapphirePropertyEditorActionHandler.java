@@ -44,7 +44,7 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
             }
         };
         
-        getModelElement().attach( this.listener, getProperty().getName() );
+        getModelElement().attach( this.listener, getProperty() );
         
         refreshEnablementState();
         
@@ -55,7 +55,7 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    getModelElement().detach( SapphirePropertyEditorActionHandler.this.listener, getProperty().getName() );
+                    getModelElement().detach( SapphirePropertyEditorActionHandler.this.listener, getProperty() );
                 }
             }
         );
