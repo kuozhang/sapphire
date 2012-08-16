@@ -355,7 +355,9 @@ public final class ModelElementType extends ModelMetadataItem
     
     public <T extends IModelElement> T instantiate()
     {
-        return (T) instantiate( null, null, new MemoryResource( this ) );
+        final T element = (T) instantiate( null, null, new MemoryResource( this ) );
+        element.initialize();
+        return element;
     }
     
     public List<ModelProperty> properties()
