@@ -97,7 +97,9 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         return this.parentProperty;
     }
     
-    public final void initialize()
+    @SuppressWarnings( "unchecked" )
+    
+    public final <T extends IModelElement> T initialize()
     {
         for( ModelProperty property : properties() ) 
         {
@@ -115,6 +117,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 read( ( (ImpliedElementProperty) property ) ).initialize();
             }
         }
+        
+        return (T) this;
     }
     
     public List<ModelProperty> properties()

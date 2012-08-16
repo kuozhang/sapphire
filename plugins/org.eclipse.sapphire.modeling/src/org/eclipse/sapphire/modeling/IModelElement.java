@@ -29,7 +29,7 @@ public interface IModelElement extends IModelParticle
     ModelElementType type();
     ModelProperty getParentProperty();
     
-    void initialize();
+    <T extends IModelElement> T initialize();
     
     <T extends ModelProperty> T property( String name );
     List<ModelProperty> properties();
