@@ -48,7 +48,7 @@ public final class TestModelingEvents0004 extends SapphireTestCase
 
     public void testImpliedElementPropertyEvents() throws Exception
     {
-        final RootElement root = RootElement.TYPE.instantiate();
+        final RootElement root = RootElement.TYPE.instantiate( null ); // Note explicit avoidance of instantiate with initialization.
         
         final List<Event> events = new ArrayList<Event>();
         

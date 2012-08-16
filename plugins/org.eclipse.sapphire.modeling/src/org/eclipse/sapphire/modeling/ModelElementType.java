@@ -348,14 +348,14 @@ public final class ModelElementType extends ModelMetadataItem
     
     public <T extends IModelElement> T instantiate( final Resource resource )
     {
-        return (T) instantiate( null, null, resource );
+        return (T) instantiate( null, null, ( resource == null ? new MemoryResource( this ) : resource ) );
     }
     
     @SuppressWarnings( "unchecked" )
     
     public <T extends IModelElement> T instantiate()
     {
-        final T element = (T) instantiate( null, null, new MemoryResource( this ) );
+        final T element = (T) instantiate( null );
         element.initialize();
         return element;
     }
