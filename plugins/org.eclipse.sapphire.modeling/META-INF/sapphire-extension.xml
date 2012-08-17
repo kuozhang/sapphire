@@ -142,6 +142,13 @@
         <description>Implementation of ValidationService that produces a validation error when a list property is not compatible with the version compatibility target yet the list is not empty.</description>
     </service>
     <service>
+        <id>Sapphire.ValidationService.Property.PreferDefaultValue</id>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <factory>org.eclipse.sapphire.internal.PreferDefaultValueValidationService$Factory</factory>
+        <description>Implementation of ValidationService that produces a validation warning when property value doesn't match its default.</description>
+        <context>Sapphire.Property.Instance</context>
+    </service>
+    <service>
         <type>org.eclipse.sapphire.services.EnablementService</type>
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.ParentBasedEnablementService$Factory</factory>
@@ -306,6 +313,13 @@
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.DeprecatedPropertyFactsService$Factory</factory>
         <id>Sapphire.FactsService.Deprecated</id>
+    </service>
+    <service>
+        <id>Sapphire.FactsService.PreferDefaultValue</id>
+        <description>Creates fact statements about property's recommended value by using semantical information specified by @PreferDefaultValue annotation.</description>
+        <context>Sapphire.Property.Instance</context>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+        <factory>org.eclipse.sapphire.internal.PreferDefaultValueFactsService$Factory</factory>
     </service>
     <service>
         <description>Implementation of FileExtensionsService that derives its behavior from @FileExtensions annotation.</description>

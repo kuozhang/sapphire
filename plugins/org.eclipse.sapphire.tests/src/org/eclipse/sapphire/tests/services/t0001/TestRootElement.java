@@ -127,7 +127,7 @@ public interface TestRootElement extends IModelElement
     // *** RequiredValueWithDefault ***
     
     @Required
-    @DefaultValue( text = "abc" )
+    @DefaultValue( text = "123" )
     
     ValueProperty PROP_REQUIRED_VALUE_WITH_DEFAULT = new ValueProperty( TYPE, "RequiredValueWithDefault" );
     

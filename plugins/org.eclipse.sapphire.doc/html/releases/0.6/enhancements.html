@@ -23,7 +23,11 @@
 <h1>Enhancements in 0.6</h1>
 
 <ol>
-  <li><a href="#VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
+  <li><a href="#Modeling">Modeling</a></li>
+  <ol type="A">
+    <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
+    <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
+  </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
@@ -53,7 +57,7 @@
 </ol>
 
 
-<h2><a name="VersionsAndVersionConstraints">Versions and Version Constraints</a></h2>
+<h2><a name="Modeling"><a name="Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></a></h2>
 
 <p>In many complex Sapphire models, it is useful to be able to constrain functionality based on a version. To simplify these scenarios,
 Sapphire now has native constructs for dealing with versions and version constraints.</p>
@@ -130,6 +134,31 @@ view page.</p>
         &lt;/content>
     &lt;/page>
 &lt;/properties-view></font></code></pre>
+
+
+<h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>
+
+<p>In certain cases, deviations from property's default value are allowed, but not recommended.</p>
+
+<p>Consider a file creation wizard where the file should have a certain name to function properly. 
+This is common for configuration files. For flexibility and consistency, the wizard should allow 
+a different file name to be used if the user so desires, but it should warn the user that they 
+are deviating from the file name recommendation.</p>
+
+<p>The new @PreferDefaultValue annotation is used to specify the above semantics. Utilizing this 
+annotation produces a warning and a fact statement.</p>
+
+<p>Warning: <i>[property] should be [default-value].</i><br/>
+Fact: <i>Recommended value is [default-value].</i></p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@DefaultValue( text = "sapphire-extension.xml" )</font>
+@PreferDefaultValue
+ 
+<font color="#888888">ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/PreferDefaultValue.png"/></p>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>

@@ -113,7 +113,7 @@ public final class TestServices0001 extends SapphireTestCase
 
     public void testRequiredValueWithDefault() throws Exception
     {
-        test( TestRootElement.PROP_REQUIRED_VALUE_WITH_DEFAULT, "Default value is \"abc\"." );
+        test( TestRootElement.PROP_REQUIRED_VALUE_WITH_DEFAULT, "Default value is \"123\"." );
     }
     
     public void testRequiredElement() throws Exception
