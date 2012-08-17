@@ -47,6 +47,9 @@ public final class TestServices0001 extends SapphireTestCase
         suite.addTest( new TestServices0001( "testNumericRangeMin" ) );
         suite.addTest( new TestServices0001( "testNumericRangeMax" ) );
         suite.addTest( new TestServices0001( "testNumericRangeMinMax" ) );
+        suite.addTest( new TestServices0001( "testRequiredValue" ) );
+        suite.addTest( new TestServices0001( "testRequiredValueWithDefault" ) );
+        suite.addTest( new TestServices0001( "testRequiredElement" ) );
         suite.addTest( new TestServices0001( "testReadOnly" ) );
         suite.addTest( new TestServices0001( "testCountConstraintAtLeastOne" ) );
         suite.addTest( new TestServices0001( "testCountConstraintMin" ) );
@@ -106,6 +109,11 @@ public final class TestServices0001 extends SapphireTestCase
     public void testRequiredValue() throws Exception
     {
         test( TestRootElement.PROP_REQUIRED_VALUE, "Must be specified." );
+    }
+
+    public void testRequiredValueWithDefault() throws Exception
+    {
+        test( TestRootElement.PROP_REQUIRED_VALUE_WITH_DEFAULT, "Default value is \"abc\"." );
     }
     
     public void testRequiredElement() throws Exception

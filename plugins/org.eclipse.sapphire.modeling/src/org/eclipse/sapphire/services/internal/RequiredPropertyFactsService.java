@@ -13,7 +13,10 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
@@ -33,7 +36,25 @@ public final class RequiredPropertyFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        facts.add( Resources.statement );
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+        
+        boolean applicable = true;
+        
+        if( property instanceof ValueProperty )
+        {
+            final Value<?> value = element.read( (ValueProperty) property );
+            
+            if( value.getDefaultText() != null )
+            {
+                applicable = false;
+            }
+        }
+        
+        if( applicable )
+        {
+            facts.add( Resources.statement );
+        }
     }
     
     public static final class Factory extends ServiceFactory
