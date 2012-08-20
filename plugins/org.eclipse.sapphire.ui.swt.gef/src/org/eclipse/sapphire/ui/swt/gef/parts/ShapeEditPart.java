@@ -19,7 +19,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.Orientation;
+import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
@@ -158,33 +160,17 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 						Object layoutConstraint = null;
 						if (layoutDef instanceof SequenceLayoutDef)
 						{
-							SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layoutDef;
 							SequenceLayoutConstraint sequenceLayoutConstraint = (SequenceLayoutConstraint)childShapePart.getLayoutConstraint();
 							GridData gd = new GridData();
-							if (childFigure instanceof Label)
+							if (sequenceLayoutConstraint != null)
 							{
-								if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)
-								{
-									gd.grabExcessHorizontalSpace = sequenceLayoutConstraint.isExpandCellHorizontally().getContent();
-									gd.horizontalAlignment = SWT.CENTER;
-									gd.verticalAlignment = SWT.CENTER;
-									gd.grabExcessVerticalSpace = true;
-								}
-								else
-								{
-									gd.grabExcessVerticalSpace = sequenceLayoutConstraint.isExpandCellVertically().getContent();
-								}
+								gd.horizontalAlignment = getSwtHorizontalAlignment(sequenceLayoutConstraint.getHorizontalAlignment().getContent());
+								gd.verticalAlignment = getSwtVerticalAlignment(sequenceLayoutConstraint.getVerticalAlignment().getContent());
+								gd.grabExcessHorizontalSpace = sequenceLayoutConstraint.isExpandCellHorizontally().getContent();
+								gd.grabExcessVerticalSpace = sequenceLayoutConstraint.isExpandCellVertically().getContent();
+								gd.horizontalIndent = sequenceLayoutConstraint.getHorizontalMargin().getContent();
 							}
-							else
-							{
-								if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)
-								{
-									if (sequenceLayoutConstraint != null)
-									{
-										gd.horizontalIndent = sequenceLayoutConstraint.getHorizontalMargin().getContent();
-									}
-								}								
-							}
+							
 							layoutConstraint = gd;
 						}
 						if (layoutConstraint != null)
@@ -202,4 +188,31 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		return figure;
 	}
 	
+	private int getSwtHorizontalAlignment(HorizontalAlignment horizontalAlign)
+	{
+		int swtAlign = SWT.CENTER;
+		if (horizontalAlign == HorizontalAlignment.LEFT)
+		{
+			swtAlign = SWT.LEFT;
+		}
+		else if (horizontalAlign == HorizontalAlignment.RIGHT)
+		{
+			swtAlign = SWT.RIGHT;
+		}
+		return swtAlign;
+	}
+
+	private int getSwtVerticalAlignment(VerticalAlignment verticalAlign)
+	{
+		int swtAlign = SWT.CENTER;
+		if (verticalAlign == VerticalAlignment.TOP)
+		{
+			swtAlign = SWT.TOP;
+		}
+		else if (verticalAlign == VerticalAlignment.BOTTOM)
+		{
+			swtAlign = SWT.BOTTOM;
+		}
+		return swtAlign;
+	}
 }
