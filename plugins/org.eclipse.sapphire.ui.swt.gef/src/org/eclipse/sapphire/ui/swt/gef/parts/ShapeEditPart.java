@@ -14,15 +14,29 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.EditPart;
-import org.eclipse.gef.Request;
+import org.eclipse.draw2d.Label;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.def.Orientation;
+import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
+import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraint;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
+import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
+import org.eclipse.swt.SWT;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -31,6 +45,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 public class ShapeEditPart extends AbstractGraphicalEditPart 
 			implements IConfigurationManagerHolder, PropertyChangeListener
 {
+	
 	private DiagramConfigurationManager configManager;
 
 	public ShapeEditPart(DiagramConfigurationManager configManager) 
@@ -43,32 +58,37 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
     	return this.configManager;
     }
 
-	@Override
-	public void activate() 
-	{
-		if (!isActive()) 
-		{
-			super.activate();
-			ShapeModel shapeModel = (ShapeModel)getModel();
-			shapeModel.getNodeModel().addPropertyChangeListener(this);
-		}
-	}
-    
-	@Override
-	public void deactivate() 
-	{
-		if (isActive()) 
-		{
-			ShapeModel shapeModel = (ShapeModel)getModel();
-			shapeModel.getNodeModel().removePropertyChangeListener(this);			
-			super.deactivate();
-		}
-	}
+//	@Override
+//	public void activate() 
+//	{
+//		if (!isActive()) 
+//		{
+//			super.activate();
+//			if (getModel() instanceof ShapeModel)
+//			{
+//				ShapeModel shapeModel = (ShapeModel)getModel();
+//				shapeModel.getNodeModel().addPropertyChangeListener(this);
+//			}
+//		}
+//	}
+//    
+//	@Override
+//	public void deactivate() 
+//	{
+//		if (isActive()) 
+//		{
+//			if (getModel() instanceof ShapeModel)
+//			{
+//				ShapeModel shapeModel = (ShapeModel)getModel();
+//				shapeModel.getNodeModel().removePropertyChangeListener(this);			
+//				super.deactivate();
+//			}
+//		}
+//	}
 	
 	@Override
 	protected IFigure createFigure() 
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -76,7 +96,6 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	protected void createEditPolicies() 
 	{
 		// TODO Auto-generated method stub
-
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) 
@@ -95,16 +114,92 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		return shapeModel.getNodeModel().getModelPart().getLocalModelElement();
 	}
 	
-//	@Override
-//	public DragTracker getDragTracker(Request request) 
-//	{
-//		EditPart parent = getParent();
-//		while (!(parent instanceof DiagramNodeEditPart))
-//		{
-//			parent = parent.getParent();
-//		}
-//		return new org.eclipse.gef.tools.DragEditPartsTracker(parent);
-//		//return new org.eclipse.gef.tools.DragEditPartsTracker(this);
-//	}	
+	private DiagramResourceCache getResourceCache()
+	{
+		if (getModel() instanceof DiagramNodeModel)
+		{
+			return ((DiagramNodeModel)getModel()).getDiagramModel().getResourceCache();
+		}
+		ShapeModel shapeModel = (ShapeModel)getModel();
+		return shapeModel.getNodeModel().getDiagramModel().getResourceCache();
+	}
+	
+	public IFigure createFigureForShape(ShapePart shapePart)
+	{
+		IFigure figure = null;
+		if (shapePart instanceof TextPart)
+		{
+			TextPart textPart = (TextPart)shapePart;
+			figure = new TextFigure(getResourceCache(), textPart.getText(), textPart.getTextColor());
+		}
+		else if (shapePart instanceof ValidationMarkerPart)
+		{
+			ValidationMarkerPart markerPart = (ValidationMarkerPart)shapePart;
+			DiagramNodePart nodePart = markerPart.nearest(DiagramNodePart.class);
+			figure = FigureUtil.createValidationMarkerFigure(markerPart.getSize(), nodePart.getLocalModelElement(), nodePart.getImageCache());
+		}
+		else if (shapePart instanceof RectanglePart)
+		{
+			RectanglePart rectPart = (RectanglePart)shapePart;
+			figure = new RectangleFigure(rectPart, getResourceCache());
+		}
+		
+		if (shapePart instanceof ContainerShapePart)
+		{
+			ContainerShapePart containerPart = (ContainerShapePart)shapePart;
+			ShapeLayoutDef layoutDef = containerPart.getLayout();
+			for (ShapePart childShapePart : containerPart.getChildren())
+			{
+				if (!childShapePart.isActive())
+				{
+					IFigure childFigure = createFigureForShape(childShapePart);
+					if (childFigure != null)
+					{
+						Object layoutConstraint = null;
+						if (layoutDef instanceof SequenceLayoutDef)
+						{
+							SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layoutDef;
+							SequenceLayoutConstraint sequenceLayoutConstraint = (SequenceLayoutConstraint)childShapePart.getLayoutConstraint();
+							GridData gd = new GridData();
+							if (childFigure instanceof Label)
+							{
+								if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)
+								{
+									gd.grabExcessHorizontalSpace = sequenceLayoutConstraint.isExpandCellHorizontally().getContent();
+									gd.horizontalAlignment = SWT.CENTER;
+									gd.verticalAlignment = SWT.CENTER;
+									gd.grabExcessVerticalSpace = true;
+								}
+								else
+								{
+									gd.grabExcessVerticalSpace = sequenceLayoutConstraint.isExpandCellVertically().getContent();
+								}
+							}
+							else
+							{
+								if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)
+								{
+									if (sequenceLayoutConstraint != null)
+									{
+										gd.horizontalIndent = sequenceLayoutConstraint.getHorizontalMargin().getContent();
+									}
+								}								
+							}
+							layoutConstraint = gd;
+						}
+						if (layoutConstraint != null)
+						{
+							figure.add(childFigure, layoutConstraint);
+						}
+						else
+						{
+							figure.add(childFigure);
+						}
+					}
+				}
+			}
+		}
+		return figure;
+	}
 	
 }

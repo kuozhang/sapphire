@@ -25,6 +25,7 @@ public class ShapePart extends SapphirePart
 {
 	private ShapeDef shapeDef;
 	private IModelElement modelElement;
+	private boolean isActive = false;
 
 	@Override
     protected void init()
@@ -44,6 +45,16 @@ public class ShapePart extends SapphirePart
 	{
 		// TODO Auto-generated method stub
 
+	}
+	
+	public boolean isActive()
+	{
+		return this.isActive;
+	}
+	
+	public void setActive(boolean isActive)
+	{
+		this.isActive = isActive;
 	}
 
 }

@@ -14,7 +14,6 @@
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,24 +23,24 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.ContainerShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.DiagramNodeFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
-import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramNodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLabelDirectEditPolicy;
@@ -52,10 +51,9 @@ import org.eclipse.sapphire.ui.swt.gef.policies.NodeLayoutEditPolicy;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramNodeEditPart extends AbstractGraphicalEditPart 
-		implements NodeEditPart, PropertyChangeListener, IConfigurationManagerHolder {
+public class DiagramNodeEditPart extends ShapeEditPart 
+		implements NodeEditPart {
 
-	private DiagramConfigurationManager configManager;
     private NodeDirectEditManager manager;
     
     private ConnectionAnchor sourceAnchor;
@@ -64,19 +62,18 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
     private List<IFigure> decorators = new ArrayList<IFigure>();
 
     public DiagramNodeEditPart(DiagramConfigurationManager configManager) {
-    	this.configManager = configManager;
+    	super(configManager);
     }
     
-    public DiagramConfigurationManager getConfigurationManager() {
-    	return this.configManager;
-    }
     
     @Override
 	protected IFigure createFigure() {
     	//ImageData imageData = getCastedModel().getModelPart().getImage();
 		//return new NodeFigure(imageData != null, getCastedModel().getDiagramModel().getResourceCache());
-    	return new DiagramNodeFigure(getCastedModel().getModelPart(), 
-    			getCastedModel().getDiagramModel().getResourceCache());
+//    	return new DiagramNodeFigure(getCastedModel().getModelPart(), 
+//    			getCastedModel().getDiagramModel().getResourceCache());
+    	DiagramNodePart nodePart = getCastedModel().getModelPart();
+    	return this.createFigureForShape(nodePart.getShapePart());
     	
 	}
 
@@ -109,11 +106,20 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 	}
 
 	private void performDirectEdit() {
-//		if (manager == null) {
-//			Label label = getNodeFigure().getLabelFigure();
-//			manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), label), label);
-//		}
-//		manager.show();
+		if (manager == null) {
+			IFigure figure = getFigure();
+			if (figure instanceof ContainerShapeFigure)
+			{
+				ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
+				TextFigure textFigure = containerShapeFigure.getTextFigure();
+				if (textFigure != null)
+				{
+					manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+				}
+			}
+		}
+		if (manager != null)
+			manager.show();
 	}
 
 	@Override
@@ -156,13 +162,22 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 
 	private boolean mouseInLabelRegion(Point pt)
 	{
-//		Point realLocation = this.configManager.getDiagramEditor().calculateRealMouseLocation(pt);
-//		NodeFigure nodeFig = getNodeFigure();
-//		Rectangle bounds = nodeFig.getLabelFigure().getTextBounds();
-//		if (bounds.contains(realLocation))
-//		{
-//			return true;
-//		}
+		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(pt);
+		IFigure figure = getFigure();
+		if (figure instanceof ContainerShapeFigure)
+		{
+			ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
+			TextFigure textFigure = containerShapeFigure.getTextFigure();
+			if (textFigure != null)
+			{
+				Rectangle bounds = textFigure.getTextBounds();
+				if (bounds.contains(realLocation))
+				{
+					return true;
+				}
+			}
+		}
+		
 		return false;
 	}
 	
@@ -176,17 +191,17 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 		return getCastedModel().getTargetConnections();
 	}
 	
-	@Override
-	protected List<ShapeModel> getModelChildren() 
-	{
-		DiagramNodeModel nodeModel = getCastedModel();
-		List<ShapeModel> children = new ArrayList<ShapeModel>();
-		if (nodeModel.getShapeModel() != null)
-		{
-			children.add(nodeModel.getShapeModel());
-		}
-		return children;
-	}
+//	@Override
+//	protected List<ShapeModel> getModelChildren() 
+//	{
+//		DiagramNodeModel nodeModel = getCastedModel();
+//		List<ShapeModel> children = new ArrayList<ShapeModel>();
+//		if (nodeModel.getShapeModel() != null)
+//		{
+//			children.add(nodeModel.getShapeModel());
+//		}
+//		return children;
+//	}
 
 	public DiagramNodeModel getCastedModel() {
 		return (DiagramNodeModel)getModel();
@@ -224,11 +239,23 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 		
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), nb.getWidth(), nb.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
+		refreshNode();
 	}
 	
 	// Called when node is updated which could include label change, validation change
 	private void refreshNode()
 	{
+		IFigure figure = getFigure();
+		if (figure instanceof ContainerShapeFigure)
+		{
+			ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
+			TextFigure textFigure = containerShapeFigure.getTextFigure();
+			if (textFigure != null)
+			{
+				textFigure.setText(getCastedModel().getLabel());
+			}
+			containerShapeFigure.refreshValidationStatus();
+		}
 //		getNodeFigure().setText(getCastedModel().getLabel());
 //		getNodeFigure().refreshValidationStatus();		
 	}
@@ -276,16 +303,4 @@ public class DiagramNodeEditPart extends AbstractGraphicalEditPart
 		}
 	}
 	
-	@Override
-	protected void addChildVisual(EditPart childEditPart, int index) 
-	{
-		super.addChildVisual(childEditPart, index);
-		IFigure nodeFigure = getFigure();
-		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
-		org.eclipse.draw2d.geometry.Rectangle rect = 
-				(org.eclipse.draw2d.geometry.Rectangle)nodeFigure.getParent().getLayoutManager().getConstraint(nodeFigure);		
-		org.eclipse.draw2d.geometry.Rectangle newRect = new org.eclipse.draw2d.geometry.Rectangle(0, 0, rect.width, rect.height);
-		this.setLayoutConstraint(childEditPart, child, newRect);
-		
-	}	
 }

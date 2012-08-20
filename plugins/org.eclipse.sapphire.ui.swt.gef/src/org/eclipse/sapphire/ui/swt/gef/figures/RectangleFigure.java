@@ -16,13 +16,10 @@ import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.Orientation;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.BorderDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
@@ -36,7 +33,7 @@ import org.eclipse.swt.graphics.Color;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class RectangleFigure extends org.eclipse.draw2d.Shape 
+public class RectangleFigure extends ContainerShapeFigure implements IShapeFigure
 {	
 	private static final org.eclipse.sapphire.ui.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.ui.Color(0xAC, 0xD2, 0xF4);
     private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_START = new org.eclipse.sapphire.ui.Color(0xFF, 0xFF, 0xFF);
@@ -44,25 +41,19 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
     private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
 	
 	private RectanglePart rectPart;
-	private int validationMarkerIndex;
-	private IModelElement model;
 	private ShapeLayoutDef layout;
 	private DiagramResourceCache resourceCache;
-	private Status validationStatus;
     private boolean selected;
 	private boolean hasFocus;
 	
-	public RectangleFigure(RectanglePart rectPart, int numChildren, int validationMarkerIndex, IModelElement model,
-			DiagramResourceCache resourceCache)
+	public RectangleFigure(RectanglePart rectPart, DiagramResourceCache resourceCache)
 	{
+		super(rectPart, resourceCache);
 		this.rectPart = rectPart;
-		this.validationMarkerIndex = validationMarkerIndex;
-		this.model = model;
 		this.layout = rectPart.getLayout();
-		this.resourceCache = resourceCache;
+		this.resourceCache = resourceCache;		
 		
-		this.validationStatus = model.validation();
-		
+		int numChildren = this.rectPart.getChildren().size();
 		if (this.layout instanceof SequenceLayoutDef)
 		{
 			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layout;
@@ -178,15 +169,15 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 					Math.max(0, cornerDimension.height - (int) lineInset));
 		}
 		
-//		if (hasFocus || selected) 
-//		{
-//			graphics.setForegroundColor(resourceCache.getColor(OUTLINE_FOREGROUND));
-//			org.eclipse.draw2d.geometry.Rectangle expanded = r.getExpanded(1, 1);
-//			graphics.setLineStyle(SWT.LINE_DASH);
-//			graphics.drawRoundRectangle(expanded,
-//					Math.max(0, cornerDimension.width - (int) lineInset),
-//					Math.max(0, cornerDimension.height - (int) lineInset));				
-//		}
+		if (hasFocus || selected) 
+		{
+			graphics.setForegroundColor(resourceCache.getColor(OUTLINE_FOREGROUND));
+			org.eclipse.draw2d.geometry.Rectangle expanded = r.getExpanded(1, 1);
+			graphics.setLineStyle(SWT.LINE_DASH);
+			graphics.drawRoundRectangle(expanded,
+					Math.max(0, cornerDimension.width - (int) lineInset),
+					Math.max(0, cornerDimension.height - (int) lineInset));				
+		}
 		
 		// Restore previous graphics attributes
 		graphics.setLineWidth(oldLineWidth);
@@ -204,66 +195,6 @@ public class RectangleFigure extends org.eclipse.draw2d.Shape
 	{
 		hasFocus = b;
 		repaint();
-	}
-	
-	public void refreshValidationStatus()
-	{
-		if (this.validationMarkerIndex == -1)
-		{
-			return;
-		}
-		Status newStatus = this.model.validation();
-		
-		GridLayout gridLayout = null;
-		boolean isHorizontalSequenceLayout = isHorizontalSequenceLayout(); 
-		if (isHorizontalSequenceLayout)
-		{
-			gridLayout = (GridLayout)this.getLayoutManager();
-		}
-		if (!newStatus.equals(this.validationStatus))
-		{			
-			if (this.validationStatus.severity() != Status.Severity.OK)
-			{
-				if (isHorizontalSequenceLayout)
-				{
-					gridLayout.numColumns--;
-				}
-			}
-			if (newStatus.severity() != Status.Severity.OK)
-			{
-				if (isHorizontalSequenceLayout)
-				{
-					gridLayout.numColumns++;
-				}
-			}
-			this.validationStatus = newStatus;
-			this.layout();
-		}
-	}
-	
-	private boolean showValidationMarker()
-	{
-		boolean show = false;
-		if (this.validationMarkerIndex != -1)
-		{
-			Status status = this.model.validation();		
-			show =  status.severity() != Status.Severity.OK;
-		}
-		return show;
-	}
-	
-	private boolean isHorizontalSequenceLayout()
-	{		
-		if (this.layout instanceof SequenceLayoutDef)
-		{
-			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layout;				
-			if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)	
-			{
-				return true;
-			}
-		}
-		return false;
-		
 	}
 	
 	private int convertLineStyle(LineStyle style)

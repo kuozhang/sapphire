@@ -72,7 +72,7 @@ public class SapphireDiagramEditorEditPartFactory implements EditPartFactory {
 			return new ValidationMarkerEditPart(this.configManager);
 		}
 		if (model instanceof RectangleModel) {
-			return new RectangleEditPart(this.configManager);
+			return new ContainerShapeEditPart(this.configManager);
 		}
 		if (model instanceof DiagramConnectionModel) {
 			return new DiagramConnectionEditPart(this.configManager);

@@ -71,8 +71,6 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 			// Hide the context buttons when moving a node
 			this.model.getSapphireDiagramEditor().getContextButtonManager().hideContextButtonsInstantly();
 			DiagramNodeModel node = ((DiagramNodeEditPart)child).getCastedModel();
-			System.out.println("Current node bounds: " + node.getNodeBounds());
-			System.out.println("DiagramXYLayoutEditPolicy:createChangeConstraintCommand's constraint: " + constraint);
 			return new MoveNodeCommand(node, (Rectangle)constraint);
 		}
 		return super.createChangeConstraintCommand(request, child, constraint);
