@@ -9,9 +9,9 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
-import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -19,17 +19,19 @@ import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValueSerializationService;
 
 /**
+ * Implementation of ValueSerializationService for FileName.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PathSerializationService extends ValueSerializationService
+public final class FileNameSerializationService extends ValueSerializationService
 {
     @Override
-    protected Path decodeFromString( final String value )
+    protected FileName decodeFromString( final String value )
     {
         try
         {
-            return new Path( value );
+            return new FileName( value );
         }
         catch( IllegalArgumentException e )
         {
@@ -44,14 +46,14 @@ public final class PathSerializationService extends ValueSerializationService
                                    final Class<? extends Service> service )
         {
             final ValueProperty property = context.find( ValueProperty.class ); 
-            return ( property != null && property.isOfType( Path.class ) );
+            return ( property != null && property.isOfType( FileName.class ) );
         }
     
         @Override
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            return new PathSerializationService();
+            return new FileNameSerializationService();
         }
     }
 

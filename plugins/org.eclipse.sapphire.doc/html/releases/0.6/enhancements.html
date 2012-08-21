@@ -26,6 +26,7 @@
   <li><a href="#Modeling">Modeling</a></li>
   <ol type="A">
     <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
+    <li><a href="#Modeling-FileName">FileName</a></li>
     <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
@@ -134,6 +135,36 @@ view page.</p>
         &lt;/content>
     &lt;/page>
 &lt;/properties-view></font></code></pre>
+
+
+<h2><a name="Modeling-FileName">FileName</a></h2>
+
+<p>When implementing operations that create files, a common need is to gather the name of a file 
+from the user. The file name must be validated to be compatible with user's platform and certain 
+normalization should be performed to simplify file name input.</p>
+
+<p>Sapphire now provides FileName class and associated services.</p>
+
+<ol>
+
+  <li><b>ValidationService</b> – Flags invalid file names as errors.</li>
+
+  <li><b>ValueSerializationService</b> – Only creates FileName objects that are valid for the current platform.</li>
+
+  <li><b>ValueNormalizationService</b></li>
+  
+  <ol type="A">
+
+    <li>Leading whitespace is removed.</li>
+   
+    <li>Trailing whitespace and dots are removed.</li>
+   
+    <li>Extension is added if the file name does not have one already and if the property has 
+    a FileExtensionsService (usually via @FileExtensions annotation).</li>
+    
+  </ol>
+  
+</ol>
 
 
 <h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>

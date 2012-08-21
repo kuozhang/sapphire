@@ -3,7 +3,8 @@ p
   font: 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 }
 
-li{  font: 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;}
+li{  font: 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+  margin: .4em 0}
 pre.source-code {  font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace;   color: #000000;  background-color: #fafafa;  font-size: 12px;  border: 1px dashed #999999;  line-height: 14px;  padding: 5px;  margin-left: 20px;  margin-right: 20px;  overflow: auto}
 table{  border-collapse: collapse;  margin-left: 20px;  margin-right: 20px;}
 th{      vertical-align:top;  border: 1px solid #000000;  padding: 5px;  text-align: left;  font: 12px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;  background-color: #eee;}

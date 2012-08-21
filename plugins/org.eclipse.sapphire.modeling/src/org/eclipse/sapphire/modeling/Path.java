@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and Other Contributors.
+ * Copyright (c) 2012 IBM, Oracle and Other Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,8 @@ package org.eclipse.sapphire.modeling;
 
 import java.io.File;
 import java.util.Arrays;
+
+import org.eclipse.sapphire.FileName;
 
 /** 
  * The standard implementation of the <code>Path</code> interface.
@@ -478,11 +480,15 @@ public final class Path
         for (int i = 0; i < segmentCount; i++) {
             int start = next;
             int end = path.indexOf(SEPARATOR, next);
-            if (end == -1) {
-                newSegments[i] = path.substring(start, lastPosition + 1);
-            } else {
-                newSegments[i] = path.substring(start, end);
+            
+            final String segment = path.substring( start, ( end == -1 ? lastPosition + 1 : end ) );
+
+            if( ! segment.equals( "." ) && ! segment.equals( ".." ) )
+            {
+                new FileName( segment ); // Validation for illegal characters, etc.
             }
+
+            newSegments[ i ] = segment;
             next = end + 1;
         }
         return newSegments;
