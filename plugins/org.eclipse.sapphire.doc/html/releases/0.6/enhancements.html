@@ -27,6 +27,8 @@
   <ol type="A">
     <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
     <li><a href="#Modeling-FileName">FileName</a></li>
+    <li><a href="#Modeling-ModelElement">ModelElement</a></li>
+    <li><a href="#Modeling-ModelElementList">ModelElementList</a></li>
     <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
@@ -48,8 +50,6 @@
     <li><a href="#Miscellaneous-CollectionFactoriesEnhancements">Enhancements to Collection Factories</a></li>
     <li><a href="#Miscellaneous-JdtUtil">JdtUtil</a></li>
     <li><a href="#Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></li>
-    <li><a href="#Miscellaneous-ModelElement">ModelElement</a></li>
-    <li><a href="#Miscellaneous-ModelElementList">ModelElementList</a></li>
     <li><a href="#Miscellaneous-SapphirePart">SapphirePart</a></li>
     <li><a href="#Miscellaneous-Status">Status</a></li>
     <li><a href="#Miscellaneous-Value">Value</a></li>
@@ -165,6 +165,86 @@ normalization should be performed to simplify file name input.</p>
   </ol>
   
 </ol>
+
+
+<h2><a name="Modeling-ModelElement">ModelElement</a></h2>
+
+<p>The existing ModelElement.initialize() method has been enhanced to be consistent with fluent interface principles by returning 
+the element instead of void. This facilitates chaining.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource );
+op.initialize();</font></code></pre>
+
+<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource ).initialize();</font></code></pre>
+
+<p>A new variant of attach() and detach() methods has been added to make it a bit less verbose to listen for changes
+to a particular property.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{</font>
+    <font color="#888888">boolean attach( Listener listener )
+    void attach( Listener listener, String path )
+    void attach( Listener listener, ModelPath path )</font>
+    void attach( Listener listener, ModelProperty property )
+    
+    <font color="#888888">boolean detach( Listener listener )
+    void detach( Listener listener, String path )
+    void detach( Listener listener, ModelPath path )</font>
+    void detach( Listener listener, ModelProperty property )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME.getName() );</code></pre>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME );</code></pre>
+
+<p>Several method have been enhanced with an overloaded variant that accepts a string property name in place
+of a ModelProperty object. This reduces verbosity in situations where code does not already have a ModelProperty
+instance handy.</p> 
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{
+    &lt;S extends Service> S service( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> S service( String property, Class&lt;S> serviceType )
+    
+    <font color="#888888">&lt;S extends Service> List&lt;S> services( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> List&lt;S> services( String property, Class&lt;S> serviceType )
+    
+    <font color="#888888">boolean enabled( ModelProperty property )</font>
+    boolean enabled( String property )
+    
+    <font color="#888888">Status validation( ModelProperty property )</font>
+    Status validation( String property )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>Status validation = op.validation( op.property( "FileName" ) );</code></pre>
+
+<pre class="source-code"><code>Status validation = op.validation( "FileName" );</code></pre>
+
+
+<h2><a name="Modeling-ModelElementList">ModelElementList</a></h2>
+
+<p>The new ModelElementList.enabled() method provides a simpler way to check list property's enablement
+directly through the property accessor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two statements are equivalent.</p>
+
+<pre class="source-code"><code>container.getEntities().enabled()</font></code></pre>
+
+<pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
 
 
 <h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>
@@ -470,59 +550,6 @@ does not fire when child node visibility changes. See VisibilityChangedEvent for
         }
     }
 )</code></pre>
-
-
-<h2><a name="Miscellaneous-ModelElement">ModelElement</a></h2>
-
-<p>The existing ModelElement.initialize() method has been enhanced to be consistent with fluent interface principles by returning 
-the element instead of void. This facilitates chaining.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
-
-<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource );
-op.initialize();</font></code></pre>
-
-<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource ).initialize();</font></code></pre>
-
-<p>A new variant of attach() and detach() methods has been added to make it a bit less verbose to listen for changes
-to a particular property.</p>
-
-<pre class="source-code"><code><font color="#888888">ModelElement
-{</font>
-    <font color="#888888">boolean attach( Listener listener )
-    void attach( Listener listener, String path )
-    void attach( Listener listener, ModelPath path )</font>
-    void attach( Listener listener, ModelProperty property )
-    
-    <font color="#888888">boolean detach( Listener listener )
-    void detach( Listener listener, String path )
-    void detach( Listener listener, ModelPath path )</font>
-    void detach( Listener listener, ModelProperty property )
-<font color="#888888">}</font></code></pre>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
-
-<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME.getName() );</code></pre>
-
-<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME );</code></pre>
-
-
-<h2><a name="Miscellaneous-ModelElementList">ModelElementList</a></h2>
-
-<p>The new ModelElementList.enabled() method provides a simpler way to check list property's enablement
-directly through the property accessor.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">The following two statements are equivalent.</p>
-
-<pre class="source-code"><code>container.getEntities().enabled()</font></code></pre>
-
-<pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
 
 
 <h2><a name="Miscellaneous-SapphirePart">SapphirePart</a></h2>

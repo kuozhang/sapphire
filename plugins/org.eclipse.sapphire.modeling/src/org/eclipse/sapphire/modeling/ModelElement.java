@@ -530,12 +530,22 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final <S extends Service> S service( final Class<S> serviceType )
     {
+        if( serviceType == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         final List<S> services = services( serviceType );
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
     public final <S extends Service> List<S> services( final Class<S> serviceType )
     {
+        if( serviceType == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         synchronized( root() )
         {
             if( this.elementServiceContext == null )
@@ -550,6 +560,32 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final <S extends Service> S service( final ModelProperty property,
                                                 final Class<S> serviceType )
     {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( serviceType == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return service( property.getName(), serviceType );
+    }
+    
+    public final <S extends Service> S service( final String property,
+                                                final Class<S> serviceType )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( serviceType == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         final List<S> services = services( property, serviceType );
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
@@ -557,16 +593,49 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final <S extends Service> List<S> services( final ModelProperty property,
                                                        final Class<S> serviceType )
     {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( serviceType == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return services( property.getName(), serviceType );
+    }
+
+    public final <S extends Service> List<S> services( final String property,
+                                                       final Class<S> serviceType )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( serviceType == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         PropertyInstanceServiceContext context;
         
         synchronized( root() )
         {
-            context = this.propertyServiceContexts.get( property );
+            context = this.propertyServiceContexts.get( prop );
             
             if( context == null )
             {
-                context = new PropertyInstanceServiceContext( this, property );
-                this.propertyServiceContexts.put( property, context );
+                context = new PropertyInstanceServiceContext( this, prop );
+                this.propertyServiceContexts.put( prop, context );
             }
         }
         
@@ -575,14 +644,36 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final boolean enabled( final ModelProperty property )
     {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return enabled( property.getName() );
+    }
+    
+    public final boolean enabled( final String property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         synchronized( root() )
         {
-            Boolean status = this.enablementStatuses.get( property );
+            Boolean status = this.enablementStatuses.get( prop );
             
             if( status == null )
             {
-                refreshProperty( property, true );
-                status = this.enablementStatuses.get( property );
+                refreshProperty( prop, true );
+                status = this.enablementStatuses.get( prop );
             }
             
             return status;
@@ -668,27 +759,49 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final Status validation( final ModelProperty property )
     {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return validation( property.getName() );
+    }
+    
+    public final Status validation( final String property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         final Status validation;
         
-        if( property instanceof ValueProperty )
+        if( prop instanceof ValueProperty )
         {
-            validation = read( (ValueProperty) property ).validation();
+            validation = read( (ValueProperty) prop ).validation();
         }
-        else if( property instanceof ListProperty )
+        else if( prop instanceof ListProperty )
         {
-            validation = read( (ListProperty) property ).validation();
+            validation = read( (ListProperty) prop ).validation();
         }
-        else if( property instanceof ImpliedElementProperty )
+        else if( prop instanceof ImpliedElementProperty )
         {
-            validation = read( (ImpliedElementProperty) property ).validation();
+            validation = read( (ImpliedElementProperty) prop ).validation();
         }
-        else if( property instanceof ElementProperty )
+        else if( prop instanceof ElementProperty )
         {
-            validation = read( (ElementProperty) property ).validation();
+            validation = read( (ElementProperty) prop ).validation();
         }
-        else if( property instanceof TransientProperty )
+        else if( prop instanceof TransientProperty )
         {
-            validation = read( (TransientProperty) property ).validation();
+            validation = read( (TransientProperty) prop ).validation();
         }
         else
         {
