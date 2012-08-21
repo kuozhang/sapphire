@@ -37,13 +37,18 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 	public void relocate(CellEditor celleditor) {
 		double zoom = manager.getDiagramEditor().getZoomLevel();
 		Rectangle labelRect = label.getClientArea();
+		Rectangle parentRect = label.getParent().getClientArea();
+		labelRect.x = parentRect.x;
+		labelRect.width = parentRect.width;
+		// TODO check for border
+		int margin = 5;
 		// shrink horizontal, may need to pad for border
-		int margin = 2;
-		if (label.getParent() instanceof NodeFigure) {
-			if (((NodeFigure)label.getParent()).hasBorder()) {
-				margin = 4;
-			}
-		}
+//		int margin = 2;
+//		if (label.getParent() instanceof NodeFigure) {
+//			if (((NodeFigure)label.getParent()).hasBorder()) {
+//				margin = 4;
+//			}
+//		}
 		labelRect.x += margin;
 		labelRect.width -= margin + margin;
 		// zoom
@@ -64,7 +69,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 				Rectangle imageRect = ((DecoratorImageFigure)object).getBounds();
 				int imageWidth = ((DecoratorImageFigure)object).getBounds().width;
 				imageWidth = (int) (imageWidth * zoom);
-				int newX = imageRect.x + imageWidth + margin;
+				int newX = imageRect.x + imageWidth + 3;
 				if ((imageRect.x - 2 < labelRect.x && newX < labelRect.x + (labelRect.width / 2)) && 
 					(imageRect.y - 2 <= labelRect.y && labelRect.y <= imageRect.y + 2)) {
 					// right aligned image
