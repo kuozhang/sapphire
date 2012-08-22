@@ -144,6 +144,7 @@
                     </content>
                 </page>
             </properties-view>
+            <visible-when>${ DetailLevel == 1 }</visible-when>
         </node>
         <page-header-text>architecture</page-header-text>
         <connection>
