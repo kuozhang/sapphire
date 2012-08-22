@@ -47,10 +47,37 @@
         </action-handler>
         <node>
             <instance-id>${ Name }</instance-id>
+            <width>110</width>
+            <height>30</height>
+            <rectangle>
+              <corner-radius>8</corner-radius>
+              <border>
+                <width>1</width>
+                <style>solid</style>
+                <color>#333399</color>
+              </border>
+              <background>
+                <gradient/>
+              </background>
+              <sequence-layout>
+                <orientation>horizontal</orientation>
+              </sequence-layout>
+              <content>
+                <validation-marker>
+                </validation-marker>
+                <text>
+                  <sequence-layout-constraint>
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <vertical-alignment>center</vertical-alignment>
+                    <expand-cell-horizontally>true</expand-cell-horizontally>
+                    <expand-cell-vertically>true</expand-cell-vertically>
+                  </sequence-layout-constraint>
+                </text>
+              </content>
+            </rectangle>
             <tool-palette-label>component</tool-palette-label>
             <property>Components</property>
             <label>
-                <width>120</width>
                 <text>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</text>
             </label>
             <connection-binding>

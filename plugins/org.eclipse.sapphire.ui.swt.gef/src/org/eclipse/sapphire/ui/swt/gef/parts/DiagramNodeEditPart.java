@@ -296,10 +296,10 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		} else if (DiagramNodeModel.NODE_BOUNDS.equals(prop)) {
 			refreshVisuals();
 		} else if (DiagramNodeModel.NODE_UPDATES.equals(prop)) {
-			//refreshVisuals();
+			refreshVisuals();
 			refreshNode();
 		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
-			//performDirectEdit();
+			performDirectEdit();
 		}
 	}
 	
