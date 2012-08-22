@@ -89,10 +89,6 @@
             <label>
                 <text>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</text>
             </label>
-	        <image>
-	            <path>${ (Name == null ? &quot;node-fragment-incomplete.png&quot; : &quot;node-fragment.png&quot;) }</path>
-	            <placement>top</placement> 
-	        </image>
             <connection-binding>
                 <connection-id>Dependency</connection-id>
                 <property>Dependencies</property>
