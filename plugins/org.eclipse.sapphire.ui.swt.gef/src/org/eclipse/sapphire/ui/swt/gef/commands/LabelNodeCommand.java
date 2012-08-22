@@ -65,7 +65,7 @@ public class LabelNodeCommand extends Command {
 			}
 		}		
 		
-		node.getModelPart().setLabel(labelText);
+		node.setLabel(labelText);
 		
 		// Refreshing endpoints of attached connections and re-enable listeners on them.
 		for (DiagramConnectionPart connPart : connParts1)

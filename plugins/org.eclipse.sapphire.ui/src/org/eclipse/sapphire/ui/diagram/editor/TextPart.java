@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
@@ -25,6 +26,7 @@ public class TextPart extends ShapePart
 	private TextDef textDef;
 	private IModelElement modelElement;
 	private FunctionResult textFunction;
+	private ValueProperty labelProperty;
 	private FunctionResult colorFunction;
 	
 	@Override
@@ -48,6 +50,7 @@ public class TextPart extends ShapePart
                 }
             }
         );
+        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.textFunction);
         
         this.colorFunction = initExpression
         ( 
@@ -91,6 +94,10 @@ public class TextPart extends ShapePart
     
     public void setText(String text)
     {
+        if (this.labelProperty != null)
+        {
+            this.modelElement.write(this.labelProperty, text);
+        }
     	
     }
     

@@ -79,7 +79,6 @@
             <tool-palette-label>location</tool-palette-label>
             <tool-palette-desc>map location</tool-palette-desc>
             <property>Locations</property>
-            <label>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</label>
             <instance-id>${Name}</instance-id>
             <connection-binding>
                 <connection-id>railway_routes</connection-id>

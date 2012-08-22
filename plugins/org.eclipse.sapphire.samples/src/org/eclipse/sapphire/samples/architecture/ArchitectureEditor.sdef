@@ -66,6 +66,7 @@
                 <validation-marker>
                 </validation-marker>
                 <text>
+                  <content>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</content>
                   <sequence-layout-constraint>
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>center</vertical-alignment>
@@ -77,9 +78,6 @@
             </rectangle>
             <tool-palette-label>component</tool-palette-label>
             <property>Components</property>
-            <label>
-                <text>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</text>
-            </label>
             <connection-binding>
                 <connection-id>Dependency</connection-id>
                 <property>Dependencies</property>

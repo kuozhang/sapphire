@@ -15,20 +15,15 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
@@ -40,9 +35,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
@@ -60,37 +53,12 @@ public class DiagramNodePart
     
 {
 	
-    public final static class NodeImageDecorator {
-    	
-    	ImageData imageData;
-    	IDiagramImageDecoratorDef imageDecoratorDef;
-    	
-    	public NodeImageDecorator(ImageData imageData, IDiagramImageDecoratorDef imageDecoratorDef) {
-    		this.imageData = imageData;
-    		this.imageDecoratorDef = imageDecoratorDef;
-    	}
-    	
-    	public ImageData getImageData() {
-    		return this.imageData;
-    	}
-    	
-    	public IDiagramImageDecoratorDef getImageDecoratorDef() {
-    		return this.imageDecoratorDef;
-    	}
-    	
-    }
-    	
 	private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
 	
 	private DiagramNodeTemplate nodeTemplate;
 	private IDiagramNodeDef definition;
 	private IModelElement modelElement;
-	private FunctionResult labelFunctionResult;
 	private FunctionResult idFunctionResult;
-	private FunctionResult imageDataFunctionResult;
-	private List<FunctionResult> imageDecoratorFunctionResults;
-	private List<FunctionResult> imageDecoratorDataFunctionResults;
-	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
 	private Listener modelPropertyListener;
@@ -106,21 +74,6 @@ public class DiagramNodePart
         this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
         this.definition = (IDiagramNodeDef)super.definition;
         this.modelElement = getModelElement();
-        this.labelFunctionResult = initExpression
-        ( 
-            this.modelElement,
-            this.definition.getLabel().element().getText().getContent(),
-            String.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshLabel();
-                }
-            }
-        );
-        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.labelFunctionResult);
         
         this.idFunctionResult = initExpression
         ( 
@@ -135,68 +88,7 @@ public class DiagramNodePart
                 }
             }
         );
-        
-        if (this.definition.getImage().element() != null)
-        {
-            this.imageDataFunctionResult = initExpression
-            ( 
-                this.modelElement,
-                this.definition.getImage().element().getImage().getContent(),
-                ImageData.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        refreshImage();
-                    }
-                }
-            );
-        }
-
-        // Image decorator functions
-        
-        ModelElementList<IDiagramImageDecoratorDef> imageDecorators = this.definition.getImageDecorators();
-        this.imageDecoratorFunctionResults = new ArrayList<FunctionResult>();
-        for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
-        {
-            FunctionResult imageResult = initExpression
-            ( 
-                this.modelElement,
-                imageDecorator.getVisibleWhen().getContent(),
-                String.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        refreshDecorator();
-                    }
-                }
-            );
-            this.imageDecoratorFunctionResults.add(imageResult);
-        }
-        
-        this.imageDecoratorDataFunctionResults = new ArrayList<FunctionResult>();
-        for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
-        {
-            FunctionResult imageResult = initExpression
-            ( 
-                this.modelElement,
-                imageDecorator.getImage().getContent(),
-                ImageData.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        refreshDecorator();
-                    }
-                }
-            );
-            this.imageDecoratorDataFunctionResults.add(imageResult);
-        }
-        
+                
         // create shape part
         
         createShapePart();
@@ -240,28 +132,6 @@ public class DiagramNodePart
     	return this.shapePart;
     }
     
-    public List<NodeImageDecorator> getImageDecorators()
-    {
-        List<NodeImageDecorator> imageDecorators = new ArrayList<NodeImageDecorator>();
-        ModelElementList<IDiagramImageDecoratorDef> defs = this.definition.getImageDecorators();
-        for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
-        {
-            FunctionResult result = this.imageDecoratorFunctionResults.get(i);
-            if (result != null)
-            {
-                String show = (String)result.value();
-                if (show != null && show.equals("true"))
-                {
-                    IDiagramImageDecoratorDef def = defs.get(i);
-                	FunctionResult imageDataResult = this.imageDecoratorDataFunctionResults.get(i);
-                	NodeImageDecorator nodeImageDecorator = new NodeImageDecorator((ImageData)imageDataResult.value(), def);
-                    imageDecorators.add(nodeImageDecorator);
-                }
-            }
-        }
-        return imageDecorators;
-    }
-    
     @Override
     public void render(SapphireRenderingContext context)
     {
@@ -292,66 +162,13 @@ public class DiagramNodePart
     public void dispose()
     {
         super.dispose();
-        if (this.labelFunctionResult != null)
-        {
-            this.labelFunctionResult.dispose();
-        }
-        
         if (this.idFunctionResult != null)
         {
             this.idFunctionResult.dispose();
         }
         
-        if (this.imageDataFunctionResult != null)
-        {
-            this.imageDataFunctionResult.dispose();
-        }
-    
-        for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
-        {
-            FunctionResult result = this.imageDecoratorFunctionResults.get(i);
-            if (result != null)
-            {
-                result.dispose();
-            }
-        }
-        
-        for (int i = 0; i < this.imageDecoratorDataFunctionResults.size(); i++)
-        {
-            FunctionResult result = this.imageDecoratorDataFunctionResults.get(i);
-            if (result != null)
-            {
-                result.dispose();
-            }
-        }
-
         this.modelElement.detach(this.modelPropertyListener, "*");
         this.modelElement.detach(this.elementValidationListener);
-    }
-    
-    public String getLabel()
-    {
-        String label = null;
-        
-        if( this.labelFunctionResult != null )
-        {
-            label = (String) this.labelFunctionResult.value();
-        }
-        
-        if( label == null )
-        {
-            label = "#null#";
-        }
-        
-        return label;
-    }
-
-    public void setLabel(String newValue)
-    {
-        if (this.labelProperty != null)
-        {
-            this.modelElement.write(this.labelProperty, newValue);
-        }
     }
     
     public void refreshLabel()
@@ -369,11 +186,6 @@ public class DiagramNodePart
         notifyNodeUpdate();
     }
 
-    public boolean canEditLabel()
-    {
-        return this.labelProperty != null;
-    }
-    
     public String getNodeTypeId()
     {
         return this.definition.getId().getContent();
@@ -439,84 +251,7 @@ public class DiagramNodePart
 		}			
 	}
 
-	public int getHorizontalSpacing()
-	{
-		if (this.definition.getHorizontalSpacing().getContent() != null)
-		{
-			return this.definition.getHorizontalSpacing().getContent();
-		}
-		return 0;
-	}
 	
-	public int getVerticalSpacing()
-	{
-		if (this.definition.getVerticalSpacing().getContent() != null)
-		{
-			return this.definition.getVerticalSpacing().getContent();
-		}
-		return 0;
-	}
-
-    public ImageData getImage()
-    {
-        if( this.imageDataFunctionResult != null )
-        {
-        	return (ImageData) this.imageDataFunctionResult.value();
-        }
-        return null;        
-    }
-    
-    public ImagePlacement getImagePlacement()
-    {
-        if (this.definition.getImage().element() != null)
-        {
-            return this.definition.getImage().element().getPlacement().getContent();
-        }
-        return null;
-    }
-    
-    public int getImageWidth()
-    {
-        if (this.definition.getImage().element() != null)
-        {
-            if (this.definition.getImage().element().getWidth().getContent() != null)
-            {
-                this.definition.getImage().element().getWidth().getContent();
-            }
-        }
-        return 0;
-    }
-    
-    public int getImageHeight()
-    {
-        if (this.definition.getImage().element() != null)
-        {
-            if (this.definition.getImage().element().getHeight().getContent() != null)
-            {
-                this.definition.getImage().element().getHeight().getContent();
-            }
-        }
-        return 0;
-    }
-
-    public int getLabelWidth()
-    {
-        if (this.definition.getLabel().element().getWidth().getContent() != null)
-        {
-            return this.definition.getLabel().element().getWidth().getContent();
-        }
-        return 0;
-    }
-
-	public int getLabelHeight()
-	{
-		if (this.definition.getLabel().element().getHeight().getContent() != null)
-		{
-			return this.definition.getLabel().element().getHeight().getContent();
-		}
-		return 0;
-	}
-						
 	private void notifyNodeUpdate()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
