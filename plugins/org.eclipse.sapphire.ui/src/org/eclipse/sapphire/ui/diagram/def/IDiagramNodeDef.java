@@ -194,60 +194,7 @@ public interface IDiagramNodeDef
     Value<Boolean> isResizable();
     void setResizable( String value );
     void setResizable( Boolean value );
-    
-    // *** HorizontalSpacing ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "horizontal spacing" )
-    @XmlBinding( path = "horizontal-spacing" )
-    @DefaultValue( text = "0" )
-    
-    ValueProperty PROP_HORIZONTAL_SPACING = new ValueProperty( TYPE, "HorizontalSpacing" );
-    
-    Value<Integer> getHorizontalSpacing();
-    void setHorizontalSpacing( String value );
-    void setHorizontalSpacing( Integer value );
-    
-    // *** VerticalSpacing ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "vertical spacing" )
-    @XmlBinding( path = "vertical-spacing" )
-    @DefaultValue( text = "0" )
-    
-    ValueProperty PROP_VERTICAL_SPACING = new ValueProperty( TYPE, "VerticalSpacing" );
-    
-    Value<Integer> getVerticalSpacing();
-    void setVerticalSpacing( String value );
-    void setVerticalSpacing( Integer value );
-
-    // *** Image ***
-    
-    @Type( base = IDiagramNodeImageDef.class )
-    @XmlBinding( path = "image" )
-
-    ElementProperty PROP_IMAGE = new ElementProperty( TYPE, "Image" );
-    
-    ModelElementHandle<IDiagramNodeImageDef> getImage();
-    
-    // *** Label ***
-    
-    @Type( base = IDiagramLabelDef.class )
-    @XmlBinding( path = "label" )
-    
-    ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
-    
-    ModelElementHandle<IDiagramLabelDef> getLabel();
-                
-    // *** ImageDecorators ***
-    
-    @Type( base = IDiagramImageDecoratorDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image-decorator", type = IDiagramImageDecoratorDef.class ) )
-                             
-    ListProperty PROP_IMAGE_DECORATORS = new ListProperty( TYPE, "ImageDecorators" );
-    
-    ModelElementList<IDiagramImageDecoratorDef> getImageDecorators();
-    
+        
     // *** EmbeddedConnections ***
     
     @Type( base = IDiagramExplicitConnectionBindingDef.class )

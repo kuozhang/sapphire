@@ -35,6 +35,8 @@ public class ContainerShapePart extends ShapePart
 	private List<ShapePart> children;
 	private int validationMarkerIndex = -1;
 	private ValidationMarkerPart validationMarkerPart;
+	// TODO support multiple text part
+	private TextPart textPart;
 
 	@Override
     protected void init()
@@ -51,7 +53,8 @@ public class ContainerShapePart extends ShapePart
         	ShapePart childPart = null;
         	if (shape instanceof TextDef)
         	{
-    	        childPart = new TextPart();
+        		this.textPart = new TextPart();
+    	        childPart = this.textPart;
         	}
         	else if (shape instanceof ImageDef)
         	{
@@ -99,5 +102,10 @@ public class ContainerShapePart extends ShapePart
 	public ValidationMarkerPart getValidationMarkerPart()
 	{
 		return this.validationMarkerPart;
+	}
+	
+	public TextPart getTextPart()
+	{
+		return this.textPart;
 	}
 }
