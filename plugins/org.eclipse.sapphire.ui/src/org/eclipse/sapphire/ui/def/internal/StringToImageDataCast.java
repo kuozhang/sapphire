@@ -13,9 +13,9 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.net.URL;
 
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.TypeCast;
@@ -38,7 +38,7 @@ public final class StringToImageDataCast extends TypeCast
         
         if( origin instanceof IModelElement )
         {
-            return ( ( (IModelElement) origin ).adapt( ResourceLocator.class ) != null );
+            return ( ( (IModelElement) origin ).adapt( Context.class ) != null );
         }
         
         return false;
@@ -51,7 +51,7 @@ public final class StringToImageDataCast extends TypeCast
                             final Class<?> target )
     {
         final IModelElement element = (IModelElement) requestor.origin();
-        final ResourceLocator resourceLocator = element.adapt( ResourceLocator.class );
+        final Context ctxt = element.adapt( Context.class );
         final String path = (String) value;
         
         URL url = null;
@@ -69,7 +69,7 @@ public final class StringToImageDataCast extends TypeCast
                     if( pname != null )
                     {
                         final String possibleFullPath = pname.replace( '.', '/' ) + "/" + path;
-                        url = resourceLocator.find( possibleFullPath );
+                        url = ctxt.findResource( possibleFullPath );
                         
                         if( url != null )
                         {
@@ -82,7 +82,7 @@ public final class StringToImageDataCast extends TypeCast
         
         if( url == null )
         {
-            url = resourceLocator.find( path );
+            url = ctxt.findResource( path );
         }
         
         if( url != null )

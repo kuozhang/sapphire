@@ -13,10 +13,9 @@ package org.eclipse.sapphire.ui.def;
 
 import java.net.URL;
 
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Sapphire;
-import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.SharedModelsCache;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
@@ -45,19 +44,17 @@ public final class SapphireUiDefFactory
         return null;
     }
     
-    public static ISapphireUiDef load( final ISapphireUiDef context,
+    public static ISapphireUiDef load( final ISapphireUiDef contextUiDef,
                                        final String path )
     {
-        final ResourceLocator resourceLocator = context.adapt( ResourceLocator.class );
+        final Context context = contextUiDef.adapt( Context.class );
         
-        if( resourceLocator != null )
+        if( context != null )
         {
-            final URL url = resourceLocator.find( path );
+            final URL url = context.findResource( path );
             
             if( url != null )
             {
-                final ClassLocator classLocator = context.adapt( ClassLocator.class );
-                
                 try
                 {
                     final UrlResourceStore resourceStore = new UrlResourceStore( url )
@@ -65,13 +62,9 @@ public final class SapphireUiDefFactory
                         @Override
                         public <A> A adapt( final Class<A> adapterType )
                         {
-                            if( adapterType == ResourceLocator.class )
+                            if( adapterType == Context.class )
                             {
-                                return adapterType.cast( resourceLocator );
-                            }
-                            else if( adapterType == ClassLocator.class )
-                            {
-                                return adapterType.cast( classLocator );
+                                return adapterType.cast( context );
                             }
                             
                             return super.adapt( adapterType );

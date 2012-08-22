@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.java.ClassBasedJavaType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
-import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.Service;
@@ -34,9 +34,9 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
     public JavaType resolve( final String name )
     {
         final ISapphireUiDef sdef = context( ISapphireUiDef.class );
-        final ClassLocator locator = sdef.adapt( ClassLocator.class );
+        final Context context = sdef.adapt( Context.class );
         
-        if( locator != null )
+        if( context != null )
         {
             for( IPackageReference packageRef : sdef.getImportedPackages() )
             {
@@ -45,7 +45,7 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
                 if( packageName != null )
                 {
                     final String fullClassName = packageName + "." + name;
-                    final Class<?> cl = locator.find( fullClassName );
+                    final Class<?> cl = context.findClass( fullClassName );
                     
                     if( cl != null )
                     {

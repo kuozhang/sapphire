@@ -26,6 +26,7 @@
   <li><a href="#Modeling">Modeling</a></li>
   <ol type="A">
     <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
+    <li><a href="#Modeling-Context">Context</a></li>
     <li><a href="#Modeling-FileName">FileName</a></li>
     <li><a href="#Modeling-ModelElement">ModelElement</a></li>
     <li><a href="#Modeling-ModelElementList">ModelElementList</a></li>
@@ -135,6 +136,40 @@ view page.</p>
         &lt;/content>
     &lt;/page>
 &lt;/properties-view></font></code></pre>
+
+
+<h2><a name="Modeling-Context">Context</a></h2>
+
+<p>The existing ClassLocator and ResourceLocator abstractions have been combined into a single abstraction.
+This abstraction enables Sapphire to find classes and other resources typically loaded from
+a class loader even if Sapphire is used in a context such as OSGi where a ClassLoader instance may not always
+be exposed.</p>
+
+<pre class="source-code"><code>Context
+{
+     static Context adapt( ClassLoader loader )
+     static Context adapt( Class&lt;?> cl )
+     
+     abstract &lt;T> Class&lt;T> findClass( String name )
+     abstract URL findResource( String name )
+     abstract List&lt;URL> findResources( String name )
+}
+ 
+BundleBasedContext extends Context
+{
+     static Context adapt( Bundle bundle )
+}</code></pre>
+
+<p>In addition to merging of the locators, this enhancement includes two new features:</p>
+
+<ol>
+
+  <li>The findResources() method, which is used for locating all resources with the same name.</li> 
+
+  <li>When Context is constructed based on a class instead of a class loader, the implementation is 
+  capable of resolving classes and resources using a simple name relative to the package of context class.</li>
+  
+</ol>
 
 
 <h2><a name="Modeling-FileName">FileName</a></h2>

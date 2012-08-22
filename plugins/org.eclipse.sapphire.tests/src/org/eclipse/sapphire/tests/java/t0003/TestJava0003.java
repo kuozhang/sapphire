@@ -11,12 +11,15 @@
 
 package org.eclipse.sapphire.tests.java.t0003;
 
+import java.net.URL;
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.osgi.framework.Bundle;
@@ -27,10 +30,7 @@ import org.osgi.framework.Bundle;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestJava0003
-
-    extends SapphireTestCase
-    
+public final class TestJava0003 extends SapphireTestCase
 {
     private static final String PACKAGE_NAME = "org.eclipse.sapphire.tests.java.t0003";
     
@@ -47,7 +47,7 @@ public final class TestJava0003
 
         suite.addTest( new TestJava0003( "testTopLevel" ) );
         suite.addTest( new TestJava0003( "testInner" ) );
-        suite.addTest( new TestJava0003( "testWithCustomClassLocator" ) );
+        suite.addTest( new TestJava0003( "testWithCustomContext" ) );
         
         return suite;
     }
@@ -72,7 +72,7 @@ public final class TestJava0003
         assertNotNull( type );
     }
     
-    public void testWithCustomClassLocator()
+    public void testWithCustomContext()
     {
         final RootXmlResource resource = new RootXmlResource()
         {
@@ -81,14 +81,14 @@ public final class TestJava0003
             
             public <A> A adapt( final Class<A> adapterType )
             {
-                if( adapterType == ClassLocator.class )
+                if( adapterType == Context.class )
                 {
                     final Bundle bundle = Platform.getBundle( "org.eclipse.core.resources" );
                     
-                    return (A) new ClassLocator()
+                    return (A) new Context()
                     {
                         @Override
-                        public Class<?> find( final String name )
+                        public Class<?> findClass( final String name )
                         {
                             try
                             {
@@ -96,12 +96,23 @@ public final class TestJava0003
                             }
                             catch( ClassNotFoundException e )
                             {
-                                // Intentionally ignoring.
+                                // Intentionally converting ClassNotFoundException to null return.
                             }
                             
                             return null;
                         }
-                        
+
+                        @Override
+                        public URL findResource( final String name )
+                        {
+                            throw new UnsupportedOperationException();
+                        }
+
+                        @Override
+                        public List<URL> findResources( final String name )
+                        {
+                            throw new UnsupportedOperationException();
+                        }
                     };
                 }
                 

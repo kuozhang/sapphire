@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.eclipse.sapphire.Context;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -84,39 +86,7 @@ public abstract class ExtensionsLocator
 
                                 if( url != null )
                                 {
-                                    final Handle handle = new Handle()
-                                    {
-                                        @Override
-                                        public URL extension()
-                                        {
-                                            return url;
-                                        }
-
-                                        @Override
-                                        public URL findResource( final String name )
-                                        {
-                                            return cl.getResource( name );
-                                        }
-
-                                        @Override
-                                        @SuppressWarnings( "unchecked" )
-                                        
-                                        public <T> Class<T> findClass( final String name )
-                                        {
-                                            try
-                                            {
-                                                return (Class<T>) cl.loadClass( name );
-                                            }
-                                            catch( ClassNotFoundException e )
-                                            {
-                                                // Intentionally converting ClassNotFoundException to null return.
-                                            }
-
-                                            return null;
-                                        }
-                                    };
-                                    
-                                    handles.add( handle );
+                                    handles.add( new Handle( url, Context.adapt( cl ) ) );
                                 }
                             }
                         }
@@ -136,11 +106,27 @@ public abstract class ExtensionsLocator
     
     public abstract List<Handle> find();
 
-    public static abstract class Handle
+    public static final class Handle
     {
-        public abstract URL extension();
-        public abstract URL findResource( String name );
-        public abstract <T> Class<T> findClass( String name );
+        private final URL extension;
+        private final Context context;
+        
+        public Handle( final URL extension,
+                       final Context context )
+        {
+            this.extension = extension;
+            this.context = context;
+        }
+        
+        public URL extension()
+        {
+            return this.extension;
+        }
+        
+        public Context context()
+        {
+            return this.context;
+        }
     }
     
     public static abstract class Factory

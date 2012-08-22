@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.java.internal;
 
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.java.ClassBasedJavaType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
-import org.eclipse.sapphire.modeling.ClassLocator;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
@@ -27,46 +27,29 @@ import org.eclipse.sapphire.services.ServiceFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StandardJavaTypeReferenceService
-
-    extends JavaTypeReferenceService
-    
+public final class StandardJavaTypeReferenceService extends JavaTypeReferenceService
 {
-    private final ClassLocator classLocator;
+    private final Context context;
     
-    public StandardJavaTypeReferenceService( final ClassLocator classLocator )
+    public StandardJavaTypeReferenceService( final Context context )
     {
-        this.classLocator = classLocator;
+        if( context == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.context = context;
     }
     
-    public StandardJavaTypeReferenceService( final ClassLoader classLoader )
+    public StandardJavaTypeReferenceService( final ClassLoader loader )
     {
-        this
-        (
-            new ClassLocator()
-            {
-                @Override
-                public Class<?> find( final String name )
-                {
-                    try
-                    {
-                        return classLoader.loadClass( name );
-                    }
-                    catch( ClassNotFoundException e )
-                    {
-                        // Intentionally converting exception to null result.
-                    }
-
-                    return null;
-                }
-            }
-        );
+        this( Context.adapt( loader ) );
     }
     
     @Override
     public JavaType resolve( final String name )
     {
-        final Class<?> cl = this.classLocator.find( name );
+        final Class<?> cl = this.context.findClass( name );
         
         if( cl != null )
         {
@@ -102,17 +85,15 @@ public final class StandardJavaTypeReferenceService
                                final Class<? extends Service> service )
         {
             final IModelElement element = context.find( IModelElement.class );
-            final ClassLocator classLocator = element.adapt( ClassLocator.class );
             
-            if( classLocator != null )
+            Context ctxt = element.adapt( Context.class );
+            
+            if( ctxt == null )
             {
-                return new StandardJavaTypeReferenceService( classLocator );
+                ctxt = Context.adapt( element.type().getModelElementClass().getClassLoader() );
             }
-            else
-            {
-                final ClassLoader classLoader = element.type().getModelElementClass().getClassLoader();
-                return new StandardJavaTypeReferenceService( classLoader );
-            }
+
+            return new StandardJavaTypeReferenceService( ctxt );
         }
     }
 

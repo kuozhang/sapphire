@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -109,6 +110,7 @@ public final class SapphireModelingExtensionSystem
                 if( root != null )
                 {
                     final NodeList nodes = root.getChildNodes();
+                    final Context context = handle.context();
 
                     for( int i = 0, n = nodes.getLength(); i < n; i++ )
                     {
@@ -124,8 +126,8 @@ public final class SapphireModelingExtensionSystem
                                 if( elname.equals( EL_SERVICE ) )
                                 {
                                     final String id = value( el, EL_ID );
-                                    final Class<? extends Service> serviceType = handle.findClass( value( el, EL_TYPE ) );
-                                    final Class<? extends ServiceFactory> serviceFactory = handle.findClass( value( el, EL_FACTORY ) );
+                                    final Class<? extends Service> serviceType = context.findClass( value( el, EL_TYPE ) );
+                                    final Class<? extends ServiceFactory> serviceFactory = context.findClass( value( el, EL_FACTORY ) );
                                     final Set<String> contexts = set( el, EL_CONTEXT );
                                     final Set<String> overrides = set( el, EL_OVERRIDES );
                                     
@@ -141,15 +143,15 @@ public final class SapphireModelingExtensionSystem
                                 else if( elname.equals( EL_FUNCTION ) )
                                 {
                                     final String name = value( el, EL_NAME );
-                                    final Class<? extends Function> impl = handle.findClass( value( el, EL_IMPL ) );
+                                    final Class<? extends Function> impl = context.findClass( value( el, EL_IMPL ) );
 
                                     functionFactories.put( name.toLowerCase(), new FunctionFactory( impl ) );
                                 }
                                 else if( elname.equals( EL_TYPE_CAST ) )
                                 {
-                                    final Class<?> source = handle.findClass( value( el, EL_SOURCE ) );
-                                    final Class<?> target = handle.findClass( value( el, EL_TARGET ) );
-                                    final Class<? extends TypeCast> impl = handle.findClass( value( el, EL_IMPL ) );
+                                    final Class<?> source = context.findClass( value( el, EL_SOURCE ) );
+                                    final Class<?> target = context.findClass( value( el, EL_TARGET ) );
+                                    final Class<? extends TypeCast> impl = context.findClass( value( el, EL_IMPL ) );
                                     
                                     typeCasts.add( new TypeCastProxy( source, target, impl ) );
                                 }

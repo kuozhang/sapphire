@@ -58,39 +58,7 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
                             
                             if( url != null )
                             {
-                                final Handle handle = new Handle()
-                                {
-                                    @Override
-                                    public URL extension()
-                                    {
-                                        return url;
-                                    }
-
-                                    @Override
-                                    public URL findResource( final String name )
-                                    {
-                                        return bundle.getResource( name );
-                                    }
-
-                                    @Override
-                                    @SuppressWarnings( "unchecked" )
-                                    
-                                    public <T> Class<T> findClass( final String name )
-                                    {
-                                        try
-                                        {
-                                            return (Class<T>) bundle.loadClass( name );
-                                        }
-                                        catch( ClassNotFoundException e )
-                                        {
-                                            // Intentionally converting ClassNotFoundException to null return.
-                                        }
-
-                                        return null;
-                                    }
-                                };
-                                
-                                handlesListFactory.add( handle );
+                                handlesListFactory.add( new Handle( url, BundleBasedContext.adapt( bundle ) ) );
                             }
                         }
                     }
