@@ -73,15 +73,6 @@
                     <expand-cell-vertically>true</expand-cell-vertically>
                   </sequence-layout-constraint>
                 </text>
-                <image>
-	              <path>${ (Name == null ? &quot;node-fragment-incomplete.png&quot; : &quot;node-fragment.png&quot;) }</path>
-                  <sequence-layout-constraint>
-                    <horizontal-alignment>center</horizontal-alignment>
-                    <vertical-alignment>top</vertical-alignment>
-                    <expand-cell-horizontally>false</expand-cell-horizontally>
-                    <expand-cell-vertically>false</expand-cell-vertically>
-                  </sequence-layout-constraint>
-                </image>
               </content>
             </rectangle>
             <tool-palette-label>component</tool-palette-label>
@@ -89,10 +80,6 @@
             <label>
                 <text>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</text>
             </label>
-	        <image>
-	            <path>${ (Name == null ? &quot;node-fragment-incomplete.png&quot; : &quot;node-fragment.png&quot;) }</path>
-	            <placement>top</placement> 
-	        </image>
             <connection-binding>
                 <connection-id>Dependency</connection-id>
                 <property>Dependencies</property>
