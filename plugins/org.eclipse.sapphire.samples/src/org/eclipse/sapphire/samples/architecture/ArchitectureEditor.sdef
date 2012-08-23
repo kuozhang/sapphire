@@ -48,7 +48,7 @@
         <node>
             <instance-id>${ Name }</instance-id>
             <width>70</width>
-            <height>70</height>
+            <height>90</height>
             <rectangle>
               <corner-radius>8</corner-radius>
               <sequence-layout>
@@ -56,7 +56,7 @@
               </sequence-layout>
               <content>
                 <image>
-	              <path>Architecture-32.png</path>
+	              <path>Architecture.png</path>
                   <sequence-layout-constraint>
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>top</vertical-alignment>
