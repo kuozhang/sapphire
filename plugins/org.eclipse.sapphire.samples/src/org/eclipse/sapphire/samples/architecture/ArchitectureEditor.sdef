@@ -47,23 +47,25 @@
         </action-handler>
         <node>
             <instance-id>${ Name }</instance-id>
-            <width>110</width>
-            <height>30</height>
+            <width>70</width>
+            <height>70</height>
             <rectangle>
               <corner-radius>8</corner-radius>
-              <border>
-                <width>1</width>
-                <style>solid</style>
-                <color>#333399</color>
-              </border>
-              <background>
-                <gradient/>
-              </background>
               <sequence-layout>
-                <orientation>horizontal</orientation>
+                <orientation>vertical</orientation>
               </sequence-layout>
               <content>
+                <image>
+	              <path>Architecture-32.png</path>
+                  <sequence-layout-constraint>
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <vertical-alignment>top</vertical-alignment>
+                    <expand-cell-horizontally>false</expand-cell-horizontally>
+                    <expand-cell-vertically>false</expand-cell-vertically>
+                  </sequence-layout-constraint>
+                </image>
                 <validation-marker>
+                    <size>small</size>
                 </validation-marker>
                 <text>
                   <content>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</content>

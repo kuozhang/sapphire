@@ -16,14 +16,14 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
-import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
@@ -32,6 +32,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraint;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
@@ -133,6 +134,15 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		{
 			TextPart textPart = (TextPart)shapePart;
 			figure = new TextFigure(getResourceCache(), textPart.getText(), textPart.getTextColor());
+		}
+		else if (shapePart instanceof ImagePart)
+		{
+			ImagePart imagePart = (ImagePart)shapePart;
+			DiagramNodePart nodePart = imagePart.nearest(DiagramNodePart.class);
+			final ImageData data = imagePart.getImage();
+			if (data != null) {
+				figure = new DecoratorImageFigure(nodePart.getImageCache().getImage(data));
+			}
 		}
 		else if (shapePart instanceof ValidationMarkerPart)
 		{

@@ -36,35 +36,41 @@ public class RectanglePart extends ContainerShapePart
         this.rectangleDef = (RectangleDef)super.definition;
         this.modelElement = getModelElement();
         
-        this.borderWidth = initExpression
-        ( 
-            this.modelElement,
-            this.rectangleDef.getBorder().element().getWidth().getContent(),
-            Integer.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshBorder();
-                }
-            }
-        );
+        if (this.rectangleDef.getBorder().element() != null)
+        {
+            this.borderWidth = initExpression
+                    ( 
+                        this.modelElement,
+                        this.rectangleDef.getBorder().element().getWidth().getContent(),
+                        Integer.class,
+                        null,
+                        new Runnable()
+                        {
+                            public void run()
+                            {
+                                refreshBorder();
+                            }
+                        }
+                    );
+        }
         
-        this.borderColor = initExpression
-        ( 
-            this.modelElement,
-            this.rectangleDef.getBorder().element().getColor().getContent(),
-            Color.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshBorder();
-                }
-            }
-        );
+        if (this.rectangleDef.getBorder().element() != null)
+        {
+	        this.borderColor = initExpression
+	        ( 
+	            this.modelElement,
+	            this.rectangleDef.getBorder().element().getColor().getContent(),
+	            Color.class,
+	            null,
+	            new Runnable()
+	            {
+	                public void run()
+	                {
+	                    refreshBorder();
+	                }
+	            }
+	        );
+        }
         
     }
 

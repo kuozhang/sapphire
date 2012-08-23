@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 
@@ -24,6 +25,7 @@ public class ImagePart extends ShapePart
 	private ImageDef imageDef;
 	private IModelElement modelElement;
 	private FunctionResult imagePathFunction;
+	private FunctionResult imageDataFunctionResult;
 	
 	@Override
     protected void init()
@@ -32,11 +34,27 @@ public class ImagePart extends ShapePart
         this.imageDef = (ImageDef)super.definition;
         this.modelElement = getModelElement();
         
+        
         this.imagePathFunction = initExpression
         ( 
             this.modelElement,
             this.imageDef.getPath().getContent(),
             String.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    refreshImage();
+                }
+            }
+        );
+        
+        this.imageDataFunctionResult = initExpression
+        ( 
+            this.modelElement,
+            this.imageDef.getPath().getContent(),
+            ImageData.class,
             null,
             new Runnable()
             {
@@ -57,8 +75,21 @@ public class ImagePart extends ShapePart
         {
             this.imagePathFunction.dispose();
         }
+        if (this.imageDataFunctionResult != null)
+        {
+            this.imageDataFunctionResult.dispose();
+        }
     }
 	
+    public ImageData getImage()
+    {
+        if( this.imageDataFunctionResult != null )
+        {
+        	return (ImageData) this.imageDataFunctionResult.value();
+        }
+        return null;        
+    }
+ 
     public String getImagePath()
     {
     	String path = null;
