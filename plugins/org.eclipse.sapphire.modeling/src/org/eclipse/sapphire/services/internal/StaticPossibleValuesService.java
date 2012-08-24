@@ -11,50 +11,44 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.EnumValueType;
+import java.util.List;
+import java.util.SortedSet;
+
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.services.ValueLabelService;
-import org.eclipse.sapphire.services.ValueSerializationService;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
+ * Implementation of PossibleValuesService based on @PossibleValues annotation's values attribute..
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EnumValueLabelService extends ValueLabelService
+public final class StaticPossibleValuesService extends PossibleValuesService
 {
-    private EnumValueType enumType;
-    private ValueSerializationService valueSerializationService;
+    private final List<String> values;
     
-    @Override
-    protected void init()
+    public StaticPossibleValuesService( final String[] values,
+                                        final String invalidValueMessageTemplate,
+                                        final Status.Severity invalidValueSeverity,
+                                        final boolean caseSensitive )
     {
-        super.init();
+        super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive );
         
-        final ValueProperty property = context( ValueProperty.class );
-        
-        this.enumType = new EnumValueType( property.getTypeClass() );
-        this.valueSerializationService = property.service( ValueSerializationService.class );
-    }
-    
-    @Override
-    public String provide( final String value )
-    {
-        final Enum<?> item = (Enum<?>) this.valueSerializationService.decode( value );
-        
-        if( item == null )
-        {
-            return value;
-        }
-        else
-        {
-            return this.enumType.getLabel( item, false, CapitalizationType.NO_CAPS, false );
-        }
+        this.values = ListFactory.unmodifiable( values );
     }
 
+    @Override
+    protected void fillPossibleValues( final SortedSet<String> values )
+    {
+        values.addAll( this.values );
+    }
+    
     public static final class Factory extends ServiceFactory
     {
         @Override
@@ -62,14 +56,15 @@ public final class EnumValueLabelService extends ValueLabelService
                                    final Class<? extends Service> service )
         {
             final ValueProperty property = context.find( ValueProperty.class );
-            return ( property != null && Enum.class.isAssignableFrom( property.getTypeClass() ) );
+            return ( property != null && property.hasAnnotation( PossibleValues.class ) && property.getAnnotation( PossibleValues.class ).values().length > 0 );
         }
 
         @Override
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            return new EnumValueLabelService();
+            final PossibleValues a = context.find( ValueProperty.class ).getAnnotation( PossibleValues.class );
+            return new StaticPossibleValuesService( a.values(), a.invalidValueMessage(), a.invalidValueSeverity(), a.caseSensitive() );
         }
     }
     

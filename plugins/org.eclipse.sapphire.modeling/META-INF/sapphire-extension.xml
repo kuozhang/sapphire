@@ -35,16 +35,24 @@
         <context>Sapphire.Property.Instance</context>
     </service>
     <service>
+        <id>Sapphire.PossibleValuesService.Static</id>
+        <type>org.eclipse.sapphire.services.PossibleValuesService</type>
+        <factory>org.eclipse.sapphire.services.internal.StaticPossibleValuesService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
+        <description>Implementation of PossibleValuesService based on @PossibleValues annotation's values attribute..</description>
+    </service>
+    <service>
+        <description>Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..</description>
+        <factory>org.eclipse.sapphire.services.internal.ModelBasedPossibleValuesService$Factory</factory>
+        <id>Sapphire.PossibleValuesService.ModelBased</id>
         <type>org.eclipse.sapphire.services.PossibleValuesService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.PossibleValuesServiceFactory</factory>
-        <id>Sapphire.PossibleValuesService</id>
     </service>
     <service>
         <type>org.eclipse.sapphire.services.PossibleValuesService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.EnumPossibleValuesService$Factory</factory>
         <id>Sapphire.PossibleValuesService.Enum</id>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <context>Sapphire.Element.Instance</context>
@@ -189,29 +197,29 @@
     </service>
     <service>
         <type>org.eclipse.sapphire.services.ValueLabelService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.DefaultValueLabelService$Factory</factory>
         <id>Sapphire.ValueLabelService.Default</id>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <type>org.eclipse.sapphire.services.ValueLabelService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.EnumValueLabelService$Factory</factory>
         <id>Sapphire.ValueLabelService.Enum</id>
         <overrides>Sapphire.ValueLabelService.Default</overrides>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <type>org.eclipse.sapphire.services.ValueImageService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.DefaultValueImageService$Factory</factory>
         <id>Sapphire.ValueImageService.Default</id>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <type>org.eclipse.sapphire.services.ValueImageService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.EnumValueImageService$Factory</factory>
         <id>Sapphire.ValueImageService.Enum</id>
         <overrides>Sapphire.ValueImageService.Default</overrides>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.DocumentationService.Element.Standard</id>
@@ -367,99 +375,99 @@
     <service>
         <id>Sapphire.ValueSerializationService.Enum</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.EnumSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Boolean</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.BooleanSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Byte</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.ByteSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Short</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.ShortSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Integer</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.IntegerSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Long</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.LongSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Float</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.FloatSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Double</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.DoubleSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.BigInteger</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.BigIntegerSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.BigDecimal</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.BigDecimalSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Date</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.DateSerializationServiceFactory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Uri</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.UriSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Url</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.UrlSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Path</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.PathSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.FileName</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
         <factory>org.eclipse.sapphire.internal.FileNameSerializationService$Factory</factory>
-        <context>Sapphire.Property.Instance</context>
         <description>Implementation of ValueSerializationService for FileName.</description>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.Function</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.FunctionSerializationService$Factory</factory>
+        <context>Sapphire.Property.Instance</context>
     </service>
     <function>
         <name>Concat</name>
@@ -504,14 +512,14 @@
     <service>
         <id>Sapphire.ValueSerializationService.Version</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.VersionSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.ValueSerializationService.VersionConstraint</id>
         <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.VersionConstraintSerializationService$Factory</factory>
+        <context>Sapphire.Property.MetaModel</context>
     </service>
     <service>
         <id>Sapphire.PossibleTypesService.Standard</id>

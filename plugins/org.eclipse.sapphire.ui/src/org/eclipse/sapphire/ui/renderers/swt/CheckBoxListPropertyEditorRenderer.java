@@ -105,7 +105,6 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         // Initialize
         
         final PropertyEditorPart part = getPart();
-        final IModelElement element = part.getLocalModelElement();
         final ListProperty listProperty = (ListProperty) part.getProperty();
         
         this.memberType = listProperty.getType();
@@ -130,7 +129,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             throw new IllegalStateException();
         }
         
-        final PossibleValuesService possibleValuesService = element.service( this.memberProperty, PossibleValuesService.class );
+        final PossibleValuesService possibleValuesService = this.memberProperty.service( PossibleValuesService.class );
         
         // Create Controls
         
@@ -539,10 +538,8 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             this.value = value;
             this.element = element;
             
-            final IModelElement parent = getModelElement();
-            
-            this.valueLabelService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueLabelService.class );
-            this.valueImageService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueImageService.class );
+            this.valueLabelService = CheckBoxListPropertyEditorRenderer.this.memberProperty.service( ValueLabelService.class );
+            this.valueImageService = CheckBoxListPropertyEditorRenderer.this.memberProperty.service( ValueImageService.class );
             
             this.listener = new Listener()
             {

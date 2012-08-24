@@ -26,6 +26,32 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public abstract class PossibleValuesService extends Service
 {
+    private final String invalidValueMessageTemplate;
+    private final Status.Severity invalidValueSeverity;
+    private final boolean caseSensitive;
+    
+    public PossibleValuesService( final String invalidValueMessageTemplate,
+                                  final Status.Severity invalidValueSeverity,
+                                  final boolean caseSensitive )
+    {
+        if( invalidValueMessageTemplate == null || invalidValueMessageTemplate.length() == 0 )
+        {
+            this.invalidValueMessageTemplate = Resources.defaultInvalidValueMessage;
+        }
+        else
+        {
+            this.invalidValueMessageTemplate = invalidValueMessageTemplate;
+        }
+
+        this.invalidValueSeverity = ( invalidValueSeverity == null ? Status.Severity.ERROR : invalidValueSeverity );
+        this.caseSensitive = caseSensitive;
+    }
+    
+    public PossibleValuesService()
+    {
+        this( null, null, true );
+    }
+    
     public final SortedSet<String> values()
     {
         final TreeSet<String> values = new TreeSet<String>();
@@ -37,17 +63,17 @@ public abstract class PossibleValuesService extends Service
     
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( Resources.defaultInvalidValueMessage, invalidValue, context( ModelProperty.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        return NLS.bind( this.invalidValueMessageTemplate, invalidValue, context( ModelProperty.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
     }
     
     public Status.Severity getInvalidValueSeverity( final String invalidValue )
     {
-        return Status.Severity.ERROR;
+        return this.invalidValueSeverity;
     }
     
     public boolean isCaseSensitive()
     {
-        return true;
+        return this.caseSensitive;
     }
     
     private static final class Resources extends NLS

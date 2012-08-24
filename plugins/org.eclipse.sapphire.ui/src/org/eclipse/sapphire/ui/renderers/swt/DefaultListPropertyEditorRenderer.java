@@ -77,6 +77,7 @@ import org.eclipse.sapphire.modeling.ElementEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -89,10 +90,13 @@ import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.PossibleTypesService;
+import org.eclipse.sapphire.services.ValueImageService;
+import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.ui.ListSelectionService;
 import org.eclipse.sapphire.ui.ListSelectionService.ListSelectionChangedEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -116,8 +120,8 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -1365,12 +1369,12 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     private class DefaultColumnLabelProvider extends ColumnLabelProvider
     {
         private final ColumnHandler columnHandler;
-        private final ValueLabelProvider valueLabelProvider;
+        private final ValueProperty property;
         
         public DefaultColumnLabelProvider( final ColumnHandler columnHandler )
         {
             this.columnHandler = columnHandler;
-            this.valueLabelProvider = new ValueLabelProvider( getPart(), columnHandler.getProperty() );
+            this.property = columnHandler.getProperty();
         }
     
         @Override
@@ -1378,21 +1382,42 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         {
             final IModelElement element = ( (TableRow) obj ).element();
             final Value<?> value = this.columnHandler.getPropertyValue( element );
-            String str = this.valueLabelProvider.getText( value.getText() );
             
-            if( str == null )
+            final String text = value.getText();
+            String label = null;
+            
+            try
+            {
+                label = element.service( this.property, ValueLabelService.class ).provide( text );
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
+            }
+            
+            if( label == null )
+            {
+                label = text;
+            }
+            else if( ! label.equals( text ) )
+            {
+                final LocalizationService localizationService = getPart().definition().adapt( LocalizationService.class );
+                label = localizationService.transform( label, CapitalizationType.FIRST_WORD_ONLY, false );
+            }
+            
+            if( label == null )
             {
                 if( this.columnHandler.isEmptyTextLabelDesired( element ) )
                 {
-                    str = Resources.emptyRowIndicator;
+                    label = Resources.emptyRowIndicator;
                 }
                 else
                 {
-                    str = MiscUtil.EMPTY_STRING;
+                    label = MiscUtil.EMPTY_STRING;
                 }
             }
             
-            return str;
+            return label;
         }
         
         @Override
@@ -1408,11 +1433,21 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 {
                     final IModelElement element = row.element();
                     final Value<?> value = this.columnHandler.getPropertyValue( element );
-                    final ImageData valueImageData = this.valueLabelProvider.getImageData( value.getText() );
                     
-                    if( valueImageData != null )
+                    ImageData imageData = null;
+                    
+                    try
                     {
-                        image = getPart().getImageCache().getImage( valueImageData, element.validation().severity() );
+                        imageData = element.service( this.property, ValueImageService.class ).provide( value.getText() );
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
+                    
+                    if( imageData != null )
+                    {
+                        image = getPart().getImageCache().getImage( imageData, element.validation().severity() );
                     }
                 }
                 

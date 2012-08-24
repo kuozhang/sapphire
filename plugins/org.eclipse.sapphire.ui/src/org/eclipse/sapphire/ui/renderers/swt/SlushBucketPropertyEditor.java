@@ -94,7 +94,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         
         this.memberType = getProperty().getType();
         this.memberProperty = (ValueProperty) this.memberType.properties().get( 0 );
-        this.possibleValuesService = part.getLocalModelElement().service( this.memberProperty, PossibleValuesService.class );
+        this.possibleValuesService = this.memberProperty.service( PossibleValuesService.class );
         
         setAddActionDesired( false );
     }
@@ -414,7 +414,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                         
                         if( memberProperty instanceof ValueProperty &&
                             memberProperty.hasAnnotation( NoDuplicates.class ) &&
-                            propertyEditorPart.getLocalModelElement().service( memberProperty, PossibleValuesService.class ) != null )
+                            memberProperty.service( PossibleValuesService.class ) != null )
                         {
                             return true;
                         }
