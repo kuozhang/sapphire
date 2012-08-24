@@ -55,18 +55,35 @@
                 <orientation>vertical</orientation>
               </sequence-layout>
               <content>
-                <image>
-	              <path>Architecture.png</path>
+                <rectangle>
                   <sequence-layout-constraint>
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>top</vertical-alignment>
                     <expand-cell-horizontally>false</expand-cell-horizontally>
                     <expand-cell-vertically>false</expand-cell-vertically>
                   </sequence-layout-constraint>
-                </image>
-                <validation-marker>
-                    <size>small</size>
-                </validation-marker>
+                  <stack-layout/>
+                  <content>
+                    <image>
+	                  <path>Architecture.png</path>
+                    </image>
+                    <validation-marker>
+                     <size>small</size>
+                     <stack-layout-constraint>
+                       <horizontal-alignment>center</horizontal-alignment>
+                       <vertical-alignment>bottom</vertical-alignment>
+                       <vertical-margin>10</vertical-margin>
+                     </stack-layout-constraint>
+                    </validation-marker>                    
+                    <image>
+                      <path>Component.png</path>
+                      <stack-layout-constraint>
+                        <horizontal-alignment>center</horizontal-alignment>
+                        <vertical-alignment>center</vertical-alignment>
+                      </stack-layout-constraint>
+                    </image>
+                  </content>
+                </rectangle>    
                 <text>
                   <content>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</content>
                   <sequence-layout-constraint>

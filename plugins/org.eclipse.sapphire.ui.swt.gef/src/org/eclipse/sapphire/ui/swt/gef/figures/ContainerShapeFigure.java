@@ -24,6 +24,9 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
@@ -90,6 +93,15 @@ public class ContainerShapeFigure extends Shape
 	
 	public void refreshValidationStatus()
 	{
+		List children = getChildren();
+		for (Object figureObj : children)
+		{
+			if (figureObj instanceof ContainerShapeFigure)
+			{
+				((ContainerShapeFigure)figureObj).refreshValidationStatus();
+			}
+		}
+		
 		if (this.validationMarkerIndex == -1)
 		{
 			return;
@@ -119,7 +131,28 @@ public class ContainerShapeFigure extends Shape
 				ValidationMarkerPart markerPart = this.containerShapePart.getValidationMarkerPart();
 				ValidationMarkerFigure newMarkerFigure = 
 						FigureUtil.createValidationMarkerFigure(markerPart.getSize(), this.model, nodePart.getImageCache()) ;
-				this.add(newMarkerFigure, this.validationMarkerIndex);
+				if (this.layout instanceof StackLayoutDef)
+				{
+					StackLayoutConstraintDef stackLayoutConstraint = (StackLayoutConstraintDef)markerPart.getLayoutConstraint();
+					SapphireStackLayoutConstraint constraint = null;
+					if (stackLayoutConstraint != null)
+					{
+						constraint = new SapphireStackLayoutConstraint(
+								stackLayoutConstraint.getHorizontalAlignment().getContent(),
+								stackLayoutConstraint.getVerticalAlignment().getContent(),
+								stackLayoutConstraint.getHorizontalMargin().getContent(),
+								stackLayoutConstraint.getVerticalMargin().getContent());
+					}
+					else
+					{
+						constraint = new SapphireStackLayoutConstraint();
+					}
+					this.add(newMarkerFigure, constraint);
+				}
+				else
+				{
+					this.add(newMarkerFigure, this.validationMarkerIndex);
+				}
 				if (isHorizontalSequenceLayout)
 				{
 					gridLayout.numColumns++;

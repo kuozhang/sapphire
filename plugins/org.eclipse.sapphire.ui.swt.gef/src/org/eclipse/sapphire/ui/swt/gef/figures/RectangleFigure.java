@@ -25,6 +25,8 @@ import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackgroundDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -68,8 +70,12 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 				gridLayout.numColumns = 1;
 				gridLayout.verticalSpacing = sequenceLayout.getSpacing().getContent();
 			}
-			this.setLayoutManager(gridLayout);
-			
+			this.setLayoutManager(gridLayout);			
+		}
+		else if (this.layout instanceof StackLayoutDef)
+		{
+			SapphireStackLayout sapphireStackLayout = new SapphireStackLayout();
+			this.setLayoutManager(sapphireStackLayout);
 		}
 	}
 	

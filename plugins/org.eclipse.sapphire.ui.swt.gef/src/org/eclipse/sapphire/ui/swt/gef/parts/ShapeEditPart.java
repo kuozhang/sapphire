@@ -31,11 +31,14 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraint;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
@@ -179,9 +182,31 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 								gd.grabExcessHorizontalSpace = sequenceLayoutConstraint.isExpandCellHorizontally().getContent();
 								gd.grabExcessVerticalSpace = sequenceLayoutConstraint.isExpandCellVertically().getContent();
 								gd.horizontalIndent = sequenceLayoutConstraint.getHorizontalMargin().getContent();
+							}							
+							layoutConstraint = gd;
+						}
+						else if (layoutDef instanceof StackLayoutDef)
+						{
+							if (childShapePart.getLayoutConstraint() != null)
+							{
+								StackLayoutConstraintDef stackLayoutConstraint = 
+										(StackLayoutConstraintDef)childShapePart.getLayoutConstraint();
+								SapphireStackLayoutConstraint constraint = null;
+								if (stackLayoutConstraint != null)
+								{
+									constraint = new SapphireStackLayoutConstraint(
+														stackLayoutConstraint.getHorizontalAlignment().getContent(),
+														stackLayoutConstraint.getVerticalAlignment().getContent(),
+														stackLayoutConstraint.getHorizontalMargin().getContent(),
+														stackLayoutConstraint.getVerticalMargin().getContent());
+								}
+								else
+								{
+									constraint = new SapphireStackLayoutConstraint();
+								}
+								layoutConstraint = constraint;
 							}
 							
-							layoutConstraint = gd;
 						}
 						if (layoutConstraint != null)
 						{
