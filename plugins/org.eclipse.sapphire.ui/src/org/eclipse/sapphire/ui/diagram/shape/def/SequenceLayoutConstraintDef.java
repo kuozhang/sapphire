@@ -25,9 +25,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 @GenerateImpl
 
-public interface SequenceLayoutConstraint extends LayoutConstraintDef 
+public interface SequenceLayoutConstraintDef extends LayoutConstraintDef 
 {
-	ModelElementType TYPE = new ModelElementType( SequenceLayoutConstraint.class );
+	ModelElementType TYPE = new ModelElementType( SequenceLayoutConstraintDef.class );
 	
     // *** MinWidth ***
     

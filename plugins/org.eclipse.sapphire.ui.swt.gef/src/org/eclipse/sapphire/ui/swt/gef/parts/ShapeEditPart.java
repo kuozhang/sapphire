@@ -28,7 +28,7 @@ import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
-import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraint;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
@@ -173,7 +173,7 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 						Object layoutConstraint = null;
 						if (layoutDef instanceof SequenceLayoutDef)
 						{
-							SequenceLayoutConstraint sequenceLayoutConstraint = (SequenceLayoutConstraint)childShapePart.getLayoutConstraint();
+							SequenceLayoutConstraintDef sequenceLayoutConstraint = (SequenceLayoutConstraintDef)childShapePart.getLayoutConstraint();
 							GridData gd = new GridData();
 							if (sequenceLayoutConstraint != null)
 							{
