@@ -37,7 +37,7 @@ public interface ShapeDef extends PartDef
         base = LayoutConstraintDef.class, 
         possible = 
         { 
-            SequenceLayoutConstraint.class, 
+            SequenceLayoutConstraintDef.class, 
             StackLayoutConstraintDef.class
         }
     )    
@@ -46,7 +46,7 @@ public interface ShapeDef extends PartDef
     ( 
         mappings = 
         {
-            @XmlElementBinding.Mapping( element = "sequence-layout-constraint", type = SequenceLayoutConstraint.class ),
+            @XmlElementBinding.Mapping( element = "sequence-layout-constraint", type = SequenceLayoutConstraintDef.class ),
             @XmlElementBinding.Mapping( element = "stack-layout-constraint", type = StackLayoutConstraintDef.class )
         }
     )
