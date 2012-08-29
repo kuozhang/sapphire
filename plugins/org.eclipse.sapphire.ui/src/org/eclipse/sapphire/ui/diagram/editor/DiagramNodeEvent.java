@@ -17,10 +17,26 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 public class DiagramNodeEvent extends DiagramPartEvent 
 {
+	
+	private ShapePart shapePart;
     
     public DiagramNodeEvent(final DiagramNodePart part)
     {
        super(part);
     }
 
+    public DiagramNodeEvent(final DiagramNodePart part, final ShapePart shapePart)
+    {
+       super(part);
+       this.shapePart = shapePart;
+    }
+
+	public ShapePart getShapePart() {
+		return this.shapePart;
+	}
+
+	public void setShapePart(ShapePart shapePart) {
+		this.shapePart = shapePart;
+	}
+    
 }

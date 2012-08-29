@@ -725,15 +725,14 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return null;
     }
     
-    private void notifyNodeUpdate(DiagramNodePart nodePart)
+    private void notifyNodeUpdate(DiagramNodeEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
-				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
+				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(event);
 			}
 		}		
 	}
@@ -983,9 +982,9 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	private class NodeTemplateListener extends DiagramNodeTemplateListener
 	{
         @Override
-        public void handleNodeUpdate(final DiagramNodePart nodePart)
+        public void handleNodeUpdate(final DiagramNodeEvent event)
         {
-            notifyNodeUpdate(nodePart);
+            notifyNodeUpdate(event);
         }
         
         @Override

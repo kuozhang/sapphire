@@ -70,16 +70,20 @@
                     <validation-marker>
                      <size>small</size>
                      <stack-layout-constraint>
-                       <horizontal-alignment>center</horizontal-alignment>
+                       <horizontal-alignment>left</horizontal-alignment>
                        <vertical-alignment>bottom</vertical-alignment>
-                       <vertical-margin>10</vertical-margin>
+                       <horizontal-margin>5</horizontal-margin>
+                       <vertical-margin>12</vertical-margin>
                      </stack-layout-constraint>
                     </validation-marker>                    
                     <image>
-                      <path>Component.png</path>
+                      <path>DependsOn-16.png</path>
+                      <visible-when>${ Dependencies.Size > 0 }</visible-when>
                       <stack-layout-constraint>
-                        <horizontal-alignment>center</horizontal-alignment>
-                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>right</horizontal-alignment>
+                        <vertical-alignment>bottom</vertical-alignment>
+                       <horizontal-margin>2</horizontal-margin>
+                        <vertical-margin>7</vertical-margin>
                       </stack-layout-constraint>
                     </image>
                   </content>

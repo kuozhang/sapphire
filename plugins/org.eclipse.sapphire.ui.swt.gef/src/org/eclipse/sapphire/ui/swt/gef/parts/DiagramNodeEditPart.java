@@ -14,7 +14,7 @@
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
@@ -33,11 +33,11 @@ import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.ContainerShapeFigure;
-import org.eclipse.sapphire.ui.swt.gef.figures.DiagramNodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
@@ -59,12 +59,11 @@ public class DiagramNodeEditPart extends ShapeEditPart
     private ConnectionAnchor sourceAnchor;
     private ConnectionAnchor targetAnchor;
     
-    private List<IFigure> decorators = new ArrayList<IFigure>();
+	private HashMap<ShapePart, IFigure> partToFigure = new HashMap<ShapePart, IFigure>();
 
     public DiagramNodeEditPart(DiagramConfigurationManager configManager) {
     	super(configManager);
     }
-    
     
     @Override
 	protected IFigure createFigure() {
@@ -73,7 +72,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 //    	return new DiagramNodeFigure(getCastedModel().getModelPart(), 
 //    			getCastedModel().getDiagramModel().getResourceCache());
     	DiagramNodePart nodePart = getCastedModel().getModelPart();
-    	return this.createFigureForShape(nodePart.getShapePart());
+    	return ShapeUtil.createFigureForShape(nodePart.getShapePart(), partToFigure, getCastedModel().getDiagramModel().getResourceCache());
     	
 	}
 
@@ -207,10 +206,6 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		return (DiagramNodeModel)getModel();
 	}
 	
-	protected DiagramNodeFigure getNodeFigure() {
-		return (DiagramNodeFigure)getFigure();
-	}
-	
 	private void addDecorators(Bounds labelBounds, Bounds imageBounds) {
 //		NodeFigure nodeFigure = getNodeFigure();
 //		
@@ -239,7 +234,6 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), nb.getWidth(), nb.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
-		refreshNode();
 	}
 	
 	// Called when node is updated which could include label change, validation change
@@ -258,6 +252,11 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 //		getNodeFigure().setText(getCastedModel().getLabel());
 //		getNodeFigure().refreshValidationStatus();		
+	}
+	
+	private void updateShapePart(ShapePart shapePart) {
+    	DiagramNodePart nodePart = getCastedModel().getModelPart();
+		ShapeUtil.updateFigureForShape(nodePart.getShapePart(), shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
 	}
 	
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
@@ -296,8 +295,13 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		} else if (DiagramNodeModel.NODE_BOUNDS.equals(prop)) {
 			refreshVisuals();
 		} else if (DiagramNodeModel.NODE_UPDATES.equals(prop)) {
-			refreshVisuals();
-			refreshNode();
+			Object obj = evt.getNewValue();
+			if (obj instanceof ShapePart) {
+				updateShapePart((ShapePart)obj);
+			} else {
+				refreshVisuals();
+				refreshNode();
+			}
 		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
 			performDirectEdit();
 		}

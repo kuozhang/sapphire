@@ -52,7 +52,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 {
     public static abstract class DiagramNodeTemplateListener
     {
-        public void handleNodeUpdate(final DiagramNodePart nodePart)
+        public void handleNodeUpdate(final DiagramNodeEvent event)
         {
         }       
         public void handleNodeAdd(final DiagramNodePart nodePart)
@@ -108,7 +108,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         	@Override
         	public void handleNodeUpdateEvent(final DiagramNodeEvent event)
         	{
-        		notifyNodeUpdate((DiagramNodePart)event.getPart());
+        		notifyNodeUpdate(event);
         	}        	
         	@Override
 	    	public void handleNodeMoveEvent(final DiagramNodeEvent event)
@@ -427,11 +427,11 @@ public final class DiagramNodeTemplate extends SapphirePart
         return this.diagramEditor;
     }
     
-    private void notifyNodeUpdate(DiagramNodePart nodePart)
+    private void notifyNodeUpdate(DiagramNodeEvent event)
     {
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
-            listener.handleNodeUpdate(nodePart);
+            listener.handleNodeUpdate(event);
         }        
     }
     

@@ -14,35 +14,12 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.ui.def.HorizontalAlignment;
-import org.eclipse.sapphire.ui.def.VerticalAlignment;
-import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
-import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.TextPart;
-import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
-import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraint;
-import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
-import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
-import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
-import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
-import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
-import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
-import org.eclipse.swt.SWT;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -120,134 +97,4 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		return shapeModel.getNodeModel().getModelPart().getLocalModelElement();
 	}
 	
-	private DiagramResourceCache getResourceCache()
-	{
-		if (getModel() instanceof DiagramNodeModel)
-		{
-			return ((DiagramNodeModel)getModel()).getDiagramModel().getResourceCache();
-		}
-		ShapeModel shapeModel = (ShapeModel)getModel();
-		return shapeModel.getNodeModel().getDiagramModel().getResourceCache();
-	}
-	
-	public IFigure createFigureForShape(ShapePart shapePart)
-	{
-		IFigure figure = null;
-		if (shapePart instanceof TextPart)
-		{
-			TextPart textPart = (TextPart)shapePart;
-			figure = new TextFigure(getResourceCache(), textPart.getText(), textPart.getTextColor());
-		}
-		else if (shapePart instanceof ImagePart)
-		{
-			ImagePart imagePart = (ImagePart)shapePart;
-			DiagramNodePart nodePart = imagePart.nearest(DiagramNodePart.class);
-			final ImageData data = imagePart.getImage();
-			if (data != null) {
-				figure = new DecoratorImageFigure(nodePart.getImageCache().getImage(data));
-			}
-		}
-		else if (shapePart instanceof ValidationMarkerPart)
-		{
-			ValidationMarkerPart markerPart = (ValidationMarkerPart)shapePart;
-			DiagramNodePart nodePart = markerPart.nearest(DiagramNodePart.class);
-			figure = FigureUtil.createValidationMarkerFigure(markerPart.getSize(), nodePart.getLocalModelElement(), nodePart.getImageCache());
-		}
-		else if (shapePart instanceof RectanglePart)
-		{
-			RectanglePart rectPart = (RectanglePart)shapePart;
-			figure = new RectangleFigure(rectPart, getResourceCache());
-		}
-		
-		if (shapePart instanceof ContainerShapePart)
-		{
-			ContainerShapePart containerPart = (ContainerShapePart)shapePart;
-			ShapeLayoutDef layoutDef = containerPart.getLayout();
-			for (ShapePart childShapePart : containerPart.getChildren())
-			{
-				if (!childShapePart.isActive())
-				{
-					IFigure childFigure = createFigureForShape(childShapePart);
-					if (childFigure != null)
-					{
-						Object layoutConstraint = null;
-						if (layoutDef instanceof SequenceLayoutDef)
-						{
-							SequenceLayoutConstraint sequenceLayoutConstraint = (SequenceLayoutConstraint)childShapePart.getLayoutConstraint();
-							GridData gd = new GridData();
-							if (sequenceLayoutConstraint != null)
-							{
-								gd.horizontalAlignment = getSwtHorizontalAlignment(sequenceLayoutConstraint.getHorizontalAlignment().getContent());
-								gd.verticalAlignment = getSwtVerticalAlignment(sequenceLayoutConstraint.getVerticalAlignment().getContent());
-								gd.grabExcessHorizontalSpace = sequenceLayoutConstraint.isExpandCellHorizontally().getContent();
-								gd.grabExcessVerticalSpace = sequenceLayoutConstraint.isExpandCellVertically().getContent();
-								gd.horizontalIndent = sequenceLayoutConstraint.getHorizontalMargin().getContent();
-							}							
-							layoutConstraint = gd;
-						}
-						else if (layoutDef instanceof StackLayoutDef)
-						{
-							if (childShapePart.getLayoutConstraint() != null)
-							{
-								StackLayoutConstraintDef stackLayoutConstraint = 
-										(StackLayoutConstraintDef)childShapePart.getLayoutConstraint();
-								SapphireStackLayoutConstraint constraint = null;
-								if (stackLayoutConstraint != null)
-								{
-									constraint = new SapphireStackLayoutConstraint(
-														stackLayoutConstraint.getHorizontalAlignment().getContent(),
-														stackLayoutConstraint.getVerticalAlignment().getContent(),
-														stackLayoutConstraint.getHorizontalMargin().getContent(),
-														stackLayoutConstraint.getVerticalMargin().getContent());
-								}
-								else
-								{
-									constraint = new SapphireStackLayoutConstraint();
-								}
-								layoutConstraint = constraint;
-							}
-							
-						}
-						if (layoutConstraint != null)
-						{
-							figure.add(childFigure, layoutConstraint);
-						}
-						else
-						{
-							figure.add(childFigure);
-						}
-					}
-				}
-			}
-		}
-		return figure;
-	}
-	
-	private int getSwtHorizontalAlignment(HorizontalAlignment horizontalAlign)
-	{
-		int swtAlign = SWT.CENTER;
-		if (horizontalAlign == HorizontalAlignment.LEFT)
-		{
-			swtAlign = SWT.LEFT;
-		}
-		else if (horizontalAlign == HorizontalAlignment.RIGHT)
-		{
-			swtAlign = SWT.RIGHT;
-		}
-		return swtAlign;
-	}
-
-	private int getSwtVerticalAlignment(VerticalAlignment verticalAlign)
-	{
-		int swtAlign = SWT.CENTER;
-		if (verticalAlign == VerticalAlignment.TOP)
-		{
-			swtAlign = SWT.TOP;
-		}
-		else if (verticalAlign == VerticalAlignment.BOTTOM)
-		{
-			swtAlign = SWT.BOTTOM;
-		}
-		return swtAlign;
-	}
 }

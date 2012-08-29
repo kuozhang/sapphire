@@ -125,8 +125,8 @@ public class DiagramNodeModel extends DiagramModelBase {
 		firePropertyChange(NODE_BOUNDS, null, getModelPart().getNodeBounds());
 	}
 	
-	public void handleUpdateNode() {
-		firePropertyChange(NODE_UPDATES, null, getModelPart().getNodeBounds());
+	public void handleUpdateNode(ShapePart shapePart) {
+		firePropertyChange(NODE_UPDATES, null, shapePart);
 	}
 
 	public List<DiagramConnectionModel> getSourceConnections() {

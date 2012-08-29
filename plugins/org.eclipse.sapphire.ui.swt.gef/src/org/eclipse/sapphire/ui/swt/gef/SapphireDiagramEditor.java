@@ -88,6 +88,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.ActionBridge;
@@ -205,7 +206,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
             @Override
             public void handleNodeUpdateEvent(final DiagramNodeEvent event)
             {
-                updateNode((DiagramNodePart)event.getPart());
+                updateNode((DiagramNodePart)event.getPart(), event.getShapePart());
             }
             
             @Override
@@ -551,14 +552,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		getConfigurationManager().getDiagramRenderingContextCache().put(part, ctx);		
 	}
 
-	protected void updateNode(DiagramNodePart part) {
+	protected void updateNode(DiagramNodePart part, ShapePart shapePart) {
 		if (diagramModel == null) {
 			return;
 		}
 		
 		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
 		if (nodeModel != null) {
-			nodeModel.handleUpdateNode();
+			nodeModel.handleUpdateNode(shapePart);
 		}
 	}
 	
