@@ -43,7 +43,7 @@ public final class ValueSerializationMasterService extends Service
         
         if( type != String.class )
         {
-            this.valueSerializationService = context().service( ValueSerializationService.class );
+            this.valueSerializationService = service( ValueSerializationService.class );
             
             if( this.valueSerializationService == null )
             {

@@ -31,6 +31,7 @@
     <li><a href="#Modeling-ModelElement">ModelElement</a></li>
     <li><a href="#Modeling-ModelElementList">ModelElementList</a></li>
     <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
+    <li><a href="#Modeling-Service">Service</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -305,6 +306,27 @@ Fact: <i>Recommended value is [default-value].</i></p>
 <font color="#888888">ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );</font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/PreferDefaultValue.png"/></p>
+
+
+<h2><a name="Modeling-Service">Service</a></h2>
+
+<p>In the past, when a service implementation needed to leverage another service from the same context, 
+service context needed to be referenced explicitly. This led to unnecessary verbosity, so a pair of
+convenience methods have been added that delegate to the current context.</p>
+
+<pre class="source-code"><code><font color="#888888">Service
+{</font>
+    protected final &lt;S extends Service> S service( Class&lt;S> serviceType )
+    protected final &lt;S extends Service> List&lt;S> services( Class&lt;S> serviceType )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent within Service implementation.</p>
+
+<pre class="source-code"><code>context().service( ExampleService.class )</code></pre>
+
+<pre class="source-code"><code>service( ExampleService.class )</code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
