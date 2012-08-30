@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
@@ -47,34 +48,7 @@ public class ShapeUtil {
 	
 	public static IFigure createFigureForShape(ShapePart shapePart, HashMap<ShapePart, IFigure> partToFigure, DiagramResourceCache resourceCache)
 	{
-		IFigure figure = null;
-		if (shapePart instanceof TextPart)
-		{
-			TextPart textPart = (TextPart)shapePart;
-			figure = new TextFigure(resourceCache, textPart.getText(), textPart.getTextColor());
-		}
-		else if (shapePart instanceof ImagePart)
-		{
-			ImagePart imagePart = (ImagePart)shapePart;
-			if (imagePart.visible()) {
-				DiagramNodePart nodePart = imagePart.nearest(DiagramNodePart.class);
-				final ImageData data = imagePart.getImage();
-				if (data != null) {
-					figure = new DecoratorImageFigure(nodePart.getImageCache().getImage(data));
-				}
-			}
-		}
-		else if (shapePart instanceof ValidationMarkerPart)
-		{
-			ValidationMarkerPart markerPart = (ValidationMarkerPart)shapePart;
-			DiagramNodePart nodePart = markerPart.nearest(DiagramNodePart.class);
-			figure = FigureUtil.createValidationMarkerFigure(markerPart.getSize(), nodePart.getLocalModelElement(), nodePart.getImageCache());
-		}
-		else if (shapePart instanceof RectanglePart)
-		{
-			RectanglePart rectPart = (RectanglePart)shapePart;
-			figure = new RectangleFigure(rectPart, resourceCache);
-		}
+		IFigure figure = createFigure(shapePart, resourceCache);
 		partToFigure.put(shapePart, figure);
 		
 		if (shapePart instanceof ContainerShapePart)
@@ -88,44 +62,7 @@ public class ShapeUtil {
 					IFigure childFigure = createFigureForShape(childShapePart, partToFigure, resourceCache);
 					if (childFigure != null)
 					{
-						Object layoutConstraint = null;
-						if (layoutDef instanceof SequenceLayoutDef)
-						{
-							SequenceLayoutConstraintDef sequenceLayoutConstraint = (SequenceLayoutConstraintDef)childShapePart.getLayoutConstraint();
-							GridData gd = new GridData();
-							if (sequenceLayoutConstraint != null)
-							{
-								gd.horizontalAlignment = getSwtHorizontalAlignment(sequenceLayoutConstraint.getHorizontalAlignment().getContent());
-								gd.verticalAlignment = getSwtVerticalAlignment(sequenceLayoutConstraint.getVerticalAlignment().getContent());
-								gd.grabExcessHorizontalSpace = sequenceLayoutConstraint.isExpandCellHorizontally().getContent();
-								gd.grabExcessVerticalSpace = sequenceLayoutConstraint.isExpandCellVertically().getContent();
-								gd.horizontalIndent = sequenceLayoutConstraint.getHorizontalMargin().getContent();
-							}							
-							layoutConstraint = gd;
-						}
-						else if (layoutDef instanceof StackLayoutDef)
-						{
-							if (childShapePart.getLayoutConstraint() != null)
-							{
-								StackLayoutConstraintDef stackLayoutConstraint = 
-										(StackLayoutConstraintDef)childShapePart.getLayoutConstraint();
-								SapphireStackLayoutConstraint constraint = null;
-								if (stackLayoutConstraint != null)
-								{
-									constraint = new SapphireStackLayoutConstraint(
-														stackLayoutConstraint.getHorizontalAlignment().getContent(),
-														stackLayoutConstraint.getVerticalAlignment().getContent(),
-														stackLayoutConstraint.getHorizontalMargin().getContent(),
-														stackLayoutConstraint.getVerticalMargin().getContent());
-								}
-								else
-								{
-									constraint = new SapphireStackLayoutConstraint();
-								}
-								layoutConstraint = constraint;
-							}
-							
-						}
+						Object layoutConstraint = getLayoutConstraint(childShapePart, layoutDef);
 						if (layoutConstraint != null)
 						{
 							figure.add(childFigure, layoutConstraint);
@@ -186,8 +123,10 @@ public class ShapeUtil {
 					IFigure containerFigure = partToFigure.get(containerShapePart);
 					if (containerFigure != null) {
 						
+						int index = -1;
 						if (updateFigure != null) {
 							// first delete it
+							index = findIndex(containerFigure, updateFigure);
 							containerFigure.remove(updateFigure);
 						}
 						// add it
@@ -197,11 +136,11 @@ public class ShapeUtil {
 						Object layoutConstraint = getLayoutConstraint(shapePart, containerShapePart.getLayout());
 						if (layoutConstraint != null)
 						{
-							containerFigure.add(updateFigure, layoutConstraint);
+							containerFigure.add(updateFigure, layoutConstraint, index);
 						}
 						else
 						{
-							containerFigure.add(updateFigure);
+							containerFigure.add(updateFigure, index);
 						}
 						containerFigure.revalidate();
 					}
@@ -237,6 +176,17 @@ public class ShapeUtil {
 		return false;
 	}
 
+	private static int findIndex(IFigure parentFigure, IFigure figure) {
+		List list = parentFigure.getChildren();
+		for (int i = 0; i < list.size(); i++) {
+			IFigure childFigure = (IFigure)list.get(i);
+			if (childFigure.equals(figure)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	private static Object getLayoutConstraint(ShapePart childShapePart, ShapeLayoutDef layoutDef)
 	{
 		Object layoutConstraint = null;
