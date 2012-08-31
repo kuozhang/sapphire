@@ -11,11 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.Color;
-import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.BorderDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 
 /**
@@ -25,53 +22,12 @@ import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 public class RectanglePart extends ContainerShapePart
 {
 	private RectangleDef rectangleDef;
-	private IModelElement modelElement;
-	private FunctionResult borderWidth;	
-	private FunctionResult borderColor;
 	
 	@Override
     protected void init()
     {
         super.init();
         this.rectangleDef = (RectangleDef)super.definition;
-        this.modelElement = getModelElement();
-        
-        if (this.rectangleDef.getBorder().element() != null)
-        {
-            this.borderWidth = initExpression
-                    ( 
-                        this.modelElement,
-                        this.rectangleDef.getBorder().element().getWidth().getContent(),
-                        Integer.class,
-                        null,
-                        new Runnable()
-                        {
-                            public void run()
-                            {
-                                refreshBorder();
-                            }
-                        }
-                    );
-        }
-        
-        if (this.rectangleDef.getBorder().element() != null)
-        {
-	        this.borderColor = initExpression
-	        ( 
-	            this.modelElement,
-	            this.rectangleDef.getBorder().element().getColor().getContent(),
-	            Color.class,
-	            null,
-	            new Runnable()
-	            {
-	                public void run()
-	                {
-	                    refreshBorder();
-	                }
-	            }
-	        );
-        }
-        
     }
 
 	public boolean hasBorder()
@@ -79,34 +35,31 @@ public class RectanglePart extends ContainerShapePart
 		return this.rectangleDef.getBorder().element() != null;
 	}
 	
-	public int getBorderWidth()
+	public BorderDef getBorderDef() 
 	{
-		int width = 0;
-        if( this.borderWidth != null )
-        {
-            width = (Integer) this.borderWidth.value();
-        }
-        
-        return width;
+		return this.rectangleDef.getBorder().element();
 	}
 	
-	public Color getBorderColor()
+	public BorderDef getTopBorderDef() 
 	{
-		Color borderColor = new Color(0, 0, 0);
-        if( this.borderColor != null )
-        {
-            borderColor = (Color) this.borderColor.value();
-        }
-        
-        return borderColor;
+		return this.rectangleDef.getTopBorder().element();
 	}
 	
-	public LineStyle getBorderStyle()
+	public BorderDef getBottomBorderDef() 
 	{
-		LineStyle style = this.rectangleDef.getBorder().element().getStyle().getContent();
-		return style;
+		return this.rectangleDef.getBottomBorder().element();
 	}
 
+	public BorderDef getLeftBorderDef() 
+	{
+		return this.rectangleDef.getLeftBorder().element();
+	}
+	
+	public BorderDef getRightBorderDef() 
+	{
+		return this.rectangleDef.getRightBorder().element();
+	}
+	
 	public BackgroundDef getBackground()
 	{
 		return this.rectangleDef.getBackground().element();
@@ -117,22 +70,4 @@ public class RectanglePart extends ContainerShapePart
 		return this.rectangleDef.getCornerRadius().getContent();
 	}
 	
-	@Override
-    public void dispose()
-    {
-        super.dispose();
-        if (this.borderWidth != null)
-        {
-            this.borderWidth.dispose();
-        }
-        if (this.borderColor != null)
-        {
-            this.borderColor.dispose();
-        }
-    }
-    
-	private void refreshBorder()
-	{
-		
-	}
 }

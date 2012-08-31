@@ -19,8 +19,8 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 
 /**
@@ -35,28 +35,30 @@ public interface BorderDef extends IModelElement
 	
 	// *** Width ***
     
-    @Type( base = Function.class )
-    @XmlBinding( path = "width" )
+    @Type( base = Integer.class )
     @Label( standard = "width" )
+    @XmlBinding( path = "width" )
+    @DefaultValue( text = "1" )
     
     ValueProperty PROP_WIDTH = new ValueProperty(TYPE, "Width");
     
-    Value<Function> getWidth();
+    Value<Integer> getWidth();
     void setWidth( String value );
-    void setWidth( Function value );        
+    void setWidth( Integer value );        
 		
 	// *** Color ***
 	    
-    @Type( base = Function.class )
+    @Type( base = Color.class )
     @Label( standard = "color")
     @XmlBinding( path = "color")
+    @DefaultValue( text = "#000000" )
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
     
-    Value<Function> getColor();
+    Value<Color> getColor();
     void setColor( String value );
-    void setColor( Function value );
-    
+    void setColor( Color value );    
+
     // *** Style ***
     
     @Type( base = LineStyle.class )
