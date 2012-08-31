@@ -72,7 +72,7 @@ public final class ExtensionManifestEditor extends SapphireEditorForXml
     
         static 
         {
-            initializeMessages( ExtensionManifestEditor.class.getName(), Resources.class );
+            initializeMessages( ExtensionManifestEditor.class.getName() + "Ext", Resources.class );
         }
     }
     
