@@ -17,7 +17,10 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -169,6 +172,30 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
         this.decorator.addEditorControl( drillDown );
         this.decorator.addEditorControl( tree );
 
+        final Value<?> value = element.read( getProperty() );
+        final String val = value.getText();
+        
+        if( val != null )
+        {
+            final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            
+            IPath path = new Path( val );
+            IResource resource = root.findMember( val );
+            
+            while( resource == null )
+            {
+                path = path.removeLastSegments( 1 );
+                resource = root.findMember( path );
+            }
+            
+            if( resource instanceof IFile && validFileSystemResourceTypeAnnotation.value() == FileSystemResourceType.FOLDER )
+            {
+                resource = resource.getParent();
+            }
+            
+            treeViewer.setSelection( new StructuredSelection( resource ) );
+        }
+
         treeViewer.addSelectionChangedListener
         (
             new ISelectionChangedListener()
@@ -197,26 +224,6 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
         textField.setData( DATA_BINDING, this.binding );
         
         addControl( tree );
-        
-        final IModelElement modelElement = getModelElement();
-        
-        if( modelElement != null )
-        {
-            final Value<?> value = modelElement.read( getProperty() );
-            final String val = value.getText();
-            
-            if( val != null )
-            {
-                IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( val );
-                
-                if( resource instanceof IFile && validFileSystemResourceTypeAnnotation.value() == FileSystemResourceType.FOLDER )
-                {
-                    resource = resource.getParent();
-                }
-                
-                treeViewer.setSelection( new StructuredSelection( resource ) );
-            }
-        }
     }
     
     @Override

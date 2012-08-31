@@ -48,7 +48,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public class SapphireSection extends SapphireComposite
+public class SapphireSection extends CompositePart
 {
     private Section section;
     private FunctionResult titleFunctionResult;

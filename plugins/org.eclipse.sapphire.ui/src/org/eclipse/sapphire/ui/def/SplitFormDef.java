@@ -31,7 +31,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "split form" )
 @GenerateImpl
 
-public interface SplitFormDef extends FormPartDef
+public interface SplitFormDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( SplitFormDef.class );
     

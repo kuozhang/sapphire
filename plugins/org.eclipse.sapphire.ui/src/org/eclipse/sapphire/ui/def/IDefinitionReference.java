@@ -13,14 +13,15 @@ package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.DefinitionReferenceMethods;
+import org.eclipse.sapphire.ui.def.internal.DefinitionReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -28,28 +29,21 @@ import org.eclipse.sapphire.ui.def.internal.DefinitionReferenceMethods;
 
 @GenerateImpl
 
-public interface IDefinitionReference
-
-    extends IModelElement
-    
+public interface IDefinitionReference extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IDefinitionReference.class );
     
     // *** Path ***
     
+    @Reference( target = ISapphireUiDef.class )
     @Label( standard = "definition path" )
     @Required
     @XmlBinding( path = "" )
+    @Service( impl = DefinitionReferenceService.class )
     
-    ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" ); //$NON-NLS-1$
+    ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );
     
-    Value<String> getPath();
+    ReferenceValue<String,ISapphireUiDef> getPath();
     void setPath( String path );
-    
-    // *** Method : resolve ***
-    
-    @DelegateImplementation( DefinitionReferenceMethods.class )
-    
-    ISapphireUiDef resolve();
     
 }

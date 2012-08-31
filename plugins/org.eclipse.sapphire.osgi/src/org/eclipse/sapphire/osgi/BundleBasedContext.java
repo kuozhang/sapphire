@@ -30,9 +30,26 @@ import org.osgi.framework.Bundle;
 public final class BundleBasedContext extends Context
 {
     /**
+     * Returns a context based on the specified OSGi bundle id.
+     * 
+     * @param bundleId the id of the bundle that should be used as the context basis
+     * @return a context based on the specified bundle
+     */
+    
+    public static final Context adapt( String bundleId )
+    {
+        if( bundleId == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return adapt( BundleLocator.find( bundleId ) );
+    }
+
+    /**
      * Returns a context based on the specified OSGi bundle.
      * 
-     * @param loader the bundle that should be used as the context basis
+     * @param bundle the bundle that should be used as the context basis
      * @return a context based on the specified bundle
      */
     

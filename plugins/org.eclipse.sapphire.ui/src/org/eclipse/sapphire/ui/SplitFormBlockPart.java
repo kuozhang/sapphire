@@ -18,7 +18,7 @@ import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SplitFormBlockPart extends SapphirePartContainer
+public final class SplitFormBlockPart extends FormPart
 {
     @Override
     public SplitFormBlockDef definition()

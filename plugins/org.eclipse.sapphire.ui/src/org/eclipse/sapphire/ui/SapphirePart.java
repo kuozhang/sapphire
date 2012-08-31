@@ -50,11 +50,12 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.ConditionalDef;
 import org.eclipse.sapphire.ui.def.FormDef;
+import org.eclipse.sapphire.ui.def.FormEditorPageDef;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.def.IFormPartInclude;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
+import org.eclipse.sapphire.ui.def.CompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
-import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
+import org.eclipse.sapphire.ui.def.DialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
@@ -64,7 +65,7 @@ import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
-import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
+import org.eclipse.sapphire.ui.def.WizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -72,6 +73,8 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.ui.def.TabGroupDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
@@ -908,11 +911,11 @@ public abstract class SapphirePart implements ISapphirePart
                 part = new SapphireListControlledPageBook();
             }
         }
-        else if( definition instanceof ISapphireDialogDef )
+        else if( definition instanceof DialogDef )
         {
             part = new SapphireDialogPart();
         }
-        else if( definition instanceof ISapphireWizardPageDef )
+        else if( definition instanceof WizardPageDef )
         {
             part = new SapphireWizardPagePart();
         }
@@ -920,9 +923,9 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SapphireSection();
         }
-        else if( definition instanceof ISapphireCompositeDef )
+        else if( definition instanceof CompositeDef )
         {
-            part = new SapphireComposite();
+            part = new CompositePart();
         }
         else if( definition instanceof IFormPartInclude )
         {
@@ -944,7 +947,7 @@ public abstract class SapphirePart implements ISapphirePart
                     }
                 }
                 
-                part = new SapphirePartContainer();
+                part = new FormPart();
             }
         }
         else if( definition instanceof TabGroupDef )
@@ -969,7 +972,15 @@ public abstract class SapphirePart implements ISapphirePart
         }
         else if( definition instanceof FormDef )
         {
-            part = new SapphirePartContainer();
+            part = new FormPart();
+        }
+        else if( definition instanceof MasterDetailsEditorPageDef )
+        {
+            part = new MasterDetailsEditorPagePart();
+        }
+        else if( definition instanceof FormEditorPageDef )
+        {
+            part = new FormEditorPagePart();
         }
         
         if( part == null )

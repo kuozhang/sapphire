@@ -35,7 +35,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHtmlPanelDefSourceBinding;
 @Label( standard = "HTML panel" )
 @GenerateImpl
 
-public interface HtmlPanelDef extends FormPartDef
+public interface HtmlPanelDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( HtmlPanelDef.class );
     

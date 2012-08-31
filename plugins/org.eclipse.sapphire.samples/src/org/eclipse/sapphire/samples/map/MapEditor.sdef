@@ -132,7 +132,8 @@
         <service>
             <implementation>MapDragAndDropService</implementation>
         </service>
-        <page-name>map</page-name>                
+        <page-name>map</page-name>
+        <element-type>Map</element-type>                
     </diagram-page>
     
     <editor-page>
@@ -201,6 +202,7 @@
                 </section>
             </node>
         </root-node>
+        <element-type>Map</element-type>
     </editor-page>
 
 </definition>

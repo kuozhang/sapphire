@@ -2321,6 +2321,7 @@
             </node>
         </root-node>
         <page-name>gallery</page-name>
+        <element-type>IGallery</element-type>
     </editor-page>
     <dialog>
         <id>SplitFormDialog</id>

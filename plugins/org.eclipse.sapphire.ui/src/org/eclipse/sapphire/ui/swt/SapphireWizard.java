@@ -20,17 +20,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.SapphireWizardPagePart;
 import org.eclipse.sapphire.ui.SapphireWizardPart;
-import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
-import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.WizardDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -44,35 +44,52 @@ import org.eclipse.ui.ide.IDE;
 
 public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
 {
-    private final M element;
-    private final SapphireWizardPart part;
-    private final Listener listener;
+    private M element;
+    private DefinitionLoader.Reference<WizardDef> definition;
+    private SapphireWizardPart part;
     
-    public SapphireWizard( final M modelElement,
-                           final String wizardDefPath )
+    public SapphireWizard( final M element,
+                           final DefinitionLoader.Reference<WizardDef> definition )
     {
-        this.element = modelElement;
+        init( element, definition );
+    }
+
+    protected SapphireWizard()
+    {
+    }
+    
+    protected void init( final M element,
+                         final DefinitionLoader.Reference<WizardDef> definition )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
         
-        final ISapphireWizardDef definition = SapphireUiDefFactory.getWizardDef( wizardDefPath );
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.element = element;
+        this.definition = definition;
         
         this.part = new SapphireWizardPart();
-        this.part.init( null, this.element, definition, Collections.<String,String>emptyMap() );
+        this.part.init( null, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
         
         setWindowTitle( this.part.getLabel() );
         
-        this.listener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
+        this.part.attach
+        (
+            new FilteredListener<SapphirePart.ImageChangedEvent>()
             {
-                if( event instanceof SapphirePart.ImageChangedEvent )
+                @Override
+                protected void handleTypedEvent( final ImageChangedEvent event )
                 {
                     refreshImage();
                 }
             }
-        };
-        
-        this.part.attach( this.listener );
+        );
         
         refreshImage();
         
@@ -82,6 +99,11 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     public final M getModelElement()
     {
         return this.element;
+    }
+    
+    public final WizardDef definition()
+    {
+        return ( this.definition == null ? null : this.definition.resolve() );
     }
     
     @Override
@@ -172,7 +194,40 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
             }
         }
     }
+
+    protected final void openFileEditor( final IFile file )
+    {
+        openFileEditor( file, null );
+    }
     
+    protected final void openFileEditor( final IFile file,
+                                         final String editor )
+    {
+        final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        
+        if( window != null )
+        {
+            final IWorkbenchPage page = window.getActivePage();
+            
+            try
+            {
+                if( editor == null )
+                {
+                    IDE.openEditor( page, file );
+                }
+                else
+                {
+                    IDE.openEditor( page, file, editor );
+                    IDE.setDefaultEditor( file, editor );
+                }
+            } 
+            catch( PartInitException e ) 
+            {
+                SapphireUiFrameworkPlugin.log( e );
+            }
+        }
+    }
+
     private final void refreshImage()
     {
         setDefaultPageImageDescriptor( toImageDescriptor( this.part.getImage() ) );
@@ -183,7 +238,13 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     {
         super.dispose();
         
-        this.part.detach( this.listener );
+        this.element = null;
+        
+        this.part.dispose();
+        this.part = null;
+        
+        this.definition.dispose();
+        this.definition = null;
     }
     
 }

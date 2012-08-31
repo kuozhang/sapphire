@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
+import org.eclipse.sapphire.ui.def.DialogDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,21 +20,21 @@ import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 
 public final class SapphireDialogPart
 
-    extends SapphireComposite
+    extends CompositePart
     
 {
-    private ISapphireDialogDef def;
+    private DialogDef def;
     
     @Override
     protected void init()
     {
         super.init();
         
-        this.def = (ISapphireDialogDef) this.definition;
+        this.def = (DialogDef) this.definition;
     }
 
     @Override
-    public ISapphireDialogDef definition()
+    public DialogDef definition()
     {
         return this.def;
     }

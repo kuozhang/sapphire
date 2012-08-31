@@ -38,14 +38,14 @@ import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
 
 public interface IFormPartInclude
 
-    extends FormPartDef
+    extends FormComponentDef
     
 {
     ModelElementType TYPE = new ModelElementType( IFormPartInclude.class );
     
     // *** Part ***
 
-    @Reference( target = FormPartDef.class )
+    @Reference( target = FormComponentDef.class )
     @Service( impl = FormPartIncludeReferenceService.class )
     @Label( standard = "part" )
     @PossibleValues( property = "/PartDefs/Id" )
@@ -55,7 +55,7 @@ public interface IFormPartInclude
     
     ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
     
-    ReferenceValue<String,FormPartDef> getPart();
+    ReferenceValue<String,FormComponentDef> getPart();
     void setPart( String part );
     
     // *** Params ***

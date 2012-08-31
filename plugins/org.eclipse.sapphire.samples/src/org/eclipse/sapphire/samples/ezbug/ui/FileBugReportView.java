@@ -16,7 +16,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.samples.ezbug.IBugReport;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
-import org.eclipse.sapphire.ui.swt.SapphireControl;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.swt.SapphireForm;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -25,10 +26,7 @@ import org.eclipse.ui.part.ViewPart;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FileBugReportView
-
-    extends ViewPart
-    
+public final class FileBugReportView extends ViewPart
 {
     @Override
     public void createPartControl( final Composite parent )
@@ -39,8 +37,11 @@ public final class FileBugReportView
         final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
         final IBugReport report = op.getBugReport();
         
-        final SapphireControl control 
-            = new SapphireControl( parent, report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!bug.report.form.style.scrolled" );
+        final SapphireForm control = new SapphireForm
+        (
+            parent, report,
+            DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).form( "bug.report.form.style.scrolled" )
+        );
 
         control.setLayoutData( gdfill() );
     }

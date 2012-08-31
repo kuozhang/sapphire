@@ -225,7 +225,7 @@ public abstract class Context
                 resource = super.findResource( this.path + "/" + name );
             }
             
-            return null;
+            return resource;
         }
 
         @Override

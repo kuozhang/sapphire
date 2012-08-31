@@ -47,18 +47,33 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#EnablementService">EnablementService</a></li>
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
   <li><a href="#FactsService">FactsService</a></li>
+  <li><a href="#FormEditorPage">FormEditorPage</a></li>
+  <li><a href="#FormPart">FormPart</a></li>
+  <li><a href="#FormPartDef">FormPartDef</a></li>
+  <li><a href="#ISapphireCompositeDef">ISapphireCompositeDef</a></li>
+  <li><a href="#ISapphireDialogDef">ISapphireDialogDef</a></li>
+  <li><a href="#ISapphireWizardDef">ISapphireWizardDef</a></li>
+  <li><a href="#ISapphireWizardPageDef">ISapphireWizardPageDef</a></li>
   <li><a href="#MasterDetailsContentNode">MasterDetailsContentNode</a></li>
   <li><a href="#MasterDetailsContentOutline">MasterDetailsContentOutline</a></li>
+  <li><a href="#MasterDetailsEditorPage">MasterDetailsEditorPage</a></li>
   <li><a href="#PartDef">PartDef</a></li>
   <li><a href="#PropertyEditorDef">PropertyEditorDef</a></li>
   <li><a href="#ReadOnlyListFactory">ReadOnlyListFactory</a></li>
   <li><a href="#ReadOnlyMapFactory">ReadOnlyMapFactory</a></li>
   <li><a href="#ReadOnlySetFactory">ReadOnlySetFactory</a></li>
+  <li><a href="#SapphireControl">SapphireControl</a></li>
   <li><a href="#SapphireDiagramEditor">SapphireDiagramEditor</a></li>
+  <li><a href="#SapphireDialog">SapphireDialog</a></li>
+  <li><a href="#SapphireEditor">SapphireEditor</a></li>
+  <li><a href="#SapphireEditorForXml">SapphireEditorForXml</a></li>
   <li><a href="#SapphireModelCondition">SapphireModelCondition</a></li>
   <li><a href="#SapphirePart">SapphirePart</a></li>
+  <li><a href="#SapphirePartContainer">SapphirePartContainer</a></li>
   <li><a href="#SapphirePropertyEnabledCondition">SapphirePropertyEnabledCondition</a></li>
   <li><a href="#SapphireSection">SapphireSection</a></li>
+  <li><a href="#SapphireUiDefFactory">SapphireUiDefFactory</a></li>
+  <li><a href="#SapphireWizard">SapphireWizard</a></li>
   <li><a href="#Status">Status</a></li>
   <li><a href="#Conditional">Conditional</a></li>
   <li><a href="#SectionVisibility">Section Visibility</a></li>
@@ -209,6 +224,143 @@ to 0.6 release. Only changes from the previous release are covered.</p>
         ...
     }
 }</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormEditorPage">FormEditorPage</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">new FormEditorPage
+{
+    this, element,</font>
+    new Path( "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef/ExamplePage" )
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">new FormEditorPage
+{
+    this, element,</font>
+    DefinitionLoader
+        .context( getClass().getClassLoader() )
+        .sdef( "org.eclipse.sapphire.examples.Examples" )
+        .page( "ExamplePage" )
+<font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormPart">FormPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>FormPart</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>FormComponentPart</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormPartDef">FormPartDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>FormPartDef</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>FormComponentDef</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireCompositeDef">ISapphireCompositeDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireCompositeDef</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>CompositeDef</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireDialogDef">ISapphireDialogDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireDialogDef</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DialogDef</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireWizardDef">ISapphireWizardDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireWizardDef</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>WizardDef</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireWizardPageDef">ISapphireWizardPageDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireWizardPageDef</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>WizardPageDef</code></pre>
     </td>
   </tr>
 </table>
@@ -378,6 +530,35 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
     <td>
 <p>No direct equivalent has been provided. The outline will update itself without explicit notify calls. For further guidance, 
 post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsEditorPage">MasterDetailsEditorPage</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">new MasterDetailsEditorPage
+{
+    this, element,</font>
+    new Path( "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef/ExamplePage" )
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">new MasterDetailsEditorPage
+{
+    this, element,</font>
+    DefinitionLoader
+        .context( getClass().getClassLoader() )
+        .sdef( "org.eclipse.sapphire.examples.Examples" )
+        .page( "ExamplePage" )
+<font color="#888888">}</font></code></pre>
     </td>
   </tr>
 </table>
@@ -585,6 +766,35 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
 </table>
 
 
+<h2><a name="SapphireControl">SapphireControl</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">new SapphireControl
+{
+    parent, element,</font>
+    "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef!ExampleComposite"
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">new SapphireForm
+{
+    parent, element,</font>
+    DefinitionLoader
+        .context( getClass().getClassLoader() )
+        .sdef( "org.eclipse.sapphire.examples.Examples" )
+        .form( "ExampleComposite" )
+<font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="SapphireDiagramEditor">SapphireDiagramEditor</a></h2>
 
 <table>
@@ -594,12 +804,110 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>page.setDiagramHeaderText( text )</font></code></pre>
+<pre class="source-code"><code>page.setDiagramHeaderText( text )</code></pre>
     </td>
     <td>
 <p>No direct equivalent has been provided, but page header text can now be specified as an expression. This accounts
 for the dynamic header text use cases. For further guidance, post a question 
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireDialog">SapphireDialog</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">new SapphireDialog
+{
+    shell, element,</font>
+    "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef!ExampleDialog"
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">new SapphireDialog
+{
+    shell, element,</font>
+    DefinitionLoader
+        .context( getClass().getClassLoader() )
+        .sdef( "org.eclipse.sapphire.examples.Examples" )
+        .dialog( "ExampleDialog" )
+<font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireEditor">SapphireEditor</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleEditor extends SapphireEditor
+{
+    public ExampleEditor()
+    {</font>
+        super( "org.sapphire.examples" );
+    <font color="#888888">}
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleEditor extends SapphireEditor
+{
+    public ExampleEditor()
+    {</font>
+        super();
+    <font color="#888888">}
+}</font></code></pre>
+    </td>
+</table>
+
+
+<h2><a name="SapphireEditorForXml">SapphireEditorForXml</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleEditor extends SapphireEditorForXml
+{
+    public ExampleEditor()
+    {</font>
+        super( "org.sapphire.examples" );
+        
+        setRootModelElementType( ExampleElement.TYPE );
+        setEditorDefinitionPath( "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef/EditorPage" );
+    <font color="#888888">}
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleEditor extends SapphireEditorForXml
+{
+    public ExampleEditor()
+    {</font>
+        super
+        (
+            ExampleElement.TYPE,
+            DefinitionLoader
+                .context( getClass().getClassLoader() )
+                .sdef( "org.eclipse.sapphire.examples.Examples" )
+                .page( "EditorPage" )
+        );
+    <font color="#888888">}
+}</font></code></pre>
     </td>
   </tr>
 </table>
@@ -628,6 +936,24 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <p>SapphirePart has a new public final visible() method that is linked with the "visible when" feature in sdef. A custom part
 implementation may be defining this method already, in which case the method will need to be renamed. For further guidance, 
 post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphirePartContainer">SapphirePartContainer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>SapphirePartContainer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>FormPart</code></pre>
     </td>
   </tr>
 </table>
@@ -664,6 +990,260 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <p>No direct equivalent has been provided. It is possible to check section visibility using visible() method and to listen for
 visibility changes using VisibilityChangedEvent, but it is no longer possible to access the actual visibility condition.
 For further guidance, post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireUiDefFactory">SapphireUiDefFactory</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireUiDef def = SapphireUiDefFactory.load
+(
+    "org.eclipse.sapphire.examples", 
+    "org/eclipse/sapphire/examples/Examples.sdef"
+);</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DefinitionLoader.Reference&lt;ISapphireUiDef> defref = DefinitionLoader
+    .context( BundleBasedContext.adapt( "org.eclipse.sapphire.examples" ) )
+    .sdef( "org.eclipse.sapphire.examples.Examples" )
+    .root();
+    
+try
+{
+    ISapphireUiDef def = defref.resolve();
+}
+finally
+{
+    // Do not dispose the definition reference until the definition is not
+    // needed any longer.
+    
+    defref.dispose();
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireUiDef def = SapphireUiDefFactory.load
+(
+    sapphireUiDefinition, 
+    "org/eclipse/sapphire/examples/Examples.sdef"
+);</code></pre>
+    </td>
+    <td>
+<p>No direct equivalent has been provided. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192"><nobr>Sapphire Adopter Forum</nobr></a>.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireUiDef def = SapphireUiDefFactory.load
+(
+    xmlResourceStore, 
+    writable
+);</code></pre>
+    </td>
+    <td>
+<p>No direct equivalent has been provided. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192"><nobr>Sapphire Adopter Forum</nobr></a>.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireCompositeDef def = SapphireUiDefFactory.getCompositeDef
+(
+   "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef!ExampleComposite"
+);</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DefinitionLoader.Reference&lt;FormComponentDef> defref = DefinitionLoader
+    .context( BundleBasedContext.adapt( "org.eclipse.sapphire.examples" ) )
+    .sdef( "org.eclipse.sapphire.examples.Examples" )
+    .form( "ExampleComposite" );
+    
+try
+{
+    CompositeDef def = (CompositeDef) defref.resolve();
+}
+finally
+{
+    // Do not dispose the definition reference until the definition is not
+    // needed any longer.
+    
+    defref.dispose();
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireCompositeDef def = SapphireUiDefFactory.getCompositeDef
+(
+    "org.eclipse.sapphire.examples",
+    "org/eclipse/sapphire/examples/Examples.sdef",
+    "ExampleComposite"
+);</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DefinitionLoader.Reference&lt;FormComponentDef> defref = DefinitionLoader
+    .context( BundleBasedContext.adapt( "org.eclipse.sapphire.examples" ) )
+    .sdef( "org.eclipse.sapphire.examples.Examples" )
+    .form( "ExampleComposite" );
+    
+try
+{
+    CompositeDef def = (CompositeDef) defref.resolve();
+}
+finally
+{
+    // Do not dispose the definition reference until the definition is not
+    // needed any longer.
+    
+    defref.dispose();
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireDialogDef def = SapphireUiDefFactory.getDialogDef
+(
+   "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef!ExampleDialog"
+);</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DefinitionLoader.Reference&lt;DialogDef> defref = DefinitionLoader
+    .context( BundleBasedContext.adapt( "org.eclipse.sapphire.examples" ) )
+    .sdef( "org.eclipse.sapphire.examples.Examples" )
+    .dialog( "ExampleDialog" );
+    
+try
+{
+    DialogDef def = defref.resolve();
+}
+finally
+{
+    // Do not dispose the definition reference until the definition is not
+    // needed any longer.
+    
+    defref.dispose();
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireDialogDef def = SapphireUiDefFactory.getDialogDef
+(
+    "org.eclipse.sapphire.examples",
+    "org/eclipse/sapphire/examples/Examples.sdef",
+    "ExampleDialog"
+);</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DefinitionLoader.Reference&lt;DialogDef> defref = DefinitionLoader
+    .context( BundleBasedContext.adapt( "org.eclipse.sapphire.examples" ) )
+    .sdef( "org.eclipse.sapphire.examples.Examples" )
+    .dialog( "ExampleDialog" );
+    
+try
+{
+    DialogDef def = defref.resolve();
+}
+finally
+{
+    // Do not dispose the definition reference until the definition is not
+    // needed any longer.
+    
+    defref.dispose();
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireWizardDef def = SapphireUiDefFactory.getWizardDef
+(
+   "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef!ExampleWizard"
+);</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DefinitionLoader.Reference&lt;WizardDef> defref = DefinitionLoader
+    .context( BundleBasedContext.adapt( "org.eclipse.sapphire.examples" ) )
+    .sdef( "org.eclipse.sapphire.examples.Examples" )
+    .wizard( "ExampleWizard" );
+    
+try
+{
+    WizardDef def = defref.resolve();
+}
+finally
+{
+    // Do not dispose the definition reference until the definition is not
+    // needed any longer.
+    
+    defref.dispose();
+}</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>ISapphireWizardDef def = SapphireUiDefFactory.getWizardDef
+(
+    "org.eclipse.sapphire.examples",
+    "org/eclipse/sapphire/examples/Examples.sdef",
+    "ExampleWizard"
+);</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>DefinitionLoader.Reference&lt;WizardDef> defref = DefinitionLoader
+    .context( BundleBasedContext.adapt( "org.eclipse.sapphire.examples" ) )
+    .sdef( "org.eclipse.sapphire.examples.Examples" )
+    .wizard( "ExampleWizard" );
+    
+try
+{
+    WizardDef def = defref.resolve();
+}
+finally
+{
+    // Do not dispose the definition reference until the definition is not
+    // needed any longer.
+    
+    defref.dispose();
+}</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireWizard">SapphireWizard</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">new SapphireWizard
+{
+    element,</font>
+    "org.eclipse.sapphire.examples/org/eclipse/sapphire/examples/Examples.sdef!ExampleWizard"
+<font color="#888888">}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">new SapphireWizard
+{
+    element,</font>
+    DefinitionLoader
+        .context( getClass().getClassLoader() )
+        .sdef( "org.eclipse.sapphire.examples.Examples" )
+        .wizard( "ExampleWizard" )
+<font color="#888888">}</font></code></pre>
     </td>
   </tr>
 </table>

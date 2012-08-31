@@ -37,11 +37,11 @@ import org.eclipse.swt.widgets.Control;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PageBookPart extends FormPart
+public abstract class PageBookPart extends FormComponentPart
 {
     private Map<Object,FormDef> pageDefs;
     private FormDef defaultPageDef;
-    private SapphirePartContainer currentPage;
+    private FormPart currentPage;
     private boolean exposePageValidationState = false;
     private Listener childPartListener = null;
     
@@ -123,7 +123,7 @@ public abstract class PageBookPart extends FormPart
         }
     }
     
-    public final SapphirePartContainer getCurrentPage()
+    public final FormPart getCurrentPage()
     {
         return this.currentPage;
     }
@@ -163,7 +163,7 @@ public abstract class PageBookPart extends FormPart
         
         if( pageDef != null )
         {
-            this.currentPage = (SapphirePartContainer) create( this, modelElementForPage, pageDef, this.params );
+            this.currentPage = (FormPart) create( this, modelElementForPage, pageDef, this.params );
             
             if( this.childPartListener != null )
             {
@@ -187,7 +187,7 @@ public abstract class PageBookPart extends FormPart
     {
         if( this.exposePageValidationState == true )
         {
-            final SapphirePartContainer currentPage = getCurrentPage();
+            final FormPart currentPage = getCurrentPage();
             
             if( currentPage != null )
             {

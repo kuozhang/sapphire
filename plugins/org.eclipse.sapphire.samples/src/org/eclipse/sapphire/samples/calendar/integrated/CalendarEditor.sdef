@@ -155,6 +155,7 @@
                 </node-factory>
             </node>
         </root-node>
+        <element-type>ICalendar</element-type>
     </editor-page>
     
 </definition>

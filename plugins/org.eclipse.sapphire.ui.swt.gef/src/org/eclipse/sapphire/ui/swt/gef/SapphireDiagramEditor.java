@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -76,8 +75,8 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderTextEvent;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -144,10 +143,13 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette implements ISapphireEditorActionContributor, EditorPagePresentation
 {
+    private final SapphireEditor editor;
+    private IModelElement element;
+    private DefinitionLoader.Reference<EditorPageDef> definition;
+    private SapphireDiagramEditorPagePart part;
+    
     private DiagramLayoutPersistenceService layoutPersistenceService;
 	private PaletteRoot root;
-    private IDiagramEditorPageDef diagramPageDef;
-    private SapphireDiagramEditorPagePart diagramPart;
     private DiagramModel diagramModel;
     private SapphireDiagramPartListener diagramPartListener;
     private Listener layoutPersistenceServiceListener;
@@ -163,7 +165,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	// Diagram header, borrowed from org.eclipse.ui.forms.widgets.Form class
 	private FormHeading header;
-	private String headerText;
 	private Composite body;
 	private SizeCache bodyCache = new SizeCache();
 	private SizeCache headCache = new SizeCache();	
@@ -174,29 +175,41 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 
 	private SapphireDiagramOutline diagramOutline;
 	
-	public SapphireDiagramEditor(
-		final SapphireEditor editor, final IModelElement rootModelElement, final IPath pageDefinitionLocation )
+	public SapphireDiagramEditor( final SapphireEditor editor,
+                                  final IModelElement element,
+                                  final DefinitionLoader.Reference<EditorPageDef> definition )
 	{
-		final String bundleId = pageDefinitionLocation.segment( 0 );
-        final String pageId = pageDefinitionLocation.lastSegment();
-        final String relPath = pageDefinitionLocation.removeFirstSegments( 1 ).removeLastSegments( 1 ).toPortableString();
+        if( editor == null )
+        {
+            throw new IllegalArgumentException();
+        }
         
-        final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, relPath );
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
         
-        this.diagramPageDef = (IDiagramEditorPageDef) def.getPartDef( pageId, true, IDiagramEditorPageDef.class );
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
         
-        final String partName = this.diagramPageDef.getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        this.editor = editor;
+        this.element = element;
+        this.definition = definition;
+
+        this.part = new SapphireDiagramEditorPagePart();
+		this.part.init( editor, this.element, this.definition.resolve(), Collections.<String, String> emptyMap() );
+        
+        final String partName = this.definition.resolve().getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
         setPartName( partName );
 
-        this.diagramPart = new SapphireDiagramEditorPagePart();
-		this.diagramPart.init( editor, rootModelElement, this.diagramPageDef, Collections.<String, String> emptyMap() );
-        
 		// Initialize layout persistence service
-		this.layoutPersistenceService = SapphireDiagramEditorFactory.getLayoutPersistenceService(this.diagramPart);
+		this.layoutPersistenceService = SapphireDiagramEditorFactory.getLayoutPersistenceService(this.part);
 		
         this.configManager = new DiagramConfigurationManager(this);
         
-        this.diagramModel = new DiagramModel(diagramPart, this.configManager);
+        this.diagramModel = new DiagramModel(part, this.configManager);
 
 		setEditDomain(new DefaultEditDomain(this));
 		
@@ -295,17 +308,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		    @Override
 			public void handleGridStateChangeEvent(final DiagramPageEvent event)
 			{
-				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, new Boolean(diagramPart.isGridVisible()));
-				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, new Boolean(diagramPart.isGridVisible()));
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, new Boolean(part.isGridVisible()));
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, new Boolean(part.isGridVisible()));
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING, 
-						new Dimension(diagramPart.getGridUnit(), diagramPart.getVerticalGridUnit()));
+						new Dimension(part.getGridUnit(), part.getVerticalGridUnit()));
 				markEditorDirty();
 			}
 			
 			@Override
 			public void handleGuideStateChangeEvent(final DiagramPageEvent event)
 			{
-				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, new Boolean(diagramPart.isShowGuides()));
+				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, new Boolean(part.isShowGuides()));
 				markEditorDirty();
 			}
 
@@ -329,9 +342,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			
 		};
 		
-		this.diagramPart.addListener(this.diagramPartListener);
+		this.part.addListener(this.diagramPartListener);
 		
-		this.diagramPart.attach
+		this.part.attach
         (
             new Listener()
             {
@@ -340,7 +353,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
                 {
                     if( event instanceof SelectionChangedEvent )
                     {
-                        selectParts(diagramPart.getSelections());
+                        selectParts(part.getSelections());
                     }
                 }
             }
@@ -389,12 +402,27 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
             }
         };
         
-        this.diagramPart.attach( this.diagramEditorPagePartListener );
+        this.part.attach( this.diagramEditorPagePartListener );
     }
     
     public IDiagramEditorPageDef getDiagramEditorPageDef()
     {
-    	return this.diagramPageDef;
+    	return (IDiagramEditorPageDef) this.definition.resolve();
+    }
+    
+    public final SapphireEditor getEditor()
+    {
+        return this.editor;
+    }
+    
+    public SapphireDiagramEditorPagePart getPart()
+    {
+        return this.part;
+    }
+    
+    public final IModelElement getModelElement()
+    {
+        return this.part.getModelElement();
     }
      
     public DiagramLayoutPersistenceService getLayoutPersistenceService()
@@ -445,8 +473,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 		IModelElement endpoint1 = connPart.getEndpoint1();
 		IModelElement endpoint2 = connPart.getEndpoint2();
-		DiagramNodePart nodePart1 = this.diagramPart.getDiagramNodePart(endpoint1);
-		DiagramNodePart nodePart2 = this.diagramPart.getDiagramNodePart(endpoint2);
+		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
+		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
 		GraphicalEditPart node1 = getGraphicalEditPart(nodePart1);
 		GraphicalEditPart node2 = getGraphicalEditPart(nodePart2);
 		if (node1 != null && node2 != null) {
@@ -471,8 +499,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 				
 		IModelElement endpoint1 = connPart.getEndpoint1();
 		IModelElement endpoint2 = connPart.getEndpoint2();
-		DiagramNodePart nodePart1 = this.diagramPart.getDiagramNodePart(endpoint1);
-		DiagramNodePart nodePart2 = this.diagramPart.getDiagramNodePart(endpoint2);
+		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
+		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
 		GraphicalEditPart newSrcNode = getGraphicalEditPart(nodePart1);
 		GraphicalEditPart newTargetNode = getGraphicalEditPart(nodePart2);
 
@@ -629,17 +657,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	private void initActions()
 	{
-	    final DiagramRenderingContext diagramRenderingContext = getConfigurationManager().getDiagramRenderingContextCache().get( this.diagramPart );
+	    final DiagramRenderingContext diagramRenderingContext = getConfigurationManager().getDiagramRenderingContextCache().get( this.part );
 	    
 	    this.globalActions = new HashMap<String,ActionBridge>();
 		
-		final ActionBridge selectAllBridge = new ActionBridge( diagramRenderingContext, this.diagramPart.getAction( "Sapphire.Diagram.SelectAll" ) );
+		final ActionBridge selectAllBridge = new ActionBridge( diagramRenderingContext, this.part.getAction( "Sapphire.Diagram.SelectAll" ) );
 		this.globalActions.put( ActionFactory.SELECT_ALL.getId(), selectAllBridge );
 		
-        final ActionBridge deleteBridge = new ActionBridge( diagramRenderingContext, this.diagramPart.getAction( "Sapphire.Delete" ) );
+        final ActionBridge deleteBridge = new ActionBridge( diagramRenderingContext, this.part.getAction( "Sapphire.Delete" ) );
         this.globalActions.put( ActionFactory.DELETE.getId(), deleteBridge );
 
-        final ActionBridge printBridge = new ActionBridge( diagramRenderingContext, this.diagramPart.getAction( "Sapphire.Diagram.Print" ) );
+        final ActionBridge printBridge = new ActionBridge( diagramRenderingContext, this.part.getAction( "Sapphire.Diagram.Print" ) );
         this.globalActions.put( ActionFactory.PRINT.getId(), printBridge );
 	}
 	
@@ -671,14 +699,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		if (root == null)
-			root = new SapphirePaletteRoot(diagramPart);
+			root = new SapphirePaletteRoot(part);
 		return root;
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		try {
-			this.diagramPart.saveDiagram();
+			this.part.saveDiagram();
 			markEditorClean();
 		} catch (Exception e) {
 			SapphireUiFrameworkPlugin.log(e);
@@ -733,8 +761,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private void initRenderingContext()
 	{
 		// cache DiagramRenderingContext for the diagram edit page part
-		DiagramRenderingContext ctx = new DiagramRenderingContext(this.diagramPart, this);
-		this.configManager.getDiagramRenderingContextCache().put(this.diagramPart, ctx);
+		DiagramRenderingContext ctx = new DiagramRenderingContext(this.part, this);
+		this.configManager.getDiagramRenderingContextCache().put(this.part, ctx);
 		
 		List<DiagramNodeModel> nodes = this.diagramModel.getNodes();
 		for (DiagramNodeModel node : nodes)
@@ -795,7 +823,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		final Composite main = new Composite( parent, SWT.NONE );
 		main.setLayout(new FormLayout());
 		this.header = new FormHeading(main, SWT.NULL);
-		this.headerText = this.diagramPageDef.getPageHeaderText().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
 		this.formColors = new FormColors(parent.getDisplay());
 		        
 		super.createPartControl(main);
@@ -830,12 +857,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		{
 			isGridVisibleInViewer = (Boolean) viewer.getProperty(SnapToGrid.PROPERTY_GRID_VISIBLE);
 		}
-		if (this.diagramPart.isGridVisible() != isGridVisibleInViewer)
+		if (this.part.isGridVisible() != isGridVisibleInViewer)
 		{
-			viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, this.diagramPart.isGridVisible());
-			viewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, this.diagramPart.isGridVisible());
+			viewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, this.part.isGridVisible());
+			viewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, this.part.isGridVisible());
 			viewer.setProperty(SnapToGrid.PROPERTY_GRID_SPACING, 
-					new Dimension(this.diagramPart.getGridUnit(), this.diagramPart.getVerticalGridUnit()));
+					new Dimension(this.part.getGridUnit(), this.part.getVerticalGridUnit()));
 		}
 		
 		boolean isShowGuidesInViewer = false;
@@ -843,9 +870,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		{
 			isShowGuidesInViewer = (Boolean)viewer.getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
 		}
-		if (this.diagramPart.isShowGuides() != isShowGuidesInViewer)
+		if (this.part.isShowGuides() != isShowGuidesInViewer)
 		{
-			viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.diagramPart.isShowGuides());
+			viewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, this.part.isShowGuides());
 		}
 		
 		// Support context help
@@ -925,10 +952,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			return getDiagramOutline();
 		}		
 		return super.getAdapter(type);
-	}
-	
-	public SapphireDiagramEditorPagePart getPart() {
-		return this.diagramPart;
 	}
 	
 	@Override
@@ -1079,7 +1102,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	{
 		getMouseLocation().setLocation(x, y);
 		Point realLocation = calculateRealMouseLocation(getMouseLocation());
-		this.diagramPart.setMouseLocation(realLocation.x, realLocation.y);
+		this.part.setMouseLocation(realLocation.x, realLocation.y);
 	}
 	
 	public FigureCanvas getFigureCanvas() 
@@ -1132,15 +1155,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		super.dispose();
 		
 		diagramModel.dispose();
-		diagramPart.dispose();
-		diagramPart.removeListener(this.diagramPartListener);
+		part.removeListener(this.diagramPartListener);
 		layoutPersistenceService.detach(this.layoutPersistenceServiceListener);
 		if (layoutPersistenceService != null)
 		{
 			layoutPersistenceService.dispose();
 		}
 		
-        this.diagramPart.detach( this.diagramEditorPagePartListener );        
+        this.part.detach( this.diagramEditorPagePartListener );        
         final Image image = this.header.getImage();        
         if( image != null )
         {
@@ -1151,16 +1173,24 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         {
             bridge.dispose();
         }
+        
+        this.element = null;
+        
+        this.part.dispose();
+        this.part = null;
+        
+        this.definition.dispose();
+        this.definition = null;
 	}
 	
 	private void configureDiagramHeading()
 	{
 		decorateHeading();
 		
-        final SapphireActionGroup actions = this.diagramPart.getActions( SapphireActionSystem.CONTEXT_DIAGRAM_HEADER );
+        final SapphireActionGroup actions = this.part.getActions( SapphireActionSystem.CONTEXT_DIAGRAM_HEADER );
         if (actions != null && !actions.isEmpty())
         {
-	        DiagramRenderingContext context = this.configManager.getDiagramRenderingContextCache().get(this.diagramPart);
+	        DiagramRenderingContext context = this.configManager.getDiagramRenderingContextCache().get(this.part);
 	        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager(context, actions);
 	        final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( actionPresentationManager );
 	        actionPresentation.setToolBarManager( this.header.getToolBarManager() );
@@ -1204,7 +1234,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
     private void refreshPageHeaderText()
     {
-        this.header.setText( LabelTransformer.transform( this.diagramPart.getPageHeaderText(), CapitalizationType.TITLE_STYLE, false ) );
+        this.header.setText( LabelTransformer.transform( this.part.getPageHeaderText(), CapitalizationType.TITLE_STYLE, false ) );
         this.header.layout();
     }
 	
@@ -1217,7 +1247,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
             oldImage.dispose();
         }
         
-        final ImageData newImageData = this.diagramPart.getPageHeaderImage();
+        final ImageData newImageData = this.part.getPageHeaderImage();
         
         if( newImageData == null )
         {
@@ -1231,7 +1261,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     
 	private void refreshZoomLevel()
 	{
-	    final int zoomLevel = this.diagramPart.getZoomLevel();
+	    final int zoomLevel = this.part.getZoomLevel();
 	    final double zoom = (double) zoomLevel / 100;
 	    
 	    getZoomManager().setZoom( zoom );

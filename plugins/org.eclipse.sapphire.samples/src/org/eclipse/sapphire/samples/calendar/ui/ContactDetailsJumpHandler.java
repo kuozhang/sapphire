@@ -14,6 +14,7 @@ package org.eclipse.sapphire.samples.calendar.ui;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;

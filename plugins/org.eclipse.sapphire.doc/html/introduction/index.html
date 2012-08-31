@@ -425,7 +425,7 @@ externally from Java code.</p>
 IBugReport report = op.getBugReport();
 
 SapphireDialog dialog 
-    = new SapphireDialog( shell, report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!bug.report.dialog" );
+    = new SapphireDialog( shell, report, DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).dialog( "bug.report.dialog" ) );
 
 if( dialog.open() == Dialog.OK )
 {
@@ -483,6 +483,7 @@ hookup.</p>
 
 <pre class="source-code"><code>&lt;wizard>
     &lt;id>wizard&lt;/id>
+    &lt;element-type>IFileBugReportOp&lt;/element-type>
     &lt;label>create bug report (sapphire sample)&lt;/label>
     &lt;page>
         &lt;id>main.page&lt;/id>
@@ -509,7 +510,7 @@ to use the wizard...</p>
 <pre class="source-code"><code>IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
 
 SapphireWizard&lt;IFileBugReportOp> wizard 
-    = new SapphireWizard&lt;IFileBugReportOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!wizard" );
+    = new SapphireWizard&lt;IFileBugReportOp>( op, DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).wizard( "wizard" ) );
 
 WizardDialog dialog = new WizardDialog( shell, wizard );
 
@@ -565,6 +566,8 @@ of content on the left and a series of sections on the right that change dependi
 
 <pre class="source-code"><code>&lt;editor-page>
     &lt;id>editor.page&lt;/id>
+    &lt;element-type>IBugDatabase&lt;/element-type>
+    &lt;page-name>bug database&lt;/page-name>
     &lt;page-header-text>bug database (sapphire sample)&lt;/page-header-text>
     &lt;initial-selection>bug reports&lt;/initial-selection>
     &lt;root-node>
@@ -602,36 +605,23 @@ The outline can nest arbitrarily deep and you can even define recursive structur
 node definitions, assigning ids to them and then referencing those definitions similarly to how this
 sample references an existing composite definition.</p>
 
-<p>The next step is to create the actual editor. Sapphire includes several editor classes for you to choose
-from. In this article we will use the editor class that's specialized for the case where you are editing an XML
-file and you want to have an editor page rendered by Sapphire along with an XML source page.</p>
-
-<pre class="source-code"><code>public final class BugDatabaseEditor extends SapphireEditorForXml
-{
-    public BugDatabaseEditor()
-    {
-        super( "org.eclipse.sapphire.samples" );
-
-        setRootModelElementType( IBugDatabase.TYPE );
-        setEditorDefinitionPath( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef/editor.page" );
-    }
-}</code></pre>
-
-<p>Finally, we need to register the editor. There are a variety of options for how to do this, but covering
-all of these options is outside the scope of this article. For simplicity we will register the editor as the default
-choice for files named "bugs.xml".</p>
+<p>The next step is to add an editor declaration to the plugin.xml file. Note that the declaration references
+an editor class provided by Sapphire and specifies sdef via a parameter. For simplicity of the example, the editor is
+registered as the default choice for files named "bugs.xml".</p>
 
 <pre class="source-code"><code>&lt;extension point="org.eclipse.ui.editors">
-    &lt;editor
-        class="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
-        default="true"
-        filenames="bugs.xml"
-        id="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
-        name="Bug Database Editor (Sapphire Sample)"/>
+  &lt;editor
+    id="org.eclipse.sapphire.samples.ezbug.BugDatabaseEditor"
+    name="Bug Database Editor (Sapphire Sample)"
+    filenames="bugs.xml"
+    default="true">
+    &lt;class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+      &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.ezbug.EzBug"/>
+    &lt;/class>
+  &lt;/editor>
 &lt;/extension></code></pre>
 
-<p>That's it. We are done creating the editor. After launching Eclipse and creating a bug.xml file, you should
-see an editor that looks like this:</p>
+<p>That's it. We have created a two page editor with a Sapphire form page and an XML source page.</p>
 
 <p style="margin-left: 20px;"><img src="images/editor.png"/></p>
 

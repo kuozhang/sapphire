@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "form" )
 @GenerateImpl
 
-public interface FormDef extends FormPartDef
+public interface FormDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( FormDef.class );
     
@@ -34,7 +34,7 @@ public interface FormDef extends FormPartDef
     
     @Type
     ( 
-        base = FormPartDef.class,
+        base = FormComponentDef.class,
         possible = 
         { 
             PropertyEditorDef.class, 
@@ -44,7 +44,7 @@ public interface FormDef extends FormPartDef
             ISapphireGroupDef.class,
             ISapphireWithDirectiveDef.class,
             ConditionalDef.class,
-            ISapphireCompositeDef.class,
+            CompositeDef.class,
             ActuatorDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
@@ -70,7 +70,7 @@ public interface FormDef extends FormPartDef
             @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
-            @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "composite", type = CompositeDef.class ),
             @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
@@ -86,6 +86,6 @@ public interface FormDef extends FormPartDef
                              
     ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content" );
     
-    ModelElementList<FormPartDef> getContent();
+    ModelElementList<FormComponentDef> getContent();
     
 }

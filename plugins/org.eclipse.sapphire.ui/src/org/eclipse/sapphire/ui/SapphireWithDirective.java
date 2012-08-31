@@ -44,7 +44,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
+import org.eclipse.sapphire.ui.def.CompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
@@ -116,10 +116,10 @@ public final class SapphireWithDirective extends PageBookPart
     }
     
     @Override
-    protected ISapphireCompositeDef initDefaultPageDef()
+    protected CompositeDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        final ISapphireCompositeDef composite = (ISapphireCompositeDef) root.getPartDefs().insert( ISapphireCompositeDef.TYPE );
+        final CompositeDef composite = (CompositeDef) root.getPartDefs().insert( CompositeDef.TYPE );
         final ISapphireLabelDef label = (ISapphireLabelDef) composite.getContent().insert( ISapphireLabelDef.TYPE );
         label.setText( Resources.noAdditionalPropertiesMessage );
         

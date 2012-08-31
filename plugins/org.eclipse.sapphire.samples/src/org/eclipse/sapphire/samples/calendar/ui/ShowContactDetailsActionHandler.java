@@ -16,6 +16,7 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;

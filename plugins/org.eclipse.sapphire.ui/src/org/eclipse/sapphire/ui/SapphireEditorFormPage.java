@@ -15,6 +15,8 @@ package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 
+import java.util.Collections;
+
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -23,6 +25,8 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderImageEvent;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderTextEvent;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -40,34 +44,49 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 public abstract class SapphireEditorFormPage extends FormPage implements EditorPagePresentation
 {
     private final SapphireEditor editor;
-    private final SapphireEditorPagePart part;
-    private final Listener listener;
+    private IModelElement element;
+    private DefinitionLoader.Reference<EditorPageDef> definition;
+    private SapphireEditorPagePart part;
     
     public SapphireEditorFormPage( final SapphireEditor editor,
-                                   final SapphireEditorPagePart editorPagePart ) 
+                                   final IModelElement element,
+                                   final DefinitionLoader.Reference<EditorPageDef> definition ) 
     {
         super( editor, null, null );
+        
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
 
         this.editor = editor;
-        this.part = editorPagePart;
+        this.element = element;
+        this.definition = definition;
+        this.part = (SapphireEditorPagePart) SapphirePart.create( editor, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
         
-        this.listener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
+        this.part.attach
+        (
+            new Listener()
             {
-                if( event instanceof PageHeaderTextEvent )
+                @Override
+                public void handle( final Event event )
                 {
-                    refreshPageHeaderText();
-                }
-                else if( event instanceof PageHeaderImageEvent )
-                {
-                    refreshPageHeaderImage();
+                    if( event instanceof PageHeaderTextEvent )
+                    {
+                        refreshPageHeaderText();
+                    }
+                    else if( event instanceof PageHeaderImageEvent )
+                    {
+                        refreshPageHeaderImage();
+                    }
                 }
             }
-        };
-        
-        this.part.attach( this.listener );
+        );
     }
     
     public final SapphireEditor getEditor()
@@ -133,8 +152,6 @@ public abstract class SapphireEditorFormPage extends FormPage implements EditorP
     {
         super.dispose();
         
-        this.part.detach( this.listener );
-        
         if( getManagedForm() != null )
         {
             final Image image = getManagedForm().getForm().getImage();
@@ -144,6 +161,14 @@ public abstract class SapphireEditorFormPage extends FormPage implements EditorP
                 image.dispose();
             }
         }
+
+        this.element = null;
+        
+        this.part.dispose();
+        this.part = null;
+        
+        this.definition.dispose();
+        this.definition = null;
     }
     
     public abstract String getId();

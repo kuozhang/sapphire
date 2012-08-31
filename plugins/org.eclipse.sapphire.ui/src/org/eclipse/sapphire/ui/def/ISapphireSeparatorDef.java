@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireSeparatorDef
 
-    extends FormPartDef
+    extends FormComponentDef
     
 {
     ModelElementType TYPE = new ModelElementType( ISapphireSeparatorDef.class );

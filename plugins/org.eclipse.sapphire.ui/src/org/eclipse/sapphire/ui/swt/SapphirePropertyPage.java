@@ -19,6 +19,8 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -27,21 +29,18 @@ import org.eclipse.ui.dialogs.PropertyPage;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePropertyPage 
-
-    extends PropertyPage
-    
+public class SapphirePropertyPage extends PropertyPage
 {
-    private final String compositeDefPath;
-    private IModelElement modelElement = null;
+    private IModelElement element;
+    private DefinitionLoader.Reference<FormComponentDef> definition;
     
-    public SapphirePropertyPage( final String compositeDefPath )
+    public SapphirePropertyPage( final IModelElement element,
+                                 final DefinitionLoader.Reference<FormComponentDef> definition )
     {
-        this.compositeDefPath = compositeDefPath;
+        this.element = element;
+        this.definition = definition;
     }
 
-    protected abstract IModelElement createModelElement();
-    
     @Override
     public void createControl( final Composite parent )
     {
@@ -52,10 +51,7 @@ public abstract class SapphirePropertyPage
 
     protected Control createContents( final Composite parent ) 
     {
-        this.modelElement = createModelElement();
-        
-        final SapphireControl control 
-            = new SapphireControl( parent, this.modelElement, this.compositeDefPath );
+        final SapphireForm control = new SapphireForm( parent, this.element, this.definition );
         
         final Runnable messageUpdateOperation = new Runnable()
         {
@@ -105,7 +101,7 @@ public abstract class SapphirePropertyPage
     {
         try
         {
-            this.modelElement.resource().save();
+            this.element.resource().save();
             
             return true;
         }
@@ -121,6 +117,17 @@ public abstract class SapphirePropertyPage
     protected void performApply() 
     {
         performOk();
+    }
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        this.element = null;
+        
+        this.definition.dispose();
+        this.definition = null;
     }
 
     private static final class Resources extends NLS

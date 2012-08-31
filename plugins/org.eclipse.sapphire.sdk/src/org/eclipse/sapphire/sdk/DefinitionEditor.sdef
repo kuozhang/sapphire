@@ -25,10 +25,11 @@
         <package>org.eclipse.sapphire.ui.diagram.def</package>
         <package>org.eclipse.sapphire.sdk</package>
         <package>org.eclipse.sapphire.sdk.internal</package>
-        <definition>org/eclipse/sapphire/sdk/Common.sdef</definition>
+        <definition>org.eclipse.sapphire.sdk.Common</definition>
     </import>
     
     <editor-page>
+        <element-type>ISapphireUiDef</element-type>
         <id>main</id>
         <page-header-text>Sapphire UI Definition</page-header-text>
         <root-node>
@@ -614,13 +615,14 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireWizardDef</model-element-type>
+            <model-element-type>WizardDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Wizard" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
                 <label>Wizard</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>Label</property-editor>
                     <property-editor>Description</property-editor>
                     <property-editor>Image</property-editor>
@@ -629,7 +631,7 @@
             <node-factory>
                 <property>Pages</property>
                 <case>
-                    <model-element-type>ISapphireWizardPageDef</model-element-type>
+                    <model-element-type>WizardPageDef</model-element-type>
                     <label>${ Label == null ? "&lt;page&gt;" : Label }</label>
                     <section>
                         <label>Wizard Page</label>
@@ -666,7 +668,7 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireDialogDef</model-element-type>
+            <model-element-type>DialogDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Dialog" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -773,7 +775,7 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireCompositeDef</model-element-type>
+            <model-element-type>CompositeDef</model-element-type>
             <label>${ Id == null ? "Composite" : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -810,6 +812,7 @@
                 <label>form editor page</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
@@ -1276,6 +1279,7 @@
                 <label>form editor page</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
@@ -1306,6 +1310,7 @@
                 <label>diagram editor page</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>

@@ -12,12 +12,20 @@
 
 package org.eclipse.sapphire.ui.swt.xml.editor;
 
-import org.eclipse.core.runtime.Path;
+import java.util.Map;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.osgi.BundleBasedContext;
 import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -27,77 +35,94 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireEditorForXml extends SapphireEditor
+public class SapphireEditorForXml extends SapphireEditor implements IExecutableExtension
 {
-    private MasterDetailsEditorPage mainPage;
-    private StructuredTextEditor sourceEditor;
-    private ModelElementType rootModelElementType;
-    private String editorDefinitionPath;
+    private ModelElementType type;
+    private DefinitionLoader.Reference<EditorPageDef> definition;
+    private StructuredTextEditor sourcePage;
+    private MasterDetailsEditorPage formPage;
     
-    public SapphireEditorForXml( final String pluginId )
+    public SapphireEditorForXml( final ModelElementType type,
+                                 final DefinitionLoader.Reference<EditorPageDef> definition )
     {
-        super( pluginId );
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.type = type;
+        this.definition = definition;
+    }
+    
+    public SapphireEditorForXml()
+    {
+    }
+    
+    @Override
+    public void setInitializationData( final IConfigurationElement config,
+                                       final String propertyName,
+                                       final Object data )
+    {
+        super.setInitializationData( config, propertyName, data );
+        
+        if( this.definition == null )
+        {
+            final String bundleId = config.getContributor().getName();
+            final Context context = BundleBasedContext.adapt( bundleId );
+            final Map<?,?> properties = (Map<?,?>) data;
+    
+            final String sdef = (String) properties.get( "sdef" );
+            this.definition = DefinitionLoader.context( context ).sdef( sdef ).page();
+            
+            final JavaType elementJavaType = this.definition.resolve().getElementType().resolve();
+            this.type = ModelElementType.read( elementJavaType.artifact(), true );
+        }
     }
     
     public final StructuredTextEditor getXmlEditor()
     {
-        return this.sourceEditor;
-    }
-    
-    public final String getEditorDefinitionPath()
-    {
-        return this.editorDefinitionPath;
-    }
-    
-    public final void setEditorDefinitionPath( final String editorDefinitionPath )
-    {
-        this.editorDefinitionPath = editorDefinitionPath;
-    }
-    
-    protected final ModelElementType getRootModelElementType()
-    {
-        return this.rootModelElementType;
-    }
-    
-    protected final void setRootModelElementType( final ModelElementType rootModelElementType )
-    {
-        this.rootModelElementType = rootModelElementType;
+        return this.sourcePage;
     }
     
     protected IModelElement createModel()
     {
-        final XmlEditorResourceStore store = createResourceStore( this.sourceEditor );
-        return this.rootModelElementType.instantiate( new RootXmlResource( store ) );
+        final XmlEditorResourceStore store = createResourceStore( this.sourcePage );
+        return this.type.instantiate( new RootXmlResource( store ) );
     }
     
     protected XmlEditorResourceStore createResourceStore( final StructuredTextEditor sourceEditor )
     {
-        return new XmlEditorResourceStore( this, this.sourceEditor );
+        return new XmlEditorResourceStore( this, this.sourcePage );
     }
     
     @Override
     protected final void createSourcePages() throws PartInitException
     {
-        this.sourceEditor = new StructuredTextEditor();
-        this.sourceEditor.setEditorPart(this);
+        this.sourcePage = new StructuredTextEditor();
+        this.sourcePage.setEditorPart( this );
         
-        final int index = addPage( this.sourceEditor, getEditorInput() );
+        final int index = addPage( this.sourcePage, getEditorInput() );
         setPageText( index, Resources.sourcePageTitle );
     }
     
     @Override
     protected void createFormPages() throws PartInitException
     {
-        this.mainPage = new MasterDetailsEditorPage( this, getModelElement(), new Path( getEditorDefinitionPath() ) );
-        addPage( 0, this.mainPage );
+        this.formPage = new MasterDetailsEditorPage( this, getModelElement(), this.definition );
+        addPage( 0, this.formPage );
     }
 
     @Override
     public IContentOutlinePage getContentOutline( final Object page )
     {
-        if( page == this.sourceEditor )
+        if( page == this.sourcePage )
         {
-            return (IContentOutlinePage) this.sourceEditor.getAdapter( IContentOutlinePage.class );
+            return (IContentOutlinePage) this.sourcePage.getAdapter( IContentOutlinePage.class );
         }
         
         return super.getContentOutline( page );

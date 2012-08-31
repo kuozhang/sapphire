@@ -197,9 +197,9 @@ public final class SapphireListControlledPageBook extends PageBookPart
         
         searchedParts.add( part );
         
-        if( part instanceof SapphirePartContainer )
+        if( part instanceof FormPart )
         {
-            final SapphirePartContainer partContainerPart = (SapphirePartContainer) part;
+            final FormPart partContainerPart = (FormPart) part;
             
             for( SapphirePart child : partContainerPart.getChildParts() )
             {

@@ -60,7 +60,7 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
         {
             final SapphirePart part = create( this, element, childPartDef, this.params );
             part.attach( childPartListener );
-            this.childParts.add( part );
+            childPartsListFactory.add( part );
         }
         
         this.childParts = childPartsListFactory.result();

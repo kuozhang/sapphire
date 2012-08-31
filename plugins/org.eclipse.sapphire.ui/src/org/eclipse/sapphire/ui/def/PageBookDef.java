@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @Label( standard = "page book" )
 
-public interface PageBookDef extends FormPartDef
+public interface PageBookDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( PageBookDef.class );
     
@@ -42,12 +42,12 @@ public interface PageBookDef extends FormPartDef
 
     // *** DefaultPage ***
     
-    @Type( base = ISapphireCompositeDef.class )
+    @Type( base = CompositeDef.class )
     @Label( standard = "default page" )
     @XmlBinding( path = "default-panel" )
     
     ImpliedElementProperty PROP_DEFAULT_PAGE = new ImpliedElementProperty( TYPE, "DefaultPage" );
     
-    ISapphireCompositeDef getDefaultPage();
+    CompositeDef getDefaultPage();
 
 }

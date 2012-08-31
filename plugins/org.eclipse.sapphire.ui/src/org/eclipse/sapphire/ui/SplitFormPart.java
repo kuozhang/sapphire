@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SplitFormPart extends SapphirePartContainer
+public final class SplitFormPart extends FormPart
 {
     @Override
     protected List<SapphirePart> initChildParts()

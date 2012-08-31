@@ -1,0 +1,188 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2012 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<definition>
+
+    <import>
+        <package>org.eclipse.sapphire.sdk.internal</package>
+        <package>org.eclipse.sapphire.ui.renderers.swt</package>
+        <definition>org.eclipse.sapphire.sdk.Common</definition>
+        <package>org.eclipse.sapphire.sdk.extensibility</package>
+    </import>
+
+    <editor-page>
+        <id>main</id>
+        <page-header-text>Sapphire Extension</page-header-text>
+        <initial-selection>Model Element Services</initial-selection>
+        <root-node>
+            <node>
+                <label>services</label>
+                <section>
+                    <content>
+                        <label>Define services.</label>
+                        <spacer/>
+                        <actuator>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>add a service</label>
+                        </actuator>
+                    </content>
+                </section>
+                <node-factory>
+                    <property>Services</property>
+                    <case>
+                        <label>${ Id == null ? &quot;&lt;service&gt;&quot; : Id }</label>
+                        <section>
+                            <label>service</label>
+                            <content>
+                                <property-editor>Id</property-editor>
+                                <property-editor>Type</property-editor>
+                                <property-editor>Factory</property-editor>
+                                <property-editor>
+                                    <property>Description</property>
+                                    <height>75</height>
+                                </property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>factory</name>
+                                        <value>CheckBoxListPropertyEditorRenderer$Factory</value>
+                                    </hint>
+                                    <property>Contexts</property>
+                                    <hint>
+                                        <name>show.header</name>
+                                        <value>false</value>
+                                    </hint>
+                                </property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>show.header</name>
+                                        <value>false</value>
+                                    </hint>
+                                    <property>Overrides</property>
+                                </property-editor>
+                            </content>
+                        </section>
+                    </case>
+                </node-factory>
+            </node>
+            <node>
+                <label>functions</label>
+                <section>
+                    <content>
+                        <label>Define expression language functions.</label>
+                        <spacer/>
+                        <actuator>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add an expression language function</label>
+                        </actuator>
+                    </content>
+                </section>
+                <node-factory>
+                    <property>Functions</property>
+                    <case>
+                        <label>${ Name == null ? "&lt;function&gt;" : Name }</label>
+                        <section>
+                            <label>function</label>
+                            <content>
+                                <property-editor>Name</property-editor>
+                                <property-editor>ImplClass</property-editor>
+                                <property-editor>
+                                    <property>Description</property>
+                                    <height>75</height>
+                                </property-editor>
+                            </content>
+                        </section>
+                    </case>
+                </node-factory>
+            </node>
+            <node>
+                <label>type casts</label>
+                <section>
+                    <content>
+                        <actuator>
+                            <label>Add an expression language type cast</label>
+                            <action-id>Sapphire.Add</action-id>
+                        </actuator>
+                    </content>
+                </section>
+                <node-factory>
+                    <property>TypeCasts</property>
+                    <case>
+                        <label>${ Implementation == null ? &quot;&lt;type-cast&gt;&quot; : LastSegment( Implementation, '.' ) }</label>
+                        <section>
+                            <label>type cast</label>
+                            <content>
+                                <property-editor>SourceType</property-editor>
+                                <property-editor>TargetType</property-editor>
+                                <property-editor>Implementation</property-editor>
+                                <property-editor>
+                                    <property>Description</property>
+                                    <height>75</height>
+                                </property-editor>
+                            </content>
+                        </section>
+                    </case>
+                </node-factory>
+            </node>
+            <node-include>
+                <part>ActionsNode</part>
+                <param>
+                    <name>Extension</name>
+                    <value>true</value>
+                </param>
+            </node-include>
+            <node-include>
+                <part>ActionHandlersNode</part>
+                <param>
+                    <name>Extension</name>
+                    <value>true</value>
+                </param>
+            </node-include>
+            <node-include>
+                <part>ActionHandlerFactoriesNode</part>
+                <param>
+                    <name>Extension</name>
+                    <value>true</value>
+                </param>
+            </node-include>
+            <node>
+                <label>presentation styles</label>
+                <node-factory>
+                    <case>
+                        <label>${ Id == null ? &quot;&lt;presentation-style&gt;&quot; : Id }</label>
+                        <section>
+                            <label>presentation style</label>
+                            <content>
+                                <property-editor>Id</property-editor>
+                                <property-editor>PartType</property-editor>
+                                <property-editor>Description</property-editor>
+                            </content>
+                        </section>
+                    </case>
+                    <property>PresentationStyles</property>
+                </node-factory>
+                <section>
+                    <content>
+                        <label>Define presentation styles. A presentation style is an abstraction that gives the user interface author some influence over how a part is presented without the part type hardcoding the alternatives. Providers of concrete presentations associate their rendering logic with registered presentation styles.</label>
+                        <spacer></spacer>
+                        <actuator>
+                            <label>Add a presentation style</label>
+                            <action-id>Sapphire.Add</action-id>
+                        </actuator>
+                    </content>
+                </section>
+            </node>
+        </root-node>
+        <element-type>SapphireExtensionDef</element-type>
+    </editor-page>
+    
+</definition>

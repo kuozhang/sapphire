@@ -26,7 +26,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.samples.architecture.ConnectionBendpoint;
-import org.eclipse.sapphire.samples.architecture.Architecture;
+import org.eclipse.sapphire.samples.architecture.ArchitectureSketch;
 import org.eclipse.sapphire.samples.architecture.Component;
 import org.eclipse.sapphire.samples.architecture.ComponentDependency;
 import org.eclipse.sapphire.ui.Bounds;
@@ -51,7 +51,7 @@ import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 
 public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPersistenceService 
 {
-	private Architecture architecture;
+	private ArchitectureSketch architecture;
 	private SapphireDiagramPartListener diagramPartListener;
 	private Listener componentListener;	
 	private Listener componentDependencyListener;
@@ -63,7 +63,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
     protected void init()
     {
     	super.init();    	
-    	this.architecture = (Architecture)context( SapphireDiagramEditorPagePart.class ).getLocalModelElement();
+    	this.architecture = (ArchitectureSketch)context( SapphireDiagramEditorPagePart.class ).getLocalModelElement();
     	this.nodeBounds = new HashMap<String, DiagramNodeBounds>();
     	this.connectionBendPoints = new HashMap<ConnectionHashKey, DiagramConnectionBendPoints>();
     	this.dirty = false;

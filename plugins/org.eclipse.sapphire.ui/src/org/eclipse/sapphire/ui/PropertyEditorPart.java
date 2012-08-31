@@ -68,7 +68,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyEditorPart extends FormPart
+public final class PropertyEditorPart extends FormComponentPart
 {
     public static final String RELATED_CONTROLS = "related-controls";
     public static final String BROWSE_BUTTON = "browse-button";

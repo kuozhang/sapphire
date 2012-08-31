@@ -27,7 +27,7 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWithDirectiveImplied extends SapphirePartContainer
+public final class SapphireWithDirectiveImplied extends FormPart
 {
     private ModelPath path;
     private IModelElement element;

@@ -26,8 +26,8 @@ import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
-import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.DialogDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -43,31 +43,32 @@ import org.eclipse.swt.widgets.Shell;
 
 public class SapphireDialog extends Dialog
 {
-    private final SapphireDialogPart part;
-    private final boolean preferFormStyle;
+    private IModelElement element;
+    private DefinitionLoader.Reference<DialogDef> definition;
+    private SapphireDialogPart part;
     private Button okButton;
     
     public SapphireDialog( final Shell shell,
-                           final IModelElement modelElement,
-                           final String dialogDefPath )
-    {
-        this( shell, modelElement, SapphireUiDefFactory.getDialogDef( dialogDefPath ) );
-    }
-    
-    public SapphireDialog( final Shell shell,
-                           final IModelElement modelElement,
-                           final ISapphireDialogDef definition )
-    {
-        this( shell, (SapphireDialogPart) SapphirePart.create( null, modelElement, definition, Collections.<String,String>emptyMap() ) );
-    }
-
-    public SapphireDialog( final Shell shell,
-                           final SapphireDialogPart part )
+                           final IModelElement element,
+                           final DefinitionLoader.Reference<DialogDef> definition )
     {
         super( shell );
         
-        this.part = part;
-        this.preferFormStyle = part.getPreferFormStyle();
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.element = element;
+        this.definition = definition;
+        
+        this.part = new SapphireDialogPart();
+        this.part.init( null, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
     }
     
     public final IModelElement getModelElement()
@@ -78,11 +79,30 @@ public class SapphireDialog extends Dialog
     @Override
     protected Control createDialogArea( final Composite parent )
     {
-        getShell().setText( this.part.getLabel() );
+        final Shell shell = getShell();
+        
+        shell.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    SapphireDialog.this.element = null;
+                    
+                    SapphireDialog.this.part.dispose();
+                    SapphireDialog.this.part = null;
+                    
+                    SapphireDialog.this.definition.dispose();
+                    SapphireDialog.this.definition = null;
+                }
+            }
+        );
+        
+        shell.setText( this.part.getLabel() );
         
         final Composite composite = (Composite) super.createDialogArea( parent );
         
-        if( this.preferFormStyle )
+        if( this.part.getPreferFormStyle() )
         {
             composite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
         }
@@ -110,7 +130,7 @@ public class SapphireDialog extends Dialog
     {
         final Composite composite = (Composite) super.createContents( parent );
         
-        if( this.preferFormStyle )
+        if( this.part.getPreferFormStyle() )
         {
             composite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
         }
@@ -123,7 +143,7 @@ public class SapphireDialog extends Dialog
     {
         final Composite composite = (Composite) super.createButtonBar( parent );
         
-        if( this.preferFormStyle )
+        if( this.part.getPreferFormStyle() )
         {
             composite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
         }
@@ -168,7 +188,7 @@ public class SapphireDialog extends Dialog
     {
         final Button button = super.createButton( parent, id, label, defaultButton );
         
-        if( this.preferFormStyle )
+        if( this.part.getPreferFormStyle() )
         {
             button.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
         }

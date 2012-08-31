@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "section" )
 @GenerateImpl
 
-public interface ISapphireSectionDef extends ISapphireCompositeDef
+public interface ISapphireSectionDef extends CompositeDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireSectionDef.class );
     

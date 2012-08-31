@@ -13,11 +13,10 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.sapphire.samples.ezbug.IBugReport;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.SapphireDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -26,16 +25,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class FileBugReportHandler1
-    
-    extends AbstractHandler
-    implements IHandler
-    
+public final class FileBugReportHandler1 extends AbstractHandler
 {
     public Object execute( final ExecutionEvent event )
-    
-        throws ExecutionException
-        
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
@@ -43,7 +35,7 @@ public class FileBugReportHandler1
         final IBugReport report = op.getBugReport();
         
         final SapphireDialog dialog 
-            = new SapphireDialog( window.getShell(), report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!dialog1" );
+            = new SapphireDialog( window.getShell(), report, DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).dialog( "dialog1" ) );
         
         if( dialog.open() == Dialog.OK )
         {

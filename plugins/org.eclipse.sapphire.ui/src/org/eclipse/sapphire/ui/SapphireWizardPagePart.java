@@ -15,13 +15,13 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
+import org.eclipse.sapphire.ui.def.WizardPageDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWizardPagePart extends SapphireComposite
+public final class SapphireWizardPagePart extends CompositePart
 {
     private FunctionResult imageFunctionResult;
     private boolean visible;
@@ -32,7 +32,7 @@ public final class SapphireWizardPagePart extends SapphireComposite
         super.init();
         
         final IModelElement element = getModelElement();
-        final ISapphireWizardPageDef def = definition();
+        final WizardPageDef def = definition();
         
         this.imageFunctionResult = initExpression
         (
@@ -51,9 +51,9 @@ public final class SapphireWizardPagePart extends SapphireComposite
     }
 
     @Override
-    public ISapphireWizardPageDef definition()
+    public WizardPageDef definition()
     {
-        return (ISapphireWizardPageDef) super.definition();
+        return (WizardPageDef) super.definition();
     }
     
     public String getLabel()

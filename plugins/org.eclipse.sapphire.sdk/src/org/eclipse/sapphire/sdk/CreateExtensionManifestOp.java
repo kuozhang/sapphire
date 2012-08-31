@@ -11,24 +11,24 @@
 
 package org.eclipse.sapphire.sdk;
 
+import org.eclipse.sapphire.PreferDefaultValue;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ProgressMonitor;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
-import org.eclipse.sapphire.sdk.internal.CreateExtensionManifestOpFileNameValidationService;
-import org.eclipse.sapphire.sdk.internal.CreateExtensionManifestOpFolderValidationService;
-import org.eclipse.sapphire.sdk.internal.CreateExtensionManifestOpMethods;
+import org.eclipse.sapphire.sdk.internal.CreateExtensionManifestOpServices.FolderInitialValueService;
+import org.eclipse.sapphire.sdk.internal.CreateExtensionManifestOpServices.FolderValidationService;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
+import org.eclipse.sapphire.workspace.WorkspaceFileType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@WorkspaceFileType( SapphireExtensionDef.class )
 @GenerateImpl
 
 public interface CreateExtensionManifestOp extends CreateWorkspaceFileOp
@@ -37,21 +37,21 @@ public interface CreateExtensionManifestOp extends CreateWorkspaceFileOp
     
     // *** Folder ***
     
-    @Service( impl = CreateExtensionManifestOpFolderValidationService.class )
+    @Services
+    (
+        {
+            @Service( impl = FolderValidationService.class ),
+            @Service( impl = FolderInitialValueService.class )
+        }
+    )
     
     ValueProperty PROP_FOLDER = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FOLDER );
     
     // *** FileName ***
     
     @DefaultValue( text = SapphireExtensionDef.FILE_NAME )
-    @Service( impl = CreateExtensionManifestOpFileNameValidationService.class )
+    @PreferDefaultValue
 
     ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
-    
-    // *** Method: execute ***
-    
-    @DelegateImplementation( CreateExtensionManifestOpMethods.class )
-    
-    Status execute( ProgressMonitor monitor );
     
 }

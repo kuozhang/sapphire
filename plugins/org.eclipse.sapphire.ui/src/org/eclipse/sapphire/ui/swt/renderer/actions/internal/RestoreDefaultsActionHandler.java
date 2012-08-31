@@ -48,7 +48,7 @@ import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartContainer;
+import org.eclipse.sapphire.ui.FormPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.swt.SWT;
@@ -152,9 +152,9 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     {
         if( part.visible() )
         {
-            if( part instanceof SapphirePartContainer )
+            if( part instanceof FormPart )
             {
-                for( SapphirePart child : ( (SapphirePartContainer) part ).getChildParts() )
+                for( SapphirePart child : ( (FormPart) part ).getChildParts() )
                 {
                     collectProperties( child, result );
                 }
@@ -166,7 +166,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             }
             else if( part instanceof SapphireEnumControlledPageBook )
             {
-                final SapphirePartContainer currentPage = ( (SapphireEnumControlledPageBook) part ).getCurrentPage();
+                final FormPart currentPage = ( (SapphireEnumControlledPageBook) part ).getCurrentPage();
                 
                 if( currentPage != null )
                 {

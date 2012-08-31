@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "group" )
 @GenerateImpl
 
-public interface ISapphireGroupDef extends ISapphireCompositeDef
+public interface ISapphireGroupDef extends CompositeDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireGroupDef.class );
  

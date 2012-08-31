@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Group;
  * @author <a href="mailto:rodedb@gmail.com">Roded Bahat</a>
  */
 
-public class SapphireGroup extends SapphireComposite
+public class SapphireGroup extends CompositePart
 {
     @Override
     protected Composite createOuterComposite( final SapphireRenderingContext context )

@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.samples.po;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.FormEditorPage;
 import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -31,11 +31,6 @@ public final class PurchaseOrderEditor extends SapphireEditor
     private FormEditorPage pageGeneral;
     private FormEditorPage pageEntries;
     
-    public PurchaseOrderEditor()
-    {
-        super( "org.eclipse.sapphire.samples" );
-    }
-
     @Override
     protected void createSourcePages() throws PartInitException 
     {
@@ -56,10 +51,20 @@ public final class PurchaseOrderEditor extends SapphireEditor
     @Override
     protected void createFormPages() throws PartInitException 
     {
-        this.pageGeneral = new FormEditorPage( this, this.model, new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/po/PurchaseOrderEditor.sdef/GeneralPage" ) );
+        this.pageGeneral = new FormEditorPage
+        (
+            this, this.model,
+            DefinitionLoader.context( PurchaseOrderEditor.class ).sdef( "PurchaseOrderEditor" ).page( "GeneralPage" )
+        );
+        
         addPage( 0, this.pageGeneral );
 
-        this.pageEntries = new FormEditorPage( this, this.model, new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/po/PurchaseOrderEditor.sdef/EntriesPage" ) );
+        this.pageEntries = new FormEditorPage
+        (
+            this, this.model,
+            DefinitionLoader.context( PurchaseOrderEditor.class ).sdef( "PurchaseOrderEditor" ).page( "EntriesPage" )
+        );
+        
         addPage( 1, this.pageEntries );
     }
     

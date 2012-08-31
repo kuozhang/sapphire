@@ -31,9 +31,9 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 public final class SapphireUiDefMethods
 {
     public static PartDef getPartDef( final ISapphireUiDef rootdef,
-                                               final String id,
-                                               final boolean searchImportedDefinitions,
-                                               final Class<?> expectedType )
+                                      final String id,
+                                      final boolean searchImportedDefinitions,
+                                      final Class<?> expectedType )
     {
         if( id != null )
         {
@@ -57,7 +57,7 @@ public final class SapphireUiDefMethods
             {
                 for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
                 {
-                    final ISapphireUiDef sdef = ref.resolve();
+                    final ISapphireUiDef sdef = ref.getPath().resolve();
                     
                     if( sdef != null )
                     {
@@ -88,7 +88,7 @@ public final class SapphireUiDefMethods
             {
                 for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
                 {
-                    final ISapphireUiDef sdef = ref.resolve();
+                    final ISapphireUiDef sdef = ref.getPath().resolve();
                     
                     if( sdef != null )
                     {
