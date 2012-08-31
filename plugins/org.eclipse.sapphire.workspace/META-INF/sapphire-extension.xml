@@ -46,4 +46,11 @@
         <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathFactsService$Factory</factory>
         <id>Sapphire.FactsService.WorkspaceRelativePath</id>
     </service>
+    <service>
+        <id>Sapphire.ConversionService.IFileToWorkspaceFileResourceStore</id>
+        <type>org.eclipse.sapphire.ConversionService</type>
+        <description>Implementation of ConversionService that is capable of converting an IFile to a WorkspaceFileResourceStore or a ByteArrayResourceStore.</description>
+        <context>Sapphire.Element.MetaModel</context>
+        <factory>org.eclipse.sapphire.workspace.internal.WorkspaceFileResourceStoreConversionService$Factory</factory>
+    </service>
 </extension>

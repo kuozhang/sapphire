@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.tests.modeling.events.EventLog;
 
@@ -67,7 +68,7 @@ public final class TestModelingEvents0005 extends SapphireTestCase
 
     private void test( final ModelProperty property ) throws Exception
     {
-        final RootElement root = RootElement.TYPE.instantiate( null ); // Note explicit avoidance of instantiate with initialization.
+        final RootElement root = RootElement.TYPE.instantiate( new MemoryResource( RootElement.TYPE ) ); // Note explicit avoidance of instantiate with initialization.
         final EventLog log = new EventLog();
         
         root.attach( log );

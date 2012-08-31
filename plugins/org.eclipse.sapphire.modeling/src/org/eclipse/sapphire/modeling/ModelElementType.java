@@ -24,6 +24,7 @@ import java.util.TreeMap;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Listeners;
@@ -348,14 +349,24 @@ public final class ModelElementType extends ModelMetadataItem
     
     public <T extends IModelElement> T instantiate( final Resource resource )
     {
-        return (T) instantiate( null, null, ( resource == null ? new MemoryResource( this ) : resource ) );
+        if( resource == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return (T) instantiate( null, null, resource );
+    }
+    
+    public <T extends IModelElement> T instantiate( final Object input )
+    {
+        return instantiate( service( MasterConversionService.class ).convert( input, Resource.class ) );
     }
     
     @SuppressWarnings( "unchecked" )
     
     public <T extends IModelElement> T instantiate()
     {
-        final T element = (T) instantiate( null );
+        final T element = (T) instantiate( new MemoryResource( this ) );
         element.initialize();
         return element;
     }

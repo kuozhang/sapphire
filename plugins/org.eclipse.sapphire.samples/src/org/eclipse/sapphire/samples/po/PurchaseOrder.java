@@ -27,6 +27,7 @@ import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -34,6 +35,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@Service( impl = PurchaseOrderResourceConversionService.class )
 @GenerateImpl
 
 public interface PurchaseOrder extends IModelElement

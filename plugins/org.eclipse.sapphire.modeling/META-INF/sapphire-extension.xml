@@ -630,4 +630,11 @@
         <impl>org.eclipse.sapphire.modeling.el.LowerCaseFunction</impl>
         <description>Converts a string to lower case. Can be used either as LowerCase( Name ) or as Name.LowerCase().</description>
     </function>
+    <service>
+        <id>Sapphire.MasterConversionService</id>
+        <type>org.eclipse.sapphire.MasterConversionService</type>
+        <factory>org.eclipse.sapphire.internal.MasterConversionServiceFactory</factory>
+        <description>Converts an object to the specified type by delegating to available ConversionService implementations. If object is null or is already of desired type, the object is returned unchanged.</description>
+        <context>Sapphire.Element.MetaModel</context>
+    </service>
 </extension>

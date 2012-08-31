@@ -27,9 +27,12 @@
   <ol type="A">
     <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
     <li><a href="#Modeling-Context">Context</a></li>
+    <li><a href="#Modeling-ConversionService">ConversionService</a></li>
     <li><a href="#Modeling-FileName">FileName</a></li>
+    <li><a href="#Modeling-MasterConversionService">MasterConversionService</a></li>
     <li><a href="#Modeling-ModelElement">ModelElement</a></li>
     <li><a href="#Modeling-ModelElementList">ModelElementList</a></li>
+    <li><a href="#Modeling-ModelElementType">ModelElementType</a></li>
     <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
     <li><a href="#Modeling-Service">Service</a></li>
   </ol>
@@ -173,6 +176,72 @@ BundleBasedContext extends Context
 </ol>
 
 
+<a name="Modeling-ConversionService"><h2>ConversionService</h2></a>
+
+<p>The ConversionService converts an object to the specified type. One common application is to convert
+an input (such as a file) to a resource when instantiating the model.</p>
+
+<table>
+  <tr>
+    <th>Sapphire.ConversionService.IFileToWorkspaceFileResourceStore</th>
+  </tr>
+  <tr>
+    <td>Capable of converting an IFile to a WorkspaceFileResourceStore or a ByteArrayResourceStore.</td>
+  </tr>
+  <tr>
+    <td style="border-width: 0px; height: 20px"></td>
+  </tr>
+  <tr>
+    <th>Sapphire.ConversionService.ByteArrayResourceStoreToXmlResource</th>
+  </tr>
+  <tr>
+    <td>Capable of converting a ByteArrayResourceStore to an XmlResource or a Resource. Conversion is only 
+    performed if resource store corresponds   to a file with "xml" extension or if the context element type 
+    has XML binding annotations.</td>
+  </tr>
+</table>
+
+<p>A ConversionService can delegate to other conversion services to create a conversion chain. In fact,
+a common conversion of IFile to XmlResource is a chain of two ConversionService implementations.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In the purchase order sample, a custom ConversionService is used because the 
+default file extension for purchase order files is "po" rather than "xml" and PurchaseOrder element does not
+have XML binding annotations. The combination of these two factors prevent the framework-provided ConversionService
+implementations from engaging.</p>
+
+<pre class="source-code"><code>@Service( impl = PurchaseOrderResourceConversionService.class )
+
+<font color="#888888">public interface PurchaseOrder extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code>public class PurchaseOrderResourceConversionService extends ConversionService
+{
+    @Override
+    public &lt;T> T convert( Object object, Class&lt;T> type )
+    {
+        if( type == XmlResource.class || type == Resource.class )
+        {
+            final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
+            
+            if( store != null )
+            {
+                return type.cast( new RootXmlResource( new XmlResourceStore( store ) ) );
+            }
+        }
+        
+        return null;
+    }
+}</code></pre>
+
+<p style="margin-left: 20px;">Note the use of chaining as part of the presented ConversionService implementation. The 
+input could be any number of things, but as long as another ConversionService implementation knows how to convert it 
+to a ByteArrayResourceStore, this implementation will take the conversion the rest of the way to a Resource.</p> 
+
+
 <h2><a name="Modeling-FileName">FileName</a></h2>
 
 <p>When implementing operations that create files, a common need is to gather the name of a file 
@@ -201,6 +270,24 @@ normalization should be performed to simplify file name input.</p>
   </ol>
   
 </ol>
+
+
+<a name="Modeling-MasterConversionService"><h2>MasterConversionService</h2></a>
+
+<p>The MasterConversionService converts an object to the specified type by delegating to available ConversionService 
+implementations. If object is null or is already of desired type, the object is returned unchanged.</p> 
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to
+be implemented by adopters. See <a href="#Modeling-ConversionService">ConversionService</a> instead.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, an IFile is converted to a Resource as part of instantiating the model.
+Note how this code is not aware of the details of the conversion or what type of a resource is created.</p>
+
+ <pre class="source-code"><code><font color="#888888">IFile file = project.getFile( "contacts.xml" )</font>
+Resource resource = ContactsDatabase.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+<font color="#888888">ContactsDatabase model = ContactsDatabase.TYPE.instantiate( resource );</font></code></pre>
 
 
 <h2><a name="Modeling-ModelElement">ModelElement</a></h2>
@@ -281,6 +368,32 @@ directly through the property accessor.</p>
 <pre class="source-code"><code>container.getEntities().enabled()</font></code></pre>
 
 <pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
+
+
+<h2><a name="Modeling-ModelElementType">ModelElementType</a></h2>
+
+<p>A new variant of instantiate method provides a way to create a model instance from an arbitrary input
+without knowing which resource needs to be created. The resource creation is handled by delegating
+to ConversionService implementations.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElementType
+{
+    &lt;T extends IModelElement> T instantiate()
+    &lt;T extends IModelElement> T instantiate( Resource resource )</font>
+    &lt;T extends IModelElement> T instantiate( Object input )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following three snippets are equivalent.</p>
+
+<pre class="source-code"><code>Resource resource = new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) );
+PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
+
+<pre class="source-code"><code>Resource resource = PurchaseOrder.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
+
+<pre class="source-code"><code>PurchaseOrder po = PuchaseOrder.TYPE.instantiate( file );</code></pre>
 
 
 <h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>
