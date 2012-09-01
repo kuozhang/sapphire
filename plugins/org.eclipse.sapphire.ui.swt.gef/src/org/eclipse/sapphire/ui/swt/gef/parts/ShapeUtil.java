@@ -84,7 +84,7 @@ public class ShapeUtil {
 		if (shapePart instanceof TextPart)
 		{
 			TextPart textPart = (TextPart)shapePart;
-			figure = new TextFigure(resourceCache, textPart.getText(), textPart.getTextColor());
+			figure = new TextFigure(resourceCache, textPart.getText(), textPart.getTextColor(), textPart.getFontDef());
 		}
 		else if (shapePart instanceof ImagePart)
 		{

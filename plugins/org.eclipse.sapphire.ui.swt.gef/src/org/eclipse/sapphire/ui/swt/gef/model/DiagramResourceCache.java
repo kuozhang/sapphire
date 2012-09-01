@@ -19,6 +19,7 @@ import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -32,13 +33,14 @@ import org.eclipse.swt.widgets.Display;
 public class DiagramResourceCache {
 	
 	private List<Color> colors = new ArrayList<Color>();
-	private Font defaultFont;
+	private List<Font> fonts = new ArrayList<Font>();
 	
 	public DiagramResourceCache() {
 		FontDescriptor descriptor = JFaceResources.getDefaultFontDescriptor();
 		FontData[] fontData = descriptor.getFontData();
 		FontData smallerFontData = new FontData(fontData[0].getName(), fontData[0].getHeight()-1, 0);
-		defaultFont = new Font(null, new FontData[] { smallerFontData });
+		Font defaultFont = new Font(null, new FontData[] { smallerFontData });
+		fonts.add(defaultFont);
 	}
 	
     public int getLinkStyle(IDiagramConnectionDef def) {
@@ -84,15 +86,42 @@ public class DiagramResourceCache {
     }
     
     public Font getDefaultFont() {
-		return defaultFont;
+		return fonts.get(0);
+    }
+    
+    public Font getFont(FontDef fontDef) {
+
+    	if (fontDef != null) {
+    		final String name = fontDef.getName().getContent();
+    		final int size = fontDef.getSize().getContent();
+    		int style = SWT.NORMAL;
+    		if (fontDef.isBold().getContent()) {
+    			style |= SWT.BOLD;
+    		}
+    		if (fontDef.isItalic().getContent()) {
+    			style |= SWT.ITALIC;
+    		}
+        	for (Font existingFont : fonts) {
+        		FontData data = existingFont.getFontData()[0];
+        		if (data.getName().equals(name) && data.getHeight() == size && data.getStyle() == style) {
+        			return existingFont;
+        		}
+        	}
+        	final FontData newFontData = new FontData(name, size, style);
+        	final Font newFont = new Font(Display.getCurrent(), newFontData);
+        	fonts.add(newFont);
+        	return newFont;
+    	}
+    	return fonts.get(0);
     }
     
     public void dispose() {
-    	defaultFont.dispose();
-    	defaultFont = null;
-
     	for (Color existingColor : colors) {
     		existingColor.dispose();
+    	}
+    	
+    	for (Font existingFont : fonts) {
+    		existingFont.dispose();
     	}
     }
 }

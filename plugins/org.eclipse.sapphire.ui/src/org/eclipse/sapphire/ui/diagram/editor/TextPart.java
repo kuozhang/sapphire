@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Extend Sapphire Diagram Framework to support SQL Schema diagram like editors
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -15,6 +16,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 /**
@@ -27,7 +29,6 @@ public class TextPart extends ShapePart
 	private IModelElement modelElement;
 	private FunctionResult textFunction;
 	private ValueProperty labelProperty;
-	private FunctionResult colorFunction;
 	
 	@Override
     protected void init()
@@ -51,21 +52,6 @@ public class TextPart extends ShapePart
             }
         );
         this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.textFunction);
-        
-        this.colorFunction = initExpression
-        ( 
-            this.modelElement,
-            this.textDef.getColor().getContent(),
-            Color.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshLabel();
-                }
-            }
-        );
     }
 	
     @Override
@@ -75,10 +61,6 @@ public class TextPart extends ShapePart
         if (this.textFunction != null)
         {
             this.textFunction.dispose();
-        }
-        if (this.colorFunction != null)
-        {
-            this.colorFunction.dispose();
         }
     }
 	
@@ -103,7 +85,12 @@ public class TextPart extends ShapePart
     
     public Color getTextColor()
     {
-    	return (Color)this.colorFunction.value();
+    	return this.textDef.getColor().getContent();
+    }
+
+    public FontDef getFontDef() 
+    {
+    	return this.textDef.getFont().element();
     }
     
 	private void refreshLabel()

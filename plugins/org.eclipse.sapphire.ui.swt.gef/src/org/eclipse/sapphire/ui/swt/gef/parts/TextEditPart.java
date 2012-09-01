@@ -7,12 +7,12 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Extend Sapphire Diagram Framework to support SQL Schema diagram like editors
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -38,7 +38,7 @@ public class TextEditPart extends ShapeEditPart
 		TextModel textModel = (TextModel)getModel();
 		TextPart textPart = (TextPart)textModel.getSapphirePart();
 		TextFigure figure = new TextFigure(textModel.getNodeModel().getDiagramModel().getResourceCache(), 
-				textPart.getText(), textPart.getTextColor());
+				textPart.getText(), textPart.getTextColor(), textPart.getFontDef());
 		return figure;
 	}
 		

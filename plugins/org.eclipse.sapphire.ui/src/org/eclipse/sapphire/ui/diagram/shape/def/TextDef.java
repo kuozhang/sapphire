@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Extend Sapphire Diagram Framework to support SQL Schema diagram like editors
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
@@ -23,6 +24,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.Color;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -50,15 +52,15 @@ public interface TextDef extends ShapeDef
     
 	// *** Color ***
     
-    @Type( base = Function.class )
+    @Type( base = Color.class )
     @Label( standard = "color")
     @XmlBinding( path = "color")
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
     
-    Value<Function> getColor();
+    Value<Color> getColor();
     void setColor( String value );
-    void setColor( Function value );
+    void setColor( Color value );
     
     // *** Font ***
     
