@@ -38,21 +38,27 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
         
         if( context != null )
         {
-            for( IPackageReference packageRef : sdef.getImportedPackages() )
+            Class<?> cl = context.findClass( name );
+            
+            if( cl == null && name.indexOf( '.' ) == -1 )
             {
-                final String packageName = packageRef.getName().getText();
-                
-                if( packageName != null )
+                for( IPackageReference packageRef : sdef.getImportedPackages() )
                 {
-                    final String fullClassName = packageName + "." + name;
-                    final Class<?> cl = context.findClass( fullClassName );
+                    final String packageName = packageRef.getName().getText();
                     
-                    if( cl != null )
+                    if( packageName != null )
                     {
-                        return new ClassBasedJavaType( cl );
+                        cl = context.findClass( packageName + "." + name );
+                        
+                        if( cl != null )
+                        {
+                            break;
+                        }
                     }
                 }
             }
+            
+            return new ClassBasedJavaType( cl );
         }
         
         return null;

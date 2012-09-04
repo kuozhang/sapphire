@@ -16,7 +16,6 @@
 <definition>
     <import>
         <definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm</definition>
-        <package>org.eclipse.sapphire.samples.contacts</package>
     </import>
     <wizard>
         <id>CreateContactsDatabaseWizard</id>
@@ -31,6 +30,6 @@
             <scale-vertically>true</scale-vertically>
             <image>org/eclipse/sapphire/samples/SapphireWizardBanner.png</image>
         </page>
-        <element-type>CreateContactsDatabaseOp</element-type>
+        <element-type>org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseOp</element-type>
     </wizard>    
 </definition>

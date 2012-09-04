@@ -16,7 +16,6 @@
 <definition>
     <import>
         <definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm</definition>
-        <package>org.eclipse.sapphire.samples.calendar.integrated</package>
     </import>
     <wizard>
         <id>CreateCalendarWizard</id>
@@ -31,6 +30,6 @@
             <scale-vertically>true</scale-vertically>
             <image>org/eclipse/sapphire/samples/SapphireWizardBanner.png</image>
         </page>
-        <element-type>CreateCalendarOp</element-type>
+        <element-type>org.eclipse.sapphire.samples.calendar.integrated.CreateCalendarOp</element-type>
     </wizard>    
 </definition>

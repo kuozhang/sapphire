@@ -16,7 +16,6 @@
 <definition>
     <import>
         <definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm</definition>
-        <package>org.eclipse.sapphire.samples.architecture</package>
     </import>
     <wizard>
         <id>CreateArchitectureSketchWizard</id>
@@ -31,6 +30,6 @@
             <scale-vertically>true</scale-vertically>
             <image>org/eclipse/sapphire/samples/SapphireWizardBanner.png</image>
         </page>
-        <element-type>CreateArchitectureSketchOp</element-type>
+        <element-type>org.eclipse.sapphire.samples.architecture.CreateArchitectureSketchOp</element-type>
     </wizard>    
 </definition>
