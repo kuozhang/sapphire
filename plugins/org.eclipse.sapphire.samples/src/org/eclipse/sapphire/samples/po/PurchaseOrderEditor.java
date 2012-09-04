@@ -54,7 +54,7 @@ public final class PurchaseOrderEditor extends SapphireEditor
         this.pageGeneral = new FormEditorPage
         (
             this, this.model,
-            DefinitionLoader.context( PurchaseOrderEditor.class ).sdef( "PurchaseOrderEditor" ).page( "GeneralPage" )
+            DefinitionLoader.sdef( getClass() ).page( "GeneralPage" )
         );
         
         addPage( 0, this.pageGeneral );
@@ -62,7 +62,7 @@ public final class PurchaseOrderEditor extends SapphireEditor
         this.pageEntries = new FormEditorPage
         (
             this, this.model,
-            DefinitionLoader.context( PurchaseOrderEditor.class ).sdef( "PurchaseOrderEditor" ).page( "EntriesPage" )
+            DefinitionLoader.sdef( getClass() ).page( "EntriesPage" )
         );
         
         addPage( 1, this.pageEntries );

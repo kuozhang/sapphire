@@ -58,7 +58,7 @@ public final class ArchitectureSketchEditor extends SapphireEditor
 		this.pageDiagram = new SapphireDiagramEditor
 		(
 		    this, this.architectureModel, 
-		    DefinitionLoader.context( getClass() ).sdef( "ArchitectureSketchEditor" ).page( "DiagramPage" )
+		    DefinitionLoader.sdef( getClass() ).page( "DiagramPage" )
 		);
 		
         addEditorPage( 0, this.pageDiagram );
@@ -70,7 +70,7 @@ public final class ArchitectureSketchEditor extends SapphireEditor
         this.pageDetails = new MasterDetailsEditorPage
         (
             this, this.architectureModel,
-            DefinitionLoader.context( getClass() ).sdef( "ArchitectureSketchEditor" ).page( "DetailsPage" )
+            DefinitionLoader.sdef( getClass() ).page( "DetailsPage" )
         );
         
         addPage( 1, this.pageDetails );

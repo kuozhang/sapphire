@@ -95,7 +95,7 @@ public final class CalendarEditor extends SapphireEditor
         this.calendarDesignPage = new MasterDetailsEditorPage
         (
             this, this.modelCalendarIntegrated,
-            DefinitionLoader.context( getClass() ).sdef( "CalendarEditor" ).page()
+            DefinitionLoader.sdef( getClass() ).page()
         );
         
         addPage( 0, this.calendarDesignPage );

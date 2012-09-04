@@ -36,7 +36,7 @@ public final class ExtensionManifestEditor extends SapphireEditorForXml
         super
         (
             SapphireExtensionDef.TYPE,
-            DefinitionLoader.context( ExtensionManifestEditor.class ).sdef( "ExtensionManifestEditor" ).page()
+            DefinitionLoader.sdef( ExtensionManifestEditor.class ).page()
         );
     }
 

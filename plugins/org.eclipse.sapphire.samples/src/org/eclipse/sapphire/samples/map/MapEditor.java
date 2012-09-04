@@ -60,7 +60,7 @@ public final class MapEditor extends SapphireEditor
 		this.mapDiagram = new SapphireDiagramEditor
 		(
 		    this, this.modelMap, 
-		    DefinitionLoader.context( Map.class ).sdef( "MapEditor" ).page( "DiagramPage" )
+		    DefinitionLoader.sdef( getClass() ).page( "DiagramPage" )
 		);
 		
         addEditorPage( 0, this.mapDiagram );
@@ -72,7 +72,7 @@ public final class MapEditor extends SapphireEditor
         this.mapDetailsPage = new MasterDetailsEditorPage
         (
             this, this.modelMap,
-            DefinitionLoader.context( Map.class ).sdef( "MapEditor" ).page( "DetailsPage" )
+            DefinitionLoader.sdef( getClass() ).page( "DetailsPage" )
         );
         
         addPage( 1, this.mapDetailsPage );

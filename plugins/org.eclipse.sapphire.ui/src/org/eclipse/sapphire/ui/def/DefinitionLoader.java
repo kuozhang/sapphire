@@ -72,6 +72,16 @@ public final class DefinitionLoader
         
         return context( Context.adapt( cl ) );
     }
+
+    public static DefinitionLoader sdef( final Class<?> cl )
+    {
+        if( cl == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return context( cl ).sdef( cl.getSimpleName() );
+    }
     
     public DefinitionLoader sdef( final String name )
     {
