@@ -22,6 +22,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
@@ -44,10 +45,17 @@ import org.eclipse.ui.ide.IDE;
 
 public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
 {
-    private M element;
+    private IExecutableModelElement element;
+    private boolean elementInstantiatedLocally;
     private DefinitionLoader.Reference<WizardDef> definition;
     private SapphireWizardPart part;
     
+    public SapphireWizard( final ModelElementType type,
+                           final DefinitionLoader.Reference<WizardDef> definition )
+    {
+        init( type, definition );
+    }
+
     public SapphireWizard( final M element,
                            final DefinitionLoader.Reference<WizardDef> definition )
     {
@@ -58,7 +66,30 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     {
     }
     
-    protected void init( final M element,
+    protected void init( final ModelElementType type,
+                         final DefinitionLoader.Reference<WizardDef> definition )
+    {
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( ! IExecutableModelElement.class.isAssignableFrom( type.getModelElementClass() ) )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.elementInstantiatedLocally = true;
+        
+        init( (IExecutableModelElement) type.instantiate(), definition );
+    }
+    
+    protected void init( final IExecutableModelElement element,
                          final DefinitionLoader.Reference<WizardDef> definition )
     {
         if( element == null )
@@ -96,9 +127,11 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         setNeedsProgressMonitor( true );
     }
     
-    public final M getModelElement()
+    @SuppressWarnings( "unchecked" )
+    
+    public final M element()
     {
-        return this.element;
+        return (M) this.element;
     }
     
     public final WizardDef definition()
@@ -238,13 +271,27 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     {
         super.dispose();
         
-        this.element = null;
+        if( this.element != null )
+        {
+            if( this.elementInstantiatedLocally )
+            {
+                this.element.dispose();
+            }
+            
+            this.element = null;
+        }
         
-        this.part.dispose();
-        this.part = null;
+        if( this.part != null )
+        {
+            this.part.dispose();
+            this.part = null;
+        }
         
-        this.definition.dispose();
-        this.definition = null;
+        if( this.definition != null )
+        {
+            this.definition.dispose();
+            this.definition = null;
+        }
     }
     
 }

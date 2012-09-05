@@ -43,6 +43,12 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
 {
     private String editor;
     
+    public CreateWorkspaceFileWizard( final ModelElementType type,
+                                      final DefinitionLoader.Reference<WizardDef> definition )
+    {
+        super( type, definition );
+    }
+    
     public CreateWorkspaceFileWizard( final M element,
                                       final DefinitionLoader.Reference<WizardDef> definition )
     {
@@ -52,6 +58,23 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
     public CreateWorkspaceFileWizard()
     {
         super();
+    }
+    
+    @Override
+    protected void init( final ModelElementType type,
+                         final DefinitionLoader.Reference<WizardDef> definition )
+    {
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( ! CreateWorkspaceFileOp.class.isAssignableFrom( type.getModelElementClass() ) )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        super.init( type, definition );
     }
     
     public void init( final IWorkbench workbench,
@@ -78,7 +101,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
                     resource = resource.getParent();
                 }
                 
-                final CreateWorkspaceFileOp op = getModelElement();
+                final CreateWorkspaceFileOp op = element();
                 op.setContext( (IContainer) resource );
                 op.initialize();
             }
@@ -100,9 +123,8 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
             
             final JavaType operationJavaType = definition.resolve().getElementType().resolve();
             final ModelElementType operationElementType = ModelElementType.read( operationJavaType.artifact(), true );
-            final M operation = operationElementType.instantiate();
     
-            init( operation, definition );
+            init( operationElementType, definition );
             
             this.editor = (String) properties.get( "editor" );
         }
@@ -111,7 +133,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
     @Override
     protected void performPostFinish() 
     {
-        openFileEditor( getModelElement().getFileHandle(), editor() );
+        openFileEditor( element().getFileHandle(), editor() );
     }
     
     protected String editor()

@@ -14,7 +14,6 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.sapphire.samples.ezbug.IBugReport;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.SapphireDialog;
@@ -31,15 +30,24 @@ public final class FileBugReportHandler1 extends AbstractHandler
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-        final IBugReport report = op.getBugReport();
+        final IFileBugReportOp operation = IFileBugReportOp.TYPE.instantiate();
         
-        final SapphireDialog dialog 
-            = new SapphireDialog( window.getShell(), report, DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).dialog( "dialog1" ) );
-        
-        if( dialog.open() == Dialog.OK )
+        try
         {
-            // Do something. User input is found in the bug report model.
+            final SapphireDialog dialog = new SapphireDialog
+            (
+                window.getShell(), operation.getBugReport(),
+                DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).dialog( "dialog1" )
+            );
+            
+            if( dialog.open() == Dialog.OK )
+            {
+                // Do something. User input is found in the bug report model.
+            }
+        }
+        finally
+        {
+            operation.dispose();
         }
         
         return null;

@@ -71,9 +71,14 @@ public class SapphireDialog extends Dialog
         this.part.init( null, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
     }
     
-    public final IModelElement getModelElement()
+    public final IModelElement element()
     {
-        return this.part.getModelElement();
+        return this.element;
+    }
+    
+    public final DialogDef definition()
+    {
+        return this.definition.resolve();
     }
     
     @Override

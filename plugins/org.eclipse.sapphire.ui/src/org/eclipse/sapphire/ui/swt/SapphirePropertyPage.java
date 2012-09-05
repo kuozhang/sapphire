@@ -15,6 +15,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -32,13 +33,64 @@ import org.eclipse.ui.dialogs.PropertyPage;
 public class SapphirePropertyPage extends PropertyPage
 {
     private IModelElement element;
+    private boolean elementInstantiatedLocally;
     private DefinitionLoader.Reference<FormComponentDef> definition;
     
+    public SapphirePropertyPage( final ModelElementType type,
+                                 final DefinitionLoader.Reference<FormComponentDef> definition )
+    {
+        init( type, definition );
+    }
+
     public SapphirePropertyPage( final IModelElement element,
                                  final DefinitionLoader.Reference<FormComponentDef> definition )
     {
+        init( element, definition );
+    }
+
+    protected void init( final ModelElementType type,
+                         final DefinitionLoader.Reference<FormComponentDef> definition )
+    {
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.elementInstantiatedLocally = true;
+        
+        init( type.instantiate(), definition );
+    }
+    
+    protected void init( final IModelElement element,
+                         final DefinitionLoader.Reference<FormComponentDef> definition )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         this.element = element;
         this.definition = definition;
+    }
+    
+    public final IModelElement element()
+    {
+        return this.element;
+    }
+    
+    public final FormComponentDef definition()
+    {
+        return this.definition.resolve();
     }
 
     @Override
@@ -51,13 +103,13 @@ public class SapphirePropertyPage extends PropertyPage
 
     protected Control createContents( final Composite parent ) 
     {
-        final SapphireForm control = new SapphireForm( parent, this.element, this.definition );
+        final SapphireForm form = new SapphireForm( parent, this.element, this.definition );
         
         final Runnable messageUpdateOperation = new Runnable()
         {
             public void run()
             {
-                final Status st = control.getPart().getValidationState();
+                final Status st = form.part().getValidationState();
                 
                 if( st.severity() == Status.Severity.ERROR )
                 {
@@ -91,9 +143,9 @@ public class SapphirePropertyPage extends PropertyPage
             }
         };
         
-        control.getPart().attach( messageUpdateListener );
+        form.part().attach( messageUpdateListener );
         
-        return control;
+        return form;
     }
     
     @Override
@@ -124,10 +176,21 @@ public class SapphirePropertyPage extends PropertyPage
     {
         super.dispose();
         
-        this.element = null;
+        if( this.element != null )
+        {
+            if( this.elementInstantiatedLocally )
+            {
+                this.element.dispose();
+            }
+
+            this.element = null;
+        }
         
-        this.definition.dispose();
-        this.definition = null;
+        if( this.definition != null )
+        {
+            this.definition.dispose();
+            this.definition = null;
+        }
     }
 
     private static final class Resources extends NLS

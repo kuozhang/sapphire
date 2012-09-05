@@ -421,15 +421,24 @@ externally from Java code.</p>
 
 <p>Next we will write a little bit of Java code to open the dialog that we defined.</p>
 
-<pre class="source-code"><code>IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-IBugReport report = op.getBugReport();
+<pre class="source-code"><code>IFileBugReportOp operation = IFileBugReportOp.TYPE.instantiate();
 
-SapphireDialog dialog 
-    = new SapphireDialog( shell, report, DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).dialog( "bug.report.dialog" ) );
-
-if( dialog.open() == Dialog.OK )
+try
 {
-    // Do something. User input is found in the bug report model.
+    SapphireDialog dialog = new SapphireDialog
+    (
+        shell, operation.getBugReport(),
+        DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).dialog( "bug.report.dialog" )
+    );
+
+    if( dialog.open() == Dialog.OK )
+    {
+        // Do something. User input is found in the bug report model.
+    }
+}
+finally
+{
+    operation.dispose();
 }</code></pre>
 
 <p>Pretty simple, right? We create the model and then use the provided SapphireDialog class to instantiate the UI by
@@ -507,10 +516,11 @@ hookup.</p>
 <p>The above defines a one page wizard by re-using the composite definition created earlier. Now back to Java
 to use the wizard...</p>
 
-<pre class="source-code"><code>IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-
-SapphireWizard&lt;IFileBugReportOp> wizard 
-    = new SapphireWizard&lt;IFileBugReportOp>( op, DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).wizard( "wizard" ) );
+<pre class="source-code"><code>SapphireWizard&lt;IFileBugReportOp> wizard = new SapphireWizard&lt;IFileBugReportOp>
+(
+    IFileBugReportOp.TYPE, 
+    DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).wizard( "wizard" )
+);
 
 WizardDialog dialog = new WizardDialog( shell, wizard );
 

@@ -29,8 +29,11 @@ public class OpenSplitFormDialogActionHandler extends SapphireActionHandler
     {
         final IModelElement element = context.getPart().getLocalModelElement();
         
-        final SapphireDialog dialog 
-            = new SapphireDialog( context.getShell(), element, DefinitionLoader.context( IGallery.class ).sdef( "SapphireGallery" ).dialog( "SplitFormDialog" ) );
+        final SapphireDialog dialog = new SapphireDialog
+        (
+            context.getShell(), element, 
+            DefinitionLoader.context( IGallery.class ).sdef( "SapphireGallery" ).dialog( "SplitFormDialog" )
+        );
         
         dialog.open();
         

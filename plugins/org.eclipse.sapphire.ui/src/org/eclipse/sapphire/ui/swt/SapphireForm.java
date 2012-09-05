@@ -83,12 +83,17 @@ public final class SapphireForm extends Composite
         );
     }
     
-    public IModelElement getModelElement()
+    public IModelElement element()
     {
-        return this.part.getModelElement();
+        return this.element;
     }
     
-    public FormComponentPart getPart()
+    public FormComponentDef definition()
+    {
+        return this.definition.resolve();
+    }
+    
+    public FormComponentPart part()
     {
         return this.part;
     }

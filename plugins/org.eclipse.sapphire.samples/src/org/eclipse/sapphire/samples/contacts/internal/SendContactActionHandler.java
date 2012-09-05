@@ -31,15 +31,26 @@ public final class SendContactActionHandler extends SapphireActionHandler
     {
         final Contact contact = (Contact) getModelElement();
         
-        final SendContactOp op = SendContactOp.TYPE.instantiate();
-        op.setContact( contact );
+        final SendContactOp operation = SendContactOp.TYPE.instantiate();
         
-        final SapphireWizard<SendContactOp> wizard 
-            = new SapphireWizard<SendContactOp>( op, DefinitionLoader.context( ContactsDatabase.class ).sdef( "ContactsDatabaseEditor" ).wizard( "SendContactWizard" ) );
-        
-        final WizardDialog dialog = new WizardDialog( context.getShell(), wizard );
-        
-        dialog.open();
+        try
+        {
+            operation.setContact( contact );
+            
+            final SapphireWizard<SendContactOp> wizard = new SapphireWizard<SendContactOp>
+            ( 
+                operation, 
+                DefinitionLoader.context( ContactsDatabase.class ).sdef( "ContactsDatabaseEditor" ).wizard( "SendContactWizard" )
+            );
+            
+            final WizardDialog dialog = new WizardDialog( context.getShell(), wizard );
+            
+            dialog.open();
+        }
+        finally
+        {
+            operation.dispose();
+        }
         
         return null;
     }
