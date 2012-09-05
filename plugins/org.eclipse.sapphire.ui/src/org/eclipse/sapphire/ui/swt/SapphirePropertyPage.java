@@ -48,6 +48,10 @@ public class SapphirePropertyPage extends PropertyPage
         init( element, definition );
     }
 
+    protected SapphirePropertyPage()
+    {
+    }
+    
     protected void init( final ModelElementType type,
                          final DefinitionLoader.Reference<FormComponentDef> definition )
     {
