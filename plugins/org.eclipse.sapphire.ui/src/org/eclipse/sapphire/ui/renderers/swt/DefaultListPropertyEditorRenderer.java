@@ -203,6 +203,17 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         menuActionsPresentation.addFilter( createFilterByActionId( ACTION_ASSIST ) );
         menuActionsPresentation.addFilter( createFilterByActionId( ACTION_JUMP ) );
         
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    actionPresentationManager.dispose();
+                }
+            }
+        );
+        
         final Composite mainComposite = createMainComposite
         (
             parent,

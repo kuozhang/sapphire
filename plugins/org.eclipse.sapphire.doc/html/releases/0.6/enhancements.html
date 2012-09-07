@@ -59,6 +59,7 @@
     <li><a href="#Miscellaneous-Status">Status</a></li>
     <li><a href="#Miscellaneous-Value">Value</a></li>
     <li><a href="#Miscellaneous-OverwriteExistingFile">Overwrite Existing File</a></li>
+    <li><a href="#Miscellaneous-DynamicActionVisibility">Dynamic Action Visibility</a></li>
   </ol>
 </ol>
 
@@ -778,6 +779,66 @@ an existing file. This makes it slightly easier for user to go from problem to r
 in the same popup.</p>
 
 <p style="margin-left: 20px;"><img src="images/OverwriteExistingFile.png"/></p>
+
+
+<h2><a name="Miscellaneous-DynamicActionVisibility">Dynamic Action Visibility</a></h2>
+
+<p>Dynamic visibility of actions has been made easier. An action handler is now able to update its own visibility.
+An action whose handlers are all invisible is itself invisible. This approach mimics the previously-existing support
+for dynamic action enablement.</p> 
+
+<pre class="source-code"><code><font color="#888888">SapphireActionSystemPart
+{
+    boolean isEnabled()
+    void setEnabled( boolean enabled )</font>
+    boolean isVisible()
+    void setVisible( boolean visible )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action, ActionHandlerDef def )
+    {
+        super.init( action, def );
+        
+        <font color="#008444">// Attach a listener to something that will call refreshVisibility()
+        // when needed.</font>
+        
+        ...
+        
+        <font color="#008444">// Remove the listener on action handler dispose.</font>
+        
+        attach
+        (
+            new FilteredListener&lt;DisposeEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( DisposeEvent event )
+                {
+                    ...
+                }
+            }
+        }
+        
+        <font color="#008444">// Perform initial visibility refresh.</font>
+        
+        refreshVisibility();
+    }
+    
+    private void refreshVisibility()
+    {
+        setVisible( ... );
+    }
+    
+    @Override
+    protected Object run( SapphireRenderingContext context )
+    {
+        ...
+    }
+}</code></pre>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>

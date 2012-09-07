@@ -16,6 +16,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 import java.util.List;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystemPart.CheckedStateChangedEvent
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.ImagesChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.LabelChangedEvent;
+import org.eclipse.sapphire.ui.SapphireActionSystemPart.VisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.swt.SWT;
@@ -43,10 +45,25 @@ import org.eclipse.swt.widgets.MenuItem;
 public final class SapphireMenuActionPresentation extends SapphireHotSpotsActionPresentation
 {
     private Menu menu;
+    private final Listener actionVisibilityListener;
     
     public SapphireMenuActionPresentation( final SapphireActionPresentationManager manager )
     {
         super( manager );
+        
+        this.actionVisibilityListener = new FilteredListener<VisibilityEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final VisibilityEvent event )
+            {
+                render();
+            }
+        };
+        
+        for( SapphireAction action : manager.getActions() )
+        {
+            action.attach( this.actionVisibilityListener );
+        }
     }
     
     public Menu getMenu()
@@ -61,6 +78,11 @@ public final class SapphireMenuActionPresentation extends SapphireHotSpotsAction
     
     public void render()
     {
+        if( this.menu == null )
+        {
+            return;
+        }
+        
         final SapphireRenderingContext context = getManager().getContext();
         
         for( MenuItem item : this.menu.getItems() )
@@ -73,24 +95,55 @@ public final class SapphireMenuActionPresentation extends SapphireHotSpotsAction
         
         for( final SapphireAction action : getActions() )
         {
-            final String group = action.getGroup();
-            
-            if( ! first && ! equal( lastGroup, group ) )
+            if( action.isVisible() )
             {
-                new MenuItem( this.menu, SWT.SEPARATOR );
-            }
-            
-            first = false;
-            lastGroup = group;
-            
-            final List<SapphireActionHandler> handlers = action.getActiveHandlers();
-            final MenuItem menuItem;
-
-            if( action.getType() == SapphireActionType.PUSH )
-            {
-                if( handlers.size() == 1 )
+                final String group = action.getGroup();
+                
+                if( ! first && ! equal( lastGroup, group ) )
                 {
-                    menuItem = new MenuItem( this.menu, SWT.PUSH );
+                    new MenuItem( this.menu, SWT.SEPARATOR );
+                }
+                
+                first = false;
+                lastGroup = group;
+                
+                final List<SapphireActionHandler> handlers = action.getActiveHandlers();
+                final MenuItem menuItem;
+    
+                if( action.getType() == SapphireActionType.PUSH )
+                {
+                    if( handlers.size() == 1 )
+                    {
+                        menuItem = new MenuItem( this.menu, SWT.PUSH );
+                        
+                        menuItem.addSelectionListener
+                        (
+                            new SelectionAdapter()
+                            {
+                                @Override
+                                public void widgetSelected( final SelectionEvent event )
+                                {
+                                    handlers.get( 0 ).execute( context );
+                                }
+                            }
+                        );
+                    }
+                    else
+                    {
+                        final Menu childMenu = new Menu( this.menu );
+                        
+                        menuItem = new MenuItem( this.menu, SWT.CASCADE );
+                        menuItem.setMenu( childMenu );
+                        
+                        for( SapphireActionHandler handler : action.getActiveHandlers() )
+                        {
+                            renderMenuItem( childMenu, handler );
+                        }
+                    }
+                }
+                else if( action.getType() == SapphireActionType.TOGGLE )
+                {
+                    menuItem = new MenuItem( this.menu, SWT.CHECK );
                     
                     menuItem.addSelectionListener
                     (
@@ -106,127 +159,110 @@ public final class SapphireMenuActionPresentation extends SapphireHotSpotsAction
                 }
                 else
                 {
-                    final Menu childMenu = new Menu( this.menu );
-                    
-                    menuItem = new MenuItem( this.menu, SWT.CASCADE );
-                    menuItem.setMenu( childMenu );
-                    
-                    for( SapphireActionHandler handler : action.getActiveHandlers() )
-                    {
-                        renderMenuItem( childMenu, handler );
-                    }
+                    throw new IllegalStateException();
                 }
-            }
-            else if( action.getType() == SapphireActionType.TOGGLE )
-            {
-                menuItem = new MenuItem( this.menu, SWT.CHECK );
                 
-                menuItem.addSelectionListener
-                (
-                    new SelectionAdapter()
+                final Runnable updateActionLabelOp = new Runnable()
+                {
+                    public void run()
                     {
-                        @Override
-                        public void widgetSelected( final SelectionEvent event )
+                        if( ! menuItem.isDisposed() )
                         {
-                            handlers.get( 0 ).execute( context );
+                            menuItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
+                        }
+                    }
+                };
+                
+                final Runnable updateActionImageOp = new Runnable()
+                {
+                    public void run()
+                    {
+                        if( ! menuItem.isDisposed() )
+                        {
+                            menuItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+                        }
+                    }
+                };
+                
+                final Runnable updateActionEnablementStateOp = new Runnable()
+                {
+                    public void run()
+                    {
+                        if( ! menuItem.isDisposed() )
+                        {
+                            menuItem.setEnabled( action.isEnabled() );
+                        }
+                    }
+                };
+                
+                final Runnable updateActionCheckedStateOp = new Runnable()
+                {
+                    public void run()
+                    {
+                        if( ! menuItem.isDisposed() )
+                        {
+                            menuItem.setSelection( action.isChecked() );
+                        }
+                    }
+                };
+                
+                updateActionLabelOp.run();
+                updateActionImageOp.run();
+                updateActionEnablementStateOp.run();
+                updateActionCheckedStateOp.run();
+    
+                final Listener listener = new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        if( event instanceof LabelChangedEvent )
+                        {
+                            updateActionLabelOp.run();
+                        }
+                        else if( event instanceof ImagesChangedEvent )
+                        {
+                            updateActionImageOp.run();
+                        }
+                        else if( event instanceof EnablementChangedEvent )
+                        {
+                            updateActionEnablementStateOp.run();
+                        }
+                        else if( event instanceof CheckedStateChangedEvent )
+                        {
+                            updateActionCheckedStateOp.run();
+                        }
+                        else if( event instanceof HandlersChangedEvent )
+                        {
+                            render();
+                        }
+                    }
+                };
+    
+                action.attach( listener );
+                
+                menuItem.addDisposeListener
+                (
+                    new DisposeListener()
+                    {
+                        public void widgetDisposed( final DisposeEvent event )
+                        {
+                            action.detach( listener );
                         }
                     }
                 );
             }
-            else
-            {
-                throw new IllegalStateException();
-            }
+        }
+    }
 
-            final Runnable updateActionLabelOp = new Runnable()
-            {
-                public void run()
-                {
-                    if( ! menuItem.isDisposed() )
-                    {
-                        menuItem.setText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
-                    }
-                }
-            };
-            
-            final Runnable updateActionImageOp = new Runnable()
-            {
-                public void run()
-                {
-                    if( ! menuItem.isDisposed() )
-                    {
-                        menuItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
-                    }
-                }
-            };
-            
-            final Runnable updateActionEnablementStateOp = new Runnable()
-            {
-                public void run()
-                {
-                    if( ! menuItem.isDisposed() )
-                    {
-                        menuItem.setEnabled( action.isEnabled() );
-                    }
-                }
-            };
-            
-            final Runnable updateActionCheckedStateOp = new Runnable()
-            {
-                public void run()
-                {
-                    if( ! menuItem.isDisposed() )
-                    {
-                        menuItem.setSelection( action.isChecked() );
-                    }
-                }
-            };
-            
-            updateActionLabelOp.run();
-            updateActionImageOp.run();
-            updateActionEnablementStateOp.run();
-            updateActionCheckedStateOp.run();
-
-            final Listener listener = new Listener()
-            {
-                @Override
-                public void handle( final Event event )
-                {
-                    if( event instanceof LabelChangedEvent )
-                    {
-                        updateActionLabelOp.run();
-                    }
-                    else if( event instanceof ImagesChangedEvent )
-                    {
-                        updateActionImageOp.run();
-                    }
-                    else if( event instanceof EnablementChangedEvent )
-                    {
-                        updateActionEnablementStateOp.run();
-                    }
-                    else if( event instanceof CheckedStateChangedEvent )
-                    {
-                        updateActionCheckedStateOp.run();
-                    }
-                    else if( event instanceof HandlersChangedEvent )
-                    {
-                        render();
-                    }
-                }
-            };
-
-            action.attach( listener );
-            
-            menuItem.addDisposeListener
-            (
-                new DisposeListener()
-                {
-                    public void widgetDisposed( final DisposeEvent event )
-                    {
-                        action.detach( listener );
-                    }
-                }
-            );
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        for( SapphireAction action : getManager().getActions() )
+        {
+            action.detach( this.actionVisibilityListener );
         }
     }
     
