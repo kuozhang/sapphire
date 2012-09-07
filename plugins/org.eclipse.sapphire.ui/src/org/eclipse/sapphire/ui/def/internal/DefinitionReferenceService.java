@@ -57,7 +57,7 @@ public final class DefinitionReferenceService extends ReferenceService
             }
         }
         
-        return ( this.handle == null ? null : this.handle.resolve() );
+        return ( this.handle == null ? null : this.handle.resolveIgnoringValidation() );
     }
 
     @Override

@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -38,6 +39,7 @@ public interface IDefinitionReference extends IModelElement
     @Reference( target = ISapphireUiDef.class )
     @Label( standard = "definition path" )
     @Required
+    @MustExist
     @XmlBinding( path = "" )
     @Service( impl = DefinitionReferenceService.class )
     

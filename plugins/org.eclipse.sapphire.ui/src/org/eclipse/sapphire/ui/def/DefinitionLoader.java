@@ -334,18 +334,28 @@ public final class DefinitionLoader
                 throw new IllegalArgumentException();
             }
             
-            final Status validation = def.validation();
+            this.loader = loader;
+            this.def = def;
+        }
+        
+        public T resolve()
+        {
+            if( this.def == null )
+            {
+                throw new IllegalStateException();
+            }
+            
+            final Status validation = this.def.validation();
             
             if( validation.severity() == Status.Severity.ERROR )
             {
                 throw new InvalidDefinitionException( validation );
             }
             
-            this.loader = loader;
-            this.def = def;
+           return this.def;
         }
         
-        public T resolve()
+        public T resolveIgnoringValidation()
         {
             if( this.def == null )
             {

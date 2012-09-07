@@ -932,7 +932,12 @@ public abstract class SapphirePart implements ISapphirePart
             final IFormPartInclude inc = (IFormPartInclude) definition;
             def = inc.getPart().resolve();
             
-            if( def != null )
+            if( def == null )
+            {
+                final String msg = NLS.bind( Resources.couldNotResolveInclude, inc.getPart().getText() );
+                throw new IllegalArgumentException( msg );
+            }
+            else
             {
                 partParams = new HashMap<String,String>( params );
                 
@@ -997,6 +1002,7 @@ public abstract class SapphirePart implements ISapphirePart
     {
         public static String failedToInstantiate;
         public static String doesNotExtend;
+        public static String couldNotResolveInclude;
         
         static
         {
