@@ -11,13 +11,19 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
+import java.util.List;
+
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.FormPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.PageBookPart;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart.ValidationChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireSection;
@@ -46,6 +52,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
             protected void handleTypedEvent( final NodeListEvent event )
             {
                 attach( event.part() );
+                refreshVisibility();
             }
         };
         
@@ -189,6 +196,53 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
         
         return null;
     }
+    
+    private PropertyEditorPart findFirstProblem( final List<SapphireSection> sections )
+    {
+        for( SapphireSection section : sections )
+        {
+            final PropertyEditorPart res = findFirstProblem( section );
+            
+            if( res != null )
+            {
+                return res;
+            }
+        }
+        
+        return null;
+    }
+    
+    private PropertyEditorPart findFirstProblem( final SapphirePart part )
+    {
+        if( part != null )
+        {
+            if( part instanceof PropertyEditorPart )
+            {
+                if( part.getValidationState().severity() == this.severity )
+                {
+                    return (PropertyEditorPart) part;
+                }
+            }
+            else if( part instanceof FormPart )
+            {
+                for( SapphirePart p : ( (FormPart) part ).getChildParts() )
+                {
+                    final PropertyEditorPart result = findFirstProblem( p );
+                    
+                    if( result != null )
+                    {
+                        return result;
+                    }
+                }
+            }
+            else if( part instanceof PageBookPart )
+            {
+                return findFirstProblem( ( (PageBookPart) part ).getCurrentPage() );
+            }
+        }
+        
+        return null;
+    }
 
     @Override
     protected Object run( final SapphireRenderingContext context )
@@ -199,6 +253,13 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
         if( nextProblemNode != null )
         {
             nextProblemNode.select();
+            
+            final PropertyEditorPart firstProblemPropertyEditor = findFirstProblem( nextProblemNode.getSections() );
+            
+            if( firstProblemPropertyEditor != null )
+            {
+                firstProblemPropertyEditor.setFocus();
+            }
         }
         
         return null;
