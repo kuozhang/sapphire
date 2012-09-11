@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.LineStyle;
@@ -26,6 +25,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
@@ -55,22 +55,12 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		this.layout = rectPart.getLayout();
 		this.resourceCache = resourceCache;		
 		
-		int numChildren = this.rectPart.getChildren().size();
 		if (this.layout instanceof SequenceLayoutDef)
 		{
-			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layout;
-			GridLayout gridLayout = new GridLayout();
-			if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)
-			{
-				gridLayout.numColumns = numChildren - (showValidationMarker() ? 0 : 1);
-				gridLayout.horizontalSpacing = sequenceLayout.getSpacing().getContent();
-			}
-			else
-			{
-				gridLayout.numColumns = 1;
-				gridLayout.verticalSpacing = sequenceLayout.getSpacing().getContent();
-			}
-			this.setLayoutManager(gridLayout);			
+			SequenceLayoutDef sequenceLayoutDef = (SequenceLayoutDef)layout;
+			SapphireSequenceLayout sequenceLayout = new SapphireSequenceLayout(sequenceLayoutDef.getOrientation().getContent() == Orientation.HORIZONTAL);
+			sequenceLayout.setSpacing(sequenceLayoutDef.getSpacing().getContent());
+			this.setLayoutManager(sequenceLayout);
 		}
 		else if (this.layout instanceof StackLayoutDef)
 		{

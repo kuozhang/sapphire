@@ -14,12 +14,9 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 import java.util.HashMap;
 import java.util.List;
 
-import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.def.HorizontalAlignment;
-import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
@@ -36,9 +33,9 @@ import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
-import org.eclipse.swt.SWT;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -192,17 +189,8 @@ public class ShapeUtil {
 		Object layoutConstraint = null;
 		if (layoutDef instanceof SequenceLayoutDef)
 		{
-			SequenceLayoutConstraintDef sequenceLayoutConstraint = (SequenceLayoutConstraintDef)childShapePart.getLayoutConstraint();
-			GridData gd = new GridData();
-			if (sequenceLayoutConstraint != null)
-			{
-				gd.horizontalAlignment = getSwtHorizontalAlignment(sequenceLayoutConstraint.getHorizontalAlignment().getContent());
-				gd.verticalAlignment = getSwtVerticalAlignment(sequenceLayoutConstraint.getVerticalAlignment().getContent());
-				gd.grabExcessHorizontalSpace = sequenceLayoutConstraint.isExpandCellHorizontally().getContent();
-				gd.grabExcessVerticalSpace = sequenceLayoutConstraint.isExpandCellVertically().getContent();
-				gd.horizontalIndent = sequenceLayoutConstraint.getHorizontalMargin().getContent();
-			}							
-			layoutConstraint = gd;
+			SequenceLayoutConstraintDef def = (SequenceLayoutConstraintDef)childShapePart.getLayoutConstraint();
+			layoutConstraint = new SapphireSequenceLayoutConstraint(def);
 		}
 		else if (layoutDef instanceof StackLayoutDef)
 		{
@@ -230,32 +218,4 @@ public class ShapeUtil {
 		return layoutConstraint;
 	}
 	
-
-	private static int getSwtHorizontalAlignment(HorizontalAlignment horizontalAlign)
-	{
-		int swtAlign = SWT.CENTER;
-		if (horizontalAlign == HorizontalAlignment.LEFT)
-		{
-			swtAlign = SWT.LEFT;
-		}
-		else if (horizontalAlign == HorizontalAlignment.RIGHT)
-		{
-			swtAlign = SWT.RIGHT;
-		}
-		return swtAlign;
-	}
-
-	private static int getSwtVerticalAlignment(VerticalAlignment verticalAlign)
-	{
-		int swtAlign = SWT.CENTER;
-		if (verticalAlign == VerticalAlignment.TOP)
-		{
-			swtAlign = SWT.TOP;
-		}
-		else if (verticalAlign == VerticalAlignment.BOTTOM)
-		{
-			swtAlign = SWT.BOTTOM;
-		}
-		return swtAlign;
-	}
 }

@@ -48,7 +48,6 @@
         <node>
             <instance-id>${ Name }</instance-id>
             <width>70</width>
-            <height>90</height>
             <rectangle>
               <corner-radius>8</corner-radius>
               <sequence-layout>
@@ -82,7 +81,7 @@
                       <stack-layout-constraint>
                         <horizontal-alignment>right</horizontal-alignment>
                         <vertical-alignment>bottom</vertical-alignment>
-                       <horizontal-margin>2</horizontal-margin>
+                        <horizontal-margin>2</horizontal-margin>
                         <vertical-margin>7</vertical-margin>
                       </stack-layout-constraint>
                     </image>
@@ -94,7 +93,10 @@
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>center</vertical-alignment>
                     <expand-cell-horizontally>true</expand-cell-horizontally>
-                    <expand-cell-vertically>true</expand-cell-vertically>
+                    <expand-cell-vertically>false</expand-cell-vertically>
+                    <bottom-margin>5</bottom-margin>
+                    <left-margin>5</left-margin>
+                    <right-margin>5</right-margin>
                   </sequence-layout-constraint>
                 </text>
               </content>

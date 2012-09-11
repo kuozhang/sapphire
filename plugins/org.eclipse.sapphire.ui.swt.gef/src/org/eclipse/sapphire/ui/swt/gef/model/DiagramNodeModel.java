@@ -30,10 +30,6 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 
 public class DiagramNodeModel extends DiagramModelBase {
 	
-    public static final int DEFAULT_NODE_WIDTH = 100;
-    public static final int DEFAULT_NODE_HEIGHT = 30;
-    private static final int DEFAULT_TEXT_HEIGHT = 16;
-    
     public final static String SOURCE_CONNECTIONS = "SOURCE_CONNECTIONS";
 	public final static String TARGET_CONNECTIONS = "TARGET_CONNECTIONS";
 	public final static String NODE_BOUNDS = "NODE_BOUNDS";

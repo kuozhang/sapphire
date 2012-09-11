@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 import java.util.List;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
@@ -108,22 +107,12 @@ public class ContainerShapeFigure extends Shape
 		}
 		Status newStatus = this.model.validation();
 		
-		GridLayout gridLayout = null;
-		boolean isHorizontalSequenceLayout = isHorizontalSequenceLayout(); 
-		if (isHorizontalSequenceLayout)
-		{
-			gridLayout = (GridLayout)this.getLayoutManager();
-		}
 		if (!newStatus.equals(this.validationStatus))
 		{
 			ValidationMarkerFigure markerFigure = getValidationMarkerFigure();
 			if (this.validationStatus.severity() != Status.Severity.OK && markerFigure != null)
 			{
 				this.remove(markerFigure);
-				if (isHorizontalSequenceLayout)
-				{
-					gridLayout.numColumns--;
-				}
 			}
 			if (newStatus.severity() != Status.Severity.OK)
 			{
@@ -152,10 +141,6 @@ public class ContainerShapeFigure extends Shape
 				else
 				{
 					this.add(newMarkerFigure, this.validationMarkerIndex);
-				}
-				if (isHorizontalSequenceLayout)
-				{
-					gridLayout.numColumns++;
 				}
 			}
 			this.validationStatus = newStatus;
