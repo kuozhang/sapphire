@@ -21,15 +21,9 @@ import java.util.Set;
 
 public abstract class ServiceFactoryProxy
 {
-    public String id()
-    {
-        return String.valueOf( hashCode() );
-    }
+    public abstract String id();
     
-    public Class<? extends Service> type()
-    {
-        return Service.class;
-    }
+    public abstract Class<? extends Service> type();
     
     public Set<String> overrides()
     {

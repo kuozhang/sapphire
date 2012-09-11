@@ -110,6 +110,12 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
             final ServiceFactoryProxy proxy = new ServiceFactoryProxy()
             {
                 @Override
+                public String id()
+                {
+                    return cl.getName();
+                }
+                
+                @Override
                 public Class<? extends Service> type()
                 {
                     return cl;

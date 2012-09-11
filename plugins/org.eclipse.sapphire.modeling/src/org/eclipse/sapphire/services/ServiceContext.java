@@ -14,12 +14,13 @@ package org.eclipse.sapphire.services;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
-import org.eclipse.sapphire.util.ReadOnlyListFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,7 +35,9 @@ public class ServiceContext
     
     private final String type;
     private final ServiceContext parent;
-    private final Map<Class<? extends Service>,List<Service>> services = new HashMap<Class<? extends Service>,List<Service>>();
+    private final List<Service> services = new ArrayList<Service>();
+    private final Set<Class<?>> initializedServiceTypes = new HashSet<Class<?>>();
+    private final Set<String> exhaustedServiceFactories = new HashSet<String>();
     private boolean disposed = false;
     
     public ServiceContext( final String type,
@@ -70,8 +73,6 @@ public class ServiceContext
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
-    @SuppressWarnings( "unchecked" )
-    
     public final synchronized <S extends Service> List<S> services( final Class<S> serviceType )
     {
         if( this.disposed )
@@ -79,10 +80,10 @@ public class ServiceContext
             throw new IllegalStateException();
         }
         
-        List<Service> services = this.services.get( serviceType );
-        
-        if( services == null )
+        if( ! this.initializedServiceTypes.contains( serviceType ) )
         {
+            this.initializedServiceTypes.add( serviceType );
+            
             // Find all applicable service factories declared via the extension system.
             
             final Map<String,ServiceFactoryProxy> applicable = new HashMap<String,ServiceFactoryProxy>();
@@ -108,12 +109,14 @@ public class ServiceContext
             
             // Process local service definitions.
             
-            final ReadOnlyListFactory<Service> servicesListFactory = ReadOnlyListFactory.create();
-            
             for( ServiceFactoryProxy factory : local() )
             {
-                if( factory.applicable( this, serviceType ) )
+                final String id = factory.id();
+                
+                if( ! this.exhaustedServiceFactories.contains( id ) && factory.applicable( this, serviceType ) )
                 {
+                    this.exhaustedServiceFactories.add( id );
+                    
                     Service service = null;
                     
                     try
@@ -133,7 +136,16 @@ public class ServiceContext
                             applicable.remove( overriddenServiceId );
                         }
                         
-                        servicesListFactory.add( service );
+                        this.services.add( service );
+                        
+                        try
+                        {
+                            service.init();
+                        }
+                        catch( Exception e )
+                        {
+                            LoggingService.log( e );
+                        }
                     }
                 }
             }
@@ -142,53 +154,57 @@ public class ServiceContext
             
             for( ServiceFactoryProxy factory : applicable.values() )
             {
-                Service service = null;
+                final String id = factory.id();
                 
-                try
+                if( ! this.exhaustedServiceFactories.contains( id ) )
                 {
-                    service = factory.create( this, serviceType );
-                    service.init( this, factory.parameters() );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
-
-                if( service != null )
-                {
-                    servicesListFactory.add( service );
-                }
-            }
-            
-            // Store the list of services for future use.
-            
-            services = servicesListFactory.export();
-            this.services.put( serviceType, services );
-            
-            // Initialize services. This happens last because initialization can cause a reentrant call
-            // to this method, so we need to ensure that instantiated services are stored prior to initialization.
-            // Note the implication of this is that it is possible to access a service prior to it being
-            // initialized. It is up to service implementation to handle this condition gracefully.
-            
-            for( Service service : services )
-            {
-                try
-                {
-                    service.init();
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
+                    this.exhaustedServiceFactories.add( id );
+                    
+                    Service service = null;
+                    
+                    try
+                    {
+                        service = factory.create( this, serviceType );
+                        service.init( this, factory.parameters() );
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
+    
+                    if( service != null )
+                    {
+                        this.services.add( service );
+                        
+                        try
+                        {
+                            service.init();
+                        }
+                        catch( Exception e )
+                        {
+                            LoggingService.log( e );
+                        }
+                    }
                 }
             }
         }
         
-        if( services.isEmpty() && this.parent != null )
+        final List<S> result = new ArrayList<S>( 1 );
+        
+        for( Service service : this.services )
         {
-            services = (List<Service>) this.parent.services( serviceType );
+            if( serviceType.isInstance( service ) )
+            {
+                result.add( serviceType.cast( service ) );
+            }
         }
         
-        return (List<S>) services;
+        if( this.parent != null && result.isEmpty() )
+        {
+            result.addAll( this.parent.services( serviceType ) );
+        }
+        
+        return Collections.unmodifiableList( result );
     }
 
     protected List<ServiceFactoryProxy> local()
@@ -200,18 +216,15 @@ public class ServiceContext
     {
         this.disposed = true;
         
-        for( List<Service> services : this.services.values() )
+        for( Service service : this.services )
         {
-            for( Service service : services )
+            try
             {
-                try
-                {
-                    service.dispose();
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
+                service.dispose();
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
             }
         }
         
