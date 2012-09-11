@@ -1710,6 +1710,7 @@
             <content>
                 <property-editor>Content</property-editor>
                 <property-editor>Color</property-editor>
+                <property-editor>VisibleWhen</property-editor>
                 <with>
                     <path>Font</path>
                     <label>font</label>
@@ -1745,6 +1746,7 @@
                 <property-editor>Resizable</property-editor>
                 <property-editor>ResizeHorizontally</property-editor>
                 <property-editor>ResizeVertically</property-editor>
+                <property-editor>VisibleWhen</property-editor>
             </content>
         </section>
         <node>
@@ -1786,6 +1788,7 @@
                 <property-editor>CornerRadius</property-editor>
                 <property-editor>ScrollHorizontally</property-editor>
                 <property-editor>ScrollVertically</property-editor>
+                <property-editor>VisibleWhen</property-editor>
             </content>
         </section>
         <section>
@@ -1838,6 +1841,7 @@
                             <include>BorderForm</include>
                         </content>
                     </panel>
+                    <label>left border</label>
                 </with>
                 <spacer>
                     <size>5</size>
@@ -1949,6 +1953,7 @@
         <section>
             <content>
                 <property-editor>Property</property-editor>
+                <property-editor>VisibleWhen</property-editor>
             </content>
             <label>shape factory properties</label>
         </section>
