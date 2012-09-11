@@ -12,7 +12,6 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
 import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ADD;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
@@ -70,6 +69,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
@@ -80,6 +80,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
@@ -107,7 +108,6 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldCellEditorPresentation;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
@@ -381,26 +381,27 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
         };
         
-        this.binding = new AbstractBinding( getPart(), this.context, this.table )
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            protected void doUpdateModel()
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                // Don't do anything here. Changes to the model are pushed at cell-level.
-            }
-
-            @Override
-            protected void doUpdateTarget()
-            {
-                // Changes are mostly synchronized at cell-level. This is only here to
-                // catch the case where a full page refresh is performed perhaps because user
-                // has visited the source page.
-                
                 DefaultListPropertyEditorRenderer.this.refreshOperation.run();
             }
         };
         
-        this.table.setData( DATA_BINDING, this.binding );
+        element.attach( listener, property.getName() );
+        
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    element.detach( listener, property.getName() );
+                }
+            }
+        );
         
         boolean showImages = true;
         
@@ -1162,13 +1163,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     }
     
     @Override
-    protected void handlePropertyChangedEvent()
-    {
-        super.handlePropertyChangedEvent();
-        this.refreshOperation.run();
-    }
-    
-    @Override
     protected void handleListElementChangedEvent( final Event event )
     {
         super.handleListElementChangedEvent( event );
@@ -1182,10 +1176,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     public void run()
                     {
                         update( event instanceof ElementEvent ? ( (ElementEvent) event ).element() : ( (PropertyEvent) event ).element() );
-                        
-                        // Cause the overall list editor decorator to be updated.
-                        
-                        DefaultListPropertyEditorRenderer.this.binding.updateTargetAttributes();
                     }
                 }
             );
