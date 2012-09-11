@@ -166,6 +166,8 @@ public final class ModelElementList<T extends IModelElement>
                     newContent.add( modelElement );
                 }
                 
+                final List<IModelElement> toBeDisposed = new ArrayList<IModelElement>( 1 );
+                
                 for( IModelElement x : this.data )
                 {
                     boolean retained = false;
@@ -181,18 +183,23 @@ public final class ModelElementList<T extends IModelElement>
 
                     if( ! retained )
                     {
-                        try
-                        {
-                            x.dispose();
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
+                        toBeDisposed.add( x );
                     }
                 }
                 
                 this.data = newContent;
+                
+                for( IModelElement x : toBeDisposed )
+                {
+                    try
+                    {
+                        x.dispose();
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
+                }
                 
                 for( T modelElement : this )
                 {
