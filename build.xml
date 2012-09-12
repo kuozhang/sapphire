@@ -1127,7 +1127,15 @@ Fragment-Host: @{Bundle}
               <if>
                 <not><istrue value="${.content.valid}"/></not>
                 <then>
-                  <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1&amp;protocol=http" dest="${downloads}/${.url.checksum}" verbose="true"/>
+                  <if>
+                    <istrue value="${force.eclipse.org}"/>
+                  	<then>
+                      <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;mirror_id=1" dest="${downloads}/${.url.checksum}" verbose="true"/>
+                    </then>
+                    <else>
+                      <get src="http://www.eclipse.org/downloads/download.php?file=@{file}&amp;r=1&amp;protocol=http" dest="${downloads}/${.url.checksum}" verbose="true"/>
+                    </else>
+                  </if>
                 </then>
               </if>
               
