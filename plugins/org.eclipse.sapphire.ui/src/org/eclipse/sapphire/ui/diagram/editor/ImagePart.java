@@ -11,13 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import java.util.Set;
-
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 
 /**
@@ -30,7 +26,6 @@ public class ImagePart extends ShapePart
 	private IModelElement modelElement;
 	private FunctionResult imagePathFunction;
 	private FunctionResult imageDataFunctionResult;
-	private FunctionResult imageVisibleFunctionResult;
 
 	@Override
     protected void init()
@@ -69,20 +64,6 @@ public class ImagePart extends ShapePart
             }
         );
         
-        this.imageVisibleFunctionResult = initExpression
-        ( 
-            this.modelElement,
-            this.imageDef.getVisibleWhen().getContent(),
-            String.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshImage();
-                }
-            }
-        );
     }
 	
     @Override
@@ -96,10 +77,6 @@ public class ImagePart extends ShapePart
         if (this.imageDataFunctionResult != null)
         {
             this.imageDataFunctionResult.dispose();
-        }
-        if (this.imageVisibleFunctionResult != null)
-        {
-            this.imageVisibleFunctionResult.dispose();
         }
     }
 	
@@ -125,31 +102,7 @@ public class ImagePart extends ShapePart
 	private void refreshImage()
 	{
     	DiagramNodePart nodePart = getNodePart();
-    	if (nodePart != null) {
-        	Set<SapphirePartListener> listeners = nodePart.getListeners();
-    		for(SapphirePartListener listener : listeners)
-    		{
-    			if (listener instanceof SapphireDiagramPartListener)
-    			{
-    				DiagramNodeEvent nue = new DiagramNodeEvent(nodePart, this);
-    				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
-    			}
-    		}
-    	}
+    	nodePart.refreshShape(this);
 	}
-	
-	private DiagramNodePart getNodePart() 
-	{
-		DiagramNodePart nodePart = null;
-		ISapphirePart part = this;
-		while (part != null) {
-			if (part instanceof DiagramNodePart) {
-				nodePart = (DiagramNodePart)part;
-				break;
-			}
-			part = part.getParentPart();
-		}
-		return nodePart;
-	}
-   
+	   
 }

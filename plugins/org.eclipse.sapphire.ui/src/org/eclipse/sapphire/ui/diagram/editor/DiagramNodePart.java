@@ -171,21 +171,32 @@ public class DiagramNodePart
         this.modelElement.detach(this.elementValidationListener);
     }
     
-    public void refreshLabel()
+    public void refreshShape(ShapePart shapePart)
     {
-        notifyNodeUpdate();
-    }
-    
-    public void refreshImage()
-    {
-        notifyNodeUpdate();
-    }
-    
-    public void refreshDecorator()
-    {
-        notifyNodeUpdate();
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeUpdateEvent(nue);
+			}
+		}    	
     }
 
+    public void refreshShapeVisibility(ShapePart shapePart)
+    {
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeVisibilityEvent nue = new DiagramShapeVisibilityEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(nue);
+			}
+		}    	
+    }
+    
     public String getNodeTypeId()
     {
         return this.definition.getId().getContent();

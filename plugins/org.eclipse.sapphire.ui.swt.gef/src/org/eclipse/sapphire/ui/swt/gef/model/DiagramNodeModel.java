@@ -34,6 +34,8 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public final static String TARGET_CONNECTIONS = "TARGET_CONNECTIONS";
 	public final static String NODE_BOUNDS = "NODE_BOUNDS";
 	public final static String NODE_UPDATES = "NODE_UPDATES";
+	public final static String SHAPE_UPDATES = "SHAPE_UPDATES";
+	public final static String SHAPE_VISIBILITY_UPDATES = "SHAPE_VISIBILITY_UPDATES";
 	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
 	private DiagramModel parent;
@@ -121,8 +123,16 @@ public class DiagramNodeModel extends DiagramModelBase {
 		firePropertyChange(NODE_BOUNDS, null, getModelPart().getNodeBounds());
 	}
 	
-	public void handleUpdateNode(ShapePart shapePart) {
-		firePropertyChange(NODE_UPDATES, null, shapePart);
+	public void handleUpdateNode() {
+		firePropertyChange(NODE_UPDATES, null, null);
+	}
+
+	public void handleUpdateNodeShape(ShapePart shapePart) {
+		firePropertyChange(SHAPE_UPDATES, null, shapePart);
+	}
+
+	public void handleUpdateShapeVisibility(ShapePart shapePart) {
+		firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
 	}
 
 	public List<DiagramConnectionModel> getSourceConnections() {

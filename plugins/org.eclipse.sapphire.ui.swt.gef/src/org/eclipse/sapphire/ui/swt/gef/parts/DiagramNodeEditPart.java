@@ -23,6 +23,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.NodeEditPart;
@@ -32,8 +33,10 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
@@ -41,6 +44,7 @@ import org.eclipse.sapphire.ui.swt.gef.figures.ContainerShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramNodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLabelDirectEditPolicy;
@@ -67,10 +71,6 @@ public class DiagramNodeEditPart extends ShapeEditPart
     
     @Override
 	protected IFigure createFigure() {
-    	//ImageData imageData = getCastedModel().getModelPart().getImage();
-		//return new NodeFigure(imageData != null, getCastedModel().getDiagramModel().getResourceCache());
-//    	return new DiagramNodeFigure(getCastedModel().getModelPart(), 
-//    			getCastedModel().getDiagramModel().getResourceCache());
     	DiagramNodePart nodePart = getCastedModel().getModelPart();
     	return ShapeUtil.createFigureForShape(nodePart.getShapePart(), partToFigure, getCastedModel().getDiagramModel().getResourceCache());
     	
@@ -103,18 +103,31 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			super.deactivate();
 		}
 	}
-
-	private void performDirectEdit() {
-		if (manager == null) {
-			IFigure figure = getFigure();
-			if (figure instanceof ContainerShapeFigure)
+	
+	@Override
+	protected void addChildVisual(EditPart childEditPart, int index) 
+	{
+		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+		
+		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
+		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
+		ShapePart parentPart = (ShapePart)shapePart.getParentPart();
+		while (!(parentPart instanceof ContainerShapePart))
+		{
+			parentPart = (ShapePart)parentPart.getParentPart();
+		}
+		IFigure parentFigure = this.partToFigure.get(parentPart);
+		parentFigure.add(child, index);		
+	}
+	
+	private void performDirectEdit() 
+	{
+		if (manager == null) 
+		{
+			TextFigure textFigure = getLabel();
+			if (textFigure != null)
 			{
-				ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
-				TextFigure textFigure = containerShapeFigure.getTextFigure();
-				if (textFigure != null)
-				{
-					manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
-				}
+				manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
 			}
 		}
 		if (manager != null)
@@ -162,21 +175,15 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	private boolean mouseInLabelRegion(Point pt)
 	{
 		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(pt);
-		IFigure figure = getFigure();
-		if (figure instanceof ContainerShapeFigure)
+		TextFigure label = getLabel();
+		if (label != null)
 		{
-			ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
-			TextFigure textFigure = containerShapeFigure.getTextFigure();
-			if (textFigure != null)
+			Rectangle bounds = label.getTextBounds();
+			if (bounds.contains(realLocation))
 			{
-				Rectangle bounds = textFigure.getTextBounds();
-				if (bounds.contains(realLocation))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
-		
 		return false;
 	}
 	
@@ -190,73 +197,55 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		return getCastedModel().getTargetConnections();
 	}
 	
-//	@Override
-//	protected List<ShapeModel> getModelChildren() 
-//	{
-//		DiagramNodeModel nodeModel = getCastedModel();
-//		List<ShapeModel> children = new ArrayList<ShapeModel>();
-//		if (nodeModel.getShapeModel() != null)
-//		{
-//			children.add(nodeModel.getShapeModel());
-//		}
-//		return children;
-//	}
-
 	public DiagramNodeModel getCastedModel() {
 		return (DiagramNodeModel)getModel();
 	}
 	
-	private void addDecorators(Bounds labelBounds, Bounds imageBounds) {
-//		NodeFigure nodeFigure = getNodeFigure();
-//		
-//		// first remove all decorators
-//		for (IFigure decorator : decorators) {
-//			nodeFigure.remove(decorator);
-//		}
-//		decorators.clear();
-//
-//		NodeDecorator util = new NodeDecorator(getCastedModel(), labelBounds, imageBounds);
-//		decorators.addAll(util.decorate(getNodeFigure()));
-	}
 
 	@Override
 	protected void refreshVisuals() {
-		//getNodeFigure().setText(getCastedModel().getLabel());
-		//getNodeFigure().setImage(getCastedModel().getImage());
 		
 		Bounds nb = getCastedModel().getNodeBounds();
-//		Bounds labelBounds = getCastedModel().getLabelBounds(nb);
-//		Bounds imageBounds = getCastedModel().getImageBounds(nb);
-//		
-//		getNodeFigure().refreshConstraints(labelBounds, imageBounds);
-//		
-//		addDecorators(labelBounds, imageBounds);
 		
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), nb.getWidth(), nb.getHeight());
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
 	}
 	
-	// Called when node is updated which could include label change, validation change
+	// Called when node is updated which could validation change
 	private void refreshNode()
 	{
 		IFigure figure = getFigure();
 		if (figure instanceof ContainerShapeFigure)
 		{
 			ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
-			TextFigure textFigure = containerShapeFigure.getTextFigure();
-			if (textFigure != null)
-			{
-				textFigure.setText(getCastedModel().getLabel());
-			}
 			containerShapeFigure.refreshValidationStatus();
 		}
-//		getNodeFigure().setText(getCastedModel().getLabel());
-//		getNodeFigure().refreshValidationStatus();		
 	}
 	
-	private void updateShapePart(ShapePart shapePart) {
+	private void updateShape(ShapePart shapePart) 
+	{
+		if (shapePart instanceof TextPart)
+		{
+			TextFigure textFigure = (TextFigure)this.partToFigure.get(shapePart);
+			textFigure.setText(((TextPart)shapePart).getText());
+		}
+		else
+		{
+			DiagramNodePart nodePart = getCastedModel().getModelPart();
+			ShapeUtil.updateFigureForShape(nodePart.getShapePart(), shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+		}
+	}
+	
+	private void updateShapeVisibility(ShapePart shapePart) 
+	{
     	DiagramNodePart nodePart = getCastedModel().getModelPart();
-		ShapeUtil.updateFigureForShape(nodePart.getShapePart(), shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+		boolean updated = ShapeUtil.updateFigureForShape(nodePart.getShapePart(), shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+		if (updated && (shapePart instanceof TextPart))
+		{
+			// The label figure has been recreated; we need to throw away the direct edit cache.
+			this.manager = null;
+		}
+		
 	}
 	
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
@@ -295,16 +284,45 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		} else if (DiagramNodeModel.NODE_BOUNDS.equals(prop)) {
 			refreshVisuals();
 		} else if (DiagramNodeModel.NODE_UPDATES.equals(prop)) {
+			refreshVisuals();
+			refreshNode();
+		} else if (DiagramNodeModel.SHAPE_UPDATES.equals(prop)) {
 			Object obj = evt.getNewValue();
 			if (obj instanceof ShapePart) {
-				updateShapePart((ShapePart)obj);
-			} else {
-				refreshVisuals();
-				refreshNode();
+				updateShape((ShapePart)obj);
+			}
+		} else if (DiagramNodeModel.SHAPE_VISIBILITY_UPDATES.equals(prop)) {
+			Object obj = evt.getNewValue();
+			if (obj instanceof ShapePart) {
+				updateShapeVisibility((ShapePart)obj);
 			}
 		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
 			performDirectEdit();
 		}
 	}
 	
+	public HashMap<ShapePart, IFigure> getPartFigureMap()
+	{
+		return this.partToFigure;
+	}
+	
+	private TextFigure getLabel()
+	{
+		DiagramNodePart nodePart = getCastedModel().getModelPart();
+		ShapePart shapePart = nodePart.getShapePart();
+		TextFigure textFigure = null;
+		if (shapePart instanceof TextPart)
+		{
+			textFigure = (TextFigure)this.partToFigure.get(shapePart);
+		}
+		else if (shapePart instanceof ContainerShapePart)
+		{
+			TextPart textPart = ((ContainerShapePart)shapePart).getTextPart();
+			if (textPart != null)
+			{
+				textFigure = (TextFigure)this.partToFigure.get(textPart);
+			}
+		}
+		return textFigure;
+	}
 }

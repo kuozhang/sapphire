@@ -95,7 +95,8 @@ public class TextPart extends ShapePart
     
 	private void refreshLabel()
 	{
-		
+    	DiagramNodePart nodePart = getNodePart();
+    	nodePart.refreshShape(this);
 	}
 	
 }

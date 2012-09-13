@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
@@ -36,23 +37,21 @@ public class ContainerShapeModel extends ShapeModel
 		children = new ArrayList<ShapeModel>();
 		for (ShapePart shapePart : part.getChildren())
 		{
-			ShapeModel childModel = null;
-        	if (shapePart instanceof TextPart)
-        	{
-    	        childModel = new TextModel(nodeModel, this, (TextPart)shapePart);
-        	}
-        	else if (shapePart instanceof ImagePart)
-        	{
-        		childModel = new ImageModel(nodeModel, this, (ImagePart)shapePart);
-        	}
-        	else if (shapePart instanceof ValidationMarkerPart)
-        	{
-        		childModel = new ValidationMarkerModel(nodeModel, this, (ValidationMarkerPart)shapePart);
-        	}
-        	else if (shapePart instanceof RectanglePart)
-        	{
-        		childModel = new RectangleModel(nodeModel, this, (RectanglePart)shapePart);
-        	}
+			ShapeModel childModel = createShapeModel(nodeModel, shapePart);
+        	if (childModel != null)
+        	{        		
+        		this.children.add(childModel);
+        	}        				
+		}
+	}
+	
+	public ContainerShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapeFactoryPart part)
+	{
+		super(nodeModel, parent, part);
+		children = new ArrayList<ShapeModel>();
+		for (ShapePart shapePart : part.getChildren())
+		{
+			ShapeModel childModel = createShapeModel(nodeModel, shapePart);
         	if (childModel != null)
         	{        		
         		this.children.add(childModel);
@@ -63,5 +62,31 @@ public class ContainerShapeModel extends ShapeModel
 	public List<ShapeModel> getChildren()
 	{
 		return this.children;
+	}
+	
+	private ShapeModel createShapeModel(DiagramNodeModel nodeModel, ShapePart shapePart)
+	{
+		ShapeModel childModel = null;
+    	if (shapePart instanceof TextPart)
+    	{
+	        childModel = new TextModel(nodeModel, this, (TextPart)shapePart);
+    	}
+    	else if (shapePart instanceof ImagePart)
+    	{
+    		childModel = new ImageModel(nodeModel, this, (ImagePart)shapePart);
+    	}
+    	else if (shapePart instanceof ValidationMarkerPart)
+    	{
+    		childModel = new ValidationMarkerModel(nodeModel, this, (ValidationMarkerPart)shapePart);
+    	}
+    	else if (shapePart instanceof RectanglePart)
+    	{
+    		childModel = new RectangleModel(nodeModel, this, (RectanglePart)shapePart);
+    	}
+    	else if (shapePart instanceof ShapeFactoryPart)
+    	{
+        	childModel = new ContainerShapeModel(nodeModel, this, (ShapeFactoryPart)shapePart);        		
+    	}
+		return childModel;
 	}
 }

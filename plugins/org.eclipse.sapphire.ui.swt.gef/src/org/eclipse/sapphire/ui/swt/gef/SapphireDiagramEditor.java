@@ -85,6 +85,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
@@ -203,10 +205,20 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
 		this.diagramPartListener = new SapphireDiagramPartListener() 
         {
+		    public void handleShapeVisibilityEvent(final DiagramShapeVisibilityEvent event)
+		    {
+		        updateShapeVisibility((DiagramNodePart)event.getPart(), event.getShapePart());
+		    }
+
+		    public void handleShapeUpdateEvent(final DiagramShapeEvent event)
+		    {
+		        updateNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
+		    }
+			
             @Override
             public void handleNodeUpdateEvent(final DiagramNodeEvent event)
             {
-                updateNode((DiagramNodePart)event.getPart(), event.getShapePart());
+                updateNode((DiagramNodePart)event.getPart());
             }
             
             @Override
@@ -552,17 +564,39 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		getConfigurationManager().getDiagramRenderingContextCache().put(part, ctx);		
 	}
 
-	protected void updateNode(DiagramNodePart part, ShapePart shapePart) {
+	protected void updateNode(DiagramNodePart part) {
 		if (diagramModel == null) {
 			return;
 		}
 		
 		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
 		if (nodeModel != null) {
-			nodeModel.handleUpdateNode(shapePart);
+			nodeModel.handleUpdateNode();
 		}
 	}
 	
+	protected void updateNodeShape(DiagramNodePart part, ShapePart shapePart) {
+		if (diagramModel == null) {
+			return;
+		}
+		
+		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
+		if (nodeModel != null) {
+			nodeModel.handleUpdateNodeShape(shapePart);
+		}
+	}
+	
+	protected void updateShapeVisibility(DiagramNodePart part, ShapePart shapePart) {
+		if (diagramModel == null) {
+			return;
+		}
+		
+		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
+		if (nodeModel != null) {
+			nodeModel.handleUpdateShapeVisibility(shapePart);
+		}
+	}
+
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// If not the active editor, ignore selection changed.

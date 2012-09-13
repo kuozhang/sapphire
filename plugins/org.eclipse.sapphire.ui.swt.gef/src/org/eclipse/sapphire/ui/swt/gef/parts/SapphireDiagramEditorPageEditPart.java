@@ -23,14 +23,11 @@ import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
-import org.eclipse.draw2d.GridLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.gef.CompoundSnapToHelper;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
@@ -45,7 +42,6 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramXYLayoutEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.SapphireSnapFeedbackPolicy;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>

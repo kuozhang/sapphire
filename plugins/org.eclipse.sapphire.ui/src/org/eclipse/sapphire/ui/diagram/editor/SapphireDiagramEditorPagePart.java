@@ -737,7 +737,31 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
-	private void notifyNodeAdd(DiagramNodePart nodePart)
+    private void notifyNodeShapeUpdate(DiagramShapeEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleShapeUpdateEvent(event);
+			}
+		}		
+	}
+	
+    private void notifyShapeVisibilityUpdate( DiagramShapeVisibilityEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(event);
+			}
+		}		
+	}
+
+    private void notifyNodeAdd(DiagramNodePart nodePart)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -1003,7 +1027,20 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         public void handleNodeMove(final DiagramNodeEvent event)
         {
         	notifyNodeMove(event);
-        }		
+        }	
+        
+        @Override
+        public void handleNodeShapeUpdate(final DiagramShapeEvent event)
+        {
+        	notifyNodeShapeUpdate(event);
+        }        
+        
+        @Override
+        public void handleShapeVisibilityUpdate(final DiagramShapeVisibilityEvent event)
+        {        
+        	notifyShapeVisibilityUpdate(event);
+        }        
+        
 	}
 	
 	private class ConnectionTemplateListener extends DiagramConnectionTemplateListener

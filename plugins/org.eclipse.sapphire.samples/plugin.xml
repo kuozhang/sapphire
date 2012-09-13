@@ -175,6 +175,15 @@
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      class="org.eclipse.sapphire.samples.sqlschema.ui.SqlSchemaEditor"
+      default="true"
+      filenames="sqlschema.xml"
+      id="org.eclipse.sapphire.samples.sqlschema.ui.SqlSchemaEditor"
+      name="Schema Editor"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+  </extension>
   <!-- 
     *************************
     * Purchase Order Sample *

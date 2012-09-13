@@ -16,7 +16,6 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
-import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
@@ -41,7 +40,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		labelRect.x = parentRect.x;
 		labelRect.width = parentRect.width;
 		// TODO check for border
-		int margin = 5;
+		int margin = 2;
 		// shrink horizontal, may need to pad for border
 //		int margin = 2;
 //		if (label.getParent() instanceof NodeFigure) {

@@ -11,14 +11,19 @@
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.requests.DirectEditRequest;
+import org.eclipse.gef.requests.SelectionRequest;
+import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
-import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
+import org.eclipse.sapphire.ui.swt.gef.policies.ContainerShapeLabelDirectEditPolicy;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -26,34 +31,91 @@ import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 
 public class ContainerShapeEditPart extends ShapeEditPart 
 {
+	private NodeDirectEditManager manager;
 	
 	public ContainerShapeEditPart(DiagramConfigurationManager configManager) 
 	{
     	super(configManager);    	
     }
-
+	
 	@Override
-	protected List<ShapeModel> getModelChildren() 
+	protected void createEditPolicies() 
 	{
-		// TODO need to recursively collect all the active children
-		ContainerShapeModel containerModel = (ContainerShapeModel)getModel();
-		List<ShapeModel> modelChildren = containerModel.getChildren();
-		List<ShapeModel> returnedModelChildren = new ArrayList<ShapeModel>();
-		for (ShapeModel shapeModel : modelChildren)
+		ContainerShapeModel model = getCastedModel();
+		ContainerShapePart containerPart = (ContainerShapePart)model.getSapphirePart();
+		if (containerPart.getTextPart() != null)
 		{
-			ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
-			if (shapePart.isActive())
-			{
-				returnedModelChildren.add(shapeModel);
-			}
+			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ContainerShapeLabelDirectEditPolicy());
 		}
-		return returnedModelChildren;
+	}
+	
+	public ContainerShapeModel getCastedModel() 
+	{
+		return (ContainerShapeModel)getModel();
 	}
 	
 	@Override
-	protected IFigure createFigure() 
+	public void performRequest(Request request) 
 	{
-		return null;
+		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
+		{
+			if (!(request instanceof DirectEditRequest))
+			{
+				// Direct edit invoked using key command
+				performDirectEdit();
+			}
+		}
+		else if (request.getType().equals(REQ_OPEN))
+		{
+			SelectionRequest selRequest = (SelectionRequest)request;
+			Point pt = selRequest.getLocation();
+			if (mouseInLabelRegion(pt))
+			{
+				performDirectEdit();
+			}
+		}
+		else
+		{
+			super.performRequest(request);
+		}
 	}
-		
+	
+	private void performDirectEdit() 
+	{
+		if (manager == null) 
+		{
+			TextFigure textFigure = getLabelFigure();
+			if (textFigure != null)
+			{
+				manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+			}
+		}
+		if (manager != null)
+			manager.show();
+	}
+	
+	private TextFigure getLabelFigure()
+	{
+		ContainerShapePart containerPart = (ContainerShapePart)getCastedModel().getSapphirePart();
+		TextPart textPart = containerPart.getTextPart();
+		DiagramNodeEditPart nodeEditPart = this.getNodeEditPart();
+		TextFigure textFigure = (TextFigure)nodeEditPart.getPartFigureMap().get(textPart);
+		return textFigure;		
+	}
+	
+	private boolean mouseInLabelRegion(Point pt)
+	{
+		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(pt);
+		TextFigure label = getLabelFigure();
+		if (label != null)
+		{
+			Rectangle bounds = label.getTextBounds();
+			if (bounds.contains(realLocation))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

@@ -64,6 +64,12 @@ public final class DiagramNodeTemplate extends SapphirePart
         public void handleNodeMove(final DiagramNodeEvent event)
         {        	
         }
+        public void handleNodeShapeUpdate(final DiagramShapeEvent event)
+        {        	
+        }
+        public void handleShapeVisibilityUpdate(final DiagramShapeVisibilityEvent event)
+        {        	
+        }        
     }
     
 	private SapphireDiagramEditorPagePart diagramEditor;
@@ -105,6 +111,18 @@ public final class DiagramNodeTemplate extends SapphirePart
         
         this.nodePartListener = new SapphireDiagramPartListener() 
         {
+        	@Override
+            public void handleShapeVisibilityEvent(final DiagramShapeVisibilityEvent event)
+            {
+        		notifyShapeVisibilityUpdate(event);
+            }
+
+        	@Override
+            public void handleShapeUpdateEvent(final DiagramShapeEvent event)
+            {
+                notifyNodeShapeUpdate(event);
+            }
+        	
         	@Override
         	public void handleNodeUpdateEvent(final DiagramNodeEvent event)
         	{
@@ -435,6 +453,22 @@ public final class DiagramNodeTemplate extends SapphirePart
         }        
     }
     
+    private void notifyShapeVisibilityUpdate(final DiagramShapeVisibilityEvent event)
+    {    	
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleShapeVisibilityUpdate(event);
+        }        
+    }
+    
+    private void notifyNodeShapeUpdate(final DiagramShapeEvent event)
+    {    	
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleNodeShapeUpdate(event);
+        }        
+    }
+
     private void notifyNodeAdd(DiagramNodePart nodePart)
     {
         for( DiagramNodeTemplateListener listener : this.listeners )

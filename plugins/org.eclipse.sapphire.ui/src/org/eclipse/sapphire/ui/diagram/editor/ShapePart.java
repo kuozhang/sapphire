@@ -11,7 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
@@ -33,6 +35,17 @@ public class ShapePart extends SapphirePart
         super.init();
         this.shapeDef = (ShapeDef)super.definition;
         this.modelElement = getModelElement();
+        this.attach
+        (
+             new FilteredListener<VisibilityChangedEvent>()
+             {
+                @Override
+                protected void handleTypedEvent( final VisibilityChangedEvent event )
+                {
+                    refreshShapeVisibility((ShapePart)event.part());
+                }
+             }
+        );
     }
 
 	public LayoutConstraintDef getLayoutConstraint()
@@ -57,4 +70,24 @@ public class ShapePart extends SapphirePart
 		this.isActive = isActive;
 	}
 
+	public void refreshShapeVisibility(ShapePart shapePart)
+	{
+		DiagramNodePart nodePart = getNodePart();
+		nodePart.refreshShapeVisibility(shapePart);
+	}
+	
+	protected DiagramNodePart getNodePart() 
+	{
+		DiagramNodePart nodePart = null;
+		ISapphirePart part = this;
+		while (part != null) {
+			if (part instanceof DiagramNodePart) {
+				nodePart = (DiagramNodePart)part;
+				break;
+			}
+			part = part.getParentPart();
+		}
+		return nodePart;
+	}
+	
 }

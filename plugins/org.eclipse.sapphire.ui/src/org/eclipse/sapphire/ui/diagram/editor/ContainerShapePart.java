@@ -20,6 +20,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
@@ -70,6 +71,10 @@ public class ContainerShapePart extends ShapePart
         	{
         		childPart = new RectanglePart();
         	}
+        	else if (shape instanceof ShapeFactoryDef)
+        	{
+        		childPart = new ShapeFactoryPart();
+        	}
         	if (childPart != null)
         	{
         		childPart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
@@ -106,6 +111,21 @@ public class ContainerShapePart extends ShapePart
 	
 	public TextPart getTextPart()
 	{
-		return this.textPart;
+		if (this.textPart != null)
+		{
+			return this.textPart;
+		}
+		for (ShapePart shapePart : getChildren())
+		{
+			if (shapePart instanceof ContainerShapePart)
+			{
+				TextPart textPart = ((ContainerShapePart)shapePart).getTextPart();
+				if (textPart != null)
+				{
+					return textPart;
+				}
+			}
+		}
+		return null;
 	}
 }

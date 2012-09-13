@@ -75,6 +75,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 		super.bringDown();
 		// dispose any scaled fonts that might have been created
 		disposeScaledFont();
+		label.setVisible(true);
 	}
 
 	protected CellEditor createCellEditorOn(Composite composite) {
@@ -91,7 +92,10 @@ public class NodeDirectEditManager extends DirectEditManager {
 	protected void initCellEditor() {
 		// update text
 		getCellEditor().setValue(label.getText());
-		label.setText("");
+		// Shenxue: set text to "" doesn't work since it messes the size calculation in parent's
+		// layout manager. It'd shrink the label figure size to 0. Use figure's visibility instead.
+		//label.setText("");
+		label.setVisible(false);
 		// update font
 		ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
 				.getProperty(ZoomManager.class.toString());
