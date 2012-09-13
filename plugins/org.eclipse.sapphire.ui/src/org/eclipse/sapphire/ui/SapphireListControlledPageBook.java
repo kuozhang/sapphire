@@ -163,9 +163,9 @@ public final class SapphireListControlledPageBook extends PageBookPart
                     }
                 }
             );
+            
+            changePage( this.element, (String) null );
         }
-
-        changePage( this.element, (String) null );
     }
     
     private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
