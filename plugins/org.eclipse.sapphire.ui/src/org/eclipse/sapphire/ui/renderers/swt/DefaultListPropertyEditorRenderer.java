@@ -303,41 +303,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         this.selectionProvider = new SelectionProvider( this.tableViewer );
         
-        final ListSelectionService selectionService = part.service( ListSelectionService.class );
-       
-        this.selectionProvider.addSelectionChangedListener
-        (
-            new ISelectionChangedListener()
-            {
-                public void selectionChanged( SelectionChangedEvent event )
-                {
-                    selectionService.select( getSelectedElements() );
-                }
-            }
-        );
-        
-        final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
-        {
-            @Override
-            public void handle( final org.eclipse.sapphire.Event event )
-            {
-                setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
-            }
-        };
-
-        selectionService.attach( selectionServiceListener );
-
-        addOnDisposeOperation
-        ( 
-            new Runnable()
-            {
-                public void run()
-                {
-                    selectionService.detach( selectionServiceListener );
-                }
-            }
-        );
-        
         this.table.addFocusListener
         (
             new FocusAdapter()
@@ -1062,6 +1027,43 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         addControl( this.table );
         
+        final ListSelectionService selectionService = part.service( ListSelectionService.class );
+        
+        this.selectionProvider.addSelectionChangedListener
+        (
+            new ISelectionChangedListener()
+            {
+                public void selectionChanged( SelectionChangedEvent event )
+                {
+                    selectionService.select( getSelectedElements() );
+                }
+            }
+        );
+        
+        setSelectedElements( selectionService.selection() );
+        
+        final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
+        {
+            @Override
+            public void handle( final org.eclipse.sapphire.Event event )
+            {
+                setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
+            }
+        };
+
+        selectionService.attach( selectionServiceListener );
+
+        addOnDisposeOperation
+        ( 
+            new Runnable()
+            {
+                public void run()
+                {
+                    selectionService.detach( selectionServiceListener );
+                }
+            }
+        );
+        
         return this.table;
     }
     
@@ -1184,9 +1186,21 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     
     protected void handleTableFocusGainedEvent()
     {
+        if( this.table.isDisposed() )
+        {
+            return;
+        }
+        
         if( this.tableViewer.getSelection().isEmpty() && this.table.getItemCount() > 0 )
         {
-            final Object firstItem = this.table.getItem( 0 ).getData();
+            final TableItem firstTableItem = this.table.getItem( 0 );
+            
+            if( firstTableItem.isDisposed() )
+            {
+                return;
+            }
+            
+            final Object firstItem = firstTableItem.getData();
             this.tableViewer.setSelection( new StructuredSelection( firstItem ) );
         }
     }
