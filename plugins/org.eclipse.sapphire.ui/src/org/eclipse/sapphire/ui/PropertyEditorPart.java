@@ -149,6 +149,13 @@ public final class PropertyEditorPart extends FormComponentPart
             throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
         }
         
+        // Read the property to ensure that initial events are broadcast and avoid being surprised
+        // by them later.
+        
+        this.element.read( this.property );
+        
+        // Listen for PropertyValidationEvent and update property editor's validation.
+        
         this.listener = new FilteredListener<PropertyValidationEvent>()
         {
             @Override
