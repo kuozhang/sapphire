@@ -44,6 +44,7 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -361,10 +362,13 @@ public class XmlResourceStore extends ResourceStore
             }
         }
         
-        final ProcessingInstruction pi 
-            = document.createProcessingInstruction( PI_XML_TARGET, PI_XML_DATA );
+        final Node insertionReference = document.getFirstChild();
         
-        document.insertBefore( pi, document.getFirstChild() );
+        final ProcessingInstruction pi = document.createProcessingInstruction( PI_XML_TARGET, PI_XML_DATA );
+        document.insertBefore( pi, insertionReference );
+        
+        final Text newLineTextNode = document.createTextNode( "\n" );
+        document.insertBefore( newLineTextNode, insertionReference );
     }
     
 }
