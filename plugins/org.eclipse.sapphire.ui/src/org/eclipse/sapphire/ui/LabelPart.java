@@ -130,6 +130,8 @@ public final class LabelPart extends SapphirePart
         {
             description = description.trim();
         }
+        
+        description = description.replace( "<", "&lt;" );
     
         final int index = description.indexOf( BREAK_TOKEN );
         
