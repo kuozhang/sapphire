@@ -31,6 +31,7 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
@@ -53,6 +54,8 @@ import org.eclipse.swt.widgets.ToolBar;
 
 public final class PopUpListFieldPropertyEditorPresentation extends ValuePropertyEditorRenderer
 {
+    private static final String DATA_DEFAULT_VALUE = "Sapphire.Default.Value";
+    
     private final PopUpListFieldStyle style;
     private Combo combo;
 
@@ -119,9 +122,12 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         {
             public void run()
             {
-                final String value = valueNormalizationService.normalize( element.read( property ).getText() );
+                final Value<?> value = element.read( property );
+                final String text = valueNormalizationService.normalize( value.getText() );
                 
-                if( value == null )
+                combo.setData( DATA_DEFAULT_VALUE, value.isDefault() );
+                
+                if( text == null )
                 {
                     combo.deselectAll();
                     combo.setText( EMPTY_STRING );
@@ -136,7 +142,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                         
                         for( int i = 0; i < possibleValuesCount && possibleValueIndex == -1; i++ )
                         {
-                            if( equal( possibleValues.get( i ).value(), value ) )
+                            if( equal( possibleValues.get( i ).value(), text ) )
                             {
                                 possibleValueIndex = i;
                             }
@@ -146,26 +152,23 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                         {
                             if( possibleValues.size() == combo.getItemCount() )
                             {
-                                combo.add( value );
+                                combo.add( text );
                             }
                             else
                             {
                                 final String existingNonConformingValue = combo.getItem( possibleValuesCount );
                                 
-                                if( ! existingNonConformingValue.equals( value ) )
+                                if( ! existingNonConformingValue.equals( text ) )
                                 {
-                                    combo.setItem( possibleValuesCount, value );
+                                    combo.setItem( possibleValuesCount, text );
                                 }
                             }
                             
                             possibleValueIndex = possibleValuesCount;
                         }
-                        else
+                        else if( possibleValuesCount < combo.getItemCount() )
                         {
-                            if( possibleValuesCount < combo.getItemCount() )
-                            {
-                                combo.remove( possibleValuesCount );
-                            }
+                            combo.remove( possibleValuesCount );
                         }
                         
                         if( combo.getSelectionIndex() != possibleValueIndex )
@@ -175,9 +178,9 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                     }
                     else
                     {
-                        if( ! equal( valueNormalizationService.normalize( combo.getText() ), value ) )
+                        if( ! equal( valueNormalizationService.normalize( combo.getText() ), text ) )
                         {
-                            combo.setText( value );
+                            combo.setText( text );
                         }
                     }
                 }
@@ -234,22 +237,45 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             public void run()
             {
                 String value = null;
-                final int index = combo.getSelectionIndex();
                 
-                if( index != -1 )
+                if( PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.STRICT )
                 {
-                    final List<PossibleValue> possible = possibleValuesRef.get();
+                    final int index = combo.getSelectionIndex();
                     
-                    if( index < possible.size() )
+                    if( index != -1 )
                     {
-                        value = possible.get( index ).value();
+                        final List<PossibleValue> possible = possibleValuesRef.get();
+                        
+                        if( index < possible.size() )
+                        {
+                            value = possible.get( index ).value();
+                        }
+                        else
+                        {
+                            value = combo.getText().trim();
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    if( value == null )
                     {
-                        value = combo.getText();
+                        value = combo.getText().trim();
                     }
                 }
                 
+                if( value != null )
+                {
+                    if( value.length() == 0 )
+                    {
+                        value = null;
+                    }
+                    else if( ( (Boolean) combo.getData( DATA_DEFAULT_VALUE ) ) == true && value.equals( element.read( property ).getDefaultText() ) )
+                    {
+                        value = null;
+                    }
+                }
+
                 element.write( property, value );
             }
         };
