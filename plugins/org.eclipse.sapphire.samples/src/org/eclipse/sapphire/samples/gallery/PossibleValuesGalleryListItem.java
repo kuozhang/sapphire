@@ -20,7 +20,11 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.samples.gallery.internal.ColorValueImageService;
+import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -51,6 +55,7 @@ public interface PossibleValuesGalleryListItem extends IModelElement
     )
     
     @DefaultValue( text = "Green" )
+    @Services( { @Service( impl = ColorValueLabelService.class ), @Service( impl = ColorValueImageService.class ) } )
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
     

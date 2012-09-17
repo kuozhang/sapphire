@@ -117,6 +117,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         final ValueNormalizationService valueNormalizationService = element.service( property, ValueNormalizationService.class );
         
         final MutableReference<List<PossibleValue>> possibleValuesRef = new MutableReference<List<PossibleValue>>();
+        final MutableReference<Boolean> updatingComboSelection = new MutableReference<Boolean>( false );
         
         final Runnable updateComboSelectionOp = new Runnable()
         {
@@ -125,16 +126,18 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                 final Value<?> value = element.read( property );
                 final String text = valueNormalizationService.normalize( value.getText() );
                 
-                combo.setData( DATA_DEFAULT_VALUE, value.isDefault() );
-                
-                if( text == null )
+                try
                 {
-                    combo.deselectAll();
-                    combo.setText( EMPTY_STRING );
-                }
-                else
-                {
-                    if( PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.STRICT )
+                    updatingComboSelection.set( true );
+
+                    combo.setData( DATA_DEFAULT_VALUE, value.isDefault() );
+                    
+                    if( text == null )
+                    {
+                        combo.deselectAll();
+                        combo.setText( EMPTY_STRING );
+                    }
+                    else
                     {
                         final List<PossibleValue> possibleValues = possibleValuesRef.get();
                         final int possibleValuesCount = possibleValues.size();
@@ -147,42 +150,54 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                                 possibleValueIndex = i;
                             }
                         }
-                        
-                        if( possibleValueIndex == -1 )
+    
+                        if( PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.STRICT )
                         {
-                            if( possibleValues.size() == combo.getItemCount() )
+                            if( possibleValueIndex == -1 )
                             {
-                                combo.add( text );
-                            }
-                            else
-                            {
-                                final String existingNonConformingValue = combo.getItem( possibleValuesCount );
-                                
-                                if( ! existingNonConformingValue.equals( text ) )
+                                if( possibleValues.size() == combo.getItemCount() )
                                 {
-                                    combo.setItem( possibleValuesCount, text );
+                                    combo.add( text );
                                 }
+                                else
+                                {
+                                    final String existingNonConformingValue = combo.getItem( possibleValuesCount );
+                                    
+                                    if( ! existingNonConformingValue.equals( text ) )
+                                    {
+                                        combo.setItem( possibleValuesCount, text );
+                                    }
+                                }
+                                
+                                possibleValueIndex = possibleValuesCount;
                             }
-                            
-                            possibleValueIndex = possibleValuesCount;
-                        }
-                        else if( possibleValuesCount < combo.getItemCount() )
-                        {
-                            combo.remove( possibleValuesCount );
+                            else if( possibleValuesCount < combo.getItemCount() )
+                            {
+                                combo.remove( possibleValuesCount );
+                            }
                         }
                         
-                        if( combo.getSelectionIndex() != possibleValueIndex )
+                        if( possibleValueIndex != -1 )
                         {
-                            combo.select( possibleValueIndex );
+                            if( combo.getSelectionIndex() != possibleValueIndex )
+                            {
+                                combo.setText( EMPTY_STRING );
+                                combo.select( possibleValueIndex );
+                            }
+                        }
+                        else
+                        {
+                            if( ! equal( valueNormalizationService.normalize( combo.getText() ), text ) )
+                            {
+                                combo.deselectAll();
+                                combo.setText( text );
+                            }
                         }
                     }
-                    else
-                    {
-                        if( ! equal( valueNormalizationService.normalize( combo.getText() ), text ) )
-                        {
-                            combo.setText( text );
-                        }
-                    }
+                }
+                finally
+                {
+                    updatingComboSelection.set( false );
                 }
             }
         };
@@ -232,14 +247,19 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         
         element.attach( propertyListener, property );
         
-        final Runnable updateModelOp = new Runnable()
-        {
-            public void run()
+        combo.addModifyListener
+        (
+            new ModifyListener()
             {
-                String value = null;
-                
-                if( PopUpListFieldPropertyEditorPresentation.this.style == PopUpListFieldStyle.STRICT )
+                public void modifyText( final ModifyEvent e )
                 {
+                    if( updatingComboSelection.get() == true )
+                    {
+                        return;
+                    }
+                    
+                    String value = null;
+                    
                     final int index = combo.getSelectionIndex();
                     
                     if( index != -1 )
@@ -250,43 +270,31 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                         {
                             value = possible.get( index ).value();
                         }
-                        else
-                        {
-                            value = combo.getText().trim();
-                        }
                     }
-                }
-                else
-                {
+                    
                     if( value == null )
                     {
                         value = combo.getText().trim();
                     }
-                }
-                
-                if( value != null )
-                {
-                    if( value.length() == 0 )
+                    
+                    if( value != null )
                     {
-                        value = null;
+                        if( value.length() == 0 )
+                        {
+                            value = null;
+                        }
+                        else if( ( (Boolean) combo.getData( DATA_DEFAULT_VALUE ) ) == true && value.equals( element.read( property ).getDefaultText() ) )
+                        {
+                            value = null;
+                        }
                     }
-                    else if( ( (Boolean) combo.getData( DATA_DEFAULT_VALUE ) ) == true && value.equals( element.read( property ).getDefaultText() ) )
-                    {
-                        value = null;
-                    }
-                }
 
-                element.write( property, value );
-            }
-        };
-        
-        combo.addModifyListener
-        (
-            new ModifyListener()
-            {
-                public void modifyText( final ModifyEvent e )
-                {
-                    updateModelOp.run();
+                    element.write( property, value );
+                    
+                    // If an editable pop-up list was presenting the default value and user clears it, there is
+                    // no change in the model, but we need to restore the display of the default value in the UI.
+                    
+                    updateComboSelectionOp.run();
                 }
             }
         );

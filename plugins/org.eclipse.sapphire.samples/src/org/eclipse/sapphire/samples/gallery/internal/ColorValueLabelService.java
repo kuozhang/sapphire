@@ -24,27 +24,27 @@ public final class ColorValueLabelService extends ValueLabelService
     {
         if( value != null )
         {
-            if( value.equals( "red" ) )
+            if( value.equalsIgnoreCase( "red" ) )
             {
                 return "Red [FF0000]";
             }
-            else if( value.equals( "orange" ) )
+            else if( value.equalsIgnoreCase( "orange" ) )
             {
                 return "Orange [FF8A00]";
             }
-            else if( value.equals( "yellow" ) )
+            else if( value.equalsIgnoreCase( "yellow" ) )
             {
                 return "Yellow [FFF200]";
             }
-            else if( value.equals( "green" ) )
+            else if( value.equalsIgnoreCase( "green" ) )
             {
                 return "Green [00BC00]";
             }
-            else if( value.equals( "blue" ) )
+            else if( value.equalsIgnoreCase( "blue" ) )
             {
                 return "Blue [0000FF]";
             }
-            else if( value.equals( "violet" ) )
+            else if( value.equalsIgnoreCase( "violet" ) )
             {
                 return "Violet [8A00FF]";
             }
