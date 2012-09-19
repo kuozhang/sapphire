@@ -62,6 +62,12 @@ public class ReconnectConnectionCommand extends Command {
 		if (newSource.equals(oldTarget)) {
 			return false;
 		}
+		DiagramConnectionPart connectionPart = this.connection.getModelPart();
+		
+		if (!(connectionPart.getDiagramConnectionTemplate().canCreateNewConnection(
+				newSource.getModelPart(), oldTarget.getModelPart())))
+			return false;
+
 		return true;
 	}
 
@@ -70,6 +76,12 @@ public class ReconnectConnectionCommand extends Command {
 		if (newTarget.equals(oldSource)) {
 			return false;
 		}
+		DiagramConnectionPart connectionPart = this.connection.getModelPart();
+		
+		if (!(connectionPart.getDiagramConnectionTemplate().canCreateNewConnection(
+				oldSource.getModelPart(), newTarget.getModelPart())))
+			return false;
+		
 		return true;
 	}
 

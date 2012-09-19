@@ -71,7 +71,10 @@ public class CreateConnectionCommand extends Command {
 		if (target == null || source.equals(target)) {
 			return false;
 		}
-		return true;
+		DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(this.source);
+		if (connectionTemplate.canCreateNewConnection(this.source.getModelPart(), this.target.getModelPart()))
+			return true;
+		return false;
 	}
 
 	/*
