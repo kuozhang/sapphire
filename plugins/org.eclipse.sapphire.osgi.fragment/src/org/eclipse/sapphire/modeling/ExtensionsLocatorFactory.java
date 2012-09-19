@@ -14,6 +14,7 @@ package org.eclipse.sapphire.modeling;
 import java.net.URL;
 import java.util.List;
 
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.util.ListFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -58,7 +59,21 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
                             
                             if( url != null )
                             {
-                                handlesListFactory.add( new Handle( url, BundleBasedContext.adapt( bundle ) ) );
+                                boolean ok = false;
+                                
+                                try
+                                {
+                                    // Verify that the bundle is using this version of Sapphire before trying to
+                                    // load its extensions.
+                                    
+                                    ok = ( bundle.loadClass( Sapphire.class.getName() ) == Sapphire.class );
+                                }
+                                catch( Exception e ) {}
+
+                                if( ok )
+                                {
+                                    handlesListFactory.add( new Handle( url, BundleBasedContext.adapt( bundle ) ) );
+                                }
                             }
                         }
                     }
