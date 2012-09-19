@@ -14,6 +14,7 @@ package org.eclipse.sapphire.modeling;
 import java.net.URL;
 import java.util.List;
 
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.util.ReadOnlyListFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -58,39 +59,53 @@ public final class ExtensionsLocatorFactory extends ExtensionsLocator.Factory
                             
                             if( url != null )
                             {
-                                final Handle handle = new Handle()
-                                {
-                                    @Override
-                                    public URL extension()
-                                    {
-                                        return url;
-                                    }
-
-                                    @Override
-                                    public URL findResource( final String name )
-                                    {
-                                        return bundle.getResource( name );
-                                    }
-
-                                    @Override
-                                    @SuppressWarnings( "unchecked" )
-                                    
-                                    public <T> Class<T> findClass( final String name )
-                                    {
-                                        try
-                                        {
-                                            return (Class<T>) bundle.loadClass( name );
-                                        }
-                                        catch( ClassNotFoundException e )
-                                        {
-                                            // Intentionally converting ClassNotFoundException to null return.
-                                        }
-
-                                        return null;
-                                    }
-                                };
+                                boolean ok = false;
                                 
-                                handlesListFactory.add( handle );
+                                try
+                                {
+                                    // Verify that the bundle is using this version of Sapphire before trying to
+                                    // load its extensions.
+                                    
+                                    ok = ( bundle.loadClass( Sapphire.class.getName() ) == Sapphire.class );
+                                }
+                                catch( Exception e ) {}
+
+                                if( ok )
+                                {
+                                    final Handle handle = new Handle()
+                                    {
+                                        @Override
+                                        public URL extension()
+                                        {
+                                            return url;
+                                        }
+    
+                                        @Override
+                                        public URL findResource( final String name )
+                                        {
+                                            return bundle.getResource( name );
+                                        }
+    
+                                        @Override
+                                        @SuppressWarnings( "unchecked" )
+                                        
+                                        public <T> Class<T> findClass( final String name )
+                                        {
+                                            try
+                                            {
+                                                return (Class<T>) bundle.loadClass( name );
+                                            }
+                                            catch( ClassNotFoundException e )
+                                            {
+                                                // Intentionally converting ClassNotFoundException to null return.
+                                            }
+    
+                                            return null;
+                                        }
+                                    };
+                                    
+                                    handlesListFactory.add( handle );
+                                }
                             }
                         }
                     }
