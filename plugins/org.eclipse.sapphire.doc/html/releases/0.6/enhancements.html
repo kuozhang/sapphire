@@ -599,6 +599,7 @@ brand new SortedSetFactory.</p>
     ListFactory&lt;E> add( E element )
     ListFactory&lt;E> add( E... element )
     ListFactory&lt;E> add( Collection&lt;E> element )</font>
+    ListFactory&lt;E> filter( Filter&lt;E> filter )
     E remove( int index )
     E get( int index )
     boolean contains( E element )
@@ -619,6 +620,7 @@ SetFactory
     SetFactory&lt;E> add( E element )
     SetFactory&lt;E> add( E... element )
     SetFactory&lt;E> add( Collection&lt;E> element )</font>
+    SetFactory&lt;E> filter( Filter&lt;E> filter )
     boolean remove( E element )
     boolean contains( E element )
     int size()
@@ -639,6 +641,7 @@ SortedSetFactory
     SortedSetFactory&lt;E> add( E element )
     SortedSetFactory&lt;E> add( E... element )
     SortedSetFactory&lt;E> add( Collection&lt;E> element )
+    SortedSetFactory&lt;E> filter( Filter&lt;E> filter )
     boolean remove( E element )
     E first()
     E last()
@@ -658,6 +661,7 @@ SortedSetFactory
 
     MapFactory&lt;K,V> add( K key, V value )
     MapFactory&lt;K,V> add( Map&lt;K,V> map )</font>
+    MapFactory&lt;K,V> filter( Filter&lt;Map.Entry&lt;K,V>> filter )
     V remove( K key )
     V get( K key )
     boolean contains( K key )

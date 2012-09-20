@@ -28,7 +28,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
-import org.eclipse.sapphire.modeling.util.Filter;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
@@ -44,6 +43,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFilterDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.util.Filter;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -106,7 +106,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                 final Filter<IModelElement> filter = new Filter<IModelElement>()
                 {
                     @Override
-                    public boolean check( final IModelElement element )
+                    public boolean allows( final IModelElement element )
                     {
                         if( element instanceof ServiceDef )
                         {

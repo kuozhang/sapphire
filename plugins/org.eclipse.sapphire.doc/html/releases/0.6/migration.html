@@ -47,6 +47,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#EnablementService">EnablementService</a></li>
   <li><a href="#FactsAggregationService">FactsAggregationService</a></li>
   <li><a href="#FactsService">FactsService</a></li>
+  <li><a href="#Filter">Filter</a></li>
   <li><a href="#FormEditorPage">FormEditorPage</a></li>
   <li><a href="#FormPart">FormPart</a></li>
   <li><a href="#FormPartDef">FormPartDef</a></li>
@@ -220,6 +221,46 @@ to 0.6 release. Only changes from the previous release are covered.</p>
 {
     @Override
     protected void facts(</font> SortedSet<font color="#888888">&lt;String> facts )
+    {
+        ...
+    }
+}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="Filter">Filter</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">org.eclipse.sapphire</font>.modeling<font color="#888888">.util.Filter</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">org.eclipse.sapphire.util.Filter</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleFilter extends Filter&lt;String>
+{
+    @Override
+    public boolean</font> check<font color="#888888">( String element )
+    {
+        ...
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleFilter extends Filter&lt;String>
+{
+    @Override
+    public boolean</font> allows<font color="#888888">( String element )
     {
         ...
     }

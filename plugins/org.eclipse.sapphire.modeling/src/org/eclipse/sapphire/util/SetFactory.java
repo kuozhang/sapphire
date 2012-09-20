@@ -14,6 +14,7 @@ package org.eclipse.sapphire.util;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -22,6 +23,7 @@ import java.util.Set;
 
 public final class SetFactory<E>
 {
+    private Filter<E> filter;
     private E firstElement = null;
     private Set<E> set = null;
     private boolean exported = false;
@@ -53,6 +55,51 @@ public final class SetFactory<E>
         return new SetFactory<E>();
     }
     
+    public SetFactory<E> filter( final Filter<E> filter )
+    {
+        if( this.exported )
+        {
+            throw new IllegalStateException();
+        }
+        
+        this.filter = filter;
+        
+        if( this.filter != null )
+        {
+            if( this.set != null )
+            {
+                for( Iterator<E> itr = this.set.iterator(); itr.hasNext(); )
+                {
+                    if( ! this.filter.allows( itr.next() ) )
+                    {
+                        itr.remove();
+                    }
+                }
+                
+                final int size = this.set.size();
+                
+                if( size == 1 )
+                {
+                    this.firstElement = this.set.iterator().next();
+                    this.set = null;
+                }
+                else if( size == 0 )
+                {
+                    this.set = null;
+                }
+            }
+            else if( this.firstElement != null )
+            {
+                if( ! this.filter.allows( this.firstElement ) )
+                {
+                    this.firstElement = null;
+                }
+            }
+        }
+        
+        return this;
+    }
+    
     public SetFactory<E> add( final E element )
     {
         if( this.exported )
@@ -60,20 +107,23 @@ public final class SetFactory<E>
             throw new IllegalStateException();
         }
         
-        if( this.set != null )
+        if( element != null && ( this.filter == null || this.filter.allows( element ) ) )
         {
-            this.set.add( element );
-        }
-        else if( this.firstElement != null )
-        {
-            this.set = new HashSet<E>();
-            this.set.add( this.firstElement );
-            this.set.add( element );
-            this.firstElement = null;
-        }
-        else
-        {
-            this.firstElement = element;
+            if( this.set != null )
+            {
+                this.set.add( element );
+            }
+            else if( this.firstElement != null )
+            {
+                this.set = new HashSet<E>();
+                this.set.add( this.firstElement );
+                this.set.add( element );
+                this.firstElement = null;
+            }
+            else
+            {
+                this.firstElement = element;
+            }
         }
         
         return this;

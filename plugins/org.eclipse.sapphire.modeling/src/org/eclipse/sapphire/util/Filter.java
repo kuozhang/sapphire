@@ -9,16 +9,23 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.util;
+package org.eclipse.sapphire.util;
 
 /**
- * Generic filter interface that can be parameterized for different item types.
+ * Generic filter interface that can be parameterized for different element types.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class Filter<T>
+public abstract class Filter<E>
 {
-    public abstract boolean check( T item );
+    /**
+     * Evaluates whether the given element passes the criteria implemented by the filter.
+     * 
+     * @param element the element to evaluate or null
+     * @return true if the given element is allowed by the filter, false otherwise
+     */
+    
+    public abstract boolean allows( E element );
     
 }
