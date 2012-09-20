@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -19,6 +19,9 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.util.Comparators;
+import org.eclipse.sapphire.util.Filters;
+import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -54,9 +57,12 @@ public abstract class PossibleValuesService extends Service
     
     public final SortedSet<String> values()
     {
-        final TreeSet<String> values = new TreeSet<String>();
+        final Comparator<String> comparator = ( isCaseSensitive() ? null : Comparators.createIgnoreCaseComparator() );
+
+        final TreeSet<String> values = new TreeSet<String>( comparator );
         fillPossibleValues( values );
-        return Collections.unmodifiableSortedSet( values );
+        
+        return SortedSetFactory.start( comparator ).filter( Filters.createNotEmptyFilter() ).add( values ).result();
     }
     
     protected abstract void fillPossibleValues( final SortedSet<String> values );

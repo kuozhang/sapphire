@@ -153,20 +153,23 @@ public final class SetFactory<E>
     {
         boolean removed = false;
         
-        if( this.set != null )
+        if( element != null )
         {
-            removed = this.set.remove( element );
-            
-            if( this.set.size() == 1 )
+            if( this.set != null )
             {
-                this.firstElement = this.set.iterator().next();
-                this.set = null;
+                removed = this.set.remove( element );
+                
+                if( this.set.size() == 1 )
+                {
+                    this.firstElement = this.set.iterator().next();
+                    this.set = null;
+                }
             }
-        }
-        else if( this.firstElement != null && this.firstElement.equals( element ) )
-        {
-            removed = true;
-            this.firstElement = null;
+            else if( this.firstElement != null && this.firstElement.equals( element ) )
+            {
+                removed = true;
+                this.firstElement = null;
+            }
         }
         
         return removed;
