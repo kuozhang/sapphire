@@ -62,6 +62,10 @@ public final class ColorValueImageService extends ValueImageService
                 {
                     imageResourceName = "SquareViolet.png";
                 }
+                else
+                {
+                    imageResourceName = "SquareQuestionMark.png";
+                }
             }
             
             if( imageResourceName != null )

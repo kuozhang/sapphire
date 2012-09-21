@@ -16,10 +16,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.annotations.Required;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,24 +24,17 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IMultiSelectListGalleryEnumItem
-
-    extends IModelElement
-    
+public interface CustomColor extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IMultiSelectListGalleryEnumItem.class );
+    ModelElementType TYPE = new ModelElementType( CustomColor.class );
     
-    // *** Item ***
+    // *** Name ***
     
-    @Type( base = Color.class )
-    @Label( standard = "color" )
-    @XmlBinding( path = "" )
-    @NoDuplicates
+    @Required
+    
+    ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+    
+    Value<String> getName();
+    void setName( String value );
 
-    ValueProperty PROP_ITEM = new ValueProperty( TYPE, "Item" );
-    
-    Value<Color> getItem();
-    void setItem( String value );
-    void setItem( Color value );
-    
 }

@@ -33,6 +33,7 @@
     <li><a href="#Modeling-ModelElement">ModelElement</a></li>
     <li><a href="#Modeling-ModelElementList">ModelElementList</a></li>
     <li><a href="#Modeling-ModelElementType">ModelElementType</a></li>
+    <li><a href="#Modeling-PossibleValuesService">PossibleValuesService</a></li>
     <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
     <li><a href="#Modeling-Service">Service</a></li>
   </ol>
@@ -396,6 +397,43 @@ PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
 PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
 
 <pre class="source-code"><code>PurchaseOrder po = PuchaseOrder.TYPE.instantiate( file );</code></pre>
+
+
+<h2><a name="Modeling-PossibleValuesService">PossibleValueService</a></h2>
+
+<p>PossibleValueService can now be attached to the list property instead of the value property when modeling the
+list of possible values pattern in order to be able to utilize the model in the service implementation and
+be compatible with property editors like the slush bucket and the check box list.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public interface Example extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Example.class );
+    
+    // *** FavoriteColors ***
+
+    interface FavoriteColor extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( FavoriteColor.class );
+        
+        // *** Name ***
+        
+        @NoDuplicates
+
+        ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+        
+        Value&lt;String> getName();
+        void setName( String value );
+    }
+    
+    @Type( base = MultiSelectStringItem.class )</font>
+    @Service( impl = ColorsPossibleValuesService.class )
+    
+    <font color="#888888">ListProperty PROP_FAVORITY_COLORS = new ListProperty( TYPE, "FavoriteColors" );
+    
+    ModelElementList&lt;FavoriteColor> getMultiSelectString();
+}</font></code></pre>
 
 
 <h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>

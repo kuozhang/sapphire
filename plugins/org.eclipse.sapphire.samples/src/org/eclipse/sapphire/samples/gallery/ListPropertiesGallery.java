@@ -22,9 +22,15 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import org.eclipse.sapphire.modeling.annotations.Service;
+import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.samples.gallery.internal.ColorPossibleValuesService;
+import org.eclipse.sapphire.samples.gallery.internal.ColorValueImageService;
+import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,12 +38,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IListPropertiesGallery
+public interface ListPropertiesGallery
 
     extends IModelElement
 
 {
-    ModelElementType TYPE = new ModelElementType( IListPropertiesGallery.class );
+    ModelElementType TYPE = new ModelElementType( ListPropertiesGallery.class );
     
     // *** Enabled ***
 
@@ -103,24 +109,58 @@ public interface IListPropertiesGallery
     
     // *** MultiSelectString ***
     
-    @Type( base = IMultiSelectListGalleryStringItem.class )
+    @GenerateImpl
+
+    interface MultiSelectStringItem extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( MultiSelectStringItem.class );
+        
+        // *** Item ***
+        
+        @Label( standard = "color" )
+        @NoDuplicates
+        @Services( { @Service( impl = ColorValueLabelService.class ), @Service( impl = ColorValueImageService.class ) } )
+
+        ValueProperty PROP_ITEM = new ValueProperty( TYPE, "Item" );
+        
+        Value<String> getItem();
+        void setItem( String value );
+    }
+    
+    @Type( base = MultiSelectStringItem.class )
     @Label( standard = "multi-select string" )
     @Enablement( expr = "${ Enabled }" )
-    @XmlListBinding( path = "multi-select-string", mappings = @XmlListBinding.Mapping( element = "child", type = IMultiSelectListGalleryStringItem.class ) )
+    @Service( impl = ColorPossibleValuesService.class )
     
     ListProperty PROP_MULTI_SELECT_STRING = new ListProperty( TYPE, "MultiSelectString" );
     
-    ModelElementList<IMultiSelectListGalleryStringItem> getMultiSelectString();
+    ModelElementList<MultiSelectStringItem> getMultiSelectString();
     
     // *** MultiSelectEnum ***
     
-    @Type( base = IMultiSelectListGalleryEnumItem.class )
+    interface MultiSelectEnumItem extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( MultiSelectEnumItem.class );
+        
+        // *** Item ***
+        
+        @Type( base = Color.class )
+        @Label( standard = "color" )
+        @NoDuplicates
+    
+        ValueProperty PROP_ITEM = new ValueProperty( TYPE, "Item" );
+        
+        Value<Color> getItem();
+        void setItem( String value );
+        void setItem( Color value );
+    }
+    
+    @Type( base = MultiSelectEnumItem.class )
     @Label( standard = "multi-select enumeration" )
     @Enablement( expr = "${ Enabled }" )
-    @XmlListBinding( path = "multi-select-enum", mappings = @XmlListBinding.Mapping( element = "child", type = IMultiSelectListGalleryEnumItem.class ) )
     
     ListProperty PROP_MULTI_SELECT_ENUM = new ListProperty( TYPE, "MultiSelectEnum" );
     
-    ModelElementList<IMultiSelectListGalleryEnumItem> getMultiSelectEnum();
+    ModelElementList<MultiSelectEnumItem> getMultiSelectEnum();
 
 }
