@@ -28,7 +28,7 @@ import org.eclipse.sapphire.ui.def.Orientation;
 
 @GenerateImpl
 
-public interface SequenceLayoutDef extends ShapeLayoutDef 
+public interface SequenceLayoutDef extends ShapeLayoutDef, MarginConstraintDef
 {
 	ModelElementType TYPE = new ModelElementType( SequenceLayoutDef.class );
     
@@ -59,5 +59,10 @@ public interface SequenceLayoutDef extends ShapeLayoutDef
     void setSpacing( String value );
     void setSpacing( Integer value );
     
-	
+    // *** Margin ***
+
+    @DefaultValue( text = "5" )
+    
+    ValueProperty PROP_MARGIN = new ValueProperty( TYPE, MarginConstraintDef.PROP_MARGIN );
+    
 }

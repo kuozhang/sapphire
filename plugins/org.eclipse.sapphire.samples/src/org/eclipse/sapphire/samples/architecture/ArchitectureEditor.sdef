@@ -94,9 +94,6 @@
                     <vertical-alignment>center</vertical-alignment>
                     <expand-cell-horizontally>true</expand-cell-horizontally>
                     <expand-cell-vertically>false</expand-cell-vertically>
-                    <bottom-margin>5</bottom-margin>
-                    <left-margin>5</left-margin>
-                    <right-margin>5</right-margin>
                   </sequence-layout-constraint>
                 </text>
               </content>

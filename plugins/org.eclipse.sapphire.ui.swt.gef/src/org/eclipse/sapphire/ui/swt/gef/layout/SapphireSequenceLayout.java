@@ -14,14 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.draw2d.AbstractHintLayout;
 import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
-import org.eclipse.draw2d.OrderedLayout;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Transposer;
+import org.eclipse.sapphire.ui.def.Orientation;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.swt.SWT;
 
 /**
@@ -35,38 +38,37 @@ import org.eclipse.swt.SWT;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  *  
  */
-public class SapphireSequenceLayout extends OrderedLayout {
+public class SapphireSequenceLayout extends AbstractHintLayout {
 
 	/** The layout contraints */
 	private Map constraints = new HashMap();
 
 	/**
-	 * Sets whether children should "stretch" with their container
+	 * Transposer object that may be used in layout calculations. Will be
+	 * automatically enabled/disabled dependent on the default and the actual
+	 * orientation.
 	 * 
-	 * @deprecated Use {@link OrderedLayout#setStretchMinorAxis(boolean)} and
-	 *             {@link OrderedLayout#isStretchMinorAxis()} instead.
-	 * */
-	protected boolean matchWidth;
+	 * @noreference This field is not intended to be referenced by clients.
+	 */
+	private Transposer transposer = new Transposer();
 
 	/**
-	 * Space in pixels between Figures
+	 * The horizontal property.
+	 * 
+	 */
+	private boolean horizontal;
+
+	/**
+	 * Space in pixels between Figures   
 	 * 
 	 */
 	private int spacing;
 	
-	private int margin = 0;
-
 	/**
-	 * Constructs a vertically oriented ToolbarLayout with child spacing of 0
-	 * pixels, {@link #setStretchMinorAxis(boolean)} <code>true</code>, and
-	 * {@link #ALIGN_TOPLEFT} minor alignment.
+	 * Margin insets   
 	 * 
-	 * @since 2.0
 	 */
-	public SapphireSequenceLayout() {
-		setStretchMinorAxis(true);
-		setSpacing(0);
-	}
+	private Insets marginInsets;
 
 	/**
 	 * Constructs a ToolbarLayout with a specified orientation. Default values
@@ -77,14 +79,25 @@ public class SapphireSequenceLayout extends OrderedLayout {
 	 *            whether the children are oriented horizontally
 	 * @since 2.0
 	 */
-	public SapphireSequenceLayout(boolean isHorizontal) {
-		setHorizontal(isHorizontal);
-		setStretchMinorAxis(false);
-		setSpacing(0);
+	public SapphireSequenceLayout(SequenceLayoutDef def) {
+		setHorizontal(def.getOrientation().getContent() == Orientation.HORIZONTAL);
+		setSpacing(def.getSpacing().getContent());
+		this.marginInsets = LayoutUtil.calculateMargin(def);
+	}
+	
+	public void setHorizontal(boolean flag) {
+		if (horizontal == flag)
+			return;
+		invalidate();
+		horizontal = flag;
+		updateTransposerEnabledState();
 	}
 
-	private Dimension calculateChildrenSize(List children, int wHint,
-			int hHint, boolean preferred) {
+	public boolean isHorizontal() {
+		return horizontal;
+	}
+
+	private Dimension calculateChildrenSize(List children, int wHint, int hHint, boolean preferred) {
 		Dimension childSize;
 		IFigure child;
 		int height = 0, width = 0;
@@ -97,7 +110,7 @@ public class SapphireSequenceLayout extends OrderedLayout {
 
 			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
 			if (constraint != null) {
-				Insets inset = constraint.getMarginInset();
+				Insets inset = transposer.t( constraint.getMarginInset());
 				width += inset.left + inset.right;
 				height += inset.top + inset.bottom;
 			}
@@ -124,8 +137,7 @@ public class SapphireSequenceLayout extends OrderedLayout {
 	 * @see #getMinimumSize(IFigure, int, int)
 	 * @since 2.1
 	 */
-	protected Dimension calculateMinimumSize(IFigure container, int wHint,
-			int hHint) {
+	protected Dimension calculateMinimumSize(IFigure container, int wHint, int hHint) {
 		Insets insets = container.getInsets();
 		if (isHorizontal()) {
 			wHint = -1;
@@ -190,14 +202,17 @@ public class SapphireSequenceLayout extends OrderedLayout {
 		Dimension prefSize = calculateChildrenSize(children, wHint, hHint, true);
 		// Do a second pass, if necessary
 		if (wHint >= 0 && prefSize.width > wHint) {
-			prefSize = calculateChildrenSize(children, prefSize.width, hHint,
-					true);
+			prefSize = calculateChildrenSize(children, prefSize.width, hHint, true);
 		} else if (hHint >= 0 && prefSize.width > hHint) {
-			prefSize = calculateChildrenSize(children, wHint, prefSize.width,
-					true);
+			prefSize = calculateChildrenSize(children, wHint, prefSize.width, true);
 		}
 
 		prefSize.height += Math.max(0, children.size() - 1) * spacing;
+
+		Insets inset = transposer.t(this.marginInsets);
+		prefSize.width += inset.left + inset.right;
+		prefSize.height += inset.top + inset.bottom;
+
 		return transposer.t(prefSize)
 				.expand(insets.getWidth(), insets.getHeight())
 				.union(getBorderPreferredSize(container));
@@ -262,34 +277,17 @@ public class SapphireSequenceLayout extends OrderedLayout {
 	}
 
 	/**
-	 * Returns <code>true</code> if stretch minor axis has been enabled. The
-	 * default value is false.
-	 * 
-	 * @return <code>true</code> if stretch minor axis is enabled
-	 * @deprecated Use {@link #isStretchMinorAxis()} instead.
-	 */
-	public boolean getStretchMinorAxis() {
-		return isStretchMinorAxis();
-	}
-
-	/**
-	 * Overwritten to guarantee backwards compatibility with {@link #matchWidth}
-	 * field.
-	 * 
-	 * @see org.eclipse.draw2d.OrderedLayout#isStretchMinorAxis()
-	 */
-	public boolean isStretchMinorAxis() {
-		return matchWidth;
-	}
-
-	/**
 	 * @see org.eclipse.draw2d.LayoutManager#layout(IFigure)
 	 */
 	public void layout(IFigure parent) {
 		List children = parent.getChildren();
 		int numChildren = children.size();
 		Rectangle clientArea = transposer.t(parent.getClientArea());
-		System.out.println("clientArea: " + clientArea);
+		Insets margins = transposer.t(this.marginInsets);
+		
+		clientArea.x += margins.left;
+		clientArea.width -= (margins.left + margins.right);
+
 		int x = clientArea.x;
 		int y = clientArea.y;
 		int availableHeight = clientArea.height;
@@ -325,11 +323,9 @@ public class SapphireSequenceLayout extends OrderedLayout {
 		 */
 		IFigure child;
 		int totalHeight = 0;
-		//int totalMinHeight = 0;
-		//int prefMinSumHeight = 0;
 		int totalMargin = 0;
 		int expandCount = 0;
-
+		
 		for (int i = 0; i < numChildren; i++) {
 			child = (IFigure) children.get(i);
 			
@@ -353,24 +349,8 @@ public class SapphireSequenceLayout extends OrderedLayout {
 			//totalMinHeight += minSizes[i].height;
 		}
 		totalHeight += (numChildren - 1) * spacing;
-		totalHeight += margin + margin;
-		//totalMinHeight += (numChildren - 1) * spacing;
-		//prefMinSumHeight = totalHeight - totalMinHeight;
-		/*
-		 * The total amount that the children must be shrunk is the sum of the
-		 * preferred Heights of the children minus Max(the available area and
-		 * the sum of the minimum heights of the children).
-		 * 
-		 * amntShrinkHeight is the combined amount that the children must shrink
-		 * amntShrinkCurrentHeight is the amount each child will shrink
-		 * respectively
-		 */
-//		int amntShrinkHeight = totalHeight
-//				- Math.max(availableHeight, totalMinHeight);
-//
-//		if (amntShrinkHeight < 0) {
-//			amntShrinkHeight = 0;
-//		}
+		totalHeight += margins.top + margins.bottom;
+
 		int extraHeight = availableHeight - totalHeight - totalMargin;
 		if (extraHeight < 0) {
 			extraHeight = 0;
@@ -382,10 +362,9 @@ public class SapphireSequenceLayout extends OrderedLayout {
 			}
 		}
 		
-		y += margin;
+		y += margins.top;
 
 		for (int i = 0; i < numChildren; i++) {
-//			int amntShrinkCurrentHeight = 0;
 			int prefHeight = prefSizes[i].height;
 			int minHeight = minSizes[i].height;
 			int prefWidth = prefSizes[i].width;
@@ -416,35 +395,31 @@ public class SapphireSequenceLayout extends OrderedLayout {
 			}
 
 			child = (IFigure) children.get(i);
-//			if (prefMinSumHeight != 0)
-//				amntShrinkCurrentHeight = (prefHeight - minHeight)
-//						* amntShrinkHeight / (prefMinSumHeight);
 
-			int width = Math.min(prefWidth,
-					transposer.t(child.getMaximumSize()).width);
-			if (isStretchMinorAxis()/*TODO if fill*/)
-				width = transposer.t(child.getMaximumSize()).width;
+			int width = Math.min(prefWidth,	transposer.t(child.getMaximumSize()).width);
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
 
-			int adjust = clientArea.width - width;
-			switch (getMinorAlignment(constraint)) {
-			case SWT.TOP:
-			case SWT.LEFT:
-				adjust = 0;
-				break;
-			case SWT.CENTER:
-				adjust /= 2;
-				break;
-			case ALIGN_BOTTOMRIGHT:
-				break;   
+			if (getMinorExpand(constraint)) {
+				newBounds.x += marginInset.left;
+				newBounds.width = clientArea.width - marginInset.left - marginInset.right;
+			} else {
+				int adjust = clientArea.width - width - marginInset.left - marginInset.right;
+				switch (getMinorAlignment(constraint)) {
+				case SWT.TOP:
+				case SWT.LEFT:
+					adjust = marginInset.left;
+					break;
+				case SWT.CENTER:
+					adjust /= 2;
+					break;
+				default:
+					break;   
+				}
+				newBounds.x += adjust;
 			}
-			newBounds.x += adjust;
-//			newBounds.height -= amntShrinkCurrentHeight;      
 			child.setBounds(transposer.t(newBounds));
 
-//			amntShrinkHeight -= amntShrinkCurrentHeight;
-//			prefMinSumHeight -= (prefHeight - minHeight);
 			y += newBounds.height + spacing + marginInset.bottom;
 		}
 	}
@@ -457,17 +432,8 @@ public class SapphireSequenceLayout extends OrderedLayout {
 		return isHorizontal() ? constraint.verticalAlignment : constraint.horizontalAlignment;
 	}
 
-	/**
-	 * Sets children's width (if vertically oriented) or height (if horizontally
-	 * oriented) to stretch with their container.
-	 * 
-	 * @deprecated use {@link #setStretchMinorAxis(boolean)}
-	 * @param match
-	 *            whether to stretch children
-	 * @since 2.0
-	 */
-	public void setMatchWidth(boolean match) {
-		matchWidth = match;
+	private boolean getMinorExpand(SapphireSequenceLayoutConstraint constraint) {
+		return isHorizontal() ? constraint.expandCellVertically : constraint.expandCellHorizontally;
 	}
 
 	/**
@@ -481,33 +447,6 @@ public class SapphireSequenceLayout extends OrderedLayout {
 		spacing = space;
 	}
 	
-	public void setMargin(int margin) {
-		this.margin = margin;
-	}
-
-	/**
-	 * Overwritten to guarantee backwards compatibility with {@link #matchWidth}
-	 * field.
-	 * 
-	 * @see org.eclipse.draw2d.OrderedLayout#setStretchMinorAxis(boolean)
-	 */
-	public void setStretchMinorAxis(boolean value) {
-		matchWidth = value;
-	}
-
-	/**
-	 * Sets the orientation of the layout
-	 * 
-	 * @param flag
-	 *            whether the orientation should be vertical
-	 * @since 2.0
-	 * @deprecated Use {@link #setHorizontal(boolean)} with argument
-	 *             <code>false</code> instead.
-	 */
-	public void setVertical(boolean flag) {
-		setHorizontal(!flag);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -531,5 +470,18 @@ public class SapphireSequenceLayout extends OrderedLayout {
 			constraints.put(figure, newConstraint);
 
 		}
+	}
+	
+	/**
+	 * Updates the enabled state of the {@link #transposer} in case the layout
+	 * has a different orientation that its default one.
+	 */
+	private void updateTransposerEnabledState() {
+		// enable transposer if the current orientation differs from the default
+		// orientation, disable it otherwise
+		transposer.setEnabled(isHorizontal()
+				&& getDefaultOrientation() == PositionConstants.VERTICAL
+				|| !isHorizontal()
+				&& getDefaultOrientation() == PositionConstants.HORIZONTAL);
 	}
 }

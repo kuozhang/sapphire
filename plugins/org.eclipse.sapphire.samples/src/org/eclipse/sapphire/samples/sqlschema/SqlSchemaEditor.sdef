@@ -19,6 +19,7 @@
                 </border>
                 <sequence-layout>
                     <spacing>5</spacing>
+                    <margin>0</margin>
                 </sequence-layout>
                 <content>
                     <rectangle>
@@ -36,7 +37,6 @@
                                 <sequence-layout-constraint>
                                     <expand-cell-horizontally>true</expand-cell-horizontally>
                                     <expand-cell-vertically>true</expand-cell-vertically>
-                                    <margin>5</margin>
                                 </sequence-layout-constraint>
                                 <font>
                                     <name>Arial</name>
@@ -47,7 +47,6 @@
                         </content>
                         <sequence-layout-constraint>
                             <expand-cell-horizontally>true</expand-cell-horizontally>
-                            <margin>5</margin>
                         </sequence-layout-constraint>
                     </rectangle>
                     <rectangle>
@@ -64,17 +63,15 @@
                                         <sequence-layout>
                                             <orientation>horizontal</orientation>
                                         </sequence-layout>
-                                        <content>
+                                        <content>    
                                             <validation-marker>
                                                 <size>small</size>
                                             </validation-marker>
                                             <text>
                                                 <content>${Name == null ? &quot;&lt;column&gt;&quot; : Name}</content>
                                                 <sequence-layout-constraint>
-                                                    <expand-cell-horizontally>true</expand-cell-horizontally>
-                                                    <expand-cell-vertically>false</expand-cell-vertically>
-                                                    <horizontal-alignment>left</horizontal-alignment>
-                                                    <margin>3</margin>
+                            						<expand-cell-horizontally>true</expand-cell-horizontally>
+                                                	<horizontal-alignment>left</horizontal-alignment>
                                                 </sequence-layout-constraint>
                                             </text>
                                         </content>
@@ -87,7 +84,7 @@
                                             <expand-cell-horizontally>true</expand-cell-horizontally>
                                         </sequence-layout-constraint>
                                     </rectangle>
-                                </case>
+                                </case>        
                             </shape-factory>
                         </content>
                         <sequence-layout-constraint>
@@ -98,7 +95,6 @@
                 </content>
             </rectangle>
             <width>120</width>
-            <height>160</height>
             <resizable>true</resizable>
             <connection-binding>
                 <connection-id>foreign_keys</connection-id>

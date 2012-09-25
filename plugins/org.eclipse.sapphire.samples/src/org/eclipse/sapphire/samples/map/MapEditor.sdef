@@ -63,11 +63,7 @@
                 <orientation>horizontal</orientation>
               </sequence-layout>
               <content>
-                <validation-marker>
-                  <sequence-layout-constraint>
-                    <left-margin>3</left-margin>
-                  </sequence-layout-constraint>
-                </validation-marker>
+                <validation-marker/>
                 <text>
                   <content>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</content>                
                   <sequence-layout-constraint>
@@ -75,7 +71,6 @@
                     <vertical-alignment>center</vertical-alignment>
                     <expand-cell-horizontally>true</expand-cell-horizontally>
                     <expand-cell-vertically>true</expand-cell-vertically>
-                    <horizontal-margin>3</horizontal-margin>
                   </sequence-layout-constraint>
                 </text>
               </content>

@@ -15,7 +15,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.BorderDef;
@@ -57,9 +56,7 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		
 		if (this.layout instanceof SequenceLayoutDef)
 		{
-			SequenceLayoutDef sequenceLayoutDef = (SequenceLayoutDef)layout;
-			SapphireSequenceLayout sequenceLayout = new SapphireSequenceLayout(sequenceLayoutDef.getOrientation().getContent() == Orientation.HORIZONTAL);
-			sequenceLayout.setSpacing(sequenceLayoutDef.getSpacing().getContent());
+			SapphireSequenceLayout sequenceLayout = new SapphireSequenceLayout((SequenceLayoutDef)layout);
 			this.setLayoutManager(sequenceLayout);
 		}
 		else if (this.layout instanceof StackLayoutDef)

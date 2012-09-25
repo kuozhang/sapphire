@@ -37,6 +37,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
@@ -117,7 +118,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			parentPart = (ShapePart)parentPart.getParentPart();
 		}
 		IFigure parentFigure = this.partToFigure.get(parentPart);
-		parentFigure.add(child, index);		
+		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePart, ((ContainerShapePart)parentPart).getLayout());
+		parentFigure.add(child, layoutConstraint, index);
 	}
 	
 	private void performDirectEdit() 

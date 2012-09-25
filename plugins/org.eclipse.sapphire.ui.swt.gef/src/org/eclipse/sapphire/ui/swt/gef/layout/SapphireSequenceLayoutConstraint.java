@@ -84,21 +84,6 @@ public final class SapphireSequenceLayoutConstraint {
 	 */
 	public int heightHint = SWT.DEFAULT;
 	
-	
-	public int margin = 0;
-	
-	public int horizontalMargin = 0;
-
-	public int verticalMargin = 0;
-	
-	public int leftMargin = 0;
-
-	public int rightMargin = 0;
-
-	public int topMargin = 0;
-
-	public int bottomMargin = 0;
-	
 	public int minWidth = SWT.DEFAULT;
 	
 	public int minHeight = SWT.DEFAULT;
@@ -121,7 +106,7 @@ public final class SapphireSequenceLayoutConstraint {
 	 * Constructs a new instance of SapphireSequenceLayoutConstraint using default values.
 	 */
 	public SapphireSequenceLayoutConstraint() {
-		super();
+		this(null);
 	}
 
 	/**
@@ -144,13 +129,9 @@ public final class SapphireSequenceLayoutConstraint {
 			this.verticalAlignment = getSwtVerticalAlignment(def.getVerticalAlignment().getContent());
 			this.expandCellHorizontally = def.isExpandCellHorizontally().getContent();
 			this.expandCellVertically = def.isExpandCellVertically().getContent();
-			this.margin = def.getMargin().getContent();
-			this.horizontalMargin = def.getHorizontalMargin().getContent();
-			this.verticalMargin = def.getVerticalMargin().getContent();
-			this.topMargin = def.getTopMargin().getContent();
-			this.bottomMargin = def.getBottomMargin().getContent();
-			this.leftMargin = def.getLeftMargin().getContent();
-			this.rightMargin = def.getRightMargin().getContent();
+			this.marginInsets = LayoutUtil.calculateMargin(def);
+		} else {
+			this.marginInsets = new Insets(0, 0, 0, 0);
 		}
 	}
 	
@@ -252,20 +233,8 @@ public final class SapphireSequenceLayoutConstraint {
 		string += "verticalAlignment=" + vAlign + " "; //$NON-NLS-1$ //$NON-NLS-2$
 		if (heightHint != SWT.DEFAULT)
 			string += "heightHint=" + heightHint + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		if (margin != 0)
-			string += "margin=" + margin + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		if (horizontalMargin != 0)
-			string += "horizontalMargin=" + horizontalMargin + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		if (verticalMargin != 0)
-			string += "verticalMargin=" + verticalMargin + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		if (leftMargin != 0)
-			string += "leftMargin=" + leftMargin + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		if (rightMargin != 0)
-			string += "rightMargin=" + rightMargin + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		if (topMargin != 0)
-			string += "topMargin=" + topMargin + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		if (bottomMargin != 0)
-			string += "bottomMargin=" + bottomMargin + " "; //$NON-NLS-1$ //$NON-NLS-2$
+		if (marginInsets != null)
+			string += "marginInsets=" + marginInsets + " "; //$NON-NLS-1$ //$NON-NLS-2$
 		string += expandCellHorizontally ? "expandCellHorizontally " : "!expandCellHorizontally ";
 		string += expandCellVertically ? "expandCellVertically " : "!expandCellVertically ";
 		string = string.trim();
@@ -275,13 +244,6 @@ public final class SapphireSequenceLayoutConstraint {
 	}
 	
 	public Insets getMarginInset() {
-		if (marginInsets == null) {
-			final int top = topMargin + verticalMargin + margin;
-			final int left = leftMargin + horizontalMargin + margin;
-			final int bottom = bottomMargin + verticalMargin + margin;
-			final int right = rightMargin + horizontalMargin + margin;
-			marginInsets = new Insets(top, left, bottom, right);
-		}
 		return marginInsets;
 	}
 	

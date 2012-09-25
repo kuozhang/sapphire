@@ -173,6 +173,7 @@ public class ShapeUtil {
 		return false;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private static int findIndex(IFigure parentFigure, IFigure figure) {
 		List list = parentFigure.getChildren();
 		for (int i = 0; i < list.size(); i++) {
@@ -184,7 +185,7 @@ public class ShapeUtil {
 		return -1;
 	}
 	
-	private static Object getLayoutConstraint(ShapePart childShapePart, ShapeLayoutDef layoutDef)
+	public static Object getLayoutConstraint(ShapePart childShapePart, ShapeLayoutDef layoutDef)
 	{
 		Object layoutConstraint = null;
 		if (layoutDef instanceof SequenceLayoutDef)
