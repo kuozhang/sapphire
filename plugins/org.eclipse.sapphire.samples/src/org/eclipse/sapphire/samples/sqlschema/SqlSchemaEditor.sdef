@@ -53,6 +53,7 @@
                         <scroll-vertically>true</scroll-vertically>
                         <sequence-layout>
                             <spacing>2</spacing>
+                    		<margin>0</margin>
                         </sequence-layout>
                         <content>
                             <shape-factory>
