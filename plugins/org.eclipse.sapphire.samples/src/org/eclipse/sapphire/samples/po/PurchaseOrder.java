@@ -14,9 +14,9 @@ package org.eclipse.sapphire.samples.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Version;
-import org.eclipse.sapphire.annotations.Since;
-import org.eclipse.sapphire.annotations.VersionCompatibilityTarget;
+import org.eclipse.sapphire.VersionCompatibilityTarget;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;

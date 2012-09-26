@@ -23,7 +23,6 @@ import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.services.internal.DeclarativeVersionCompatibilityService;
 
 /**
  * Creates fact statements about property's version compatibility by using semantic information specified

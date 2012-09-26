@@ -9,14 +9,16 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.VersionCompatibility;
+import org.eclipse.sapphire.VersionCompatibilityService;
+import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.VersionConstraint;
-import org.eclipse.sapphire.annotations.Since;
-import org.eclipse.sapphire.annotations.VersionCompatibility;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -31,8 +33,6 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.services.VersionCompatibilityService;
-import org.eclipse.sapphire.services.VersionCompatibilityTargetService;
 
 /**
  * Implementation of VersionCompatibilityService that derives its behavior from @VersionCompatibility and @Since annotations.

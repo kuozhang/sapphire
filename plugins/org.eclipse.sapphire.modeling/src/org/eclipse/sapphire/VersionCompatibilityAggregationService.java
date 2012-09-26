@@ -9,16 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
 
 import java.util.List;
 
-import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.VersionCompatibilityService.Data;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.services.VersionCompatibilityService.Data;
+import org.eclipse.sapphire.services.DataService;
 
 /**
  * Aggregates the data from all applicable version compatibility services in order to produce a single statement

@@ -9,9 +9,9 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
 
-import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.services.DataService;
 import org.eclipse.sapphire.util.EqualsFactory;
 import org.eclipse.sapphire.util.HashCodeFactory;
 

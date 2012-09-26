@@ -9,10 +9,11 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.VersionCompatibilityAggregationService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.services.EnablementService;
@@ -20,7 +21,6 @@ import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.services.VersionCompatibilityAggregationService;
 
 /**
  * Implementation of EnablementService that determines property's enablement state based on property's 

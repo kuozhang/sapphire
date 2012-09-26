@@ -9,12 +9,13 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Version;
-import org.eclipse.sapphire.annotations.VersionCompatibilityTarget;
+import org.eclipse.sapphire.VersionCompatibilityTarget;
+import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -28,7 +29,6 @@ import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.services.VersionCompatibilityTargetService;
 
 /**
  * Implementation of VersionCompatibilityTargetService that derives its behavior from @VersionCompatibilityTarget annotation.

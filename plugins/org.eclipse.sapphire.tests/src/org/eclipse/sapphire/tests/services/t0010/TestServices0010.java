@@ -15,11 +15,11 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.VersionCompatibilityAggregationService;
+import org.eclipse.sapphire.VersionCompatibilityService;
+import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.services.VersionCompatibilityAggregationService;
-import org.eclipse.sapphire.services.VersionCompatibilityService;
-import org.eclipse.sapphire.services.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**

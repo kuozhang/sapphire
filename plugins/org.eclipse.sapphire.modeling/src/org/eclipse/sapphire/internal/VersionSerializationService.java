@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.modeling.ValueProperty;

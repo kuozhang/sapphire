@@ -14,10 +14,10 @@ package org.eclipse.sapphire.tests.services.t0010;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.VersionCompatibilityService;
+import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.services.VersionCompatibilityService;
-import org.eclipse.sapphire.services.VersionCompatibilityTargetService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

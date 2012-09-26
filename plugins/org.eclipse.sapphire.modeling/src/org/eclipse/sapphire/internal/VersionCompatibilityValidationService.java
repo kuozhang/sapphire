@@ -9,11 +9,12 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.VersionCompatibilityAggregationService;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -26,7 +27,6 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValidationService;
-import org.eclipse.sapphire.services.VersionCompatibilityAggregationService;
 
 /**
  * An abstract base class for implementations of ValidationService that produce a validation error when a property 
