@@ -27,6 +27,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -137,7 +138,13 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
             compatible = constraint.check( version );
         }
         
-        return new Data( compatible, version, versioned );
+        return new Data( versioned, version, constraint, compatible );
+    }
+    
+    public VersionConstraint constraint()
+    {
+        final Data data = (Data) data();
+        return ( data == null ? null : data.constraint() );
     }
 
     @Override
@@ -160,6 +167,44 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
             {
                 LoggingService.log( e );
             }
+        }
+    }
+    
+    public static final class Data extends VersionCompatibilityService.Data
+    {
+        private final VersionConstraint constraint;
+        
+        public Data( final String versioned,
+                     final Version version,
+                     final VersionConstraint constraint,
+                     final boolean compatible )
+        {
+           super( compatible, version, versioned );
+           
+           this.constraint = constraint;
+        }
+        
+        public VersionConstraint constraint()
+        {
+            return this.constraint;
+        }
+        
+        @Override
+        public boolean equals( final Object obj )
+        {
+            if( obj instanceof Data )
+            {
+                final Data data = (Data) obj;
+                return super.equals( obj ) && MiscUtil.equal( this.constraint, data.constraint );
+            }
+            
+            return false;
+        }
+        
+        @Override
+        public int hashCode()
+        {
+            return super.hashCode() + ( this.constraint == null ? 0 : this.constraint.hashCode() );
         }
     }
     

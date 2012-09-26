@@ -352,6 +352,13 @@
         <factory>org.eclipse.sapphire.internal.PreferDefaultValueFactsService$Factory</factory>
     </service>
     <service>
+        <context>Sapphire.Property.Instance</context>
+        <description>Creates fact statements about property's version compatibility by using semantic information specified by @Since and @VersionCompatibility annotations.</description>
+        <factory>org.eclipse.sapphire.internal.VersionCompatibilityFactsService$Factory</factory>
+        <id>Sapphire.FactsService.VersionCompatibility</id>
+        <type>org.eclipse.sapphire.services.FactsService</type>
+    </service>
+    <service>
         <description>Implementation of FileExtensionsService that derives its behavior from @FileExtensions annotation.</description>
         <type>org.eclipse.sapphire.services.FileExtensionsService</type>
         <context>Sapphire.Property.Instance</context>

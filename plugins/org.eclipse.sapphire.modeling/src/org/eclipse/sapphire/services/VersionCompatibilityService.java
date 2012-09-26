@@ -38,14 +38,14 @@ public abstract class VersionCompatibilityService extends DataService<VersionCom
     }
     
     /**
-     * Returns true if the property is currently compatibility with the version compatibility target,
-     * otherwise returns false.
+     * Returns the name of the version compatibility target that was used for the last compatibility
+     * computation.
      */
     
-    public final boolean compatible()
+    public final String versioned()
     {
         final Data data = data();
-        return ( data == null ? false : data.compatible() );
+        return ( data == null ? null : data.versioned() );
     }
     
     /**
@@ -60,17 +60,17 @@ public abstract class VersionCompatibilityService extends DataService<VersionCom
     }
     
     /**
-     * Returns the name of the version compatibility target that was used for the last compatibility
-     * computation.
+     * Returns true if the property is currently compatibility with the version compatibility target,
+     * otherwise returns false.
      */
     
-    public final String versioned()
+    public final boolean compatible()
     {
         final Data data = data();
-        return ( data == null ? null : data.versioned() );
+        return ( data == null ? false : data.compatible() );
     }
     
-    public static final class Data
+    public static class Data
     {
         private final boolean compatible;
         private final Version version;

@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.SortedSet;
 
 import junit.framework.TestCase;
 
@@ -39,6 +40,7 @@ import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.services.FactsAggregationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -290,6 +292,14 @@ public abstract class SapphireTestCase extends TestCase
         assertSame( property, evt.property() );
         assertEquals( before, evt.before() );
         assertEquals( after, evt.after() );
+    }
+    
+    protected static void assertFact( final IModelElement element,
+                                      final ModelProperty property,
+                                      final String fact )
+    {
+        final SortedSet<String> facts = element.service( property, FactsAggregationService.class ).facts();
+        assertTrue( facts.contains( fact ) );
     }
     
     protected static void assertContainsInstanceOf( final Collection<?> collection,

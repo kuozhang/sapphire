@@ -38,7 +38,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  */
 
 @Service( impl = PurchaseOrderResourceConversionService.class )
-@VersionCompatibilityTarget( version = "${ Version }", versioned = "purchase order" )
+@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
 @GenerateImpl
 
 public interface PurchaseOrder extends IModelElement
