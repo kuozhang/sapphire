@@ -51,6 +51,7 @@ public class TextPart extends ShapePart
                 }
             }
         );
+        this.setEditable(true);
         this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.textFunction);
     }
 	

@@ -61,7 +61,6 @@ public class DiagramNodePart
 	private FunctionResult idFunctionResult;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
-	private Listener modelPropertyListener;
 	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
@@ -92,25 +91,13 @@ public class DiagramNodePart
         // create shape part
         
         createShapePart();
-        
-        // Add model property listener. It listens to all the properties so that the
-        // validation status change would trigger node update
-        this.modelPropertyListener =  new FilteredListener<PropertyEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final PropertyEvent event )
-            {
-                notifyNodeUpdate();
-            }
-        };
-        this.modelElement.attach(this.modelPropertyListener, "*");
-        
+                
         this.elementValidationListener = new FilteredListener<ElementValidationEvent>()
         {
             @Override
             protected void handleTypedEvent( final ElementValidationEvent event )
             {
-                notifyNodeUpdate();
+                notifyNodeValidation();
             }
         };
         this.modelElement.attach(this.elementValidationListener);        
@@ -167,7 +154,6 @@ public class DiagramNodePart
             this.idFunctionResult.dispose();
         }
         
-        this.modelElement.detach(this.modelPropertyListener, "*");
         this.modelElement.detach(this.elementValidationListener);
     }
     
@@ -191,10 +177,49 @@ public class DiagramNodePart
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				DiagramShapeVisibilityEvent nue = new DiagramShapeVisibilityEvent(this, shapePart);
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
 				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(nue);
 			}
 		}    	
+    }
+    
+    public void refreshShapeValidation(ShapePart shapePart)
+    {
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeValidationEvent(nue);
+			}
+		}    	
+    }
+
+    public void addShape(ShapePart shapePart)
+    {
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeAddEvent(nue);
+			}
+		}    	    	
+    }
+    
+    public void deleteShape(ShapePart shapePart)
+    {    	
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeDeleteEvent(nue);
+			}
+		}    	    	
     }
     
     public String getNodeTypeId()
@@ -263,7 +288,7 @@ public class DiagramNodePart
 	}
 
 	
-	private void notifyNodeUpdate()
+	private void notifyNodeValidation()
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -271,7 +296,7 @@ public class DiagramNodePart
 			if (listener instanceof SapphireDiagramPartListener)
 			{
 				DiagramNodeEvent nue = new DiagramNodeEvent(this);
-				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
+				((SapphireDiagramPartListener)listener).handleNodeValidationEvent(nue);
 			}
 		}
 	}

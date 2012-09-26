@@ -725,19 +725,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return null;
     }
     
-    private void notifyNodeUpdate(DiagramNodeEvent event)
+    private void notifyNodeValidation(DiagramNodeEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
 		{
 			if (listener instanceof SapphireDiagramPartListener)
 			{
-				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(event);
+				((SapphireDiagramPartListener)listener).handleNodeValidationEvent(event);
 			}
 		}		
 	}
 	
-    private void notifyNodeShapeUpdate(DiagramShapeEvent event)
+    private void notifyShapeUpdate(DiagramShapeEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -749,7 +749,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
-    private void notifyShapeVisibilityUpdate( DiagramShapeVisibilityEvent event)
+    private void notifyShapeVisibilityUpdate( DiagramShapeEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -757,6 +757,42 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 			if (listener instanceof SapphireDiagramPartListener)
 			{
 				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(event);
+			}
+		}		
+	}
+
+    private void notifyShapeValidation(DiagramShapeEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleShapeValidationEvent(event);
+			}
+		}		
+	}
+
+    private void notifyShapeAdd(DiagramShapeEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleShapeAddEvent(event);
+			}
+		}		
+	}
+
+    private void notifyShapeDelete(DiagramShapeEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleShapeDeleteEvent(event);
 			}
 		}		
 	}
@@ -1006,9 +1042,9 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	private class NodeTemplateListener extends DiagramNodeTemplateListener
 	{
         @Override
-        public void handleNodeUpdate(final DiagramNodeEvent event)
+        public void handleNodeValidation(final DiagramNodeEvent event)
         {
-            notifyNodeUpdate(event);
+            notifyNodeValidation(event);
         }
         
         @Override
@@ -1030,15 +1066,33 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }	
         
         @Override
-        public void handleNodeShapeUpdate(final DiagramShapeEvent event)
+        public void handleShapeUpdate(final DiagramShapeEvent event)
         {
-        	notifyNodeShapeUpdate(event);
+        	notifyShapeUpdate(event);
         }        
         
         @Override
-        public void handleShapeVisibilityUpdate(final DiagramShapeVisibilityEvent event)
+        public void handleShapeVisibilityUpdate(final DiagramShapeEvent event)
         {        
         	notifyShapeVisibilityUpdate(event);
+        }        
+        
+        @Override
+        public void handleShapeValidation(final DiagramShapeEvent event)
+        {
+        	notifyShapeValidation(event);
+        }
+       
+        @Override
+        public void handleShapeAdd(final DiagramShapeEvent event)
+        {
+        	notifyShapeAdd(event);
+        }        
+        
+        @Override
+        public void handleShapeDelete(final DiagramShapeEvent event)
+        {        
+        	notifyShapeDelete(event);
         }        
         
 	}

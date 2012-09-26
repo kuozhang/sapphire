@@ -1949,7 +1949,7 @@
     </node>
     <node>
         <id>ShapeFactoryNode</id>
-        <label>shape factory</label>
+        <label>Shape Factory Properties</label>
         <section>
             <content>
                 <property-editor>Property</property-editor>

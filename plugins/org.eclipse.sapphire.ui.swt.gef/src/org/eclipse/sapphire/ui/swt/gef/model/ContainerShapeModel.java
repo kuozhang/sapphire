@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
@@ -28,6 +29,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 
 public class ContainerShapeModel extends ShapeModel 
 {
+	public final static String SHAPE_VALIDATION = "SHAPE_VALIDATION";
 	private List<ShapeModel> children;
 	
 	public ContainerShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, ContainerShapePart part)
@@ -64,6 +66,34 @@ public class ContainerShapeModel extends ShapeModel
 		return this.children;
 	}
 	
+	public void refreshChildren()
+	{
+		this.children.clear();
+		ISapphirePart sapphirePart = getSapphirePart();
+		List<ShapePart> children = new ArrayList<ShapePart>();
+		if (sapphirePart instanceof ContainerShapePart)
+		{
+			children.addAll(((ContainerShapePart)sapphirePart).getChildren());
+		}
+		else if (sapphirePart instanceof ShapeFactoryPart)
+		{
+			children.addAll(((ShapeFactoryPart)sapphirePart).getChildren());
+		}
+		for (ShapePart shapePart : children)
+		{
+			ShapeModel childModel = createShapeModel(getNodeModel(), shapePart);
+        	if (childModel != null)
+        	{        		
+        		this.children.add(childModel);
+        	}        				
+		}				
+	}
+	
+	public void handleShapeValidation() 
+	{
+		firePropertyChange(SHAPE_VALIDATION, null, null);
+	}
+
 	private ShapeModel createShapeModel(DiagramNodeModel nodeModel, ShapePart shapePart)
 	{
 		ShapeModel childModel = null;

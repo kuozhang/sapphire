@@ -22,6 +22,7 @@ public class ShapeModel extends DiagramModelBase
 	private DiagramNodeModel nodeModel;
 	private ShapeModel parent;
     private SapphirePart sapphirePart;
+    public final static String SHAPE_START_EDITING = "SHAPE_START_EDITING";
 
     public ShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, SapphirePart part)
     {
@@ -44,6 +45,11 @@ public class ShapeModel extends DiagramModelBase
 	public DiagramNodeModel getNodeModel()
 	{
 		return this.nodeModel;
+	}
+	
+	public void handleDirectEditing()
+	{
+		firePropertyChange(SHAPE_START_EDITING, null, null);
 	}
 	
     @SuppressWarnings( "unchecked" )

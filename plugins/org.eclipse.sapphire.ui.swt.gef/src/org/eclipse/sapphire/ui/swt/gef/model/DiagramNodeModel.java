@@ -33,9 +33,11 @@ public class DiagramNodeModel extends DiagramModelBase {
     public final static String SOURCE_CONNECTIONS = "SOURCE_CONNECTIONS";
 	public final static String TARGET_CONNECTIONS = "TARGET_CONNECTIONS";
 	public final static String NODE_BOUNDS = "NODE_BOUNDS";
-	public final static String NODE_UPDATES = "NODE_UPDATES";
+	public final static String NODE_VALIDATION = "NODE_VALIDATION";
 	public final static String SHAPE_UPDATES = "SHAPE_UPDATES";
 	public final static String SHAPE_VISIBILITY_UPDATES = "SHAPE_VISIBILITY_UPDATES";
+	public final static String SHAPE_ADD = "SHAPE_ADD";
+	public final static String SHAPE_DELETE = "SHAPE_DELETE";
 	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
 	private DiagramModel parent;
@@ -78,12 +80,7 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public DiagramNodePart getModelPart() {
 		return part;
 	}
-	
-	public ShapeModel getShapeModel()
-	{
-		return this.shapeModel;
-	}
-	
+		
 	public String getLabel() 
 	{
 		ShapePart shapePart = getModelPart().getShapePart();
@@ -123,8 +120,12 @@ public class DiagramNodeModel extends DiagramModelBase {
 		firePropertyChange(NODE_BOUNDS, null, getModelPart().getNodeBounds());
 	}
 	
-	public void handleUpdateNode() {
-		firePropertyChange(NODE_UPDATES, null, null);
+	public void handleNodeValidation() {
+		firePropertyChange(NODE_VALIDATION, null, null);
+	}
+
+	public void handleNodeValidation(ShapePart shapePart) {
+		firePropertyChange(NODE_VALIDATION, null, shapePart);
 	}
 
 	public void handleUpdateNodeShape(ShapePart shapePart) {
@@ -133,6 +134,20 @@ public class DiagramNodeModel extends DiagramModelBase {
 
 	public void handleUpdateShapeVisibility(ShapePart shapePart) {
 		firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
+	}
+
+	public void handleAddShape(ShapePart shapePart) {
+		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
+		assert(parentModel instanceof ContainerShapeModel);
+		((ContainerShapeModel)parentModel).refreshChildren();
+		firePropertyChange(SHAPE_ADD, null, shapePart);
+	}
+
+	public void handleDeleteShape(ShapePart shapePart) {
+		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
+		assert(parentModel instanceof ContainerShapeModel);
+		((ContainerShapeModel)parentModel).refreshChildren();
+		firePropertyChange(SHAPE_DELETE, null, shapePart);
 	}
 
 	public List<DiagramConnectionModel> getSourceConnections() {
@@ -172,4 +187,9 @@ public class DiagramNodeModel extends DiagramModelBase {
 		return getLabel();
 	}
 
+	public ShapeModel getShapeModel()
+	{
+		return this.shapeModel;
+	}
+	
 }

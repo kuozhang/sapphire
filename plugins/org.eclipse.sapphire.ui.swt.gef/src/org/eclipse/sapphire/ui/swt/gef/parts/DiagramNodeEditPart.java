@@ -14,6 +14,7 @@
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,9 +44,11 @@ import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.ContainerShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramNodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLabelDirectEditPolicy;
@@ -120,6 +123,36 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		IFigure parentFigure = this.partToFigure.get(parentPart);
 		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePart, ((ContainerShapePart)parentPart).getLayout());
 		parentFigure.add(child, layoutConstraint, index);
+	}
+	
+	@Override
+	protected void removeChildVisual(EditPart childEditPart) 
+	{
+		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
+		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
+		ShapePart parentPart = (ShapePart)shapePart.getParentPart();
+		while (!(parentPart instanceof ContainerShapePart))
+		{
+			parentPart = (ShapePart)parentPart.getParentPart();
+		}
+		IFigure parentFigure = this.partToFigure.get(parentPart);
+		parentFigure.remove(child);		
+	}
+	
+	@Override
+	protected List<ShapeModel> getModelChildren() 
+	{
+		List<ShapeModel> returnedModelChildren = new ArrayList<ShapeModel>();
+		DiagramNodeModel nodeModel = (DiagramNodeModel)getModel();
+		ShapeModel shapeModel = nodeModel.getShapeModel();
+		if (shapeModel instanceof ContainerShapeModel)
+		{
+			ContainerShapeModel containerModel = (ContainerShapeModel)shapeModel;
+			returnedModelChildren.addAll(ShapeModelUtil.collectActiveChildrenRecursively(containerModel));
+		}
+		
+		return returnedModelChildren;
 	}
 	
 	private void performDirectEdit() 
@@ -214,9 +247,17 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	}
 	
 	// Called when node is updated which could validation change
-	private void refreshNode()
+	private void refreshNodeValidation(Object obj)
 	{
-		IFigure figure = getFigure();
+		IFigure figure = null;
+		if (obj == null)
+		{
+			figure = getFigure();
+		}
+		else if (obj instanceof ShapePart)
+		{
+			figure = this.partToFigure.get((ShapePart)obj);
+		}
 		if (figure instanceof ContainerShapeFigure)
 		{
 			ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
@@ -285,9 +326,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			refreshTargetConnections();
 		} else if (DiagramNodeModel.NODE_BOUNDS.equals(prop)) {
 			refreshVisuals();
-		} else if (DiagramNodeModel.NODE_UPDATES.equals(prop)) {
-			refreshVisuals();
-			refreshNode();
+		} else if (DiagramNodeModel.NODE_VALIDATION.equals(prop)) {
+			refreshNodeValidation(evt.getNewValue());
 		} else if (DiagramNodeModel.SHAPE_UPDATES.equals(prop)) {
 			Object obj = evt.getNewValue();
 			if (obj instanceof ShapePart) {
@@ -298,6 +338,10 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			if (obj instanceof ShapePart) {
 				updateShapeVisibility((ShapePart)obj);
 			}
+		} else if(DiagramNodeModel.SHAPE_ADD.equals(prop)) {
+			refreshChildren();
+		} else if(DiagramNodeModel.SHAPE_DELETE.equals(prop)) {
+			refreshChildren();
 		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
 			performDirectEdit();
 		}

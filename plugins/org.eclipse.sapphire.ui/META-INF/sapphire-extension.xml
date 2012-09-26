@@ -84,6 +84,7 @@
         <context>Sapphire.EditorPage.Outline</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
         <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
         <context>Sapphire.Diagram.Connection</context>
         <context>Sapphire.Diagram.MultipleParts</context>
     </action>
@@ -409,6 +410,7 @@
         <id>Sapphire.Diagram.Delete</id>
         <description>Deletes the model element associated with a given diagram node or connection.</description>
         <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
         <context>Sapphire.Diagram.Connection</context>
         <context>Sapphire.Diagram.MultipleParts</context>
     </action-handler>
@@ -482,6 +484,14 @@
         <description>Creates an add action handler for every node type.</description>
         <context>Sapphire.Diagram.Editor</context>
     </action-handler-factory>  
+    <action-handler-factory>
+        <action>Sapphire.Add</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddShapeFactory</impl>
+        <description>Creates an add action handler for every shape factory.</description>
+        <context>Sapphire.Diagram.Node</context>
+        <condition>org.eclipse.sapphire.ui.diagram.actions.internal.DiagramNodeAddShapeFactoryCondition</condition>        
+    </action-handler-factory>
+    
     
     <type-cast>
         <source>java.lang.String</source>

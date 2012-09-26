@@ -52,7 +52,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 {
     public static abstract class DiagramNodeTemplateListener
     {
-        public void handleNodeUpdate(final DiagramNodeEvent event)
+        public void handleNodeValidation(final DiagramNodeEvent event)
         {
         }       
         public void handleNodeAdd(final DiagramNodePart nodePart)
@@ -64,12 +64,21 @@ public final class DiagramNodeTemplate extends SapphirePart
         public void handleNodeMove(final DiagramNodeEvent event)
         {        	
         }
-        public void handleNodeShapeUpdate(final DiagramShapeEvent event)
+        public void handleShapeUpdate(final DiagramShapeEvent event)
         {        	
         }
-        public void handleShapeVisibilityUpdate(final DiagramShapeVisibilityEvent event)
+        public void handleShapeValidation(final DiagramShapeEvent event)
         {        	
-        }        
+        }
+        public void handleShapeVisibilityUpdate(final DiagramShapeEvent event)
+        {        	
+        }
+        public void handleShapeAdd(final DiagramShapeEvent event)
+        {        	
+        }
+        public void handleShapeDelete(final DiagramShapeEvent event)
+        {        	
+        }
     }
     
 	private SapphireDiagramEditorPagePart diagramEditor;
@@ -112,7 +121,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         this.nodePartListener = new SapphireDiagramPartListener() 
         {
         	@Override
-            public void handleShapeVisibilityEvent(final DiagramShapeVisibilityEvent event)
+            public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
             {
         		notifyShapeVisibilityUpdate(event);
             }
@@ -120,13 +129,31 @@ public final class DiagramNodeTemplate extends SapphirePart
         	@Override
             public void handleShapeUpdateEvent(final DiagramShapeEvent event)
             {
-                notifyNodeShapeUpdate(event);
+                notifyShapeUpdate(event);
             }
         	
         	@Override
-        	public void handleNodeUpdateEvent(final DiagramNodeEvent event)
+            public void handleShapeValidationEvent(final DiagramShapeEvent event)
+            {
+                notifyShapeValidation(event);
+            }
+
+        	@Override
+            public void handleShapeAddEvent(final DiagramShapeEvent event)
+            {
+                notifyShapeAdd(event);
+            }
+        	
+        	@Override
+            public void handleShapeDeleteEvent(final DiagramShapeEvent event)
+            {
+                notifyShapeDelete(event);
+            }
+
+        	@Override
+        	public void handleNodeValidationEvent(final DiagramNodeEvent event)
         	{
-        		notifyNodeUpdate(event);
+        		notifyNodeValidationEvent(event);
         	}        	
         	@Override
 	    	public void handleNodeMoveEvent(final DiagramNodeEvent event)
@@ -445,15 +472,15 @@ public final class DiagramNodeTemplate extends SapphirePart
         return this.diagramEditor;
     }
     
-    private void notifyNodeUpdate(DiagramNodeEvent event)
+    private void notifyNodeValidationEvent(DiagramNodeEvent event)
     {
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
-            listener.handleNodeUpdate(event);
+            listener.handleNodeValidation(event);
         }        
     }
     
-    private void notifyShapeVisibilityUpdate(final DiagramShapeVisibilityEvent event)
+    private void notifyShapeVisibilityUpdate(final DiagramShapeEvent event)
     {    	
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
@@ -461,11 +488,35 @@ public final class DiagramNodeTemplate extends SapphirePart
         }        
     }
     
-    private void notifyNodeShapeUpdate(final DiagramShapeEvent event)
+    private void notifyShapeUpdate(final DiagramShapeEvent event)
     {    	
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
-            listener.handleNodeShapeUpdate(event);
+            listener.handleShapeUpdate(event);
+        }        
+    }
+
+    private void notifyShapeValidation(final DiagramShapeEvent event)
+    {    	
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleShapeValidation(event);
+        }        
+    }
+
+    private void notifyShapeAdd(final DiagramShapeEvent event)
+    {    	
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleShapeAdd(event);
+        }        
+    }
+
+    private void notifyShapeDelete(final DiagramShapeEvent event)
+    {    	
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleShapeDelete(event);
         }        
     }
 

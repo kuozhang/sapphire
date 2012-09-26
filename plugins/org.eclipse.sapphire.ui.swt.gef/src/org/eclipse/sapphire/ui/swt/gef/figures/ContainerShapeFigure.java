@@ -92,14 +92,14 @@ public class ContainerShapeFigure extends Shape
 	
 	public void refreshValidationStatus()
 	{
-		List children = getChildren();
-		for (Object figureObj : children)
-		{
-			if (figureObj instanceof ContainerShapeFigure)
-			{
-				((ContainerShapeFigure)figureObj).refreshValidationStatus();
-			}
-		}
+//		List children = getChildren();
+//		for (Object figureObj : children)
+//		{
+//			if (figureObj instanceof ContainerShapeFigure)
+//			{
+//				((ContainerShapeFigure)figureObj).refreshValidationStatus();
+//			}
+//		}
 		
 		if (this.validationMarkerIndex == -1)
 		{

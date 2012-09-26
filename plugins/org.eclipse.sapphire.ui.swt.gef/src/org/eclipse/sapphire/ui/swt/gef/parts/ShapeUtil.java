@@ -98,7 +98,7 @@ public class ShapeUtil {
 		{
 			ValidationMarkerPart markerPart = (ValidationMarkerPart)shapePart;
 			DiagramNodePart nodePart = markerPart.nearest(DiagramNodePart.class);
-			figure = FigureUtil.createValidationMarkerFigure(markerPart.getSize(), nodePart.getLocalModelElement(), nodePart.getImageCache());
+			figure = FigureUtil.createValidationMarkerFigure(markerPart.getSize(), shapePart.getLocalModelElement(), nodePart.getImageCache());
 		}
 		else if (shapePart instanceof RectanglePart)
 		{

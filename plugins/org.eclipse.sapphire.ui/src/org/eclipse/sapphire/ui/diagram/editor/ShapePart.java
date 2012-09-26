@@ -11,9 +11,15 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
@@ -28,6 +34,7 @@ public class ShapePart extends SapphirePart
 	private ShapeDef shapeDef;
 	private IModelElement modelElement;
 	private boolean isActive = false;
+	private boolean isEditable = false;
 
 	@Override
     protected void init()
@@ -70,12 +77,44 @@ public class ShapePart extends SapphirePart
 		this.isActive = isActive;
 	}
 
+	public boolean isEditable()
+	{
+		return this.isEditable;
+	}
+	
+	public void setEditable(boolean editable)
+	{
+		this.isEditable = editable;
+	}
+	
 	public void refreshShapeVisibility(ShapePart shapePart)
 	{
 		DiagramNodePart nodePart = getNodePart();
 		nodePart.refreshShapeVisibility(shapePart);
 	}
 	
+    @Override
+    public Set<String> getActionContexts()
+    {
+        Set<String> contextSet = new HashSet<String>();
+        if (isActive())
+        {
+        	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE);
+        }
+        return contextSet;    	
+    }
+	
+    @Override
+    public IModelElement getLocalModelElement()
+    {
+        return this.modelElement;
+    }    
+    
+    public List<ShapePart> getActiveChildren()
+    {
+    	return Collections.emptyList();
+    }
+    
 	protected DiagramNodePart getNodePart() 
 	{
 		DiagramNodePart nodePart = null;

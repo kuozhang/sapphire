@@ -11,6 +11,10 @@
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPolicy;
@@ -21,8 +25,11 @@ import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.ContainerShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 import org.eclipse.sapphire.ui.swt.gef.policies.ContainerShapeLabelDirectEditPolicy;
 
 /**
@@ -43,10 +50,21 @@ public class ContainerShapeEditPart extends ShapeEditPart
 	{
 		ContainerShapeModel model = getCastedModel();
 		ContainerShapePart containerPart = (ContainerShapePart)model.getSapphirePart();
-		if (containerPart.getTextPart() != null)
+		// Create direct edit policy if it contains non-active sapphire text part. Active 
+		// Sapphire text part has its own GEF editpart.
+		if (containerPart.isEditable())
 		{
 			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ContainerShapeLabelDirectEditPolicy());
 		}
+	}
+	
+	@Override
+	protected List<ShapeModel> getModelChildren() 
+	{
+		List<ShapeModel> returnedModelChildren = new ArrayList<ShapeModel>();
+		ContainerShapeModel containerModel = getCastedModel();
+		returnedModelChildren.addAll(ShapeModelUtil.collectActiveChildrenRecursively(containerModel));
+		return returnedModelChildren;
 	}
 	
 	public ContainerShapeModel getCastedModel() 
@@ -94,6 +112,21 @@ public class ContainerShapeEditPart extends ShapeEditPart
 			manager.show();
 	}
 	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) 
+	{
+		String prop = evt.getPropertyName();
+		if (prop.equals(ContainerShapeModel.SHAPE_VALIDATION))
+		{
+			ContainerShapeFigure modelFigure = (ContainerShapeFigure)getFigure();
+			modelFigure.refreshValidationStatus();			
+		}
+		else if (prop.equals(ShapeModel.SHAPE_START_EDITING))
+		{
+			performDirectEdit();
+		}
+	}
+
 	private TextFigure getLabelFigure()
 	{
 		ContainerShapePart containerPart = (ContainerShapePart)getCastedModel().getSapphirePart();

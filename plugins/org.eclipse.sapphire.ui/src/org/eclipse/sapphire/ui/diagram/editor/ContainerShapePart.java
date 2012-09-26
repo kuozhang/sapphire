@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
@@ -36,6 +38,8 @@ public class ContainerShapePart extends ShapePart
 	private List<ShapePart> children;
 	private int validationMarkerIndex = -1;
 	private ValidationMarkerPart validationMarkerPart;
+	private FilteredListener<ElementValidationEvent> elementValidationListener;
+	
 	// TODO support multiple text part
 	private TextPart textPart;
 
@@ -82,6 +86,18 @@ public class ContainerShapePart extends ShapePart
         	}
         	index++;
         }
+        if (this.validationMarkerIndex != -1)
+        {
+	        this.elementValidationListener = new FilteredListener<ElementValidationEvent>()
+	        {
+                @Override
+                protected void handleTypedEvent( final ElementValidationEvent event )
+                {
+                    refreshShapeValidation();
+                }
+	        };
+            this.modelElement.attach(this.elementValidationListener); 
+        }
     }
 
 	public ShapeLayoutDef getLayout()
@@ -109,6 +125,7 @@ public class ContainerShapePart extends ShapePart
 		return this.validationMarkerPart;
 	}
 	
+	// TODO support multiple text part
 	public TextPart getTextPart()
 	{
 		if (this.textPart != null)
@@ -128,4 +145,70 @@ public class ContainerShapePart extends ShapePart
 		}
 		return null;
 	}
+	
+	@Override
+	public boolean isEditable()
+	{
+		return this.textPart != null;
+	}
+	
+	// TODO support multiple shape factory
+	public ShapeFactoryPart getShapeFactoryPart()
+	{
+		for (ShapePart shapePart : getChildren())
+		{
+			if (shapePart instanceof ShapeFactoryPart)
+			{
+				return (ShapeFactoryPart)shapePart;
+			}
+			else if (shapePart instanceof ContainerShapePart)
+			{
+				ShapeFactoryPart shapeFactoryPart = ((ContainerShapePart)shapePart).getShapeFactoryPart();
+				if (shapeFactoryPart != null)
+				{
+					return shapeFactoryPart;
+				}
+			}
+		}
+		return null;
+	}
+	
+	@Override
+    public List<ShapePart> getActiveChildren()
+    {
+		List<ShapePart> activeChildren = new ArrayList<ShapePart>();
+		for (ShapePart child : getChildren())
+		{
+			if (child.isActive())
+			{
+				activeChildren.add(child);
+			}
+			else if (child instanceof ShapeFactoryPart)
+			{
+				activeChildren.addAll(((ShapeFactoryPart)child).getActiveChildren());
+			}
+			else if (child instanceof ContainerShapePart)
+			{
+				activeChildren.addAll(((ContainerShapePart)child).getActiveChildren());
+			}
+		}
+    	return activeChildren;
+    }	
+	
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        if (this.elementValidationListener != null)
+        {
+        	this.modelElement.detach(this.elementValidationListener);
+        }
+    }
+
+    private void refreshShapeValidation()
+	{
+    	DiagramNodePart nodePart = getNodePart();
+    	nodePart.refreshShapeValidation(this);		
+	}
+	
 }

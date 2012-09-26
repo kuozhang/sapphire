@@ -49,7 +49,6 @@ public interface Column extends IModelElement
     @Label( standard = "type" )
     @Localizable
     @XmlBinding( path = "type" )
-    @Required
     
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
     

@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.swt.gef.policies;
 
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.sapphire.ui.swt.gef.figures.DiagramNodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.IShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 

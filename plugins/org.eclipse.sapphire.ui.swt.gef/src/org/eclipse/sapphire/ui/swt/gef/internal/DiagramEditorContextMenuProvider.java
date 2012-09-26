@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystemPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.ActionBridge;
 import org.eclipse.sapphire.ui.swt.ActionHandlerBridge;
@@ -75,6 +76,10 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 			else if( part instanceof DiagramNodePart )
 			{
 				context = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
+			}
+			else if (part instanceof ShapePart)
+			{
+				context = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE;
 			}
 			else if( part instanceof DiagramConnectionPart )
 			{
