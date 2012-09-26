@@ -269,10 +269,6 @@ public abstract class SapphirePart implements ISapphirePart
         {
             property = ( (PropertyEditorPart) this ).getProperty();
         }
-        /*else if( this instanceof MasterDetailsContentNode )
-        {
-            property = ( (MasterDetailsContentNode) this ).property();
-        }*/
         
         if( property != null )
         {
