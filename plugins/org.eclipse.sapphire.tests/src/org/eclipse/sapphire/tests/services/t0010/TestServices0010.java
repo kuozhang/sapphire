@@ -15,7 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.Version;
-import org.eclipse.sapphire.VersionCompatibilityAggregationService;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -24,7 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
  * Tests for various services involved in the version compatibility feature, including ContextVersionService, 
- * VersionCompatibilityService, VersionCompatibilityAggregationService, VersionCompatibilityValidationService, 
+ * VersionCompatibilityService, MasterVersionCompatibilityService, VersionCompatibilityValidationService, 
  * VersionCompatibilityEnablementService, and VersionCompatibilityFactsService.
  *  
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -70,7 +70,7 @@ public final class TestServices0010 extends SapphireTestCase
         assertNotNull( rootContextVersionService );
         assertNull( rootContextVersionService.version() );
         
-        assertNull( root.service( RootElement.PROP_VALUE_UNCONSTRAINED, VersionCompatibilityAggregationService.class ) );
+        assertNull( root.service( RootElement.PROP_VALUE_UNCONSTRAINED, MasterVersionCompatibilityService.class ) );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_SINCE, false );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_SINCE_DYNAMIC, false );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY, false );
@@ -383,7 +383,7 @@ public final class TestServices0010 extends SapphireTestCase
                                                     final ModelProperty property,
                                                     final boolean expectedVersionCompatibility )
     {
-        final VersionCompatibilityAggregationService service = element.service( property, VersionCompatibilityAggregationService.class );
+        final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
         
         assertNotNull( service );
         assertEquals( expectedVersionCompatibility, service.compatible() );

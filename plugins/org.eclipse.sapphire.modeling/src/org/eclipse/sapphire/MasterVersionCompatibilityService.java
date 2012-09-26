@@ -28,7 +28,7 @@ import org.eclipse.sapphire.services.DataService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class VersionCompatibilityAggregationService extends DataService<Data>
+public final class MasterVersionCompatibilityService extends DataService<Data>
 {
     private List<VersionCompatibilityService> services;
     private Listener listener;

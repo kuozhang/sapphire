@@ -13,7 +13,7 @@ package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.VersionCompatibilityAggregationService;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class ParentBasedVersionCompatibilityService extends VersionCompatibilityService
 {
-    private VersionCompatibilityAggregationService parentVersionCompatibilityService;
+    private MasterVersionCompatibilityService parentVersionCompatibilityService;
     private Listener parentVersionCompatibilityServiceListener;
     
     @Override
@@ -50,7 +50,7 @@ public final class ParentBasedVersionCompatibilityService extends VersionCompati
             parentModelElement = (IModelElement) parentModelParticle.parent();
         }
         
-        this.parentVersionCompatibilityService = parentModelElement.service( element.getParentProperty(), VersionCompatibilityAggregationService.class );
+        this.parentVersionCompatibilityService = parentModelElement.service( element.getParentProperty(), MasterVersionCompatibilityService.class );
         
         this.parentVersionCompatibilityServiceListener = new Listener()
         {
@@ -103,7 +103,7 @@ public final class ParentBasedVersionCompatibilityService extends VersionCompati
                     parentModelElement = (IModelElement) parentModelParticle.parent();
                 }
                 
-                return parentModelElement.service( element.getParentProperty(), VersionCompatibilityAggregationService.class ) != null;
+                return parentModelElement.service( element.getParentProperty(), MasterVersionCompatibilityService.class ) != null;
             }
             
             return false;

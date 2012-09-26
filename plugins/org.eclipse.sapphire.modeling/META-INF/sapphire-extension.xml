@@ -616,13 +616,6 @@
         <description>Implementation of VersionCompatibilityTargetService that derives its behavior from @VersionCompatibilityTarget annotation.</description>
     </service>
     <service>
-        <context>Sapphire.Property.Instance</context>
-        <description>Aggregates the data from all applicable version compatibility services in order to produce a single statement about version compatibility. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityAggregationServiceFactory</factory>
-        <id>Sapphire.VersionCompatibilityAggregationService</id>
-        <type>org.eclipse.sapphire.VersionCompatibilityAggregationService</type>
-    </service>
-    <service>
         <id>Sapphire.VersionCompatibilityService.Declarative</id>
         <factory>org.eclipse.sapphire.internal.DeclarativeVersionCompatibilityService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
@@ -657,5 +650,12 @@
         <factory>org.eclipse.sapphire.internal.MasterConversionServiceFactory</factory>
         <description>Converts an object to the specified type by delegating to available ConversionService implementations. If object is null or is already of desired type, the object is returned unchanged.</description>
         <context>Sapphire.Element.MetaModel</context>
+    </service>
+    <service>
+        <context>Sapphire.Property.Instance</context>
+        <description>Aggregates the data from all applicable version compatibility services in order to produce a single statement about version compatibility. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
+        <factory>org.eclipse.sapphire.internal.MasterVersionCompatibilityServiceFactory</factory>
+        <id>Sapphire.MasterVersionCompatibilityService</id>
+        <type>org.eclipse.sapphire.MasterVersionCompatibilityService</type>
     </service>
 </extension>

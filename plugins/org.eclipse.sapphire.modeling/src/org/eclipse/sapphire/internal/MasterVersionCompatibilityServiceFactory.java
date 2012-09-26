@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.internal;
 
-import org.eclipse.sapphire.VersionCompatibilityAggregationService;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -23,7 +23,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class VersionCompatibilityAggregationServiceFactory extends ServiceFactory
+public final class MasterVersionCompatibilityServiceFactory extends ServiceFactory
 {
     @Override
     public boolean applicable( final ServiceContext context,
@@ -36,7 +36,7 @@ public final class VersionCompatibilityAggregationServiceFactory extends Service
     public Service create( final ServiceContext context,
                            final Class<? extends Service> service )
     {
-        return new VersionCompatibilityAggregationService();
+        return new MasterVersionCompatibilityService();
     }
     
 }

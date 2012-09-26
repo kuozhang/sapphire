@@ -30,7 +30,7 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.VersionCompatibilityAggregationService;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -289,7 +289,7 @@ public abstract class SapphirePart implements ISapphirePart
     
     private final Function createVersionCompatibileFunction( final ModelProperty property )
     {
-        final VersionCompatibilityAggregationService service = getLocalModelElement().service( property, VersionCompatibilityAggregationService.class );
+        final MasterVersionCompatibilityService service = getLocalModelElement().service( property, MasterVersionCompatibilityService.class );
         
         if( service != null )
         {

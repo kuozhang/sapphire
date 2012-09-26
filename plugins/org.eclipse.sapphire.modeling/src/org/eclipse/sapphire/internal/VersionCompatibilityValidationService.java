@@ -14,7 +14,7 @@ package org.eclipse.sapphire.internal;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Version;
-import org.eclipse.sapphire.VersionCompatibilityAggregationService;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -37,7 +37,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public abstract class VersionCompatibilityValidationService extends ValidationService
 {
-    private VersionCompatibilityAggregationService versionCompatibilityService;
+    private MasterVersionCompatibilityService versionCompatibilityService;
     private Listener versionCompatibilityServiceListener;
     
     @Override
@@ -45,7 +45,7 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
     {
         super.init();
         
-        this.versionCompatibilityService = context( IModelElement.class ).service( context( ModelProperty.class ), VersionCompatibilityAggregationService.class );
+        this.versionCompatibilityService = context( IModelElement.class ).service( context( ModelProperty.class ), MasterVersionCompatibilityService.class );
         
         this.versionCompatibilityServiceListener = new Listener()
         {
@@ -119,7 +119,7 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
                 final IModelElement element = context.find( IModelElement.class );
                 final ValueProperty property = context.find( ValueProperty.class );
                 
-                return property != null && element.service( property, VersionCompatibilityAggregationService.class ) != null; 
+                return property != null && element.service( property, MasterVersionCompatibilityService.class ) != null; 
             }
 
             @Override
@@ -154,7 +154,7 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
                 final ElementProperty property = context.find( ElementProperty.class );
                 
                 return property != null && ! ( property instanceof ImpliedElementProperty ) && 
-                       element.service( property, VersionCompatibilityAggregationService.class ) != null; 
+                       element.service( property, MasterVersionCompatibilityService.class ) != null; 
             }
 
             @Override
@@ -188,7 +188,7 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
                 final IModelElement element = context.find( IModelElement.class );
                 final ListProperty property = context.find( ListProperty.class );
                 
-                return property != null && element.service( property, VersionCompatibilityAggregationService.class ) != null; 
+                return property != null && element.service( property, MasterVersionCompatibilityService.class ) != null; 
             }
 
             @Override

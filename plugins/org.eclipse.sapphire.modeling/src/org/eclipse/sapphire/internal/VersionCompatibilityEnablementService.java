@@ -13,7 +13,7 @@ package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.VersionCompatibilityAggregationService;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.services.EnablementService;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class VersionCompatibilityEnablementService extends EnablementService
 {
-    private VersionCompatibilityAggregationService versionCompatibilityService;
+    private MasterVersionCompatibilityService versionCompatibilityService;
     private Listener versionCompatibilityServiceListener;
     
     @Override
@@ -40,7 +40,7 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
         final IModelElement element = context( IModelElement.class );
         final ModelProperty property = context( ModelProperty.class );
         
-        this.versionCompatibilityService = element.service( property, VersionCompatibilityAggregationService.class );
+        this.versionCompatibilityService = element.service( property, MasterVersionCompatibilityService.class );
         
         this.versionCompatibilityServiceListener = new Listener()
         {
@@ -80,7 +80,7 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
             final IModelElement element = context.find( IModelElement.class );
             final ModelProperty property = context.find( ModelProperty.class );
             
-            return property != null && element.service( property, VersionCompatibilityAggregationService.class ) != null; 
+            return property != null && element.service( property, MasterVersionCompatibilityService.class ) != null; 
         }
 
         @Override
