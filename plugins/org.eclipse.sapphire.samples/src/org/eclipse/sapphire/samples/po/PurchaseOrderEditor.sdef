@@ -51,6 +51,7 @@
                         <section>
                             <label>general</label>
                             <content>
+                                <property-editor>Version</property-editor>
                                 <property-editor>Id</property-editor>
                                 <property-editor>Customer</property-editor>
                                 <property-editor>InitialQuoteDate</property-editor>

@@ -20,9 +20,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookDef;
@@ -72,6 +77,92 @@ public abstract class PageBookPart extends FormComponentPart
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
         return (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+    }
+    
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        final Function function = new Function()
+        {
+            @Override
+            public String name()
+            {
+                return "VisibleIfChildrenVisible";
+            }
+
+            @Override
+            public FunctionResult evaluate( final FunctionContext context )
+            {
+                return new FunctionResult( this, context )
+                {
+                    @Override
+                    protected void init()
+                    {
+                        final Listener pageVisibilityListener = new FilteredListener<VisibilityChangedEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final VisibilityChangedEvent event )
+                            {
+                                refresh();
+                            }
+                        };
+                        
+                        final Listener pageChangeListener = new FilteredListener<PageChangedEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final PageChangedEvent event )
+                            {
+                                final FormPart page = getCurrentPage();
+                                
+                                if( page != null )
+                                {
+                                    page.attach( pageVisibilityListener );
+                                }
+                                
+                                refresh();
+                            }
+                        };
+                        
+                        attach( pageChangeListener );
+                        
+                        final FormPart page = getCurrentPage();
+                        
+                        if( page != null )
+                        {
+                            page.attach( pageVisibilityListener );
+                        }
+                    }
+
+                    @Override
+                    protected Object evaluate()
+                    {
+                        boolean visible = false;
+                        
+                        final FormPart page = getCurrentPage();
+                        
+                        if( page != null )
+                        {
+                            visible = page.visible();
+                        }
+                        
+                        return visible;
+                    }
+                };
+            }
+        };
+        
+        function.init();
+        
+        final Function base = super.initVisibleWhenFunction();
+        
+        if( base == null )
+        {
+            return function;
+        }
+        else
+        {
+            return AndFunction.create( base, function );
+        }
     }
 
     @Override

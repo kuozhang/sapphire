@@ -19,6 +19,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
@@ -26,7 +28,10 @@ import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -91,6 +96,37 @@ public final class SplitFormPart extends FormPart
             blockComposite.setLayout( glayout( 2, 0, rightMargin, topMargin, bottomMargin ) );
             
             block.render( blockContext );
+            
+            final Listener blockPartListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof StructureChangedEvent && isReRenderNeeded( block, (StructureChangedEvent) event ) )
+                    {
+                        for( Control control : blockComposite.getChildren() )
+                        {
+                            control.dispose();
+                        }
+                        
+                        block.render( blockContext );
+                        context.layout();
+                    }
+                }
+            };
+            
+            block.attach( blockPartListener );
+            
+            blockComposite.addDisposeListener
+            (
+                new DisposeListener()
+                {
+                    public void widgetDisposed( final DisposeEvent event )
+                    {
+                        block.detach( blockPartListener );
+                    }
+                }
+            );
             
             weights[ i ] = block.getWeight();
         }

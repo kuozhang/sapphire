@@ -37,6 +37,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -47,15 +48,16 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.VersionCompatibilityAggregationService;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
+import org.eclipse.sapphire.ui.def.CompositeDef;
 import org.eclipse.sapphire.ui.def.ConditionalDef;
+import org.eclipse.sapphire.ui.def.DialogDef;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.FormEditorPageDef;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.def.IFormPartInclude;
-import org.eclipse.sapphire.ui.def.CompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
-import org.eclipse.sapphire.ui.def.DialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
@@ -65,7 +67,6 @@ import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
-import org.eclipse.sapphire.ui.def.WizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -73,11 +74,13 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.ui.def.TabGroupDef;
+import org.eclipse.sapphire.ui.def.WizardPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -163,6 +166,8 @@ public abstract class SapphirePart implements ISapphirePart
             }
         }
         
+        init();
+        
         this.visibleWhenFunctionResult = initExpression
         (
             getModelElement(),
@@ -178,8 +183,6 @@ public abstract class SapphirePart implements ISapphirePart
                 }
             }
         );
-        
-        init();
         
         updateValidationState();
     }
@@ -251,7 +254,101 @@ public abstract class SapphirePart implements ISapphirePart
     
     protected Function initVisibleWhenFunction()
     {
-        return this.definition.getVisibleWhen().getContent();
+        final ListFactory<Function> functions = ListFactory.start();
+        
+        Function function = this.definition.getVisibleWhen().getContent();
+        
+        if( function != null )
+        {
+            functions.add( function );
+        }
+        
+        ModelProperty property = null;
+        
+        if( this instanceof PropertyEditorPart )
+        {
+            property = ( (PropertyEditorPart) this ).getProperty();
+        }
+        /*else if( this instanceof MasterDetailsContentNode )
+        {
+            property = ( (MasterDetailsContentNode) this ).property();
+        }*/
+        
+        if( property != null )
+        {
+            function = createVersionCompatibileFunction( property );
+        }
+        
+        if( function != null )
+        {
+            functions.add( function );
+        }
+        
+        return AndFunction.create( functions.result() );
+    }
+    
+    private final Function createVersionCompatibileFunction( final ModelProperty property )
+    {
+        final VersionCompatibilityAggregationService service = getLocalModelElement().service( property, VersionCompatibilityAggregationService.class );
+        
+        if( service != null )
+        {
+            final Function function = new Function()
+            {
+                @Override
+                public String name()
+                {
+                    return "VersionCompatible";
+                }
+
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        private Listener listener;
+                        
+                        @Override
+                        protected void init()
+                        {
+                            this.listener = new Listener()
+                            {
+                                @Override
+                                public void handle( final Event event )
+                                {
+                                    refresh();
+                                }
+                            };
+                            
+                            service.attach( this.listener );
+                        }
+
+                        @Override
+                        protected Object evaluate()
+                        {
+                            return service.compatible();
+                        }
+                        
+                        @Override
+                        public void dispose()
+                        {
+                            super.dispose();
+                            
+                            if( this.listener != null )
+                            {
+                                service.detach( this.listener );
+                            }
+                        }
+                    };
+                }
+            };
+            
+            function.init();
+            
+            return function;
+        }
+        
+        return null;
     }
 
     public abstract void render( final SapphireRenderingContext context );
@@ -360,6 +457,48 @@ public abstract class SapphirePart implements ISapphirePart
     protected void handleModelElementChange( final Event event )
     {
         // The default implement doesn't do anything.
+    }
+    
+    /**
+     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
+     */
+    
+    protected final boolean isReRenderNeeded( final StructureChangedEvent event )
+    {
+        return isReRenderNeeded( this, event );
+    }
+
+    /**
+     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
+     */
+    
+    protected static final boolean isReRenderNeeded( final SapphirePart context,
+                                                     final StructureChangedEvent event )
+    {
+        // Something changed in the tree of parts arranged beneath this part. If this is
+        // the composite closest to the affected part, it will need to re-render.
+        
+        ISapphirePart part = event.part();
+        Boolean needToReRender = null;
+        
+        while( part != null && needToReRender == null )
+        {
+            part = part.getParentPart();
+            
+            if( part instanceof CompositePart || part instanceof SplitFormBlockPart )
+            {
+                if( part == context )
+                {
+                    needToReRender = Boolean.TRUE;
+                }
+                else
+                {
+                    needToReRender = Boolean.FALSE;
+                }
+            }
+        }
+        
+        return ( needToReRender == Boolean.TRUE );
     }
     
     public final boolean attach( final Listener listener )

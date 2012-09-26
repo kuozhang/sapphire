@@ -14,6 +14,9 @@ package org.eclipse.sapphire.samples.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.annotations.Since;
+import org.eclipse.sapphire.annotations.VersionCompatibilityTarget;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -29,18 +32,29 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Service( impl = PurchaseOrderResourceConversionService.class )
+@VersionCompatibilityTarget( version = "${ Version }", versioned = "purchase order" )
 @GenerateImpl
 
 public interface PurchaseOrder extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );
+    
+    // *** Version ***
+    
+    @Type( base = Version.class )
+    @DefaultValue( text = "2.0" )
+
+    ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
+    
+    Value<Version> getVersion();
+    void setVersion( String value );
+    void setVersion( Version value );
     
     // *** Id ***
     
@@ -66,6 +80,7 @@ public interface PurchaseOrder extends IModelElement
     
     @Type( base = Date.class )
     @Label( standard = "initial quote date" )
+    @Since( "1.5" )
     
     ValueProperty PROP_INITIAL_QUOTE_DATE = new ValueProperty( TYPE, "InitialQuoteDate" );
     
@@ -88,6 +103,7 @@ public interface PurchaseOrder extends IModelElement
     
     @Type( base = Date.class )
     @Label( standard = "fulfillment date" )
+    @Since( "2.0" )
     
     ValueProperty PROP_FULFILLMENT_DATE = new ValueProperty( TYPE, "FulfillmentDate" );
     
@@ -99,7 +115,6 @@ public interface PurchaseOrder extends IModelElement
     
     @Type( base = BillingInformation.class )
     @Label( standard = "billing information" )
-    @XmlBinding( path = "BillingInformation" ) // TODO: This should not be necessary.
     
     ImpliedElementProperty PROP_BILLING_INFORMATION = new ImpliedElementProperty( TYPE, "BillingInformation" );
     
@@ -109,7 +124,7 @@ public interface PurchaseOrder extends IModelElement
     
     @Type( base = ShippingInformation.class )
     @Label( standard = "shipping information" )
-    @XmlBinding( path = "ShippingInformation" ) // TODO: This should not be necessary.
+    @Since( "2.0" )
     
     ImpliedElementProperty PROP_SHIPPING_INFORMATION = new ImpliedElementProperty( TYPE, "ShippingInformation" );
     

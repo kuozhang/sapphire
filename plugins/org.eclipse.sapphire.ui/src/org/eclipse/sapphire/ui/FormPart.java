@@ -14,10 +14,15 @@ package org.eclipse.sapphire.ui;
 import java.util.List;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.util.ListFactory;
@@ -57,6 +62,74 @@ public class FormPart extends FormComponentPart
         updateValidationState();
     }
     
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        final Function function = new Function()
+        {
+            @Override
+            public String name()
+            {
+                return "VisibleIfChildrenVisible";
+            }
+
+            @Override
+            public FunctionResult evaluate( final FunctionContext context )
+            {
+                return new FunctionResult( this, context )
+                {
+                    @Override
+                    protected void init()
+                    {
+                        final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final VisibilityChangedEvent event )
+                            {
+                                refresh();
+                            }
+                        };
+                        
+                        for( SapphirePart part : getChildParts() )
+                        {
+                            part.attach( listener );
+                        }
+                    }
+
+                    @Override
+                    protected Object evaluate()
+                    {
+                        boolean visible = false;
+                        
+                        for( SapphirePart part : getChildParts() )
+                        {
+                            if( part.visible() )
+                            {
+                                visible = true;
+                                break;
+                            }
+                        }
+                        
+                        return visible;
+                    }
+                };
+            }
+        };
+        
+        function.init();
+        
+        final Function base = super.initVisibleWhenFunction();
+        
+        if( base == null )
+        {
+            return function;
+        }
+        else
+        {
+            return AndFunction.create( base, function );
+        }
+    }
+    
     protected List<SapphirePart> initChildParts()
     {
         final IModelElement element = getLocalModelElement();
@@ -78,6 +151,11 @@ public class FormPart extends FormComponentPart
     
     public void render( final SapphireRenderingContext context )
     {
+        if( ! visible() )
+        {
+            return;
+        }
+        
         for( SapphirePart child : getChildParts() )
         {
             child.render( context );

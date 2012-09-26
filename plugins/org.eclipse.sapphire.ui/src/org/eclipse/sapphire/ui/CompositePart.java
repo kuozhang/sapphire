@@ -202,47 +202,21 @@ public class CompositePart extends FormPart
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof StructureChangedEvent )
+                if( event instanceof StructureChangedEvent && isReRenderNeeded( (StructureChangedEvent) event ) )
                 {
-                    // Something changed in the tree of parts arranged beneath this composite part. If this is
-                    // the composite closest to the affected part, it will need to re-render.
-                    
-                    ISapphirePart part = ( (StructureChangedEvent) event ).part();
-                    Boolean needToReRender = null;
-                    
-                    while( part != null && needToReRender == null )
+                    for( Control control : composite.getChildren() )
                     {
-                        part = part.getParentPart();
-                        
-                        if( part instanceof CompositePart )
-                        {
-                            if( part == CompositePart.this )
-                            {
-                                needToReRender = Boolean.TRUE;
-                            }
-                            else
-                            {
-                                needToReRender = Boolean.FALSE;
-                            }
-                        }
+                        control.dispose();
                     }
                     
-                    if( needToReRender == Boolean.TRUE )
+                    CompositePart.super.render( innerContext );
+                    
+                    if( scrolledComposite != null )
                     {
-                        for( Control control : composite.getChildren() )
-                        {
-                            control.dispose();
-                        }
-                        
-                        CompositePart.super.render( innerContext );
-                        
-                        if( scrolledComposite != null )
-                        {
-                            scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
-                        }
-                        
-                        context.layout();
+                        scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
                     }
+                    
+                    context.layout();
                 }
             }
         };
@@ -260,7 +234,7 @@ public class CompositePart extends FormPart
             }
         );
     }
-
+    
     protected Composite createOuterComposite( final SapphireRenderingContext context )
     {
         return context.getComposite();
