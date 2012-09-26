@@ -68,9 +68,7 @@
                   <content>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</content>                
                   <sequence-layout-constraint>
                     <horizontal-alignment>center</horizontal-alignment>
-                    <vertical-alignment>center</vertical-alignment>
                     <expand-cell-horizontally>true</expand-cell-horizontally>
-                    <expand-cell-vertically>true</expand-cell-vertically>
                   </sequence-layout-constraint>
                 </text>
               </content>

@@ -10,12 +10,12 @@
  ******************************************************************************/
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
@@ -25,79 +25,62 @@ import org.eclipse.swt.widgets.Text;
 
 final public class NodeCellEditorLocator implements CellEditorLocator {
 
-	private Label label;
+	private TextFigure textFigure;
 	private DiagramConfigurationManager manager;
 
-	public NodeCellEditorLocator(DiagramConfigurationManager manager, Label label) {
+	public NodeCellEditorLocator(DiagramConfigurationManager manager, TextFigure textFigure) {
 		this.manager = manager;
-		setLabel(label);
+		setLabel(textFigure);
 	}
 
 	public void relocate(CellEditor celleditor) {
 		double zoom = manager.getDiagramEditor().getZoomLevel();
-		Rectangle labelRect = label.getClientArea();
-		Rectangle parentRect = label.getParent().getClientArea();
+		Rectangle labelRect = textFigure.getClientArea();
+		Rectangle parentRect = textFigure.getAvailableArea();
+
 		labelRect.x = parentRect.x;
 		labelRect.width = parentRect.width;
-		// TODO check for border
-		int margin = 2;
-		// shrink horizontal, may need to pad for border
-//		int margin = 2;
-//		if (label.getParent() instanceof NodeFigure) {
-//			if (((NodeFigure)label.getParent()).hasBorder()) {
-//				margin = 4;
-//			}
-//		}
-		labelRect.x += margin;
-		labelRect.width -= margin + margin;
 		// zoom
 		labelRect.width = (int) (labelRect.width * zoom);
 		
 		Text text = (Text) celleditor.getControl();
 		Point size = text.computeSize(-1, -1);
-		
-		size.x = Math.min(size.x, labelRect.width - 2);
+		// 
+		size.x = Math.min(size.x, labelRect.width);
 		if (text.getText().length() == 0) {
 			size.x = 10;
 		}
 		
-		// calculate error image width
-		int rightOffset = 0;
-		for (Object object : label.getParent().getChildren()) {
-			if (object instanceof DecoratorImageFigure) {
-				Rectangle imageRect = ((DecoratorImageFigure)object).getBounds();
-				int imageWidth = ((DecoratorImageFigure)object).getBounds().width;
-				imageWidth = (int) (imageWidth * zoom);
-				int newX = imageRect.x + imageWidth + 3;
-				if ((imageRect.x - 2 < labelRect.x && newX < labelRect.x + (labelRect.width / 2)) && 
-					(imageRect.y - 2 <= labelRect.y && labelRect.y <= imageRect.y + 2)) {
-					// right aligned image
-					rightOffset = newX - labelRect.x; 
-				}
-			}
-		}
-		
 		// center the cell editor
 		int offset = 0;
-		if (size.x < labelRect.width) {
-			offset = (labelRect.width - size.x + 1) / 2;
-			if (rightOffset > 0 && offset < rightOffset) {
-				offset = rightOffset;
+		switch (textFigure.getHorizontalAlignment()) {
+		case SWT.RIGHT:
+			if (size.x < labelRect.width) {
+				offset = labelRect.width - size.x;
 			}
+			break;
+		case SWT.LEFT:
+			break;
+		default:
+			if (size.x < labelRect.width) {
+				offset = (labelRect.width - size.x + 1) / 2;
+			}
+			break;
 		}
-		size.x = Math.min(size.x, rightOffset == 0 ? labelRect.width : labelRect.width - rightOffset - 1);
+
+		size.x = Math.min(size.x, labelRect.width);
 		
-		label.translateToAbsolute(labelRect);
+		textFigure.translateToAbsolute(labelRect);
 		
-		text.setBounds(labelRect.x + offset, labelRect.y + 1, size.x, size.y + 1);
+		text.setBounds(labelRect.x + offset, labelRect.y, size.x, size.y);
 	}
 	
-	protected Label getLabel() {
-		return label;
+	protected TextFigure getLabel() {
+		return textFigure;
 	}
 
-	protected void setLabel(Label label) {
-		this.label = label;
+	protected void setLabel(TextFigure textFigure) {
+		this.textFigure = textFigure;
 	}
 
 }

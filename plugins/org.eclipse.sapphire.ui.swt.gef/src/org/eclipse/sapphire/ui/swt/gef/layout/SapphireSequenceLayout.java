@@ -25,6 +25,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.swt.SWT;
 
 /**
@@ -338,7 +339,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			minSizes[i] = transposer.t(getChildMinimumSize(child, wHint, hHint));
 			marginInsets[i] = transposer.t(constraint.getMarginInset());
 			
-			if (isHorizontal() && constraint.expandCellHorizontally || !isHorizontal() && constraint.expandCellVertically) {
+			if (getMajorExpand(constraint)) {
 				totalHeight += minSizes[i].height;
 				expandCount++;
 			} else {
@@ -371,10 +372,12 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			int minWidth = minSizes[i].width;
 			Insets marginInset = marginInsets[i];
 			
-			Rectangle newBounds;
+			Rectangle newBounds, availableBounds;
+			int availableBoundHeight;
 			SapphireSequenceLayoutConstraint constraint = constraints[i];
-			if (isHorizontal() && constraint.expandCellHorizontally || !isHorizontal() && constraint.expandCellVertically) {
+			if (getMajorExpand(constraint)) {
 				int height = minHeight + extraHeight;
+				availableBoundHeight = height;
 				int offset = 0;
 				if (height > prefHeight) {
 					// alignment
@@ -392,6 +395,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				newBounds = new Rectangle(x, y + marginInset.top + offset, prefWidth, height);
 			} else {
 				newBounds = new Rectangle(x, y + marginInset.top, prefWidth, prefHeight);
+				availableBoundHeight = prefHeight;
 			}
 
 			child = (IFigure) children.get(i);
@@ -399,6 +403,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			int width = Math.min(prefWidth,	transposer.t(child.getMaximumSize()).width);
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
+
+			availableBounds = new Rectangle(x + marginInset.left, y + marginInset.top, 
+						clientArea.width - marginInset.left - marginInset.right, availableBoundHeight);
 
 			if (getMinorExpand(constraint)) {
 				newBounds.x += marginInset.left;
@@ -419,6 +426,17 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				newBounds.x += adjust;
 			}
 			child.setBounds(transposer.t(newBounds));
+			
+			if (child instanceof TextFigure) {
+				if (i > 0) {
+					int extraSpacing = spacing / 2;
+					extraSpacing = Math.max(extraSpacing, 3);
+					availableBounds.y += extraSpacing;
+					availableBounds.height -= extraSpacing;
+				}
+				((TextFigure) child).setAvailableArea(transposer.t(availableBounds));
+				((TextFigure) child).setHorizontalAlignment(constraint.horizontalAlignment);
+			}
 
 			y += newBounds.height + spacing + marginInset.bottom;
 		}
@@ -430,6 +448,10 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	
 	private int getMinorAlignment(SapphireSequenceLayoutConstraint constraint) {
 		return isHorizontal() ? constraint.verticalAlignment : constraint.horizontalAlignment;
+	}
+
+	private boolean getMajorExpand(SapphireSequenceLayoutConstraint constraint) {
+		return isHorizontal() ? constraint.expandCellHorizontally : constraint.expandCellVertically;
 	}
 
 	private boolean getMinorExpand(SapphireSequenceLayoutConstraint constraint) {
@@ -468,7 +490,6 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		super.setConstraint(figure, newConstraint);
 		if (newConstraint != null) {
 			constraints.put(figure, newConstraint);
-
 		}
 	}
 	
