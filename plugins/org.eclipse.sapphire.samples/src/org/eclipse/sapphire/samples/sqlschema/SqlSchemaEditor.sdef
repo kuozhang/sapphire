@@ -18,7 +18,7 @@
                     <color>#333399</color>
                 </border>
                 <sequence-layout>
-                    <spacing>5</spacing>
+                    <spacing>0</spacing>
                     <margin>0</margin>
                 </sequence-layout>
                 <content>
@@ -32,6 +32,9 @@
                         </sequence-layout>
                         <content>
                             <validation-marker></validation-marker>
+                            <image>
+                                <path>table.gif</path>
+                            </image>
                             <text>
                                 <content>${Name == null ? &quot;&lt;table&gt;&quot; : Name}</content>
                                 <sequence-layout-constraint>
@@ -41,13 +44,17 @@
                                 <font>
                                     <name>Arial</name>
                                     <bold>true</bold>
-                                    <size>8</size>
+                                    <size>9</size>
                                 </font>
                             </text>
                         </content>
                         <sequence-layout-constraint>
                             <expand-cell-horizontally>true</expand-cell-horizontally>
+                            <margin>2</margin>
                         </sequence-layout-constraint>
+                        <background>
+                            <gradient></gradient>
+                        </background>
                     </rectangle>
                     <rectangle>
                         <scroll-vertically>true</scroll-vertically>
@@ -62,11 +69,18 @@
                                     <rectangle>
                                         <sequence-layout>
                                             <orientation>horizontal</orientation>
+                                            <margin>3</margin>
                                         </sequence-layout>
                                         <content>    
                                             <validation-marker>
                                                 <size>small</size>
                                             </validation-marker>
+                                            <image>
+                                                <path>${IsPrimaryKey ? &quot;key.gif&quot; : &quot;placeholder-16.png&quot;}</path>
+                                                <sequence-layout-constraint>
+                                                    <right-margin>8</right-margin>
+                                                </sequence-layout-constraint>
+                                            </image>
                                             <text>
                                                 <content>${Name == null ? &quot;&lt;column&gt;&quot; : Name}</content>
                                                 <sequence-layout-constraint>
@@ -93,6 +107,7 @@
                         </sequence-layout-constraint>
                     </rectangle>
                 </content>
+                <corner-radius>8</corner-radius>
             </rectangle>
             <width>120</width>
             <resizable>true</resizable>

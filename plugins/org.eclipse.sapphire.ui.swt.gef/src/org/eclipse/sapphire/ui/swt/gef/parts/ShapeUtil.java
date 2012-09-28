@@ -21,6 +21,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
@@ -108,69 +109,59 @@ public class ShapeUtil {
 		return figure;
 	}
 	
-	public static boolean updateFigureForShape(ShapePart shapePart, ShapePart updateShapePart, HashMap<ShapePart, IFigure> partToFigure, DiagramResourceCache resourceCache)
+	public static boolean updateFigureForShape(ShapePart updateShapePart, HashMap<ShapePart, IFigure> partToFigure, DiagramResourceCache resourceCache)
 	{
-		if (shapePart.equals(updateShapePart)) {
-			IFigure updateFigure = partToFigure.get(updateShapePart);
-			if (updateShapePart.visible()) {
-				// find the parent figure
-				ISapphirePart pp = updateShapePart.getParentPart();
-				if (pp instanceof ContainerShapePart) {
-					ContainerShapePart containerShapePart = (ContainerShapePart)pp;
-					IFigure containerFigure = partToFigure.get(containerShapePart);
-					if (containerFigure != null) {
-						
-						int index = -1;
-						if (updateFigure != null) {
-							// first delete it
-							index = findIndex(containerFigure, updateFigure);
-							containerFigure.remove(updateFigure);
-						}
-						// add it
-						updateFigure = createFigure(shapePart, resourceCache);
-						partToFigure.put(updateShapePart, updateFigure);
-
-						Object layoutConstraint = getLayoutConstraint(shapePart, containerShapePart.getLayout());
-						if (layoutConstraint != null)
-						{
-							containerFigure.add(updateFigure, layoutConstraint, index);
-						}
-						else
-						{
-							containerFigure.add(updateFigure, index);
-						}
-						containerFigure.revalidate();
-					}
-				}
-			} else if (!updateShapePart.visible() && updateFigure != null) {
-				// remove it
-				partToFigure.remove(updateShapePart);
-				ISapphirePart pp = updateShapePart.getParentPart();
-				if (pp instanceof ContainerShapePart) {
-					ContainerShapePart containerShapePart = (ContainerShapePart)pp;
-					IFigure containerFigure = partToFigure.get(containerShapePart);
-					containerFigure.remove(updateFigure);
-					containerFigure.revalidate();
-				}
-			}
-			return true;
-		}
-		
-		if (shapePart instanceof ContainerShapePart)
+		IFigure updateFigure = partToFigure.get(updateShapePart);
+		ContainerShapePart containerShapePart = null;
+		ISapphirePart pp = updateShapePart.getParentPart();
+		if (pp instanceof ContainerShapePart)
 		{
-			ContainerShapePart containerPart = (ContainerShapePart)shapePart;
-			for (ShapePart childShapePart : containerPart.getChildren())
-			{
-				if (!childShapePart.isActive())
-				{
-					boolean updated = updateFigureForShape(childShapePart, updateShapePart, partToFigure, resourceCache);
-					if (updated) {
-						return true;
-					}
-				}
-			}
+			containerShapePart = (ContainerShapePart)pp;
 		}
-		return false;
+		else if (pp instanceof ShapeFactoryPart)
+		{
+			ISapphirePart ppp = pp.getParentPart();
+			assert (ppp instanceof ContainerShapePart);
+			containerShapePart = (ContainerShapePart)ppp;
+		}
+		if (updateShapePart.visible()) 
+		{
+			IFigure containerFigure = partToFigure.get(containerShapePart);
+			// find the parent figure
+			if (containerFigure != null) 
+			{
+				int index = -1;
+				if (updateFigure != null) 
+				{
+					// first delete it
+					index = findIndex(containerFigure, updateFigure);
+					containerFigure.remove(updateFigure);
+				}
+				// add it
+				updateFigure = createFigure(updateShapePart, resourceCache);
+				partToFigure.put(updateShapePart, updateFigure);
+
+				Object layoutConstraint = getLayoutConstraint(updateShapePart, containerShapePart.getLayout());
+				if (layoutConstraint != null)
+				{
+					containerFigure.add(updateFigure, layoutConstraint, index);
+				}
+				else
+				{
+					containerFigure.add(updateFigure, index);
+				}
+				containerFigure.revalidate();
+			}
+		} 
+		else if (!updateShapePart.visible() && updateFigure != null) 
+		{
+			// remove it
+			partToFigure.remove(updateShapePart);
+			IFigure containerFigure = partToFigure.get(containerShapePart);
+			containerFigure.remove(updateFigure);
+			containerFigure.revalidate();
+		}
+		return true;		
 	}
 
 	@SuppressWarnings("rawtypes")

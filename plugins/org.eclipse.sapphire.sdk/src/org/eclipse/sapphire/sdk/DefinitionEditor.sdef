@@ -1902,6 +1902,7 @@
                             <content>
                                 <property-editor>Orientation</property-editor>
                                 <property-editor>Spacing</property-editor>
+                                <property-editor>Margin</property-editor>
                             </content>
                         </panel>
                         <label>layout</label>

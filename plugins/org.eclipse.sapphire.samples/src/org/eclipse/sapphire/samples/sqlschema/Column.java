@@ -15,6 +15,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -56,5 +57,17 @@ public interface Column extends IModelElement
     void setType( String value );
     void setType( ColumnType value );
     
+    // *** IsPrimaryKey ***
+    
+	@Type( base = Boolean.class )
+	@Label( standard = "is primary key" )
+	@XmlBinding( path = "is-primary-key" )
+	@DefaultValue(text = "false")
+	
+	ValueProperty PROP_IS_PRIMARY_KEY = new ValueProperty( TYPE, "IsPrimaryKey" );
+	
+	Value<Boolean> getIsPrimaryKey();
+	void setIsPrimaryKey( String value );
+	void setIsPrimaryKey( Boolean value );    
 
 }

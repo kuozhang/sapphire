@@ -45,7 +45,7 @@ public class SqlSchemaEditor extends SapphireEditor
         this.schemaSourceEditor.setEditorPart(this);
         
         int index = addPage( this.schemaSourceEditor, getEditorInput() );
-        setPageText( index, "schema.xml" );
+        setPageText( index, "Source" );
     }
 
     @Override

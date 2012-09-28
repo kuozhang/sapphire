@@ -38,7 +38,6 @@ import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
-import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
@@ -274,15 +273,13 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 		else
 		{
-			DiagramNodePart nodePart = getCastedModel().getModelPart();
-			ShapeUtil.updateFigureForShape(nodePart.getShapePart(), shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+			ShapeUtil.updateFigureForShape(shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
 		}
 	}
 	
 	private void updateShapeVisibility(ShapePart shapePart) 
 	{
-    	DiagramNodePart nodePart = getCastedModel().getModelPart();
-		boolean updated = ShapeUtil.updateFigureForShape(nodePart.getShapePart(), shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+		boolean updated = ShapeUtil.updateFigureForShape(shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
 		if (updated && (shapePart instanceof TextPart))
 		{
 			// The label figure has been recreated; we need to throw away the direct edit cache.
