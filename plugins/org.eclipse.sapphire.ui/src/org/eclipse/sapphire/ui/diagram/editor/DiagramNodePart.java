@@ -20,10 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
@@ -263,6 +261,11 @@ public class DiagramNodePart
 		setNodeBounds(new DiagramNodeBounds(x, y, -1, -1, false, false));
 	}
 	
+	public void setNodeBounds(int x, int y, int width, int height)
+	{
+		setNodeBounds(new DiagramNodeBounds(x, y, width, height, false, false));
+	}
+
 	public void setNodeBounds(int x, int y, boolean autoLayout, boolean defaultPosition)
 	{
 		setNodeBounds(new DiagramNodeBounds(x, y, -1, -1, autoLayout, defaultPosition));
@@ -276,11 +279,13 @@ public class DiagramNodePart
 	
 	public void setNodeBounds(DiagramNodeBounds bounds)
 	{
-		// TODO handle node resizing events
+		// TODO handle node resizing events - rename move?
 		if (!this.nodeBounds.equals(bounds))
 		{
 			this.nodeBounds.setX(bounds.getX());
 			this.nodeBounds.setY(bounds.getY());
+			this.nodeBounds.setWidth(bounds.getWidth());
+			this.nodeBounds.setHeight(bounds.getHeight());
 			this.nodeBounds.setAutoLayout(bounds.isAutoLayout());
 			this.nodeBounds.setDefaultPosition(bounds.isDefaultPosition());
 			notifyNodeMove();

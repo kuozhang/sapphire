@@ -198,9 +198,8 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		if (hasFocus || selected) 
 		{
 			graphics.setForegroundColor(resourceCache.getColor(OUTLINE_FOREGROUND));
-			org.eclipse.draw2d.geometry.Rectangle expanded = r.getExpanded(1, 1);
 			graphics.setLineStyle(SWT.LINE_DASH);
-			graphics.drawRoundRectangle(expanded,
+			graphics.drawRoundRectangle(r,
 					Math.max(0, cornerDimension.width - (int) lineInset),
 					Math.max(0, cornerDimension.height - (int) lineInset));				
 		}
