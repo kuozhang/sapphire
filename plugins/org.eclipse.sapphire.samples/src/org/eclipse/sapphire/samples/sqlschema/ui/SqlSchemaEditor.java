@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.sqlschema.Schema;
 import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
@@ -32,6 +33,7 @@ public class SqlSchemaEditor extends SapphireEditor
     private Schema schemaModel;
     private StructuredTextEditor schemaSourceEditor;
     private SapphireDiagramEditor schemaDiagram;
+    private MasterDetailsEditorPage schemaDetails;
 	
     public SqlSchemaEditor()
     {
@@ -66,7 +68,11 @@ public class SqlSchemaEditor extends SapphireEditor
     @Override
     protected void createFormPages() throws PartInitException 
     {
+        IPath path = new Path( "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/sqlschema/SqlSchemaEditor.sdef/DetailsPage" );
+        this.schemaDetails = new MasterDetailsEditorPage( this, this.schemaModel, path );
+        addPage( 1, this.schemaDetails );
     }
+    
 
     public Schema getSchema()
     {
