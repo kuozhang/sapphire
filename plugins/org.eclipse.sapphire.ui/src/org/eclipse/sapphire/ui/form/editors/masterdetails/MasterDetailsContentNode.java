@@ -353,21 +353,12 @@ public final class MasterDetailsContentNode
     @Override
     protected Function initVisibleWhenFunction()
     {
-        Function function = super.initVisibleWhenFunction();
-        
-        if( this.nodeFactoryVisibleFunction != null )
-        {
-            if( function == null )
-            {
-                function = this.nodeFactoryVisibleFunction;
-            }
-            else
-            {
-                function = AndFunction.create( this.nodeFactoryVisibleFunction, function );
-            }
-        }
-        
-        return function;
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            this.nodeFactoryVisibleFunction,
+            createVersionCompatibleFunction( getModelElement(), this.modelElementProperty )
+        );
     }
     
     public MasterDetailsContentOutline getContentTree()

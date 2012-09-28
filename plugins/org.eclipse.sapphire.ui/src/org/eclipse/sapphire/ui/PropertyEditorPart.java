@@ -40,6 +40,8 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
@@ -294,6 +296,16 @@ public final class PropertyEditorPart extends FormComponentPart
                     broadcast( new LabelChangedEvent( PropertyEditorPart.this ) );
                 }
             }
+        );
+    }
+
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            createVersionCompatibleFunction( getLocalModelElement(), this.property )
         );
     }
     

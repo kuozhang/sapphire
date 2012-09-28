@@ -38,7 +38,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -80,7 +79,6 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEdito
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
-import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -254,94 +252,77 @@ public abstract class SapphirePart implements ISapphirePart
     
     protected Function initVisibleWhenFunction()
     {
-        final ListFactory<Function> functions = ListFactory.start();
-        
-        Function function = this.definition.getVisibleWhen().getContent();
-        
-        if( function != null )
+        return this.definition.getVisibleWhen().getContent();
+    }
+    
+    protected static final Function createVersionCompatibleFunction( final IModelElement element,
+                                                                     final ModelProperty property )
+    {
+        if( element == null )
         {
-            functions.add( function );
-        }
-        
-        ModelProperty property = null;
-        
-        if( this instanceof PropertyEditorPart )
-        {
-            property = ( (PropertyEditorPart) this ).getProperty();
+            throw new IllegalArgumentException();
         }
         
         if( property != null )
         {
-            function = createVersionCompatibileFunction( property );
-        }
-        
-        if( function != null )
-        {
-            functions.add( function );
-        }
-        
-        return AndFunction.create( functions.result() );
-    }
-    
-    private final Function createVersionCompatibileFunction( final ModelProperty property )
-    {
-        final MasterVersionCompatibilityService service = getLocalModelElement().service( property, MasterVersionCompatibilityService.class );
-        
-        if( service != null )
-        {
-            final Function function = new Function()
+            final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
+            
+            if( service != null )
             {
-                @Override
-                public String name()
+                final Function function = new Function()
                 {
-                    return "VersionCompatible";
-                }
-
-                @Override
-                public FunctionResult evaluate( final FunctionContext context )
-                {
-                    return new FunctionResult( this, context )
+                    @Override
+                    public String name()
                     {
-                        private Listener listener;
-                        
-                        @Override
-                        protected void init()
+                        return "VersionCompatible";
+                    }
+    
+                    @Override
+                    public FunctionResult evaluate( final FunctionContext context )
+                    {
+                        return new FunctionResult( this, context )
                         {
-                            this.listener = new Listener()
+                            private Listener listener;
+                            
+                            @Override
+                            protected void init()
                             {
-                                @Override
-                                public void handle( final Event event )
+                                this.listener = new Listener()
                                 {
-                                    refresh();
-                                }
-                            };
-                            
-                            service.attach( this.listener );
-                        }
-
-                        @Override
-                        protected Object evaluate()
-                        {
-                            return service.compatible();
-                        }
-                        
-                        @Override
-                        public void dispose()
-                        {
-                            super.dispose();
-                            
-                            if( this.listener != null )
-                            {
-                                service.detach( this.listener );
+                                    @Override
+                                    public void handle( final Event event )
+                                    {
+                                        refresh();
+                                    }
+                                };
+                                
+                                service.attach( this.listener );
                             }
-                        }
-                    };
-                }
-            };
-            
-            function.init();
-            
-            return function;
+    
+                            @Override
+                            protected Object evaluate()
+                            {
+                                return service.compatible();
+                            }
+                            
+                            @Override
+                            public void dispose()
+                            {
+                                super.dispose();
+                                
+                                if( this.listener != null )
+                                {
+                                    service.detach( this.listener );
+                                }
+                            }
+                        };
+                    }
+                };
+                
+                function.init();
+                
+                return function;
+            }
         }
         
         return null;
