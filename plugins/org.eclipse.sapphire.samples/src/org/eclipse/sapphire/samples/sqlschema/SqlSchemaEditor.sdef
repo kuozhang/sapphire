@@ -107,7 +107,6 @@
                         </sequence-layout-constraint>
                     </rectangle>
                 </content>
-                <corner-radius>8</corner-radius>
             </rectangle>
             <width>120</width>
             <resizable>true</resizable>
