@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
@@ -198,8 +199,9 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		if (hasFocus || selected) 
 		{
 			graphics.setForegroundColor(resourceCache.getColor(OUTLINE_FOREGROUND));
+			Rectangle expanded = r.getExpanded(1, 1);
 			graphics.setLineStyle(SWT.LINE_DASH);
-			graphics.drawRoundRectangle(r,
+			graphics.drawRoundRectangle(expanded,
 					Math.max(0, cornerDimension.width - (int) lineInset),
 					Math.max(0, cornerDimension.height - (int) lineInset));				
 		}

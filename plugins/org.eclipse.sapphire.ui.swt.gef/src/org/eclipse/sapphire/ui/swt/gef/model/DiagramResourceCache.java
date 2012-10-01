@@ -35,7 +35,9 @@ public class DiagramResourceCache {
 	private List<Color> colors = new ArrayList<Color>();
 	private List<Font> fonts = new ArrayList<Font>();
 	
-	public DiagramResourceCache() {
+    private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
+
+    public DiagramResourceCache() {
 		FontDescriptor descriptor = JFaceResources.getDefaultFontDescriptor();
 		FontData[] fontData = descriptor.getFontData();
 		FontData smallerFontData = new FontData(fontData[0].getName(), fontData[0].getHeight()-1, 0);
@@ -83,6 +85,10 @@ public class DiagramResourceCache {
 		final Color newColor = new Color(Display.getCurrent(), red, green, blue);
 		colors.add(newColor);
 		return newColor;
+    }
+    
+    public Color getOutlineColor() {
+    	return getColor(OUTLINE_FOREGROUND);
     }
     
     public Font getDefaultFont() {

@@ -21,7 +21,6 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
@@ -63,7 +62,7 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 		if (child instanceof DiagramNodeEditPart) {
 			boolean canResizeShape = ((DiagramNodeEditPart)child).getCastedModel().getModelPart().canResizeShape();
 			if (canResizeShape) {
-				return new ResizableEditPolicy();
+				return new DiagramNodeResizableEditPolicy(((DiagramNodeEditPart)child).getCastedModel().getDiagramModel().getResourceCache());
 			} else {
 				return new DiagramNodeSelectionEditPolicy();
 			}
