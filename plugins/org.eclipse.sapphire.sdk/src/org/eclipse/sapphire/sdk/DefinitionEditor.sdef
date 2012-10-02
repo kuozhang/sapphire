@@ -46,9 +46,8 @@
                 <label>documentation</label>
                 <image>Documentation.gif</image>
                 <section>
+                    <description>Define named documentation content. Reference the same documentation content from multiple parts.</description>
                     <content>
-                        <label>Define named documentation content. Reference the same documentation content from multiple parts.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add documentation content</label>
@@ -73,9 +72,8 @@
             <node>
                 <label>parts</label>
                 <section>
+                    <description>Define parts.</description>
                     <content>
-                        <label>Define parts.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a part</label>
@@ -181,9 +179,8 @@
         <node>
             <label>handler filters</label>
             <section>
+                <description>Define action handler filters.</description>
                 <content>
-                    <label>Define action handler filters.</label>
-                    <spacer/>
                     <actuator>
                         <action-id>Sapphire.Add</action-id>
                         <label>Add an action handler filter</label>
@@ -733,7 +730,7 @@
             <model-element-type>SectionDef</model-element-type>
             <label>${ Id == null ? &quot;Section&quot; : Id }</label>
             <section>
-                <label>Section</label>
+                <label>section</label>
                 <content>
                     <property-editor>Label</property-editor>
                     <property-editor>
@@ -1111,9 +1108,13 @@
                         <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                         <image>${ Image() }</image>
                         <section>
-                            <label>Section</label>
+                            <label>section</label>
                             <content>
                                 <property-editor>Label</property-editor>
+                                <property-editor>
+                                    <height>75</height>
+                                    <property>Description</property>
+                                </property-editor>
                                 <property-editor>VisibleWhen</property-editor>
                             </content>
                         </section>
@@ -1202,9 +1203,13 @@
                                 <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                                 <image>${ Image() }</image>
                                 <section>
-                                    <label>Section</label>
+                                    <label>section</label>
                                     <content>
                                         <property-editor>Label</property-editor>
+                                        <property-editor>
+                                            <height>75</height>
+                                            <property>Description</property>
+                                        </property-editor>
                                         <property-editor>VisibleWhen</property-editor>
                                     </content>
                                 </section>

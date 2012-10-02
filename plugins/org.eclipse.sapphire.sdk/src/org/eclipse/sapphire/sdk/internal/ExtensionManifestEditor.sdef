@@ -28,9 +28,8 @@
             <node>
                 <label>services</label>
                 <section>
+                    <description>Define services.</description>
                     <content>
-                        <label>Define services.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a service</label>
@@ -77,9 +76,8 @@
             <node>
                 <label>functions</label>
                 <section>
+                    <description>Define expression language functions.</description>
                     <content>
-                        <label>Define expression language functions.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add an expression language function</label>

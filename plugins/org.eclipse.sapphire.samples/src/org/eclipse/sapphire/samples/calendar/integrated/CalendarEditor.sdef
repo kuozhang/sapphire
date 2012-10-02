@@ -53,13 +53,12 @@
                 <label>events</label>
                 <section>
                     <content>
-                        <label>Use this simple editor to organize your calendar.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add an event</label>
                         </actuator>
                     </content>
+                    <description>Use this simple editor to organize your calendar.</description>
                 </section>
                 <node-factory>
                     <property>Events</property>

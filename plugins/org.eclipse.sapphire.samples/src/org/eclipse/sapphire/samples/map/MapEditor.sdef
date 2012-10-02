@@ -165,9 +165,8 @@
             <node>
                 <label>Locations</label>
                 <section>
+                    <description>Locations in the map.</description>
                     <content>
-                        <label>Locations in the map</label>
-                        <spacer/>
                         <property-editor>Locations</property-editor>
                         <separator>
                             <label>Railway Routes</label>
@@ -194,9 +193,8 @@
             <node>
                 <label>Highway Routes</label>
                 <section>
+                    <description>Highway Routes in the map</description>
                     <content>
-                        <label>Highway Routes in the map</label>
-                        <spacer/>
                         <property-editor>Routes</property-editor>
                     </content>
                 </section>

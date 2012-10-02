@@ -186,13 +186,12 @@
                 <label>bug reports</label>
                 <section>
                     <content>
-                        <label>Use this editor to manage your bug database.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a bug report</label>
                         </actuator>
                     </content>
+                    <description>Use this editor to manage your bug database.</description>
                 </section>
                 <node-factory>
                     <property>BugReports</property>
