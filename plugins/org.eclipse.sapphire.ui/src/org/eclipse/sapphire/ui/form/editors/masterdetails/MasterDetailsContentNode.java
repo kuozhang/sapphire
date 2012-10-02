@@ -55,9 +55,9 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.SapphireSection;
+import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeChildDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryCaseDef;
@@ -93,7 +93,7 @@ public final class MasterDetailsContentNode
     private Listener childPartListener;
     private List<Object> rawChildren;
     private MasterDetailsContentNodeList nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNode>emptyList() );
-    private List<SapphireSection> sections;
+    private List<SectionPart> sections;
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private boolean expanded;
     private boolean transformLabelCase = true;
@@ -203,11 +203,11 @@ public final class MasterDetailsContentNode
         
         this.rawChildren = new ArrayList<Object>();
         
-        final ListFactory<SapphireSection> sectionsListFactory = ListFactory.start();
+        final ListFactory<SectionPart> sectionsListFactory = ListFactory.start();
         
-        for( ISapphireSectionDef secdef : this.definition.getSections() )
+        for( SectionDef secdef : this.definition.getSections() )
         {
-            final SapphireSection section = new SapphireSection()
+            final SectionPart section = new SectionPart()
             {
                 @Override
                 protected Object createSectionLayoutData()
@@ -506,7 +506,7 @@ public final class MasterDetailsContentNode
         getContentTree().setSelectedNode( this );
     }
     
-    public List<SapphireSection> getSections()
+    public List<SectionPart> getSections()
     {
         return this.sections;
     }

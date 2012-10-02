@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart.ValidationChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.SapphireSection;
+import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode.NodeListEvent;
@@ -98,7 +98,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
             attach( child );
         }
         
-        for( SapphireSection section : node.getSections() )
+        for( SectionPart section : node.getSections() )
         {
             section.attach( this.sectionListener );
         }
@@ -113,7 +113,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
             detach( child );
         }
         
-        for( SapphireSection section : node.getSections() )
+        for( SectionPart section : node.getSections() )
         {
             section.detach( this.sectionListener );
         }
@@ -144,7 +144,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
     
     private MasterDetailsContentNode findNextProblemDown( final MasterDetailsContentNode node )
     {
-        for( SapphireSection section : node.getSections() )
+        for( SectionPart section : node.getSections() )
         {
             if( section.visible() && section.getValidationState().severity() == this.severity )
             {
@@ -197,9 +197,9 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
         return null;
     }
     
-    private PropertyEditorPart findFirstProblem( final List<SapphireSection> sections )
+    private PropertyEditorPart findFirstProblem( final List<SectionPart> sections )
     {
-        for( SapphireSection section : sections )
+        for( SectionPart section : sections )
         {
             final PropertyEditorPart res = findFirstProblem( section );
             

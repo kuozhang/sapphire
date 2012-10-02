@@ -86,7 +86,7 @@ import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePart.PartEvent;
 import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.SapphireSection;
+import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
@@ -150,7 +150,6 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
-import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
@@ -1743,7 +1742,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                                          final Composite parent ) 
         {
             this.masterSection = new MasterSection( managedForm, parent );
-            final SectionPart spart = new SectionPart(this.masterSection);
+            final org.eclipse.ui.forms.SectionPart spart = new org.eclipse.ui.forms.SectionPart(this.masterSection);
             managedForm.addPart(spart);
         }
 
@@ -1814,7 +1813,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     private final class MasterSection extends Section
     {
         private IManagedForm managedForm;
-        private SectionPart sectionPart;
+        private org.eclipse.ui.forms.SectionPart sectionPart;
         private TreeViewer treeViewer;
         private Tree tree;
         
@@ -1878,7 +1877,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             this.treeViewer = filteredTree.getViewer();
             this.tree = this.treeViewer.getTree();
             
-            this.sectionPart = new SectionPart( this );
+            this.sectionPart = new org.eclipse.ui.forms.SectionPart( this );
             this.managedForm.addPart( this.sectionPart );
     
             contentTree.attach
@@ -1948,7 +1947,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         private IManagedForm mform;
         private Composite composite;
         private final Listener listener;
-        private List<SapphireSection> sections;
+        private List<SectionPart> sections;
         
         public DetailsSection()
         {
@@ -2025,7 +2024,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 control.dispose();
             }
             
-            for( SapphireSection section : this.sections )
+            for( SectionPart section : this.sections )
             {
                 section.detach( this.listener );
             }
@@ -2036,7 +2035,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 
                 final FormEditorRenderingContext context = new FormEditorRenderingContext( this.node, this.composite, this.mform.getToolkit() );
                 
-                for( SapphireSection section : this.node.getSections() )
+                for( SectionPart section : this.node.getSections() )
                 {
                     section.render( context );
                 }
@@ -2046,7 +2045,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 this.sections = Collections.emptyList();
             }
             
-            for( SapphireSection section : this.sections )
+            for( SectionPart section : this.sections )
             {
                 section.attach( this.listener );
             }
@@ -2056,7 +2055,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         
         public void dispose()
         {
-            for( SapphireSection section : this.sections )
+            for( SectionPart section : this.sections )
             {
                 section.detach( this.listener );
             }

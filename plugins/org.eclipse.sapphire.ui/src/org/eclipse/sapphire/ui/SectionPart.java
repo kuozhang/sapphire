@@ -16,8 +16,12 @@ package org.eclipse.sapphire.ui;
 
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.reflowOnResize;
 
 import java.util.Collections;
 import java.util.Set;
@@ -29,10 +33,11 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
-import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -48,10 +53,17 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public class SapphireSection extends CompositePart
+public class SectionPart extends CompositePart
 {
-    private Section section;
     private FunctionResult titleFunctionResult;
+    private FunctionResult descriptionFunctionResult;
+    
+    private SapphireRenderingContext context;
+    private Section section;
+    private SapphireFormText descriptionFormText;
+    private Composite descriptionSpacer;
+    private Composite sectionContentOuterComposite;
+    private Composite sectionContentInnerComposite;
     private boolean expanded;
     
     @Override
@@ -59,23 +71,30 @@ public class SapphireSection extends CompositePart
     {
         super.init();
         
-        final ISapphireSectionDef def = definition();
+        final SectionDef def = definition();
         
         this.expanded = ! def.getCollapsedInitially().getContent();
     }
     
     @Override
-    public ISapphireSectionDef definition()
+    public SectionDef definition()
     {
-        return (ISapphireSectionDef) super.definition();
+        return (SectionDef) super.definition();
     }
 
     @Override
     protected Composite createOuterComposite( final SapphireRenderingContext context )
     {
+        this.context = context;
+        this.section = null;
+        this.descriptionFormText = null;
+        this.descriptionSpacer = null;
+        this.sectionContentOuterComposite = null;
+        this.sectionContentInnerComposite = null;
+        
         final FormToolkit toolkit = new FormToolkit( context.getDisplay() );
         
-        final ISapphireSectionDef def = definition();
+        final SectionDef def = definition();
         
         final Composite outerComposite = new Composite( context.getComposite(), SWT.NONE );
         outerComposite.setLayoutData( createSectionLayoutData() );
@@ -98,7 +117,7 @@ public class SapphireSection extends CompositePart
                 {
                     public void expansionStateChanged( final ExpansionEvent event )
                     {
-                        SapphireSection.this.expanded = event.getState();
+                        SectionPart.this.expanded = event.getState();
                     }
                 }
             );
@@ -121,9 +140,31 @@ public class SapphireSection extends CompositePart
         
         refreshTitle();
         
-        final Composite sectionContentComposite = new Composite( this.section, SWT.NONE );
-        sectionContentComposite.setLayout( glayout( 2, 0, 0 ) );
-        context.adapt( sectionContentComposite );
+        this.sectionContentOuterComposite = new Composite( this.section, SWT.NONE );
+        this.sectionContentOuterComposite.setLayout( glayout( 1, 0, 0 ) );
+        context.adapt( this.sectionContentOuterComposite );
+
+        this.descriptionFunctionResult = initExpression
+        (
+            getModelElement(),
+            def.getDescription().getContent(), 
+            String.class,
+            null,
+            new Runnable()
+            {
+                public void run()
+                {
+                    refreshDescription();
+                }
+            }
+        );
+
+        refreshDescription();
+        
+        this.sectionContentInnerComposite = new Composite( this.sectionContentOuterComposite, SWT.NONE );
+        this.sectionContentInnerComposite.setLayoutData( gdhfill() );
+        this.sectionContentInnerComposite.setLayout( glayout( 2, 0, 0 ) );
+        context.adapt( this.sectionContentInnerComposite );
         
         final SapphireActionGroup actions = getActions();
         final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
@@ -139,9 +180,9 @@ public class SapphireSection extends CompositePart
         keyboardActionsPresentation.render();
         
         toolkit.paintBordersFor( this.section );
-        this.section.setClient( sectionContentComposite );
+        this.section.setClient( this.sectionContentOuterComposite );
         
-        return sectionContentComposite;
+        return this.sectionContentInnerComposite;
     }
     
     protected Object createSectionLayoutData()
@@ -151,12 +192,7 @@ public class SapphireSection extends CompositePart
     
     private void refreshTitle()
     {
-        String title = null;
-        
-        if( this.titleFunctionResult != null )
-        {
-            title = (String) this.titleFunctionResult.value();
-        }
+        String title = (String) this.titleFunctionResult.value();
         
         if( title == null )
         {
@@ -171,6 +207,63 @@ public class SapphireSection extends CompositePart
         this.section.setText( title.trim() );
     }
 
+    private void refreshDescription()
+    {
+        String description = (String) this.descriptionFunctionResult.value();
+        
+        if( description != null )
+        {
+            description = description.trim();
+            
+            if( description.length() == 0 )
+            {
+                description = null;
+            }
+        }
+        
+        if( description == null )
+        {
+            if( this.descriptionFormText != null )
+            {
+                this.descriptionFormText.dispose();
+                this.descriptionFormText = null;
+                this.descriptionSpacer.dispose();
+                this.descriptionSpacer = null;
+            }
+        }
+        else
+        {
+            if( this.descriptionFormText == null )
+            {
+                this.descriptionFormText = new SapphireFormText( this.sectionContentOuterComposite, SWT.NONE );
+                this.descriptionFormText.setLayoutData( gdhindent( gdwhint( gdhfill(), 100 ), 9 ) );
+                reflowOnResize( this.descriptionFormText );
+                
+                this.descriptionSpacer = new Composite( this.sectionContentOuterComposite, SWT.NONE );
+                this.descriptionSpacer.setLayoutData( gdhhint( gdhfill(), 5 ) );
+                this.descriptionSpacer.setLayout( glayout( 1, 0, 0, 0, 0 ) );
+                this.context.adapt( this.descriptionSpacer );
+                
+                if( this.sectionContentInnerComposite != null )
+                {
+                    this.descriptionFormText.moveAbove( this.sectionContentInnerComposite );
+                    this.descriptionSpacer.moveAbove( this.sectionContentInnerComposite );
+                }
+            }
+            
+            description = description.replace( "<", "&lt;" );
+            
+            final StringBuilder buf = new StringBuilder();
+            buf.append( "<form><p vspace=\"false\">");
+            buf.append( description );
+            buf.append( "</p></form>" );
+            
+            this.descriptionFormText.setText( buf.toString(), true, false );
+        }
+        
+        this.sectionContentOuterComposite.layout();
+    }
+    
     @Override
     public Set<String> getActionContexts()
     {

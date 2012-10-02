@@ -50,6 +50,10 @@
     <li><a href="#ExpressionLanguage-UseInNodeFactoryVisibilityConstraint">Use in Node Factory Visibility Constraint</a></li>
     <li><a href="#ExpressionLanguage-UseInPropertyEditorVisibilityConstraint">Use in Property Editor Visibility Constraint</a></li>
   </ol>
+  <li><a href="#Forms">Forms</a></li>
+  <ol type="A">
+    <li><a href="#Forms-SectionDescription">Section Description</a></li>
+  </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></li>
@@ -609,6 +613,39 @@ ${ Name.LowerCase() }</code></pre>
     &lt;property>Description&lt;/property>
     &lt;visible-when></font>${ VersionMatches( Root().Version, "[1.1" ) }<font color="#888888">&lt;/condition>
 &lt;/property-editor></font></code></pre>
+
+
+<h2><a name="Forms"><a name="Forms-SectionDescription">Section Description</a></a></h2>
+
+<p>A common pattern in forms involves a description text at the top of a section to explain the contents of the section. This 
+pattern can be implemented using a label followed by a spacer in the section content, but this approach fails to fully convey
+the developer's intent and can lead to inconsistent presentation. A common mistake is failing to add a spacer after the label.</p>
+
+<p>The description for a section can now be specified directly.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;section>
+    &lt;label>shipping information&lt;/label></font>
+    &lt;description>If not specified, billing information is used for shipping purposes.&lt;/description>
+    <font color="#888888">&lt;content>
+        &lt;with>
+            &lt;path>ShippingInformation&lt;/path>
+            &lt;default-panel>
+                &lt;content>
+                    &lt;property-editor>Name&lt;/property-editor>
+                    &lt;property-editor>Organization&lt;/property-editor>
+                    &lt;property-editor>Street&lt;/property-editor>
+                    &lt;property-editor>City&lt;/property-editor>
+                    &lt;property-editor>State&lt;/property-editor>
+                    &lt;property-editor>ZipCode&lt;/property-editor>
+                &lt;/content>
+            &lt;/default-panel>
+        &lt;/with>
+    &lt;/content>
+&lt;/section></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/SectionDescription.png"/></p>
 
 
 <h2><a name="Miscellaneous"><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></a></h2>

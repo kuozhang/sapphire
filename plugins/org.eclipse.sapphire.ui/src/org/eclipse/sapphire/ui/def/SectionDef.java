@@ -18,10 +18,13 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,9 +33,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "section" )
 @GenerateImpl
 
-public interface ISapphireSectionDef extends CompositeDef
+public interface SectionDef extends CompositeDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireSectionDef.class );
+    ModelElementType TYPE = new ModelElementType( SectionDef.class );
     
     // *** Label ***
     
@@ -46,6 +49,21 @@ public interface ISapphireSectionDef extends CompositeDef
     Value<Function> getLabel();
     void setLabel( String value );
     void setLabel( Function value );
+    
+    // *** Description ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "description" )
+    @LongString
+    @Localizable
+    @Whitespace( collapse = true )
+    @XmlValueBinding( path = "description" )
+    
+    ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );
+    
+    Value<Function> getDescription();
+    void setDescription( String value );
+    void setDescription( Function value );
     
     // *** Collapsible ***
     

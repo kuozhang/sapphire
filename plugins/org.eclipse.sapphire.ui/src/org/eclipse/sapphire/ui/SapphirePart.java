@@ -61,7 +61,7 @@ import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
-import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
@@ -1035,9 +1035,9 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SapphireWizardPagePart();
         }
-        else if( definition instanceof ISapphireSectionDef )
+        else if( definition instanceof SectionDef )
         {
-            part = new SapphireSection();
+            part = new SectionPart();
         }
         else if( definition instanceof CompositeDef )
         {

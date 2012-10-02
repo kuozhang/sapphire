@@ -16,7 +16,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDetailsSectionDefLabelDefaultValueProvider;
 
 /**
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDet
 
 public interface MasterDetailsSectionDef
 
-    extends ISapphireSectionDef
+    extends SectionDef
     
 {
     ModelElementType TYPE = new ModelElementType( MasterDetailsSectionDef.class );
@@ -37,6 +37,6 @@ public interface MasterDetailsSectionDef
     
     @Service( impl = MasterDetailsSectionDefLabelDefaultValueProvider.class )
     
-    ValueProperty PROP_LABEL = new ValueProperty( TYPE, ISapphireSectionDef.PROP_LABEL );
+    ValueProperty PROP_LABEL = new ValueProperty( TYPE, SectionDef.PROP_LABEL );
     
 }
