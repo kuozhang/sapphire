@@ -52,7 +52,7 @@ public final class SortedSetFactory<E>
             throw new IllegalArgumentException();
         }
         
-        return new SingletonSortedSet<E>( element );
+        return new SingletonSortedSet<E>( null, element );
     }
 
     public static <E> SortedSet<E> unmodifiable( final E... elements )
@@ -286,7 +286,7 @@ public final class SortedSetFactory<E>
         }
         else if( this.firstElement != null )
         {
-            return singleton( this.firstElement );
+            return new SingletonSortedSet<E>( this.comparator, this.firstElement );
         }
         else
         {
@@ -420,10 +420,13 @@ public final class SortedSetFactory<E>
     
     private static final class SingletonSortedSet<E> implements SortedSet<E>
     {
+        private final Comparator<E> comparator;
         private final E entry;
         
-        public SingletonSortedSet( final E entry )
+        public SingletonSortedSet( final Comparator<E> comparator,
+                                   final E entry )
         {
+            this.comparator = comparator;
             this.entry = entry;
         }
 
@@ -437,9 +440,24 @@ public final class SortedSetFactory<E>
             return false;
         }
 
+        @SuppressWarnings( "unchecked" )
+        
         public boolean contains( final Object object )
         {
-            return equal( this.entry, object );
+            return ( this.comparator == null ? equal( this.entry, object ) : this.comparator.compare( this.entry, (E) object ) == 0 );
+        }
+
+        public boolean containsAll( final Collection<?> collection )
+        {
+            for( Object object : collection )
+            {
+                if( ! contains( object ) )
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
 
         public Iterator<E> iterator()
@@ -510,19 +528,6 @@ public final class SortedSetFactory<E>
             throw new UnsupportedOperationException();
         }
 
-        public boolean containsAll( final Collection<?> collection )
-        {
-            for( Object object : collection )
-            {
-                if( ! equal( this.entry, object ) )
-                {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-
         public boolean addAll( final Collection<? extends E> collection )
         {
             throw new UnsupportedOperationException();
@@ -561,7 +566,7 @@ public final class SortedSetFactory<E>
 
         public SortedSet<E> tailSet( final E fromElement )
         {
-            if( equal( this.entry, fromElement ) )
+            if( contains( fromElement ) )
             {
                 return this;
             }
