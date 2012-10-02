@@ -41,6 +41,8 @@ import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.TransientProperty;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -263,63 +265,7 @@ public final class MasterDetailsContentNode
             }
             else if( entry instanceof MasterDetailsContentNodeFactoryDef )
             {
-                final MasterDetailsContentNodeFactoryDef def = (MasterDetailsContentNodeFactoryDef) entry;
-                
-                final ModelProperty property = resolve( getLocalModelElement(), def.getProperty().getContent(), params );
-                final NodeFactory factory;
-                
-                if( property instanceof ListProperty )
-                {
-                    final ListProperty prop = (ListProperty) property;
-                    
-                    factory = new NodeFactory( def, params )
-                    {
-                        @Override
-                        public ModelProperty property()
-                        {
-                            return prop;
-                        }
-    
-                        @Override
-                        protected List<IModelElement> elements()
-                        {
-                            return ListFactory.unmodifiable( getLocalModelElement().read( prop ) );
-                        }
-                    };
-                }
-                else if( property instanceof ElementProperty )
-                {
-                    final ElementProperty prop = (ElementProperty) property;
-                    
-                    factory = new NodeFactory( def, params )
-                    {
-                        @Override
-                        public ModelProperty property()
-                        {
-                            return prop;
-                        }
-    
-                        @Override
-                        protected List<IModelElement> elements()
-                        {
-                            final IModelElement element = getLocalModelElement().read( prop ).element();
-                            
-                            if( element == null )
-                            {
-                                return Collections.emptyList();
-                            }
-                            else
-                            {
-                                return Collections.singletonList( element );
-                            }
-                        }
-                    };
-                }
-                else
-                {
-                    throw new IllegalStateException();
-                }
-                
+                final NodeFactory factory = new NodeFactory( getLocalModelElement(), (MasterDetailsContentNodeFactoryDef) entry, params );
                 this.rawChildren.add( factory );
             }
             else
@@ -772,24 +718,38 @@ public final class MasterDetailsContentNode
         return false;
     }
     
-    private abstract class NodeFactory
+    private final class NodeFactory
     {
+        private final IModelElement element;
+        private final ModelProperty property;
         private final MasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
         private final FunctionResult visibleWhenFunctionResult;
         private final Function visibleWhenFunctionForNodes;
         private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
         
-        public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
+        public NodeFactory( final IModelElement element,
+                            final MasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
         {
+            this.element = element;
+            this.property = resolve( element, definition.getProperty().getContent(), params );
             this.definition = definition;
             this.params = params;
             
+            if( this.property instanceof ValueProperty || this.property instanceof ImpliedElementProperty || this.property instanceof TransientProperty )
+            {
+                throw new IllegalArgumentException();
+            }
+            
             this.visibleWhenFunctionResult = initExpression
             (
-                getLocalModelElement(),
-                definition.getVisibleWhen().getContent(), 
+                this.element,
+                AndFunction.create
+                (
+                    definition.getVisibleWhen().getContent(),
+                    createVersionCompatibleFunction( this.element, this.property )
+                ),
                 Boolean.class,
                 Literal.TRUE
             );
@@ -849,9 +809,26 @@ public final class MasterDetailsContentNode
             return (Boolean) this.visibleWhenFunctionResult.value();
         }
         
-        public abstract ModelProperty property();
+        public ModelProperty property()
+        {
+            return this.property;
+        }
         
-        protected abstract List<IModelElement> elements();
+        protected List<IModelElement> elements()
+        {
+            final ListFactory<IModelElement> elementsListFactory = ListFactory.start();
+            
+            if( this.property instanceof ListProperty )
+            {
+                elementsListFactory.add( this.element.read( (ListProperty) this.property ) );
+            }
+            else
+            {
+                elementsListFactory.add( this.element.read( (ElementProperty) this.property ).element() );
+            }
+            
+            return elementsListFactory.result();
+        }
         
         public final List<MasterDetailsContentNode> nodes()
         {

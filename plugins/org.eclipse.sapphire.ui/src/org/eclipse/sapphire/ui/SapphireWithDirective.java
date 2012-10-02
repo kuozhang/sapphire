@@ -40,6 +40,8 @@ import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
@@ -116,6 +118,16 @@ public final class SapphireWithDirective extends PageBookPart
     }
     
     @Override
+    protected Function initVisibleWhenFunction()
+    {
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            createVersionCompatibleFunction( getLocalModelElement(), this.property )
+        );
+    }
+    
+    @Override
     protected CompositeDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
@@ -145,6 +157,11 @@ public final class SapphireWithDirective extends PageBookPart
     @Override
     public void render( final SapphireRenderingContext context )
     {
+        if( ! visible() )
+        {
+            return;
+        }
+        
         final ISapphireWithDirectiveDef def = (ISapphireWithDirectiveDef) this.definition;
         
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
