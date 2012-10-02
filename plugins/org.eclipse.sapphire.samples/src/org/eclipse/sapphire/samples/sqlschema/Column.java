@@ -60,7 +60,7 @@ public interface Column extends IModelElement
     // *** IsPrimaryKey ***
     
 	@Type( base = Boolean.class )
-	@Label( standard = "is primary key" )
+	@Label( standard = "primary key" )
 	@XmlBinding( path = "is-primary-key" )
 	@DefaultValue(text = "false")
 	

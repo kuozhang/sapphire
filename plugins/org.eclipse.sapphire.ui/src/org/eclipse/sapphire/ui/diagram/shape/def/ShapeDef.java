@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
+import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
@@ -26,7 +27,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
 
 @GenerateImpl
 
-public interface ShapeDef extends PartDef
+public interface ShapeDef extends PartDef, IPropertiesViewContributorDef
 {
 	ModelElementType TYPE = new ModelElementType( ShapeDef.class );
 		

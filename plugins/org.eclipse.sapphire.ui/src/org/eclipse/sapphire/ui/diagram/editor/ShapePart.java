@@ -18,7 +18,10 @@ import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -29,12 +32,13 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ShapePart extends SapphirePart 
+public class ShapePart extends SapphirePart implements IPropertiesViewContributorPart
 {
 	private ShapeDef shapeDef;
 	private IModelElement modelElement;
 	private boolean isActive = false;
 	private boolean isEditable = false;
+	private PropertiesViewContributionManager propertiesViewContributionManager; 
 
 	@Override
     protected void init()
@@ -129,4 +133,13 @@ public class ShapePart extends SapphirePart
 		return nodePart;
 	}
 	
+    public PropertiesViewContributionPart getPropertiesViewContribution()
+    {
+        if( this.propertiesViewContributionManager == null )
+        {
+            this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, getLocalModelElement() );
+        }
+        
+        return this.propertiesViewContributionManager.getPropertiesViewContribution();
+    }
 }
