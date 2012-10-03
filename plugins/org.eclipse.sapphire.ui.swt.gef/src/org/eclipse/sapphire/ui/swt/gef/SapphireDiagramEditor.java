@@ -1108,20 +1108,28 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			{
 				// Force a layout first.
 				viewer.flush();
-				viewer.select(editpart);
 				if (part instanceof DiagramNodePart)
 				{
+					viewer.select(editpart);
 					this.getDiagramModel().handleDirectEditing((DiagramNodePart)part);
 				}
 				else if (part instanceof ShapePart)
 				{
 					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
-					DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
-					ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
-					shapeModel.handleDirectEditing();
+					DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)getGraphicalEditPart(nodePart);
+					org.eclipse.draw2d.geometry.Rectangle partBounds = editpart.getFigure().getBounds();
+					org.eclipse.draw2d.geometry.Rectangle nodeBounds = nodeEditPart.getFigure().getBounds();
+					if (nodeBounds.contains(partBounds))
+					{
+						viewer.select(editpart);
+						DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
+						ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
+						shapeModel.handleDirectEditing();
+					}
 				}
 				else if (part instanceof DiagramConnectionPart)
 				{
+					viewer.select(editpart);
 					this.getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
 				}				
 			}
