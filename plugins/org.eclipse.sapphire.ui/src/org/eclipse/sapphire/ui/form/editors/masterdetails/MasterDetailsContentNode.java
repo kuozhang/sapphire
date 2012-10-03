@@ -27,6 +27,7 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
@@ -303,7 +304,91 @@ public final class MasterDetailsContentNode
         (
             super.initVisibleWhenFunction(),
             this.nodeFactoryVisibleFunction,
-            createVersionCompatibleFunction( getModelElement(), this.modelElementProperty )
+            createVersionCompatibleFunction( getModelElement(), this.modelElementProperty ),
+            new Function()
+            {
+                @Override
+                public String name()
+                {
+                    return "VisibleIfChildrenVisible";
+                }
+
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        @Override
+                        protected void init()
+                        {
+                            final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                            {
+                                @Override
+                                protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                {
+                                    refresh();
+                                }
+                            };
+                            
+                            for( SapphirePart section : getSections() )
+                            {
+                                section.attach( listener );
+                            }
+                            
+                            for( Object entry : MasterDetailsContentNode.this.rawChildren )
+                            {
+                                if( entry instanceof MasterDetailsContentNode )
+                                {
+                                    ( (MasterDetailsContentNode) entry ).attach( listener );
+                                }
+                                else if( entry instanceof NodeFactory )
+                                {
+                                    ( (NodeFactory) entry ).attach( listener );
+                                }
+                            }
+                        }
+
+                        @Override
+                        protected Object evaluate()
+                        {
+                            boolean visible = false;
+                            
+                            for( SectionPart section : getSections() )
+                            {
+                                if( section.visible() )
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            
+                            if( ! visible )
+                            {
+                                visible = ( getChildNodeFactoryProperties().size() > 0 );
+                            }
+                            
+                            if( ! visible )
+                            {
+                                for( Object entry : MasterDetailsContentNode.this.rawChildren )
+                                {
+                                    if( entry instanceof MasterDetailsContentNode )
+                                    {
+                                        final MasterDetailsContentNode node = (MasterDetailsContentNode) entry;
+                                        
+                                        if( node.visible() )
+                                        {
+                                            visible = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            return visible;
+                        }
+                    };
+                }
+            }
         );
     }
     
@@ -727,6 +812,7 @@ public final class MasterDetailsContentNode
         private final FunctionResult visibleWhenFunctionResult;
         private final Function visibleWhenFunctionForNodes;
         private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
+        private final ListenerContext listeners = new ListenerContext();
         
         public NodeFactory( final IModelElement element,
                             final MasterDetailsContentNodeFactoryDef definition,
@@ -751,7 +837,14 @@ public final class MasterDetailsContentNode
                     createVersionCompatibleFunction( this.element, this.property )
                 ),
                 Boolean.class,
-                Literal.TRUE
+                Literal.TRUE,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        broadcast( new VisibilityChangedEvent( null ) );
+                    }
+                }
             );
             
             this.visibleWhenFunctionForNodes = new Function()
@@ -894,6 +987,16 @@ public final class MasterDetailsContentNode
             }
             
             return nodes.result();
+        }
+        
+        public final boolean attach( final Listener listener )
+        {
+            return this.listeners.attach( listener );
+        }
+        
+        protected final void broadcast( final Event event )
+        {
+            this.listeners.broadcast( event );
         }
         
         public void dispose()

@@ -24,7 +24,7 @@ public abstract class Function
 {
     private Object origin;
     private boolean originInitialized;
-    private List<Function> operands;
+    private List<Function> operands = ListFactory.empty();
     
     public final void init( final Function... operands )
     {
