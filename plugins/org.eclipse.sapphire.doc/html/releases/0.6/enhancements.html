@@ -362,6 +362,24 @@ instance handy.</p>
 
 <pre class="source-code"><code>Status validation = op.validation( "FileName" );</code></pre>
 
+<p>A method has been added to easily check if a particular property is empty without knowing 
+the type of the property.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{</font>
+    boolean empty( ModelProperty property )
+    boolean empty( String property )
+<font color="#888888">}</font></code></pre>
+
+<p>The empty state is defined as follows:</p>
+
+<ul>
+  <li><b>Value Property</b> - has null value or has default value</li>
+  <li><b>Element Property</b> - element does not exist</li>
+  <li><b>Implied Element Property</b> - none of the child element's properties are non-empty</li>
+  <li><b>List Property</b> - list size is zero</li>
+  <li><b>Transient Property</b> - has null content</li>
+</ul>
 
 <h2><a name="Modeling-ModelElementList">ModelElementList</a></h2>
 

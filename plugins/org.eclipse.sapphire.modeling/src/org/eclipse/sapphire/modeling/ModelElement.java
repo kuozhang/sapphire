@@ -747,6 +747,66 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
 
+    public final boolean empty( final ModelProperty property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return empty( property.getName() );
+    }
+
+    public final boolean empty( final String property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+    
+        if( prop instanceof ValueProperty )
+        {
+            return ( read( (ValueProperty) prop ).getText( false ) == null );
+        }
+        else if( prop instanceof ImpliedElementProperty )
+        {
+            final IModelElement element = read( (ImpliedElementProperty) prop );
+            
+            for( ModelProperty p : element.type().properties() )
+            {
+               if( ! element.empty( p ) )
+               {
+                   return false;
+               }
+            }
+            
+            return true;
+        }
+        else if( prop instanceof ElementProperty )
+        {
+            return ( read( (ElementProperty) prop ).element() == null );
+        }
+        else if( prop instanceof ListProperty )
+        {
+            return ( read( (ListProperty) prop ).isEmpty() );
+        }
+        else if( prop instanceof TransientProperty )
+        {
+            return ( read( (TransientProperty) prop ).content() == null );
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+    }
+
     public final Status validation()
     {
         if( this.validation == null )

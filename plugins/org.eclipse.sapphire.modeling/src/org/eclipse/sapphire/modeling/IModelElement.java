@@ -160,6 +160,42 @@ public interface IModelElement extends IModelParticle
     boolean enabled( ModelProperty property );
     boolean enabled( String property );
     
+    /**
+     * Determines if the specified property is empty. The empty state is defined as follows:
+     * 
+     * <ul>
+     *   <li><b>Value Property</b> - has null value or has default value</li>
+     *   <li><b>Element Property</b> - element does not exist</li>
+     *   <li><b>Implied Element Property</b> - none of the child element's properties are non-empty</li>
+     *   <li><b>List Property</b> - list size is zero</li>
+     *   <li><b>Transient Property</b> - has null content</li>
+     * </ul>
+     * 
+     * @param property the property to check
+     * @return true if the specified property is empty, false otherwise
+     * @throws IllegalArgumentException if property is null or does not belong to this element's type
+     */
+    
+    boolean empty( ModelProperty property );
+
+    /**
+     * Determines if the specified property is empty. The empty state is defined as follows:
+     * 
+     * <ul>
+     *   <li><b>Value Property</b> - has null value or has default value</li>
+     *   <li><b>Element Property</b> - element does not exist</li>
+     *   <li><b>Implied Element Property</b> - none of the child element's properties are non-empty</li>
+     *   <li><b>List Property</b> - list size is zero</li>
+     *   <li><b>Transient Property</b> - has null content</li>
+     * </ul>
+     * 
+     * @param property the name of the property to check
+     * @return true if the specified property is empty, false otherwise
+     * @throws IllegalArgumentException if property is null or does not belong to this element's type
+     */
+    
+    boolean empty( String property );
+    
     Status validation( ModelProperty property );
     Status validation( String property );
     
