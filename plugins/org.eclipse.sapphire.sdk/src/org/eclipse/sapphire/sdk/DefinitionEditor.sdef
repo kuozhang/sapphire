@@ -1521,6 +1521,7 @@
                                     <model-element-type>RectangleDef</model-element-type>
                                     <label>Rectangle</label>
                                     <node-include>RectangleNode</node-include>
+                    				<node-include>PropertiesViewContributionNode</node-include>
                                 </case>
                             </node-factory>
                         </node>

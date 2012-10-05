@@ -25,6 +25,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.swt.SWT;
 
@@ -154,11 +155,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		Dimension minSize = calculateChildrenSize(children, wHint, hHint, false);
 		// Do a second pass, if necessary
 		if (wHint >= 0 && minSize.width > wHint) {
-			minSize = calculateChildrenSize(children, minSize.width, hHint,
-					false);
+			minSize = calculateChildrenSize(children, minSize.width, hHint, false);
 		} else if (hHint >= 0 && minSize.width > hHint) {
-			minSize = calculateChildrenSize(children, wHint, minSize.width,
-					false);
+			minSize = calculateChildrenSize(children, wHint, minSize.width, false);
 		}
 
 		minSize.height += Math.max(0, children.size() - 1) * spacing;
@@ -244,7 +243,33 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * @since 3.3
 	 */
 	protected Dimension getChildPreferredSize(IFigure child, int wHint,	int hHint) {
-		return child.getPreferredSize(wHint, hHint);
+		Dimension dimension = child.getPreferredSize(wHint, hHint);
+		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
+		if (constraint.widthHint > SWT.DEFAULT) {
+			dimension.width = constraint.widthHint; 
+		}
+		if (constraint.heightHint > SWT.DEFAULT) {
+			dimension.height = constraint.heightHint; 
+		}
+		if (constraint.minWidth > SWT.DEFAULT && dimension.width < constraint.minWidth) {
+			dimension.width = constraint.minWidth; 
+		}
+		if (constraint.minHeight > SWT.DEFAULT && dimension.height < constraint.minHeight) {
+			dimension.height = constraint.minHeight; 
+		}
+		if (constraint.minWidth > SWT.DEFAULT && dimension.width < constraint.minWidth) {
+			dimension.width = constraint.minWidth; 
+		}
+		if (constraint.minHeight > SWT.DEFAULT && dimension.height < constraint.minHeight) {
+			dimension.height = constraint.minHeight; 
+		}
+		if (constraint.maxWidth > SWT.DEFAULT && dimension.width > constraint.maxWidth) {
+			dimension.width = constraint.maxWidth; 
+		}
+		if (constraint.maxHeight > SWT.DEFAULT && dimension.height > constraint.maxHeight) {
+			dimension.height = constraint.maxHeight; 
+		}
+		return dimension;
 	}
 
 	/**
@@ -313,14 +338,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 		/*
 		 * Calculate sum of preferred heights of all children(totalHeight).
-		 * Calculate sum of minimum heights of all children(minHeight). Cache
-		 * Preferred Sizes and Minimum Sizes of all children.
-		 * 
-		 * totalHeight is the sum of the preferred heights of all children
-		 * totalMinHeight is the sum of the minimum heights of all children
-		 * prefMinSumHeight is the sum of the difference between all children's
-		 * preferred heights and minimum heights. (This is used as a ratio to
-		 * calculate how much each child will shrink).
+		 * Cache Preferred Sizes and Minimum Sizes of all children.
 		 */
 		IFigure child;
 		int totalHeight = 0;
@@ -346,8 +364,6 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				totalHeight += prefSizes[i].height;
 			}
 			totalMargin += marginInsets[i].top + marginInsets[i].bottom;
-
-			//totalMinHeight += minSizes[i].height;
 		}
 		totalHeight += (numChildren - 1) * spacing;
 		totalHeight += margins.top + margins.bottom;
@@ -366,6 +382,8 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		y += margins.top;
 
 		for (int i = 0; i < numChildren; i++) {
+			child = (IFigure) children.get(i);
+
 			int prefHeight = prefSizes[i].height;
 			int minHeight = minSizes[i].height;
 			int prefWidth = prefSizes[i].width;
@@ -378,27 +396,29 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			if (getMajorExpand(constraint)) {
 				int height = minHeight + extraHeight;
 				availableBoundHeight = height;
-				int offset = 0;
-				if (height > prefHeight) {
-					// alignment
-					switch (getMajorAlignment(constraint)) {
-					case SWT.CENTER:
-						offset = (height - prefHeight) / 2;
-						break;
-					case SWT.RIGHT:
-					case SWT.BOTTOM:
-						offset = height - prefHeight;
-						break;
+				if (child instanceof RectangleFigure) {
+					newBounds = new Rectangle(x, y + marginInset.top, prefWidth, height);
+				} else {
+					int offset = 0;
+					if (height > prefHeight) {
+						// alignment
+						switch (getMajorAlignment(constraint)) {
+						case SWT.CENTER:
+							offset = (height - prefHeight) / 2;
+							break;
+						case SWT.RIGHT:
+						case SWT.BOTTOM:
+							offset = height - prefHeight;
+							break;
+						}
+						height = prefHeight;
 					}
-					height = prefHeight;
+					newBounds = new Rectangle(x, y + marginInset.top + offset, prefWidth, height);
 				}
-				newBounds = new Rectangle(x, y + marginInset.top + offset, prefWidth, height);
 			} else {
 				newBounds = new Rectangle(x, y + marginInset.top, prefWidth, prefHeight);
 				availableBoundHeight = prefHeight;
 			}
-
-			child = (IFigure) children.get(i);
 
 			int width = Math.min(prefWidth,	transposer.t(child.getMaximumSize()).width);
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
