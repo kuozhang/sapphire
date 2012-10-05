@@ -16,7 +16,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
+import org.eclipse.sapphire.ui.def.WhitespaceSeparatorDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
@@ -24,15 +24,17 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireSpacer
-
-    extends SapphirePart
-    
+public final class WhitespaceSeparatorPart extends SeparatorPart
 {
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final ISapphireSpacerDef def = (ISapphireSpacerDef) this.definition;
+        if( ! visible() )
+        {
+            return;
+        }
+        
+        final WhitespaceSeparatorDef def = (WhitespaceSeparatorDef) this.definition;
         
         final Composite spacer = new Composite( context.getComposite(), SWT.NONE );
         spacer.setLayoutData( gdhhint( gdhspan( gdhfill(), 2 ), def.getSize().getContent() ) );

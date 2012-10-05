@@ -18,7 +18,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
+import org.eclipse.sapphire.ui.def.LineSeparatorDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -27,15 +27,17 @@ import org.eclipse.swt.widgets.Label;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireSeparator
-
-    extends SapphirePart
-    
+public final class LineSeparatorPart extends SeparatorPart
 {
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final ISapphireSeparatorDef def = (ISapphireSeparatorDef) this.definition;
+        if( ! visible() )
+        {
+            return;
+        }
+        
+        final LineSeparatorDef def = (LineSeparatorDef) this.definition;
         
         final Composite separatorComposite = new Composite( context.getComposite(), SWT.NONE );
         separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );

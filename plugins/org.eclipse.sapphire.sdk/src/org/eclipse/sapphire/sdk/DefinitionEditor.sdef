@@ -423,8 +423,8 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireSeparatorDef</model-element-type>
-            <label>Separator</label>
+            <model-element-type>LineSeparatorDef</model-element-type>
+            <label>Line Separator</label>
             <image>${ Image() }</image>
             <section>
                 <content>
@@ -436,8 +436,8 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireSpacerDef</model-element-type>
-            <label>Spacer</label>
+            <model-element-type>WhitespaceSeparatorDef</model-element-type>
+            <label>Whitespace Separator</label>
             <image>${ Image() }</image>
             <section>
                 <content>

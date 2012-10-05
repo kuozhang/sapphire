@@ -38,8 +38,8 @@ public interface FormDef extends FormComponentDef
         possible = 
         { 
             PropertyEditorDef.class, 
-            ISapphireSeparatorDef.class,
-            ISapphireSpacerDef.class,
+            LineSeparatorDef.class,
+            WhitespaceSeparatorDef.class,
             ISapphireLabelDef.class,
             ISapphireGroupDef.class,
             ISapphireWithDirectiveDef.class,
@@ -64,8 +64,8 @@ public interface FormDef extends FormComponentDef
         mappings =
         {
             @XmlListBinding.Mapping( element = "property-editor", type = PropertyEditorDef.class ),
-            @XmlListBinding.Mapping( element = "separator", type = ISapphireSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "spacer", type = ISapphireSpacerDef.class ),
+            @XmlListBinding.Mapping( element = "separator", type = LineSeparatorDef.class ),
+            @XmlListBinding.Mapping( element = "spacer", type = WhitespaceSeparatorDef.class ),
             @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
             @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),

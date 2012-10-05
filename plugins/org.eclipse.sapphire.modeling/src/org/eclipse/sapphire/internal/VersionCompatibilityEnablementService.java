@@ -12,10 +12,13 @@
 package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.Service;
@@ -33,6 +36,7 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
 {
     private MasterVersionCompatibilityService versionCompatibilityService;
     private Listener versionCompatibilityServiceListener;
+    private Listener propertyListener;
     
     @Override
     protected void initEnablementService()
@@ -52,12 +56,33 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
         };
         
         this.versionCompatibilityService.attach( this.versionCompatibilityServiceListener );
+        
+        this.propertyListener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                refresh();
+            }
+        };
+        
+        if( property instanceof ImpliedElementProperty )
+        {
+            element.attach( this.propertyListener, property.getName() + "/*" );
+        }
+        else
+        {
+            element.attach( this.propertyListener, property.getName() );
+        }
     }
 
     @Override
     protected EnablementServiceData compute()
     {
-        return new EnablementServiceData( this.versionCompatibilityService.compatible() );
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+        
+        return new EnablementServiceData( this.versionCompatibilityService.compatible() || ! element.empty( property ) );
     }
     
     @Override
@@ -65,9 +90,18 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
     {
         super.dispose();
         
-        if( this.versionCompatibilityService != null )
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+        
+        this.versionCompatibilityService.detach( this.versionCompatibilityServiceListener );
+        
+        if( property instanceof ImpliedElementProperty )
         {
-            this.versionCompatibilityService.detach( this.versionCompatibilityServiceListener );
+            element.detach( this.propertyListener, property.getName() + "/*" );
+        }
+        else
+        {
+            element.detach( this.propertyListener, property.getName() );
         }
     }
     

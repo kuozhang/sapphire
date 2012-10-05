@@ -65,69 +65,60 @@ public class FormPart extends FormComponentPart
     @Override
     protected Function initVisibleWhenFunction()
     {
-        final Function function = new Function()
-        {
-            @Override
-            public String name()
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            new Function()
             {
-                return "VisibleIfChildrenVisible";
-            }
-
-            @Override
-            public FunctionResult evaluate( final FunctionContext context )
-            {
-                return new FunctionResult( this, context )
+                @Override
+                public String name()
                 {
-                    @Override
-                    protected void init()
+                    return "VisibleIfChildrenVisible";
+                }
+    
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
                     {
-                        final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                        @Override
+                        protected void init()
                         {
-                            @Override
-                            protected void handleTypedEvent( final VisibilityChangedEvent event )
+                            final Listener listener = new FilteredListener<VisibilityChangedEvent>()
                             {
-                                refresh();
-                            }
-                        };
-                        
-                        for( SapphirePart part : getChildParts() )
-                        {
-                            part.attach( listener );
-                        }
-                    }
-
-                    @Override
-                    protected Object evaluate()
-                    {
-                        boolean visible = false;
-                        
-                        for( SapphirePart part : getChildParts() )
-                        {
-                            if( part.visible() )
+                                @Override
+                                protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                {
+                                    refresh();
+                                }
+                            };
+                            
+                            for( SapphirePart part : getChildParts() )
                             {
-                                visible = true;
-                                break;
+                                part.attach( listener );
                             }
                         }
-                        
-                        return visible;
-                    }
-                };
+    
+                        @Override
+                        protected Object evaluate()
+                        {
+                            boolean visible = false;
+                            
+                            for( SapphirePart part : getChildParts() )
+                            {
+                                if( part.visible() )
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            
+                            return visible;
+                        }
+                    };
+                }
             }
-        };
-        
-        function.init();
-        
-        final Function base = super.initVisibleWhenFunction();
-        
-        if( base == null )
-        {
-            return function;
-        }
-        else
-        {
-            return AndFunction.create( base, function );
-        }
+        );
     }
     
     protected List<SapphirePart> initChildParts()
