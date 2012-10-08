@@ -29,7 +29,7 @@ public interface IModelElement extends IModelParticle
     ModelElementType type();
     ModelProperty getParentProperty();
     
-    void initialize();
+    <T extends IModelElement> T initialize();
     
     <T extends ModelProperty> T property( String name );
     List<ModelProperty> properties();
@@ -153,18 +153,24 @@ public interface IModelElement extends IModelParticle
     <S extends Service> List<S> services( Class<S> serviceType );
     
     <S extends Service> S service( ModelProperty property, Class<S> serviceType );
+    <S extends Service> S service( String property, Class<S> serviceType );
     <S extends Service> List<S> services( ModelProperty property, Class<S> serviceType );
+    <S extends Service> List<S> services( String property, Class<S> serviceType );
     
     boolean enabled( ModelProperty property );
+    boolean enabled( String property );
     
     Status validation( ModelProperty property );
+    Status validation( String property );
     
     boolean attach( Listener listener );
     void attach( Listener listener, String path );
     void attach( Listener listener, ModelPath path );
+    void attach( Listener listener, ModelProperty property );
     boolean detach( Listener listener );
     void detach( Listener listener, String path );
     void detach( Listener listener, ModelPath path );
+    void detach( Listener listener, ModelProperty property );
     
     void dispose();
     boolean disposed();

@@ -69,7 +69,11 @@ public final class SapphireAction extends SapphireActionSystemPart
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof EnablementChangedEvent )
+                if( event instanceof VisibilityEvent )
+                {
+                    refreshVisibilityState();
+                }
+                else if( event instanceof EnablementChangedEvent )
                 {
                     refreshEnablementState();
                 }
@@ -89,6 +93,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                 {
                     if( event instanceof HandlersChangedEvent || event instanceof FiltersChangedEvent )
                     {
+                        refreshVisibilityState();
                         refreshEnablementState();
                         refreshCheckedState();
                     }
@@ -539,6 +544,22 @@ public final class SapphireAction extends SapphireActionSystemPart
     {
         this.filters.remove( filter );
         broadcast( new FiltersChangedEvent() );
+    }
+    
+    private void refreshVisibilityState()
+    {
+        boolean visible = false;
+        
+        for( SapphireActionHandler handler : getActiveHandlers() )
+        {
+            if( handler.isVisible() )
+            {
+                visible = true;
+                break;
+            }
+        }
+        
+        setVisible( visible );
     }
     
     private void refreshEnablementState()

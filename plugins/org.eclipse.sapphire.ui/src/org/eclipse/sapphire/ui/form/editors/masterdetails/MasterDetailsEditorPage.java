@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -87,13 +86,12 @@ import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePart.PartEvent;
 import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.SapphireSection;
+import org.eclipse.sapphire.ui.SectionPart;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode.NodeListEvent;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart.OutlineHeaderTextEvent;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
@@ -152,7 +150,6 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
-import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
@@ -170,35 +167,31 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public final class MasterDetailsEditorPage extends SapphireEditorFormPage implements ISapphireEditorActionContributor
 {
-    private MasterDetailsEditorPageDef definition;
     private RootSection mainSection;
     private ContentOutline contentOutlinePage;
     private IPartListener2 partListener;
-    private Listener editorPagePartListener;
     
     public MasterDetailsEditorPage( final SapphireEditor editor,
-                                    final IModelElement rootModelElement,
-                                    final IPath pageDefinitionLocation ) 
+                                    final IModelElement element,
+                                    final DefinitionLoader.Reference<EditorPageDef> definition ) 
     {
-        this( editor, rootModelElement, pageDefinitionLocation, null );
+        this( editor, element, definition, null );
     }
 
     public MasterDetailsEditorPage( final SapphireEditor editor,
-                                    final IModelElement rootModelElement,
-                                    final IPath pageDefinitionLocation,
+                                    final IModelElement element,
+                                    final DefinitionLoader.Reference<EditorPageDef> definition,
                                     final String pageName ) 
     {
-        super( editor, createEditorPagePart( editor, rootModelElement, pageDefinitionLocation ) );
+        super( editor, element, definition );
         
         final MasterDetailsEditorPagePart part = getPart();
-        
-        this.definition = part.definition();
         
         String partName = pageName;
         
         if( partName == null )
         {
-            partName = this.definition.getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+            partName = part.definition().getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
         }
         
         setPartName( partName );
@@ -220,28 +213,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         outlineHideActionHandler.init( outlineHideAction, null );
         outlineHideActionHandler.setChecked( isDetailsMaximized() );
         outlineHideAction.addHandler( outlineHideActionHandler );
-    }
-
-    private static MasterDetailsEditorPagePart createEditorPagePart( final SapphireEditor editor,
-                                                                     final IModelElement rootModelElement,
-                                                                     final IPath pageDefinitionLocation )
-    {
-        final String bundleId = pageDefinitionLocation.segment( 0 );
-        final String pageId = pageDefinitionLocation.lastSegment();
-        final String relPath = pageDefinitionLocation.removeFirstSegments( 1 ).removeLastSegments( 1 ).toPortableString();
-        
-        final ISapphireUiDef def = SapphireUiDefFactory.load( bundleId, relPath );
-        final EditorPageDef editorPageDef = (EditorPageDef) def.getPartDef( pageId, true, EditorPageDef.class );
-        
-        if( editorPageDef == null )
-        {
-            throw new RuntimeException(); // Needs error message.
-        }
-        
-        final MasterDetailsEditorPagePart editorPagePart = new MasterDetailsEditorPagePart();
-        editorPagePart.init( editor, rootModelElement, editorPageDef, Collections.<String,String>emptyMap() );
-        
-        return editorPagePart;
     }
 
     @Override
@@ -285,7 +256,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             this.mainSection = new RootSection();
             this.mainSection.createContent( managedForm );
             
-            final ISapphireDocumentation doc = this.definition.getDocumentation().element();
+            final ISapphireDocumentation doc = getDefinition().getDocumentation().element();
             
             if( doc != null )
             {
@@ -320,19 +291,17 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             keyboardActionPresentation.attach( toolbarActionPresentation.getToolBar() );
             keyboardActionPresentation.render();
             
-            this.editorPagePartListener = new Listener()
-            {
-                @Override
-                public void handle( final org.eclipse.sapphire.Event event )
+            part.attach
+            (
+                new FilteredListener<MasterDetailsEditorPagePart.DetailsFocusRequested>()
                 {
-                    if( event instanceof MasterDetailsEditorPagePart.DetailsFocusRequested )
+                    @Override
+                    protected void handleTypedEvent( final MasterDetailsEditorPagePart.DetailsFocusRequested event )
                     {
                         setFocusOnDetails();
                     }
                 }
-            };
-            
-            part.attach( this.editorPagePartListener );
+            );
             
             this.partListener = new IPartListener2()
             {
@@ -1469,8 +1438,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     {
         super.dispose();
         
-        outline().dispose();
-        
         if( this.mainSection != null ) 
         {
             this.mainSection.dispose();
@@ -1479,11 +1446,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         if( this.partListener != null )
         {
             getSite().getPage().removePartListener( this.partListener );
-        }
-        
-        if( this.editorPagePartListener != null )
-        {
-            getPart().detach( this.editorPagePartListener );
         }
     }
     
@@ -1780,7 +1742,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                                          final Composite parent ) 
         {
             this.masterSection = new MasterSection( managedForm, parent );
-            final SectionPart spart = new SectionPart(this.masterSection);
+            final org.eclipse.ui.forms.SectionPart spart = new org.eclipse.ui.forms.SectionPart(this.masterSection);
             managedForm.addPart(spart);
         }
 
@@ -1851,7 +1813,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     private final class MasterSection extends Section
     {
         private IManagedForm managedForm;
-        private SectionPart sectionPart;
+        private org.eclipse.ui.forms.SectionPart sectionPart;
         private TreeViewer treeViewer;
         private Tree tree;
         
@@ -1915,7 +1877,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             this.treeViewer = filteredTree.getViewer();
             this.tree = this.treeViewer.getTree();
             
-            this.sectionPart = new SectionPart( this );
+            this.sectionPart = new org.eclipse.ui.forms.SectionPart( this );
             this.managedForm.addPart( this.sectionPart );
     
             contentTree.attach
@@ -1985,7 +1947,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         private IManagedForm mform;
         private Composite composite;
         private final Listener listener;
-        private List<SapphireSection> sections;
+        private List<SectionPart> sections;
         
         public DetailsSection()
         {
@@ -2062,7 +2024,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 control.dispose();
             }
             
-            for( SapphireSection section : this.sections )
+            for( SectionPart section : this.sections )
             {
                 section.detach( this.listener );
             }
@@ -2073,7 +2035,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 
                 final FormEditorRenderingContext context = new FormEditorRenderingContext( this.node, this.composite, this.mform.getToolkit() );
                 
-                for( SapphireSection section : this.node.getSections() )
+                for( SectionPart section : this.node.getSections() )
                 {
                     section.render( context );
                 }
@@ -2083,7 +2045,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 this.sections = Collections.emptyList();
             }
             
-            for( SapphireSection section : this.sections )
+            for( SectionPart section : this.sections )
             {
                 section.attach( this.listener );
             }
@@ -2093,7 +2055,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         
         public void dispose()
         {
-            for( SapphireSection section : this.sections )
+            for( SectionPart section : this.sections )
             {
                 section.detach( this.listener );
             }

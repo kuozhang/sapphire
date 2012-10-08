@@ -1,0 +1,46 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2012 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<definition>
+
+    <import>
+        <package>org.eclipse.sapphire.ui.renderers.swt</package>
+        <package>org.eclipse.sapphire.workspace.ui</package>
+    </import>
+    
+    <form>
+        <id>CreateWorkspaceFileForm</id>
+        <content>
+            <property-editor>
+                <property>Folder</property>
+                <hint>
+                    <name>factory</name>
+                    <value>EclipseWorkspacePathPropertyEditorRenderer$Factory</value>
+                </hint>
+                <span>true</span>
+                <scale-vertically>true</scale-vertically>
+                <width>400</width>
+                <height>200</height>
+            </property-editor>
+            <property-editor>
+                <hint>
+                    <name>assist.contributors</name>
+                    <value>OverwriteExistingFileActionContributor</value>
+                </hint>
+                <property>FileName</property>
+            </property-editor>
+            <property-editor>OverwriteExistingFile</property-editor>
+        </content>
+    </form>
+
+</definition>

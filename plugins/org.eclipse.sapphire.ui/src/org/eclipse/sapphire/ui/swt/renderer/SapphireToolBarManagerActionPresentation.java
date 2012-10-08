@@ -96,11 +96,6 @@ public final class SapphireToolBarManagerActionPresentation extends SapphireHotS
             super( "sapphire" );
         }
         
-        public ToolBar getToolBar()
-        {
-            return this.toolBar;
-        }
-        
         @Override
         public boolean isDynamic() 
         {

@@ -216,6 +216,11 @@ public class RootXmlResource extends XmlResource
     @Override
     public void save() throws ResourceStoreException
     {
+        if( this.document.getChildNodes().getLength() == 0 )
+        {
+            fixMalformedDescriptor();
+        }
+        
         this.store.save();
     }
 

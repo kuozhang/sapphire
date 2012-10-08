@@ -11,12 +11,27 @@
 
 package org.eclipse.sapphire.workspace;
 
+import java.io.ByteArrayInputStream;
+
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.sapphire.FileName;
+import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.annotations.FileExtensions;
+import org.eclipse.sapphire.modeling.ProgressMonitor;
+import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.platform.PathBridge;
+import org.eclipse.sapphire.platform.StatusBridge;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,34 +42,111 @@ public final class CreateWorkspaceFileOpMethods
     public static IFile getFileHandle( final CreateWorkspaceFileOp operation )
     {
         final Path folderPath = operation.getFolder().getContent();
-        String fileName = operation.getFileName().getContent();
+        final FileName fileName = operation.getFileName().getContent();
         
         if( folderPath == null || fileName == null )
         {
             return null;
         }
         
-        fileName = fileName.trim();
+        final Path newFilePath = folderPath.append( fileName.toString() );
         
-        if( fileName.indexOf( '.' ) == -1 )
+        return ResourcesPlugin.getWorkspace().getRoot().getFile( PathBridge.create( newFilePath ) );
+    }
+    
+    public static Status execute( final CreateWorkspaceFileOp operation,
+                                  ProgressMonitor monitor )
+    {
+        if( monitor == null )
         {
-            final ModelProperty property = CreateWorkspaceFileOp.PROP_FILE_NAME.refine( operation );
-            final FileExtensions fileExtensionsAnnotation = property.getAnnotation( FileExtensions.class );
+            monitor = new ProgressMonitor();
+        }
+        
+        monitor.beginTask( Resources.executeTaskName, 2 );
+        
+        try
+        {
+            final IFile newFileHandle = operation.getFileHandle();
             
-            if( fileExtensionsAnnotation != null )
+            try
             {
-                final String extension = fileExtensionsAnnotation.expr();
+                newFileHandle.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
                 
-                if( extension.length() > 0 )
+                create( newFileHandle.getParent() );
+                
+                if( newFileHandle.exists() )
                 {
-                    fileName = fileName + "." + extension;
+                    newFileHandle.setContents( new ByteArrayInputStream( new byte[ 0 ] ), IFile.FORCE, null );
+                }
+                else
+                {
+                    newFileHandle.create( new ByteArrayInputStream( new byte[ 0 ] ), IFile.FORCE, null );
+                }
+            }
+            catch( CoreException e )
+            {
+                return StatusBridge.create( e.getStatus() );
+            }
+            
+            monitor.worked( 1 );
+            
+            final WorkspaceFileType fileTypeAnnotation = operation.type().getAnnotation( WorkspaceFileType.class );
+            
+            if( fileTypeAnnotation != null )
+            {
+                final ModelElementType type = ModelElementType.read( fileTypeAnnotation.value() );
+                final Resource resource = type.service( MasterConversionService.class ).convert( newFileHandle, Resource.class );
+                
+                if( resource != null )
+                {
+                    try
+                    {
+                        final IModelElement element = type.instantiate( resource );
+                        
+                        try
+                        {
+                            element.initialize();
+                            resource.save();
+                        }
+                        finally
+                        {
+                            element.dispose();
+                        }
+                    }
+                    catch( ResourceStoreException e )
+                    {
+                        return Status.createErrorStatus( e );
+                    }
                 }
             }
         }
+        finally
+        {
+            monitor.done();
+        }
         
-        final Path newFilePath = folderPath.append( fileName );
+        return Status.createOkStatus();
+    }
+    
+    private static void create( final IContainer container ) throws CoreException
+    {
+        if( ! container.exists() )
+        {
+            create( container.getParent() );
+            
+            final IFolder iFolder = (IFolder) container;
+            iFolder.create( true, true, null );
+        }
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String executeTaskName;
         
-        return ResourcesPlugin.getWorkspace().getRoot().getFile( PathBridge.create( newFilePath ) );
+        static
+        {
+            initializeMessages( CreateWorkspaceFileOpMethods.class.getName(), Resources.class );
+        }
     }
     
 }

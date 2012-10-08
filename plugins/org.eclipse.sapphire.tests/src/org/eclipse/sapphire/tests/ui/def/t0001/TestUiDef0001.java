@@ -14,14 +14,12 @@ package org.eclipse.sapphire.tests.ui.def.t0001;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.def.SapphireUiDefFactory;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 
 /**
@@ -30,10 +28,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEdito
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestUiDef0001
-
-    extends SapphireTestCase
-    
+public final class TestUiDef0001 extends SapphireTestCase
 {
     private TestUiDef0001( final String name )
     {
@@ -53,35 +48,30 @@ public final class TestUiDef0001
     
     public void test()
     {
-        final ISapphireUiDef sdef = SapphireUiDefFactory.load( "org.eclipse.sapphire.tests", "org/eclipse/sapphire/tests/ui/def/t0001/TestDefinition.sdef" );
-
-        final MasterDetailsEditorPageDef page = (MasterDetailsEditorPageDef) sdef.getPartDef( "TestPage", false, MasterDetailsEditorPageDef.class );
-        assertNotNull( page );
+        final DefinitionLoader.Reference<EditorPageDef> handle = DefinitionLoader.context( getClass() ).sdef( "TestDefinition" ).page();
         
-        final ModelElementList<ActionHandlerDef> handlers = page.getActionHandlers();
-        assertNotNull( handlers );
-        assertEquals( 3, handlers.size() );
-        
-        JavaType type;
-        Class<?> cl;
-        
-        type = handlers.get( 0 ).getImplClass().resolve();
-        assertNotNull( type );
-        cl = type.artifact();
-        assertNotNull( cl );
-        assertEquals( IFile.class, cl );
-
-        type = handlers.get( 1 ).getImplClass().resolve();
-        assertNotNull( type );
-        cl = type.artifact();
-        assertNotNull( cl );
-        assertEquals( XmlBinding.class, cl );
-
-        type = handlers.get( 2 ).getImplClass().resolve();
-        assertNotNull( type );
-        cl = type.artifact();
-        assertNotNull( cl );
-        assertEquals( TestActionHandler.class, cl );
+        try
+        {
+            final MasterDetailsEditorPageDef page = (MasterDetailsEditorPageDef) handle.resolve();
+            assertNotNull( page );
+            
+            final ModelElementList<ActionHandlerDef> handlers = page.getActionHandlers();
+            assertNotNull( handlers );
+            assertEquals( 1, handlers.size() );
+            
+            JavaType type;
+            Class<?> cl;
+            
+            type = handlers.get( 0 ).getImplClass().resolve();
+            assertNotNull( type );
+            cl = type.artifact();
+            assertNotNull( cl );
+            assertEquals( TestActionHandler.class, cl );
+        }
+        finally
+        {
+            handle.dispose();
+        }
     }
 
 }

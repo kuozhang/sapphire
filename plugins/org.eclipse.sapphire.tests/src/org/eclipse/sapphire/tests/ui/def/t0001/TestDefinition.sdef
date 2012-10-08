@@ -16,8 +16,6 @@
 <definition>
 
     <import>
-        <package>org.eclipse.core.resources</package>
-        <package>org.eclipse.sapphire.modeling.xml.annotations</package>
         <package>org.eclipse.sapphire.tests.ui.def.t0001</package>
     </import>
     
@@ -25,16 +23,9 @@
         <id>TestPage</id>
         <action-handler>
             <action>Sapphire.Test</action>
-            <impl>IFile</impl>
-        </action-handler>
-        <action-handler>
-            <action>Sapphire.Test</action>
-            <impl>XmlBinding</impl>
-        </action-handler>
-        <action-handler>
-            <action>Sapphire.Test</action>
             <impl>TestActionHandler</impl>
         </action-handler>
+        <element-type>TestElement</element-type>
     </editor-page>
     
 </definition>

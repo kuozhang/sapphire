@@ -14,9 +14,9 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import org.eclipse.sapphire.samples.ezbug.IBugReport;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
-import org.eclipse.sapphire.ui.swt.SapphireControl;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.swt.SapphireForm;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -25,22 +25,23 @@ import org.eclipse.ui.part.ViewPart;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FileBugReportView
-
-    extends ViewPart
-    
+public final class FileBugReportView extends ViewPart
 {
+    private IFileBugReportOp operation;
+    
     @Override
     public void createPartControl( final Composite parent )
     {
         parent.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
         parent.setLayout( glayout( 1, 0, 0 ) );
         
-        final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-        final IBugReport report = op.getBugReport();
+        this.operation = IFileBugReportOp.TYPE.instantiate();
         
-        final SapphireControl control 
-            = new SapphireControl( parent, report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!bug.report.form.style.scrolled" );
+        final SapphireForm control = new SapphireForm
+        (
+            parent, this.operation.getBugReport(),
+            DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).form( "bug.report.form.style.scrolled" )
+        );
 
         control.setLayoutData( gdfill() );
     }
@@ -48,6 +49,17 @@ public final class FileBugReportView
     @Override
     public void setFocus()
     {
+    }
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.operation != null )
+        {
+            this.operation.dispose();
+        }
     }
     
 }

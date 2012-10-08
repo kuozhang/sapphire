@@ -34,7 +34,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.util.Filter;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummarySectionColumnDef;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummarySectionDef;
@@ -47,6 +46,7 @@ import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.PresentationStyleDef;
+import org.eclipse.sapphire.util.Filter;
 import org.osgi.framework.Bundle;
 
 /**
@@ -517,7 +517,7 @@ public final class ExtensionSummaryExportOpMethods
                 {
                     for( IModelElement extElement : extension.read( extTypeListProperty ) )
                     {
-                        if( this.filter.check( extElement ) )
+                        if( this.filter.allows( extElement ) )
                         {
                             extElements.add( extElement );
                         }

@@ -20,9 +20,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookDef;
@@ -37,11 +42,11 @@ import org.eclipse.swt.widgets.Control;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PageBookPart extends FormPart
+public abstract class PageBookPart extends FormComponentPart
 {
     private Map<Object,FormDef> pageDefs;
     private FormDef defaultPageDef;
-    private SapphirePartContainer currentPage;
+    private FormPart currentPage;
     private boolean exposePageValidationState = false;
     private Listener childPartListener = null;
     
@@ -72,6 +77,92 @@ public abstract class PageBookPart extends FormPart
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
         return (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+    }
+    
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        final Function function = new Function()
+        {
+            @Override
+            public String name()
+            {
+                return "VisibleIfChildrenVisible";
+            }
+
+            @Override
+            public FunctionResult evaluate( final FunctionContext context )
+            {
+                return new FunctionResult( this, context )
+                {
+                    @Override
+                    protected void init()
+                    {
+                        final Listener pageVisibilityListener = new FilteredListener<VisibilityChangedEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final VisibilityChangedEvent event )
+                            {
+                                refresh();
+                            }
+                        };
+                        
+                        final Listener pageChangeListener = new FilteredListener<PageChangedEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final PageChangedEvent event )
+                            {
+                                final FormPart page = getCurrentPage();
+                                
+                                if( page != null )
+                                {
+                                    page.attach( pageVisibilityListener );
+                                }
+                                
+                                refresh();
+                            }
+                        };
+                        
+                        attach( pageChangeListener );
+                        
+                        final FormPart page = getCurrentPage();
+                        
+                        if( page != null )
+                        {
+                            page.attach( pageVisibilityListener );
+                        }
+                    }
+
+                    @Override
+                    protected Object evaluate()
+                    {
+                        boolean visible = false;
+                        
+                        final FormPart page = getCurrentPage();
+                        
+                        if( page != null )
+                        {
+                            visible = page.visible();
+                        }
+                        
+                        return visible;
+                    }
+                };
+            }
+        };
+        
+        function.init();
+        
+        final Function base = super.initVisibleWhenFunction();
+        
+        if( base == null )
+        {
+            return function;
+        }
+        else
+        {
+            return AndFunction.create( base, function );
+        }
     }
 
     @Override
@@ -123,7 +214,7 @@ public abstract class PageBookPart extends FormPart
         }
     }
     
-    public final SapphirePartContainer getCurrentPage()
+    public final FormPart getCurrentPage()
     {
         return this.currentPage;
     }
@@ -163,7 +254,7 @@ public abstract class PageBookPart extends FormPart
         
         if( pageDef != null )
         {
-            this.currentPage = (SapphirePartContainer) create( this, modelElementForPage, pageDef, this.params );
+            this.currentPage = (FormPart) create( this, modelElementForPage, pageDef, this.params );
             
             if( this.childPartListener != null )
             {
@@ -187,7 +278,7 @@ public abstract class PageBookPart extends FormPart
     {
         if( this.exposePageValidationState == true )
         {
-            final SapphirePartContainer currentPage = getCurrentPage();
+            final FormPart currentPage = getCurrentPage();
             
             if( currentPage != null )
             {

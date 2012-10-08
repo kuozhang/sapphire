@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.services.t0010;
 
+import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Version;
-import org.eclipse.sapphire.annotations.Since;
-import org.eclipse.sapphire.annotations.VersionCompatibility;
-import org.eclipse.sapphire.annotations.VersionCompatibilityTarget;
+import org.eclipse.sapphire.VersionCompatibility;
+import org.eclipse.sapphire.VersionCompatibilityTarget;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;

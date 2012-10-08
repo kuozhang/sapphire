@@ -70,6 +70,19 @@
         </action-handler>
         <root-node>
             <node>
+                <label>general</label>
+                <section>
+                    <label>custom colors</label>
+                    <content>
+                        <property-editor>
+                            <show-label>false</show-label>
+                            <property>CustomColors</property>
+                            <span>true</span>
+                        </property-editor>
+                    </content>
+                </section>
+            </node>
+            <node>
                 <label>value properties</label>
                 <section>
                   <content>
@@ -2321,6 +2334,7 @@
             </node>
         </root-node>
         <page-name>gallery</page-name>
+        <element-type>IGallery</element-type>
     </editor-page>
     <dialog>
         <id>SplitFormDialog</id>

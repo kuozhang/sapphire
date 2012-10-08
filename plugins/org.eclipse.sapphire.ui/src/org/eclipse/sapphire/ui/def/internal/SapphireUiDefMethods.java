@@ -14,14 +14,14 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.lang.reflect.Field;
 
-import org.eclipse.sapphire.modeling.ClassLocator;
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
@@ -31,9 +31,9 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 public final class SapphireUiDefMethods
 {
     public static PartDef getPartDef( final ISapphireUiDef rootdef,
-                                               final String id,
-                                               final boolean searchImportedDefinitions,
-                                               final Class<?> expectedType )
+                                      final String id,
+                                      final boolean searchImportedDefinitions,
+                                      final Class<?> expectedType )
     {
         if( id != null )
         {
@@ -57,7 +57,7 @@ public final class SapphireUiDefMethods
             {
                 for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
                 {
-                    final ISapphireUiDef sdef = ref.resolve();
+                    final ISapphireUiDef sdef = ref.getPath().resolve();
                     
                     if( sdef != null )
                     {
@@ -88,7 +88,7 @@ public final class SapphireUiDefMethods
             {
                 for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
                 {
-                    final ISapphireUiDef sdef = ref.resolve();
+                    final ISapphireUiDef sdef = ref.getPath().resolve();
                     
                     if( sdef != null )
                     {
@@ -109,7 +109,7 @@ public final class SapphireUiDefMethods
     public static Class<?> resolveClass( final ISapphireUiDef def,
                                          final String className )
     {
-        final ClassLocator locator = def.adapt( ClassLocator.class );
+        final Context context = def.adapt( Context.class );
         
         for( IPackageReference packageRef : def.getImportedPackages() )
         {
@@ -118,7 +118,7 @@ public final class SapphireUiDefMethods
             if( packageName != null )
             {
                 final String fullClassName = packageName + "." + className;
-                final Class<?> cl = locator.find( fullClassName );
+                final Class<?> cl = context.findClass( fullClassName );
                 
                 if( cl != null )
                 {

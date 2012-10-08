@@ -56,13 +56,12 @@
                 <label>contacts</label>
                 <section>
                     <content>
-                        <label>Use this simple editor to organize your contacts.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a contact</label>
                         </actuator>
                     </content>
+                    <description>Use this simple editor to organize your contacts.</description>
                 </section>
                 <node-factory>
                     <property>Contacts</property>
@@ -232,6 +231,7 @@
         </root-node>
         <page-header-image>${ Image() }</page-header-image>
         <page-name>contacts</page-name>
+        <element-type>ContactsDatabase</element-type>
     </editor-page>
     
     <wizard>

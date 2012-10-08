@@ -40,6 +40,8 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
@@ -68,7 +70,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyEditorPart extends FormPart
+public final class PropertyEditorPart extends FormComponentPart
 {
     public static final String RELATED_CONTROLS = "related-controls";
     public static final String BROWSE_BUTTON = "browse-button";
@@ -149,6 +151,13 @@ public final class PropertyEditorPart extends FormPart
             throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
         }
         
+        // Read the property to ensure that initial events are broadcast and avoid being surprised
+        // by them later.
+        
+        this.element.read( this.property );
+        
+        // Listen for PropertyValidationEvent and update property editor's validation.
+        
         this.listener = new FilteredListener<PropertyValidationEvent>()
         {
             @Override
@@ -172,7 +181,7 @@ public final class PropertyEditorPart extends FormPart
             }
         };
         
-        this.element.attach( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property );
         
         this.childProperties = new ArrayList<ModelProperty>();
         this.childPropertiesReadOnly = Collections.unmodifiableList( this.childProperties );
@@ -287,6 +296,16 @@ public final class PropertyEditorPart extends FormPart
                     broadcast( new LabelChangedEvent( PropertyEditorPart.this ) );
                 }
             }
+        );
+    }
+
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            createVersionCompatibleFunction( getLocalModelElement(), this.property )
         );
     }
     
@@ -654,7 +673,7 @@ public final class PropertyEditorPart extends FormPart
         
         if( this.listener != null )
         {
-            this.element.detach( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property );
         }
         
         if( this.labelFunctionResult != null )

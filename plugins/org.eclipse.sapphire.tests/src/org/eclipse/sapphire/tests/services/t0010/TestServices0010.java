@@ -15,18 +15,18 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
+import org.eclipse.sapphire.VersionCompatibilityService;
+import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.services.VersionCompatibilityAggregationService;
-import org.eclipse.sapphire.services.VersionCompatibilityService;
-import org.eclipse.sapphire.services.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
  * Tests for various services involved in the version compatibility feature, including ContextVersionService, 
- * VersionCompatibilityService, VersionCompatibilityAggregationService, VersionCompatibilityValidationService and
- * VersionCompatibilityEnablementService.  
- * 
+ * VersionCompatibilityService, MasterVersionCompatibilityService, VersionCompatibilityValidationService, 
+ * VersionCompatibilityEnablementService, and VersionCompatibilityFactsService.
+ *  
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
@@ -54,6 +54,7 @@ public final class TestServices0010 extends SapphireTestCase
         suite.addTest( new TestServices0010( "testVersionCompatibilityEnablementServiceForElement" ) );
         suite.addTest( new TestServices0010( "testVersionCompatibilityEnablementServiceForElementImplied" ) );
         suite.addTest( new TestServices0010( "testVersionCompatibilityEnablementServiceForList" ) );
+        suite.addTest( new TestServices0010( "testVersionCompatibilityFactsService" ) );
         
         return suite;
     }
@@ -69,7 +70,7 @@ public final class TestServices0010 extends SapphireTestCase
         assertNotNull( rootContextVersionService );
         assertNull( rootContextVersionService.version() );
         
-        assertNull( root.service( RootElement.PROP_VALUE_UNCONSTRAINED, VersionCompatibilityAggregationService.class ) );
+        assertNull( root.service( RootElement.PROP_VALUE_UNCONSTRAINED, MasterVersionCompatibilityService.class ) );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_SINCE, false );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_SINCE_DYNAMIC, false );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY, false );
@@ -354,11 +355,35 @@ public final class TestServices0010 extends SapphireTestCase
         assertFalse( root.enabled( RootElement.PROP_CHILDREN ) );
     }
 
+    public void testVersionCompatibilityFactsService() throws Exception
+    {
+        final RootElement root = RootElement.TYPE.instantiate();
+        
+        root.setVersion( "1.0" );
+
+        assertFact( root, RootElement.PROP_VALUE_SINCE, "Since Test Versioned System 1.2" );
+        assertFact( root, RootElement.PROP_VALUE_SINCE_DYNAMIC, "Since Test Versioned System 1.2" );
+        assertFact( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY, "For Test Versioned System [1.2.3-1.3)" );
+        assertFact( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY_DYNAMIC, "For Test Versioned System [1.2.3-1.3)" );
+        
+        root.setSwitch( true );
+        
+        assertFact( root, RootElement.PROP_VALUE_SINCE, "Since Test Versioned System 1.2" );
+        assertFact( root, RootElement.PROP_VALUE_SINCE_DYNAMIC, "Since Test Versioned System 2" );
+        assertFact( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY, "For Test Versioned System [1.2.3-1.3)" );
+        assertFact( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY_DYNAMIC, "Since Test Versioned System 2" );
+        
+        final ChildElement child = root.getChildImplied();
+        
+        assertFact( child, ChildElement.PROP_VALUE_UNCONSTRAINED, "Since Test Versioned System 2" );
+        assertFact( child, ChildElement.PROP_VALUE_SINCE, "Since Test Versioned System 3" );
+    }
+
     private static void assertVersionCompatibility( final IModelElement element,
                                                     final ModelProperty property,
                                                     final boolean expectedVersionCompatibility )
     {
-        final VersionCompatibilityAggregationService service = element.service( property, VersionCompatibilityAggregationService.class );
+        final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
         
         assertNotNull( service );
         assertEquals( expectedVersionCompatibility, service.compatible() );

@@ -42,7 +42,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
     		  "placed or provided as part of actuator's definition."
 )
 
-public interface ActuatorDef extends FormPartDef
+public interface ActuatorDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( ActuatorDef.class );
  
@@ -147,7 +147,7 @@ public interface ActuatorDef extends FormPartDef
     @DefaultValue( text = "Sapphire.Actuator.Link" )
     @PossibleValues( values = { "Sapphire.Actuator.Link", "Sapphire.Actuator.Button" } )
     
-    ValueProperty PROP_STYLE = new ValueProperty( TYPE, FormPartDef.PROP_STYLE );
+    ValueProperty PROP_STYLE = new ValueProperty( TYPE, FormComponentDef.PROP_STYLE );
     
     // *** HorizontalAlignment ***
     

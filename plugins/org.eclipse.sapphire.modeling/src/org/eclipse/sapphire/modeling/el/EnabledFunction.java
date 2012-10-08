@@ -131,7 +131,7 @@ public final class EnabledFunction extends Function
                     {
                         if( this.lastElement != null && this.lastProperty != null )
                         {
-                            this.lastElement.detach( this.listener, this.lastProperty.getName() );
+                            this.lastElement.detach( this.listener, this.lastProperty );
                         }
                         
                         if( element != null && property != null )
@@ -148,7 +148,7 @@ public final class EnabledFunction extends Function
                                 };
                             }
                             
-                            element.attach( this.listener, property.getName() );
+                            element.attach( this.listener, property );
                         }
                         
                         this.lastElement = element;

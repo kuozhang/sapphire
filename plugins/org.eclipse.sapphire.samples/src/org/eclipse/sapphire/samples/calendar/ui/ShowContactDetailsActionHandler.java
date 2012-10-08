@@ -16,6 +16,7 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -46,7 +47,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
             }
         };
         
-        element.attach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        element.attach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
         
         refreshEnablementState();
         
@@ -57,7 +58,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    element.detach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+                    element.detach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
                 }
             }
         );

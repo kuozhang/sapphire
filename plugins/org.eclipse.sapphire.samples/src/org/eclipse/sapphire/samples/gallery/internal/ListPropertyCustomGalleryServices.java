@@ -48,8 +48,8 @@ public final class ListPropertyCustomGalleryServices
             };
             
             final ListPropertyCustomGallery gallery = context( ListPropertyCustomGallery.class );
-            gallery.attach( listener, ListPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_INTEGER.getName() );
-            gallery.attach( listener, ListPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_ENUM.getName() );
+            gallery.attach( listener, ListPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_INTEGER );
+            gallery.attach( listener, ListPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_ENUM );
         }
         
         @Override

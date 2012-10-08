@@ -25,8 +25,8 @@ import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.util.Filter;
 import org.eclipse.sapphire.sdk.extensibility.internal.ExtensionSummaryExportOpMethods;
+import org.eclipse.sapphire.util.Filter;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

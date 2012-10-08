@@ -73,6 +73,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
@@ -171,9 +172,9 @@ public abstract class SapphireEditor
     private Listener propertiesViewContributionChangeListener;
     private PartServiceContext serviceContext;
     
-    public SapphireEditor( final String pluginId )
+    public SapphireEditor()
     {
-        this.pluginId = pluginId;
+        this.pluginId = FrameworkUtil.getBundle( getClass() ).getSymbolicName();
         this.imageCache = new SapphireImageCache();
         this.outline = null;
         this.actionsManager = new SapphireActionManager( this, getActionContexts() );

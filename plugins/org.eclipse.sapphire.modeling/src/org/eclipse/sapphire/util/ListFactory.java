@@ -14,6 +14,7 @@ package org.eclipse.sapphire.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ import java.util.List;
 
 public final class ListFactory<E>
 {
+    private Filter<E> filter;
     private E firstElement = null;
     private ArrayList<E> list = null;
     private boolean exported = false;
@@ -53,6 +55,51 @@ public final class ListFactory<E>
         return new ListFactory<E>();
     }
     
+    public ListFactory<E> filter( final Filter<E> filter )
+    {
+        if( this.exported )
+        {
+            throw new IllegalStateException();
+        }
+        
+        this.filter = filter;
+        
+        if( this.filter != null )
+        {
+            if( this.list != null )
+            {
+                for( Iterator<E> itr = this.list.iterator(); itr.hasNext(); )
+                {
+                    if( ! this.filter.allows( itr.next() ) )
+                    {
+                        itr.remove();
+                    }
+                }
+                
+                final int size = this.list.size();
+                
+                if( size == 1 )
+                {
+                    this.firstElement = this.list.get( 0 );
+                    this.list = null;
+                }
+                else if( size == 0 )
+                {
+                    this.list = null;
+                }
+            }
+            else if( this.firstElement != null )
+            {
+                if( ! this.filter.allows( this.firstElement ) )
+                {
+                    this.firstElement = null;
+                }
+            }
+        }
+        
+        return this;
+    }
+    
     public ListFactory<E> add( final E element )
     {
         if( this.exported )
@@ -60,20 +107,23 @@ public final class ListFactory<E>
             throw new IllegalStateException();
         }
         
-        if( this.list != null )
+        if( element != null && ( this.filter == null || this.filter.allows( element ) ) )
         {
-            this.list.add( element );
-        }
-        else if( this.firstElement != null )
-        {
-            this.list = new ArrayList<E>();
-            this.list.add( this.firstElement );
-            this.list.add( element );
-            this.firstElement = null;
-        }
-        else
-        {
-            this.firstElement = element;
+            if( this.list != null )
+            {
+                this.list.add( element );
+            }
+            else if( this.firstElement != null )
+            {
+                this.list = new ArrayList<E>();
+                this.list.add( this.firstElement );
+                this.list.add( element );
+                this.firstElement = null;
+            }
+            else
+            {
+                this.firstElement = element;
+            }
         }
         
         return this;

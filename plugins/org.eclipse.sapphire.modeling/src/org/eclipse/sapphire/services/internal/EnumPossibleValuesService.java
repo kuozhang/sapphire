@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.EnumValueType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -38,11 +37,10 @@ public final class EnumPossibleValuesService extends PossibleValuesService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
         final ValueProperty property = context( ValueProperty.class );
         
         final EnumValueType enumType = new EnumValueType( property.getTypeClass() );
-        final ValueSerializationService valueSerializationService = element.service( property, ValueSerializationService.class );
+        final ValueSerializationService valueSerializationService = property.service( ValueSerializationService.class );
         
         for( Enum<?> item : enumType.getItems() )
         {

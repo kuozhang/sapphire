@@ -298,7 +298,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             };
             
             final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
-            element.attach( listener, property().getName() );
+            element.attach( listener, property() );
             
             attach
             (
@@ -309,7 +309,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                     {
                         if( event instanceof DisposeEvent )
                         {
-                            element.detach( listener, property().getName() );
+                            element.detach( listener, property() );
                         }
                     }
                 }

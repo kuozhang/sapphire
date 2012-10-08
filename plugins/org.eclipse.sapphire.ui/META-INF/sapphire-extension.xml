@@ -146,6 +146,23 @@
         <description>Moves an entity up, from the perspective of how the entity appears on the screen. A common use is to move a model element one position towards the beginning of the list, swapping places with the preceding element.</description>
     </action>
     <action>
+        <id>Sapphire.ShowNextError</id>
+        <label>show next error</label>
+        <image>org/eclipse/sapphire/ui/Error.png</image>
+        <key-binding>SHIFT+CONTROL+ALT+e</key-binding>
+        <description>Shows the next validation error.</description>
+        <context>Sapphire.EditorPage.Outline.Node</context>
+    </action>
+    <action>
+        <id>Sapphire.ShowNextWarning</id>
+        <label>show next warning</label>
+        <image>org/eclipse/sapphire/ui/Warning.png</image>
+        <key-binding>SHIFT+CONTROL+ALT+w</key-binding>
+        <description>Shows the next validation warning.</description>
+        <location>after:Sapphire.ShowNextError</location>
+        <context>Sapphire.EditorPage.Outline.Node</context>
+    </action>
+    <action>
         <id>Sapphire.ShowInSource</id>
         <context>Sapphire.EditorPage.Outline.Node</context>
         <label>show in source</label>
@@ -153,6 +170,8 @@
         <description>Shows the model element associated with a given part in the corresponding source editor.</description>
         <location>after:Sapphire.Delete</location>
         <location>after:Sapphire.Diagram.DeleteAllBendPoints</location>
+        <location>after:Sapphire.ShowNextError</location>
+        <location>after:Sapphire.ShowNextWarning</location>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
     </action>
@@ -394,6 +413,20 @@
         <description>Shows the model element associated with a given content outline node in the corresponding source editor.</description>
         <context>Sapphire.EditorPage.Outline.Node</context>
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandlerCondition</condition>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.ShowNextError</action>
+        <id>Sapphire.ShowNextError.Outline</id>
+        <description>Shows the next validation error.</description>
+        <context>Sapphire.EditorPage.Outline.Node</context>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowNextErrorActionHandler</impl>
+    </action-handler>
+    <action-handler>
+        <action>Sapphire.ShowNextWarning</action>
+        <id>Sapphire.ShowNextWarning.Outline</id>
+        <description>Shows the next validation warning</description>
+        <context>Sapphire.EditorPage.Outline.Node</context>
+        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowNextWarningActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.ShowInSource</action>

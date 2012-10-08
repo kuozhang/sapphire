@@ -13,10 +13,9 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.SapphireWizard;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -25,23 +24,17 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class FileBugReportHandler3
-    
-    extends AbstractHandler
-    implements IHandler
-    
+public final class FileBugReportHandler3 extends AbstractHandler
 {
     public Object execute( final ExecutionEvent event )
-    
-        throws ExecutionException
-        
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-        
-        final SapphireWizard<IFileBugReportOp> wizard 
-            = new SapphireWizard<IFileBugReportOp>( op, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!wizard" );
+        final SapphireWizard<IFileBugReportOp> wizard = new SapphireWizard<IFileBugReportOp>
+        ( 
+            IFileBugReportOp.TYPE,
+            DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).wizard( "wizard" )
+        );
         
         final WizardDialog dialog = new WizardDialog( window.getShell(), wizard );
         

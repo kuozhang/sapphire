@@ -15,10 +15,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -27,21 +30,73 @@ import org.eclipse.ui.dialogs.PropertyPage;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphirePropertyPage 
-
-    extends PropertyPage
-    
+public class SapphirePropertyPage extends PropertyPage
 {
-    private final String compositeDefPath;
-    private IModelElement modelElement = null;
+    private IModelElement element;
+    private boolean elementInstantiatedLocally;
+    private DefinitionLoader.Reference<FormComponentDef> definition;
     
-    public SapphirePropertyPage( final String compositeDefPath )
+    public SapphirePropertyPage( final ModelElementType type,
+                                 final DefinitionLoader.Reference<FormComponentDef> definition )
     {
-        this.compositeDefPath = compositeDefPath;
+        init( type, definition );
     }
 
-    protected abstract IModelElement createModelElement();
+    public SapphirePropertyPage( final IModelElement element,
+                                 final DefinitionLoader.Reference<FormComponentDef> definition )
+    {
+        init( element, definition );
+    }
+
+    protected SapphirePropertyPage()
+    {
+    }
     
+    protected void init( final ModelElementType type,
+                         final DefinitionLoader.Reference<FormComponentDef> definition )
+    {
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.elementInstantiatedLocally = true;
+        
+        init( type.instantiate(), definition );
+    }
+    
+    protected void init( final IModelElement element,
+                         final DefinitionLoader.Reference<FormComponentDef> definition )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.element = element;
+        this.definition = definition;
+    }
+    
+    public final IModelElement element()
+    {
+        return this.element;
+    }
+    
+    public final FormComponentDef definition()
+    {
+        return this.definition.resolve();
+    }
+
     @Override
     public void createControl( final Composite parent )
     {
@@ -52,16 +107,13 @@ public abstract class SapphirePropertyPage
 
     protected Control createContents( final Composite parent ) 
     {
-        this.modelElement = createModelElement();
-        
-        final SapphireControl control 
-            = new SapphireControl( parent, this.modelElement, this.compositeDefPath );
+        final SapphireForm form = new SapphireForm( parent, this.element, this.definition );
         
         final Runnable messageUpdateOperation = new Runnable()
         {
             public void run()
             {
-                final Status st = control.getPart().getValidationState();
+                final Status st = form.part().getValidationState();
                 
                 if( st.severity() == Status.Severity.ERROR )
                 {
@@ -95,9 +147,9 @@ public abstract class SapphirePropertyPage
             }
         };
         
-        control.getPart().attach( messageUpdateListener );
+        form.part().attach( messageUpdateListener );
         
-        return control;
+        return form;
     }
     
     @Override
@@ -105,7 +157,7 @@ public abstract class SapphirePropertyPage
     {
         try
         {
-            this.modelElement.resource().save();
+            this.element.resource().save();
             
             return true;
         }
@@ -121,6 +173,28 @@ public abstract class SapphirePropertyPage
     protected void performApply() 
     {
         performOk();
+    }
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.element != null )
+        {
+            if( this.elementInstantiatedLocally )
+            {
+                this.element.dispose();
+            }
+
+            this.element = null;
+        }
+        
+        if( this.definition != null )
+        {
+            this.definition.dispose();
+            this.definition = null;
+        }
     }
 
     private static final class Resources extends NLS

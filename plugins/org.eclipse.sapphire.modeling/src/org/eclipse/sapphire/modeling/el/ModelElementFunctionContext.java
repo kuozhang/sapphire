@@ -188,7 +188,7 @@ public class ModelElementFunctionContext extends FunctionContext
                         }
                     };
                     
-                    element.attach( this.listener, property.getName() );
+                    element.attach( this.listener, property );
                 }
 
                 @Override
@@ -201,7 +201,7 @@ public class ModelElementFunctionContext extends FunctionContext
                 public void dispose()
                 {
                     super.dispose();
-                    element.detach( this.listener, property.getName() );
+                    element.detach( this.listener, property );
                 }
             };
         }

@@ -13,11 +13,9 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.sapphire.samples.ezbug.IBugReport;
 import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.SapphireDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -26,28 +24,30 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class FileBugReportHandler2
-    
-    extends AbstractHandler
-    implements IHandler
-    
+public final class FileBugReportHandler2 extends AbstractHandler
 {
     public Object execute( final ExecutionEvent event )
-    
-        throws ExecutionException
-        
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final IFileBugReportOp op = IFileBugReportOp.TYPE.instantiate();
-        final IBugReport report = op.getBugReport();
+        final IFileBugReportOp operation = IFileBugReportOp.TYPE.instantiate();
         
-        final SapphireDialog dialog 
-            = new SapphireDialog( window.getShell(), report, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/ezbug/EzBug.sdef!dialog2" );
-        
-        if( dialog.open() == Dialog.OK )
+        try
         {
-            // Do something. User input is found in the bug report model.
+            final SapphireDialog dialog = new SapphireDialog
+            (
+                window.getShell(), operation.getBugReport(),
+                DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).dialog( "dialog2" )
+            );
+            
+            if( dialog.open() == Dialog.OK )
+            {
+                // Do something. User input is found in the bug report model.
+            }
+        }
+        finally
+        {
+            operation.dispose();
         }
         
         return null;

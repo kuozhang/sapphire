@@ -124,6 +124,16 @@ public interface TestRootElement extends IModelElement
     Value<String> getRequiredValue();
     void setRequiredValue( String value );
     
+    // *** RequiredValueWithDefault ***
+    
+    @Required
+    @DefaultValue( text = "123" )
+    
+    ValueProperty PROP_REQUIRED_VALUE_WITH_DEFAULT = new ValueProperty( TYPE, "RequiredValueWithDefault" );
+    
+    Value<String> getRequiredValueWithDefault();
+    void setRequiredValueWithDefault( String value );
+    
     // *** RequiredElement ***
     
     @Type( base = EmptyModelElement.class )

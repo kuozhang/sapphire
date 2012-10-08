@@ -73,83 +73,75 @@ public abstract class PathValidationService extends ValidationService
             
             if( fileName != null )
             {
-                return validateExtensions( fileName, this.fileExtensionsService.extensions() );
-            }
-        }
-        
-        return Status.createOkStatus();
-    }
-    
-    public static final Status validateExtensions( final String fileName,
-                                                   final List<String> validFileExtensions )
-    {
-        final int count = ( validFileExtensions == null ? 0 : validFileExtensions.size() );
-        
-        if( count > 0 )
-        {
-            final String trimmedFileName = fileName.trim();
-            final int lastdot = trimmedFileName.lastIndexOf( '.' );
-            final String extension;
-            
-            if( lastdot == -1 )
-            {
-                extension = "";
-            }
-            else
-            {
-                extension = trimmedFileName.substring( lastdot + 1 );
-            }
-            
-            boolean match = false;
-            
-            if( extension != null && extension.length() != 0 )
-            {
-                for( String ext : validFileExtensions )
-                {
-                    if( extension.equalsIgnoreCase( ext ) )
-                    {
-                        match = true;
-                        break;
-                    }
-                }
-            }
-            
-            if( ! match )
-            {
-                final String message;
+                final List<String> extensions = this.fileExtensionsService.extensions();
+                final int count = ( extensions == null ? 0 : extensions.size() );
                 
-                if( count == 1 )
+                if( count > 0 )
                 {
-                    message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, validFileExtensions.get( 0 ) );
-                }
-                else if( count == 2 )
-                {
-                    message = NLS.bind( Resources.invalidFileExtensionTwo, trimmedFileName, validFileExtensions.get( 0 ), validFileExtensions.get( 1 ) );
-                }
-                else
-                {
-                    final StringBuilder buf = new StringBuilder();
+                    final String trimmedFileName = fileName.trim();
+                    final int lastdot = trimmedFileName.lastIndexOf( '.' );
+                    final String extension;
                     
-                    for( String ext : validFileExtensions )
+                    if( lastdot == -1 )
                     {
-                        if( buf.length() != 0 )
+                        extension = "";
+                    }
+                    else
+                    {
+                        extension = trimmedFileName.substring( lastdot + 1 );
+                    }
+                    
+                    boolean match = false;
+                    
+                    if( extension != null && extension.length() != 0 )
+                    {
+                        for( String ext : extensions )
                         {
-                            buf.append( ", " );
+                            if( extension.equalsIgnoreCase( ext ) )
+                            {
+                                match = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if( ! match )
+                    {
+                        final String message;
+                        
+                        if( count == 1 )
+                        {
+                            message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, extensions.get( 0 ) );
+                        }
+                        else if( count == 2 )
+                        {
+                            message = NLS.bind( Resources.invalidFileExtensionTwo, trimmedFileName, extensions.get( 0 ), extensions.get( 1 ) );
+                        }
+                        else
+                        {
+                            final StringBuilder buf = new StringBuilder();
+                            
+                            for( String ext : extensions )
+                            {
+                                if( buf.length() != 0 )
+                                {
+                                    buf.append( ", " );
+                                }
+                                
+                                buf.append( ext );
+                            }
+                            
+                            message = NLS.bind( Resources.invalidFileExtensionMultiple, trimmedFileName, buf.toString() ); 
                         }
                         
-                        buf.append( ext );
+                        return Status.createErrorStatus( message );
                     }
-                    
-                    message = NLS.bind( Resources.invalidFileExtensionMultiple, trimmedFileName, buf.toString() ); 
                 }
-                
-                return Status.createErrorStatus( message );
             }
         }
         
         return Status.createOkStatus();
     }
-    
     
     protected static final class Resources extends NLS
     {

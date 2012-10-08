@@ -11,14 +11,12 @@
 
 package org.eclipse.sapphire.ui;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ClassLocator;
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
-import org.eclipse.sapphire.modeling.ResourceLocator;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -48,24 +46,6 @@ public final class SapphireExtensionSystem
 
             for( final ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
             {
-                final ResourceLocator resourceLocator = new ResourceLocator()
-                {
-                    @Override
-                    public URL find( final String name )
-                    {
-                        return handle.findResource( name );
-                    }
-                };
-                
-                final ClassLocator classLocator = new ClassLocator()
-                {
-                    @Override
-                    public Class<?> find( final String name )
-                    {
-                        return handle.findClass( name );
-                    }
-                };
-                
                 try
                 {
                     final UrlResourceStore store = new UrlResourceStore( handle.extension() )
@@ -73,13 +53,9 @@ public final class SapphireExtensionSystem
                         @Override
                         public <A> A adapt( final Class<A> adapterType )
                         {
-                            if( adapterType == ClassLocator.class )
+                            if( adapterType == Context.class )
                             {
-                                return adapterType.cast( classLocator );
-                            }
-                            else if( adapterType == ResourceLocator.class )
-                            {
-                                return adapterType.cast( resourceLocator );
+                                return adapterType.cast( handle.context() );
                             }
                             
                             return super.adapt( adapterType );

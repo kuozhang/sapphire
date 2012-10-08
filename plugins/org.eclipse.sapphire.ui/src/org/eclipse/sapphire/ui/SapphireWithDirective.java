@@ -40,11 +40,13 @@ import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
+import org.eclipse.sapphire.ui.def.CompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
@@ -110,16 +112,26 @@ public final class SapphireWithDirective extends PageBookPart
             }
         };
         
-        this.element.attach( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property );
         
         updateCurrentPage( true );
     }
     
     @Override
-    protected ISapphireCompositeDef initDefaultPageDef()
+    protected Function initVisibleWhenFunction()
+    {
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            createVersionCompatibleFunction( getLocalModelElement(), this.property )
+        );
+    }
+    
+    @Override
+    protected CompositeDef initDefaultPageDef()
     {
         final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        final ISapphireCompositeDef composite = (ISapphireCompositeDef) root.getPartDefs().insert( ISapphireCompositeDef.TYPE );
+        final CompositeDef composite = (CompositeDef) root.getPartDefs().insert( CompositeDef.TYPE );
         final ISapphireLabelDef label = (ISapphireLabelDef) composite.getContent().insert( ISapphireLabelDef.TYPE );
         label.setText( Resources.noAdditionalPropertiesMessage );
         
@@ -145,6 +157,11 @@ public final class SapphireWithDirective extends PageBookPart
     @Override
     public void render( final SapphireRenderingContext context )
     {
+        if( ! visible() )
+        {
+            return;
+        }
+        
         final ISapphireWithDirectiveDef def = (ISapphireWithDirectiveDef) this.definition;
         
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
@@ -467,7 +484,7 @@ public final class SapphireWithDirective extends PageBookPart
                     actionPresentationKeyboard.render();
                     
                     modelPropertyListener.handle( new PropertyContentEvent( element, property ) );
-                    element.attach( modelPropertyListener, property.getName() );
+                    element.attach( modelPropertyListener, property );
                     
                     typeSelectorComposite.layout( true, true );
                     
@@ -477,7 +494,7 @@ public final class SapphireWithDirective extends PageBookPart
                         {
                             public void widgetDisposed( final DisposeEvent event )
                             {
-                                element.detach( modelPropertyListener, property.getName() );
+                                element.detach( modelPropertyListener, property );
                                 actionPresentationManager.dispose();
                                 actionPresentationKeyboard.dispose();
                             }
@@ -595,7 +612,7 @@ public final class SapphireWithDirective extends PageBookPart
         
         if( this.listener != null )
         {
-            this.element.detach( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property );
         }
     }
     

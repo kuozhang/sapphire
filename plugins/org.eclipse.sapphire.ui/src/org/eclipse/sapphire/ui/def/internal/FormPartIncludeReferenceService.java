@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.services.ReferenceService;
-import org.eclipse.sapphire.ui.def.FormPartDef;
+import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 /**
@@ -27,7 +27,7 @@ public final class FormPartIncludeReferenceService
     @Override
     public Object resolve( final String reference )
     {
-        return context( ISapphireUiDef.class ).getPartDef( reference, true, FormPartDef.class );
+        return context( ISapphireUiDef.class ).getPartDef( reference, true, FormComponentDef.class );
     }
     
 }

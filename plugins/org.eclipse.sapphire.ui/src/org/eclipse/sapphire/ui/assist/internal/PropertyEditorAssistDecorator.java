@@ -241,7 +241,7 @@ public final class PropertyEditorAssistDecorator
             }
         };
         
-        this.element.attach( this.modelPropertyListener, this.property.getName() );
+        this.element.attach( this.modelPropertyListener, this.property );
         
         this.assistAction = part.getActions().getAction( SapphireActionSystem.ACTION_ASSIST );
         
@@ -510,7 +510,7 @@ public final class PropertyEditorAssistDecorator
     
     private void dispose()
     {
-        this.element.detach( this.modelPropertyListener, this.property.getName() );
+        this.element.detach( this.modelPropertyListener, this.property );
         this.assistAction.removeHandler( this.assistActionHandler );
         
         for( PropertyEditorAssistContributor contributor : this.contributors )

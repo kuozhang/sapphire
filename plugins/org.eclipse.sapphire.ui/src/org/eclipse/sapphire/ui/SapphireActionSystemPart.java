@@ -50,6 +50,7 @@ public abstract class SapphireActionSystemPart
     private final List<ImageData> images = new CopyOnWriteArrayList<ImageData>();
     private final List<SapphireActionLocationHint> locationHints = new CopyOnWriteArrayList<SapphireActionLocationHint>();
     private final List<SapphireActionLocationHint> locationHintsReadOnly = Collections.unmodifiableList( this.locationHints );
+    private boolean visible;
     private boolean enabled;
     private boolean checked;
     private final ListenerContext listeners = new ListenerContext();
@@ -137,6 +138,7 @@ public abstract class SapphireActionSystemPart
         }
         
         this.enabled = true;
+        this.visible = true;
     }
     
     protected abstract FunctionContext initFunctionContext();
@@ -263,6 +265,33 @@ public abstract class SapphireActionSystemPart
         broadcast( new LocationHintsChangedEvent() );
     }
     
+    public final boolean isVisible()
+    {
+        synchronized( this )
+        {
+            return this.visible;
+        }
+    }
+    
+    public final void setVisible( final boolean visible )
+    {
+        boolean changed = false;
+        
+        synchronized( this )
+        {
+            if( this.visible != visible )
+            {
+                this.visible = visible;
+                changed = true;
+            }
+        }
+        
+        if( changed )
+        {
+            broadcast( new VisibilityEvent() );
+        }
+    }
+    
     public boolean isEnabled()
     {
         synchronized( this )
@@ -347,6 +376,7 @@ public abstract class SapphireActionSystemPart
     public static final class ToolTipChangedEvent extends Event {}
     public static final class ImagesChangedEvent extends Event {}
     public static final class LocationHintsChangedEvent extends Event {}
+    public static final class VisibilityEvent extends Event {}
     public static final class EnablementChangedEvent extends Event {}
     public static final class CheckedStateChangedEvent extends Event {}
     

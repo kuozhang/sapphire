@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireCondition;
-import org.eclipse.sapphire.ui.SapphireSection;
+import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActionHandler.PropertyRef;
 
 /**
@@ -31,10 +31,10 @@ public final class RestoreDefaultsActionHandlerCondition extends SapphireConditi
     {
         final ISapphirePart part = getPart();
         
-        if( part instanceof SapphireSection )
+        if( part instanceof SectionPart )
         {
             final Set<PropertyRef> properties = new HashSet<PropertyRef>();
-            collectProperties( (SapphireSection) part, properties );        
+            collectProperties( (SectionPart) part, properties );        
             return ! properties.isEmpty();
         }
         

@@ -109,6 +109,12 @@ public final class PartServiceContext extends ServiceContext
                 final ServiceFactoryProxy proxy = new ServiceFactoryProxy()
                 {
                     @Override
+                    public String id()
+                    {
+                        return serviceImplClass.getName();
+                    }
+                    
+                    @Override
                     public Class<? extends Service> type()
                     {
                         return serviceImplClass;

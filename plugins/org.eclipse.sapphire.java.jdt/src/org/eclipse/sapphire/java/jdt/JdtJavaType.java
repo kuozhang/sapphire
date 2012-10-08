@@ -26,10 +26,7 @@ import org.eclipse.sapphire.java.JavaTypeKind;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JdtJavaType
-
-    extends JavaType
-    
+public final class JdtJavaType extends JavaType
 {
     private final IType type;
     private final JavaTypeKind kind;

@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.def.TabGroupPageDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TabGroupPagePart extends SapphirePartContainer
+public final class TabGroupPagePart extends FormPart
 {
     private static final ImageData IMG_TAB_GROUP_PAGE
         = ImageData.createFromClassLoader( TabGroupPagePart.class, "TabGroupPage.png" );

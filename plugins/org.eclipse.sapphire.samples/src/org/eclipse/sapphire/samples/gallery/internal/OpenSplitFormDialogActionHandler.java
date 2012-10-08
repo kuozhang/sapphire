@@ -12,8 +12,10 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.samples.gallery.IGallery;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.SapphireDialog;
 
 /**
@@ -27,8 +29,11 @@ public class OpenSplitFormDialogActionHandler extends SapphireActionHandler
     {
         final IModelElement element = context.getPart().getLocalModelElement();
         
-        final SapphireDialog dialog 
-            = new SapphireDialog( context.getShell(), element, "org.eclipse.sapphire.samples/org/eclipse/sapphire/samples/gallery/GalleryEditor.sdef!SplitFormDialog" );
+        final SapphireDialog dialog = new SapphireDialog
+        (
+            context.getShell(), element, 
+            DefinitionLoader.context( IGallery.class ).sdef( "SapphireGallery" ).dialog( "SplitFormDialog" )
+        );
         
         dialog.open();
         

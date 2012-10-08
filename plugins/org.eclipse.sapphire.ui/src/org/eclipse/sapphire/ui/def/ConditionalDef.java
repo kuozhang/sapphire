@@ -31,7 +31,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 @Label( standard = "if" )
 @GenerateImpl
 
-public interface ConditionalDef extends FormPartDef
+public interface ConditionalDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( ConditionalDef.class );
     
@@ -62,7 +62,7 @@ public interface ConditionalDef extends FormPartDef
             ISapphireGroupDef.class,
             ISapphireWithDirectiveDef.class,
             ConditionalDef.class,
-            ISapphireCompositeDef.class,
+            CompositeDef.class,
             ActuatorDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
@@ -86,7 +86,7 @@ public interface ConditionalDef extends FormPartDef
             @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
-            @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "composite", type = CompositeDef.class ),
             @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
@@ -116,7 +116,7 @@ public interface ConditionalDef extends FormPartDef
             ISapphireGroupDef.class,
             ISapphireWithDirectiveDef.class,
             ConditionalDef.class,
-            ISapphireCompositeDef.class,
+            CompositeDef.class,
             ActuatorDef.class,
             ISapphireCustomPartDef.class,
             ISapphireStaticTextFieldDef.class,
@@ -140,7 +140,7 @@ public interface ConditionalDef extends FormPartDef
             @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
             @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
             @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
-            @XmlListBinding.Mapping( element = "composite", type = ISapphireCompositeDef.class ),
+            @XmlListBinding.Mapping( element = "composite", type = CompositeDef.class ),
             @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
             @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
             @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),

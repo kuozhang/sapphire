@@ -46,13 +46,13 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                refreshEnablementState();
+                refreshVisibility();
             }
         };
         
         element.attach( listener, ModelPath.ALL_DESCENDENTS );
 
-        refreshEnablementState();
+        refreshVisibility();
         
         attach
         (
@@ -70,13 +70,13 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
         );
     }
 
-    private void refreshEnablementState()
+    private void refreshVisibility()
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
         final IModelElement element = node.getLocalModelElement();
         final Resource resource = element.resource();
         
-        setEnabled( resource instanceof XmlResource && ( (XmlResource) resource ).getXmlElement() != null );
+        setVisible( resource instanceof XmlResource && ( (XmlResource) resource ).getXmlElement() != null );
     }
 
     @Override

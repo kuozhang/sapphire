@@ -21,12 +21,10 @@ import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.suppressDashedTableEn
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -56,8 +54,8 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.SortedSetFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -92,9 +90,11 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
     {
         super( context, part );
         
-        this.memberType = getProperty().getType();
+        final ListProperty property = getProperty();
+        
+        this.memberType = property.getType();
         this.memberProperty = (ValueProperty) this.memberType.properties().get( 0 );
-        this.possibleValuesService = part.getLocalModelElement().service( this.memberProperty, PossibleValuesService.class );
+        this.possibleValuesService = part.getLocalModelElement().service( property, PossibleValuesService.class );
         
         setAddActionDesired( false );
     }
@@ -127,6 +127,8 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         
         final IStructuredContentProvider contentProvider = new IStructuredContentProvider()
         {
+            @SuppressWarnings( "unchecked" )
+            
             public Object[] getElements( final Object inputElement )
             {
                 if( SlushBucketPropertyEditor.this.possibleValuesService == null )
@@ -141,55 +143,17 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                     return new Object[ 0 ];
                 }
 
-                final Collection<String> allValues;
+                final SortedSet<String> possibleValues = SlushBucketPropertyEditor.this.possibleValuesService.values();
                 
-                try
-                {
-                    allValues = SlushBucketPropertyEditor.this.possibleValuesService.values();
-                }
-                catch( Exception e )
-                {
-                    SapphireUiFrameworkPlugin.log( e );
-                    return new Object[ 0 ];
-                }
-                
-                final Set<String> valuesToRemove = new HashSet<String>();
+                final SortedSetFactory<String> unusedPossibleValues 
+                    = SortedSetFactory.start( (Comparator<String>) possibleValues.comparator() ).add( possibleValues );
                 
                 for( IModelElement member : list )
                 {
-                    final String str = member.read( SlushBucketPropertyEditor.this.memberProperty ).getText();
-                    
-                    if( str != null )
-                    {
-                        valuesToRemove.add( str );
-                    }
+                    unusedPossibleValues.remove( member.read( SlushBucketPropertyEditor.this.memberProperty ).getText() );
                 }
                 
-                final Collection<String> values;
-                
-                if( SlushBucketPropertyEditor.this.possibleValuesService.isCaseSensitive() )
-                {
-                    values = new HashSet<String>( allValues );
-                    values.removeAll( valuesToRemove );
-                }
-                else
-                {
-                    final Map<String,String> valuesLowerCaseToOriginalCase = new HashMap<String,String>();
-
-                    for( String value : allValues )
-                    {
-                        valuesLowerCaseToOriginalCase.put( value.toLowerCase(), value );
-                    }
-
-                    for( String valueToRemove : valuesToRemove )
-                    {
-                        valuesLowerCaseToOriginalCase.remove( valueToRemove.toLowerCase() );
-                    }
-                    
-                    values = valuesLowerCaseToOriginalCase.values();
-                }
-
-                return values.toArray();
+                return unusedPossibleValues.result().toArray();
             }
 
             public void inputChanged( final Viewer viewer,
@@ -396,28 +360,22 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         @Override
         public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
+            final IModelElement element = propertyEditorPart.getLocalModelElement();
             final ModelProperty property = propertyEditorPart.getProperty();
             
-            if( property instanceof ListProperty )
+            if( property instanceof ListProperty &&
+                element.service( property, PossibleValuesService.class ) != null &&
+                element.service( property, PossibleTypesService.class ).types().size() == 1 )
             {
-                final IModelElement element = propertyEditorPart.getLocalModelElement();
-                final ListProperty listProperty = (ListProperty) property;
+                final List<ModelProperty> properties = property.getType().properties();
                 
-                if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
+                if( properties.size() == 1 )
                 {
-                    final ModelElementType memberType = listProperty.getType();
-                    final List<ModelProperty> properties = memberType.properties();
+                    final ModelProperty memberProperty = properties.get( 0 );
                     
-                    if( properties.size() == 1 )
+                    if( memberProperty instanceof ValueProperty && memberProperty.hasAnnotation( NoDuplicates.class ) )
                     {
-                        final ModelProperty memberProperty = properties.get( 0 );
-                        
-                        if( memberProperty instanceof ValueProperty &&
-                            memberProperty.hasAnnotation( NoDuplicates.class ) &&
-                            propertyEditorPart.getLocalModelElement().service( memberProperty, PossibleValuesService.class ) != null )
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }

@@ -17,8 +17,8 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.def.ISapphireWizardDef;
-import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
+import org.eclipse.sapphire.ui.def.WizardDef;
+import org.eclipse.sapphire.ui.def.WizardPageDef;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -36,7 +36,7 @@ public final class SapphireWizardPart extends SapphirePart
         super.init();
         
         final IModelElement element = getModelElement();
-        final ISapphireWizardDef def = definition();
+        final WizardDef def = definition();
         
         this.imageFunctionResult = initExpression
         (
@@ -55,7 +55,7 @@ public final class SapphireWizardPart extends SapphirePart
         
         final ListFactory<SapphireWizardPagePart> pagesListFactory = ListFactory.start();
         
-        for( ISapphireWizardPageDef pageDef : def.getPages() )
+        for( WizardPageDef pageDef : def.getPages() )
         {
             pagesListFactory.add( (SapphireWizardPagePart) create( this, element, pageDef, this.params ) );
         }
@@ -64,9 +64,9 @@ public final class SapphireWizardPart extends SapphirePart
     }
 
     @Override
-    public ISapphireWizardDef definition()
+    public WizardDef definition()
     {
-        return (ISapphireWizardDef) super.definition();
+        return (WizardDef) super.definition();
     }
     
     public String getLabel()

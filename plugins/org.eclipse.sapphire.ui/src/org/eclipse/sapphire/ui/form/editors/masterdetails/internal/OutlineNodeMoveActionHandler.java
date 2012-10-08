@@ -76,7 +76,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
             }
         };
         
-        parent.attach( listPropertyListener, property.getName() );
+        parent.attach( listPropertyListener, property );
         
         refreshEnabledState();
         
@@ -89,7 +89,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        parent.detach( listPropertyListener, property.getName() );
+                        parent.detach( listPropertyListener, property );
                         OutlineNodeMoveActionHandler.this.contentTree.detach( contentTreeListener );
                     }
                 }

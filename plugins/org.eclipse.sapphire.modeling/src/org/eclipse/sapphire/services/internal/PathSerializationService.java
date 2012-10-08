@@ -27,7 +27,14 @@ public final class PathSerializationService extends ValueSerializationService
     @Override
     protected Path decodeFromString( final String value )
     {
-        return new Path( value );
+        try
+        {
+            return new Path( value );
+        }
+        catch( IllegalArgumentException e )
+        {
+            return null;
+        }
     }
     
     public static final class Factory extends ServiceFactory

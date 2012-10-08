@@ -106,7 +106,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
             }
         };
         
-        element.attach( listener, property.getName() );
+        element.attach( listener, property );
         
         attach
         (
@@ -117,7 +117,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        element.detach( listener, property.getName() );
+                        element.detach( listener, property );
                     }
                 }
             }

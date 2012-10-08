@@ -89,7 +89,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
             }
         };
         
-        this.element.attach( this.listener, this.property.getName() );
+        this.element.attach( this.listener, this.property );
         
         super.init();
         
@@ -168,7 +168,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
         
         if( this.listener != null )
         {
-            this.element.detach( this.listener, this.property.getName() );
+            this.element.detach( this.listener, this.property );
         }
     }
 

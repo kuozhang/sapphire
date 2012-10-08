@@ -133,6 +133,7 @@
 
     <wizard>
         <id>wizard</id>
+        <element-type>IFileBugReportOp</element-type>
         <label>create bug report (sapphire sample)</label>
         <page>
             <id>main.page</id>
@@ -155,6 +156,8 @@
     
     <editor-page>
         <id>editor.page</id>
+        <element-type>IBugDatabase</element-type>
+        <page-name>bug database</page-name>
         <page-header-text>bug database (sapphire sample)</page-header-text>
         <initial-selection>bug reports</initial-selection>
         <action>
@@ -183,13 +186,12 @@
                 <label>bug reports</label>
                 <section>
                     <content>
-                        <label>Use this editor to manage your bug database.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add a bug report</label>
                         </actuator>
                     </content>
+                    <description>Use this editor to manage your bug database.</description>
                 </section>
                 <node-factory>
                     <property>BugReports</property>
@@ -205,7 +207,6 @@
                 </node-factory>
             </node>
         </root-node>
-        <page-name>bug database</page-name>
     </editor-page>
     
 </definition>

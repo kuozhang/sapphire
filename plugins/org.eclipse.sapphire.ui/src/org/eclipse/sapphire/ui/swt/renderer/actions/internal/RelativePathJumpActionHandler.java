@@ -31,10 +31,7 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class RelativePathJumpActionHandler 
-
-    extends SapphireJumpActionHandler
-    
+public final class RelativePathJumpActionHandler extends SapphireJumpActionHandler
 {
     public static final String ID = "Sapphire.Jump.Path.Relative";
     
@@ -51,7 +48,7 @@ public final class RelativePathJumpActionHandler
             final IModelElement element = getModelElement();
             final ValueProperty property = getProperty();
             
-            final String relativePath = element.read( property ).getText( true );
+            final Path relativePath = (Path) element.read( property ).getContent();
             
             if( relativePath != null )
             {
@@ -78,7 +75,7 @@ public final class RelativePathJumpActionHandler
         final IModelElement element = getModelElement();
         final ValueProperty property = getProperty();
         
-        final String relativePath = element.read( property ).getText( true );
+        final Path relativePath = (Path) element.read( property ).getContent();
         
         if( relativePath != null )
         {

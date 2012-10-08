@@ -26,11 +26,12 @@
         <package>org.eclipse.sapphire.ui.diagram.def</package>
         <package>org.eclipse.sapphire.sdk</package>
         <package>org.eclipse.sapphire.sdk.internal</package>
-        <definition>org/eclipse/sapphire/sdk/Common.sdef</definition>
         <package>org.eclipse.sapphire.ui.diagram.shape.def</package>
+        <definition>org.eclipse.sapphire.sdk.Common</definition>
     </import>
     
     <editor-page>
+        <element-type>ISapphireUiDef</element-type>
         <id>main</id>
         <page-header-text>Sapphire UI Definition</page-header-text>
         <root-node>
@@ -47,9 +48,8 @@
                 <label>documentation</label>
                 <image>Documentation.gif</image>
                 <section>
+                    <description>Define named documentation content. Reference the same documentation content from multiple parts.</description>
                     <content>
-                        <label>Define named documentation content. Reference the same documentation content from multiple parts.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add documentation content</label>
@@ -74,9 +74,8 @@
             <node>
                 <label>parts</label>
                 <section>
+                    <description>Define parts.</description>
                     <content>
-                        <label>Define parts.</label>
-                        <spacer/>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a part</label>
@@ -239,9 +238,8 @@
         <node>
             <label>handler filters</label>
             <section>
+                <description>Define action handler filters.</description>
                 <content>
-                    <label>Define action handler filters.</label>
-                    <spacer/>
                     <actuator>
                         <action-id>Sapphire.Add</action-id>
                         <label>Add an action handler filter</label>
@@ -673,13 +671,14 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireWizardDef</model-element-type>
+            <model-element-type>WizardDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Wizard" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
                 <label>Wizard</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>Label</property-editor>
                     <property-editor>Description</property-editor>
                     <property-editor>Image</property-editor>
@@ -688,7 +687,7 @@
             <node-factory>
                 <property>Pages</property>
                 <case>
-                    <model-element-type>ISapphireWizardPageDef</model-element-type>
+                    <model-element-type>WizardPageDef</model-element-type>
                     <label>${ Label == null ? "&lt;page&gt;" : Label }</label>
                     <section>
                         <label>Wizard Page</label>
@@ -725,7 +724,7 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireDialogDef</model-element-type>
+            <model-element-type>DialogDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Dialog" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -787,12 +786,16 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireSectionDef</model-element-type>
+            <model-element-type>SectionDef</model-element-type>
             <label>${ Id == null ? &quot;Section&quot; : Id }</label>
             <section>
-                <label>Section</label>
+                <label>section</label>
                 <content>
                     <property-editor>Label</property-editor>
+                    <property-editor>
+                        <height>75</height>
+                        <property>Description</property>
+                    </property-editor>
                     <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
@@ -832,7 +835,7 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireCompositeDef</model-element-type>
+            <model-element-type>CompositeDef</model-element-type>
             <label>${ Id == null ? "Composite" : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -869,6 +872,7 @@
                 <label>form editor page</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
@@ -1163,9 +1167,13 @@
                         <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                         <image>${ Image() }</image>
                         <section>
-                            <label>Section</label>
+                            <label>section</label>
                             <content>
                                 <property-editor>Label</property-editor>
+                                <property-editor>
+                                    <height>75</height>
+                                    <property>Description</property>
+                                </property-editor>
                                 <property-editor>VisibleWhen</property-editor>
                             </content>
                         </section>
@@ -1254,9 +1262,13 @@
                                 <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
                                 <image>${ Image() }</image>
                                 <section>
-                                    <label>Section</label>
+                                    <label>section</label>
                                     <content>
                                         <property-editor>Label</property-editor>
+                                        <property-editor>
+                                            <height>75</height>
+                                            <property>Description</property>
+                                        </property-editor>
                                         <property-editor>VisibleWhen</property-editor>
                                     </content>
                                 </section>
@@ -1335,6 +1347,7 @@
                 <label>form editor page</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
@@ -1365,6 +1378,7 @@
                 <label>diagram editor page</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>ElementType</property-editor>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
@@ -1463,6 +1477,24 @@
                                             <property-editor>InstanceId</property-editor>
                                         </content>
                                     </section>
+                                    <section>
+                                        <content>
+                                            <with>
+                                                <path>Label</path>
+                                                <label>show connection label</label>
+                                                <panel>
+                                                    <key>IDiagramLabelDef</key>
+                                                    <content>
+                                                        <property-editor>Text</property-editor>
+                                                        <property-editor>Width</property-editor>
+                                                        <property-editor>Height</property-editor>
+                                                    </content>
+                                                </panel>
+                                            </with>
+                                        </content>
+                                        <label>label</label>
+                                    </section>
+                                    
                                     <label>${ Property == null ? &quot;&lt;connection-binding&gt;&quot; : Property }</label>
                                     <section>
                                         <label>endpoint 1</label>

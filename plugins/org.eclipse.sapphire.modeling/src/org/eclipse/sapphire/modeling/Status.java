@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.*;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Comparator;
@@ -139,6 +141,24 @@ public final class Status
     public SortedSet<Status> children()
     {
         return this.children;
+    }
+    
+    public boolean contains( final String type )
+    {
+        if( equal( this.type, type ) )
+        {
+            return true;
+        }
+        
+        for( Status child : this.children )
+        {
+            if( child.contains( type ) )
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     @Override
@@ -341,7 +361,7 @@ public final class Status
         public int compare( final Status x,
                             final Status y )
         {
-            int result = x.severity.code() - y.severity.code();
+            int result = y.severity.code() - x.severity.code();
             
             if( result == 0 )
             {

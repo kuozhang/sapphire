@@ -23,7 +23,20 @@
 <h1>Enhancements in 0.6</h1>
 
 <ol>
-  <li><a href="#VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
+  <li><a href="#Modeling">Modeling</a></li>
+  <ol type="A">
+    <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
+    <li><a href="#Modeling-Context">Context</a></li>
+    <li><a href="#Modeling-ConversionService">ConversionService</a></li>
+    <li><a href="#Modeling-FileName">FileName</a></li>
+    <li><a href="#Modeling-MasterConversionService">MasterConversionService</a></li>
+    <li><a href="#Modeling-ModelElement">ModelElement</a></li>
+    <li><a href="#Modeling-ModelElementList">ModelElementList</a></li>
+    <li><a href="#Modeling-ModelElementType">ModelElementType</a></li>
+    <li><a href="#Modeling-PossibleValuesService">PossibleValuesService</a></li>
+    <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
+    <li><a href="#Modeling-Service">Service</a></li>
+  </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
@@ -37,19 +50,27 @@
     <li><a href="#ExpressionLanguage-UseInNodeFactoryVisibilityConstraint">Use in Node Factory Visibility Constraint</a></li>
     <li><a href="#ExpressionLanguage-UseInPropertyEditorVisibilityConstraint">Use in Property Editor Visibility Constraint</a></li>
   </ol>
+  <li><a href="#Forms">Forms</a></li>
+  <ol type="A">
+    <li><a href="#Forms-SectionDescription">Section Description</a></li>
+  </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></li>
     <li><a href="#Miscellaneous-CollectionFactoriesEnhancements">Enhancements to Collection Factories</a></li>
+    <li><a href="#Miscellaneous-JdtUtil">JdtUtil</a></li>
     <li><a href="#Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></li>
-    <li><a href="#Miscellaneous-ModelElementList">ModelElementList</a></li>
     <li><a href="#Miscellaneous-SapphirePart">SapphirePart</a></li>
+    <li><a href="#Miscellaneous-Status">Status</a></li>
     <li><a href="#Miscellaneous-Value">Value</a></li>
+    <li><a href="#Miscellaneous-OverwriteExistingFile">Overwrite Existing File</a></li>
+    <li><a href="#Miscellaneous-DynamicActionVisibility">Dynamic Action Visibility</a></li>
+    <li><a href="#Miscellaneous-ShowNextProblem">Show Next Problem</a></li>
   </ol>
 </ol>
 
 
-<h2><a name="VersionsAndVersionConstraints">Versions and Version Constraints</a></h2>
+<h2><a name="Modeling"><a name="Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></a></h2>
 
 <p>In many complex Sapphire models, it is useful to be able to constrain functionality based on a version. To simplify these scenarios,
 Sapphire now has native constructs for dealing with versions and version constraints.</p>
@@ -126,6 +147,343 @@ view page.</p>
         &lt;/content>
     &lt;/page>
 &lt;/properties-view></font></code></pre>
+
+
+<h2><a name="Modeling-Context">Context</a></h2>
+
+<p>The existing ClassLocator and ResourceLocator abstractions have been combined into a single abstraction.
+This abstraction enables Sapphire to find classes and other resources typically loaded from
+a class loader even if Sapphire is used in a context such as OSGi where a ClassLoader instance may not always
+be exposed.</p>
+
+<pre class="source-code"><code>Context
+{
+     static Context adapt( ClassLoader loader )
+     static Context adapt( Class&lt;?> cl )
+     
+     abstract &lt;T> Class&lt;T> findClass( String name )
+     abstract URL findResource( String name )
+     abstract List&lt;URL> findResources( String name )
+}
+ 
+BundleBasedContext extends Context
+{
+     static Context adapt( Bundle bundle )
+}</code></pre>
+
+<p>In addition to merging of the locators, this enhancement includes two new features:</p>
+
+<ol>
+
+  <li>The findResources() method, which is used for locating all resources with the same name.</li> 
+
+  <li>When Context is constructed based on a class instead of a class loader, the implementation is 
+  capable of resolving classes and resources using a simple name relative to the package of context class.</li>
+  
+</ol>
+
+
+<a name="Modeling-ConversionService"><h2>ConversionService</h2></a>
+
+<p>The ConversionService converts an object to the specified type. One common application is to convert
+an input (such as a file) to a resource when instantiating the model.</p>
+
+<table>
+  <tr>
+    <th>Sapphire.ConversionService.IFileToWorkspaceFileResourceStore</th>
+  </tr>
+  <tr>
+    <td>Capable of converting an IFile to a WorkspaceFileResourceStore or a ByteArrayResourceStore.</td>
+  </tr>
+  <tr>
+    <td style="border-width: 0px; height: 20px"></td>
+  </tr>
+  <tr>
+    <th>Sapphire.ConversionService.ByteArrayResourceStoreToXmlResource</th>
+  </tr>
+  <tr>
+    <td>Capable of converting a ByteArrayResourceStore to an XmlResource or a Resource. Conversion is only 
+    performed if resource store corresponds   to a file with "xml" extension or if the context element type 
+    has XML binding annotations.</td>
+  </tr>
+</table>
+
+<p>A ConversionService can delegate to other conversion services to create a conversion chain. In fact,
+a common conversion of IFile to XmlResource is a chain of two ConversionService implementations.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In the purchase order sample, a custom ConversionService is used because the 
+default file extension for purchase order files is "po" rather than "xml" and PurchaseOrder element does not
+have XML binding annotations. The combination of these two factors prevent the framework-provided ConversionService
+implementations from engaging.</p>
+
+<pre class="source-code"><code>@Service( impl = PurchaseOrderResourceConversionService.class )
+
+<font color="#888888">public interface PurchaseOrder extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code>public class PurchaseOrderResourceConversionService extends ConversionService
+{
+    @Override
+    public &lt;T> T convert( Object object, Class&lt;T> type )
+    {
+        if( type == XmlResource.class || type == Resource.class )
+        {
+            final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
+            
+            if( store != null )
+            {
+                return type.cast( new RootXmlResource( new XmlResourceStore( store ) ) );
+            }
+        }
+        
+        return null;
+    }
+}</code></pre>
+
+<p style="margin-left: 20px;">Note the use of chaining as part of the presented ConversionService implementation. The 
+input could be any number of things, but as long as another ConversionService implementation knows how to convert it 
+to a ByteArrayResourceStore, this implementation will take the conversion the rest of the way to a Resource.</p> 
+
+
+<h2><a name="Modeling-FileName">FileName</a></h2>
+
+<p>When implementing operations that create files, a common need is to gather the name of a file 
+from the user. The file name must be validated to be compatible with user's platform and certain 
+normalization should be performed to simplify file name input.</p>
+
+<p>Sapphire now provides FileName class and associated services.</p>
+
+<ol>
+
+  <li><b>ValidationService</b> – Flags invalid file names as errors.</li>
+
+  <li><b>ValueSerializationService</b> – Only creates FileName objects that are valid for the current platform.</li>
+
+  <li><b>ValueNormalizationService</b></li>
+  
+  <ol type="A">
+
+    <li>Leading whitespace is removed.</li>
+   
+    <li>Trailing whitespace and dots are removed.</li>
+   
+    <li>Extension is added if the file name does not have one already and if the property has 
+    a FileExtensionsService (usually via @FileExtensions annotation).</li>
+    
+  </ol>
+  
+</ol>
+
+
+<a name="Modeling-MasterConversionService"><h2>MasterConversionService</h2></a>
+
+<p>The MasterConversionService converts an object to the specified type by delegating to available ConversionService 
+implementations. If object is null or is already of desired type, the object is returned unchanged.</p> 
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to
+be implemented by adopters. See <a href="#Modeling-ConversionService">ConversionService</a> instead.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, an IFile is converted to a Resource as part of instantiating the model.
+Note how this code is not aware of the details of the conversion or what type of a resource is created.</p>
+
+ <pre class="source-code"><code><font color="#888888">IFile file = project.getFile( "contacts.xml" )</font>
+Resource resource = ContactsDatabase.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+<font color="#888888">ContactsDatabase model = ContactsDatabase.TYPE.instantiate( resource );</font></code></pre>
+
+
+<h2><a name="Modeling-ModelElement">ModelElement</a></h2>
+
+<p>The existing ModelElement.initialize() method has been enhanced to be consistent with fluent interface principles by returning 
+the element instead of void. This facilitates chaining.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource );
+op.initialize();</font></code></pre>
+
+<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource ).initialize();</font></code></pre>
+
+<p>A new variant of attach() and detach() methods has been added to make it a bit less verbose to listen for changes
+to a particular property.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{</font>
+    <font color="#888888">boolean attach( Listener listener )
+    void attach( Listener listener, String path )
+    void attach( Listener listener, ModelPath path )</font>
+    void attach( Listener listener, ModelProperty property )
+    
+    <font color="#888888">boolean detach( Listener listener )
+    void detach( Listener listener, String path )
+    void detach( Listener listener, ModelPath path )</font>
+    void detach( Listener listener, ModelProperty property )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME.getName() );</code></pre>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME );</code></pre>
+
+<p>Several method have been enhanced with an overloaded variant that accepts a string property name in place
+of a ModelProperty object. This reduces verbosity in situations where code does not already have a ModelProperty
+instance handy.</p> 
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{
+    &lt;S extends Service> S service( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> S service( String property, Class&lt;S> serviceType )
+    
+    <font color="#888888">&lt;S extends Service> List&lt;S> services( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> List&lt;S> services( String property, Class&lt;S> serviceType )
+    
+    <font color="#888888">boolean enabled( ModelProperty property )</font>
+    boolean enabled( String property )
+    
+    <font color="#888888">Status validation( ModelProperty property )</font>
+    Status validation( String property )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>Status validation = op.validation( op.property( "FileName" ) );</code></pre>
+
+<pre class="source-code"><code>Status validation = op.validation( "FileName" );</code></pre>
+
+
+<h2><a name="Modeling-ModelElementList">ModelElementList</a></h2>
+
+<p>The new ModelElementList.enabled() method provides a simpler way to check list property's enablement
+directly through the property accessor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two statements are equivalent.</p>
+
+<pre class="source-code"><code>container.getEntities().enabled()</font></code></pre>
+
+<pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
+
+
+<h2><a name="Modeling-ModelElementType">ModelElementType</a></h2>
+
+<p>A new variant of instantiate method provides a way to create a model instance from an arbitrary input
+without knowing which resource needs to be created. The resource creation is handled by delegating
+to ConversionService implementations.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElementType
+{
+    &lt;T extends IModelElement> T instantiate()
+    &lt;T extends IModelElement> T instantiate( Resource resource )</font>
+    &lt;T extends IModelElement> T instantiate( Object input )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following three snippets are equivalent.</p>
+
+<pre class="source-code"><code>Resource resource = new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) );
+PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
+
+<pre class="source-code"><code>Resource resource = PurchaseOrder.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
+
+<pre class="source-code"><code>PurchaseOrder po = PuchaseOrder.TYPE.instantiate( file );</code></pre>
+
+
+<h2><a name="Modeling-PossibleValuesService">PossibleValueService</a></h2>
+
+<p>PossibleValueService can now be attached to the list property instead of the value property when modeling the
+list of possible values pattern in order to be able to utilize the model in the service implementation and
+be compatible with property editors like the slush bucket and the check box list.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public interface Example extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Example.class );
+    
+    // *** FavoriteColors ***
+
+    interface FavoriteColor extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( FavoriteColor.class );
+        
+        // *** Name ***
+        
+        @NoDuplicates
+
+        ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+        
+        Value&lt;String> getName();
+        void setName( String value );
+    }
+    
+    @Type( base = MultiSelectStringItem.class )</font>
+    @Service( impl = ColorsPossibleValuesService.class )
+    
+    <font color="#888888">ListProperty PROP_FAVORITY_COLORS = new ListProperty( TYPE, "FavoriteColors" );
+    
+    ModelElementList&lt;FavoriteColor> getMultiSelectString();
+}</font></code></pre>
+
+
+<h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>
+
+<p>In certain cases, deviations from property's default value are allowed, but not recommended.</p>
+
+<p>Consider a file creation wizard where the file should have a certain name to function properly. 
+This is common for configuration files. For flexibility and consistency, the wizard should allow 
+a different file name to be used if the user so desires, but it should warn the user that they 
+are deviating from the file name recommendation.</p>
+
+<p>The new @PreferDefaultValue annotation is used to specify the above semantics. Utilizing this 
+annotation produces a warning and a fact statement.</p>
+
+<p>Warning: <i>[property] should be [default-value].</i><br/>
+Fact: <i>Recommended value is [default-value].</i></p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@DefaultValue( text = "sapphire-extension.xml" )</font>
+@PreferDefaultValue
+ 
+<font color="#888888">ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/PreferDefaultValue.png"/></p>
+
+
+<h2><a name="Modeling-Service">Service</a></h2>
+
+<p>In the past, when a service implementation needed to leverage another service from the same context, 
+service context needed to be referenced explicitly. This led to unnecessary verbosity, so a pair of
+convenience methods have been added that delegate to the current context.</p>
+
+<pre class="source-code"><code><font color="#888888">Service
+{</font>
+    protected final &lt;S extends Service> S service( Class&lt;S> serviceType )
+    protected final &lt;S extends Service> List&lt;S> services( Class&lt;S> serviceType )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent within Service implementation.</p>
+
+<pre class="source-code"><code>context().service( ExampleService.class )</code></pre>
+
+<pre class="source-code"><code>service( ExampleService.class )</code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
@@ -257,6 +615,39 @@ ${ Name.LowerCase() }</code></pre>
 &lt;/property-editor></font></code></pre>
 
 
+<h2><a name="Forms"><a name="Forms-SectionDescription">Section Description</a></a></h2>
+
+<p>A common pattern in forms involves a description text at the top of a section to explain the contents of the section. This 
+pattern can be implemented using a label followed by a spacer in the section content, but this approach fails to fully convey
+the developer's intent and can lead to inconsistent presentation. A common mistake is failing to add a spacer after the label.</p>
+
+<p>The description for a section can now be specified directly.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;section>
+    &lt;label>shipping information&lt;/label></font>
+    &lt;description>If not specified, billing information is used for shipping purposes.&lt;/description>
+    <font color="#888888">&lt;content>
+        &lt;with>
+            &lt;path>ShippingInformation&lt;/path>
+            &lt;default-panel>
+                &lt;content>
+                    &lt;property-editor>Name&lt;/property-editor>
+                    &lt;property-editor>Organization&lt;/property-editor>
+                    &lt;property-editor>Street&lt;/property-editor>
+                    &lt;property-editor>City&lt;/property-editor>
+                    &lt;property-editor>State&lt;/property-editor>
+                    &lt;property-editor>ZipCode&lt;/property-editor>
+                &lt;/content>
+            &lt;/default-panel>
+        &lt;/with>
+    &lt;/content>
+&lt;/section></font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/SectionDescription.png"/></p>
+
+
 <h2><a name="Miscellaneous"><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></a></h2>
 
 <p>Two static utility methods have been added to XmlUtil to make it easier to convert documents to and from namespace-qualified form.</p>
@@ -283,6 +674,7 @@ brand new SortedSetFactory.</p>
     ListFactory&lt;E> add( E element )
     ListFactory&lt;E> add( E... element )
     ListFactory&lt;E> add( Collection&lt;E> element )</font>
+    ListFactory&lt;E> filter( Filter&lt;E> filter )
     E remove( int index )
     E get( int index )
     boolean contains( E element )
@@ -303,6 +695,7 @@ SetFactory
     SetFactory&lt;E> add( E element )
     SetFactory&lt;E> add( E... element )
     SetFactory&lt;E> add( Collection&lt;E> element )</font>
+    SetFactory&lt;E> filter( Filter&lt;E> filter )
     boolean remove( E element )
     boolean contains( E element )
     int size()
@@ -323,6 +716,7 @@ SortedSetFactory
     SortedSetFactory&lt;E> add( E element )
     SortedSetFactory&lt;E> add( E... element )
     SortedSetFactory&lt;E> add( Collection&lt;E> element )
+    SortedSetFactory&lt;E> filter( Filter&lt;E> filter )
     boolean remove( E element )
     E first()
     E last()
@@ -342,6 +736,7 @@ SortedSetFactory
 
     MapFactory&lt;K,V> add( K key, V value )
     MapFactory&lt;K,V> add( Map&lt;K,V> map )</font>
+    MapFactory&lt;K,V> filter( Filter&lt;Map.Entry&lt;K,V>> filter )
     V remove( K key )
     V get( K key )
     boolean contains( K key )
@@ -351,6 +746,29 @@ SortedSetFactory
     
     <font color="#888888">Map&lt;K,V> result()
 }</font></code></pre>
+
+
+<h2><a name="Miscellaneous-JdtUtil">JdtUtil</a></h2>
+
+<p>Various scenarios in both Sapphire and common usage of Sapphire require locating Java source folders. 
+Sapphire JDT integration now includes a set of utility functions to make this easier.</p>
+
+<pre class="source-code"><code>JdtUtil
+{
+    <font color="#008444">// Finds the nearest Java source folder for the specified resource.
+    // The nearest is defined as either the source folder containing 
+    // the specified resource or the first non-derived source folder 
+    // of the containing project.</font>
+
+    static IContainer findSourceFolder( IResource resource )
+
+    <font color="#008444">// Finds all source folders for a project, which is specified either
+    // directly or indirectly via a contained resource.</font>
+
+    static List&lt;IContainer> findSourceFolders( IResource resource )
+    static List&lt;IContainer> findSourceFolders( IProject project )
+    static List&lt;IContainer> findSourceFolders( IJavaProject project )
+}</code></pre>
 
 
 <h2><a name="Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></h2>
@@ -385,20 +803,6 @@ does not fire when child node visibility changes. See VisibilityChangedEvent for
 )</code></pre>
 
 
-<h2><a name="Miscellaneous-ModelElementList">ModelElementList</a></h2>
-
-<p>The new ModelElementList.enabled() method provides a simpler way to check list property's enablement
-directly through the property accessor.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">The following two statements are equivalent.</p>
-
-<pre class="source-code"><code>container.getEntities().enabled()</font></code></pre>
-
-<pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
-
-
 <h2><a name="Miscellaneous-SapphirePart">SapphirePart</a></h2>
 
 <p>Check part's visibility using SapphirePart.visible() method. To get notified of changes to part's visibility,
@@ -421,6 +825,19 @@ editor.attach
 )</code></pre>
 
 
+<h2><a name="Miscellaneous-Status">Status</a></h2>
+
+<p>The new Status.contains() method provides a simpler way to check if property validation has a problem
+of certain type. This can be useful when implementing automated validation problem fixes.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>if( op.getFileName().validation().contains( "Sapphire.Workspace.CreateFileOp.FileExists" ) )
+{
+    ...
+}</code></pre>
+
+
 <h2><a name="Miscellaneous-Value">Value</a></h2>
 
 <p>The new Value.enabled() method provides a simpler way to check value property's enablement
@@ -430,9 +847,87 @@ directly through the property accessor.</p>
 
 <p style="margin-left: 20px;">The following two statements are equivalent.</p>
 
-<pre class="source-code"><code>entity.getName().enabled()</font></code></pre>
+<pre class="source-code"><code>entity.getName().enabled()</code></pre>
 
 <pre class="source-code"><code>entity.enabled( Entity.PROP_NAME )</code></pre>
+
+
+<h2><a name="Miscellaneous-OverwriteExistingFile">Overwrite Existing File</a></h2>
+
+<p>The reusable form for creating workspace files has been enhanced with an automated problem resolution to overwrite
+an existing file. This makes it slightly easier for user to go from problem to resolution since both are presented
+in the same popup.</p>
+
+<p style="margin-left: 20px;"><img src="images/OverwriteExistingFile.png"/></p>
+
+
+<h2><a name="Miscellaneous-DynamicActionVisibility">Dynamic Action Visibility</a></h2>
+
+<p>Dynamic visibility of actions has been made easier. An action handler is now able to update its own visibility.
+An action whose handlers are all invisible is itself invisible. This approach mimics the previously-existing support
+for dynamic action enablement.</p> 
+
+<pre class="source-code"><code><font color="#888888">SapphireActionSystemPart
+{
+    boolean isEnabled()
+    void setEnabled( boolean enabled )</font>
+    boolean isVisible()
+    void setVisible( boolean visible )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action, ActionHandlerDef def )
+    {
+        super.init( action, def );
+        
+        <font color="#008444">// Attach a listener to something that will call refreshVisibility()
+        // when needed.</font>
+        
+        ...
+        
+        <font color="#008444">// Remove the listener on action handler dispose.</font>
+        
+        attach
+        (
+            new FilteredListener&lt;DisposeEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( DisposeEvent event )
+                {
+                    ...
+                }
+            }
+        }
+        
+        <font color="#008444">// Perform initial visibility refresh.</font>
+        
+        refreshVisibility();
+    }
+    
+    private void refreshVisibility()
+    {
+        setVisible( ... );
+    }
+    
+    @Override
+    protected Object run( SapphireRenderingContext context )
+    {
+        ...
+    }
+}</code></pre>
+
+
+<h2><a name="Miscellaneous-ShowNextProblem">Show Next Problem</a></h2>
+
+<p>A pair of new actions have been added to the master-details content outline editor page to make
+it easier to navigate to the next validation error or warning. This facility is especially helpful
+in a deeply nested outline.</p>
+
+<p style="margin-left: 20px;"><img src="images/ShowNextProblem.png"/></p>
 
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>

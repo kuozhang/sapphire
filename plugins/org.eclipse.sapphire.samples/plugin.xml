@@ -15,6 +15,18 @@
 
 <plugin>
 
+  <extension point="org.eclipse.ui.newWizards">
+    <category
+      id="Sapphire"
+      name="Sapphire">
+    </category>
+    <category
+      id="Samples"
+      name="Samples"
+      parentCategory="Sapphire">
+    </category>
+  </extension>
+
   <!-- 
     *******************
     * Contacts Sample *
@@ -34,12 +46,29 @@
 
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.samples.contacts.ui.ContactsDatabaseEditor"
-      default="true"
+      id="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"
+      name="Contacts Database Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"
       filenames="contacts.xml"
-      id="org.eclipse.sapphire.samples.contacts.ui.ContactsDatabaseEditor"
-      name="Contacts Database Editor"
-      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+      </class>
+    </editor>
+  </extension>
+  
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"
+      category="Sapphire/Samples"
+      name="Contacts Database (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create a contacts database.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+      </class>
+    </wizard>
   </extension>
   
   <!-- 
@@ -58,14 +87,28 @@
 
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.samples.calendar.ui.CalendarEditor"
+      id="org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor"
+      class="org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor"
       default="true"
       filenames="calendar.xml"
-      id="org.eclipse.sapphire.samples.calendar.ui.CalendarEditor"
       name="Calendar Editor"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.calendar.integrated.CreateCalendarWizard"
+      category="Sapphire/Samples"
+      name="Calendar (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create a calendar.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.calendar.integrated.CreateCalendarWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor"/>
+      </class>
+    </wizard>
+  </extension>
+  
   <!-- 
     ******************
     * Gallery Sample *
@@ -74,12 +117,29 @@
   
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.samples.gallery.ui.SapphireGallerySampleEditor"
-      default="true"
+      id="org.eclipse.sapphire.samples.gallery.GalleryEditor"
+      name="Gallery Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"
       filenames="sapphire-gallery.xml"
-      id="org.eclipse.sapphire.samples.gallery.ui.SapphireGallerySampleEditor"
-      name="Sapphire Gallery Sample Editor"
-      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.gallery.GalleryEditor"/>
+      </class>
+    </editor>
+  </extension>
+  
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.gallery.CreateGalleryWizard"
+      category="Sapphire/Samples"
+      name="Gallery (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create a gallery.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.gallery.CreateGalleryWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.gallery.GalleryEditor"/>
+      </class>
+    </wizard>
   </extension>
 
   <!-- 
@@ -141,12 +201,29 @@
   
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
-      default="true"
-      filenames="bugs.xml"
-      id="org.eclipse.sapphire.samples.ezbug.ui.BugDatabaseEditor"
+      id="org.eclipse.sapphire.samples.ezbug.BugDatabaseEditor"
       name="Bug Database Editor (Sapphire Sample)"
-      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"
+      filenames="bugs.xml"
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.ezbug.EzBug"/>
+      </class>
+    </editor>
+  </extension>
+  
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.ezbug.CreateBugDatabaseWizard"
+      category="Sapphire/Samples"
+      name="Bug Database (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create a bug database.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.ezbug.CreateBugDatabaseWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.ezbug.BugDatabaseEditor"/>
+      </class>
+    </wizard>
   </extension>
 
   <!-- 
@@ -157,30 +234,58 @@
   
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.samples.map.ui.MapEditor"
+      id="org.eclipse.sapphire.samples.map.MapEditor"
+      class="org.eclipse.sapphire.samples.map.MapEditor"
       default="true"
       filenames="map.xml"
-      id="org.eclipse.sapphire.samples.map.ui.MapEditor"
-      name="Map Editor"
+      name="Map Editor (Sapphire Sample)"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+  </extension>
+  
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.map.CreateMapWizard"
+      category="Sapphire/Samples"
+      name="Map (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create a map.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.map.CreateMapWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.map.MapEditor"/>
+      </class>
+    </wizard>
   </extension>
 
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
+      id="org.eclipse.sapphire.samples.architecture.ArchitectureSketchEditor"
+      class="org.eclipse.sapphire.samples.architecture.ArchitectureSketchEditor"
       default="true"
       filenames="architecture.xml"
-      id="org.eclipse.sapphire.samples.architecture.ui.ArchitectureEditor"
-      name="Architecture Editor"
+      name="Architecture Sketch Editor (Sapphire Sample)"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+  </extension>
+
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.architecture.CreateArchitectureSketchWizard"
+      category="Sapphire/Samples"
+      name="Architecture Sketch (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create an architecture sketch.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.architecture.CreateArchitectureSketchWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.architecture.ArchitectureSketchEditor"/>
+      </class>
+    </wizard>
   </extension>
 
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.samples.sqlschema.ui.SqlSchemaEditor"
+      class="org.eclipse.sapphire.samples.sqlschema.SqlSchemaEditor"
       default="true"
       filenames="sqlschema.xml"
-      id="org.eclipse.sapphire.samples.sqlschema.ui.SqlSchemaEditor"
+      id="org.eclipse.sapphire.samples.sqlschema.SqlSchemaEditor"
       name="Schema Editor"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
@@ -192,22 +297,36 @@
   
   <extension point="org.eclipse.ui.editors">
     <editor
+      id="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"
       class="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"
       default="true"
       filenames="*.po"
-      id="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"
-      name="Purchase Order Editor"
+      name="Purchase Order Editor (Sapphire Sample)"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
   
-  <extension point="org.eclipse.core.runtime.contentTypes">
+  <extension point="org.eclipse.core.contenttype.contentTypes">
     <content-type
       file-extensions="po"
       priority="high"
-      name="Purchase Order"
+      name="Purchase Order (Sapphire Sample)"
       id="po"
       base-type="org.eclipse.core.runtime.xml">
     </content-type>
+  </extension>
+  
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.po.CreatePurchaseOrderWizard"
+      category="Sapphire/Samples"
+      name="Purchase Order (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create a purchase order.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.po.CreatePurchaseOrderwizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"/>
+      </class>
+    </wizard>
   </extension>
 
 </plugin>

@@ -25,10 +25,7 @@ import org.eclipse.sapphire.services.PossibleTypesService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StandardImpliedXmlElementBindingImpl
-
-    extends ElementBindingImpl
-    
+public final class StandardImpliedXmlElementBindingImpl extends ElementBindingImpl
 {
     private XmlPath path;
     private Resource resource;
@@ -65,6 +62,10 @@ public final class StandardImpliedXmlElementBindingImpl
             if( xmlBindingAnnotation != null )
             {
                 pathString = xmlBindingAnnotation.path();
+            }
+            else
+            {
+                pathString = property.getName();
             }
         }
         

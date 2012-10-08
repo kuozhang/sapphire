@@ -130,7 +130,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             throw new IllegalStateException();
         }
         
-        final PossibleValuesService possibleValuesService = element.service( this.memberProperty, PossibleValuesService.class );
+        final PossibleValuesService possibleValuesService = element.service( listProperty, PossibleValuesService.class );
         
         // Create Controls
         
@@ -539,10 +539,8 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             this.value = value;
             this.element = element;
             
-            final IModelElement parent = getModelElement();
-            
-            this.valueLabelService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueLabelService.class );
-            this.valueImageService = parent.service( CheckBoxListPropertyEditorRenderer.this.memberProperty, ValueImageService.class );
+            this.valueLabelService = CheckBoxListPropertyEditorRenderer.this.memberProperty.service( ValueLabelService.class );
+            this.valueImageService = CheckBoxListPropertyEditorRenderer.this.memberProperty.service( ValueImageService.class );
             
             this.listener = new Listener()
             {
@@ -716,25 +714,20 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             final IModelElement element = propertyEditorDefinition.getLocalModelElement();
             final ModelProperty property = propertyEditorDefinition.getProperty();
             
-            if( property instanceof ListProperty )
+            if( property instanceof ListProperty &&
+                element.service( property, PossibleTypesService.class ).types().size() == 1 )
             {
-                final ListProperty listProperty = (ListProperty) property;
+                final List<ModelProperty> properties = property.getType().properties();
                 
-                if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
+                if( properties.size() == 1 )
                 {
-                    final ModelElementType memberType = listProperty.getType();
-                    final List<ModelProperty> properties = memberType.properties();
+                    final ModelProperty memberProperty = properties.get( 0 );
                     
-                    if( properties.size() == 1 )
+                    if( memberProperty instanceof ValueProperty &&
+                        memberProperty.hasAnnotation( NoDuplicates.class ) &&
+                        Enum.class.isAssignableFrom( memberProperty.getTypeClass() ) )
                     {
-                        final ModelProperty memberProperty = properties.get( 0 );
-                        
-                        if( memberProperty instanceof ValueProperty &&
-                            memberProperty.hasAnnotation( NoDuplicates.class ) &&
-                            Enum.class.isAssignableFrom( memberProperty.getTypeClass() ) )
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }

@@ -13,6 +13,7 @@ package org.eclipse.sapphire.services;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.sapphire.Event;
@@ -65,6 +66,16 @@ public abstract class Service
     protected final <T> T context( final Class<T> type )
     {
         return this.context.find( type );
+    }
+    
+    protected final <S extends Service> S service( final Class<S> serviceType )
+    {
+        return this.context.service( serviceType );
+    }
+
+    protected final <S extends Service> List<S> services( final Class<S> serviceType )
+    {
+        return this.context.services( serviceType );
     }
     
     protected final Map<String,String> params()

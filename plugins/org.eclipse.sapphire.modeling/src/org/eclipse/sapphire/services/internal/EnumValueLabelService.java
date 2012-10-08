@@ -13,7 +13,6 @@ package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -35,11 +34,10 @@ public final class EnumValueLabelService extends ValueLabelService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
         final ValueProperty property = context( ValueProperty.class );
         
         this.enumType = new EnumValueType( property.getTypeClass() );
-        this.valueSerializationService = element.service( property, ValueSerializationService.class );
+        this.valueSerializationService = property.service( ValueSerializationService.class );
     }
     
     @Override

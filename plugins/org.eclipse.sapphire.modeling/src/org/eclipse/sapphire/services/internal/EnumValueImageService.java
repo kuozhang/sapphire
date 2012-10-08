@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.modeling.EnumValueType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
@@ -42,11 +41,10 @@ public final class EnumValueImageService extends ValueImageService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
         final ValueProperty property = context( ValueProperty.class );
         
         this.enumType = new EnumValueType( property.getTypeClass() );
-        this.valueSerializationService = element.service( property, ValueSerializationService.class );
+        this.valueSerializationService = property.service( ValueSerializationService.class );
     }
     
     @Override

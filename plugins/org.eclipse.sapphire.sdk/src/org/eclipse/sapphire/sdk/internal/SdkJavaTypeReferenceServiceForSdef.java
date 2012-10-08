@@ -35,10 +35,7 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SdkJavaTypeReferenceServiceForSdef
-
-    extends JavaTypeReferenceService
-    
+public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceService
 {
     private final IJavaProject project;
     
@@ -64,20 +61,27 @@ public final class SdkJavaTypeReferenceServiceForSdef
         
         try
         {
-            for( IPackageReference packageRef : context( ISapphireUiDef.class ).getImportedPackages() )
+            IType type = this.project.findType( n );
+            
+            if( type == null && name.indexOf( '.' ) == -1 )
             {
-                final String packageName = packageRef.getName().getText();
-                
-                if( packageName != null )
+                for( IPackageReference packageRef : context( ISapphireUiDef.class ).getImportedPackages() )
                 {
-                    final IType type = this.project.findType( packageName, n );
-
-                    if( type != null && type.exists() && ! type.isAnonymous() )
+                    final String packageName = packageRef.getName().getText();
+                    
+                    if( packageName != null )
                     {
-                        return new JdtJavaType( type );
+                        type = this.project.findType( packageName, n );
+        
+                        if( type != null && type.exists() && ! type.isAnonymous() )
+                        {
+                            break;
+                        }
                     }
                 }
             }
+            
+            return new JdtJavaType( type );
         }
         catch( JavaModelException e )
         {

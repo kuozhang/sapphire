@@ -53,7 +53,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
         final IModelElement element = getModelElement();
         
         element.nearest( ContactsDatabase.class ).attach( listener, "Contacts/Name" );
-        element.attach( listener, this.property.getName() );
+        element.attach( listener, this.property );
         
         refreshEnablementState();
         
@@ -65,7 +65,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
                     element.nearest( ContactsDatabase.class ).detach( listener, "Contacts/Name" );
-                    element.detach( listener, CreateContactActionHandler.this.property.getName() );
+                    element.detach( listener, CreateContactActionHandler.this.property );
                 }
             }
         );

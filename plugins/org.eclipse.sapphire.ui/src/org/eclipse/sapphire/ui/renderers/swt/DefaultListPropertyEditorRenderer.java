@@ -12,7 +12,6 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
 import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ADD;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.ACTION_ASSIST;
@@ -70,6 +69,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
@@ -77,9 +77,11 @@ import org.eclipse.sapphire.modeling.ElementEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
@@ -89,10 +91,13 @@ import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.PossibleTypesService;
+import org.eclipse.sapphire.services.ValueImageService;
+import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.ui.ListSelectionService;
 import org.eclipse.sapphire.ui.ListSelectionService.ListSelectionChangedEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -107,7 +112,6 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldCellEditorPresentation;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
@@ -116,8 +120,8 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireTextCellEditor;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -198,6 +202,17 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         final SapphireMenuActionPresentation menuActionsPresentation = new SapphireMenuActionPresentation( actionPresentationManager );
         menuActionsPresentation.addFilter( createFilterByActionId( ACTION_ASSIST ) );
         menuActionsPresentation.addFilter( createFilterByActionId( ACTION_JUMP ) );
+        
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    actionPresentationManager.dispose();
+                }
+            }
+        );
         
         final Composite mainComposite = createMainComposite
         (
@@ -303,41 +318,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         this.selectionProvider = new SelectionProvider( this.tableViewer );
         
-        final ListSelectionService selectionService = part.service( ListSelectionService.class );
-       
-        this.selectionProvider.addSelectionChangedListener
-        (
-            new ISelectionChangedListener()
-            {
-                public void selectionChanged( SelectionChangedEvent event )
-                {
-                    selectionService.select( getSelectedElements() );
-                }
-            }
-        );
-        
-        final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
-        {
-            @Override
-            public void handle( final org.eclipse.sapphire.Event event )
-            {
-                setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
-            }
-        };
-
-        selectionService.attach( selectionServiceListener );
-
-        addOnDisposeOperation
-        ( 
-            new Runnable()
-            {
-                public void run()
-                {
-                    selectionService.detach( selectionServiceListener );
-                }
-            }
-        );
-        
         this.table.addFocusListener
         (
             new FocusAdapter()
@@ -381,26 +361,27 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
         };
         
-        this.binding = new AbstractBinding( getPart(), this.context, this.table )
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            protected void doUpdateModel()
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                // Don't do anything here. Changes to the model are pushed at cell-level.
-            }
-
-            @Override
-            protected void doUpdateTarget()
-            {
-                // Changes are mostly synchronized at cell-level. This is only here to
-                // catch the case where a full page refresh is performed perhaps because user
-                // has visited the source page.
-                
                 DefaultListPropertyEditorRenderer.this.refreshOperation.run();
             }
         };
         
-        this.table.setData( DATA_BINDING, this.binding );
+        element.attach( listener, property.getName() );
+        
+        addOnDisposeOperation
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    element.detach( listener, property.getName() );
+                }
+            }
+        );
         
         boolean showImages = true;
         
@@ -1061,6 +1042,43 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         addControl( this.table );
         
+        final ListSelectionService selectionService = part.service( ListSelectionService.class );
+        
+        this.selectionProvider.addSelectionChangedListener
+        (
+            new ISelectionChangedListener()
+            {
+                public void selectionChanged( SelectionChangedEvent event )
+                {
+                    selectionService.select( getSelectedElements() );
+                }
+            }
+        );
+        
+        setSelectedElements( selectionService.selection() );
+        
+        final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
+        {
+            @Override
+            public void handle( final org.eclipse.sapphire.Event event )
+            {
+                setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
+            }
+        };
+
+        selectionService.attach( selectionServiceListener );
+
+        addOnDisposeOperation
+        ( 
+            new Runnable()
+            {
+                public void run()
+                {
+                    selectionService.detach( selectionServiceListener );
+                }
+            }
+        );
+        
         return this.table;
     }
     
@@ -1162,13 +1180,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     }
     
     @Override
-    protected void handlePropertyChangedEvent()
-    {
-        super.handlePropertyChangedEvent();
-        this.refreshOperation.run();
-    }
-    
-    @Override
     protected void handleListElementChangedEvent( final Event event )
     {
         super.handleListElementChangedEvent( event );
@@ -1182,10 +1193,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     public void run()
                     {
                         update( event instanceof ElementEvent ? ( (ElementEvent) event ).element() : ( (PropertyEvent) event ).element() );
-                        
-                        // Cause the overall list editor decorator to be updated.
-                        
-                        DefaultListPropertyEditorRenderer.this.binding.updateTargetAttributes();
                     }
                 }
             );
@@ -1194,9 +1201,21 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     
     protected void handleTableFocusGainedEvent()
     {
+        if( this.table.isDisposed() )
+        {
+            return;
+        }
+        
         if( this.tableViewer.getSelection().isEmpty() && this.table.getItemCount() > 0 )
         {
-            final Object firstItem = this.table.getItem( 0 ).getData();
+            final TableItem firstTableItem = this.table.getItem( 0 );
+            
+            if( firstTableItem.isDisposed() )
+            {
+                return;
+            }
+            
+            final Object firstItem = firstTableItem.getData();
             this.tableViewer.setSelection( new StructuredSelection( firstItem ) );
         }
     }
@@ -1365,12 +1384,12 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     private class DefaultColumnLabelProvider extends ColumnLabelProvider
     {
         private final ColumnHandler columnHandler;
-        private final ValueLabelProvider valueLabelProvider;
+        private final ValueProperty property;
         
         public DefaultColumnLabelProvider( final ColumnHandler columnHandler )
         {
             this.columnHandler = columnHandler;
-            this.valueLabelProvider = new ValueLabelProvider( getPart(), columnHandler.getProperty() );
+            this.property = columnHandler.getProperty();
         }
     
         @Override
@@ -1378,21 +1397,42 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         {
             final IModelElement element = ( (TableRow) obj ).element();
             final Value<?> value = this.columnHandler.getPropertyValue( element );
-            String str = this.valueLabelProvider.getText( value.getText() );
             
-            if( str == null )
+            final String text = value.getText();
+            String label = null;
+            
+            try
+            {
+                label = element.service( this.property, ValueLabelService.class ).provide( text );
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
+            }
+            
+            if( label == null )
+            {
+                label = text;
+            }
+            else if( ! label.equals( text ) )
+            {
+                final LocalizationService localizationService = getPart().definition().adapt( LocalizationService.class );
+                label = localizationService.transform( label, CapitalizationType.FIRST_WORD_ONLY, false );
+            }
+            
+            if( label == null )
             {
                 if( this.columnHandler.isEmptyTextLabelDesired( element ) )
                 {
-                    str = Resources.emptyRowIndicator;
+                    label = Resources.emptyRowIndicator;
                 }
                 else
                 {
-                    str = MiscUtil.EMPTY_STRING;
+                    label = MiscUtil.EMPTY_STRING;
                 }
             }
             
-            return str;
+            return label;
         }
         
         @Override
@@ -1408,11 +1448,21 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 {
                     final IModelElement element = row.element();
                     final Value<?> value = this.columnHandler.getPropertyValue( element );
-                    final ImageData valueImageData = this.valueLabelProvider.getImageData( value.getText() );
                     
-                    if( valueImageData != null )
+                    ImageData imageData = null;
+                    
+                    try
                     {
-                        image = getPart().getImageCache().getImage( valueImageData, element.validation().severity() );
+                        imageData = element.service( this.property, ValueImageService.class ).provide( value.getText() );
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
+                    
+                    if( imageData != null )
+                    {
+                        image = getPart().getImageCache().getImage( imageData, element.validation().severity() );
                     }
                 }
                 

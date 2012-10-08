@@ -67,7 +67,7 @@ public final class TestModelingEvents0001 extends SapphireTestCase
         final RootElement root = RootElement.TYPE.instantiate();
         final EventLog log = new EventLog();
         
-        root.attach( log, RootElement.PROP_REQUIRED_STRING_VALUE.getName() );
+        root.attach( log, RootElement.PROP_REQUIRED_STRING_VALUE );
         
         testPropertyListener( root, log );
     }

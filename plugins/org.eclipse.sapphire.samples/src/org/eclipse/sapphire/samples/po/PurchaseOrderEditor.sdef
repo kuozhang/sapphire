@@ -14,6 +14,10 @@
 -->
 
 <definition>
+    <import>
+        <package>org.eclipse.sapphire.samples</package>
+        <package>org.eclipse.sapphire.samples.po</package>
+    </import>
     <form-editor-page>
         <id>GeneralPage</id>
         <page-name>general</page-name>
@@ -47,6 +51,7 @@
                         <section>
                             <label>general</label>
                             <content>
+                                <property-editor>Version</property-editor>
                                 <property-editor>Id</property-editor>
                                 <property-editor>Customer</property-editor>
                                 <property-editor>InitialQuoteDate</property-editor>
@@ -78,6 +83,7 @@
                         </section>
                         <section>
                             <label>shipping information</label>
+                            <description>If not specified, billing information is used for shipping purposes.</description>
                             <content>
                                 <with>
                                     <path>ShippingInformation</path>
@@ -99,6 +105,7 @@
             </split-form>
         </content>
         <page-header-image>PurchaseOrder-${ Entries.Size &gt; 3 ? 3 : Entries.Size }.png</page-header-image>
+        <element-type>PurchaseOrder</element-type>
     </form-editor-page>
     <form-editor-page>
         <id>EntriesPage</id>
@@ -172,9 +179,6 @@
             </split-form>
         </content>
         <page-header-image>PurchaseOrder-${ Entries.Size &gt; 3 ? 3 : Entries.Size }.png</page-header-image>
-    </form-editor-page>
-    <import>
-        <package>org.eclipse.sapphire.samples</package>
-        <package>org.eclipse.sapphire.samples.po</package>
-    </import>
+        <element-type>PurchaseOrder</element-type>
+    </form-editor-page>    
 </definition>

@@ -12,16 +12,21 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -49,6 +54,20 @@ public interface PartDef extends IModelElement
     
     Value<String> getId();
     void setId( String value );
+    
+    // *** ElementType ***
+    
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
+    @Label( standard = "element type" )
+    @MustExist
+    @XmlBinding( path = "element-type" )
+    
+    ValueProperty PROP_ELEMENT_TYPE = new ValueProperty( TYPE, "ElementType" );
+    
+    ReferenceValue<JavaTypeName,JavaType> getElementType();
+    void setElementType( String value );
+    void setElementType( JavaTypeName value );
     
     // *** VisibleWhen ***
     

@@ -243,6 +243,12 @@ public final class ActuatorPart extends SapphirePart
     
     public String label( final CapitalizationType capitalizationType )
     {
+        return label( capitalizationType, false );
+    }
+    
+    public String label( final CapitalizationType capitalizationType,
+                         final boolean includeMnemonic )
+    {
         if( this.showLabel )
         {
             String label = (String) this.labelFunctionResult.value();
@@ -259,7 +265,7 @@ public final class ActuatorPart extends SapphirePart
             
             final LocalizationService localizationService = this.definition.adapt( LocalizationService.class );
             
-            return localizationService.text( label, capitalizationType, false );
+            return localizationService.text( label, capitalizationType, includeMnemonic );
         }
 
         return null;
@@ -324,7 +330,7 @@ public final class ActuatorPart extends SapphirePart
             
             keyboardActionPresentation.attach( button );
             
-            final String label = label( CapitalizationType.TITLE_STYLE );
+            final String label = label( CapitalizationType.TITLE_STYLE, true );
             
             if( label != null )
             {

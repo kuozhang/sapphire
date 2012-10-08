@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * A version constraint is a boolean expression that can check versions for applicability. In string 
@@ -42,10 +43,10 @@ public final class VersionConstraint
             throw new IllegalArgumentException();
         }
         
-        this.ranges = new ArrayList<Range>();
+        final ListFactory<Range> rangesListFactory = ListFactory.start();
         
         int state = SM_RANGE_STARTING;
-        Range range = null;
+        Range.Factory range = null;
         StringBuilder buf = null;
         
         for( int position = 0, n = expr.length(); position < n; position++ )
@@ -62,15 +63,15 @@ public final class VersionConstraint
                     }
                     else if( ch == '[' )
                     {
-                        range = new Range();
-                        range.includesStartVersion = true;
+                        range = new Range.Factory();
+                        range.minVersionInclusive = true;
                         buf = new StringBuilder();
                         state = SM_VERSION_STARTING;
                     }
                     else if( ch == '(' )
                     {
-                        range = new Range();
-                        range.includesStartVersion = false;
+                        range = new Range.Factory();
+                        range.minVersionInclusive = false;
                         buf = new StringBuilder();
                         state = SM_VERSION_STARTING;
                     }
@@ -155,13 +156,13 @@ public final class VersionConstraint
                     {
                         if( range == null )
                         {
-                            range = new Range();
+                            range = new Range.Factory();
                         }
                         
-                        range.endVersion = new Version( buf.toString() );
-                        range.includesEndVersion = true;
+                        range.maxVersion = new Version( buf.toString() );
+                        range.maxVersionInclusive = true;
                         
-                        this.ranges.add( range );
+                        rangesListFactory.add( range.create() );
                         
                         range = null;
                         buf = null;
@@ -172,13 +173,13 @@ public final class VersionConstraint
                     {
                         if( range == null )
                         {
-                            range = new Range();
+                            range = new Range.Factory();
                         }
                         
-                        range.endVersion = new Version( buf.toString() );
-                        range.includesEndVersion = false;
+                        range.maxVersion = new Version( buf.toString() );
+                        range.maxVersionInclusive = false;
                         
-                        this.ranges.add( range );
+                        rangesListFactory.add( range.create() );
                         
                         range = null;
                         buf = null;
@@ -192,7 +193,7 @@ public final class VersionConstraint
                             throw new IllegalArgumentException();
                         }
                         
-                        range.startVersion = new Version( buf.toString() );
+                        range.minVersion = new Version( buf.toString() );
                         
                         buf = new StringBuilder();
                         
@@ -202,18 +203,18 @@ public final class VersionConstraint
                     {
                         if( range == null )
                         {
-                            range = new Range();
-                            range.startVersion = new Version( buf.toString() );
-                            range.endVersion = range.startVersion;
-                            range.includesStartVersion = true;
-                            range.includesEndVersion = true;
+                            range = new Range.Factory();
+                            range.minVersion = new Version( buf.toString() );
+                            range.maxVersion = range.minVersion;
+                            range.minVersionInclusive = true;
+                            range.maxVersionInclusive = true;
                         }
                         else
                         {
-                            range.startVersion = new Version( buf.toString() );
+                            range.minVersion = new Version( buf.toString() );
                         }
                         
-                        this.ranges.add( range );
+                        rangesListFactory.add( range.create() );
                         
                         range = null;
                         buf = null;
@@ -237,13 +238,13 @@ public final class VersionConstraint
                     {
                         if( range == null )
                         {
-                            range = new Range();
+                            range = new Range.Factory();
                         }
                         
-                        range.endVersion = new Version( buf.toString() );
-                        range.includesEndVersion = true;
+                        range.maxVersion = new Version( buf.toString() );
+                        range.maxVersionInclusive = true;
                         
-                        this.ranges.add( range );
+                        rangesListFactory.add( range.create() );
                         
                         range = null;
                         buf = null;
@@ -254,13 +255,13 @@ public final class VersionConstraint
                     {
                         if( range == null )
                         {
-                            range = new Range();
+                            range = new Range.Factory();
                         }
                         
-                        range.endVersion = new Version( buf.toString() );
-                        range.includesEndVersion = false;
+                        range.maxVersion = new Version( buf.toString() );
+                        range.maxVersionInclusive = false;
                         
-                        this.ranges.add( range );
+                        rangesListFactory.add( range.create() );
                         
                         range = null;
                         buf = null;
@@ -274,7 +275,7 @@ public final class VersionConstraint
                             throw new IllegalArgumentException();
                         }
                         
-                        range.startVersion = new Version( buf.toString() );
+                        range.minVersion = new Version( buf.toString() );
                         
                         buf = new StringBuilder();
                         
@@ -284,18 +285,18 @@ public final class VersionConstraint
                     {
                         if( range == null )
                         {
-                            range = new Range();
-                            range.startVersion = new Version( buf.toString() );
-                            range.endVersion = range.startVersion;
-                            range.includesStartVersion = true;
-                            range.includesEndVersion = true;
+                            range = new Range.Factory();
+                            range.minVersion = new Version( buf.toString() );
+                            range.maxVersion = range.minVersion;
+                            range.minVersionInclusive = true;
+                            range.maxVersionInclusive = true;
                         }
                         else
                         {
-                            range.startVersion = new Version( buf.toString() );
+                            range.minVersion = new Version( buf.toString() );
                         }
                         
-                        this.ranges.add( range );
+                        rangesListFactory.add( range.create() );
                         
                         range = null;
                         buf = null;
@@ -320,18 +321,18 @@ public final class VersionConstraint
         {
             if( range == null )
             {
-                range = new Range();
-                range.startVersion = new Version( buf.toString() );
-                range.endVersion = range.startVersion;
-                range.includesStartVersion = true;
-                range.includesEndVersion = true;
+                range = new Range.Factory();
+                range.minVersion = new Version( buf.toString() );
+                range.maxVersion = range.minVersion;
+                range.minVersionInclusive = true;
+                range.maxVersionInclusive = true;
             }
             else
             {
-                range.startVersion = new Version( buf.toString() );
+                range.minVersion = new Version( buf.toString() );
             }
             
-            this.ranges.add( range );
+            rangesListFactory.add( range.create() );
             
             range = null;
             buf = null;
@@ -343,6 +344,13 @@ public final class VersionConstraint
         {
             throw new IllegalArgumentException();
         }
+        
+        this.ranges = rangesListFactory.result();
+    }
+    
+    public List<Range> ranges()
+    {
+        return this.ranges;
     }
     
     public boolean check( final Version version )
@@ -377,30 +385,50 @@ public final class VersionConstraint
         return buf.toString();
     }
     
-    private static final class Range
+    public static final class Range
     {
-        public Version startVersion = null;
-        public boolean includesStartVersion = false;
-        public Version endVersion = null;
-        public boolean includesEndVersion = false;
+        private final Limit min;
+        private final Limit max;
+        
+        private Range( final Limit min,
+                       final Limit max )
+        {
+            if( min == null && max == null )
+            {
+                throw new IllegalArgumentException();
+            }
+            
+            this.min = min;
+            this.max = max;
+        }
+        
+        public Limit min()
+        {
+            return this.min;
+        }
+        
+        public Limit max()
+        {
+            return this.max;
+        }
         
         public boolean check( final Version version )
         {
-            if( this.startVersion != null )
+            if( this.min != null )
             {
-                final int res = version.compareTo( this.startVersion );
+                final int res = version.compareTo( this.min.version() );
                 
-                if( ! ( res > 0 || ( res == 0 && this.includesStartVersion ) ) )
+                if( ! ( res > 0 || ( res == 0 && this.min.inclusive() ) ) )
                 {
                     return false;
                 }
             }
             
-            if( this.endVersion != null )
+            if( this.max != null )
             {
-                final int res = version.compareTo( this.endVersion );
+                final int res = version.compareTo( this.max.version() );
                 
-                if( ! ( res < 0 || ( res == 0 && this.includesEndVersion ) ) )
+                if( ! ( res < 0 || ( res == 0 && this.max.inclusive() ) ) )
                 {
                     return false;
                 }
@@ -412,35 +440,99 @@ public final class VersionConstraint
         @Override
         public String toString()
         {
-            if( this.startVersion.equals( this.endVersion ) &&
-                this.includesStartVersion == this.includesEndVersion == true )
+            if( this.min != null && this.max != null && 
+                this.min.version().equals( this.max.version() ) &&
+                this.min.inclusive() == this.max.inclusive() == true )
             {
-                return this.startVersion.toString();
+                return this.min.version().toString();
             }
             else
             {
                 final StringBuffer buf = new StringBuffer();
                 
-                if( this.startVersion != null )
+                if( this.min != null )
                 {
-                    buf.append( this.includesStartVersion ? '[' : '(' );
-                    buf.append( this.startVersion.toString() );
+                    buf.append( this.min.inclusive() ? '[' : '(' );
+                    buf.append( this.min.version().toString() );
                 }
                 
-                if( this.endVersion != null )
+                if( this.max != null )
                 {
                     if( buf.length() != 0 )
                     {
                         buf.append( '-' );
                     }
                     
-                    buf.append( this.endVersion.toString() );
-                    buf.append( this.includesEndVersion ? ']' : ')' );
+                    buf.append( this.max.version().toString() );
+                    buf.append( this.max.inclusive() ? ']' : ')' );
                 }
                 
                 return buf.toString();
             }
         }
+
+        public static final class Limit
+        {
+            private final Version version;
+            private final boolean inclusive;
+            
+            private Limit( final Version version,
+                           final boolean inclusive )
+            {
+                if( version == null )
+                {
+                    throw new IllegalArgumentException();
+                }
+                
+                this.version = version;
+                this.inclusive = inclusive;
+            }
+            
+            public Version version()
+            {
+                return this.version;
+            }
+            
+            public boolean inclusive()
+            {
+                return this.inclusive;
+            }
+        
+            @Override
+            public boolean equals( final Object obj )
+            {
+                if( obj instanceof Limit )
+                {
+                    final Limit limit = (Limit) obj;
+                    return this.version.equals( limit.version ) && this.inclusive == limit.inclusive;
+                }
+                
+                return false;
+            }
+        
+            @Override
+            public int hashCode()
+            {
+                return this.version.hashCode() + Boolean.valueOf( this.inclusive ).hashCode();
+            }
+        }
+        
+        private static final class Factory
+        {
+            public Version minVersion;
+            public boolean minVersionInclusive;
+            public Version maxVersion;
+            public boolean maxVersionInclusive;
+            
+            public Range create()
+            {
+                final Limit min = ( this.minVersion == null ? null : new Limit( this.minVersion, this.minVersionInclusive ) );
+                final Limit max = ( this.maxVersion == null ? null : new Limit( this.maxVersion, this.maxVersionInclusive ) );
+                
+                return new Range( min, max );
+            }
+        }
+        
     }
 
 }

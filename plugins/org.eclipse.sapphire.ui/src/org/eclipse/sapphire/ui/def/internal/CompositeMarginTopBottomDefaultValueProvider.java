@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
+import org.eclipse.sapphire.ui.def.CompositeDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,7 +31,7 @@ public class CompositeMarginTopBottomDefaultValueProvider extends DefaultValueSe
     @Override
     protected DefaultValueServiceData compute()
     {
-        return new DefaultValueServiceData( context( ISapphireCompositeDef.class ).getMarginHeight().getText() );
+        return new DefaultValueServiceData( context( CompositeDef.class ).getMarginHeight().getText() );
     }
     
 }

@@ -139,8 +139,6 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultL
         relatedControls.add( sourceTable );
         relatedControls.add( toolbar );
         
-        ( (AbstractBinding) mainTable.getData( DATA_BINDING ) ).updateTargetAttributes();
-        
         addControl( sourceTable );
     }
     

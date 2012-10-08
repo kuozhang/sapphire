@@ -13,6 +13,8 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
+import org.eclipse.sapphire.util.ListFactory;
+
 /**
  * Logical AND function. 
  * 
@@ -23,36 +25,30 @@ public final class AndFunction extends Function
 {
     public static Function create( final Function... operands )
     {
-        if( operands.length == 0 )
-        {
-            return null;
-        }
-        else if( operands.length == 1 )
-        {
-            return operands[ 0 ];
-        }
-        else
-        {
-            final AndFunction function = new AndFunction();
-            function.init( operands );
-            return function;
-        }
+        return create( ListFactory.<Function>start().add( operands ) );
     }
     
     public static Function create( final List<Function> operands )
     {
-        if( operands.isEmpty() )
+        return create( ListFactory.<Function>start().add( operands ) );
+    }
+    
+    private static Function create( final ListFactory<Function> operands )
+    {
+        final int cardinality = operands.size();
+        
+        if( cardinality == 0 )
         {
             return null;
         }
-        else if( operands.size() == 1 )
+        else if( cardinality == 1 )
         {
             return operands.get( 0 );
         }
         else
         {
             final AndFunction function = new AndFunction();
-            function.init( operands );
+            function.init( operands.result() );
             return function;
         }
     }

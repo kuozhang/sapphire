@@ -41,7 +41,7 @@ import org.eclipse.swt.layout.GridData;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class HtmlPanelPart extends FormPart
+public final class HtmlPanelPart extends FormComponentPart
 {
     private static final String FRAGMENT_STYLE = readTextResource( HtmlPanelPart.class, "FragmentStyle.css" );
     private static final String FRAGMENT_HEADER = "<html><head><style>" + FRAGMENT_STYLE + "</style></head><body>";

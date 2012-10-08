@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributionPageDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertiesViewContributionPagePart extends SapphirePartContainer
+public final class PropertiesViewContributionPagePart extends FormPart
 {
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;

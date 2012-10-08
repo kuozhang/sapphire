@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.renderers.swt;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -37,7 +36,7 @@ public final class ValueLabelProvider implements ILabelProvider
     private final ValueImageService valueImageService;
     
     public ValueLabelProvider( final PropertyEditorPart part,
-                                        final ValueProperty property )
+                               final ValueProperty property )
     {
         if( part == null )
         {
@@ -52,11 +51,9 @@ public final class ValueLabelProvider implements ILabelProvider
         this.part = part;
         this.property = property;
         
-        final IModelElement element = this.part.getLocalModelElement();
-        
         this.localizationService = this.part.definition().adapt( LocalizationService.class );
-        this.valueLabelService = element.service( this.property, ValueLabelService.class );
-        this.valueImageService = element.service( this.property, ValueImageService.class );
+        this.valueLabelService = this.property.service( ValueLabelService.class );
+        this.valueImageService = this.property.service( ValueImageService.class );
         
     }
     public String getText( final Object element )

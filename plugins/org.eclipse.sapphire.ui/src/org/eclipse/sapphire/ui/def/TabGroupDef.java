@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "tab group" )
 @GenerateImpl
 
-public interface TabGroupDef extends FormPartDef
+public interface TabGroupDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( TabGroupDef.class );
     

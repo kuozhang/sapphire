@@ -30,6 +30,7 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -48,23 +49,23 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
+import org.eclipse.sapphire.ui.def.CompositeDef;
 import org.eclipse.sapphire.ui.def.ConditionalDef;
+import org.eclipse.sapphire.ui.def.DialogDef;
 import org.eclipse.sapphire.ui.def.FormDef;
+import org.eclipse.sapphire.ui.def.FormEditorPageDef;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.def.IFormPartInclude;
-import org.eclipse.sapphire.ui.def.ISapphireCompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
-import org.eclipse.sapphire.ui.def.ISapphireDialogDef;
 import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
-import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
 import org.eclipse.sapphire.ui.def.ISapphireSeparatorDef;
 import org.eclipse.sapphire.ui.def.ISapphireSpacerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
-import org.eclipse.sapphire.ui.def.ISapphireWizardPageDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -72,6 +73,9 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.ui.def.TabGroupDef;
+import org.eclipse.sapphire.ui.def.WizardPageDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
@@ -160,6 +164,8 @@ public abstract class SapphirePart implements ISapphirePart
             }
         }
         
+        init();
+        
         this.visibleWhenFunctionResult = initExpression
         (
             getModelElement(),
@@ -175,8 +181,6 @@ public abstract class SapphirePart implements ISapphirePart
                 }
             }
         );
-        
-        init();
         
         updateValidationState();
     }
@@ -249,6 +253,79 @@ public abstract class SapphirePart implements ISapphirePart
     protected Function initVisibleWhenFunction()
     {
         return this.definition.getVisibleWhen().getContent();
+    }
+    
+    protected static final Function createVersionCompatibleFunction( final IModelElement element,
+                                                                     final ModelProperty property )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( property != null )
+        {
+            final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
+            
+            if( service != null )
+            {
+                final Function function = new Function()
+                {
+                    @Override
+                    public String name()
+                    {
+                        return "VersionCompatible";
+                    }
+    
+                    @Override
+                    public FunctionResult evaluate( final FunctionContext context )
+                    {
+                        return new FunctionResult( this, context )
+                        {
+                            private Listener listener;
+                            
+                            @Override
+                            protected void init()
+                            {
+                                this.listener = new Listener()
+                                {
+                                    @Override
+                                    public void handle( final Event event )
+                                    {
+                                        refresh();
+                                    }
+                                };
+                                
+                                service.attach( this.listener );
+                            }
+    
+                            @Override
+                            protected Object evaluate()
+                            {
+                                return service.compatible();
+                            }
+                            
+                            @Override
+                            public void dispose()
+                            {
+                                super.dispose();
+                                
+                                if( this.listener != null )
+                                {
+                                    service.detach( this.listener );
+                                }
+                            }
+                        };
+                    }
+                };
+                
+                function.init();
+                
+                return function;
+            }
+        }
+        
+        return null;
     }
 
     public abstract void render( final SapphireRenderingContext context );
@@ -357,6 +434,48 @@ public abstract class SapphirePart implements ISapphirePart
     protected void handleModelElementChange( final Event event )
     {
         // The default implement doesn't do anything.
+    }
+    
+    /**
+     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
+     */
+    
+    protected final boolean isReRenderNeeded( final StructureChangedEvent event )
+    {
+        return isReRenderNeeded( this, event );
+    }
+
+    /**
+     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
+     */
+    
+    protected static final boolean isReRenderNeeded( final SapphirePart context,
+                                                     final StructureChangedEvent event )
+    {
+        // Something changed in the tree of parts arranged beneath this part. If this is
+        // the composite closest to the affected part, it will need to re-render.
+        
+        ISapphirePart part = event.part();
+        Boolean needToReRender = null;
+        
+        while( part != null && needToReRender == null )
+        {
+            part = part.getParentPart();
+            
+            if( part instanceof CompositePart || part instanceof SplitFormBlockPart )
+            {
+                if( part == context )
+                {
+                    needToReRender = Boolean.TRUE;
+                }
+                else
+                {
+                    needToReRender = Boolean.FALSE;
+                }
+            }
+        }
+        
+        return ( needToReRender == Boolean.TRUE );
     }
     
     public final boolean attach( final Listener listener )
@@ -908,28 +1027,33 @@ public abstract class SapphirePart implements ISapphirePart
                 part = new SapphireListControlledPageBook();
             }
         }
-        else if( definition instanceof ISapphireDialogDef )
+        else if( definition instanceof DialogDef )
         {
             part = new SapphireDialogPart();
         }
-        else if( definition instanceof ISapphireWizardPageDef )
+        else if( definition instanceof WizardPageDef )
         {
             part = new SapphireWizardPagePart();
         }
-        else if( definition instanceof ISapphireSectionDef )
+        else if( definition instanceof SectionDef )
         {
-            part = new SapphireSection();
+            part = new SectionPart();
         }
-        else if( definition instanceof ISapphireCompositeDef )
+        else if( definition instanceof CompositeDef )
         {
-            part = new SapphireComposite();
+            part = new CompositePart();
         }
         else if( definition instanceof IFormPartInclude )
         {
             final IFormPartInclude inc = (IFormPartInclude) definition;
             def = inc.getPart().resolve();
             
-            if( def != null )
+            if( def == null )
+            {
+                final String msg = NLS.bind( Resources.couldNotResolveInclude, inc.getPart().getText() );
+                throw new IllegalArgumentException( msg );
+            }
+            else
             {
                 partParams = new HashMap<String,String>( params );
                 
@@ -944,7 +1068,7 @@ public abstract class SapphirePart implements ISapphirePart
                     }
                 }
                 
-                part = new SapphirePartContainer();
+                part = new FormPart();
             }
         }
         else if( definition instanceof TabGroupDef )
@@ -969,7 +1093,15 @@ public abstract class SapphirePart implements ISapphirePart
         }
         else if( definition instanceof FormDef )
         {
-            part = new SapphirePartContainer();
+            part = new FormPart();
+        }
+        else if( definition instanceof MasterDetailsEditorPageDef )
+        {
+            part = new MasterDetailsEditorPagePart();
+        }
+        else if( definition instanceof FormEditorPageDef )
+        {
+            part = new FormEditorPagePart();
         }
         
         if( part == null )
@@ -986,6 +1118,7 @@ public abstract class SapphirePart implements ISapphirePart
     {
         public static String failedToInstantiate;
         public static String doesNotExtend;
+        public static String couldNotResolveInclude;
         
         static
         {

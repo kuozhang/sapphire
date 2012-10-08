@@ -38,29 +38,33 @@ public final class ColorValueImageService extends ValueImageService
             
             if( value != null )
             {
-                if( value.equals( "red" ) )
+                if( value.equalsIgnoreCase( "red" ) )
                 {
                     imageResourceName = "SquareRed.png";
                 }
-                else if( value.equals( "orange" ) )
+                else if( value.equalsIgnoreCase( "orange" ) )
                 {
                     imageResourceName = "SquareOrange.png";
                 }
-                else if( value.equals( "yellow" ) )
+                else if( value.equalsIgnoreCase( "yellow" ) )
                 {
                     imageResourceName = "SquareYellow.png";
                 }
-                else if( value.equals( "green" ) )
+                else if( value.equalsIgnoreCase( "green" ) )
                 {
                     imageResourceName = "SquareGreen.png";
                 }
-                else if( value.equals( "blue" ) )
+                else if( value.equalsIgnoreCase( "blue" ) )
                 {
                     imageResourceName = "SquareBlue.png";
                 }
-                else if( value.equals( "violet" ) )
+                else if( value.equalsIgnoreCase( "violet" ) )
                 {
                     imageResourceName = "SquareViolet.png";
+                }
+                else
+                {
+                    imageResourceName = "SquareQuestionMark.png";
                 }
             }
             

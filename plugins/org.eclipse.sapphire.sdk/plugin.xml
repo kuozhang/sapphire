@@ -18,15 +18,18 @@
 
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.sdk.internal.SapphireUiDefEditor"
-      default="true"
-      filenames="*.sdef"
       id="org.eclipse.sapphire.sdk.internal.SapphireUiDefEditor"
       name="%saphireUiDefEditor"
-      icon="org/eclipse/sapphire/sdk/SapphireFile.png"/>
+      icon="org/eclipse/sapphire/sdk/SapphireFile.png"
+      filenames="*.sdef"
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.sdk.DefinitionEditor"/>
+      </class>
+    </editor>
   </extension>
   
-  <extension point="org.eclipse.core.runtime.contentTypes">
+  <extension point="org.eclipse.core.contenttype.contentTypes">
     <content-type
       file-extensions="sdef"
       priority="high"
@@ -52,31 +55,34 @@
   
   <extension point="org.eclipse.ui.editors">
     <editor
-      class="org.eclipse.sapphire.sdk.internal.SapphireExtensionEditor"
-      default="true"
-      filenames="sapphire-extension.xml"
-      id="org.eclipse.sapphire.sdk.internal.SapphireExtensionEditor"
+      id="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor"
+      class="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor"
       name="%sapphireExtensionEditorName"
-      icon="org/eclipse/sapphire/sdk/SapphireFile.png"/>
+      icon="org/eclipse/sapphire/sdk/SapphireFile.png"
+      filenames="sapphire-extension.xml"
+      default="true"/>
   </extension>
   
   <extension point="org.eclipse.ui.editors.templates">
     <include file="templates/modeling/templates.xml" translations="templates/modeling/templates.properties" /> 
   </extension>
   
-  <!-- <extension point="org.eclipse.ui.newWizards">
+  <extension point="org.eclipse.ui.newWizards">
     <category
       id="Sapphire"
       name="%WizardCategory">
     </category>
     <wizard
-      id="org.eclipse.sapphire.sdk.internal.CreateExtensionManifestWizard"
+      id="org.eclipse.sapphire.sdk.CreateExtensionManifestWizard"
       category="Sapphire"
-      class="org.eclipse.sapphire.sdk.internal.CreateExtensionManifestWizard"
       name="%CreateExtensionManifestWizard.Name"
       icon="org/eclipse/sapphire/sdk/SapphireCreateFileWizard.png">
       <description>%CreateExtensionManifestWizard.Description</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.sdk.CreateExtensionManifestWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.sdk.internal.SapphireExtensionEditor"/>
+      </class>
     </wizard>
-  </extension> -->
+  </extension>
 
 </plugin>

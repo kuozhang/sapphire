@@ -27,6 +27,7 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
@@ -41,6 +42,8 @@ import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.TransientProperty;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -55,9 +58,9 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.SapphireSection;
+import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.def.ISapphireSectionDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeChildDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryCaseDef;
@@ -93,7 +96,7 @@ public final class MasterDetailsContentNode
     private Listener childPartListener;
     private List<Object> rawChildren;
     private MasterDetailsContentNodeList nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNode>emptyList() );
-    private List<SapphireSection> sections;
+    private List<SectionPart> sections;
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private boolean expanded;
     private boolean transformLabelCase = true;
@@ -203,11 +206,11 @@ public final class MasterDetailsContentNode
         
         this.rawChildren = new ArrayList<Object>();
         
-        final ListFactory<SapphireSection> sectionsListFactory = ListFactory.start();
+        final ListFactory<SectionPart> sectionsListFactory = ListFactory.start();
         
-        for( ISapphireSectionDef secdef : this.definition.getSections() )
+        for( SectionDef secdef : this.definition.getSections() )
         {
-            final SapphireSection section = new SapphireSection()
+            final SectionPart section = new SectionPart()
             {
                 @Override
                 protected Object createSectionLayoutData()
@@ -263,63 +266,7 @@ public final class MasterDetailsContentNode
             }
             else if( entry instanceof MasterDetailsContentNodeFactoryDef )
             {
-                final MasterDetailsContentNodeFactoryDef def = (MasterDetailsContentNodeFactoryDef) entry;
-                
-                final ModelProperty property = resolve( getLocalModelElement(), def.getProperty().getContent(), params );
-                final NodeFactory factory;
-                
-                if( property instanceof ListProperty )
-                {
-                    final ListProperty prop = (ListProperty) property;
-                    
-                    factory = new NodeFactory( def, params )
-                    {
-                        @Override
-                        public ModelProperty property()
-                        {
-                            return prop;
-                        }
-    
-                        @Override
-                        protected List<IModelElement> elements()
-                        {
-                            return ListFactory.unmodifiable( getLocalModelElement().read( prop ) );
-                        }
-                    };
-                }
-                else if( property instanceof ElementProperty )
-                {
-                    final ElementProperty prop = (ElementProperty) property;
-                    
-                    factory = new NodeFactory( def, params )
-                    {
-                        @Override
-                        public ModelProperty property()
-                        {
-                            return prop;
-                        }
-    
-                        @Override
-                        protected List<IModelElement> elements()
-                        {
-                            final IModelElement element = getLocalModelElement().read( prop ).element();
-                            
-                            if( element == null )
-                            {
-                                return Collections.emptyList();
-                            }
-                            else
-                            {
-                                return Collections.singletonList( element );
-                            }
-                        }
-                    };
-                }
-                else
-                {
-                    throw new IllegalStateException();
-                }
-                
+                final NodeFactory factory = new NodeFactory( getLocalModelElement(), (MasterDetailsContentNodeFactoryDef) entry, params );
                 this.rawChildren.add( factory );
             }
             else
@@ -353,21 +300,96 @@ public final class MasterDetailsContentNode
     @Override
     protected Function initVisibleWhenFunction()
     {
-        Function function = super.initVisibleWhenFunction();
-        
-        if( this.nodeFactoryVisibleFunction != null )
-        {
-            if( function == null )
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            this.nodeFactoryVisibleFunction,
+            createVersionCompatibleFunction( getModelElement(), this.modelElementProperty ),
+            new Function()
             {
-                function = this.nodeFactoryVisibleFunction;
+                @Override
+                public String name()
+                {
+                    return "VisibleIfChildrenVisible";
+                }
+
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        @Override
+                        protected void init()
+                        {
+                            final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                            {
+                                @Override
+                                protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                {
+                                    refresh();
+                                }
+                            };
+                            
+                            for( SapphirePart section : getSections() )
+                            {
+                                section.attach( listener );
+                            }
+                            
+                            for( Object entry : MasterDetailsContentNode.this.rawChildren )
+                            {
+                                if( entry instanceof MasterDetailsContentNode )
+                                {
+                                    ( (MasterDetailsContentNode) entry ).attach( listener );
+                                }
+                                else if( entry instanceof NodeFactory )
+                                {
+                                    ( (NodeFactory) entry ).attach( listener );
+                                }
+                            }
+                        }
+
+                        @Override
+                        protected Object evaluate()
+                        {
+                            boolean visible = false;
+                            
+                            for( SectionPart section : getSections() )
+                            {
+                                if( section.visible() )
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            
+                            if( ! visible )
+                            {
+                                visible = ( getChildNodeFactoryProperties().size() > 0 );
+                            }
+                            
+                            if( ! visible )
+                            {
+                                for( Object entry : MasterDetailsContentNode.this.rawChildren )
+                                {
+                                    if( entry instanceof MasterDetailsContentNode )
+                                    {
+                                        final MasterDetailsContentNode node = (MasterDetailsContentNode) entry;
+                                        
+                                        if( node.visible() )
+                                        {
+                                            visible = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            return visible;
+                        }
+                    };
+                }
             }
-            else
-            {
-                function = AndFunction.create( this.nodeFactoryVisibleFunction, function );
-            }
-        }
-        
-        return function;
+        );
     }
     
     public MasterDetailsContentOutline getContentTree()
@@ -515,7 +537,7 @@ public final class MasterDetailsContentNode
         getContentTree().setSelectedNode( this );
     }
     
-    public List<SapphireSection> getSections()
+    public List<SectionPart> getSections()
     {
         return this.sections;
     }
@@ -781,26 +803,48 @@ public final class MasterDetailsContentNode
         return false;
     }
     
-    private abstract class NodeFactory
+    private final class NodeFactory
     {
+        private final IModelElement element;
+        private final ModelProperty property;
         private final MasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
         private final FunctionResult visibleWhenFunctionResult;
         private final Function visibleWhenFunctionForNodes;
         private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
+        private final ListenerContext listeners = new ListenerContext();
         
-        public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
+        public NodeFactory( final IModelElement element,
+                            final MasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
         {
+            this.element = element;
+            this.property = resolve( element, definition.getProperty().getContent(), params );
             this.definition = definition;
             this.params = params;
             
+            if( this.property instanceof ValueProperty || this.property instanceof ImpliedElementProperty || this.property instanceof TransientProperty )
+            {
+                throw new IllegalArgumentException();
+            }
+            
             this.visibleWhenFunctionResult = initExpression
             (
-                getLocalModelElement(),
-                definition.getVisibleWhen().getContent(), 
+                this.element,
+                AndFunction.create
+                (
+                    definition.getVisibleWhen().getContent(),
+                    createVersionCompatibleFunction( this.element, this.property )
+                ),
                 Boolean.class,
-                Literal.TRUE
+                Literal.TRUE,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        broadcast( new VisibilityChangedEvent( null ) );
+                    }
+                }
             );
             
             this.visibleWhenFunctionForNodes = new Function()
@@ -858,9 +902,26 @@ public final class MasterDetailsContentNode
             return (Boolean) this.visibleWhenFunctionResult.value();
         }
         
-        public abstract ModelProperty property();
+        public ModelProperty property()
+        {
+            return this.property;
+        }
         
-        protected abstract List<IModelElement> elements();
+        protected List<IModelElement> elements()
+        {
+            final ListFactory<IModelElement> elementsListFactory = ListFactory.start();
+            
+            if( this.property instanceof ListProperty )
+            {
+                elementsListFactory.add( this.element.read( (ListProperty) this.property ) );
+            }
+            else
+            {
+                elementsListFactory.add( this.element.read( (ElementProperty) this.property ).element() );
+            }
+            
+            return elementsListFactory.result();
+        }
         
         public final List<MasterDetailsContentNode> nodes()
         {
@@ -926,6 +987,16 @@ public final class MasterDetailsContentNode
             }
             
             return nodes.result();
+        }
+        
+        public final boolean attach( final Listener listener )
+        {
+            return this.listeners.attach( listener );
+        }
+        
+        protected final void broadcast( final Event event )
+        {
+            this.listeners.broadcast( event );
         }
         
         public void dispose()

@@ -17,8 +17,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.sapphire.modeling.ClassLocator;
-import org.eclipse.sapphire.modeling.ResourceLocator;
+import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -30,16 +29,12 @@ import org.osgi.framework.Bundle;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class BundleResourceStore
-
-    extends UrlResourceStore
-    
+public class BundleResourceStore extends UrlResourceStore
 {
     private final String bundleId;
     private final String path;
     private Bundle bundle;
-    private ResourceLocator resourceLocator;
-    private ClassLocator classLocator;
+    private Context context;
     
     public BundleResourceStore( final String bundleId,
                                 final String path )
@@ -146,46 +141,14 @@ public class BundleResourceStore
     @Override
     public <A> A adapt( final Class<A> adapterType )
     {
-        if( adapterType == ResourceLocator.class )
+        if( adapterType == Context.class )
         {
-            if( this.resourceLocator == null )
+            if( this.context == null )
             {
-                this.resourceLocator = new ResourceLocator()
-                {
-                    @Override
-                    public URL find( final String name )
-                    {
-                        return bundle().getResource( name );
-                    }
-                };
+                this.context = BundleBasedContext.adapt( bundle() );
             }
             
-            return adapterType.cast( this.resourceLocator );
-        }
-        else if( adapterType == ClassLocator.class )
-        {
-            if( this.classLocator == null )
-            {
-                this.classLocator = new ClassLocator()
-                {
-                    @Override
-                    public Class<?> find( final String name )
-                    {
-                        try
-                        {
-                            return bundle().loadClass( name );
-                        }
-                        catch( ClassNotFoundException e )
-                        {
-                            // Intentionally converting ClassNotFoundException to null return.
-                        }
-
-                        return null;
-                    }
-                };
-            }
-            
-            return adapterType.cast( this.classLocator );
+            return adapterType.cast( this.context );
         }
         else if( adapterType == Bundle.class )
         {

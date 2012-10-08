@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -33,6 +34,12 @@ public interface EditorPageDef extends PartDef
 {
     ModelElementType TYPE = new ModelElementType( EditorPageDef.class );
     
+    // *** ElementType ***
+    
+    @Required
+    
+    ValueProperty PROP_ELEMENT_TYPE = new ValueProperty( TYPE, PartDef.PROP_ELEMENT_TYPE );
+
     // *** PageName ***
     
     @Label( standard = "page name" )

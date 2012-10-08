@@ -14,7 +14,6 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -22,16 +21,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class FileBugReportHandler4
-    
-    extends AbstractHandler
-    implements IHandler
-    
+public final class FileBugReportHandler4 extends AbstractHandler
 {
-    public Object execute( final ExecutionEvent event )
-    
-        throws ExecutionException
-        
+    public Object execute( final ExecutionEvent event ) throws ExecutionException
     {
         try
         {

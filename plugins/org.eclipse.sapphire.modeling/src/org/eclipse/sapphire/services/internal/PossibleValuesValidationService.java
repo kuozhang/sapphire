@@ -11,17 +11,12 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.Service;
@@ -73,38 +68,7 @@ public final class PossibleValuesValidationService extends ValidationService
         
         if( valueString != null && this.possibleValuesService != null )
         {
-            Collection<String> values = this.possibleValuesService.values();
-            
-            for( String v : values )
-            {
-                if( v == null )
-                {
-                    final String msg = NLS.bind( Resources.possibleValuesServiceReturnedNull, this.possibleValuesService.getClass().getName() );
-                    LoggingService.log( Status.createErrorStatus( msg ) );
-                    
-                    values = Collections.emptyList();
-                }
-            }
-            
-            boolean found = false;
-            
-            if( this.possibleValuesService.isCaseSensitive() )
-            {
-                found = values.contains( valueString );
-            }
-            else
-            {
-                for( String v : values )
-                {
-                    if( v.equalsIgnoreCase( valueString ) )
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-
-            if( ! found )
+            if( ! this.possibleValuesService.values().contains( valueString ) )
             {
                 final Status.Severity severity = this.possibleValuesService.getInvalidValueSeverity( valueString );
                 
@@ -156,16 +120,6 @@ public final class PossibleValuesValidationService extends ValidationService
                                final Class<? extends Service> service )
         {
             return new PossibleValuesValidationService();
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String possibleValuesServiceReturnedNull;
-        
-        static
-        {
-            initializeMessages( PossibleValuesValidationService.class.getName(), Resources.class );
         }
     }
     
