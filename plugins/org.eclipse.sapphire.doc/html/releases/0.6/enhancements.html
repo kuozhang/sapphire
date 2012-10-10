@@ -40,6 +40,7 @@
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
+    <li><a href="#ExpressionLanguage-CastThroughString">Cast Through a String</a></li>
     <li><a href="#ExpressionLanguage-UpperCaseFunction">UpperCase Function</a></li>
     <li><a href="#ExpressionLanguage-LowerCaseFunction">LowerCase Function</a></li>
     <li><a href="#ExpressionLanguage-UseInPageHeaderText">Use in Page Header Text</a></li>
@@ -518,6 +519,16 @@ if Assistant property is enable for this employee's manager.</p>
 <pre class="source-code"><code>${ Enabled( 'Assistant' ) }
 ${ Enabled( Manager, 'Assistant' ) }</code></pre>
 
+
+<h2><a name="ExpressionLanguage-CastThroughString">Cast Through a String</a></a></h2>
+
+<p>Sapphire EL performs type casts in order to convert the type of an operand into the type that the operator expects. 
+Any type can be cast to a string and many types types can be cast from a string since that's necessary in order to 
+specify a literal. So, while a direct X-to-Y cast may not be implemented, an indirect X-to-String-to-Y cast may be
+possible.</p>
+
+<p>Sapphire EL will now attempt an indirect cast through a string if a direct cast fails before giving up.</p>
+ 
 
 <h2><a name="ExpressionLanguage-UpperCaseFunction">UpperCase Function</a></h2>
 

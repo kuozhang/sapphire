@@ -211,8 +211,6 @@ public abstract class FunctionResult
         }
     }
     
-    @SuppressWarnings( { "unchecked", "rawtypes" } )
-    
     protected final <X> X cast( Object obj,
                                 final Class<X> type )
     {
@@ -221,356 +219,378 @@ public abstract class FunctionResult
             throw new IllegalArgumentException();
         }
         
-        if( type == String.class )
+        try
         {
-            if( obj instanceof String )
+            if( type == String.class )
             {
-                return type.cast( obj );
-            }
-            else if( obj == null )
-            {
-                return type.cast( "" );
-            }
-            else if( obj instanceof Enum )
-            {
-                return type.cast( ( (Enum<?>) obj ).name() );
-            }
-            else if( obj instanceof Value )
-            {
-                String res = ( (Value<?>) obj ).getText();
-                res = ( res == null ? "" : res );
-                return type.cast( res );
-            }
-            else if( obj instanceof List || obj instanceof Set )
-            {
-                final StringBuilder res = new StringBuilder();
-                boolean first = true;
-                
-                for( Object entry : ( (Collection<?>) obj ) )
+                if( obj instanceof String )
                 {
-                    if( first )
+                    return type.cast( obj );
+                }
+                else if( obj == null )
+                {
+                    return type.cast( "" );
+                }
+                else if( obj instanceof Value )
+                {
+                    String res = ( (Value<?>) obj ).getText();
+                    res = ( res == null ? "" : res );
+                    return type.cast( res );
+                }
+                else if( obj instanceof List || obj instanceof Set )
+                {
+                    final StringBuilder res = new StringBuilder();
+                    boolean first = true;
+                    
+                    for( Object entry : ( (Collection<?>) obj ) )
                     {
-                        first = false;
+                        if( first )
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            res.append( ',' );
+                        }
+                        
+                        final String str = cast( entry, String.class );
+                        
+                        if( str != null )
+                        {
+                            res.append( str );
+                        }
+                    }
+                    
+                    return type.cast( res.toString() );
+                }
+                else if( obj.getClass().isArray() )
+                {
+                    final StringBuilder res = new StringBuilder();
+                    
+                    for( int i = 0, n = Array.getLength( obj ); i < n; i++ )
+                    {
+                        if( i > 0 )
+                        {
+                            res.append( ',' );
+                        }
+                        
+                        final String str = cast( Array.get( obj, i ), String.class );
+                        
+                        if( str != null )
+                        {
+                            res.append( str );
+                        }
+                    }
+                    
+                    return type.cast( res.toString() );
+                }
+                else
+                {
+                    return type.cast( obj.toString() );
+                }
+            }
+            else if( Number.class.isAssignableFrom( type ) )
+            {
+                if( obj instanceof Value )
+                {
+                    obj = ( (Value<?>) obj ).getContent();
+                }
+                
+                if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
+                {
+                    obj = (short) 0;
+                }
+                else if( obj instanceof Character )
+                {
+                    obj = (short) ( (Character) obj ).charValue();
+                }
+                else if( obj instanceof Boolean )
+                {
+                    throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                }
+                
+                if( obj.getClass() == type )
+                {
+                    return type.cast( obj );
+                }
+                else if( obj instanceof Number )
+                {
+                    if( type == BigInteger.class )
+                    {
+                        if( obj instanceof BigDecimal )
+                        {
+                            return type.cast( ( (BigDecimal) obj ).toBigInteger() );
+                        }
+                        else
+                        {
+                            return type.cast( BigInteger.valueOf( ( (Number) obj ).longValue() ) );
+                        }
+                    }
+                    else if( type == BigDecimal.class )
+                    {
+                        if( obj instanceof BigInteger )
+                        {
+                            return type.cast( new BigDecimal( (BigInteger) obj ) );
+                        }
+                        else
+                        {
+                            return type.cast( new BigDecimal( ( (Number) obj ).doubleValue() ) );
+                        }
+                    }
+                    else if( type == Byte.class )
+                    {
+                        return type.cast( new Byte( ( (Number) obj ).byteValue() ) );
+                    }
+                    else if( type == Short.class )
+                    {
+                        return type.cast( new Short( ( (Number) obj ).shortValue() ) );
+                    }
+                    else if( type == Integer.class )
+                    {
+                        return type.cast( new Integer( ( (Number) obj ).intValue() ) );
+                    }
+                    else if( type == Long.class )
+                    {
+                        return type.cast( new Long( ( (Number) obj ).longValue() ) );
+                    }
+                    else if( type == Float.class )
+                    {
+                        return type.cast( new Float( ( (Number) obj ).floatValue() ) );
+                    }
+                    else if( type == Double.class )
+                    {
+                        return type.cast( new Double( ( (Number) obj ).doubleValue() ) );
+                    }
+                }
+                else if( obj instanceof String )
+                {
+                    if( type == BigDecimal.class )
+                    {
+                        return type.cast( new BigDecimal( (String) obj ) );
+                    }
+                    else if( type == BigInteger.class )
+                    {
+                        return type.cast( new BigInteger( (String) obj ) );
+                    }
+                    else if( type == Byte.class )
+                    {
+                        return type.cast( Byte.valueOf( (String) obj ) );
+                    }
+                    else if( type == Short.class )
+                    {
+                        return type.cast( Short.valueOf( (String) obj ) );
+                    }
+                    else if( type == Integer.class )
+                    {
+                        return type.cast( Integer.valueOf( (String) obj ) );
+                    }
+                    else if( type == Long.class )
+                    {
+                        return type.cast( Long.valueOf( (String) obj ) );
+                    }
+                    else if( type == Float.class )
+                    {
+                        return type.cast( Float.valueOf( (String) obj ) );
+                    }
+                    else if( type == Double.class )
+                    {
+                        return type.cast( Double.valueOf( (String) obj ) );
+                    }
+                }
+    
+                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+            }
+            else if( type == Character.class )
+            {
+                if( obj instanceof Value )
+                {
+                    obj = ( (Value<?>) obj ).getContent();
+                }
+                
+                if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
+                {
+                    return type.cast( (char) 0 );
+                }
+                else if( obj instanceof Character )
+                {
+                    return type.cast( obj );
+                }
+                else if( obj instanceof Boolean )
+                {
+                    throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                }
+                else if( obj instanceof Number )
+                {
+                    return type.cast( (char) (short) cast( obj, Short.class ) );
+                }
+                else if( obj instanceof String )
+                {
+                    return type.cast( ( (String) obj ).charAt( 0 ) );
+                }
+    
+                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+            }
+            else if( type == Boolean.class )
+            {
+                if( obj instanceof Value )
+                {
+                    obj = ( (Value<?>) obj ).getContent();
+                }
+                
+                if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
+                {
+                    return type.cast( Boolean.FALSE );
+                }
+                else if( obj instanceof Boolean )
+                {
+                    return type.cast( obj );
+                }
+                else if( obj instanceof String )
+                {
+                    return type.cast( Boolean.valueOf( (String) obj ) );
+                }
+    
+                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+            }
+            else if( Enum.class.isAssignableFrom( type ) )
+            {
+                if( obj instanceof Value )
+                {
+                    obj = ( (Value<?>) obj ).getContent();
+                }
+                
+                if( obj == null )
+                {
+                    return null;
+                }
+                else if( type.isInstance( obj ) )
+                {
+                    return type.cast( obj );
+                }
+                else if( obj instanceof String )
+                {
+                    final String str = (String) obj;
+                    
+                    if( str.length() == 0 )
+                    {
+                        return null;
                     }
                     else
                     {
-                        res.append( ',' );
-                    }
-                    
-                    final String str = cast( entry, String.class );
-                    
-                    if( str != null )
-                    {
-                        res.append( str );
+                        for( X x : type.getEnumConstants() )
+                        {
+                            if( x.toString().equals( str ) )
+                            {
+                                return x;
+                            }
+                        }
                     }
                 }
-                
-                return type.cast( res.toString() );
+    
+                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
             }
-            else if( obj.getClass().isArray() )
+            else if( List.class.isAssignableFrom( type ) )
             {
-                final StringBuilder res = new StringBuilder();
-                
-                for( int i = 0, n = Array.getLength( obj ); i < n; i++ )
+                if( obj instanceof Value )
                 {
-                    if( i > 0 )
-                    {
-                        res.append( ',' );
-                    }
-                    
-                    final String str = cast( Array.get( obj, i ), String.class );
-                    
-                    if( str != null )
-                    {
-                        res.append( str );
-                    }
+                    obj = ( (Value<?>) obj ).getContent();
                 }
                 
-                return type.cast( res.toString() );
+                if( obj == null )
+                {
+                    return null;
+                }
+                else if( obj instanceof List )
+                {
+                    return type.cast( obj );
+                }
+                else if( obj instanceof Collection )
+                {
+                    return type.cast( new ArrayList<Object>( (Collection<?>) obj ) );
+                }
+                else if( obj.getClass().isArray() )
+                {
+                    final List<Object> list = new ArrayList<Object>();
+                    
+                    for( int i = 0, n = Array.getLength( obj ); i < n; i++ )
+                    {
+                        list.add( Array.get( obj, i ) );
+                    }
+                    
+                    return type.cast( list );
+                }
+                else if( obj instanceof String )
+                {
+                    final String str = (String) obj;
+                    
+                    if( str.length() == 0 )
+                    {
+                        return type.cast( Collections.emptyList() );
+                    }
+                    else
+                    {
+                        return type.cast( Arrays.asList( ( (String) obj ).split( "\\," ) ) );
+                    }
+                }
+                else
+                {
+                    return type.cast( Collections.singletonList( obj ) );
+                }
             }
             else
             {
-                return type.cast( obj.toString() );
-            }
-        }
-        else if( Number.class.isAssignableFrom( type ) )
-        {
-            if( obj instanceof Value )
-            {
-                obj = ( (Value<?>) obj ).getContent();
-            }
-            
-            if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
-            {
-                obj = (short) 0;
-            }
-            else if( obj instanceof Character )
-            {
-                obj = (short) ( (Character) obj ).charValue();
-            }
-            else if( obj instanceof Boolean )
-            {
-                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
-            }
-            
-            if( obj.getClass() == type )
-            {
-                return type.cast( obj );
-            }
-            else if( obj instanceof Number )
-            {
-                if( type == BigInteger.class )
+                if( obj instanceof Value )
                 {
-                    if( obj instanceof BigDecimal )
-                    {
-                        return type.cast( ( (BigDecimal) obj ).toBigInteger() );
-                    }
-                    else
-                    {
-                        return type.cast( BigInteger.valueOf( ( (Number) obj ).longValue() ) );
-                    }
+                    obj = ( (Value<?>) obj ).getContent();
                 }
-                else if( type == BigDecimal.class )
-                {
-                    if( obj instanceof BigInteger )
-                    {
-                        return type.cast( new BigDecimal( (BigInteger) obj ) );
-                    }
-                    else
-                    {
-                        return type.cast( new BigDecimal( ( (Number) obj ).doubleValue() ) );
-                    }
-                }
-                else if( type == Byte.class )
-                {
-                    return type.cast( new Byte( ( (Number) obj ).byteValue() ) );
-                }
-                else if( type == Short.class )
-                {
-                    return type.cast( new Short( ( (Number) obj ).shortValue() ) );
-                }
-                else if( type == Integer.class )
-                {
-                    return type.cast( new Integer( ( (Number) obj ).intValue() ) );
-                }
-                else if( type == Long.class )
-                {
-                    return type.cast( new Long( ( (Number) obj ).longValue() ) );
-                }
-                else if( type == Float.class )
-                {
-                    return type.cast( new Float( ( (Number) obj ).floatValue() ) );
-                }
-                else if( type == Double.class )
-                {
-                    return type.cast( new Double( ( (Number) obj ).doubleValue() ) );
-                }
-            }
-            else if( obj instanceof String )
-            {
-                if( type == BigDecimal.class )
-                {
-                    return type.cast( new BigDecimal( (String) obj ) );
-                }
-                else if( type == BigInteger.class )
-                {
-                    return type.cast( new BigInteger( (String) obj ) );
-                }
-                else if( type == Byte.class )
-                {
-                    return type.cast( Byte.valueOf( (String) obj ) );
-                }
-                else if( type == Short.class )
-                {
-                    return type.cast( Short.valueOf( (String) obj ) );
-                }
-                else if( type == Integer.class )
-                {
-                    return type.cast( Integer.valueOf( (String) obj ) );
-                }
-                else if( type == Long.class )
-                {
-                    return type.cast( Long.valueOf( (String) obj ) );
-                }
-                else if( type == Float.class )
-                {
-                    return type.cast( Float.valueOf( (String) obj ) );
-                }
-                else if( type == Double.class )
-                {
-                    return type.cast( Double.valueOf( (String) obj ) );
-                }
-            }
-
-            throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
-        }
-        else if( type == Character.class )
-        {
-            if( obj instanceof Value )
-            {
-                obj = ( (Value<?>) obj ).getContent();
-            }
-            
-            if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
-            {
-                return type.cast( (char) 0 );
-            }
-            else if( obj instanceof Character )
-            {
-                return type.cast( obj );
-            }
-            else if( obj instanceof Boolean )
-            {
-                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
-            }
-            else if( obj instanceof Number )
-            {
-                return type.cast( (char) (short) cast( obj, Short.class ) );
-            }
-            else if( obj instanceof String )
-            {
-                return type.cast( ( (String) obj ).charAt( 0 ) );
-            }
-
-            throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
-        }
-        else if( type == Boolean.class )
-        {
-            if( obj instanceof Value )
-            {
-                obj = ( (Value<?>) obj ).getContent();
-            }
-            
-            if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
-            {
-                return type.cast( Boolean.FALSE );
-            }
-            else if( obj instanceof Boolean )
-            {
-                return type.cast( obj );
-            }
-            else if( obj instanceof String )
-            {
-                return type.cast( Boolean.valueOf( (String) obj ) );
-            }
-
-            throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
-        }
-        else if( Enum.class.isAssignableFrom( type ) )
-        {
-            if( obj instanceof Value )
-            {
-                obj = ( (Value<?>) obj ).getContent();
-            }
-            
-            if( obj == null )
-            {
-                return null;
-            }
-            else if( type.isInstance( obj ) )
-            {
-                return type.cast( obj );
-            }
-            else if( obj instanceof String )
-            {
-                final String str = (String) obj;
                 
-                if( str.length() == 0 )
+                if( obj == null )
+                {
+                    return null;
+                }
+                else if( type.isInstance( obj ) )
+                {
+                    return type.cast( obj );
+                }
+                else if( obj instanceof String && ( (String) obj ).length() == 0 )
                 {
                     return null;
                 }
                 else
                 {
-                    return type.cast( Enum.valueOf( (Class<Enum>) type, str ) );
-                }
-            }
-
-            throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
-        }
-        else if( List.class.isAssignableFrom( type ) )
-        {
-            if( obj instanceof Value )
-            {
-                obj = ( (Value<?>) obj ).getContent();
-            }
-            
-            if( obj == null )
-            {
-                return null;
-            }
-            else if( obj instanceof List )
-            {
-                return type.cast( obj );
-            }
-            else if( obj instanceof Collection )
-            {
-                return type.cast( new ArrayList<Object>( (Collection<?>) obj ) );
-            }
-            else if( obj.getClass().isArray() )
-            {
-                final List<Object> list = new ArrayList<Object>();
-                
-                for( int i = 0, n = Array.getLength( obj ); i < n; i++ )
-                {
-                    list.add( Array.get( obj, i ) );
-                }
-                
-                return type.cast( list );
-            }
-            else if( obj instanceof String )
-            {
-                final String str = (String) obj;
-                
-                if( str.length() == 0 )
-                {
-                    return type.cast( Collections.emptyList() );
-                }
-                else
-                {
-                    return type.cast( Arrays.asList( ( (String) obj ).split( "\\," ) ) );
-                }
-            }
-            else
-            {
-                return type.cast( Collections.singletonList( obj ) );
-            }
-        }
-        else
-        {
-            if( obj instanceof Value )
-            {
-                obj = ( (Value<?>) obj ).getContent();
-            }
-            
-            if( obj == null )
-            {
-                return null;
-            }
-            else if( type.isInstance( obj ) )
-            {
-                return type.cast( obj );
-            }
-            else if( obj instanceof String && ( (String) obj ).length() == 0 )
-            {
-                return null;
-            }
-            else
-            {
-                for( TypeCast cast : SapphireModelingExtensionSystem.getTypeCasts() )
-                {
-                    if( cast.applicable( this.context, this.function, obj, type ) )
+                    for( TypeCast cast : SapphireModelingExtensionSystem.getTypeCasts() )
                     {
-                        final X result = type.cast( cast.evaluate( this.context, this.function, obj, type ) );
-                        
-                        if( result != null )
+                        if( cast.applicable( this.context, this.function, obj, type ) )
                         {
-                            return result;
+                            final X result = type.cast( cast.evaluate( this.context, this.function, obj, type ) );
+                            
+                            if( result != null )
+                            {
+                                return result;
+                            }
                         }
                     }
                 }
+                
+                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+            }
+        }
+        catch( FunctionException e )
+        {
+            if( ! ( obj instanceof String ) )
+            {
+                try
+                {
+                    return cast( cast( obj, String.class ), type );
+                }
+                catch( FunctionException ex )
+                {
+                    ex.printStackTrace();
+                    // Ignore the composite cast failure, since we want the original exception.
+                }
             }
             
-            throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+            throw e;
         }
     }
     
