@@ -89,13 +89,19 @@ public final class TestModelingEvents0004 extends SapphireTestCase
         root.setEnablement( false );
         root.setEnablement( true );
         
-        assertEquals( 6, events.size() );
+        assertEquals( 12, events.size() );
         assertPropertyContentEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
         assertPropertyEnablementEvent( events.get( 1 ), root, RootElement.PROP_CHILD, true, false );
-        assertPropertyEnablementEvent( events.get( 2 ), child, ChildElement.PROP_INTEGER_VALUE, true, false );
-        assertPropertyContentEvent( events.get( 3 ), root, RootElement.PROP_ENABLEMENT );
-        assertPropertyEnablementEvent( events.get( 4 ), root, RootElement.PROP_CHILD, false, true );
-        assertPropertyEnablementEvent( events.get( 5 ), child, ChildElement.PROP_INTEGER_VALUE, false, true );
+        assertElementValidationEvent( events.get( 2 ), root, Status.createErrorStatus( "\"abc\" is not a valid integer." ), Status.createOkStatus() );
+        assertPropertyEnablementEvent( events.get( 3 ), child, ChildElement.PROP_INTEGER_VALUE, true, false );
+        assertElementValidationEvent( events.get( 4 ), child, Status.createErrorStatus( "\"abc\" is not a valid integer." ), Status.createOkStatus() );
+        assertPropertyValidationEvent( events.get( 5 ), root, RootElement.PROP_CHILD, Status.createErrorStatus( "\"abc\" is not a valid integer." ), Status.createOkStatus() );
+        assertPropertyContentEvent( events.get( 6 ), root, RootElement.PROP_ENABLEMENT );
+        assertPropertyEnablementEvent( events.get( 7 ), root, RootElement.PROP_CHILD, false, true );
+        assertPropertyEnablementEvent( events.get( 8 ), child, ChildElement.PROP_INTEGER_VALUE, false, true );
+        assertElementValidationEvent( events.get( 9 ), child, Status.createOkStatus(), Status.createErrorStatus( "\"abc\" is not a valid integer." ) );
+        assertPropertyValidationEvent( events.get( 10 ), root, RootElement.PROP_CHILD, Status.createOkStatus(), Status.createErrorStatus( "\"abc\" is not a valid integer." ) );
+        assertElementValidationEvent( events.get( 11 ), root, Status.createOkStatus(), Status.createErrorStatus( "\"abc\" is not a valid integer." ) );
         
         events.clear();
         

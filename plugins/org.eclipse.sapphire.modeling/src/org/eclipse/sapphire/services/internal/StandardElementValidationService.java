@@ -14,6 +14,8 @@ package org.eclipse.sapphire.services.internal;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
@@ -34,12 +36,15 @@ public final class StandardElementValidationService extends ValidationService
         
         element.attach
         (
-            new FilteredListener<PropertyValidationEvent>()
+            new FilteredListener<PropertyEvent>()
             {
                 @Override
-                protected void handleTypedEvent( final PropertyValidationEvent event )
+                protected void handleTypedEvent( final PropertyEvent event )
                 {
-                    broadcast();
+                    if( event instanceof PropertyValidationEvent || event instanceof PropertyEnablementEvent )
+                    {
+                        broadcast();
+                    }
                 }
             }
         );
