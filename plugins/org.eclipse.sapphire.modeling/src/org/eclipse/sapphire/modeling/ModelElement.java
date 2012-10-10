@@ -14,6 +14,7 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +58,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     private Status validation;
     private final ListenerContext listeners = new ListenerContext();
     private final Map<ModelProperty,Boolean> enablementStatuses;
-    private boolean enablementServicesInitialized;
+    private final Set<ModelProperty> initializedEnablementServices;
     private ElementInstanceServiceContext elementServiceContext;
     private final Map<ModelProperty,PropertyInstanceServiceContext> propertyServiceContexts;
     private boolean disposed = false;
@@ -73,6 +74,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         this.parentProperty = parentProperty;
         this.validation = null;
         this.enablementStatuses = new HashMap<ModelProperty,Boolean>();
+        this.initializedEnablementServices = new HashSet<ModelProperty>();
         this.propertyServiceContexts = new HashMap<ModelProperty,PropertyInstanceServiceContext>();
         
         if( parent != null )
@@ -690,29 +692,26 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         synchronized( root() )
         {
-            if( ! this.enablementServicesInitialized )
+            if( ! this.initializedEnablementServices.contains( property ) )
             {
-                for( final ModelProperty prop : this.type.properties() )
+                this.initializedEnablementServices.add( property );
+
+                final Listener enablementServiceListener = new Listener()
                 {
-                    final Listener enablementServiceListener = new Listener()
+                    @Override
+                    public void handle( final Event event )
                     {
-                        @Override
-                        public void handle( final Event event )
+                        if( ! disposed() )
                         {
-                            if( ! disposed() )
-                            {
-                                refreshPropertyEnablement( prop, true );
-                            }
+                            refreshPropertyEnablement( property, true );
                         }
-                    };
-                    
-                    for( EnablementService service : services( prop, EnablementService.class ) )
-                    {
-                        service.attach( enablementServiceListener );
                     }
-                }
+                };
                 
-                this.enablementServicesInitialized = true;
+                for( EnablementService service : services( property, EnablementService.class ) )
+                {
+                    service.attach( enablementServiceListener );
+                }
             }
             
             boolean newState = true;
