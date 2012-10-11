@@ -143,6 +143,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final <T> Value<T> read( final ValueProperty property )
     {
+        assertNotDisposed();
+        
         return (Value<T>) read( (ModelProperty) property );
     }
     
@@ -150,6 +152,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final <T extends IModelElement> ModelElementHandle<T> read( final ElementProperty property )
     {
+        assertNotDisposed();
+        
         return (ModelElementHandle<T>) read( (ModelProperty) property );
     }
 
@@ -157,6 +161,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final <T extends IModelElement> T read( final ImpliedElementProperty property )
     {
+        assertNotDisposed();
+        
         return (T) read( (ModelProperty) property );
     }
 
@@ -164,6 +170,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final <T extends IModelElement> ModelElementList<T> read( final ListProperty property )
     {
+        assertNotDisposed();
+        
         return (ModelElementList<T>) read( (ModelProperty) property );
     }
 
@@ -171,13 +179,18 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final <T> Transient<T> read( final TransientProperty property )
     {
+        assertNotDisposed();
+        
         return (Transient<T>) read( (ModelProperty) property );
     }
     
     public final SortedSet<String> read( final ModelPath path )
     {
+        assertNotDisposed();
+
         final SortedSet<String> result = new TreeSet<String>();
         read( path, result );
+        
         return result;
     }
 
@@ -186,6 +199,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         synchronized( root() )
         {
+            assertNotDisposed();
+
             final ModelPath.Segment head = path.head();
             
             if( head instanceof ModelRootSegment )
@@ -332,11 +347,15 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final void refresh()
     {
+        assertNotDisposed();
+
         refresh( false, false );
     }
     
     public final void refresh( final boolean force )
     {
+        assertNotDisposed();
+
         refresh( force, false );
     }
     
@@ -364,12 +383,16 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final void refresh( final ModelProperty property )
     {
+        assertNotDisposed();
+
         refresh( property, false, false );
     }
     
     public final void refresh( final ModelProperty property,
                                final boolean force )
     {
+        assertNotDisposed();
+
         refresh( property, force, false );
     }
     
@@ -419,6 +442,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final void copy( final IModelElement element )
     {
+        assertNotDisposed();
+
         if( this.type != element.type() )
         {
             throw new IllegalArgumentException();
@@ -532,6 +557,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final <S extends Service> S service( final Class<S> serviceType )
     {
+        assertNotDisposed();
+
         if( serviceType == null )
         {
             throw new IllegalArgumentException();
@@ -543,6 +570,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final <S extends Service> List<S> services( final Class<S> serviceType )
     {
+        assertNotDisposed();
+
         if( serviceType == null )
         {
             throw new IllegalArgumentException();
@@ -562,6 +591,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final <S extends Service> S service( final ModelProperty property,
                                                 final Class<S> serviceType )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -578,6 +609,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final <S extends Service> S service( final String property,
                                                 final Class<S> serviceType )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -595,6 +628,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final <S extends Service> List<S> services( final ModelProperty property,
                                                        final Class<S> serviceType )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -611,6 +646,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final <S extends Service> List<S> services( final String property,
                                                        final Class<S> serviceType )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -646,6 +683,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final boolean enabled( final ModelProperty property )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -656,6 +695,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final boolean enabled( final String property )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -748,6 +789,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final boolean empty( final ModelProperty property )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -758,6 +801,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final boolean empty( final String property )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -808,6 +853,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 
     public final Status validation()
     {
+        assertNotDisposed();
+
         if( this.validation == null )
         {
             refreshValidationResult();
@@ -818,6 +865,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final Status validation( final ModelProperty property )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -828,6 +877,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final Status validation( final String property )
     {
+        assertNotDisposed();
+
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -901,18 +952,24 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final boolean attach( final Listener listener )
     {
+        assertNotDisposed();
+
         return this.listeners.attach( listener );
     }
     
     public final void attach( final Listener listener,
                               final String path )
     {
+        assertNotDisposed();
+
         attach( listener, new ModelPath( path ) );
     }
     
     public final void attach( final Listener listener,
                               final ModelPath path )
     {
+        assertNotDisposed();
+
         final ModelPath.Segment head = path.head();
         
         if( head instanceof ModelRootSegment )
@@ -1065,23 +1122,40 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final void attach( final Listener listener,
                               final ModelProperty property )
     {
+        assertNotDisposed();
+
         attach( listener, property.getName() );
     }
     
     public final boolean detach( final Listener listener )
     {
+        if( disposed() )
+        {
+            return false;
+        }
+        
         return this.listeners.detach( listener );
     }
     
     public final void detach( final Listener listener,
                               final String path )
     {
+        if( disposed() )
+        {
+            return;
+        }
+        
         detach( listener, new ModelPath( path ) );
     }
     
     public final void detach( final Listener listener,
                               final ModelPath path )
     {
+        if( disposed() )
+        {
+            return;
+        }
+        
         final ModelPath.Segment head = path.head();
         
         if( head instanceof ModelRootSegment )
@@ -1231,6 +1305,11 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final void detach( final Listener listener,
                               final ModelProperty property )
     {
+        if( disposed() )
+        {
+            return;
+        }
+        
         detach( listener, property.getName() );
     }
     
@@ -1263,29 +1342,32 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         synchronized( root() )
         {
-            this.disposed = true;
-            
-            if( this.elementServiceContext != null )
+            if( ! this.disposed )
             {
-                this.elementServiceContext.dispose();
-            }
-            
-            for( ServiceContext context : this.propertyServiceContexts.values() )
-            {
-                context.dispose();
-            }
-            
-            broadcast( new ElementDisposeEvent( this ) );
-            
-            disposeProperties();
-            
-            try
-            {
-                resource().dispose();
-            }
-            catch( Exception e )
-            {
-                LoggingService.log( e );
+                this.disposed = true;
+                
+                if( this.elementServiceContext != null )
+                {
+                    this.elementServiceContext.dispose();
+                }
+                
+                for( ServiceContext context : this.propertyServiceContexts.values() )
+                {
+                    context.dispose();
+                }
+                
+                broadcast( new ElementDisposeEvent( this ) );
+                
+                disposeProperties();
+                
+                try
+                {
+                    resource().dispose();
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                }
             }
         }
     }
@@ -1315,6 +1397,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     @Override
     public <A> A adapt( final Class<A> adapterType )
     {
+        assertNotDisposed();
+
         A result = null;
 
         for( AdapterService service : services( AdapterService.class ) )
