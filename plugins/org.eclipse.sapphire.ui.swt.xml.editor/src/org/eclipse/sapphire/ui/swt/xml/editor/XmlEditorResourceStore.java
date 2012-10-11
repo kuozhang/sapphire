@@ -85,6 +85,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
     private final Scrubber scrubber;
     private final Listener modelElementDisposeListener;
     private final XmlSourceEditorService sourceEditorService;
+    private final INodeAdapter xmlNodeListener;
     
     public XmlEditorResourceStore( final SapphireEditor sapphireEditor,
                                    final StructuredTextEditor sourceEditor )
@@ -110,9 +111,10 @@ public class XmlEditorResourceStore extends XmlResourceStore
         
         final ISourceEditingTextTools sourceEditingTextTools = (ISourceEditingTextTools) this.sourceEditor.getAdapter( ISourceEditingTextTools.class );
         final IDOMSourceEditingTextTools domSourceEditingTextTools = (IDOMSourceEditingTextTools) sourceEditingTextTools;
-        final Document document = domSourceEditingTextTools.getDOMDocument();
         
-        final INodeAdapter adapter = new INodeAdapter()
+        setDomDocument( domSourceEditingTextTools.getDOMDocument() );
+        
+        this.xmlNodeListener = new INodeAdapter()
         {
             public boolean isAdapterForType( final Object type )
             {
@@ -136,16 +138,14 @@ public class XmlEditorResourceStore extends XmlResourceStore
                 
                 if( eventType == INodeNotifier.ADD && newValue instanceof IDOMNode )
                 {
-                    addAdapter( (IDOMNode) newValue, this );
+                    attachXmlNodeListener( (IDOMNode) newValue );
                 }
                 
                 handleXmlNodeChange( (Node) notifier );
             }
         };
 
-        addAdapter( (IDOMNode) document, adapter );
-        
-        setDomDocument( document );
+        attachXmlNodeListener();
     }
     
     public final SapphireEditor getEditor()
@@ -339,6 +339,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
     public void dispose()
     {
         super.dispose();
+        detachXmlNodeListener();
         this.scrubber.dispose();
     }
 
@@ -408,16 +409,37 @@ public class XmlEditorResourceStore extends XmlResourceStore
         DelayedTasksExecutor.schedule( new RefreshElementTask( nearestMatchModelElements ) );
     }
     
-    private static void addAdapter( final IDOMNode node,
-                                    final INodeAdapter adapter )
+    private void attachXmlNodeListener()
     {
-        node.addAdapter( adapter );
+        attachXmlNodeListener( (IDOMNode) getDomDocument() );
+    }
+    
+    private void attachXmlNodeListener( final IDOMNode node )
+    {
+        node.addAdapter( this.xmlNodeListener );
         
         final NodeList children = node.getChildNodes();
         
         for( int i = 0, n = children.getLength(); i < n; i++ )
         {
-            addAdapter( (IDOMNode) children.item( i ), adapter );
+            attachXmlNodeListener( (IDOMNode) children.item( i ) );
+        }
+    }
+    
+    private void detachXmlNodeListener()
+    {
+        detachXmlNodeListener( (IDOMNode) getDomDocument() );
+    }
+    
+    private void detachXmlNodeListener( final IDOMNode node )
+    {
+        node.removeAdapter( this.xmlNodeListener );
+        
+        final NodeList children = node.getChildNodes();
+        
+        for( int i = 0, n = children.getLength(); i < n; i++ )
+        {
+            detachXmlNodeListener( (IDOMNode) children.item( i ) );
         }
     }
     
@@ -451,7 +473,10 @@ public class XmlEditorResourceStore extends XmlResourceStore
         {
             for( final IModelElement element : this.elements )
             {
-                element.refresh( false, true );
+                if( ! element.disposed() )
+                {
+                    element.refresh( false, true );
+                }
             }
         }
     }
