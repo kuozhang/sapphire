@@ -12,9 +12,7 @@
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
@@ -35,6 +33,7 @@ import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
+import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
@@ -51,8 +50,8 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
 {
     public static final String ID_BASE = "Sapphire.Add.";
     
-    private Map<ModelProperty,PossibleTypesService> propertyToPossibleTypesServiceMap;
     private Listener possibleTypesServiceListener;
+    private Listener nodeFactoryListener;
     
     @Override
     public void init( final SapphireAction action,
@@ -69,52 +68,76 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             }
         };
         
-        this.propertyToPossibleTypesServiceMap = new HashMap<ModelProperty,PossibleTypesService>();
+        this.nodeFactoryListener = new FilteredListener<VisibilityChangedEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final VisibilityChangedEvent event )
+            {
+                broadcast( new Event() );
+            }
+        };
         
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
         final IModelElement element = node.getLocalModelElement();
-        
-        for( final ModelProperty property : node.getChildNodeFactoryProperties() )
-        {
-            final PossibleTypesService possibleTypesService = element.service( property, PossibleTypesService.class );
-            possibleTypesService.attach( this.possibleTypesServiceListener );
-            this.propertyToPossibleTypesServiceMap.put( property, possibleTypesService );
-        }
+
+        node.executeAfterInitialization
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    for( MasterDetailsContentNode.NodeFactory factory : node.factories() )
+                    {
+                        factory.attach( OutlineNodeAddActionHandlerFactory.this.nodeFactoryListener );
+                        
+                        final PossibleTypesService possibleTypesService = element.service( factory.property(), PossibleTypesService.class );
+                        possibleTypesService.attach( OutlineNodeAddActionHandlerFactory.this.possibleTypesServiceListener );
+                    }
+                    
+                    broadcast( new Event() );
+                }
+            }
+        );
     }
 
     @Override
     public List<SapphireActionHandler> create()
     {
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
+        final IModelElement element = node.getLocalModelElement();
         final List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
         
-        for( final Map.Entry<ModelProperty,PossibleTypesService> entry : this.propertyToPossibleTypesServiceMap.entrySet() )
+        for( MasterDetailsContentNode.NodeFactory factory : node.factories() )
         {
-            final ModelProperty property = entry.getKey();
-            final PossibleTypesService possibleTypesService = entry.getValue();
-
-            if( property instanceof ListProperty )
+            if( factory.visible() )
             {
-                final ListProperty prop = (ListProperty) property;
-                
-                for( final ModelElementType memberType : possibleTypesService.types() )
+                final ModelProperty property = factory.property();
+                final PossibleTypesService possibleTypesService = element.service( property, PossibleTypesService.class );
+    
+                if( property instanceof ListProperty )
                 {
-                    final ListPropertyActionHandler handler = new ListPropertyActionHandler( prop, memberType );
-                    handlers.add( handler );
+                    final ListProperty prop = (ListProperty) property;
+                    
+                    for( final ModelElementType memberType : possibleTypesService.types() )
+                    {
+                        final ListPropertyActionHandler handler = new ListPropertyActionHandler( prop, memberType );
+                        handlers.add( handler );
+                    }
                 }
-            }
-            else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
-            {
-                final ElementProperty prop = (ElementProperty) property;
-                
-                for( final ModelElementType memberType : possibleTypesService.types() )
+                else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
                 {
-                    final ElementPropertyActionHandler handler = new ElementPropertyActionHandler( prop, memberType );
-                    handlers.add( handler );
+                    final ElementProperty prop = (ElementProperty) property;
+                    
+                    for( final ModelElementType memberType : possibleTypesService.types() )
+                    {
+                        final ElementPropertyActionHandler handler = new ElementPropertyActionHandler( prop, memberType );
+                        handlers.add( handler );
+                    }
                 }
-            }
-            else
-            {
-                throw new IllegalStateException();
+                else
+                {
+                    throw new IllegalStateException();
+                }
             }
         }
         
@@ -126,8 +149,14 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
     {
         super.dispose();
         
-        for( final PossibleTypesService possibleTypesService : this.propertyToPossibleTypesServiceMap.values() )
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
+        final IModelElement element = node.getLocalModelElement();
+
+        for( MasterDetailsContentNode.NodeFactory factory : node.factories() )
         {
+            factory.detach( this.nodeFactoryListener );
+            
+            final PossibleTypesService possibleTypesService = element.service( factory.property(), PossibleTypesService.class );
             possibleTypesService.detach( this.possibleTypesServiceListener );
         }
     }

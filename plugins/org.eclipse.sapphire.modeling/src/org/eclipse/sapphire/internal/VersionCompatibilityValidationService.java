@@ -13,24 +13,17 @@ package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
-import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
- * An abstract base class for implementations of ValidationService that produce a validation error when a property 
- * is not compatible with the version compatibility target yet it contains data. 
+ * An abstract implementation of ValidationService that produces a validation error when a property 
+ * or an element is not compatible with the version compatibility target. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -45,7 +38,7 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
     {
         super.init();
         
-        this.versionCompatibilityService = context( IModelElement.class ).service( context( ModelProperty.class ), MasterVersionCompatibilityService.class );
+        this.versionCompatibilityService = element().service( property(), MasterVersionCompatibilityService.class );
         
         this.versionCompatibilityServiceListener = new Listener()
         {
@@ -58,11 +51,20 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
         
         this.versionCompatibilityService.attach( this.versionCompatibilityServiceListener );
     }
+    
+    protected abstract IModelElement element();
+    
+    protected abstract ModelProperty property();
+    
+    protected boolean problem()
+    {
+        return ( ! this.versionCompatibilityService.compatible() );
+    }
 
     @Override
     public Status validate()
     {
-        if( ! this.versionCompatibilityService.compatible() && populated() )
+        if( problem() )
         {
             final String message;
             
@@ -84,8 +86,6 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
         return Status.createOkStatus();
     }
     
-    protected abstract boolean populated();
-    
     @Override
     public void dispose()
     {
@@ -97,109 +97,6 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
         }
     }
     
-    /**
-     * Implementation of ValidationService that produces a validation error when a value property is not compatible 
-     * with the version compatibility target yet it has a value.
-     */
-    
-    public static final class ValuePropertyService extends VersionCompatibilityValidationService
-    {
-        @Override
-        protected boolean populated()
-        {
-            return context( IModelElement.class ).read( context( ValueProperty.class ) ).getText( false ) != null;
-        }
-        
-        public static final class Factory extends ServiceFactory
-        {
-            @Override
-            public boolean applicable( final ServiceContext context,
-                                       final Class<? extends Service> service )
-            {
-                final IModelElement element = context.find( IModelElement.class );
-                final ValueProperty property = context.find( ValueProperty.class );
-                
-                return property != null && element.service( property, MasterVersionCompatibilityService.class ) != null; 
-            }
-
-            @Override
-            public Service create( final ServiceContext context,
-                                   final Class<? extends Service> service )
-            {
-                return new ValuePropertyService();
-            }
-        }
-    }
-    
-    /**
-     * Implementation of ValidationService that produces a validation error when an element property is not compatible 
-     * with the version compatibility target yet it contains an element.
-     */
-
-    public static final class ElementPropertyService extends VersionCompatibilityValidationService
-    {
-        @Override
-        protected boolean populated()
-        {
-            return context( IModelElement.class ).read( context( ElementProperty.class ) ).element() != null;
-        }
-        
-        public static final class Factory extends ServiceFactory
-        {
-            @Override
-            public boolean applicable( final ServiceContext context,
-                                       final Class<? extends Service> service )
-            {
-                final IModelElement element = context.find( IModelElement.class );
-                final ElementProperty property = context.find( ElementProperty.class );
-                
-                return property != null && ! ( property instanceof ImpliedElementProperty ) && 
-                       element.service( property, MasterVersionCompatibilityService.class ) != null; 
-            }
-
-            @Override
-            public Service create( final ServiceContext context,
-                                   final Class<? extends Service> service )
-            {
-                return new ElementPropertyService();
-            }
-        }
-    }
-    
-    /**
-     * Implementation of ValidationService that produces a validation error when a list property is not compatible 
-     * with the version compatibility target yet the list is not empty.
-     */
-    
-    public static final class ListPropertyService extends VersionCompatibilityValidationService
-    {
-        @Override
-        protected boolean populated()
-        {
-            return ! context( IModelElement.class ).read( context( ListProperty.class ) ).isEmpty();
-        }
-        
-        public static final class Factory extends ServiceFactory
-        {
-            @Override
-            public boolean applicable( final ServiceContext context,
-                                       final Class<? extends Service> service )
-            {
-                final IModelElement element = context.find( IModelElement.class );
-                final ListProperty property = context.find( ListProperty.class );
-                
-                return property != null && element.service( property, MasterVersionCompatibilityService.class ) != null; 
-            }
-
-            @Override
-            public Service create( final ServiceContext context,
-                                   final Class<? extends Service> service )
-            {
-                return new ListPropertyService();
-            }
-        }
-    }
-
     private static final class Resources extends NLS
     {
         public static String notCompatibleWithVersionMessage;

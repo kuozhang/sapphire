@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 
@@ -19,23 +18,12 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNo
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeAddActionHandlerCondition 
-
-    extends SapphireCondition
-    
+public final class OutlineNodeAddActionHandlerCondition extends SapphireCondition
 {
     @Override
     protected boolean evaluate()
     {
-        final ISapphirePart part = getPart();
-        
-        if( part instanceof MasterDetailsContentNode )
-        {
-            final MasterDetailsContentNode node = (MasterDetailsContentNode) part;
-            return ( ! node.getChildNodeFactoryProperties().isEmpty() );
-        }
-        
-        return false;
+        return ( getPart() instanceof MasterDetailsContentNode );
     }
 
 }
