@@ -104,6 +104,12 @@ public abstract class SapphirePart implements ISapphirePart
     private Map<String,SapphireActionGroup> actions;
     private PartServiceContext serviceContext;
     private FunctionResult visibleWhenFunctionResult;
+    private boolean initialized;
+    
+    public final boolean initialized()
+    {
+        return this.initialized;
+    }
     
     public final void init( final ISapphirePart parent,
                             final IModelElement modelElement,
@@ -186,6 +192,8 @@ public abstract class SapphirePart implements ISapphirePart
         );
         
         updateValidationState();
+        
+        this.initialized = true;
         
         broadcast( new PartInitializationEvent( this ) );
     }
@@ -428,7 +436,7 @@ public abstract class SapphirePart implements ISapphirePart
     
     public final boolean visible()
     {
-        return (Boolean) this.visibleWhenFunctionResult.value();
+        return ( this.visibleWhenFunctionResult == null ? false : (Boolean) this.visibleWhenFunctionResult.value() );
     }
     
     public boolean setFocus()
@@ -759,6 +767,46 @@ public abstract class SapphirePart implements ISapphirePart
         }
         
         return this.serviceContext.services( serviceType );
+    }
+    
+    /**
+     * Executes a job after this part has been fully initialized. If the part has already been
+     * initialized, the job is executed immediately.
+     * 
+     * @param job the job to perform
+     * @return true if the job has been performed prior to returning to the caller, false otherwise
+     * @throws IllegalArgumentException if job is null
+     */
+    
+    public final boolean executeAfterInitialization( final Runnable job )
+    {
+        if( job == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( initialized() )
+        {
+            job.run();
+            return true;
+        }
+        else
+        {
+            attach
+            (
+                new FilteredListener<PartInitializationEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final PartInitializationEvent event )
+                    {
+                        detach( this );
+                        job.run();
+                    }
+                }
+            );
+            
+            return false;
+        }
     }
     
     public void dispose()

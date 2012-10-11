@@ -851,7 +851,43 @@ editor.attach
             ...
         }
     }
-)</code></pre>
+);</code></pre>
+
+<p>Check whether a part has been initialized by using SapphirePart.initialized() method. To get notified when the part
+has completed its initialization, listen for PartInitializationEvent.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>boolean initialized = editor.initialized()
+ 
+editor.attach
+(
+    new FilteredListener&lt;PartInitializationEvent>()
+    {
+        @Override
+        protected void handleTypedEvent( PartInitializationEvent event )
+        {
+            ...
+        }
+    }
+);</code></pre>
+
+<p>The SapphirePart.executeAfterInitialization() method provides a way to execute a job after a part has been 
+fully initialized. If the part has already been initialized, the job is executed immediately.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>editor.executeAfterInitialization
+(
+    new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            ...
+        }
+    }
+);</code></pre>
 
 
 <h2><a name="Miscellaneous-Status">Status</a></h2>
