@@ -606,7 +606,16 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             
                             if( event instanceof VisibilityChangedEvent )
                             {
-                                treeViewer.refresh( node.getParentNode(), true );
+                                final MasterDetailsContentNode parent = node.getParentNode();
+                                
+                                if( parent == outline.getRoot() )
+                                {
+                                    treeViewer.refresh();
+                                }
+                                else
+                                {
+                                    treeViewer.refresh( parent );
+                                }
                             }
                             else
                             {
@@ -663,9 +672,11 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 return ( (MasterDetailsContentNode) element ).getParentNode();
             }
         
-            public boolean hasChildren( final Object element )
+            public boolean hasChildren( final Object parentElement )
             {
-                return ! ( ( (MasterDetailsContentNode) element ).nodes().visible() ).isEmpty();
+                final MasterDetailsContentNodeList nodes = ( (MasterDetailsContentNode) parentElement ).nodes();
+                attach( nodes );
+                return ! nodes.visible().isEmpty();
             }
         
             public void inputChanged( final Viewer viewer,
