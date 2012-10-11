@@ -1404,15 +1404,7 @@ Fragment-Host: @{Bundle}
         </then>
       </if>
 
-      <if>
-        <contains string="@{platform}" substring="x86_64"/>
-        <then>
-          <adjust-eclipse-memory-settings install="@{dest}" x64="true"/>
-        </then>
-        <else>
-          <adjust-eclipse-memory-settings install="@{dest}"/>
-        </else>
-      </if>
+      <adjust-eclipse-ini platform="@{platform}"/>
 
     </sequential>
   </macrodef>
@@ -1450,9 +1442,9 @@ Fragment-Host: @{Bundle}
   </macrodef>
 
 
-  <macrodef name="adjust-eclipse-memory-settings">
+  <macrodef name="adjust-eclipse-ini">
     <attribute name="install"/>
-    <attribute name="x64" default="false"/>
+    <attribute name="platform"/>
     <sequential>
       <var name=".eclipse.ini" value="@{install}/eclipse.ini"/>
       <if>
@@ -1465,16 +1457,26 @@ Fragment-Host: @{Bundle}
         <available file="${.eclipse.ini}"/>
         <then>
           <if>
-            <istrue value="@{x64}"/>
+            <contains string="@{platform}" substring="win32"/>
             <then>
-              <replaceregexp file="${.eclipse.ini}" match="([\n|\r]*)-Xmx[0-9]*m" replace="\1-Xmx1024m\1-XX:MaxPermSize=512m"/>
+              <var name=".nl" value="&#13;&#10;"/>
             </then>
             <else>
-              <replaceregexp file="${.eclipse.ini}" match="([\n|\r]*)-Xmx[0-9]*m" replace="\1-Xmx512m\1-XX:MaxPermSize=256m"/>
+              <var name=".nl" value="&#10;"/>
+            </else>
+          </if>
+          <if>
+            <contains string="@{platform}" substring="x86_64"/>
+            <then>
+              <replaceregexp file="${.eclipse.ini}" match="([\n|\r]*)-Xmx[0-9]*m" replace="\1-Xmx1024m\1-XX:MaxPermSize=512m${.nl}-Djava.net.preferIPv4Stack=true"/>
+            </then>
+            <else>
+              <replaceregexp file="${.eclipse.ini}" match="([\n|\r]*)-Xmx[0-9]*m" replace="\1-Xmx512m\1-XX:MaxPermSize=256m${.nl}-Djava.net.preferIPv4Stack=true"/>
             </else>
           </if>
           <replaceregexp file="${.eclipse.ini}" match="[\n|\r]*--launcher.XXMaxPermSize[\n|\r]*[0-9]*m" replace=""/>
           <var name=".eclipse.ini" unset="true"/>
+          <var name=".nl" unset="true"/>
         </then>
         <else>
           <fail message="Could not locate eclipse.ini file in @{install}"/>
