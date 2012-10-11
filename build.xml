@@ -1404,7 +1404,7 @@ Fragment-Host: @{Bundle}
         </then>
       </if>
 
-      <adjust-eclipse-ini platform="@{platform}"/>
+      <adjust-eclipse-ini install="@{dest}" platform="@{platform}"/>
 
     </sequential>
   </macrodef>
