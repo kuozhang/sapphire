@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.modeling.LoggingService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.ListenerContext;
 
 public abstract class Service
 {
+    private boolean initialized;
     private ServiceContext context;
     private Map<String,String> params;
     private final ListenerContext listeners = new ListenerContext();
@@ -50,6 +52,23 @@ public abstract class Service
         {
             this.params = new HashMap<String,String>( params );
             this.params = Collections.unmodifiableMap( this.params );
+        }
+    }
+    
+    final void initIfNecessary()
+    {
+        if( ! this.initialized )
+        {
+            this.initialized = true;
+            
+            try
+            {
+                init();
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
+            }
         }
     }
     

@@ -37,6 +37,7 @@ public class ServiceContext
     private final String type;
     private final ServiceContext parent;
     private final List<Service> services = new ArrayList<Service>();
+    private final Set<Class<?>> initializingServiceTypes = new HashSet<Class<?>>();
     private final Set<Class<?>> initializedServiceTypes = new HashSet<Class<?>>();
     private final Set<String> exhaustedServiceFactories = new HashSet<String>();
     private boolean disposed = false;
@@ -74,6 +75,8 @@ public class ServiceContext
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
+    @SuppressWarnings( "unchecked" )
+    
     public final synchronized <S extends Service> List<S> services( final Class<S> serviceType )
     {
         if( this.disposed )
@@ -83,111 +86,110 @@ public class ServiceContext
         
         if( ! this.initializedServiceTypes.contains( serviceType ) )
         {
-            this.initializedServiceTypes.add( serviceType );
-            
-            // Find all applicable service factories declared via the extension system.
-            
-            final Map<String,ServiceFactoryProxy> applicable = new HashMap<String,ServiceFactoryProxy>();
-
-            for( ServiceFactoryProxy factory : SapphireModelingExtensionSystem.getServiceFactories() )
+            if( this.initializingServiceTypes.contains( serviceType ) )
             {
-                if( factory.applicable( this, serviceType ) )
-                {
-                    applicable.put( factory.id(), factory );
-                }
+                throw new IllegalStateException();
             }
             
-            // Remove those that are overridden by another applicable service. Note that a cycle will 
-            // cause all services in the cycle to be removed.
+            this.initializingServiceTypes.add( serviceType );
             
-            for( ServiceFactoryProxy factory : new ArrayList<ServiceFactoryProxy>( applicable.values() ) )
+            final Class<? super S> serviceTypeSuperClass = serviceType.getSuperclass();
+            
+            if( serviceTypeSuperClass == Service.class || serviceTypeSuperClass == DataService.class )
             {
-                for( String overriddenServiceId : factory.overrides() )
-                {
-                    applicable.remove( overriddenServiceId );
-                }
-            }
-            
-            // Process local service definitions.
-            
-            for( ServiceFactoryProxy factory : local() )
-            {
-                final String id = factory.id();
+                // Find all applicable service factories declared via the extension system.
                 
-                if( ! this.exhaustedServiceFactories.contains( id ) && factory.applicable( this, serviceType ) )
-                {
-                    this.exhaustedServiceFactories.add( id );
-                    
-                    Service service = null;
-                    
-                    try
-                    {
-                        service = factory.create( this, serviceType );
-                        service.init( this, factory.parameters() );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
-                    
-                    if( service != null )
-                    {
-                        for( String overriddenServiceId : factory.overrides() )
-                        {
-                            applicable.remove( overriddenServiceId );
-                        }
-                        
-                        this.services.add( service );
-                        
-                        try
-                        {
-                            service.init();
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
-                    }
-                }
-            }
-            
-            // Instantiate global services that haven't been overridden.
-            
-            for( ServiceFactoryProxy factory : applicable.values() )
-            {
-                final String id = factory.id();
-                
-                if( ! this.exhaustedServiceFactories.contains( id ) )
-                {
-                    this.exhaustedServiceFactories.add( id );
-                    
-                    Service service = null;
-                    
-                    try
-                    {
-                        service = factory.create( this, serviceType );
-                        service.init( this, factory.parameters() );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
+                final Map<String,ServiceFactoryProxy> applicable = new HashMap<String,ServiceFactoryProxy>();
     
-                    if( service != null )
+                for( ServiceFactoryProxy factory : SapphireModelingExtensionSystem.getServiceFactories() )
+                {
+                    if( factory.applicable( this, serviceType ) )
                     {
-                        this.services.add( service );
+                        applicable.put( factory.id(), factory );
+                    }
+                }
+                
+                // Remove those that are overridden by another applicable service. Note that a cycle will 
+                // cause all services in the cycle to be removed.
+                
+                for( ServiceFactoryProxy factory : new ArrayList<ServiceFactoryProxy>( applicable.values() ) )
+                {
+                    for( String overriddenServiceId : factory.overrides() )
+                    {
+                        applicable.remove( overriddenServiceId );
+                    }
+                }
+                
+                // Process local service definitions.
+                
+                for( ServiceFactoryProxy factory : local() )
+                {
+                    final String id = factory.id();
+                    
+                    if( ! this.exhaustedServiceFactories.contains( id ) && factory.applicable( this, serviceType ) )
+                    {
+                        this.exhaustedServiceFactories.add( id );
+                        
+                        Service service = null;
                         
                         try
                         {
-                            service.init();
+                            service = factory.create( this, serviceType );
+                            service.init( this, factory.parameters() );
                         }
                         catch( Exception e )
                         {
                             LoggingService.log( e );
                         }
+                        
+                        if( service != null )
+                        {
+                            for( String overriddenServiceId : factory.overrides() )
+                            {
+                                applicable.remove( overriddenServiceId );
+                            }
+                            
+                            this.services.add( service );
+                        }
+                    }
+                }
+                
+                // Instantiate global services that haven't been overridden.
+                
+                for( ServiceFactoryProxy factory : applicable.values() )
+                {
+                    final String id = factory.id();
+                    
+                    if( ! this.exhaustedServiceFactories.contains( id ) )
+                    {
+                        this.exhaustedServiceFactories.add( id );
+                        
+                        Service service = null;
+                        
+                        try
+                        {
+                            service = factory.create( this, serviceType );
+                            service.init( this, factory.parameters() );
+                        }
+                        catch( Exception e )
+                        {
+                            LoggingService.log( e );
+                        }
+        
+                        if( service != null )
+                        {
+                            this.services.add( service );
+                        }
                     }
                 }
             }
+            else
+            {
+                services( (Class<Service>) serviceTypeSuperClass );
+            }
+            
+            this.initializingServiceTypes.remove( serviceType );
+            this.initializedServiceTypes.add( serviceType );
         }
         
         final ListFactory<S> matchedServicesListFactory = ListFactory.start();
@@ -198,6 +200,11 @@ public class ServiceContext
             {
                 matchedServicesListFactory.add( serviceType.cast( service ) );
             }
+        }
+        
+        for( int i = 0, n = matchedServicesListFactory.size(); i < n; i++ )
+        {
+            matchedServicesListFactory.get( i ).initIfNecessary();
         }
         
         if( this.parent != null && matchedServicesListFactory.size() == 0 )
