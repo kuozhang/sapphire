@@ -13,8 +13,6 @@ package org.eclipse.sapphire.workspace.ui;
 
 import java.util.Map;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -96,13 +94,8 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
             
             if( resource != null )
             {
-                if( resource instanceof IFile )
-                {
-                    resource = resource.getParent();
-                }
-                
                 final CreateWorkspaceFileOp op = element();
-                op.setContext( (IContainer) resource );
+                op.setContext( resource );
                 op.initialize();
             }
         }

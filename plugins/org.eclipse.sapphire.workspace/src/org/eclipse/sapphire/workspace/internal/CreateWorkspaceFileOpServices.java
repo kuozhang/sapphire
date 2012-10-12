@@ -15,7 +15,6 @@ import static org.eclipse.sapphire.workspace.CreateWorkspaceFileOp.PROBLEM_FILE_
 
 import java.util.List;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -93,9 +92,15 @@ public final class CreateWorkspaceFileOpServices
         protected InitialValueServiceData compute()
         {
             final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-            final IContainer folder = op.getContext().content();
             
-            return new InitialValueServiceData( folder == null ? null : folder.getFullPath().makeRelative().toPortableString() );
+            IResource resource = op.getContext().content();
+            
+            if( resource instanceof IFile )
+            {
+                resource = resource.getParent();
+            }
+            
+            return new InitialValueServiceData( resource == null ? null : resource.getFullPath().makeRelative().toPortableString() );
         }
         
         @Override

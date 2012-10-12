@@ -126,12 +126,7 @@ public final class StandardDefaultValueService extends DefaultValueService
             
             if( property != null )
             {
-                final DefaultValue annotation = property.getAnnotation( DefaultValue.class );
-                
-                if( annotation != null && annotation.text().length() > 0 )
-                {
-                    return true;
-                }
+                return property.hasAnnotation( DefaultValue.class );
             }
             
             return false;

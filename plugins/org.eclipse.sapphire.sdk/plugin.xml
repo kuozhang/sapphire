@@ -83,6 +83,16 @@
         <parameter name="editor" value="org.eclipse.sapphire.sdk.internal.SapphireExtensionEditor"/>
       </class>
     </wizard>
+    <wizard
+      id="org.eclipse.sapphire.sdk.CreateNormalizedXmlSchemaWizard"
+      category="Sapphire"
+      name="%CreateNormalizedXmlSchemaWizard.Name"
+      icon="org/eclipse/sapphire/sdk/XmlSchemaCreateFileWizard.gif">
+      <description>%CreateNormalizedXmlSchemaWizard.Description</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.sdk.CreateNormalizedXmlSchemaWizard"/>
+      </class>
+    </wizard>
   </extension>
 
 </plugin>

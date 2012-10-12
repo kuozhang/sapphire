@@ -111,7 +111,7 @@ public final class CreateExtensionManifestOpServices
         {
             final CreateExtensionManifestOp op = context( CreateExtensionManifestOp.class );
     
-            IContainer folder = op.getContext().content();
+            IResource folder = op.getContext().content();
             
             if( folder != null )
             {
