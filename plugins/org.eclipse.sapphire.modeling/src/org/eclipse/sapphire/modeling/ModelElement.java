@@ -1331,11 +1331,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     protected final void broadcast( final Event event )
     {
-        if( ! ( event instanceof ElementDisposeEvent ) )
-        {
-            assertNotDisposed();
-        }
-        
         this.listeners.broadcast( event );
     }
     
