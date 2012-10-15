@@ -552,35 +552,40 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         rb.append( "this.#1 = new #2( this, #3, service( #3, ValueNormalizationService.class ).normalize( #3.encodeKeywords( val ) ) );\n" +
                    "this.#1.init();\n" +
                    "\n" +
-                   "final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
-                   "\n" +
-                   "if( oldValue == null )\n" +
+                   "if( ! disposed() )\n" +
                    "{\n" +
-                   "    broadcast( new PropertyInitializationEvent( this, #3 ) );\n" +
-                   "}\n" +
-                   "else\n" +
-                   "{\n" + 
-                   "    if( this.#1.equals( oldValue ) )\n" +
-                   "    {\n" + 
-                   "        this.#1 = oldValue;\n" + 
+                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
+                   "    \n" +
+                   "    if( oldValue == null )\n" +
+                   "    {\n" +
+                   "        post( new PropertyInitializationEvent( this, #3 ) );\n" +
                    "    }\n" +
                    "    else\n" +
-                   "    {\n" +
-                   "        if( ! equal( this.#1.getText( false ), oldValue.getText( false ) ) || ! equal( this.#1.getDefaultText(), oldValue.getDefaultText() ) )\n" +
+                   "    {\n" + 
+                   "        if( this.#1.equals( oldValue ) )\n" +
+                   "        {\n" + 
+                   "            this.#1 = oldValue;\n" + 
+                   "        }\n" +
+                   "        else\n" +
                    "        {\n" +
-                   "            broadcast( new PropertyContentEvent( this, #3 ) );\n" +
+                   "            if( ! equal( this.#1.getText( false ), oldValue.getText( false ) ) || ! equal( this.#1.getDefaultText(), oldValue.getDefaultText() ) )\n" +
+                   "            {\n" +
+                   "                post( new PropertyContentEvent( this, #3 ) );\n" +
+                   "            }\n" +
+                   "            \n" +
+                   "            if( ! this.#1.validation().equals( oldValue.validation() ) )\n" +
+                   "            {\n" +
+                   "                post( new PropertyValidationEvent( this, #3, oldValue.validation(), this.#1.validation() ) );\n" +
+                   "            }\n" +
                    "        }\n" +
                    "        \n" +
-                   "        if( ! this.#1.validation().equals( oldValue.validation() ) )\n" +
+                   "        if( enablementRefreshResult.changed() )\n" +
                    "        {\n" +
-                   "            broadcast( new PropertyValidationEvent( this, #3, oldValue.validation(), this.#1.validation() ) );\n" +
+                   "            post( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
                    "        }\n" +
                    "    }\n" +
                    "    \n" +
-                   "    if( enablementRefreshResult.changed() )\n" +
-                   "    {\n" +
-                   "        broadcast( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
-                   "    }\n" +
+                   "    broadcast();\n" +
                    "}",
                    variableName, wrapperType.getSimpleName(), propField.name );
         
@@ -1181,32 +1186,37 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    this.#1 = new #2( this, #3, object );\n" +
                    "    this.#1.init();\n" +
                    "    \n" +
-                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
-                   "    \n" +
-                   "    if( oldTransient == null )\n" +
+                   "    if( ! disposed() )\n" +
                    "    {\n" +
-                   "        broadcast( new PropertyInitializationEvent( this, #3 ) );\n" +
+                   "        final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
                    "        \n" +
-                   "        if( object != null )\n" +
+                   "        if( oldTransient == null )\n" +
                    "        {\n" +
-                   "            broadcast( new PropertyContentEvent( this, #3 ) );\n" +
+                   "            post( new PropertyInitializationEvent( this, #3 ) );\n" +
+                   "            \n" +
+                   "            if( object != null )\n" +
+                   "            {\n" +
+                   "                post( new PropertyContentEvent( this, #3 ) );\n" +
+                   "            }\n" +
                    "        }\n" +
-                   "    }\n" +
-                   "    else\n" +
-                   "    {\n" + 
-                   "        if( this.#1.equals( oldTransient ) )\n" +
-                   "        {\n" + 
-                   "            this.#1 = oldTransient;\n" + 
-                   "        }\n" + 
                    "        else\n" +
-                   "        {\n" +
-                   "            broadcast( new PropertyContentEvent( this, #3 ) );\n" +
+                   "        {\n" + 
+                   "            if( this.#1.equals( oldTransient ) )\n" +
+                   "            {\n" + 
+                   "                this.#1 = oldTransient;\n" + 
+                   "            }\n" + 
+                   "            else\n" +
+                   "            {\n" +
+                   "                post( new PropertyContentEvent( this, #3 ) );\n" +
+                   "            }\n" +
                    "        }\n" +
-                   "    }\n" +
-                   "    \n" +
-                   "    if( enablementRefreshResult.changed() )\n" +
-                   "    {\n" +
-                   "        broadcast( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
+                   "        \n" +
+                   "        if( enablementRefreshResult.changed() )\n" +
+                   "        {\n" +
+                   "            post( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
+                   "        }\n" +
+                   "        \n" +
+                   "        broadcast();\n" +
                    "    }\n" +
                    "}",
                    variableName, wrapperType.getSimpleName(), propField.name );
@@ -1365,8 +1375,9 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             
             rb.append( "assertNotDisposed();\n" +
                        "\n" +
-                       "property = property.refine( this );\n"+
-                       "\n" );
+                       "property = property.refine( this );" );
+            
+            rb.appendEmptyLine();
         }
         
         return readMethod;

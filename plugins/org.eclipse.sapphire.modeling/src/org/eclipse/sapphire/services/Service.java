@@ -107,6 +107,11 @@ public abstract class Service
         return this.params.get( name );
     }
     
+    final void coordinate( final ListenerContext context )
+    {
+        this.listeners.coordinate( context );
+    }
+    
     public final boolean attach( final Listener listener )
     {
         return this.listeners.attach( listener );
@@ -124,7 +129,7 @@ public abstract class Service
     
     protected final void broadcast()
     {
-        this.listeners.broadcast();
+        broadcast( new Event() );
     }
     
     public void dispose()

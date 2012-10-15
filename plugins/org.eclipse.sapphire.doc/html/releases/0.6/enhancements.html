@@ -29,6 +29,7 @@
     <li><a href="#Modeling-Context">Context</a></li>
     <li><a href="#Modeling-ConversionService">ConversionService</a></li>
     <li><a href="#Modeling-FileName">FileName</a></li>
+    <li><a href="#Modeling-ListenerContext">ListenerContext</a></li>
     <li><a href="#Modeling-MasterConversionService">MasterConversionService</a></li>
     <li><a href="#Modeling-ModelElement">ModelElement</a></li>
     <li><a href="#Modeling-ModelElementList">ModelElementList</a></li>
@@ -36,6 +37,7 @@
     <li><a href="#Modeling-PossibleValuesService">PossibleValuesService</a></li>
     <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
     <li><a href="#Modeling-Service">Service</a></li>
+    <li><a href="#Modeling-ServiceContext">ServiceContext</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -281,6 +283,21 @@ normalization should be performed to simplify file name input.</p>
 </ol>
 
 
+<h2><a name="Modeling-ListenerContext">ListenerContext</a></h2>
+
+<p>A new post method provides a way to add an event to the delivery queue without actually 
+delivering it. This is useful when a section of code needs to issue one or more events, but should not
+be interrupted by event delivery. The zero-argument broadcast method is used to deliver all events in the queue. 
+The variant of the broadcast method that takes an event is simply a post followed by a broadcast.</p>  
+
+<pre class="source-code"><code><font color="#888888">ListenerContext
+{</font>
+    void post( Event event )
+    void broadcast()
+    <font color="#888888">void broadcast( Event event )
+}</font></code></pre>
+
+
 <a name="Modeling-MasterConversionService"><h2>MasterConversionService</h2></a>
 
 <p>The MasterConversionService converts an object to the specified type by delegating to available ConversionService 
@@ -504,6 +521,17 @@ convenience methods have been added that delegate to the current context.</p>
 <pre class="source-code"><code>context().service( ExampleService.class )</code></pre>
 
 <pre class="source-code"><code>service( ExampleService.class )</code></pre>
+
+
+<h2><a name="Modeling-ServiceContext">ServiceContext</a></h2>
+
+<p>Solve certain types of out-of-order event delivery problems by making services use an existing
+event delivery queue.</p>
+
+<pre class="source-code"><code><font color="#888888">ServiceContext
+{</font>
+    void coordinate( ListenerContext context )
+<font color="#888888">}</font></code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>

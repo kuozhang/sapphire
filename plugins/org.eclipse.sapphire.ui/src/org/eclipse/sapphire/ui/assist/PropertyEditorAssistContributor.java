@@ -94,7 +94,7 @@ public abstract class PropertyEditorAssistContributor
 
     protected final void broadcast()
     {
-        this.listeners.broadcast();
+        broadcast( new Event() );
     }
     
     public void dispose()

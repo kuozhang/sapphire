@@ -34,7 +34,7 @@ public final class ListenerContext
     {
         synchronized( this )
         {
-            this.queue = context.queue;
+            this.queue = ( context == null ? new ConcurrentLinkedQueue<BroadcastJob>() : context.queue );
         }
     }
     
@@ -71,25 +71,25 @@ public final class ListenerContext
         return false;
     }
     
-    public void broadcast( final Event event )
+    public void post( final Event event )
     {
         final Class<? extends Event> eventType = event.getClass();
-        final boolean broadcast;
+        final boolean post;
         
         synchronized( this )
         {
             if( this.suspended.containsKey( eventType ) )
             {
                 this.suspended.put( eventType, event );
-                broadcast = false;
+                post = false;
             }
             else
             {
-                broadcast = true;
+                post = true;
             }
         }
         
-        if( broadcast )
+        if( post )
         {
             for( BroadcastJob job : this.queue )
             {
@@ -103,17 +103,21 @@ public final class ListenerContext
             {
                 this.queue.add( new BroadcastJob( listener, event ) );
             }
-            
-            for( BroadcastJob job = this.queue.poll(); job != null; job = this.queue.poll() )
-            {
-                job.run();
-            }
         }
     }
-    
+
     public void broadcast()
     {
-        broadcast( new Event() );
+        for( BroadcastJob job = this.queue.poll(); job != null; job = this.queue.poll() )
+        {
+            job.run();
+        }
+    }
+
+    public void broadcast( final Event event )
+    {
+        post( event );
+        broadcast();
     }
     
     public void suspend( final Class<? extends Event> eventType )
