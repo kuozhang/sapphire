@@ -143,25 +143,18 @@
         <context>Sapphire.Element.Instance</context>
     </service>
     <service>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityValidationService$ValuePropertyService$Factory</factory>
-        <id>Sapphire.ValidationService.Property.VersionCompatibility.Value</id>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
-        <description>Implementation of ValidationService that produces a validation error when a value property is not compatible with the version compatibility target yet it has a value.</description>
-    </service>
-    <service>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityValidationService$ElementPropertyService$Factory</factory>
+        <context>Sapphire.Element.Instance</context>
+        <description>An implementation of ValidationService that produces a validation error when an element is directly contained by an element or a list property that is not compatible with the version compatibility target.</description>
+        <factory>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForElement$Factory</factory>
         <id>Sapphire.ValidationService.Property.VersionCompatibility.Element</id>
         <type>org.eclipse.sapphire.services.ValidationService</type>
-        <description>Implementation of ValidationService that produces a validation error when an element property is not compatible with the version compatibility target yet it contains an element.</description>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityValidationService$ListPropertyService$Factory</factory>
-        <id>Sapphire.ValidationService.Property.VersionCompatibility.List</id>
+        <factory>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForProperty$Factory</factory>
+        <id>Sapphire.ValidationService.Property.VersionCompatibility.Property</id>
         <type>org.eclipse.sapphire.services.ValidationService</type>
-        <description>Implementation of ValidationService that produces a validation error when a list property is not compatible with the version compatibility target yet the list is not empty.</description>
+        <description>An implementation of ValidationService that produces a validation error when a property is not compatible with the version compatibility target yet contains data.</description>
     </service>
     <service>
         <id>Sapphire.ValidationService.Property.PreferDefaultValue</id>

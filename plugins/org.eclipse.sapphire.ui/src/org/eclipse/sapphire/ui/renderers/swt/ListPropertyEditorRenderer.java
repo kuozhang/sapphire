@@ -53,10 +53,12 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
             {
                 public void run()
                 {
-                    final ModelElementList<IModelElement> list = getList();
-
-                    if( list != null )
+                    final IModelElement element = getModelElement();
+                    
+                    if( ! element.disposed() )
                     {
+                        final ModelElementList<IModelElement> list =element.read( getProperty() );
+        
                         for( IModelElement entry : list )
                         {
                             entry.detach( ListPropertyEditorRenderer.this.listElementListener );

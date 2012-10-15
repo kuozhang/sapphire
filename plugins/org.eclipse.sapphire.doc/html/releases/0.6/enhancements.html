@@ -40,6 +40,7 @@
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
+    <li><a href="#ExpressionLanguage-CastThroughString">Cast Through a String</a></li>
     <li><a href="#ExpressionLanguage-UpperCaseFunction">UpperCase Function</a></li>
     <li><a href="#ExpressionLanguage-LowerCaseFunction">LowerCase Function</a></li>
     <li><a href="#ExpressionLanguage-UseInPageHeaderText">Use in Page Header Text</a></li>
@@ -53,6 +54,7 @@
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
     <li><a href="#Forms-SectionDescription">Section Description</a></li>
+    <li><a href="#Forms-ActuatorActionHandlerEvent">ActuatorActionHandlerEvent/a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
@@ -486,6 +488,361 @@ convenience methods have been added that delegate to the current context.</p>
 <pre class="source-code"><code>service( ExampleService.class )</code></pre>
 
 
+<h2><a name="Modeling-Context">Context</a></h2>
+
+<p>The existing ClassLocator and ResourceLocator abstractions have been combined into a single abstraction.
+This abstraction enables Sapphire to find classes and other resources typically loaded from
+a class loader even if Sapphire is used in a context such as OSGi where a ClassLoader instance may not always
+be exposed.</p>
+
+<pre class="source-code"><code>Context
+{
+     static Context adapt( ClassLoader loader )
+     static Context adapt( Class&lt;?> cl )
+     
+     abstract &lt;T> Class&lt;T> findClass( String name )
+     abstract URL findResource( String name )
+     abstract List&lt;URL> findResources( String name )
+}
+ 
+BundleBasedContext extends Context
+{
+     static Context adapt( Bundle bundle )
+}</code></pre>
+
+<p>In addition to merging of the locators, this enhancement includes two new features:</p>
+
+<ol>
+
+  <li>The findResources() method, which is used for locating all resources with the same name.</li> 
+
+  <li>When Context is constructed based on a class instead of a class loader, the implementation is 
+  capable of resolving classes and resources using a simple name relative to the package of context class.</li>
+  
+</ol>
+
+
+<a name="Modeling-ConversionService"><h2>ConversionService</h2></a>
+
+<p>The ConversionService converts an object to the specified type. One common application is to convert
+an input (such as a file) to a resource when instantiating the model.</p>
+
+<table>
+  <tr>
+    <th>Sapphire.ConversionService.IFileToWorkspaceFileResourceStore</th>
+  </tr>
+  <tr>
+    <td>Capable of converting an IFile to a WorkspaceFileResourceStore or a ByteArrayResourceStore.</td>
+  </tr>
+  <tr>
+    <td style="border-width: 0px; height: 20px"></td>
+  </tr>
+  <tr>
+    <th>Sapphire.ConversionService.ByteArrayResourceStoreToXmlResource</th>
+  </tr>
+  <tr>
+    <td>Capable of converting a ByteArrayResourceStore to an XmlResource or a Resource. Conversion is only 
+    performed if resource store corresponds   to a file with "xml" extension or if the context element type 
+    has XML binding annotations.</td>
+  </tr>
+</table>
+
+<p>A ConversionService can delegate to other conversion services to create a conversion chain. In fact,
+a common conversion of IFile to XmlResource is a chain of two ConversionService implementations.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In the purchase order sample, a custom ConversionService is used because the 
+default file extension for purchase order files is "po" rather than "xml" and PurchaseOrder element does not
+have XML binding annotations. The combination of these two factors prevent the framework-provided ConversionService
+implementations from engaging.</p>
+
+<pre class="source-code"><code>@Service( impl = PurchaseOrderResourceConversionService.class )
+
+<font color="#888888">public interface PurchaseOrder extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code>public class PurchaseOrderResourceConversionService extends ConversionService
+{
+    @Override
+    public &lt;T> T convert( Object object, Class&lt;T> type )
+    {
+        if( type == XmlResource.class || type == Resource.class )
+        {
+            final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
+            
+            if( store != null )
+            {
+                return type.cast( new RootXmlResource( new XmlResourceStore( store ) ) );
+            }
+        }
+        
+        return null;
+    }
+}</code></pre>
+
+<p style="margin-left: 20px;">Note the use of chaining as part of the presented ConversionService implementation. The 
+input could be any number of things, but as long as another ConversionService implementation knows how to convert it 
+to a ByteArrayResourceStore, this implementation will take the conversion the rest of the way to a Resource.</p> 
+
+
+<h2><a name="Modeling-FileName">FileName</a></h2>
+
+<p>When implementing operations that create files, a common need is to gather the name of a file 
+from the user. The file name must be validated to be compatible with user's platform and certain 
+normalization should be performed to simplify file name input.</p>
+
+<p>Sapphire now provides FileName class and associated services.</p>
+
+<ol>
+
+  <li><b>ValidationService</b> – Flags invalid file names as errors.</li>
+
+  <li><b>ValueSerializationService</b> – Only creates FileName objects that are valid for the current platform.</li>
+
+  <li><b>ValueNormalizationService</b></li>
+  
+  <ol type="A">
+
+    <li>Leading whitespace is removed.</li>
+   
+    <li>Trailing whitespace and dots are removed.</li>
+   
+    <li>Extension is added if the file name does not have one already and if the property has 
+    a FileExtensionsService (usually via @FileExtensions annotation).</li>
+    
+  </ol>
+  
+</ol>
+
+
+<a name="Modeling-MasterConversionService"><h2>MasterConversionService</h2></a>
+
+<p>The MasterConversionService converts an object to the specified type by delegating to available ConversionService 
+implementations. If object is null or is already of desired type, the object is returned unchanged.</p> 
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to
+be implemented by adopters. See <a href="#Modeling-ConversionService">ConversionService</a> instead.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, an IFile is converted to a Resource as part of instantiating the model.
+Note how this code is not aware of the details of the conversion or what type of a resource is created.</p>
+
+ <pre class="source-code"><code><font color="#888888">IFile file = project.getFile( "contacts.xml" )</font>
+Resource resource = ContactsDatabase.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+<font color="#888888">ContactsDatabase model = ContactsDatabase.TYPE.instantiate( resource );</font></code></pre>
+
+
+<h2><a name="Modeling-ModelElement">ModelElement</a></h2>
+
+<p>The existing ModelElement.initialize() method has been enhanced to be consistent with fluent interface principles by returning 
+the element instead of void. This facilitates chaining.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource );
+op.initialize();</font></code></pre>
+
+<pre class="source-code"><code>Operation op = Operation.TYPE.instantiate( resource ).initialize();</font></code></pre>
+
+<p>A new variant of attach() and detach() methods has been added to make it a bit less verbose to listen for changes
+to a particular property.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{</font>
+    <font color="#888888">boolean attach( Listener listener )
+    void attach( Listener listener, String path )
+    void attach( Listener listener, ModelPath path )</font>
+    void attach( Listener listener, ModelProperty property )
+    
+    <font color="#888888">boolean detach( Listener listener )
+    void detach( Listener listener, String path )
+    void detach( Listener listener, ModelPath path )</font>
+    void detach( Listener listener, ModelProperty property )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME.getName() );</code></pre>
+
+<pre class="source-code"><code>op.attach( listener, Operation.PROP_FILE_NAME );</code></pre>
+
+<p>Several method have been enhanced with an overloaded variant that accepts a string property name in place
+of a ModelProperty object. This reduces verbosity in situations where code does not already have a ModelProperty
+instance handy.</p> 
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{
+    &lt;S extends Service> S service( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> S service( String property, Class&lt;S> serviceType )
+    
+    <font color="#888888">&lt;S extends Service> List&lt;S> services( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> List&lt;S> services( String property, Class&lt;S> serviceType )
+    
+    <font color="#888888">boolean enabled( ModelProperty property )</font>
+    boolean enabled( String property )
+    
+    <font color="#888888">Status validation( ModelProperty property )</font>
+    Status validation( String property )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent.</p>
+
+<pre class="source-code"><code>Status validation = op.validation( op.property( "FileName" ) );</code></pre>
+
+<pre class="source-code"><code>Status validation = op.validation( "FileName" );</code></pre>
+
+<p>A method has been added to easily check if a particular property is empty without knowing 
+the type of the property.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElement
+{</font>
+    boolean empty( ModelProperty property )
+    boolean empty( String property )
+<font color="#888888">}</font></code></pre>
+
+<p>The empty state is defined as follows:</p>
+
+<ul>
+  <li><b>Value Property</b> - has null value or has default value</li>
+  <li><b>Element Property</b> - element does not exist</li>
+  <li><b>Implied Element Property</b> - none of the child element's properties are non-empty</li>
+  <li><b>List Property</b> - list size is zero</li>
+  <li><b>Transient Property</b> - has null content</li>
+</ul>
+
+<h2><a name="Modeling-ModelElementList">ModelElementList</a></h2>
+
+<p>The new ModelElementList.enabled() method provides a simpler way to check list property's enablement
+directly through the property accessor.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two statements are equivalent.</p>
+
+<pre class="source-code"><code>container.getEntities().enabled()</font></code></pre>
+
+<pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
+
+
+<h2><a name="Modeling-ModelElementType">ModelElementType</a></h2>
+
+<p>A new variant of instantiate method provides a way to create a model instance from an arbitrary input
+without knowing which resource needs to be created. The resource creation is handled by delegating
+to ConversionService implementations.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElementType
+{
+    &lt;T extends IModelElement> T instantiate()
+    &lt;T extends IModelElement> T instantiate( Resource resource )</font>
+    &lt;T extends IModelElement> T instantiate( Object input )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following three snippets are equivalent.</p>
+
+<pre class="source-code"><code>Resource resource = new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) );
+PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
+
+<pre class="source-code"><code>Resource resource = PurchaseOrder.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
+
+<pre class="source-code"><code>PurchaseOrder po = PuchaseOrder.TYPE.instantiate( file );</code></pre>
+
+
+<h2><a name="Modeling-PossibleValuesService">PossibleValueService</a></h2>
+
+<p>PossibleValueService can now be attached to the list property instead of the value property when modeling the
+list of possible values pattern in order to be able to utilize the model in the service implementation and
+be compatible with property editors like the slush bucket and the check box list.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public interface Example extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Example.class );
+    
+    // *** FavoriteColors ***
+
+    interface FavoriteColor extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( FavoriteColor.class );
+        
+        // *** Name ***
+        
+        @NoDuplicates
+
+        ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+        
+        Value&lt;String> getName();
+        void setName( String value );
+    }
+    
+    @Type( base = MultiSelectStringItem.class )</font>
+    @Service( impl = ColorsPossibleValuesService.class )
+    
+    <font color="#888888">ListProperty PROP_FAVORITY_COLORS = new ListProperty( TYPE, "FavoriteColors" );
+    
+    ModelElementList&lt;FavoriteColor> getMultiSelectString();
+}</font></code></pre>
+
+
+<h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>
+
+<p>In certain cases, deviations from property's default value are allowed, but not recommended.</p>
+
+<p>Consider a file creation wizard where the file should have a certain name to function properly. 
+This is common for configuration files. For flexibility and consistency, the wizard should allow 
+a different file name to be used if the user so desires, but it should warn the user that they 
+are deviating from the file name recommendation.</p>
+
+<p>The new @PreferDefaultValue annotation is used to specify the above semantics. Utilizing this 
+annotation produces a warning and a fact statement.</p>
+
+<p>Warning: <i>[property] should be [default-value].</i><br/>
+Fact: <i>Recommended value is [default-value].</i></p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@DefaultValue( text = "sapphire-extension.xml" )</font>
+@PreferDefaultValue
+ 
+<font color="#888888">ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/PreferDefaultValue.png"/></p>
+
+
+<h2><a name="Modeling-Service">Service</a></h2>
+
+<p>In the past, when a service implementation needed to leverage another service from the same context, 
+service context needed to be referenced explicitly. This led to unnecessary verbosity, so a pair of
+convenience methods have been added that delegate to the current context.</p>
+
+<pre class="source-code"><code><font color="#888888">Service
+{</font>
+    protected final &lt;S extends Service> S service( Class&lt;S> serviceType )
+    protected final &lt;S extends Service> List&lt;S> services( Class&lt;S> serviceType )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following two snippets are equivalent within Service implementation.</p>
+
+<pre class="source-code"><code>context().service( ExampleService.class )</code></pre>
+
+<pre class="source-code"><code>service( ExampleService.class )</code></pre>
+
+
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
 
 <p>Determines if a property is enabled. Can be used either with two arguments (element and property name) or with
@@ -500,6 +857,16 @@ if Assistant property is enable for this employee's manager.</p>
 <pre class="source-code"><code>${ Enabled( 'Assistant' ) }
 ${ Enabled( Manager, 'Assistant' ) }</code></pre>
 
+
+<h2><a name="ExpressionLanguage-CastThroughString">Cast Through a String</a></a></h2>
+
+<p>Sapphire EL performs type casts in order to convert the type of an operand into the type that the operator expects. 
+Any type can be cast to a string and many types types can be cast from a string since that's necessary in order to 
+specify a literal. So, while a direct X-to-Y cast may not be implemented, an indirect X-to-String-to-Y cast may be
+possible.</p>
+
+<p>Sapphire EL will now attempt an indirect cast through a string if a direct cast fails before giving up.</p>
+ 
 
 <h2><a name="ExpressionLanguage-UpperCaseFunction">UpperCase Function</a></h2>
 
@@ -648,6 +1015,14 @@ the developer's intent and can lead to inconsistent presentation. A common mista
 <p style="margin-left: 20px;"><img src="images/SectionDescription.png"/></p>
 
 
+<<<<<<< HEAD
+=======
+<h2><a name="Forms-ActuatorActionHandlerEvent">ActuatorActionHandlerEvent</a></h2>
+
+<p>Detect when an actuator's action handler changes using ActuatorActionHandlerEvent.</p>
+
+
+>>>>>>> refs/remotes/origin/master
 <h2><a name="Miscellaneous"><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></a></h2>
 
 <p>Two static utility methods have been added to XmlUtil to make it easier to convert documents to and from namespace-qualified form.</p>
@@ -822,7 +1197,56 @@ editor.attach
             ...
         }
     }
-)</code></pre>
+);</code></pre>
+
+<p>Check whether a part has been initialized by using SapphirePart.initialized() method. To get notified when the part
+has completed its initialization, listen for PartInitializationEvent.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>boolean initialized = editor.initialized()
+ 
+editor.attach
+(
+    new FilteredListener&lt;PartInitializationEvent>()
+    {
+        @Override
+        protected void handleTypedEvent( PartInitializationEvent event )
+        {
+            ...
+        }
+    }
+);</code></pre>
+
+<p>The SapphirePart.executeAfterInitialization() method provides a way to execute a job after a part has been 
+fully initialized. If the part has already been initialized, the job is executed immediately.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>editor.executeAfterInitialization
+(
+    new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            ...
+        }
+    }
+);</code></pre>
+
+
+<h2><a name="Miscellaneous-Status">Status</a></h2>
+
+<p>The new Status.contains() method provides a simpler way to check if property validation has a problem
+of certain type. This can be useful when implementing automated validation problem fixes.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>if( op.getFileName().validation().contains( "Sapphire.Workspace.CreateFileOp.FileExists" ) )
+{
+    ...
+}</code></pre>
 
 
 <h2><a name="Miscellaneous-Status">Status</a></h2>

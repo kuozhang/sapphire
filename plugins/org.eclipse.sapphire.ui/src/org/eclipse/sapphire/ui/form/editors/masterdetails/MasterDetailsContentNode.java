@@ -171,7 +171,7 @@ public final class MasterDetailsContentNode
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof ValidationChangedEvent )
+                if( event instanceof ValidationChangedEvent || event instanceof VisibilityChangedEvent )
                 {
                     updateValidationState();
                 }
@@ -303,92 +303,95 @@ public final class MasterDetailsContentNode
         return AndFunction.create
         (
             super.initVisibleWhenFunction(),
-            this.nodeFactoryVisibleFunction,
             createVersionCompatibleFunction( getModelElement(), this.modelElementProperty ),
-            new Function()
-            {
-                @Override
-                public String name()
+            (
+                this.nodeFactoryVisibleFunction != null ?
+                this.nodeFactoryVisibleFunction :
+                new Function()
                 {
-                    return "VisibleIfChildrenVisible";
-                }
-
-                @Override
-                public FunctionResult evaluate( final FunctionContext context )
-                {
-                    return new FunctionResult( this, context )
+                    @Override
+                    public String name()
                     {
-                        @Override
-                        protected void init()
+                        return "VisibleIfChildrenVisible";
+                    }
+    
+                    @Override
+                    public FunctionResult evaluate( final FunctionContext context )
+                    {
+                        return new FunctionResult( this, context )
                         {
-                            final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                            @Override
+                            protected void init()
                             {
-                                @Override
-                                protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                final Listener listener = new FilteredListener<VisibilityChangedEvent>()
                                 {
-                                    refresh();
-                                }
-                            };
-                            
-                            for( SapphirePart section : getSections() )
-                            {
-                                section.attach( listener );
-                            }
-                            
-                            for( Object entry : MasterDetailsContentNode.this.rawChildren )
-                            {
-                                if( entry instanceof MasterDetailsContentNode )
+                                    @Override
+                                    protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                    {
+                                        refresh();
+                                    }
+                                };
+                                
+                                for( SapphirePart section : getSections() )
                                 {
-                                    ( (MasterDetailsContentNode) entry ).attach( listener );
+                                    section.attach( listener );
                                 }
-                                else if( entry instanceof NodeFactory )
-                                {
-                                    ( (NodeFactory) entry ).attach( listener );
-                                }
-                            }
-                        }
-
-                        @Override
-                        protected Object evaluate()
-                        {
-                            boolean visible = false;
-                            
-                            for( SectionPart section : getSections() )
-                            {
-                                if( section.visible() )
-                                {
-                                    visible = true;
-                                    break;
-                                }
-                            }
-                            
-                            if( ! visible )
-                            {
-                                visible = ( getChildNodeFactoryProperties().size() > 0 );
-                            }
-                            
-                            if( ! visible )
-                            {
+                                
                                 for( Object entry : MasterDetailsContentNode.this.rawChildren )
                                 {
                                     if( entry instanceof MasterDetailsContentNode )
                                     {
-                                        final MasterDetailsContentNode node = (MasterDetailsContentNode) entry;
-                                        
-                                        if( node.visible() )
-                                        {
-                                            visible = true;
-                                            break;
-                                        }
+                                        ( (MasterDetailsContentNode) entry ).attach( listener );
+                                    }
+                                    else if( entry instanceof NodeFactory )
+                                    {
+                                        ( (NodeFactory) entry ).attach( listener );
                                     }
                                 }
                             }
-                            
-                            return visible;
-                        }
-                    };
+    
+                            @Override
+                            protected Object evaluate()
+                            {
+                                boolean visible = false;
+                                
+                                for( SectionPart section : getSections() )
+                                {
+                                    if( section.visible() )
+                                    {
+                                        visible = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if( ! visible )
+                                {
+                                    visible = ( getChildNodeFactoryProperties().size() > 0 );
+                                }
+                                
+                                if( ! visible )
+                                {
+                                    for( Object entry : MasterDetailsContentNode.this.rawChildren )
+                                    {
+                                        if( entry instanceof MasterDetailsContentNode )
+                                        {
+                                            final MasterDetailsContentNode node = (MasterDetailsContentNode) entry;
+                                            
+                                            if( node.visible() )
+                                            {
+                                                visible = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                return visible;
+                            }
+                        };
+                    }
                 }
-            }
+            )
         );
     }
     
@@ -581,6 +584,21 @@ public final class MasterDetailsContentNode
         }
         
         return false;
+    }
+    
+    public final List<NodeFactory> factories()
+    {
+        final ListFactory<NodeFactory> factories = ListFactory.start();
+        
+        for( Object entry : this.rawChildren )
+        {
+            if( entry instanceof NodeFactory )
+            {
+                factories.add( (NodeFactory) entry );
+            }
+        }
+        
+        return factories.result();
     }
     
     public final MasterDetailsContentNodeList nodes()
@@ -803,7 +821,7 @@ public final class MasterDetailsContentNode
         return false;
     }
     
-    private final class NodeFactory
+    public final class NodeFactory
     {
         private final IModelElement element;
         private final ModelProperty property;
@@ -992,6 +1010,11 @@ public final class MasterDetailsContentNode
         public final boolean attach( final Listener listener )
         {
             return this.listeners.attach( listener );
+        }
+        
+        public final boolean detach( final Listener listener )
+        {
+            return this.listeners.detach( listener );
         }
         
         protected final void broadcast( final Event event )

@@ -128,12 +128,7 @@ public final class StandardInitialValueService extends InitialValueService
             
             if( property != null )
             {
-                final InitialValue annotation = property.getAnnotation( InitialValue.class );
-                
-                if( annotation != null && annotation.text().length() > 0 )
-                {
-                    return true;
-                }
+                return property.hasAnnotation( InitialValue.class );
             }
             
             return false;

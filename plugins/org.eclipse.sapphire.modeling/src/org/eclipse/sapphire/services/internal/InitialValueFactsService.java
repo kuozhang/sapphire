@@ -41,8 +41,12 @@ public final class InitialValueFactsService extends FactsService
         final InitialValueService initialValueService = element.service( property, InitialValueService.class );
         
         final String value = initialValueService.value();
-        final String valueLabel = getValueLabel( element, property, value );
-        facts.add( NLS.bind( Resources.statement, valueLabel ) );
+        
+        if( value != null && value.trim().length() > 0 )
+        {
+            final String valueLabel = getValueLabel( element, property, value );
+            facts.add( NLS.bind( Resources.statement, valueLabel ) );
+        }
     }
     
     public static final class Factory extends ServiceFactory

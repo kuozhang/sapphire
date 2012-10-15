@@ -14,39 +14,30 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NumericRange;
-import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "spacer" )
+@Label( standard = "line separator" )
 @GenerateImpl
 
-public interface ISapphireSpacerDef
-
-    extends FormComponentDef
-    
+public interface LineSeparatorDef extends SeparatorDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireSpacerDef.class );
+    ModelElementType TYPE = new ModelElementType( LineSeparatorDef.class );
  
-    // *** Size ***
+    // *** Label ***
     
-    @Type( base = Integer.class )
-    @Label( standard = "size" )
-    @DefaultValue( text = "5" )
-    @NumericRange( min = "1" )
-    @XmlBinding( path = "size" )
+    @Label( standard = "label" )
+    @Localizable
+    @XmlBinding( path = "label" )
     
-    ValueProperty PROP_SIZE = new ValueProperty( TYPE, "Size" ); //$NON-NLS-1$
+    ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" ); //$NON-NLS-1$
     
-    Value<Integer> getSize();
-    void setSize( String size );
-    void setSize( Integer size );
-    
+    Value<String> getLabel();
+    void setLabel( String label );
 }

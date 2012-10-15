@@ -319,6 +319,8 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                         
                         final StringBuilder buf = new StringBuilder();
                         
+                        buf.append( "assertNotDisposed();\n\n" );
+                        
                         if( m.getReturnType() != TypeReference.VOID_TYPE )
                         {
                             buf.append( "return " );
@@ -597,6 +599,8 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         gb.append( "synchronized( root() )\n" + 
                    "{\n" +
+                   "    assertNotDisposed();\n" +
+                   "    \n" +
                    "    if( this.#1 == null )\n" + 
                    "    {\n" +
                    "        refresh( #2, true );\n" +
@@ -637,6 +641,8 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             
             sb.append( "synchronized( root() )\n" +
                        "{\n" +
+                       "    assertNotDisposed();\n" +
+                       "    \n" +
                        "    if( value != null && value.equals( MiscUtil.EMPTY_STRING ) )\n" +
                        "    {\n" +
                        "        value = null;\n" + 
@@ -820,6 +826,8 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         gb.append( "synchronized( root() )\n" +
                    "{\n" +
+                   "    assertNotDisposed();\n" +
+                   "    \n" +
                    "    if( this.#1 == null )\n" +
                    "    {\n" +
                    "        refresh( #2, true );\n" +
@@ -958,6 +966,8 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         gb.append( "synchronized( root() )\n" +
                    "{\n" +
+                   "    assertNotDisposed();\n" +
+                   "    \n" +
                    "    if( this.#1 == null )\n" +
                    "    {\n" +
                    "        refresh( #2, true );\n" +
@@ -1143,6 +1153,8 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         gb.append( "synchronized( root() )\n" + 
                    "{\n" +
+                   "    assertNotDisposed();\n" +
+                   "    \n" +
                    "    if( this.#1 == null )\n" + 
                    "    {\n" +
                    "        refresh( #2, true );\n" +
@@ -1351,8 +1363,10 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
 
             final Body rb = readMethod.getBody();
             
-            rb.append( "property = property.refine( this );" );
-            rb.appendEmptyLine();
+            rb.append( "assertNotDisposed();\n" +
+                       "\n" +
+                       "property = property.refine( this );\n"+
+                       "\n" );
         }
         
         return readMethod;
@@ -1397,10 +1411,12 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             writeMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
             implClassModel.setData( DATA_WRITE_VALUE_METHOD, writeMethod );
 
-            final Body rb = writeMethod.getBody();
+            final Body wb = writeMethod.getBody();
             
-            rb.append( "property = (ValueProperty) property.refine( this );" );
-            rb.appendEmptyLine();
+            wb.append( "assertNotDisposed();\n" +
+                       "\n" +
+                       "property = (ValueProperty) property.refine( this );\n"+
+                       "\n" );
         }
         
         return writeMethod;
@@ -1482,10 +1498,12 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             writeMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
             implClassModel.setData( DATA_WRITE_TRANSIENT_METHOD, writeMethod );
 
-            final Body rb = writeMethod.getBody();
+            final Body wb = writeMethod.getBody();
             
-            rb.append( "property = (TransientProperty) property.refine( this );" );
-            rb.appendEmptyLine();
+            wb.append( "assertNotDisposed();\n" +
+                       "\n" +
+                       "property = (TransientProperty) property.refine( this );\n"+
+                       "\n" );
         }
         
         return writeMethod;
@@ -1611,7 +1629,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
     {
         final MethodModel disposePropertiesMethod = getDisposePropertiesMethod( implClassModel, true );
         final Body db = disposePropertiesMethod.getBody();
-        final boolean hasPriorContent;
         
         if( disposePropertiesMethod.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
         {

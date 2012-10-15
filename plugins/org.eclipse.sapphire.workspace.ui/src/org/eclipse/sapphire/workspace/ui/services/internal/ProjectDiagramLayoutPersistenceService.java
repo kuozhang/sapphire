@@ -105,6 +105,7 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
 	                layoutIFolder.refreshLocal(IResource.DEPTH_ONE, null);
 	            }
 	            IFile layoutFile = layoutIFolder.getFile(fileName);
+	            layoutFile.refreshLocal(IResource.DEPTH_ONE, null);
 	            return layoutFile;
 			}
 		}

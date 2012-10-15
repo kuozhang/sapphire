@@ -9,21 +9,18 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
+package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.ui.SapphireCondition;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeAddActionHandlerCondition extends SapphireCondition
-{
-    @Override
-    protected boolean evaluate()
-    {
-        return ( getPart() instanceof MasterDetailsContentNode );
-    }
+@Label( standard = "separator" )
 
+public interface SeparatorDef extends FormComponentDef
+{
+    ModelElementType TYPE = new ModelElementType( SeparatorDef.class );
 }

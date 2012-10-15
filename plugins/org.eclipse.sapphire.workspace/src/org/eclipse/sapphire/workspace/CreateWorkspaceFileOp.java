@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.workspace;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -49,12 +49,12 @@ public interface CreateWorkspaceFileOp extends IExecutableModelElement
     
     // *** Context ***
     
-    @Type( base = IContainer.class )
+    @Type( base = IResource.class )
 
     TransientProperty PROP_CONTEXT = new TransientProperty( TYPE, "Context" );
     
-    Transient<IContainer> getContext();
-    void setContext( IContainer value );
+    Transient<IResource> getContext();
+    void setContext( IResource value );
     
     // *** Folder ***
     

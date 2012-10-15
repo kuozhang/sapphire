@@ -27,10 +27,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -135,8 +139,56 @@ public final class ActuatorPart extends SapphirePart
         this.style = def.getStyle().getContent();
     }
     
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        return AndFunction.create
+        (
+            super.initVisibleWhenFunction(),
+            new Function()
+            {
+                @Override
+                public String name()
+                {
+                    return "VisibleIfActionHandlerExists";
+                }
+    
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        @Override
+                        protected void init()
+                        {
+                            ActuatorPart.this.attach
+                            (
+                                new FilteredListener<ActuatorActionHandlerEvent>()
+                                {
+                                    @Override
+                                    protected void handleTypedEvent( final ActuatorActionHandlerEvent event )
+                                    {
+                                        refresh();
+                                    }
+                                }
+                            );
+                        }
+    
+                        @Override
+                        protected Object evaluate()
+                        {
+                            return ( handler() != null );
+                        }
+                    };
+                }
+            }
+        );
+    }
+    
     private void refreshActionHandler()
     {
+        final SapphireActionHandler oldActionHandler = this.actionHandler;
+        
         if( this.actionHandler != null )
         {
             this.actionHandler.detach( this.actionHandlerListener );
@@ -179,6 +231,11 @@ public final class ActuatorPart extends SapphirePart
             }
             
             this.actionHandler.attach( this.actionHandlerListener );
+        }
+        
+        if( this.actionHandler != oldActionHandler )
+        {
+            broadcast( new ActuatorActionHandlerEvent( this ) );
         }
     }
     
