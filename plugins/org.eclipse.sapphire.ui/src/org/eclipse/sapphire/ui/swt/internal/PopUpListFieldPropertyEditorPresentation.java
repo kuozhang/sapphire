@@ -209,6 +209,8 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             public void run()
             {
                 final List<PossibleValue> possibleValues = this.factory.entries();
+                possibleValuesRef.set( possibleValues );
+                
                 final String[] contentForCombo = new String[ possibleValues.size() ];
                 
                 for( int i = 0, n = possibleValues.size(); i < n; i++ )
@@ -218,7 +220,6 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                 
                 combo.setItems( contentForCombo );
                 
-                possibleValuesRef.set( possibleValues );
                 updateComboSelectionOp.run();
             }
         };
