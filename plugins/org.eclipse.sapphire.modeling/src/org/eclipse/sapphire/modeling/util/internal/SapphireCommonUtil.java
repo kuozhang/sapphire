@@ -99,7 +99,7 @@ public class SapphireCommonUtil {
                 property.isOfType( BigDecimal.class ) ||
                 property.isOfType( Boolean.class ) ) )
         {
-            valueLabel = "\"" + value + "\"";
+            valueLabel = "\"" + valueLabel + "\"";
         }
         
         return valueLabel;
