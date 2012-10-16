@@ -552,7 +552,7 @@ public abstract class PropertyEditorRenderer
         this.onDisposeOperations.add( op );
     }
     
-    private final void dispose()
+    public final void dispose()
     {
         for( Runnable op : this.onDisposeOperations )
         {
