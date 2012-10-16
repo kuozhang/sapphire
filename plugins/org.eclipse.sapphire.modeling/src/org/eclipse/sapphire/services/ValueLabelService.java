@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.services;
 
-
 /**
  * Provides the label to be used when presenting a given value to the user. The default behavior is
  * to use the value itself.
@@ -19,10 +18,7 @@ package org.eclipse.sapphire.services;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ValueLabelService
-
-    extends Service
-    
+public abstract class ValueLabelService extends Service
 {
     /**
      * Returns the label to use when presenting a given value to the user. If an unrecognized value 
