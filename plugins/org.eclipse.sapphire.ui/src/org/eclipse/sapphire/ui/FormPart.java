@@ -197,12 +197,12 @@ public class FormPart extends FormComponentPart
     @Override
     public void dispose()
     {
-        super.dispose();
-        
         for( SapphirePart child : getChildParts() )
         {
             child.dispose();
         }
+        
+        super.dispose();
     }
 
 }

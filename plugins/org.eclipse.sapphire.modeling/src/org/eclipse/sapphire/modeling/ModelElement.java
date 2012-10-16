@@ -582,6 +582,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             if( this.elementServiceContext == null )
             {
                 this.elementServiceContext = new ElementInstanceServiceContext( this );
+                this.elementServiceContext.coordinate( this.listeners );
             }
         }
         
@@ -674,6 +675,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             if( context == null )
             {
                 context = new PropertyInstanceServiceContext( this, prop );
+                context.coordinate( this.listeners );
                 this.propertyServiceContexts.put( prop, context );
             }
         }
@@ -725,6 +727,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     protected final EnablementRefreshResult refreshPropertyEnablement( final ModelProperty property )
     {
+        assertNotDisposed();
+        
         return refreshPropertyEnablement( property, false );
     }
     
@@ -733,6 +737,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         synchronized( root() )
         {
+            assertNotDisposed();
+            
             if( ! this.initializedEnablementServices.contains( property ) )
             {
                 this.initializedEnablementServices.add( property );
@@ -1313,6 +1319,16 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         detach( listener, property.getName() );
     }
     
+    protected final void post( final Event event )
+    {
+        this.listeners.post( event );
+    }
+
+    protected final void broadcast()
+    {
+        this.listeners.broadcast();
+    }
+    
     protected final void broadcast( final Event event )
     {
         this.listeners.broadcast( event );
@@ -1346,6 +1362,8 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             {
                 this.disposed = true;
                 
+                broadcast( new ElementDisposeEvent( this ) );
+                
                 if( this.elementServiceContext != null )
                 {
                     this.elementServiceContext.dispose();
@@ -1355,8 +1373,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 {
                     context.dispose();
                 }
-                
-                broadcast( new ElementDisposeEvent( this ) );
                 
                 disposeProperties();
                 

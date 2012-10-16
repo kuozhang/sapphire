@@ -169,17 +169,6 @@ public class SapphireDialog extends Dialog
         
         this.part.attach( listener );
         
-        this.okButton.addDisposeListener
-        (
-            new DisposeListener()
-            {
-                public void widgetDisposed( final DisposeEvent event )
-                {
-                    SapphireDialog.this.part.detach( listener );
-                }
-            }
-        );
-        
         updateOkButtonEnablement();
         
         return composite;

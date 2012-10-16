@@ -189,7 +189,7 @@ public abstract class FunctionResult
         {
             this.value = newValue;
             this.status = newStatus;
-            this.listeners.broadcast();
+            this.listeners.broadcast( new Event() );
         }
     }
     

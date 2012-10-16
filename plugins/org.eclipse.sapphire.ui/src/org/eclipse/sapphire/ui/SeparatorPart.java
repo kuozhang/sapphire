@@ -19,6 +19,7 @@ import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.ui.def.LineSeparatorDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -35,112 +36,115 @@ public abstract class SeparatorPart extends FormComponentPart
         {
             final FormPart form = (FormPart) parent;
             
-            /*
-             * A separator is considered not necessary if
-             * 
-             * 1. it is the first visible part of a form, or
-             * 2. it is the last visible part of a form, or
-             * 3. it is immediately preceded by another separator in the list of visible parts.
-             */
-            
-            return AndFunction.create
-            (
-                super.initVisibleWhenFunction(),
-                new Function()
-                {
-                    @Override
-                    public String name()
+            if( ! ( this instanceof LineSeparatorPart && ( (LineSeparatorDef) definition() ).getLabel().getText() != null ) )
+            {
+                /*
+                 * A separator is considered not necessary if
+                 * 
+                 * 1. it is the first visible part of a form, or
+                 * 2. it is the last visible part of a form, or
+                 * 3. it is immediately preceded by another separator in the list of visible parts.
+                 */
+                
+                return AndFunction.create
+                (
+                    super.initVisibleWhenFunction(),
+                    new Function()
                     {
-                        return "NecessarySeparator";
-                    }
-        
-                    @Override
-                    public FunctionResult evaluate( final FunctionContext context )
-                    {
-                        return new FunctionResult( this, context )
+                        @Override
+                        public String name()
                         {
-                            @Override
-                            protected void init()
+                            return "NecessarySeparator";
+                        }
+            
+                        @Override
+                        public FunctionResult evaluate( final FunctionContext context )
+                        {
+                            return new FunctionResult( this, context )
                             {
-                                final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                                @Override
+                                protected void init()
                                 {
-                                    @Override
-                                    protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                    final Listener listener = new FilteredListener<VisibilityChangedEvent>()
                                     {
-                                        refresh();
-                                    }
-                                };
-                                
-                                final List<? extends SapphirePart> parts = form.getChildParts();
-                                
-                                if( parts == null )
-                                {
-                                    form.attach
-                                    (
-                                        new FilteredListener<PartInitializationEvent>()
+                                        @Override
+                                        protected void handleTypedEvent( final VisibilityChangedEvent event )
                                         {
-                                            @Override
-                                            protected void handleTypedEvent( final PartInitializationEvent event )
+                                            refresh();
+                                        }
+                                    };
+                                    
+                                    final List<? extends SapphirePart> parts = form.getChildParts();
+                                    
+                                    if( parts == null )
+                                    {
+                                        form.attach
+                                        (
+                                            new FilteredListener<PartInitializationEvent>()
                                             {
-                                                for( SapphirePart part : form.getChildParts() )
+                                                @Override
+                                                protected void handleTypedEvent( final PartInitializationEvent event )
                                                 {
-                                                    part.attach( listener );
+                                                    for( SapphirePart part : form.getChildParts() )
+                                                    {
+                                                        part.attach( listener );
+                                                    }
+                                                    
+                                                    form.detach( this );
+                                                    
+                                                    refresh();
+                                                }
+                                            }
+                                        );
+                                    }
+                                    else
+                                    {
+                                        for( SapphirePart part : parts )
+                                        {
+                                            part.attach( listener );
+                                        }
+                                    }
+                                }
+            
+                                @Override
+                                protected Object evaluate()
+                                {
+                                    final List<? extends SapphirePart> parts = form.getChildParts();
+                                    
+                                    if( parts != null )
+                                    {
+                                        SapphirePart previous = null;
+                                        
+                                        for( SapphirePart part : parts )
+                                        {
+                                            if( part == SeparatorPart.this )
+                                            {
+                                                if( previous == null || previous instanceof SeparatorPart )
+                                                {
+                                                    return false;
                                                 }
                                                 
-                                                form.detach( this );
-                                                
-                                                refresh();
+                                                previous = part;
                                             }
-                                        }
-                                    );
-                                }
-                                else
-                                {
-                                    for( SapphirePart part : parts )
-                                    {
-                                        part.attach( listener );
-                                    }
-                                }
-                            }
-        
-                            @Override
-                            protected Object evaluate()
-                            {
-                                final List<? extends SapphirePart> parts = form.getChildParts();
-                                
-                                if( parts != null )
-                                {
-                                    SapphirePart previous = null;
-                                    
-                                    for( SapphirePart part : parts )
-                                    {
-                                        if( part == SeparatorPart.this )
-                                        {
-                                            if( previous == null || previous instanceof SeparatorPart )
+                                            else if( part.visible() )
                                             {
-                                                return false;
+                                                previous = part;
                                             }
-                                            
-                                            previous = part;
                                         }
-                                        else if( part.visible() )
+                                        
+                                        if( previous == SeparatorPart.this )
                                         {
-                                            previous = part;
+                                            return false;
                                         }
                                     }
                                     
-                                    if( previous == SeparatorPart.this )
-                                    {
-                                        return false;
-                                    }
+                                    return true;
                                 }
-                                
-                                return true;
-                            }
-                        };
+                            };
+                        }
                     }
-                }
-            );
+                );
+            }
         }
         
         return super.initVisibleWhenFunction();

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -85,7 +86,7 @@ public abstract class SapphireCondition
         if( this.conditionState != newConditionState )
         {
             this.conditionState = newConditionState;
-            this.listeners.broadcast();
+            this.listeners.broadcast( new Event() );
         }
     }
     

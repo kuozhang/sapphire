@@ -98,6 +98,7 @@ public final class PropertyEditorPart extends FormComponentPart
     private List<SapphirePart> relatedContentParts;
     private Listener listener;
     private FunctionResult labelFunctionResult;
+    private PropertyEditorRenderer presentation;
     
     @Override
     protected void init()
@@ -462,12 +463,17 @@ public final class PropertyEditorPart extends FormComponentPart
     @Override
     public void render( final SapphireRenderingContext context )
     {
+        if( this.presentation != null )
+        {
+            this.presentation.dispose();
+            this.presentation = null;
+        }
+        
         if( ! visible() )
         {
             return;
         }
         
-        PropertyEditorRenderer presentation = null;
         final String style = definition().getStyle().getText();
         
         if( style == null )
@@ -503,7 +509,7 @@ public final class PropertyEditorPart extends FormComponentPart
     
             if( factory != null )
             {
-                presentation = factory.create( context, this );
+                this.presentation = factory.create( context, this );
             }
         }
         else
@@ -540,15 +546,15 @@ public final class PropertyEditorPart extends FormComponentPart
                     
                     if( popUpListFieldPresentationStyle != null )
                     {
-                        presentation = new PopUpListFieldPropertyEditorPresentation( context, this, popUpListFieldPresentationStyle );
+                        this.presentation = new PopUpListFieldPropertyEditorPresentation( context, this, popUpListFieldPresentationStyle );
                     }
                 }
             }
         }
         
-        if( presentation != null )
+        if( this.presentation != null )
         {
-            presentation.create( context.getComposite() );
+            this.presentation.create( context.getComposite() );
         }
         else
         {
@@ -669,7 +675,10 @@ public final class PropertyEditorPart extends FormComponentPart
     @Override
     public void dispose()
     {
-        super.dispose();
+        if( this.presentation != null )
+        {
+            this.presentation.dispose();
+        }
         
         if( this.listener != null )
         {
@@ -688,6 +697,8 @@ public final class PropertyEditorPart extends FormComponentPart
                 propertyEditor.dispose();
             }
         }
+        
+        super.dispose();
     }
     
     private static final class Resources extends NLS

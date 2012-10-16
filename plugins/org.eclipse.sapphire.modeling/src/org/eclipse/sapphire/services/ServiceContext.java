@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.util.ListFactory;
@@ -40,6 +41,7 @@ public class ServiceContext
     private final Set<Class<?>> initializingServiceTypes = new HashSet<Class<?>>();
     private final Set<Class<?>> initializedServiceTypes = new HashSet<Class<?>>();
     private final Set<String> exhaustedServiceFactories = new HashSet<String>();
+    private ListenerContext coordinatingListenerContext;
     private boolean disposed = false;
     
     public ServiceContext( final String type,
@@ -144,6 +146,11 @@ public class ServiceContext
                         
                         if( service != null )
                         {
+                            if( this.coordinatingListenerContext != null )
+                            {
+                                service.coordinate( this.coordinatingListenerContext );
+                            }
+                            
                             for( String overriddenServiceId : factory.overrides() )
                             {
                                 applicable.remove( overriddenServiceId );
@@ -178,6 +185,11 @@ public class ServiceContext
         
                         if( service != null )
                         {
+                            if( this.coordinatingListenerContext != null )
+                            {
+                                service.coordinate( this.coordinatingListenerContext );
+                            }
+                            
                             this.services.add( service );
                         }
                     }
@@ -213,6 +225,11 @@ public class ServiceContext
         }
         
         return matchedServicesListFactory.result();
+    }
+    
+    public final void coordinate( final ListenerContext context )
+    {
+        this.coordinatingListenerContext = context;
     }
 
     protected List<ServiceFactoryProxy> local()

@@ -210,17 +210,7 @@ public final class ModelElementHandle<T extends IModelElement>
             
             if( newResource != oldResource )
             {
-                if( this.element != null )
-                {
-                    try
-                    {
-                        this.element.dispose();
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
-                }
+                IModelElement toBeDisposed = this.element;
                 
                 if( newResource == null )
                 {
@@ -242,6 +232,18 @@ public final class ModelElementHandle<T extends IModelElement>
                             }
                         }
                     );
+                }
+                
+                if( toBeDisposed != null )
+                {
+                    try
+                    {
+                        toBeDisposed.dispose();
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
                 }
                 
                 changed = true;

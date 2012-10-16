@@ -132,8 +132,8 @@ public final class TestModelingEvents0002 extends SapphireTestCase
         assertEquals( 12, events.size() );
         assertPropertyContentEvent( events.get( 0 ), root, RootElement.PROP_ENABLEMENT );
         assertPropertyEnablementEvent( events.get( 1 ), root, RootElement.PROP_CHILDREN, true, false );
-        assertElementValidationEvent( events.get( 2 ), root, Status.createErrorStatus( "\"abc\" is not a valid integer." ), Status.createOkStatus() );
-        assertPropertyEnablementEvent( events.get( 3 ), child, ChildElement.PROP_INTEGER_VALUE, true, false );
+        assertPropertyEnablementEvent( events.get( 2 ), child, ChildElement.PROP_INTEGER_VALUE, true, false );
+        assertElementValidationEvent( events.get( 3 ), root, Status.createErrorStatus( "\"abc\" is not a valid integer." ), Status.createOkStatus() );
         assertElementValidationEvent( events.get( 4 ), child, Status.createErrorStatus( "\"abc\" is not a valid integer." ), Status.createOkStatus() );
         assertPropertyValidationEvent( events.get( 5 ), root, RootElement.PROP_CHILDREN, Status.createErrorStatus( "\"abc\" is not a valid integer." ), Status.createOkStatus() );
         assertPropertyContentEvent( events.get( 6 ), root, RootElement.PROP_ENABLEMENT );
