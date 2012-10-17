@@ -573,12 +573,14 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         synchronized( root() )
         {
-            Boolean status = this.enablementStatuses.get( property );
+            final ModelProperty finalProperty = property.refine( this );
+            
+            Boolean status = this.enablementStatuses.get( finalProperty );
             
             if( status == null )
             {
-                refreshProperty( property, true );
-                status = this.enablementStatuses.get( property );
+                refreshProperty( finalProperty, true );
+                status = this.enablementStatuses.get( finalProperty );
             }
             
             return status;
