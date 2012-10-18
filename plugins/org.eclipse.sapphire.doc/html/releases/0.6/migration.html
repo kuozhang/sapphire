@@ -51,6 +51,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#FormEditorPage">FormEditorPage</a></li>
   <li><a href="#FormPart">FormPart</a></li>
   <li><a href="#FormPartDef">FormPartDef</a></li>
+  <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#ISapphireCompositeDef">ISapphireCompositeDef</a></li>
   <li><a href="#ISapphireDialogDef">ISapphireDialogDef</a></li>
   <li><a href="#ISapphireSectionDef">ISapphireSectionDef</a></li>
@@ -61,6 +62,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#MasterDetailsContentNode">MasterDetailsContentNode</a></li>
   <li><a href="#MasterDetailsContentOutline">MasterDetailsContentOutline</a></li>
   <li><a href="#MasterDetailsEditorPage">MasterDetailsEditorPage</a></li>
+  <li><a href="#ModelProperty">ModelProperty</a></li>
   <li><a href="#PartDef">PartDef</a></li>
   <li><a href="#PropertyEditorDef">PropertyEditorDef</a></li>
   <li><a href="#ReadOnlyListFactory">ReadOnlyListFactory</a></li>
@@ -335,6 +337,40 @@ to 0.6 release. Only changes from the previous release are covered.</p>
     </td>
     <td>
 <pre class="source-code"><code>FormComponentDef</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="IModelElement">IModelElement</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">ContactAddress address = element.read( Contact.PROP_ADDRESS );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">ContactAddress address = element.read( Contact.PROP_ADDRESS )</font>.element()<font color="#888888">;</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">element.write(</font> (ValueProperty)<font color="#888888"> property, content )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">element.write( property, content )</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">element.write(</font> (TransientProperty)<font color="#888888"> property, content )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">element.write( property, content )</font></code></pre>
     </td>
   </tr>
 </table>
@@ -659,6 +695,32 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
         .sdef( "org.eclipse.sapphire.examples.Examples" )
         .page( "ExamplePage" )
 <font color="#888888">}</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ModelProperty">ModelProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>property.refine( type )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>type.property( property.getName() )</code></pre> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>property.refine( element )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>element.property( property.getName() )</code></pre> 
     </td>
   </tr>
 </table>

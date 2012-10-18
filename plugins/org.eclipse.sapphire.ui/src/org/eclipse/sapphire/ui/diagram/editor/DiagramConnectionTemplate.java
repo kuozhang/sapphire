@@ -545,7 +545,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 throw new RuntimeException( "Property " + propertyName + " not a ValueProperty");
             }
                     
-            modelElement.write((ValueProperty)property, value);
+            modelElement.write(property, value);
         }        
     }
     

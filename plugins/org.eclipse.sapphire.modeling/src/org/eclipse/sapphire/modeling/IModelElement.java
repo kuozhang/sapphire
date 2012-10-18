@@ -35,13 +35,12 @@ public interface IModelElement extends IModelParticle
     List<ModelProperty> properties();
     
     Object read( ModelProperty property );
+    Object read( String property );
     
     <T> Value<T> read( ValueProperty property );
     
     <T extends IModelElement> ModelElementHandle<T> read( ElementProperty property );
 
-    <T extends IModelElement> T read( ImpliedElementProperty property );
-    
     <T extends IModelElement> ModelElementList<T> read( ListProperty property );
 
     <T> Transient<T> read( TransientProperty property );
@@ -51,10 +50,10 @@ public interface IModelElement extends IModelParticle
     void read( ModelPath path,
                Collection<String> result );
     
-    void write( ValueProperty property,
+    void write( ModelProperty property,
                 Object value );
-    
-    void write( TransientProperty property,
+
+    void write( String property,
                 Object value );
     
     /**
@@ -67,6 +66,17 @@ public interface IModelElement extends IModelParticle
      */
     
     void refresh( ModelProperty property );
+    
+    /**
+     * Updates the cached value of the specified model property if the underlying
+     * storage has changed. If the value is updated, a property change event will
+     * trigger. This method variant will not force caching of properties that have
+     * not been accessed.
+     * 
+     * @param property the name of the property to refresh
+     */
+    
+    void refresh( String property );
     
     /**
      * Updates the cached value of the specified model property if the underlying
@@ -85,6 +95,20 @@ public interface IModelElement extends IModelParticle
     /**
      * Updates the cached value of the specified model property if the underlying
      * storage has changed. If the value is updated, a property change event will
+     * trigger. In the case of element or list property, nested properties will
+     * not be refreshed. 
+     * 
+     * @param property the name of the property to refresh
+     * @param force whether to force caching of property even if it has not been
+     *   accessed
+     */
+    
+    void refresh( String property,
+                  boolean force );
+
+    /**
+     * Updates the cached value of the specified model property if the underlying
+     * storage has changed. If the value is updated, a property change event will
      * trigger. 
      * 
      * @param property the property to refresh
@@ -95,6 +119,22 @@ public interface IModelElement extends IModelParticle
      */
     
     void refresh( ModelProperty property,
+                  boolean force,
+                  boolean deep );
+    
+    /**
+     * Updates the cached value of the specified model property if the underlying
+     * storage has changed. If the value is updated, a property change event will
+     * trigger. 
+     * 
+     * @param property the name of the property to refresh
+     * @param force whether to force caching of property even if it has not been
+     *   accessed
+     * @param deep whether to refresh nested properties for element and list
+     *   properties; has no effect for value properties
+     */
+    
+    void refresh( String property,
                   boolean force,
                   boolean deep );
     

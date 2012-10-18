@@ -214,16 +214,6 @@ public abstract class ModelProperty extends ModelMetadataItem
         return this.modelElementType.getLocalizationService();
     }
 
-    public ModelProperty refine( final ModelElementType type )
-    {
-        return type.property( this.propertyName );
-    }
-
-    public ModelProperty refine( final IModelElement modelElement )
-    {
-        return refine( ModelElementType.read( modelElement.getClass() ) );
-    }
-
     public final boolean isReadOnly()
     {
         return hasAnnotation( ReadOnly.class ) || isDerived();

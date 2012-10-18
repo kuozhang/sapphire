@@ -64,7 +64,7 @@ public final class SapphireWithDirectiveHelper
                 
                 if( prop instanceof ImpliedElementProperty )
                 {
-                    result.element = result.element.read( (ImpliedElementProperty) prop );
+                    result.element = result.element.read( (ImpliedElementProperty) prop ).element();
                 }
                 else if( prop instanceof ElementProperty )
                 {

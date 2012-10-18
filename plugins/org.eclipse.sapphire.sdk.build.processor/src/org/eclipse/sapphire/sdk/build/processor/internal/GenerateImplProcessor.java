@@ -96,8 +96,7 @@ import com.sun.mirror.util.SourcePosition;
 public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
 {
     private static final String DATA_READ_METHOD = "read.method";
-    private static final String DATA_WRITE_VALUE_METHOD = "write.value.method";
-    private static final String DATA_WRITE_TRANSIENT_METHOD = "write.transient.method";
+    private static final String DATA_WRITE_METHOD = "write.method";
     private static final String DATA_REFRESH_METHOD = "refresh.method";
     private static final String DATA_DISPOSE_PROPERTIES_METHOD = "dispose.properties.method";
     private static final String DATA_HAS_CONTENTS = "has.contents";
@@ -367,26 +366,15 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             mRead.getBody().append( "return super.read( property );" );
         }
 
-        final MethodModel mWriteValue = getValueWriteMethod( elImplClass, false );
+        final MethodModel mWrite = getWriteMethod( elImplClass, false );
         
-        if( mWriteValue != null )
+        if( mWrite != null )
         {
-            elImplClass.removeMethod( mWriteValue );
-            elImplClass.addMethod( mWriteValue );
+            elImplClass.removeMethod( mWrite );
+            elImplClass.addMethod( mWrite );
             
-            mWriteValue.getBody().appendEmptyLine();
-            mWriteValue.getBody().append( "super.write( property, value );" );
-        }
-
-        final MethodModel mWriteTransient = getTransientWriteMethod( elImplClass, false );
-        
-        if( mWriteTransient != null )
-        {
-            elImplClass.removeMethod( mWriteTransient );
-            elImplClass.addMethod( mWriteTransient );
-            
-            mWriteTransient.getBody().appendEmptyLine();
-            mWriteTransient.getBody().append( "super.write( property, object );" );
+            mWrite.getBody().appendEmptyLine();
+            mWrite.getBody().append( "super.write( property, content );" );
         }
     }
 
@@ -554,8 +542,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "\n" +
                    "if( ! disposed() )\n" +
                    "{\n" +
-                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
-                   "    \n" +
                    "    if( oldValue == null )\n" +
                    "    {\n" +
                    "        post( new PropertyInitializationEvent( this, #3 ) );\n" +
@@ -573,15 +559,15 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "                post( new PropertyContentEvent( this, #3 ) );\n" +
                    "            }\n" +
                    "            \n" +
+                   "            if( this.#1.enabled() != oldValue.enabled() )\n" +
+                   "            {\n" +
+                   "                post( new PropertyEnablementEvent( this, #3, oldValue.enabled(), this.#1.enabled() ) );\n" +
+                   "            }\n" +
+                   "            \n" +
                    "            if( ! this.#1.validation().equals( oldValue.validation() ) )\n" +
                    "            {\n" +
                    "                post( new PropertyValidationEvent( this, #3, oldValue.validation(), this.#1.validation() ) );\n" +
                    "            }\n" +
-                   "        }\n" +
-                   "        \n" +
-                   "        if( enablementRefreshResult.changed() )\n" +
-                   "        {\n" +
-                   "            post( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
                    "        }\n" +
                    "    }\n" +
                    "    \n" +
@@ -850,19 +836,12 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    {\n" +
                    "        this.#1 = new ModelElementHandle<#3>( this, #2 );\n" +
                    "        this.#1.init();\n" +
-                   "        refreshPropertyEnablement( #2 );\n" +
                    "        broadcast( new PropertyInitializationEvent( this, #2 ) );\n" +
                    "    }\n" +
                    "}\n" +
                    "else\n" +
                    "{\n" +
-                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #2 );\n" +
-                   "    final boolean notified = this.#1.refresh();\n" +
-                   "    \n" +
-                   "    if( ! notified && enablementRefreshResult.changed() )\n" +
-                   "    {\n" +
-                   "        broadcast( new PropertyEnablementEvent( this, #2, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
-                   "    }\n" +
+                   "    this.#1.refresh();\n" +
                    "}",
                    variableName, propField.name, memberType.getSimpleName() );
         
@@ -991,19 +970,12 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "        this.#1 = new ModelElementList<#3>( this, #2 );\n" +
                    "        final ListBindingImpl binding = resource().binding( #2 );\n" +
                    "        this.#1.init( binding );\n" +
-                   "        refreshPropertyEnablement( #2 );\n" +
                    "        broadcast( new PropertyInitializationEvent( this, #2 ) );\n" +
                    "    }\n" +
                    "}\n" +
                    "else\n" +
                    "{\n" +
-                   "    final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #2 );\n" +
-                   "    final boolean notified = this.#1.refresh();\n" +
-                   "    \n" +
-                   "    if( ! notified && enablementRefreshResult.changed() )\n" +
-                   "    {\n" +
-                   "        broadcast( new PropertyEnablementEvent( this, #2, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
-                   "    }\n" +
+                   "    this.#1.refresh();\n" +
                    "}",
                    variableName, propField.name, memberType.getSimpleName() );
         
@@ -1188,8 +1160,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "    \n" +
                    "    if( ! disposed() )\n" +
                    "    {\n" +
-                   "        final EnablementRefreshResult enablementRefreshResult = refreshPropertyEnablement( #3 );\n" +
-                   "        \n" +
                    "        if( oldTransient == null )\n" +
                    "        {\n" +
                    "            post( new PropertyInitializationEvent( this, #3 ) );\n" +
@@ -1207,19 +1177,29 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                    "            }\n" + 
                    "            else\n" +
                    "            {\n" +
-                   "                post( new PropertyContentEvent( this, #3 ) );\n" +
+                   "                if( ! MiscUtil.equal( this.#1.content(), oldTransient.content() ) )\n" +
+                   "                {\n" +
+                   "                    post( new PropertyContentEvent( this, #3 ) );\n" +
+                   "                }\n" +
+                   "                \n" +
+                   "                if( this.#1.enabled() != oldTransient.enabled() )\n" +
+                   "                {\n" +
+                   "                    post( new PropertyEnablementEvent( this, #3, oldTransient.enabled(), this.#1.enabled() ) );\n" +
+                   "                }\n" +
+                   "                \n" +
+                   "                if( ! this.#1.validation().equals( oldTransient.validation() ) )\n" +
+                   "                {\n" +
+                   "                    post( new PropertyValidationEvent( this, #3, oldTransient.validation(), this.#1.validation() ) );\n" +
+                   "                }\n" +
                    "            }\n" +
-                   "        }\n" +
-                   "        \n" +
-                   "        if( enablementRefreshResult.changed() )\n" +
-                   "        {\n" +
-                   "            post( new PropertyEnablementEvent( this, #3, enablementRefreshResult.before(), enablementRefreshResult.after() ) );\n" +
                    "        }\n" +
                    "        \n" +
                    "        broadcast();\n" +
                    "    }\n" +
                    "}",
                    variableName, wrapperType.getSimpleName(), propField.name );
+        
+        implClassModel.addImport( MiscUtil.class );
         
         // Contribute read and write method blocks.
         
@@ -1365,19 +1345,12 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         if( readMethod == null && createIfNecessary )
         {
-            readMethod = implClassModel.addMethod( "read" );
+            readMethod = implClassModel.addMethod( "readProperty" );
+            readMethod.setAccessModifier( AccessModifier.PROTECTED );
             readMethod.setReturnType( Object.class );
             readMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class, false ) );
             readMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
             implClassModel.setData( DATA_READ_METHOD, readMethod );
-
-            final Body rb = readMethod.getBody();
-            
-            rb.append( "assertNotDisposed();\n" +
-                       "\n" +
-                       "property = property.refine( this );" );
-            
-            rb.appendEmptyLine();
         }
         
         return readMethod;
@@ -1402,32 +1375,31 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         rb.append( "#1if( property == #2 )\n" +
                    "{\n" +
-                   "    return #3();\n" +
+                   "    if( this.p#3 == null )\n" +
+                   "    {\n" +
+                   "        refresh( #2, true );\n" +
+                   "    }\n" +
+                   "    \n" +
+                   "    return this.p#3;\n" +
                    "}",
-                   ( hasPriorContent ? "else " : "" ), propField.name, propField.getGetterMethodName() );
+                   ( hasPriorContent ? "else " : "" ), propField.name, propField.propertyName );
 
         return rb;
     }
     
-    private static MethodModel getValueWriteMethod( final ClassModel implClassModel,
-                                                    final boolean createIfNecessary )
+    private static MethodModel getWriteMethod( final ClassModel implClassModel,
+                                               final boolean createIfNecessary )
     {
-        MethodModel writeMethod = (MethodModel) implClassModel.getData( DATA_WRITE_VALUE_METHOD );
+        MethodModel writeMethod = (MethodModel) implClassModel.getData( DATA_WRITE_METHOD );
         
         if( writeMethod == null && createIfNecessary )
         {
-            writeMethod = implClassModel.addMethod( "write" );
-            writeMethod.addParameter( new MethodParameterModel( "property", ValueProperty.class, false ) );
-            writeMethod.addParameter( new MethodParameterModel( "value", Object.class ) );
+            writeMethod = implClassModel.addMethod( "writeProperty" );
+            writeMethod.setAccessModifier( AccessModifier.PROTECTED );
+            writeMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class, false ) );
+            writeMethod.addParameter( new MethodParameterModel( "content", Object.class ) );
             writeMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
-            implClassModel.setData( DATA_WRITE_VALUE_METHOD, writeMethod );
-
-            final Body wb = writeMethod.getBody();
-            
-            wb.append( "assertNotDisposed();\n" +
-                       "\n" +
-                       "property = (ValueProperty) property.refine( this );\n"+
-                       "\n" );
+            implClassModel.setData( DATA_WRITE_METHOD, writeMethod );
         }
         
         return writeMethod;
@@ -1436,7 +1408,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
     private static Body contributeValueWriteMethodBlock( final ClassModel implClassModel,
                                                          final PropertyFieldDeclaration propField )
     {
-        final MethodModel writeMethod = getValueWriteMethod( implClassModel, true );
+        final MethodModel writeMethod = getWriteMethod( implClassModel, true );
         final Body rb = writeMethod.getBody();
         final boolean hasPriorContent;
         
@@ -1470,19 +1442,19 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         if( type == null )
         {
-            rb.append( "#1( (String) value );\n" +
+            rb.append( "#1( (String) content );\n" +
                        "return;", 
                        propField.getSetterMethodName() );
         }
         else
         {
-            rb.append( "if( ! ( value instanceof String ) )\n" +
+            rb.append( "if( ! ( content instanceof String ) )\n" +
                        "{\n" +
-                       "    #2( (#3) value );\n" +
+                       "    #2( (#3) content );\n" +
                        "}\n" +
                        "else\n" +
                        "{\n" +
-                       "    #1( (String) value );\n" +
+                       "    #1( (String) content );\n" +
                        "}\n" +
                        "\n" +
                        "return;",
@@ -1496,34 +1468,10 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         return rb;
     }
     
-    private static MethodModel getTransientWriteMethod( final ClassModel implClassModel,
-                                                        final boolean createIfNecessary )
-    {
-        MethodModel writeMethod = (MethodModel) implClassModel.getData( DATA_WRITE_TRANSIENT_METHOD );
-        
-        if( writeMethod == null && createIfNecessary )
-        {
-            writeMethod = implClassModel.addMethod( "write" );
-            writeMethod.addParameter( new MethodParameterModel( "property", TransientProperty.class, false ) );
-            writeMethod.addParameter( new MethodParameterModel( "object", Object.class ) );
-            writeMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
-            implClassModel.setData( DATA_WRITE_TRANSIENT_METHOD, writeMethod );
-
-            final Body wb = writeMethod.getBody();
-            
-            wb.append( "assertNotDisposed();\n" +
-                       "\n" +
-                       "property = (TransientProperty) property.refine( this );\n"+
-                       "\n" );
-        }
-        
-        return writeMethod;
-    }
-    
     private static Body contributeTransientWriteMethodBlock( final ClassModel implClassModel,
                                                              final PropertyFieldDeclaration propField )
     {
-        final MethodModel writeMethod = getTransientWriteMethod( implClassModel, true );
+        final MethodModel writeMethod = getWriteMethod( implClassModel, true );
         final Body rb = writeMethod.getBody();
         final boolean hasPriorContent;
         
@@ -1557,11 +1505,11 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         if( type == null )
         {
-            rb.append( "#1( object );", propField.getSetterMethodName() );
+            rb.append( "#1( content );", propField.getSetterMethodName() );
         }
         else
         {
-            rb.append( "#1( (#2) object );", propField.getSetterMethodName(), type.getSimpleName() );
+            rb.append( "#1( (#2) content );", propField.getSetterMethodName(), type.getSimpleName() );
         }
         
         rb.append( "return;" );
@@ -1580,7 +1528,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         {
             refreshMethod = implClassModel.addMethod( "refreshProperty" );
             refreshMethod.setAccessModifier( AccessModifier.PROTECTED );
-            refreshMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class, false ) );
+            refreshMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class ) );
             refreshMethod.addParameter( new MethodParameterModel( "force", TypeReference.BOOLEAN_TYPE ) );
             refreshMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
             implClassModel.setData( DATA_REFRESH_METHOD, refreshMethod );
@@ -1589,9 +1537,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             
             rb.append( "synchronized( root() )" );
             rb.openBlock();
-            
-            rb.append( "property = property.refine( this );" );
-            rb.appendEmptyLine();
         }
         
         return refreshMethod;

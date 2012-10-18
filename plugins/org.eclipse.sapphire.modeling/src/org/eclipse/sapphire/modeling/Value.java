@@ -14,6 +14,7 @@ package org.eclipse.sapphire.modeling;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.ValidationAggregationService;
 import org.eclipse.sapphire.services.ValueSerializationMasterService;
 
@@ -26,6 +27,7 @@ public class Value<T> extends ModelParticle
     private final ValueProperty property;
     private final String raw;
     private final T parsed;
+    private Boolean enablement;
     private Status validation;
     private boolean defaultValueInitialized;
     private String defaultText;
@@ -40,10 +42,6 @@ public class Value<T> extends ModelParticle
         this.property = property;
         this.raw = normalize( value );
         this.parsed = parse( property.decodeKeywords( this.raw ) );
-        this.validation = null;
-        this.defaultValueInitialized = false;
-        this.defaultText = null;
-        this.defaultContent = null;
     }
     
     public void init()
@@ -56,8 +54,29 @@ public class Value<T> extends ModelParticle
         // validator calls value's validate method, but that has not come up so far as an 
         // interesting scenario.
         
+        initEnablement();
         initValidation();
         initDefaultValue();
+    }
+    
+    private void initEnablement()
+    {
+        if( this.enablement == null )
+        {
+            boolean enablement = true;
+            
+            for( EnablementService service : parent().services( this.property, EnablementService.class ) )
+            {
+                enablement = ( enablement && service.enablement() );
+                
+                if( enablement == false )
+                {
+                    break;
+                }
+            }
+            
+            this.enablement = enablement;
+        }
     }
     
     private void initValidation()
@@ -189,15 +208,16 @@ public class Value<T> extends ModelParticle
         }
     }
     
+    public boolean enabled()
+    {
+        initEnablement();
+        return this.enablement;
+    }
+    
     public Status validation()
     {
         initValidation();
         return this.validation;
-    }
-    
-    public boolean enabled()
-    {
-        return parent().enabled( this.property );
     }
     
     @Override
@@ -217,8 +237,11 @@ public class Value<T> extends ModelParticle
         
         final Value<?> value = (Value<?>) val;
         
-        return ( parent() == value.parent() ) && ( this.property == value.property ) &&
-               ( MiscUtil.equal( this.raw, value.raw ) ) && this.validation.equals( value.validation ) &&
+        return ( parent() == value.parent() ) && 
+               ( this.property == value.property ) &&
+               ( MiscUtil.equal( this.raw, value.raw ) ) && 
+               ( MiscUtil.equal( this.enablement, value.enablement ) ) &&
+               ( MiscUtil.equal( this.validation, value.validation ) ) &&
                ( MiscUtil.equal( this.defaultText, value.defaultText ) ); 
     }
     

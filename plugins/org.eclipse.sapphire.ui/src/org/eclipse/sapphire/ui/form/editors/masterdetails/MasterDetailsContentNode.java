@@ -135,7 +135,7 @@ public final class MasterDetailsContentNode
         
         if( this.modelElementProperty != null )
         {
-            this.modelElement = getModelElement().read( this.modelElementProperty );
+            this.modelElement = getModelElement().read( this.modelElementProperty ).element();
             
             this.modelElementListener = new FilteredListener<PropertyEvent>()
             {

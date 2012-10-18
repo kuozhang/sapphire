@@ -15,6 +15,7 @@ package org.eclipse.sapphire.modeling;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValidationAggregationService;
 
@@ -29,8 +30,9 @@ public final class ModelElementHandle<T extends IModelElement>
     private final PossibleTypesService possibleTypesService;
     private final ElementBindingImpl binding;
     private T element;
-    private Status validationResultLocal;
-    private Status validationResultFull;
+    private Boolean enablement;
+    private Status validationStateLocal;
+    private Status validationStatetFull;
     
     public ModelElementHandle( final IModelElement parent,
                                final ElementProperty property )
@@ -124,7 +126,7 @@ public final class ModelElementHandle<T extends IModelElement>
                             @Override
                             protected void handleTypedEvent( final ElementValidationEvent event )
                             {
-                                refreshValidationResult();
+                                refreshValidation( true );
                             }
                         }
                     );
@@ -151,7 +153,7 @@ public final class ModelElementHandle<T extends IModelElement>
                 this.parent.broadcastPropertyContentEvent( this.property );
             }
             
-            refreshValidationResult();
+            refreshValidation( true );
         }
         
         return this.element;
@@ -166,15 +168,28 @@ public final class ModelElementHandle<T extends IModelElement>
     {
         synchronized( this )
         {
-            return ( includeChildValidation ? this.validationResultFull : this.validationResultLocal );
+            if( this.validationStatetFull == null )
+            {
+                refreshValidation( false );
+            }
+            
+            return ( includeChildValidation ? this.validationStatetFull : this.validationStateLocal );
         }
     }
     
     public boolean enabled()
     {
-        return parent().enabled( this.property );
+        synchronized( this )
+        {
+            if( this.enablement == null )
+            {
+                refreshEnablement( false );
+            }
+            
+            return this.enablement;
+        }
     }
-    
+
     public boolean remove()
     {
         synchronized( this )
@@ -228,7 +243,7 @@ public final class ModelElementHandle<T extends IModelElement>
                             @Override
                             protected void handleTypedEvent( final ElementValidationEvent event )
                             {
-                                refreshValidationResult();
+                                refreshValidation( true );
                             }
                         }
                     );
@@ -258,12 +273,53 @@ public final class ModelElementHandle<T extends IModelElement>
             }
         }
         
-        changed = changed | refreshValidationResult();
+        changed = changed | refreshEnablement( true ) | refreshValidation( true );
         
         return changed;
     }
     
-    private boolean refreshValidationResult()
+    private boolean refreshEnablement( final boolean broadcastChangeIfNecessary )
+    {
+        boolean changed = false;
+        boolean before = false;
+        boolean after = false;
+        
+        synchronized( this )
+        {
+            boolean newEnablementState = true;
+            
+            for( EnablementService service : parent().services( this.property, EnablementService.class ) )
+            {
+                newEnablementState = ( newEnablementState && service.enablement() );
+                
+                if( newEnablementState == false )
+                {
+                    break;
+                }
+            }
+            
+            if( this.enablement == null )
+            {
+                this.enablement = newEnablementState;
+            }
+            else if( this.enablement.booleanValue() != newEnablementState )
+            {
+                changed = true;
+                before = this.enablement;
+                after = newEnablementState;
+                this.enablement = newEnablementState;
+            }
+        }
+        
+        if( changed && broadcastChangeIfNecessary )
+        {
+            ( (ModelElement) parent() ).broadcastPropertyEnablementEvent( this.property, before, after );
+        }
+        
+        return changed;
+    }
+
+    private boolean refreshValidation( final boolean broadcastChangeIfNecessary )
     {
         boolean changed = false;
         Status before = null;
@@ -282,23 +338,23 @@ public final class ModelElementHandle<T extends IModelElement>
             }
             
             final Status newValidationResultFull = newValidationResultFullFactory.create();
-            final Status oldValidationResultFull = this.validationResultFull;
+            final Status oldValidationResultFull = this.validationStatetFull;
     
             if( ! newValidationResultFull.equals( oldValidationResultFull ) )
             {
-                this.validationResultLocal = newValidationResultLocal;
-                this.validationResultFull = newValidationResultFull;
+                this.validationStateLocal = newValidationResultLocal;
+                this.validationStatetFull = newValidationResultFull;
                 
                 if( oldValidationResultFull != null )
                 {
                     changed = true;
                     before = oldValidationResultFull;
-                    after = this.validationResultFull;
+                    after = this.validationStatetFull;
                 }
             }
         }
         
-        if( changed )
+        if( changed && broadcastChangeIfNecessary )
         {
             ( (ModelElement) parent() ).broadcastPropertyValidationEvent( this.property, before, after );
         }

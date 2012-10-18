@@ -20,6 +20,7 @@ import java.util.ListIterator;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValidationAggregationService;
 
@@ -40,6 +41,7 @@ public final class ModelElementList<T extends IModelElement>
     private final PossibleTypesService possibleTypesService;
     private ListBindingImpl binding;
     private List<IModelElement> data;
+    private Boolean enablement;
     private Status validation;
     private Listener listMemberListener;
     
@@ -52,14 +54,13 @@ public final class ModelElementList<T extends IModelElement>
         this.readonly = property.isReadOnly();
         this.possibleTypesService = parent.service( property, PossibleTypesService.class );
         this.data = Collections.emptyList();
-        this.validation = null;
         
         this.listMemberListener = new FilteredListener<ElementValidationEvent>()
         {
             @Override
             protected void handleTypedEvent( final ElementValidationEvent event )
             {
-                refreshValidationResult( true );
+                refreshValidation( true );
             }
         };
     }
@@ -86,21 +87,26 @@ public final class ModelElementList<T extends IModelElement>
         return this.property;
     }
     
+    public synchronized boolean enabled()
+    {
+        if( this.enablement == null )
+        {
+            refreshEnablement( false );
+        }
+        
+        return this.enablement;
+    }
+
     public synchronized Status validation()
     {
         if( this.validation == null )
         {
-            refreshValidationResult( false );
+            refreshValidation( false );
         }
         
         return this.validation;
     }
     
-    public boolean enabled()
-    {
-        return parent().enabled( this.property );
-    }
-
     public boolean refresh()
     {
         return refresh( true );
@@ -215,12 +221,43 @@ public final class ModelElementList<T extends IModelElement>
             ( (ModelElement) parent() ).broadcastPropertyContentEvent( this.property );
         }
         
-        refreshValidationResult( broadcastChangeIfNecessary );
+        refreshEnablement( broadcastChangeIfNecessary );
+        refreshValidation( broadcastChangeIfNecessary );
         
         return changed;
     }
     
-    private void refreshValidationResult( final boolean broadcastChangeIfNecessary )
+    private void refreshEnablement( final boolean broadcastChangeIfNecessary )
+    {
+        boolean newEnablementState = true;
+        
+        for( EnablementService service : parent().services( this.property, EnablementService.class ) )
+        {
+            newEnablementState = ( newEnablementState && service.enablement() );
+            
+            if( newEnablementState == false )
+            {
+                break;
+            }
+        }
+        
+        if( this.enablement == null )
+        {
+            this.enablement = newEnablementState;
+        }
+        else if( this.enablement.booleanValue() != newEnablementState )
+        {
+            final boolean before = this.enablement;
+            this.enablement = newEnablementState;
+            
+            if( broadcastChangeIfNecessary )
+            {
+                ( (ModelElement) parent() ).broadcastPropertyEnablementEvent( this.property, before, newEnablementState );
+            }
+        }
+    }
+
+    private void refreshValidation( final boolean broadcastChangeIfNecessary )
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         

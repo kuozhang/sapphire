@@ -359,18 +359,37 @@ of a ModelProperty object. This reduces verbosity in situations where code does 
 instance handy.</p> 
 
 <pre class="source-code"><code><font color="#888888">ModelElement
-{
-    &lt;S extends Service> S service( ModelProperty property, Class&lt;S> serviceType )</font>
-    &lt;S extends Service> S service( String property, Class&lt;S> serviceType )
-    
-    <font color="#888888">&lt;S extends Service> List&lt;S> services( ModelProperty property, Class&lt;S> serviceType )</font>
-    &lt;S extends Service> List&lt;S> services( String property, Class&lt;S> serviceType )
-    
+{</font>
+    <font color="#888888">&lt;T> Value&lt;T> read( ValueProperty property )
+    &lt;T> Transient&lt;T> read( TransientProperty property )    
+    &lt;T extends IModelElement> ModelElementHandle&lt;T> read( ElementProperty property )
+    &lt;T extends IModelElement> ModelElementList&lt;T> read( ListProperty property )
+    Object read( ModelProperty property )</font>
+    Object read( String property )
+
+    <font color="#888888">void write( ValueProperty property, Object content ) [removed]
+    void write( TransientProperty property, Object content ) [removed]</font>
+    void write( ModelProperty property, Object content )
+    void write( String property, Object content )
+
     <font color="#888888">boolean enabled( ModelProperty property )</font>
     boolean enabled( String property )
     
     <font color="#888888">Status validation( ModelProperty property )</font>
     Status validation( String property )
+    
+    <font color="#888888">void refresh( ModelProperty property )</font>
+    void refresh( String property )
+    <font color="#888888">void refresh( ModelProperty property, boolean force )</font>
+    void refresh( String property, boolean force )
+    <font color="#888888">void refresh( ModelProperty property, boolean force, boolean deep )</font>
+    void refresh( String property, boolean force, boolean deep )
+
+    <font color="#888888">&lt;S extends Service> S service( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> S service( String property, Class&lt;S> serviceType )
+    
+    <font color="#888888">&lt;S extends Service> List&lt;S> services( ModelProperty property, Class&lt;S> serviceType )</font>
+    &lt;S extends Service> List&lt;S> services( String property, Class&lt;S> serviceType )
 <font color="#888888">}</font></code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b></p>

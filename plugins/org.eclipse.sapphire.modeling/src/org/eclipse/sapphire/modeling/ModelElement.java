@@ -14,7 +14,6 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +41,6 @@ import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationAggregationService;
-import org.eclipse.sapphire.services.ValidationService;
 import org.eclipse.sapphire.services.internal.ElementInstanceServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
 
@@ -57,8 +55,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     private final ModelProperty parentProperty;
     private Status validation;
     private final ListenerContext listeners = new ListenerContext();
-    private final Map<ModelProperty,Boolean> enablementStatuses;
-    private final Set<ModelProperty> initializedEnablementServices;
     private ElementInstanceServiceContext elementServiceContext;
     private final Map<ModelProperty,PropertyInstanceServiceContext> propertyServiceContexts;
     private boolean disposed = false;
@@ -73,8 +69,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         this.type = type;
         this.parentProperty = parentProperty;
         this.validation = null;
-        this.enablementStatuses = new HashMap<ModelProperty,Boolean>();
-        this.initializedEnablementServices = new HashSet<ModelProperty>();
         this.propertyServiceContexts = new HashMap<ModelProperty,PropertyInstanceServiceContext>();
         
         if( parent != null )
@@ -111,12 +105,12 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 
                 if( initialValueService != null ) 
                 {
-                    write( (ValueProperty) property, initialValueService.value() );
+                    write( property, initialValueService.value() );
                 }
             }
             else if( property instanceof ImpliedElementProperty )
             {
-                read( ( (ImpliedElementProperty) property ) ).initialize();
+                read( ( (ImpliedElementProperty) property ) ).element().initialize();
             }
         }
         
@@ -133,7 +127,38 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         return this.type.property( name );
     }
 
-    public Object read( final ModelProperty property )
+    public final Object read( final ModelProperty property )
+    {
+        assertNotDisposed();
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return read( property.getName() );
+    }
+    
+    public final Object read( final String property )
+    {
+        assertNotDisposed();
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return readProperty( prop );
+    }
+
+    protected Object readProperty( final ModelProperty property )
     {
         final String msg = NLS.bind( Resources.cannotReadProperty, property.getName() );
         throw new IllegalArgumentException( msg );
@@ -155,15 +180,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         assertNotDisposed();
         
         return (ModelElementHandle<T>) read( (ModelProperty) property );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    
-    public final <T extends IModelElement> T read( final ImpliedElementProperty property )
-    {
-        assertNotDisposed();
-        
-        return (T) read( (ModelProperty) property );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -331,15 +347,41 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
     
-    public void write( final ValueProperty property,
-                       final Object value )
+    public final void write( final ModelProperty property,
+                             final Object content )
     {
-        final String msg = NLS.bind( Resources.cannotWriteProperty, property.getName() );
-        throw new IllegalArgumentException( msg );
+        assertNotDisposed();
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        write( property.getName(), content );
     }
     
-    public void write( final TransientProperty property,
-                       final Object value )
+    public final void write( final String property,
+                             final Object content )
+    {
+        assertNotDisposed();
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        writeProperty( prop, content );
+    }
+
+    protected void writeProperty( final ModelProperty property,
+                                  final Object content )
     {
         final String msg = NLS.bind( Resources.cannotWriteProperty, property.getName() );
         throw new IllegalArgumentException( msg );
@@ -388,6 +430,13 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         refresh( property, false, false );
     }
     
+    public final void refresh( final String property )
+    {
+        assertNotDisposed();
+
+        refresh( property, false, false );
+    }
+    
     public final void refresh( final ModelProperty property,
                                final boolean force )
     {
@@ -396,44 +445,69 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         refresh( property, force, false );
     }
     
+    public final void refresh( final String property,
+                               final boolean force )
+    {
+        assertNotDisposed();
+
+        refresh( property, force, false );
+    }
+
     public final void refresh( final ModelProperty property,
                                final boolean force,
                                final boolean deep )
     {
         assertNotDisposed();
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
         
-        refreshProperty( property, force );
+        refresh( property.getName(), force, deep );
+    }
+
+    public final void refresh( final String property,
+                               final boolean force,
+                               final boolean deep )
+    {
+        assertNotDisposed();
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        refreshProperty( prop, force );
         
         if( deep )
         {
-            if( property instanceof ElementProperty )
+            if( prop instanceof ElementProperty )
             {
-                final IModelElement child;
-                
-                if( property instanceof ImpliedElementProperty )
-                {
-                    child = read( (ImpliedElementProperty) property );
-                }
-                else
-                {
-                    child = read( (ElementProperty) property ).element();
-                }
+                final IModelElement child = read( (ElementProperty) prop ).element();
                 
                 if( child != null )
                 {
                     child.refresh( force, true );
                 }
             }
-            else if( property instanceof ListProperty )
+            else if( prop instanceof ListProperty )
             {
-                for( IModelElement child : read( (ListProperty) property ) )
+                for( IModelElement child : read( (ListProperty) prop ) )
                 {
                     child.refresh( force, true );
                 }
             }
         }
     }
-
+    
     protected void refreshProperty( final ModelProperty property,
                                     final boolean force )
     {
@@ -461,7 +535,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 else if( property instanceof ImpliedElementProperty )
                 {
                     final ImpliedElementProperty prop = (ImpliedElementProperty) property;
-                    read( prop ).copy( element.read( prop ) );
+                    read( prop ).element().copy( element.read( prop ).element() );
                 }
                 else if( property instanceof ElementProperty )
                 {
@@ -683,120 +757,10 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         return context.services( serviceType );
     }
 
-    public final boolean enabled( final ModelProperty property )
-    {
-        assertNotDisposed();
-
-        if( property == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return enabled( property.getName() );
-    }
-    
-    public final boolean enabled( final String property )
-    {
-        assertNotDisposed();
-
-        if( property == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        final ModelProperty prop = this.type.property( property );
-        
-        if( prop == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        synchronized( root() )
-        {
-            Boolean status = this.enablementStatuses.get( prop );
-            
-            if( status == null )
-            {
-                refreshProperty( prop, true );
-                status = this.enablementStatuses.get( prop );
-            }
-            
-            return status;
-        }
-    }
-    
-    protected final EnablementRefreshResult refreshPropertyEnablement( final ModelProperty property )
-    {
-        assertNotDisposed();
-        
-        return refreshPropertyEnablement( property, false );
-    }
-    
-    private final EnablementRefreshResult refreshPropertyEnablement( final ModelProperty property,
-                                                                     final boolean notifyListenersIfNecessary )
-    {
-        synchronized( root() )
-        {
-            assertNotDisposed();
-            
-            if( ! this.initializedEnablementServices.contains( property ) )
-            {
-                this.initializedEnablementServices.add( property );
-
-                final Listener enablementServiceListener = new Listener()
-                {
-                    @Override
-                    public void handle( final Event event )
-                    {
-                        if( ! disposed() )
-                        {
-                            refreshPropertyEnablement( property, true );
-                        }
-                    }
-                };
-                
-                for( EnablementService service : services( property, EnablementService.class ) )
-                {
-                    service.attach( enablementServiceListener );
-                }
-            }
-            
-            boolean newState = true;
-            
-            for( EnablementService service : services( property, EnablementService.class ) )
-            {
-                newState = ( newState && service.enablement() );
-                
-                if( newState == false )
-                {
-                    break;
-                }
-            }
-            
-            final Boolean oldState = this.enablementStatuses.get( property );
-            
-            if( oldState == null )
-            {
-                this.enablementStatuses.put( property, newState );
-            }
-            else if( ! oldState.equals( newState ) )
-            {
-                this.enablementStatuses.put( property, newState );
-                
-                if( notifyListenersIfNecessary )
-                {
-                    broadcast( new PropertyEnablementEvent( this, property, oldState, newState ) );
-                }
-            }
-            
-            return new EnablementRefreshResult( oldState, newState );
-        }
-    }
-
     public final boolean empty( final ModelProperty property )
     {
         assertNotDisposed();
-
+    
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -808,7 +772,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     public final boolean empty( final String property )
     {
         assertNotDisposed();
-
+    
         if( property == null )
         {
             throw new IllegalArgumentException();
@@ -827,7 +791,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
         else if( prop instanceof ImpliedElementProperty )
         {
-            final IModelElement element = read( (ImpliedElementProperty) prop );
+            final IModelElement element = read( (ImpliedElementProperty) prop ).element();
             
             for( ModelProperty p : element.type().properties() )
             {
@@ -857,18 +821,60 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
 
-    public final Status validation()
+    public final boolean enabled( final ModelProperty property )
+    {
+        assertNotDisposed();
+    
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return enabled( property.getName() );
+    }
+
+    public final boolean enabled( final String property )
     {
         assertNotDisposed();
 
-        if( this.validation == null )
+        if( property == null )
         {
-            refreshValidationResult();
+            throw new IllegalArgumentException();
         }
         
-        return this.validation;
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final boolean enablement;
+        
+        if( prop instanceof ValueProperty )
+        {
+            enablement = read( (ValueProperty) prop ).enabled();
+        }
+        else if( prop instanceof ListProperty )
+        {
+            enablement = read( (ListProperty) prop ).enabled();
+        }
+        else if( prop instanceof ElementProperty )
+        {
+            enablement = read( (ElementProperty) prop ).enabled();
+        }
+        else if( prop instanceof TransientProperty )
+        {
+            enablement = read( (TransientProperty) prop ).enabled();
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+        
+        return enablement;
     }
-    
+
     public final Status validation( final ModelProperty property )
     {
         assertNotDisposed();
@@ -907,10 +913,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         {
             validation = read( (ListProperty) prop ).validation();
         }
-        else if( prop instanceof ImpliedElementProperty )
-        {
-            validation = read( (ImpliedElementProperty) prop ).validation();
-        }
         else if( prop instanceof ElementProperty )
         {
             validation = read( (ElementProperty) prop ).validation();
@@ -927,6 +929,18 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         return validation;
     }
     
+    public final Status validation()
+    {
+        assertNotDisposed();
+    
+        if( this.validation == null )
+        {
+            refreshValidationResult();
+        }
+        
+        return this.validation;
+    }
+
     private void refreshValidationResult()
     {
         final ValidationAggregationService service = service( ValidationAggregationService.class );
@@ -1022,11 +1036,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             {
                 for( ModelProperty property : this.type.properties() )
                 {
-                    if( property instanceof ImpliedElementProperty )
-                    {
-                        read( (ImpliedElementProperty) property ).attach( listener, path );
-                    }
-                    else if( property instanceof ElementProperty )
+                    if( property instanceof ElementProperty )
                     {
                         final IModelElement element = read( (ElementProperty) property ).element();
                         
@@ -1091,7 +1101,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 
                 if( property instanceof ImpliedElementProperty )
                 {
-                    read( (ImpliedElementProperty) property ).attach( listener, tail );
+                    read( (ImpliedElementProperty) property ).element().attach( listener, tail );
                 }
                 else if( property instanceof ElementProperty )
                 {
@@ -1210,7 +1220,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             {
                 if( property instanceof ImpliedElementProperty )
                 {
-                    read( (ImpliedElementProperty) property ).detach( listener, path );
+                    read( (ImpliedElementProperty) property ).element().detach( listener, path );
                 }
                 else if( property instanceof ElementProperty )
                 {
@@ -1276,7 +1286,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 
                 if( property instanceof ImpliedElementProperty )
                 {
-                    read( (ImpliedElementProperty) property ).detach( listener, tail );
+                    read( (ImpliedElementProperty) property ).element().detach( listener, tail );
                 }
                 else if( property instanceof ElementProperty )
                 {
@@ -1339,6 +1349,13 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         broadcast( new PropertyContentEvent( this, property ) );
     }
 
+    final void broadcastPropertyEnablementEvent( final ModelProperty property,
+                                                 final boolean before,
+                                                 final boolean after )
+    {
+        broadcast( new PropertyEnablementEvent( this, property, before, after ) );
+    }
+    
     final void broadcastPropertyValidationEvent( final ModelProperty property,
                                                  final Status before,
                                                  final Status after )
@@ -1465,41 +1482,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         return value;
     }
     
-    protected final class EnablementRefreshResult
-    {
-        private final Boolean oldEnablementState;
-        private final boolean newEnablementState;
-        
-        public EnablementRefreshResult( final Boolean before,
-                                        final boolean after )
-        {
-            this.oldEnablementState = before;
-            this.newEnablementState = after;
-        }
-        
-        public Boolean before()
-        {
-            return this.oldEnablementState;
-        }
-        
-        public boolean after()
-        {
-            return this.newEnablementState;
-        }
-        
-        public boolean changed()
-        {
-            if( this.oldEnablementState == null )
-            {
-                return false;
-            }
-            else
-            {
-                return ( this.oldEnablementState != this.newEnablementState );
-            }
-        }
-    }
-    
     private final class PropagationListener extends Listener
     {
         private final ModelPath path;
@@ -1605,10 +1587,12 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 element.attach( triggerRefreshListener, dependency );
             }
             
-            for( ValidationService validationService : element.services( property, ValidationService.class ) )
+            for( EnablementService enablementService : element.services( property, EnablementService.class ) )
             {
-                validationService.attach( triggerRefreshListener );
+                enablementService.attach( triggerRefreshListener );
             }
+            
+            element.service( property, ValidationAggregationService.class ).attach( triggerRefreshListener );
             
             final DefaultValueService defaultValueService = element.service( property, DefaultValueService.class );
             
