@@ -20,6 +20,7 @@ import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -47,16 +48,20 @@ public class NodeDirectEditManager extends DirectEditManager {
 		}
 	};
 	private Label label;
+	private SapphireDiagramEditor diagramEditor;
 
 	public NodeDirectEditManager(GraphicalEditPart source, CellEditorLocator locator, Label label) {
 		super(source, null, locator);
 		this.label = label; 
+		this.diagramEditor = ((DiagramNodeEditPart)source).getConfigurationManager().getDiagramEditor();
 	}
 
 	/**
 	 * @see org.eclipse.gef.tools.DirectEditManager#bringDown()
 	 */
 	protected void bringDown() {
+		this.diagramEditor.setDirectEditingActive(false);
+		
 		ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
 				.getProperty(ZoomManager.class.toString());
 		if (zoomMgr != null)
@@ -77,6 +82,13 @@ public class NodeDirectEditManager extends DirectEditManager {
 		disposeScaledFont();
 	}
 
+	@Override
+	public void show() 
+	{
+		diagramEditor.setDirectEditingActive(true);
+		super.show();
+	}
+	
 	protected CellEditor createCellEditorOn(Composite composite) {
 		return new TextCellEditor(composite, SWT.CENTER);
 	}

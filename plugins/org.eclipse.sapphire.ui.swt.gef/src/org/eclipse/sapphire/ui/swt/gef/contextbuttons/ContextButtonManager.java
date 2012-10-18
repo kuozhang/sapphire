@@ -113,10 +113,12 @@ public class ContextButtonManager {
 			SapphireDiagramEditor ed = getEditor();
 			
 			// TODO Evaluate whether we should allow context pad to show when the 
-			// editor is in direct edit mode. 
-//			if (ed.isDirectEditingActive()) {
-//				return;
-//			}
+			// editor is in direct edit mode.
+			// We should not show the context buttons if the editor is in direct editor mode.
+			// Context button pad interferes with the keyboard events.
+			if (ed.isDirectEditingActive()) {
+				return;
+			}
 			
 			// Bug 380728 - Floating toolbar appears on a node when multiple nodes are selected 
 			if (ed.getSelectedParts().size() > 1) {
