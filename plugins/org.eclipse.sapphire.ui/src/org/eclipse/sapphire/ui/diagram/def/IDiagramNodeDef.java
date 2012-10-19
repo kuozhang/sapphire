@@ -39,15 +39,10 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
-import org.eclipse.sapphire.ui.diagram.shape.def.Image;
-import org.eclipse.sapphire.ui.diagram.shape.def.Rectangle;
-import org.eclipse.sapphire.ui.diagram.shape.def.Shape;
-import org.eclipse.sapphire.ui.diagram.shape.def.Text;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -239,32 +234,5 @@ public interface IDiagramNodeDef
     ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
     ModelElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
-            
-    // *** Shape ***
-    
-    @Type
-    ( 
-        base = Shape.class, 
-        possible = 
-        { 
-            Text.class, 
-            Image.class,
-            Rectangle.class
-        }
-    )    
-    @Label( standard = "shape" )
-    @XmlElementBinding
-    ( 
-        mappings = 
-        {
-            @XmlElementBinding.Mapping( element = "text", type = Text.class ),
-            @XmlElementBinding.Mapping( element = "image", type = Image.class ),
-            @XmlElementBinding.Mapping( element = "rectangle", type = Rectangle.class )
-        }
-    )
-    
-    ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
-    
-    ModelElementHandle<Shape> getShape(); 
-    
+                
 }
