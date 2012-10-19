@@ -9,22 +9,21 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
+package org.eclipse.sapphire.tests.modeling.misc.t0017;
 
-import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
+import org.eclipse.sapphire.services.EnablementService;
+import org.eclipse.sapphire.services.EnablementServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleValuesBrowseActionHandlerCondition extends SapphirePropertyEditorCondition
+public final class TestEnablementService extends EnablementService
 {
     @Override
-    protected boolean evaluate( final PropertyEditorPart part )
+    protected EnablementServiceData compute()
     {
-        return ( part.getLocalModelElement().service( part.getProperty(), PossibleValuesService.class ) != null );
+        return new EnablementServiceData( true );
     }
 
 }

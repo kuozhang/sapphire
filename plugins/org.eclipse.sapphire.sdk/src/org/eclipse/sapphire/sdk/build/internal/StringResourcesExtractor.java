@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -160,10 +159,6 @@ public final class StringResourcesExtractor
                 {
                     gather( child, strings );
                 }
-            }
-            else if( property instanceof ImpliedElementProperty )
-            {
-                gather( element.read( (ImpliedElementProperty) property ), strings );
             }
             else if( property instanceof ElementProperty )
             {

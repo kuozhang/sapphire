@@ -9,22 +9,29 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
+package org.eclipse.sapphire.tests.modeling.misc.t0016;
 
-import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleValuesBrowseActionHandlerCondition extends SapphirePropertyEditorCondition
+@GenerateImpl
+
+public interface BaseElement extends IModelElement
 {
-    @Override
-    protected boolean evaluate( final PropertyEditorPart part )
-    {
-        return ( part.getLocalModelElement().service( part.getProperty(), PossibleValuesService.class ) != null );
-    }
+    ModelElementType TYPE = new ModelElementType( BaseElement.class );
+    
+    // *** Value ***
+    
+    ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    
+    Value<String> getValue();
+    void setValue( String value );
 
 }

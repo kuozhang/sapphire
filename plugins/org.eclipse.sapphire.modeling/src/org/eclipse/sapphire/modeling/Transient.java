@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling;
 
 import org.eclipse.sapphire.modeling.util.MiscUtil;
+import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
@@ -22,7 +23,8 @@ public class Transient<T> extends ModelParticle
 {
     private final TransientProperty property;
     private final T content;
-    private Status valres;
+    private Boolean enablement;
+    private Status validation;
 
     public Transient( final IModelElement parent,
                       final TransientProperty property,
@@ -32,17 +34,38 @@ public class Transient<T> extends ModelParticle
         
         this.property = property;
         this.content = content;
-        this.valres = null;
+        this.validation = null;
     }
     
     public void init()
     {
+        initEnablement();
         initValidation();
+    }
+    
+    private void initEnablement()
+    {
+        if( this.enablement == null )
+        {
+            boolean enablement = true;
+            
+            for( EnablementService service : parent().services( this.property, EnablementService.class ) )
+            {
+                enablement = ( enablement && service.enablement() );
+                
+                if( enablement == false )
+                {
+                    break;
+                }
+            }
+            
+            this.enablement = enablement;
+        }
     }
     
     private void initValidation()
     {
-        if( this.valres == null )
+        if( this.validation == null )
         {
             final Status.CompositeStatusFactory factory = Status.factoryForComposite();
             
@@ -58,7 +81,7 @@ public class Transient<T> extends ModelParticle
                 }
             }
             
-            this.valres = factory.create();
+            this.validation = factory.create();
         }
     }
 
@@ -78,10 +101,16 @@ public class Transient<T> extends ModelParticle
         return this.content;
     }
     
+    public boolean enabled()
+    {
+        initEnablement();
+        return this.enablement;
+    }
+
     public Status validation()
     {
         initValidation();
-        return this.valres;
+        return this.validation;
     }
     
     @Override
@@ -101,8 +130,11 @@ public class Transient<T> extends ModelParticle
         
         final Transient<?> value = (Transient<?>) val;
         
-        return ( parent() == value.parent() ) && ( this.property == value.property ) &&
-               ( MiscUtil.equal( this.content, value.content ) ) && this.valres.equals( value.valres ); 
+        return ( parent() == value.parent() ) && 
+               ( this.property == value.property ) &&
+               ( MiscUtil.equal( this.content, value.content ) ) && 
+               ( MiscUtil.equal( this.enablement, value.enablement ) ) &&
+               ( MiscUtil.equal( this.validation, value.validation ) );
     }
     
     @Override

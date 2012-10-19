@@ -108,7 +108,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         ImpliedElementProperty modelElementProperty = (ImpliedElementProperty)resolve(this.diagramPageDef.getProperty().getContent());
         if (modelElementProperty != null)
         {
-            this.modelElement = getModelElement().read(modelElementProperty);            
+            this.modelElement = getModelElement().read( modelElementProperty ).element();            
         }
         else
         {

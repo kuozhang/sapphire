@@ -9,22 +9,27 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
+package org.eclipse.sapphire.tests.modeling.misc.t0016;
 
-import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleValuesBrowseActionHandlerCondition extends SapphirePropertyEditorCondition
+@GenerateImpl
+
+public interface DerivedElement extends BaseElement
 {
-    @Override
-    protected boolean evaluate( final PropertyEditorPart part )
-    {
-        return ( part.getLocalModelElement().service( part.getProperty(), PossibleValuesService.class ) != null );
-    }
+    ModelElementType TYPE = new ModelElementType( DerivedElement.class );
+    
+    // *** Value ***
+    
+    @Enablement( expr = "false" )
+    
+    ValueProperty PROP_VALUE = new ValueProperty( TYPE, BaseElement.PROP_VALUE );
 
 }

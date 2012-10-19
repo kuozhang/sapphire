@@ -73,7 +73,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                     {
                         public void run()
                         {
-                            element.write( (ValueProperty) prop, null );
+                            element.write( prop, null );
                         }
                     }
                 );

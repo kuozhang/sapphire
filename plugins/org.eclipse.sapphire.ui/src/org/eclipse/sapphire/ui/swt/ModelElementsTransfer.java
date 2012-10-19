@@ -122,14 +122,6 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
                         out.writeUTF( value );
                     }
                 }
-                else if( property instanceof ImpliedElementProperty )
-                {
-                    final IModelElement child = element.read( (ImpliedElementProperty) property );
-                    
-                    out.writeByte( 1 );
-                    out.writeUTF( property.getName() );
-                    javaToNative( child, out );
-                }
                 else if( property instanceof ElementProperty )
                 {
                     final IModelElement child = element.read( (ElementProperty) property ).element();
@@ -206,12 +198,12 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
             if( property instanceof ValueProperty )
             {
                 final String value = in.readUTF();
-                element.write( (ValueProperty) property, value );
+                element.write( property, value );
             }
             else if( property instanceof ImpliedElementProperty )
             {
                 in.readUTF(); // qualified type name
-                final IModelElement child = element.read( (ImpliedElementProperty) property );
+                final IModelElement child = element.read( (ImpliedElementProperty) property ).element();
                 nativeToJava( in, child );
             }
             else if( property instanceof ElementProperty )

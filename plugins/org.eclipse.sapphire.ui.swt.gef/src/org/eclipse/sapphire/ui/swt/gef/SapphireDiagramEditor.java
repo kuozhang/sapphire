@@ -167,6 +167,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private GraphicalViewerKeyHandler graphicalViewerKeyHandler;
 	private SapphireDiagramKeyHandler diagramKeyHandler;
 	private ContextButtonManager contextButtonManager = null;
+	private boolean directEditingActive = false;
 	
 	// Diagram header, borrowed from org.eclipse.ui.forms.widgets.Form class
 	private FormHeading header;
@@ -1154,7 +1155,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 				{
 					viewer.select(editpart);
 					this.getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
-				}				
+				}
+				
 			}
 		}
 	}
@@ -1318,6 +1320,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         
         this.definition.dispose();
         this.definition = null;
+	}
+	
+	public boolean isDirectEditingActive() 
+	{
+		return directEditingActive;
+	}
+
+	public void setDirectEditingActive(boolean directEditingActive) 
+	{
+		this.directEditingActive = directEditingActive;
+		getContextButtonManager().hideContextButtonsInstantly();
 	}
 	
 	private void configureDiagramHeading()

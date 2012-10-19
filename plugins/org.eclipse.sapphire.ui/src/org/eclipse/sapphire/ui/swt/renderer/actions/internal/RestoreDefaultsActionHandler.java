@@ -44,11 +44,11 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.ConditionalPart;
+import org.eclipse.sapphire.ui.FormPart;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.FormPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireWithDirective;
 import org.eclipse.swt.SWT;
@@ -125,7 +125,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             {
                 if( pref.property instanceof ValueProperty )
                 {
-                    pref.modelElement.write( (ValueProperty) pref.property, null );
+                    pref.modelElement.write( pref.property, null );
                 }
                 else if( pref.property instanceof ListProperty )
                 {

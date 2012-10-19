@@ -9,22 +9,24 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
+package org.eclipse.sapphire.tests.modeling.misc.t0017;
 
-import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleValuesBrowseActionHandlerCondition extends SapphirePropertyEditorCondition
+public final class TestValidationService extends ValidationService
 {
     @Override
-    protected boolean evaluate( final PropertyEditorPart part )
+    public Status validate()
     {
-        return ( part.getLocalModelElement().service( part.getProperty(), PossibleValuesService.class ) != null );
+        context( IModelElement.class ).enabled( TestElement.PROP_VALUE );
+        
+        return Status.createOkStatus();
     }
 
 }
