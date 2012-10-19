@@ -203,5 +203,4 @@ public interface IDiagramNodeDef
     ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
     ModelElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
-                    
 }
