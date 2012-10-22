@@ -98,12 +98,17 @@ public final class SapphireWizardPart extends SapphirePart
     @Override
     public void dispose()
     {
-        super.dispose();
-        
         if( this.imageFunctionResult != null )
         {
             this.imageFunctionResult.dispose();
         }
+        
+        for( SapphireWizardPagePart page : this.pages )
+        {
+            page.dispose();
+        }
+        
+        super.dispose();
     }
     
 }

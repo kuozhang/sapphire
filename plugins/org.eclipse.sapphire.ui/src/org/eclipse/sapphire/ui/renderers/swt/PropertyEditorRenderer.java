@@ -93,6 +93,19 @@ public abstract class PropertyEditorRenderer
         this.actionPresentationManager = new SapphireActionPresentationManager( this.context, this.actions );
         this.actionPresentationManager.setLabel( NLS.bind( Resources.actionsContextLabel, this.part.getProperty().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
         this.actionPresentationKeyboard = new SapphireKeyboardActionPresentation( this.actionPresentationManager );
+        
+        this.part.attach
+        (
+            new FilteredListener<org.eclipse.sapphire.DisposeEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( org.eclipse.sapphire.DisposeEvent event )
+                {
+                    part.detach( this );
+                    dispose();
+                }
+            }
+        );
     }
     
     public SapphireRenderingContext getUiContext()

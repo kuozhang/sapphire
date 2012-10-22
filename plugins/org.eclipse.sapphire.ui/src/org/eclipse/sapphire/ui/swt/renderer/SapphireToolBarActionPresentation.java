@@ -16,7 +16,9 @@ package org.eclipse.sapphire.ui.swt.renderer;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -56,6 +58,7 @@ import org.eclipse.swt.widgets.ToolItem;
 public final class SapphireToolBarActionPresentation extends SapphireHotSpotsActionPresentation
 {
     private ToolBar toolbar;
+    private Map<SapphireAction,Listener> listeners;
     
     public SapphireToolBarActionPresentation( final SapphireActionPresentationManager manager )
     {
@@ -85,6 +88,8 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
         
         boolean first = true;
         String lastGroup = null;
+        
+        this.listeners = new HashMap<SapphireAction,Listener>();
         
         for( final SapphireAction action : getActions() )
         {
@@ -233,32 +238,32 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
                 }
             };
             
-            action.attach
-            (
-                new Listener()
+            final Listener listener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
                 {
-                    @Override
-                    public void handle( final Event event )
+                    if( event instanceof LabelChangedEvent )
                     {
-                        if( event instanceof LabelChangedEvent )
-                        {
-                            updateActionLabelOp.run();
-                        }
-                        else if( event instanceof ToolTipChangedEvent )
-                        {
-                            updateActionToolTipOp.run();
-                        }
-                        else if( event instanceof EnablementChangedEvent )
-                        {
-                            updateActionEnablementStateOp.run();
-                        }
-                        else if( event instanceof CheckedStateChangedEvent )
-                        {
-                            updateActionCheckedStateOp.run();
-                        }
+                        updateActionLabelOp.run();
+                    }
+                    else if( event instanceof ToolTipChangedEvent )
+                    {
+                        updateActionToolTipOp.run();
+                    }
+                    else if( event instanceof EnablementChangedEvent )
+                    {
+                        updateActionEnablementStateOp.run();
+                    }
+                    else if( event instanceof CheckedStateChangedEvent )
+                    {
+                        updateActionCheckedStateOp.run();
                     }
                 }
-            );
+            };
+
+            action.attach( listener );
+            this.listeners.put( action, listener );
             
             updateActionLabelOp.run();
             updateActionToolTipOp.run();
@@ -290,10 +295,21 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
         );
     }
     
-    private static final class ToolItemHotSpot
-    
-        extends HotSpot
+    @Override
+    public void dispose()
+    {
+        if( this.listeners != null )
+        {
+            for( Map.Entry<SapphireAction,Listener> entry : this.listeners.entrySet() )
+            {
+                entry.getKey().detach( entry.getValue() );
+            }
+        }
         
+        super.dispose();
+    }
+
+    private static final class ToolItemHotSpot extends HotSpot
     {
         private final ToolItem item;
         
