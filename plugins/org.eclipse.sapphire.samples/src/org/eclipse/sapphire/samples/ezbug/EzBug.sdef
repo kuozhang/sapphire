@@ -58,7 +58,7 @@
                             <property>Hardware</property>
                         </list-selection-controller>
                         <panel>
-                            <key>IHardwareItem</key>
+                            <key>HardwareItem</key>
                             <content>
                                 <property-editor>
                                     <property>Description</property>
@@ -133,7 +133,7 @@
 
     <wizard>
         <id>wizard</id>
-        <element-type>IFileBugReportOp</element-type>
+        <element-type>FileBugReportOp</element-type>
         <label>create bug report (sapphire sample)</label>
         <page>
             <id>main.page</id>
@@ -156,7 +156,7 @@
     
     <editor-page>
         <id>editor.page</id>
-        <element-type>IBugDatabase</element-type>
+        <element-type>BugDatabase</element-type>
         <page-name>bug database</page-name>
         <page-header-text>bug database (sapphire sample)</page-header-text>
         <initial-selection>bug reports</initial-selection>

@@ -23,6 +23,10 @@
 <h1>Enhancements in 0.6</h1>
 
 <ol>
+  <li><a href="#Key">Key Enhancements</a></li>
+  <ol type="A">
+    <li><a href="#Key-MinimalGeneratedCode">Minimal Generated Code</a></li>
+  </ol>
   <li><a href="#Modeling">Modeling</a></li>
   <ol type="A">
     <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
@@ -72,6 +76,91 @@
     <li><a href="#Miscellaneous-ShowNextProblem">Show Next Problem</a></li>
   </ol>
 </ol>
+
+
+<h2><a name="Key"><a name="Key-MinimalGeneratedCode">Minimal Generated Code</a></a></h2>
+
+<p>The size of the generated model element implementation classes has been greatly reduced by shifting as much as possible
+into the base class provided by the framework. This reduces the disk and memory footprint of a Sapphire application.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public final class BugReportImpl
+    
+    extends ModelElement
+    implements BugReport
+    
+{
+    public BugReportImpl( final IModelParticle parent, final ModelProperty parentProperty, final Resource resource )
+    {
+        super( TYPE, parent, parentProperty, resource );
+    }
+    
+    public Value&lt;String> getCustomerId()
+    {
+        return (Value) read( PROP_CUSTOMER_ID );
+    }
+    
+    public void setCustomerId( String value )
+    {
+        write( PROP_CUSTOMER_ID, value );
+    }
+    
+    public Value&lt;String> getDetails()
+    {
+        return (Value) read( PROP_DETAILS );
+    }
+    
+    public void setDetails( String value )
+    {
+        write( PROP_DETAILS, value );
+    }
+    
+    public ModelElementList&lt;HardwareItem> getHardware()
+    {
+        return (ModelElementList) read( PROP_HARDWARE );
+    }
+    
+    public Value&lt;ProductStage> getProductStage()
+    {
+        return (Value) read( PROP_PRODUCT_STAGE );
+    }
+    
+    public void setProductStage( String value )
+    {
+        write( PROP_PRODUCT_STAGE, value );
+    }
+    
+    public void setProductStage( final ProductStage value )
+    {
+        write( PROP_PRODUCT_STAGE, value );
+    }
+    
+    public Value&lt;ProductVersion> getProductVersion()
+    {
+        return (Value) read( PROP_PRODUCT_VERSION );
+    }
+    
+    public void setProductVersion( String value )
+    {
+        write( PROP_PRODUCT_VERSION, value );
+    }
+    
+    public void setProductVersion( final ProductVersion value )
+    {
+        write( PROP_PRODUCT_VERSION, value );
+    }
+    
+    public Value&lt;String> getTitle()
+    {
+        return (Value) read( PROP_TITLE );
+    }
+    
+    public void setTitle( String value )
+    {
+        write( PROP_TITLE, value );
+    }
+}</code></pre> 
 
 
 <h2><a name="Modeling"><a name="Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></a></h2>

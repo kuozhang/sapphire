@@ -30,7 +30,6 @@ import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListBindingImpl;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElement;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
@@ -55,17 +54,13 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.sdk.build.processor.internal.util.AccessModifier;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.Body;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.ClassModel;
-import org.eclipse.sapphire.sdk.build.processor.internal.util.FieldModel;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.IndentingPrintWriter;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.MethodModel;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.MethodParameterModel;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.TypeReference;
 import org.eclipse.sapphire.sdk.build.processor.internal.util.WildcardTypeReference;
-import org.eclipse.sapphire.services.DerivedValueService;
-import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.services.ValueSerializationMasterService;
 
 import com.sun.mirror.apt.AnnotationProcessorEnvironment;
@@ -95,12 +90,6 @@ import com.sun.mirror.util.SourcePosition;
 
 public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
 {
-    private static final String DATA_READ_METHOD = "read.method";
-    private static final String DATA_WRITE_METHOD = "write.method";
-    private static final String DATA_REFRESH_METHOD = "refresh.method";
-    private static final String DATA_DISPOSE_PROPERTIES_METHOD = "dispose.properties.method";
-    private static final String DATA_HAS_CONTENTS = "has.contents";
-    
     @Override
     public void process( final AnnotationProcessorEnvironment env, 
                          final Declaration annotatedEntity,
@@ -201,18 +190,13 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         elImplClass.addInterface( new TypeReference( elInterface.getQualifiedName() ) );
         elImplClass.setBaseClass( new TypeReference( ModelElement.class.getName() ) );
         
-        final MethodModel c1 = elImplClass.addConstructor();
+        final MethodModel c = elImplClass.addConstructor();
         
-        c1.addParameter( new MethodParameterModel( "parent", IModelParticle.class ) );
-        c1.addParameter( new MethodParameterModel( "parentProperty", ModelProperty.class ) );
-        c1.addParameter( new MethodParameterModel( "resource", Resource.class ) );
-        c1.getBody().append( "super( TYPE, parent, parentProperty, resource );" );
+        c.addParameter( new MethodParameterModel( "parent", IModelParticle.class ) );
+        c.addParameter( new MethodParameterModel( "parentProperty", ModelProperty.class ) );
+        c.addParameter( new MethodParameterModel( "resource", Resource.class ) );
+        c.getBody().append( "super( TYPE, parent, parentProperty, resource );" );
 
-        final MethodModel c2 = elImplClass.addConstructor();
-        
-        c2.addParameter( new MethodParameterModel( "resource", Resource.class ) );
-        c2.getBody().append( "super( TYPE, null, null, resource );" );
-        
         elImplClass.addImport( PropertyInitializationEvent.class );
         elImplClass.addImport( PropertyContentEvent.class );
         elImplClass.addImport( PropertyValidationEvent.class );
@@ -345,37 +329,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         };
         
         visitAllMethods( elInterface, methodsVisitor );
-        
-        final MethodModel mRefresh = getRefreshMethod( elImplClass, false );
-        
-        if( mRefresh != null )
-        {
-            elImplClass.removeMethod( mRefresh );
-            elImplClass.addMethod( mRefresh );
-            mRefresh.getBody().closeBlock();
-        }
-        
-        final MethodModel mRead = getReadMethod( elImplClass, false );
-        
-        if( mRead != null )
-        {
-            elImplClass.removeMethod( mRead );
-            elImplClass.addMethod( mRead );
-            
-            mRead.getBody().appendEmptyLine();
-            mRead.getBody().append( "return super.read( property );" );
-        }
-
-        final MethodModel mWrite = getWriteMethod( elImplClass, false );
-        
-        if( mWrite != null )
-        {
-            elImplClass.removeMethod( mWrite );
-            elImplClass.addMethod( mWrite );
-            
-            mWrite.getBody().appendEmptyLine();
-            mWrite.getBody().append( "super.write( property, content );" );
-        }
     }
 
     private void processValueProperty( final Messager messager,
@@ -485,8 +438,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         // Determine the getter method name.
         
-        final String variableName = "p" + propField.propertyName;
-        
         String getterMethodName = null;
         
         final InterfaceDeclaration modelElementInterface = propField.getDeclaringType();
@@ -510,76 +461,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         getterMethodName = getterMethodInInterface.getSimpleName();
         propField.setGetterMethodName( getterMethodName );
         
-        // Define the field that will hold the cached value of the property.
-        
-        final FieldModel field = implClassModel.addField();
-        field.setName( variableName );
-        field.setType( wrapperType );
-        
-        // Contribute content to the refresh method.
-        
-        final Body rb = prepareRefreshMethodBlock( implClassModel, propField );
-
-        rb.append( "if( this.#1 != null || force == true )", variableName );
-        rb.openBlock();
-        rb.append( "final #2 oldValue = this.#1;", variableName, wrapperType.getSimpleName() );
-        rb.appendEmptyLine();
-        
-        if( hasDerivedValueProviderAnnotation )
-        {
-            rb.append( "final String val = service( #1, DerivedValueService.class ).value();", propField.name );
-            implClassModel.addImport( DerivedValueService.class );
-        }
-        else
-        {
-            rb.append( "final String val = resource().binding( #1 ).read();", propField.name );
-        }
-        
-        rb.appendEmptyLine();
-        
-        rb.append( "this.#1 = new #2( this, #3, service( #3, ValueNormalizationService.class ).normalize( #3.encodeKeywords( val ) ) );\n" +
-                   "this.#1.init();\n" +
-                   "\n" +
-                   "if( ! disposed() )\n" +
-                   "{\n" +
-                   "    if( oldValue == null )\n" +
-                   "    {\n" +
-                   "        post( new PropertyInitializationEvent( this, #3 ) );\n" +
-                   "    }\n" +
-                   "    else\n" +
-                   "    {\n" + 
-                   "        if( this.#1.equals( oldValue ) )\n" +
-                   "        {\n" + 
-                   "            this.#1 = oldValue;\n" + 
-                   "        }\n" +
-                   "        else\n" +
-                   "        {\n" +
-                   "            if( ! equal( this.#1.getText( false ), oldValue.getText( false ) ) || ! equal( this.#1.getDefaultText(), oldValue.getDefaultText() ) )\n" +
-                   "            {\n" +
-                   "                post( new PropertyContentEvent( this, #3 ) );\n" +
-                   "            }\n" +
-                   "            \n" +
-                   "            if( this.#1.enabled() != oldValue.enabled() )\n" +
-                   "            {\n" +
-                   "                post( new PropertyEnablementEvent( this, #3, oldValue.enabled(), this.#1.enabled() ) );\n" +
-                   "            }\n" +
-                   "            \n" +
-                   "            if( ! this.#1.validation().equals( oldValue.validation() ) )\n" +
-                   "            {\n" +
-                   "                post( new PropertyValidationEvent( this, #3, oldValue.validation(), this.#1.validation() ) );\n" +
-                   "            }\n" +
-                   "        }\n" +
-                   "    }\n" +
-                   "    \n" +
-                   "    broadcast();\n" +
-                   "}",
-                   variableName, wrapperType.getSimpleName(), propField.name );
-        
-        rb.closeBlock();
-        rb.closeBlock();
-        
-        implClassModel.addImport( ValueNormalizationService.class );
-        
         // Define the getter method.
         
         final MethodModel getter = implClassModel.addMethod();
@@ -588,18 +469,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         final Body gb = getter.getBody();
         
-        gb.append( "synchronized( root() )\n" + 
-                   "{\n" +
-                   "    assertNotDisposed();\n" +
-                   "    \n" +
-                   "    if( this.#1 == null )\n" + 
-                   "    {\n" +
-                   "        refresh( #2, true );\n" +
-                   "    }\n" +
-                   "    \n" +
-                   "    return this.#1;\n" +
-                   "}",
-                   variableName, propField.name );
+        gb.append( "return (#1) read( #2 );", wrapperType.getBase().getSimpleName(), propField.name );
         
         // Define the setter method, if necessary.
         
@@ -630,27 +500,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
             
             final Body sb = setter.getBody();
             
-            sb.append( "synchronized( root() )\n" +
-                       "{\n" +
-                       "    assertNotDisposed();\n" +
-                       "    \n" +
-                       "    if( value != null && value.equals( MiscUtil.EMPTY_STRING ) )\n" +
-                       "    {\n" +
-                       "        value = null;\n" + 
-                       "    }\n" +
-                       "    \n" +
-                       "    value = #1.decodeKeywords( value );\n" + 
-                       "    value = service( #1, ValueNormalizationService.class ).normalize( value );\n" +
-                       "    \n" +
-                       "    refresh( #1, true );\n" +
-                       "    \n" +
-                       "    if( ! equal( this.#2.getText( false ), value ) )\n" +
-                       "    {\n" +
-                       "        resource().binding( #1 ).write( value );\n" +
-                       "        refresh( #1, false );\n" +
-                       "    }\n" +
-                       "}\n",
-                       propField.name, variableName );
+            sb.append( "write( #1, value );", propField.name );
             
             implClassModel.addImport( MiscUtil.class );
             
@@ -674,14 +524,11 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                 setterForTyped.addParameter( new MethodParameterModel( "value", baseType ) );
                 
                 final Body stb = setterForTyped.getBody();
-
-                stb.append( "#1( value != null ? service( #2, ValueSerializationMasterService.class ).encode( value ) : null );", 
-                            setterMethodName, propField.name );
+                
+                stb.append( "write( #1, value );", propField.name );
                 
                 implClassModel.addImport( ValueSerializationMasterService.class );
             }
-            
-            contributeValueWriteMethodBlock( implClassModel, propField );
         }
         else
         {
@@ -726,10 +573,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
                 }
             }
         }
-        
-        // Contribute read method block.
-        
-        contributeReadMethodBlock( implClassModel, propField );
     }
     
     private void processElementProperty( final Messager messager,
@@ -787,8 +630,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         final String getterMethodName = getterMethodInInterface.getSimpleName();
         propField.setGetterMethodName( getterMethodName );
         
-        final String variableName = "p" + propField.propertyName;
-        
         TypeReference memberType = null;
         
         final Type typeAnnotation = propField.getAnnotation( Type.class );
@@ -805,66 +646,23 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         final TypeReference handleType = ( new TypeReference( ModelElementHandle.class ) ).parameterize( memberType );
         
-        final FieldModel field = implClassModel.addField();
-        field.setName( variableName );
-        field.setType( handleType );
-        
         final MethodModel g = implClassModel.addMethod();
         g.setName( getterMethodName );
         g.setReturnType( isImplied ? memberType : handleType );
         
         final Body gb = g.getBody();
         
-        gb.append( "synchronized( root() )\n" +
-                   "{\n" +
-                   "    assertNotDisposed();\n" +
-                   "    \n" +
-                   "    if( this.#1 == null )\n" +
-                   "    {\n" +
-                   "        refresh( #2, true );\n" +
-                   "    }\n" +
-                   "    \n" +
-                   "    return this.#1#3;\n" +
-                   "}", 
-                   variableName, propField.name, ( isImplied ? ".element()" : "" ) );
-        
-        final Body rb = prepareRefreshMethodBlock( implClassModel, propField );
-        
-        rb.append( "if( this.#1 == null )\n" +
-                   "{\n" +
-                   "    if( force == true )\n" +
-                   "    {\n" +
-                   "        this.#1 = new ModelElementHandle<#3>( this, #2 );\n" +
-                   "        this.#1.init();\n" +
-                   "        broadcast( new PropertyInitializationEvent( this, #2 ) );\n" +
-                   "    }\n" +
-                   "}\n" +
-                   "else\n" +
-                   "{\n" +
-                   "    this.#1.refresh();\n" +
-                   "}",
-                   variableName, propField.name, memberType.getSimpleName() );
-        
-        rb.closeBlock();
-        
-        final Body db = prepareDisposePropertiesMethodBlock( implClassModel );
-        
-        db.append( "if( this.#1 != null )\n" +
-                   "{\n" +
-                   "    final IModelElement element = this.#1.element( false );\n" +
-                   "    \n" +
-                   "    if( element != null )\n" +
-                   "    {\n" +
-                   "        element.dispose();\n" +
-                   "    }\n" +
-                   "}",
-                   variableName );
-        
+        if( isImplied )
+        {
+            gb.append( "return (#2) ( (ModelElementHandle) read( #1 ) ).element();", propField.name, memberType.getSimpleName() );
+        }
+        else
+        {
+            gb.append( "return (ModelElementHandle) read( #1 );", propField.name );
+        }
+
+        implClassModel.addImport( ModelElementHandle.class );
         implClassModel.addImport( IModelElement.class );
-        
-        // Contribute read method block.
-        
-        contributeReadMethodBlock( implClassModel, propField );
     }
     
     private void processListProperty( final Messager messager,
@@ -920,8 +718,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         final String getterMethodName = getterMethodInInterface.getSimpleName();
         propField.setGetterMethodName( getterMethodName );
         
-        final String variableName = "p" + propField.propertyName;
-        
         TypeReference memberType = null;
         
         final Type typeAnnotation = propField.getAnnotation( Type.class );
@@ -938,67 +734,15 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         final TypeReference listType = ( new TypeReference( ModelElementList.class ) ).parameterize( memberType );
         
-        final FieldModel field = implClassModel.addField();
-        field.setName( variableName );
-        field.setType( listType );
-        
         final MethodModel g = implClassModel.addMethod();
         g.setName( getterMethodName );
         g.setReturnType( listType );
         
         final Body gb = g.getBody();
         
-        gb.append( "synchronized( root() )\n" +
-                   "{\n" +
-                   "    assertNotDisposed();\n" +
-                   "    \n" +
-                   "    if( this.#1 == null )\n" +
-                   "    {\n" +
-                   "        refresh( #2, true );\n" +
-                   "    }\n" +
-                   "    \n" +
-                   "    return this.#1;\n" +
-                   "}", 
-                   variableName, propField.name );
-        
-        final Body rb = prepareRefreshMethodBlock( implClassModel, propField );
-        
-        rb.append( "if( this.#1 == null )\n" +
-                   "{\n" +
-                   "    if( force == true )\n" +
-                   "    {\n" +
-                   "        this.#1 = new ModelElementList<#3>( this, #2 );\n" +
-                   "        final ListBindingImpl binding = resource().binding( #2 );\n" +
-                   "        this.#1.init( binding );\n" +
-                   "        broadcast( new PropertyInitializationEvent( this, #2 ) );\n" +
-                   "    }\n" +
-                   "}\n" +
-                   "else\n" +
-                   "{\n" +
-                   "    this.#1.refresh();\n" +
-                   "}",
-                   variableName, propField.name, memberType.getSimpleName() );
-        
-        implClassModel.addImport( ListBindingImpl.class );
-        
-        rb.closeBlock();
-        
-        final Body db = prepareDisposePropertiesMethodBlock( implClassModel );
-        
-        db.append( "if( this.#1 != null )\n" +
-                   "{\n" +
-                   "    for( IModelElement element : this.#1 )\n" +
-                   "    {\n" +
-                   "        element.dispose();\n" +
-                   "    }\n" +
-                   "}",
-                   variableName );
+        gb.append( "return (ModelElementList) read( #1 );", propField.name );
         
         implClassModel.addImport( IModelElement.class );
-        
-        // Contribute read method block.
-        
-        contributeReadMethodBlock( implClassModel, propField );
     }
     
     private void processTransientProperty( final Messager messager,
@@ -1069,8 +813,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         // Determine the variable, getter and setter names.
         
-        final String variableName = "p" + propField.propertyName;
-        
         final MethodDeclaration getterMethodInInterface = findMethodDeclaration( interfaceDeclaration, "get" + propField.propertyName );
         
         if( getterMethodInInterface == null )
@@ -1095,31 +837,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         final String setterMethodName = setterMethodInInterface.getSimpleName();
         propField.setSetterMethodName( setterMethodName );
         
-        // Define the field that will hold the cached value of the property.
-        
-        final FieldModel field = implClassModel.addField();
-        field.setName( variableName );
-        field.setType( wrapperType );
-        
-        // Contribute content to the refresh method.
-        
-        final Body rb = prepareRefreshMethodBlock( implClassModel, propField );
-
-        rb.append( "if( this.#1 == null )\n" +
-                   "{\n" +
-                   "    if( force == true )\n" +
-                   "    {\n" +
-                   "        #2( null );\n" +
-                   "    }\n" +
-                   "}\n" +
-                   "else\n" +
-                   "{\n" +
-                   "    #2( this.#1.content() );\n" +
-                   "}",
-                   variableName, setterMethodName );
-        
-        rb.closeBlock();
-        
         // Define the getter method.
         
         final MethodModel getter = implClassModel.addMethod();
@@ -1128,18 +845,7 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         final Body gb = getter.getBody();
         
-        gb.append( "synchronized( root() )\n" + 
-                   "{\n" +
-                   "    assertNotDisposed();\n" +
-                   "    \n" +
-                   "    if( this.#1 == null )\n" + 
-                   "    {\n" +
-                   "        refresh( #2, true );\n" +
-                   "    }\n" +
-                   "    \n" +
-                   "    return this.#1;\n" +
-                   "}",
-                   variableName, propField.name );
+        gb.append( "return (Transient) read( #1 );", propField.name );
         
         // Define the setter method.
         
@@ -1151,60 +857,9 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         
         final Body sb = setter.getBody();
         
-        sb.append( "synchronized( root() )\n" +
-                   "{\n" +
-                   "    final #2 oldTransient = this.#1;\n" +
-                   "    \n" +
-                   "    this.#1 = new #2( this, #3, object );\n" +
-                   "    this.#1.init();\n" +
-                   "    \n" +
-                   "    if( ! disposed() )\n" +
-                   "    {\n" +
-                   "        if( oldTransient == null )\n" +
-                   "        {\n" +
-                   "            post( new PropertyInitializationEvent( this, #3 ) );\n" +
-                   "            \n" +
-                   "            if( object != null )\n" +
-                   "            {\n" +
-                   "                post( new PropertyContentEvent( this, #3 ) );\n" +
-                   "            }\n" +
-                   "        }\n" +
-                   "        else\n" +
-                   "        {\n" + 
-                   "            if( this.#1.equals( oldTransient ) )\n" +
-                   "            {\n" + 
-                   "                this.#1 = oldTransient;\n" + 
-                   "            }\n" + 
-                   "            else\n" +
-                   "            {\n" +
-                   "                if( ! MiscUtil.equal( this.#1.content(), oldTransient.content() ) )\n" +
-                   "                {\n" +
-                   "                    post( new PropertyContentEvent( this, #3 ) );\n" +
-                   "                }\n" +
-                   "                \n" +
-                   "                if( this.#1.enabled() != oldTransient.enabled() )\n" +
-                   "                {\n" +
-                   "                    post( new PropertyEnablementEvent( this, #3, oldTransient.enabled(), this.#1.enabled() ) );\n" +
-                   "                }\n" +
-                   "                \n" +
-                   "                if( ! this.#1.validation().equals( oldTransient.validation() ) )\n" +
-                   "                {\n" +
-                   "                    post( new PropertyValidationEvent( this, #3, oldTransient.validation(), this.#1.validation() ) );\n" +
-                   "                }\n" +
-                   "            }\n" +
-                   "        }\n" +
-                   "        \n" +
-                   "        broadcast();\n" +
-                   "    }\n" +
-                   "}",
-                   variableName, wrapperType.getSimpleName(), propField.name );
+        sb.append( "write( #1, object );", propField.name );
         
         implClassModel.addImport( MiscUtil.class );
-        
-        // Contribute read and write method blocks.
-        
-        contributeReadMethodBlock( implClassModel, propField );
-        contributeTransientWriteMethodBlock( implClassModel, propField );
     }
     
     private static MethodDeclaration findMethodDeclaration( final InterfaceDeclaration interfaceDeclaration,
@@ -1336,266 +991,6 @@ public final class GenerateImplProcessor extends SapphireAnnotationsProcessor
         {
             visitor.visit( field );
         }
-    }
-    
-    private static MethodModel getReadMethod( final ClassModel implClassModel,
-                                              final boolean createIfNecessary )
-    {
-        MethodModel readMethod = (MethodModel) implClassModel.getData( DATA_READ_METHOD );
-        
-        if( readMethod == null && createIfNecessary )
-        {
-            readMethod = implClassModel.addMethod( "readProperty" );
-            readMethod.setAccessModifier( AccessModifier.PROTECTED );
-            readMethod.setReturnType( Object.class );
-            readMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class, false ) );
-            readMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
-            implClassModel.setData( DATA_READ_METHOD, readMethod );
-        }
-        
-        return readMethod;
-    }
-    
-    private static Body contributeReadMethodBlock( final ClassModel implClassModel,
-                                                   final PropertyFieldDeclaration propField )
-    {
-        final MethodModel readMethod = getReadMethod( implClassModel, true );
-        final Body rb = readMethod.getBody();
-        final boolean hasPriorContent;
-        
-        if( readMethod.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
-        {
-            hasPriorContent = true;
-        }
-        else
-        {
-            hasPriorContent = false;
-            readMethod.setData( DATA_HAS_CONTENTS, Boolean.TRUE );
-        }
-        
-        rb.append( "#1if( property == #2 )\n" +
-                   "{\n" +
-                   "    if( this.p#3 == null )\n" +
-                   "    {\n" +
-                   "        refresh( #2, true );\n" +
-                   "    }\n" +
-                   "    \n" +
-                   "    return this.p#3;\n" +
-                   "}",
-                   ( hasPriorContent ? "else " : "" ), propField.name, propField.propertyName );
-
-        return rb;
-    }
-    
-    private static MethodModel getWriteMethod( final ClassModel implClassModel,
-                                               final boolean createIfNecessary )
-    {
-        MethodModel writeMethod = (MethodModel) implClassModel.getData( DATA_WRITE_METHOD );
-        
-        if( writeMethod == null && createIfNecessary )
-        {
-            writeMethod = implClassModel.addMethod( "writeProperty" );
-            writeMethod.setAccessModifier( AccessModifier.PROTECTED );
-            writeMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class, false ) );
-            writeMethod.addParameter( new MethodParameterModel( "content", Object.class ) );
-            writeMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
-            implClassModel.setData( DATA_WRITE_METHOD, writeMethod );
-        }
-        
-        return writeMethod;
-    }
-    
-    private static Body contributeValueWriteMethodBlock( final ClassModel implClassModel,
-                                                         final PropertyFieldDeclaration propField )
-    {
-        final MethodModel writeMethod = getWriteMethod( implClassModel, true );
-        final Body rb = writeMethod.getBody();
-        final boolean hasPriorContent;
-        
-        if( writeMethod.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
-        {
-            hasPriorContent = true;
-        }
-        else
-        {
-            hasPriorContent = false;
-            writeMethod.setData( DATA_HAS_CONTENTS, Boolean.TRUE );
-        }
-        
-        final Type typeAnnotation = propField.getAnnotation( Type.class );
-        TypeReference type = null;
-        
-        if( typeAnnotation != null )
-        {
-            try
-            {
-                typeAnnotation.base();
-            }
-            catch( MirroredTypeException e )
-            {
-                type = toTypeReference( e.getTypeMirror() );
-            }
-        }
-        
-        rb.append( "#1if( property == #2 )", ( hasPriorContent ? "else " : "" ), propField.name );
-        rb.openBlock();
-        
-        if( type == null )
-        {
-            rb.append( "#1( (String) content );\n" +
-                       "return;", 
-                       propField.getSetterMethodName() );
-        }
-        else
-        {
-            rb.append( "if( ! ( content instanceof String ) )\n" +
-                       "{\n" +
-                       "    #2( (#3) content );\n" +
-                       "}\n" +
-                       "else\n" +
-                       "{\n" +
-                       "    #1( (String) content );\n" +
-                       "}\n" +
-                       "\n" +
-                       "return;",
-                       propField.getSetterMethodName(), propField.getTypedSetterMethodName(), type.getSimpleName() );
-            
-            implClassModel.addImport( type );
-        }
-        
-        rb.closeBlock();
-
-        return rb;
-    }
-    
-    private static Body contributeTransientWriteMethodBlock( final ClassModel implClassModel,
-                                                             final PropertyFieldDeclaration propField )
-    {
-        final MethodModel writeMethod = getWriteMethod( implClassModel, true );
-        final Body rb = writeMethod.getBody();
-        final boolean hasPriorContent;
-        
-        if( writeMethod.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
-        {
-            hasPriorContent = true;
-        }
-        else
-        {
-            hasPriorContent = false;
-            writeMethod.setData( DATA_HAS_CONTENTS, Boolean.TRUE );
-        }
-        
-        final Type typeAnnotation = propField.getAnnotation( Type.class );
-        TypeReference type = null;
-        
-        if( typeAnnotation != null )
-        {
-            try
-            {
-                typeAnnotation.base();
-            }
-            catch( MirroredTypeException e )
-            {
-                type = toTypeReference( e.getTypeMirror() );
-            }
-        }
-        
-        rb.append( "#1if( property == #2 )", ( hasPriorContent ? "else " : "" ), propField.name );
-        rb.openBlock();
-        
-        if( type == null )
-        {
-            rb.append( "#1( content );", propField.getSetterMethodName() );
-        }
-        else
-        {
-            rb.append( "#1( (#2) content );", propField.getSetterMethodName(), type.getSimpleName() );
-        }
-        
-        rb.append( "return;" );
-        
-        rb.closeBlock();
-
-        return rb;
-    }
-    
-    private static MethodModel getRefreshMethod( final ClassModel implClassModel,
-                                                 final boolean createIfNecessary )
-    {
-        MethodModel refreshMethod = (MethodModel) implClassModel.getData( DATA_REFRESH_METHOD );
-        
-        if( refreshMethod == null && createIfNecessary )
-        {
-            refreshMethod = implClassModel.addMethod( "refreshProperty" );
-            refreshMethod.setAccessModifier( AccessModifier.PROTECTED );
-            refreshMethod.addParameter( new MethodParameterModel( "property", ModelProperty.class ) );
-            refreshMethod.addParameter( new MethodParameterModel( "force", TypeReference.BOOLEAN_TYPE ) );
-            refreshMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
-            implClassModel.setData( DATA_REFRESH_METHOD, refreshMethod );
-
-            final Body rb = refreshMethod.getBody();
-            
-            rb.append( "synchronized( root() )" );
-            rb.openBlock();
-        }
-        
-        return refreshMethod;
-    }
-    
-    private static Body prepareRefreshMethodBlock( final ClassModel implClassModel,
-                                                   final PropertyFieldDeclaration propField )
-    {
-        final MethodModel refreshMethod = getRefreshMethod( implClassModel, true );
-        final Body rb = refreshMethod.getBody();
-        final boolean hasPriorContent;
-        
-        if( refreshMethod.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
-        {
-            hasPriorContent = true;
-        }
-        else
-        {
-            hasPriorContent = false;
-            refreshMethod.setData( DATA_HAS_CONTENTS, Boolean.TRUE );
-        }
-        
-        rb.append( "#1if( property == #2 )", ( hasPriorContent ? "else " : "" ), propField.name );
-        rb.openBlock();
-
-        return rb;
-    }
-
-    private static MethodModel getDisposePropertiesMethod( final ClassModel implClassModel,
-                                                           final boolean createIfNecessary )
-    {
-        MethodModel disposePropertiesMethod = (MethodModel) implClassModel.getData( DATA_DISPOSE_PROPERTIES_METHOD );
-        
-        if( disposePropertiesMethod == null && createIfNecessary )
-        {
-            disposePropertiesMethod = implClassModel.addMethod( "disposeProperties" );
-            disposePropertiesMethod.setAccessModifier( AccessModifier.PROTECTED );
-            disposePropertiesMethod.setData( DATA_HAS_CONTENTS, Boolean.FALSE );
-            implClassModel.setData( DATA_DISPOSE_PROPERTIES_METHOD, disposePropertiesMethod );
-        }
-        
-        return disposePropertiesMethod;
-    }
-    
-    private static Body prepareDisposePropertiesMethodBlock( final ClassModel implClassModel )
-    {
-        final MethodModel disposePropertiesMethod = getDisposePropertiesMethod( implClassModel, true );
-        final Body db = disposePropertiesMethod.getBody();
-        
-        if( disposePropertiesMethod.getData( DATA_HAS_CONTENTS ) == Boolean.TRUE )
-        {
-            db.appendEmptyLine();
-        }
-        else
-        {
-            disposePropertiesMethod.setData( DATA_HAS_CONTENTS, Boolean.TRUE );
-        }
-
-        return db;
     }
     
     private static TypeReference toTypeReference( final TypeMirror typeMirror )

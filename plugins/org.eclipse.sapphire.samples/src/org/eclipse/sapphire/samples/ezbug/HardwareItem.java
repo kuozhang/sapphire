@@ -28,12 +28,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @GenerateImpl
 
-public interface IHardwareItem
+public interface HardwareItem
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IHardwareItem.class );
+    ModelElementType TYPE = new ModelElementType( HardwareItem.class );
     
     // *** Type ***
     

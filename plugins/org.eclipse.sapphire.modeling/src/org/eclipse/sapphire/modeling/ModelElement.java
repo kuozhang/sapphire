@@ -30,6 +30,9 @@ import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
 import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
+import org.eclipse.sapphire.modeling.annotations.Derived;
+import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.DefaultValueService;
@@ -41,6 +44,8 @@ import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationAggregationService;
+import org.eclipse.sapphire.services.ValueNormalizationService;
+import org.eclipse.sapphire.services.ValueSerializationMasterService;
 import org.eclipse.sapphire.services.internal.ElementInstanceServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
 
@@ -53,6 +58,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
 {
     private final ModelElementType type;
     private final ModelProperty parentProperty;
+    private final Map<ModelProperty,Object> properties;
     private Status validation;
     private final ListenerContext listeners = new ListenerContext();
     private ElementInstanceServiceContext elementServiceContext;
@@ -68,6 +74,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         
         this.type = type;
         this.parentProperty = parentProperty;
+        this.properties = new HashMap<ModelProperty,Object>( this.type.properties().size() );
         this.validation = null;
         this.propertyServiceContexts = new HashMap<ModelProperty,PropertyInstanceServiceContext>();
         
@@ -154,16 +161,19 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         {
             throw new IllegalArgumentException();
         }
+
+        Object data = this.properties.get( prop );
         
-        return readProperty( prop );
+        if( data == null )
+        {
+            refresh( prop, true );
+        }
+        
+        data = this.properties.get( prop );
+        
+        return data;
     }
 
-    protected Object readProperty( final ModelProperty property )
-    {
-        final String msg = NLS.bind( Resources.cannotReadProperty, property.getName() );
-        throw new IllegalArgumentException( msg );
-    }
-    
     @SuppressWarnings( "unchecked" )
     
     public final <T> Value<T> read( final ValueProperty property )
@@ -377,14 +387,97 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
         
-        writeProperty( prop, content );
-    }
-
-    protected void writeProperty( final ModelProperty property,
-                                  final Object content )
-    {
-        final String msg = NLS.bind( Resources.cannotWriteProperty, property.getName() );
-        throw new IllegalArgumentException( msg );
+        synchronized( root() )
+        {
+            if( prop instanceof ValueProperty )
+            {
+                final ValueProperty p = (ValueProperty) prop;
+                String value = null;
+                
+                if( content != null )
+                {
+                    if( content instanceof String )
+                    {
+                        value = (String) content;
+                    }
+                    else
+                    {
+                        if( p.getTypeClass().isInstance( content ) )
+                        {
+                            value = service( p, ValueSerializationMasterService.class ).encode( content );
+                        }
+                        else
+                        {
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                }
+                
+                value = p.decodeKeywords( value );
+                value = service( p, ValueNormalizationService.class ).normalize( value );
+                
+                if( ! equal( read( p ).getText( false ), value ) )
+                {
+                    resource().binding( p ).write( value );
+                    refresh( p );
+                }
+            }
+            else if( prop instanceof TransientProperty )
+            {
+                final TransientProperty p = (TransientProperty) prop;
+                final Transient<?> oldTransient = (Transient<?>) this.properties.get( p );
+                
+                Transient<?> t = new Transient<Object>( this, p, content );
+                this.properties.put( p, t );
+                
+                t.init();
+                
+                if( ! disposed() )
+                {
+                    if( oldTransient == null )
+                    {
+                        post( new PropertyInitializationEvent( this, p ) );
+                        
+                        if( content != null )
+                        {
+                            post( new PropertyContentEvent( this, p ) );
+                        }
+                    }
+                    else
+                    {
+                        if( t.equals( oldTransient ) )
+                        {
+                            t = oldTransient;
+                            this.properties.put( p, t );
+                        }
+                        else
+                        {
+                            if( ! MiscUtil.equal( t.content(), oldTransient.content() ) )
+                            {
+                                post( new PropertyContentEvent( this, p ) );
+                            }
+                            
+                            if( t.enabled() != oldTransient.enabled() )
+                            {
+                                post( new PropertyEnablementEvent( this, p, oldTransient.enabled(), t.enabled() ) );
+                            }
+                            
+                            if( ! t.validation().equals( oldTransient.validation() ) )
+                            {
+                                post( new PropertyValidationEvent( this, p, oldTransient.validation(), t.validation() ) );
+                            }
+                        }
+                    }
+                    
+                    broadcast();
+                }
+            }
+            else
+            {
+                final String msg = NLS.bind( Resources.cannotWriteProperty, property );
+                throw new IllegalArgumentException( msg );
+            }
+        }
     }
     
     public final void refresh()
@@ -485,7 +578,127 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
         
-        refreshProperty( prop, force );
+        synchronized( root() )
+        {
+            if( prop instanceof ValueProperty )
+            {
+                final ValueProperty p = (ValueProperty) prop;
+                Value<?> value = (Value<?>) this.properties.get( p );
+                
+                if( value != null || force == true )
+                {
+                    final Value<?> oldValue = value;
+                    String val;
+                    
+                    if( p.hasAnnotation( Derived.class ) )
+                    {
+                        val = service( p, DerivedValueService.class ).value();
+                    }
+                    else
+                    {
+                        val = resource().binding( p ).read();
+                    }
+                    
+                    val = service( p, ValueNormalizationService.class ).normalize( p.encodeKeywords( val ) );
+                    
+                    if( p.hasAnnotation( Reference.class ) )
+                    {
+                        value = new ReferenceValue<Object,Object>( this, p, val );
+                    }
+                    else
+                    {
+                        value = new Value<Object>( this, p, val );
+                    }
+                    
+                    this.properties.put( p, value );
+                    
+                    value.init();
+                    
+                    if( ! disposed() )
+                    {
+                        if( oldValue == null )
+                        {
+                            post( new PropertyInitializationEvent( this, p ) );
+                        }
+                        else
+                        {
+                            if( value.equals( oldValue ) )
+                            {
+                                value = oldValue;
+                                this.properties.put( p, value );
+                            }
+                            else
+                            {
+                                if( ! equal( value.getText( false ), oldValue.getText( false ) ) || ! equal( value.getDefaultText(), oldValue.getDefaultText() ) )
+                                {
+                                    post( new PropertyContentEvent( this, p ) );
+                                }
+                                
+                                if( value.enabled() != oldValue.enabled() )
+                                {
+                                    post( new PropertyEnablementEvent( this, p, oldValue.enabled(), value.enabled() ) );
+                                }
+                                
+                                if( ! value.validation().equals( oldValue.validation() ) )
+                                {
+                                    post( new PropertyValidationEvent( this, p, oldValue.validation(), value.validation() ) );
+                                }
+                            }
+                        }
+                        
+                        broadcast();
+                    }
+                }
+            }
+            else if( prop instanceof ElementProperty )
+            {
+                final ElementProperty p = (ElementProperty) prop;
+                ModelElementHandle<?> handle = (ModelElementHandle<?>) this.properties.get( p );
+                
+                if( handle == null )
+                {
+                    if( force == true )
+                    {
+                        handle = new ModelElementHandle<IModelElement>( this, p );
+                        this.properties.put( p, handle );
+                        
+                        handle.init();
+                        
+                        broadcast( new PropertyInitializationEvent( this, p ) );
+                    }
+                }
+                else
+                {
+                    handle.refresh();
+                }
+            }
+            else if( prop instanceof ListProperty )
+            {
+                final ListProperty p = (ListProperty) prop;
+                ModelElementList<?> list = (ModelElementList<?>) this.properties.get( p );
+                
+                if( list == null )
+                {
+                    if( force == true )
+                    {
+                        list = new ModelElementList<IModelElement>( this, p );
+                        this.properties.put( p, list );
+                        
+                        list.init( resource().binding( p ) );
+                        
+                        broadcast( new PropertyInitializationEvent( this, p ) );
+                    }
+                }
+                else
+                {
+                    list.refresh();
+                }
+            }
+            else
+            {
+                throw new IllegalArgumentException();
+            }
+        }
         
         if( deep )
         {
@@ -506,12 +719,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 }
             }
         }
-    }
-    
-    protected void refreshProperty( final ModelProperty property,
-                                    final boolean force )
-    {
-        // The default implementation does not do anything.
     }
     
     public final void copy( final IModelElement element )
@@ -1391,7 +1598,25 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     context.dispose();
                 }
                 
-                disposeProperties();
+                for( Object data : this.properties.values() )
+                {
+                    if( data instanceof ModelElementHandle )
+                    {
+                        final IModelElement element = ( (ModelElementHandle<?>) data ).element( false );
+                        
+                        if( element != null )
+                        {
+                            element.dispose();
+                        }
+                    }
+                    else if( data instanceof ModelElementList )
+                    {
+                        for( IModelElement element : (ModelElementList<?>) data )
+                        {
+                            element.dispose();
+                        }
+                    }
+                }
                 
                 try
                 {
@@ -1403,11 +1628,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 }
             }
         }
-    }
-    
-    protected void disposeProperties()
-    {
-        // The default implementation does not do anything.
     }
     
     protected final void assertNotDisposed()
@@ -1692,7 +1912,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     private static final class Resources extends NLS
     {
         public static String invalidModelPath;
-        public static String cannotReadProperty;
         public static String cannotWriteProperty;
         public static String elementAlreadyDisposed;
         
