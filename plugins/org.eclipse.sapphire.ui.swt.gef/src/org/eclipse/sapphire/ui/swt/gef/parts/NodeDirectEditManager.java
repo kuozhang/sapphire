@@ -53,7 +53,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 	public NodeDirectEditManager(GraphicalEditPart source, CellEditorLocator locator, Label label) {
 		super(source, null, locator);
 		this.label = label; 
-		this.diagramEditor = ((DiagramNodeEditPart)source).getConfigurationManager().getDiagramEditor();
+		this.diagramEditor = ((ShapeEditPart)source).getConfigurationManager().getDiagramEditor();
 	}
 
 	/**
