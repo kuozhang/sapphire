@@ -448,6 +448,7 @@ public final class SapphireAction extends SapphireActionSystemPart
             for( SapphireActionHandler handler : factory.create() )
             {
                 handler.init( this, null );
+                handler.attach( this.handlerListener );
                 handlers.add( handler );
             }
         }
