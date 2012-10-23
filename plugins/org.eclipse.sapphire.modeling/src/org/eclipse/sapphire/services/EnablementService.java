@@ -30,7 +30,7 @@ public abstract class EnablementService extends DataService<EnablementServiceDat
     public final boolean enablement()
     {
         final EnablementServiceData data = data();
-        return ( data == null ? false : data.enablement() );
+        return ( data == null ? true : data.enablement() );
     }
     
 }

@@ -40,5 +40,21 @@ public final class PropertyEnablementEvent extends PropertyEvent
     {
         return this.after;
     }
+    
+    @Override
+    public String toString()
+    {
+        final StringBuilder buf = new StringBuilder();
+        
+        buf.append( getClass().getSimpleName() ).append( '\n' );
+        buf.append( "{\n" );
+        buf.append( "    element = " ).append( element().type().getQualifiedName() ).append( '(' ).append( System.identityHashCode( element() ) ).append( ")\n" );
+        buf.append( "    property = " ).append( property().getName() ).append( '\n' );
+        buf.append( "    before = " ).append( before() ).append( '\n' );
+        buf.append( "    after = " ).append( after() ).append( '\n' );
+        buf.append( "}" );
+        
+        return buf.toString();
+    }
 
 }
