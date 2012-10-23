@@ -280,87 +280,84 @@ public abstract class SapphirePart implements ISapphirePart
         {
             final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
             
-            if( service != null )
+            final Function function = new Function()
             {
-                final Function function = new Function()
+                @Override
+                public String name()
                 {
-                    @Override
-                    public String name()
-                    {
-                        return "VersionCompatible";
-                    }
-    
-                    @Override
-                    public FunctionResult evaluate( final FunctionContext context )
-                    {
-                        return new FunctionResult( this, context )
-                        {
-                            private Listener serviceListener;
-                            private Listener propertyListener;
-                            
-                            @Override
-                            protected void init()
-                            {
-                                this.serviceListener = new Listener()
-                                {
-                                    @Override
-                                    public void handle( final Event event )
-                                    {
-                                        refresh();
-                                    }
-                                };
-                                
-                                service.attach( this.serviceListener );
-                                
-                                this.propertyListener = new FilteredListener<PropertyContentEvent>()
-                                {
-                                    @Override
-                                    protected void handleTypedEvent( final PropertyContentEvent event )
-                                    {
-                                        refresh();
-                                    }
-                                };
-                                
-                                if( property instanceof ImpliedElementProperty )
-                                {
-                                    element.attach( this.propertyListener, property.getName() + "/*" );
-                                }
-                                else
-                                {
-                                    element.attach( this.propertyListener, property.getName() );
-                                }
-                            }
-    
-                            @Override
-                            protected Object evaluate()
-                            {
-                                return service.compatible() || ! element.empty( property );
-                            }
-                            
-                            @Override
-                            public void dispose()
-                            {
-                                super.dispose();
-                                
-                                service.detach( this.serviceListener );
+                    return "VersionCompatible";
+                }
 
-                                if( property instanceof ImpliedElementProperty )
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        private Listener serviceListener;
+                        private Listener propertyListener;
+                        
+                        @Override
+                        protected void init()
+                        {
+                            this.serviceListener = new Listener()
+                            {
+                                @Override
+                                public void handle( final Event event )
                                 {
-                                    element.attach( this.propertyListener, property.getName() + "/*" );
+                                    refresh();
                                 }
-                                else
+                            };
+                            
+                            service.attach( this.serviceListener );
+                            
+                            this.propertyListener = new FilteredListener<PropertyContentEvent>()
+                            {
+                                @Override
+                                protected void handleTypedEvent( final PropertyContentEvent event )
                                 {
-                                    element.attach( this.propertyListener, property.getName() );
+                                    refresh();
                                 }
+                            };
+                            
+                            if( property instanceof ImpliedElementProperty )
+                            {
+                                element.attach( this.propertyListener, property.getName() + "/*" );
                             }
-                        };
-                    }
-                };
-                
-                function.init();
-                
-                return function;
-            }
+                            else
+                            {
+                                element.attach( this.propertyListener, property.getName() );
+                            }
+                        }
+
+                        @Override
+                        protected Object evaluate()
+                        {
+                            return service.compatible() || ! element.empty( property );
+                        }
+                        
+                        @Override
+                        public void dispose()
+                        {
+                            super.dispose();
+                            
+                            service.detach( this.serviceListener );
+
+                            if( property instanceof ImpliedElementProperty )
+                            {
+                                element.detach( this.propertyListener, property.getName() + "/*" );
+                            }
+                            else
+                            {
+                                element.detach( this.propertyListener, property.getName() );
+                            }
+                        }
+                    };
+                }
+            };
+            
+            function.init();
+            
+            return function;
         }
         
         return null;

@@ -51,8 +51,6 @@ public final class TestServices0008 extends SapphireTestCase
         
         final List<ValidationService> services = element.services( DerivedElement.PROP_TEST_PROPERTY, ValidationService.class );
         
-        assertEquals( 2, services.size() );
-        
         assertContainsInstanceOf( services, BaseValidationService.class );
         assertContainsInstanceOf( services, DerivedValidationService.class );
         

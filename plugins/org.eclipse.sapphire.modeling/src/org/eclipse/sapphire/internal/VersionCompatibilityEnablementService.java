@@ -111,10 +111,7 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = context.find( ModelProperty.class );
-            
-            return property != null && element.service( property, MasterVersionCompatibilityService.class ) != null; 
+            return true;
         }
 
         @Override

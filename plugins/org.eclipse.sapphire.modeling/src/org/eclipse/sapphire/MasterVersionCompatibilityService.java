@@ -56,7 +56,7 @@ public final class MasterVersionCompatibilityService extends DataService<Data>
     public final boolean compatible()
     {
         final Data data = data();
-        return ( data == null ? false : data.compatible() );
+        return ( data == null ? true : data.compatible() );
     }
     
     public final Version version()

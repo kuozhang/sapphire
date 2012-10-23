@@ -87,26 +87,7 @@ public final class ParentBasedVersionCompatibilityService extends VersionCompati
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final IModelParticle parentModelParticle = element.parent();
-            
-            if( parentModelParticle != null )
-            {
-                final IModelElement parentModelElement;
-                
-                if( parentModelParticle instanceof IModelElement )
-                {
-                    parentModelElement = (IModelElement) parentModelParticle;
-                }
-                else
-                {
-                    parentModelElement = (IModelElement) parentModelParticle.parent();
-                }
-                
-                return parentModelElement.service( element.getParentProperty(), MasterVersionCompatibilityService.class ) != null;
-            }
-            
-            return false;
+            return ( context.find( IModelElement.class ).parent() != null );
         }
 
         @Override

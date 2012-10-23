@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.internal;
 
-import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -50,13 +49,7 @@ public final class VersionCompatibilityValidationServiceForElement extends Versi
             final IModelElement element = context.find( IModelElement.class );
             final ModelProperty property = element.getParentProperty();
             
-            if( property instanceof ElementProperty || property instanceof ListProperty )
-            {
-                final IModelElement parent = element.parent().nearest( IModelElement.class );
-                return parent.service( property, MasterVersionCompatibilityService.class ) != null;
-            }
-            
-            return false;
+            return ( property instanceof ElementProperty || property instanceof ListProperty );
         }
 
         @Override

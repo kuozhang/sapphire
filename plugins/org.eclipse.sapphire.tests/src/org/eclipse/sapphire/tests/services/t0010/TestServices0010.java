@@ -70,7 +70,6 @@ public final class TestServices0010 extends SapphireTestCase
         assertNotNull( rootContextVersionService );
         assertNull( rootContextVersionService.version() );
         
-        assertNull( root.service( RootElement.PROP_VALUE_UNCONSTRAINED, MasterVersionCompatibilityService.class ) );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_SINCE, false );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_SINCE_DYNAMIC, false );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY, false );
