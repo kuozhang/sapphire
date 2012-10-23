@@ -131,11 +131,11 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 			}			
 			tooltip.setHeader(label);
 		}
-		if (getSapphireAction().getDescription() != null && getSapphireAction().getDescription().length() > 0) {
+		if (getSapphireAction().getToolTip() != null && getSapphireAction().getToolTip().length() > 0) {
 			if (tooltip == null) {
 				tooltip = new Tooltip();
 			}
-			tooltip.setDescription(getSapphireAction().getDescription());
+			tooltip.setDescription(getSapphireAction().getToolTip());
 		}
 		setToolTip(tooltip);
 
