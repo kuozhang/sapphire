@@ -585,7 +585,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 final ValueProperty p = (ValueProperty) prop;
                 Value<?> value = (Value<?>) this.properties.get( p );
                 
-                if( value != null || force == true )
+                if( value != null || force )
                 {
                     final Value<?> oldValue = value;
                     String val;
@@ -657,7 +657,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 
                 if( handle == null )
                 {
-                    if( force == true )
+                    if( force )
                     {
                         handle = new ModelElementHandle<IModelElement>( this, p );
                         this.properties.put( p, handle );
@@ -679,7 +679,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 
                 if( list == null )
                 {
-                    if( force == true )
+                    if( force )
                     {
                         list = new ModelElementList<IModelElement>( this, p );
                         this.properties.put( p, list );
@@ -694,9 +694,25 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     list.refresh();
                 }
             }
+            else if( prop instanceof TransientProperty )
+            {
+                Transient<?> t = (Transient<?>) this.properties.get( prop );
+                
+                if( t == null )
+                {
+                    if( force )
+                    {
+                        write( prop, null );
+                    }
+                }
+                else
+                {
+                    write( prop, t.content() );
+                }
+            }
             else
             {
-                throw new IllegalArgumentException();
+                throw new IllegalStateException();
             }
         }
         
