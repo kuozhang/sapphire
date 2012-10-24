@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui.swt.gef.policies;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
-import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.commands.LabelEditCommand;
-import org.eclipse.sapphire.ui.swt.gef.parts.ContainerShapeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -29,10 +29,14 @@ public class ContainerShapeLabelDirectEditPolicy extends DirectEditPolicy
 	protected Command getDirectEditCommand(DirectEditRequest request) 
 	{
 		String labelText = (String) request.getCellEditor().getValue();
-		ContainerShapeEditPart editPart = (ContainerShapeEditPart) getHost();
-		ContainerShapePart containerPart = (ContainerShapePart)editPart.getCastedModel().getSapphirePart();
-		LabelEditCommand command = new LabelEditCommand(containerPart.getTextPart(), labelText);
-		return command;
+				
+		TextPart textPart = (TextPart)request.getExtendedData().get(DiagramNodeEditPart.DIRECT_EDIT_REQUEST_PARAM);
+		if (textPart != null)
+		{
+			LabelEditCommand command = new LabelEditCommand(textPart, labelText);
+			return command;
+		}
+		return null;
 	}
 
 	@Override

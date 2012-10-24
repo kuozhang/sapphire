@@ -14,7 +14,9 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
@@ -37,10 +39,11 @@ public class TextPart extends ShapePart
         this.textDef = (TextDef)super.definition;
         this.modelElement = getModelElement();
         
+        Function func = this.textDef.getContent().getContent();
         this.textFunction = initExpression
         ( 
             this.modelElement,
-            this.textDef.getContent().getContent(),
+            func,
             String.class,
             null,
             new Runnable()
@@ -51,7 +54,7 @@ public class TextPart extends ShapePart
                 }
             }
         );
-        this.setEditable(true);
+        this.setEditable(!(func instanceof Literal));
         this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.textFunction);
     }
 	

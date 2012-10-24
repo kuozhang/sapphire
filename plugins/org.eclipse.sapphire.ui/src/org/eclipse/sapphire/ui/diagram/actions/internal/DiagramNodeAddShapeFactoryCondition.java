@@ -26,16 +26,19 @@ public class DiagramNodeAddShapeFactoryCondition extends SapphireCondition
     @Override
     protected boolean evaluate()
     {
-    	DiagramNodePart nodePart = (DiagramNodePart)getPart();
-    	ShapePart shapePart = nodePart.getShapePart();
-    	if (shapePart instanceof ShapeFactoryPart)
+    	if (getPart() instanceof DiagramNodePart)
     	{
-    		return true;
-    	}
-    	else if (shapePart instanceof ContainerShapePart)
-    	{
-    		ShapeFactoryPart shapeFactoryPart = ((ContainerShapePart)shapePart).getShapeFactoryPart();
-    		return shapeFactoryPart != null;
+	    	DiagramNodePart nodePart = (DiagramNodePart)getPart();
+	    	ShapePart shapePart = nodePart.getShapePart();
+	    	if (shapePart instanceof ShapeFactoryPart)
+	    	{
+	    		return true;
+	    	}
+	    	else if (shapePart instanceof ContainerShapePart)
+	    	{
+	    		ShapeFactoryPart shapeFactoryPart = ((ContainerShapePart)shapePart).getShapeFactoryPart();
+	    		return shapeFactoryPart != null;
+	    	}
     	}
         return false;
     }

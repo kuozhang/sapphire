@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
@@ -87,9 +86,10 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		{
 			SelectionRequest selRequest = (SelectionRequest)request;
 			Point pt = selRequest.getLocation();
-			if (mouseInLabelRegion(pt))
+			TextPart textPart = getTextPart(pt);
+			if (textPart != null)
 			{
-				performDirectEdit();
+				performDirectEdit(textPart);
 			}
 		}
 		else
@@ -97,20 +97,31 @@ public class ContainerShapeEditPart extends ShapeEditPart
 			super.performRequest(request);
 		}
 	}
-	
+		
 	private void performDirectEdit() 
 	{
-		if (manager == null) 
+		List<TextPart> textParts = getTextParts();
+		if (!textParts.isEmpty())
 		{
-			TextFigure textFigure = getLabelFigure();
+			performDirectEdit(textParts.get(0));
+		}
+	}
+	
+	private void performDirectEdit(TextPart textPart)
+	{
+		if (textPart.isEditable())
+		{
+			DiagramNodeEditPart nodeEditPart = this.getNodeEditPart();
+			TextFigure textFigure = (TextFigure)nodeEditPart.getPartFigureMap().get(textPart);
 			if (textFigure != null)
 			{
-				manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+				NodeDirectEditManager manager = 
+						new NodeDirectEditManager(this, textPart, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+				manager.show();
 			}
 		}
-		if (manager != null)
-			manager.show();
 	}
+
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) 
@@ -127,28 +138,28 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		}
 	}
 
-	private TextFigure getLabelFigure()
+	private List<TextPart> getTextParts()
 	{
+		List<TextPart> textParts = new ArrayList<TextPart>();
 		ContainerShapePart containerPart = (ContainerShapePart)getCastedModel().getSapphirePart();
-		TextPart textPart = containerPart.getTextPart();
-		DiagramNodeEditPart nodeEditPart = this.getNodeEditPart();
-		TextFigure textFigure = (TextFigure)nodeEditPart.getPartFigureMap().get(textPart);
-		return textFigure;		
+		textParts.addAll(containerPart.getTextParts());
+		return textParts;		
 	}
 	
-	private boolean mouseInLabelRegion(Point pt)
+	private TextPart getTextPart(Point mouseLocation)
 	{
-		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(pt);
-		TextFigure label = getLabelFigure();
-		if (label != null)
+		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
+		DiagramNodeEditPart nodeEditPart = this.getNodeEditPart();
+		List<TextPart> textParts = getTextParts();
+		for (TextPart textPart : textParts)
 		{
-			Rectangle bounds = label.getTextBounds();
-			if (bounds.contains(realLocation))
+			TextFigure textFigure = (TextFigure)nodeEditPart.getPartFigureMap().get(textPart);
+			if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
 			{
-				return true;
+				return textPart;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 }

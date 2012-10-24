@@ -61,8 +61,7 @@ import org.eclipse.sapphire.ui.swt.gef.policies.NodeLayoutEditPolicy;
 public class DiagramNodeEditPart extends ShapeEditPart 
 		implements NodeEditPart {
 
-    private NodeDirectEditManager manager;
-    
+    public static final String DIRECT_EDIT_REQUEST_PARAM = "TEXTPART";
     private ConnectionAnchor sourceAnchor;
     private ConnectionAnchor targetAnchor;
     
@@ -156,16 +155,25 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	
 	private void performDirectEdit() 
 	{
-		if (manager == null) 
+		List<TextPart> textParts = getTextParts();
+		if (!textParts.isEmpty())
 		{
-			TextFigure textFigure = getLabel();
+			performDirectEdit(textParts.get(0));
+		}
+	}
+	
+	private void performDirectEdit(TextPart textPart)
+	{
+		if (textPart.isEditable())
+		{
+			TextFigure textFigure = (TextFigure)this.partToFigure.get(textPart);
 			if (textFigure != null)
 			{
-				manager = new NodeDirectEditManager(this, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+				NodeDirectEditManager manager = 
+						new NodeDirectEditManager(this, textPart, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+				manager.show();
 			}
 		}
-		if (manager != null)
-			manager.show();
 	}
 
 	@Override
@@ -183,9 +191,10 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		{
 			SelectionRequest selRequest = (SelectionRequest)request;
 			Point pt = selRequest.getLocation();
-			if (mouseInLabelRegion(pt))
+			TextPart textPart = getTextPart(pt);
+			if (textPart != null)
 			{
-				performDirectEdit();
+				performDirectEdit(textPart);
 			}
 			else
 			{
@@ -206,21 +215,6 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 	}
 
-	private boolean mouseInLabelRegion(Point pt)
-	{
-		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(pt);
-		TextFigure label = getLabel();
-		if (label != null)
-		{
-			Rectangle bounds = label.getTextBounds();
-			if (bounds.contains(realLocation))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	@Override
 	protected List<DiagramConnectionModel> getModelSourceConnections() {
 		return getCastedModel().getSourceConnections();
@@ -283,7 +277,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		if (updated && (shapePart instanceof TextPart))
 		{
 			// The label figure has been recreated; we need to throw away the direct edit cache.
-			this.manager = null;
+			//this.manager = null;
 		}
 		
 	}
@@ -349,23 +343,47 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		return this.partToFigure;
 	}
 	
-	private TextFigure getLabel()
+	public TextPart getTextPart(Point mouseLocation)
 	{
+		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
 		DiagramNodePart nodePart = getCastedModel().getModelPart();
 		ShapePart shapePart = nodePart.getShapePart();
-		TextFigure textFigure = null;
 		if (shapePart instanceof TextPart)
 		{
-			textFigure = (TextFigure)this.partToFigure.get(shapePart);
+			TextFigure textFigure = (TextFigure)this.partToFigure.get(shapePart);
+			if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
+			{
+				return (TextPart)shapePart;
+			}
 		}
 		else if (shapePart instanceof ContainerShapePart)
 		{
-			TextPart textPart = ((ContainerShapePart)shapePart).getTextPart();
-			if (textPart != null)
+			List<TextPart> textParts = ((ContainerShapePart)shapePart).getTextParts();
+			for (TextPart textPart : textParts)
 			{
-				textFigure = (TextFigure)this.partToFigure.get(textPart);
+				TextFigure textFigure = (TextFigure)this.partToFigure.get(textPart);
+				if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
+				{
+					return textPart;
+				}
 			}
 		}
-		return textFigure;
+		return null;
+	}
+	
+	private List<TextPart> getTextParts()
+	{
+		DiagramNodePart nodePart = getCastedModel().getModelPart();
+		ShapePart shapePart = nodePart.getShapePart();
+		List<TextPart> textParts = new ArrayList<TextPart>();
+		if (shapePart instanceof TextPart)
+		{
+			textParts.add((TextPart)shapePart);
+		}
+		else if (shapePart instanceof ContainerShapePart)
+		{
+			textParts.addAll(((ContainerShapePart)shapePart).getTextParts());
+		}
+		return textParts;
 	}
 }

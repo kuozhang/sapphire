@@ -19,9 +19,10 @@
         <id>Sapphire.Diagram.DirectEdit</id>
         <context>Sapphire.Diagram.Node.Hidden</context>
         <context>Sapphire.Diagram.Connection.Hidden</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
         <label>direct edit</label>
         <key-binding>F2</key-binding>
-        <description>Direct edit a node or connection</description>
+        <description>Direct edit a node, shape or connection</description>
     </action>
     <action-handler>
         <action>Sapphire.Diagram.Layout</action>
@@ -42,6 +43,7 @@
         <impl>org.eclipse.sapphire.ui.swt.gef.actions.DiagramDirectEditActionHandler</impl>
         <id>Sapphire.Diagram.DirectEdit</id>
         <context>Sapphire.Diagram.Node.Hidden</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
         <context>Sapphire.Diagram.Connection.Hidden</context>
     </action-handler>
     <action-handler>

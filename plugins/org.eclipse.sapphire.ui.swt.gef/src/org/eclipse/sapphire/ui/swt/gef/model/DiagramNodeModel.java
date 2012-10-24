@@ -87,29 +87,15 @@ public class DiagramNodeModel extends DiagramModelBase {
 		if (shapePart instanceof ContainerShapePart)
 		{
 			ContainerShapePart containerShapePart = (ContainerShapePart)shapePart;
-			TextPart textPart = containerShapePart.getTextPart();
-			if (textPart != null)
+			List<TextPart> textParts = containerShapePart.getTextParts();
+			if (!textParts.isEmpty())
 			{
-				return textPart.getText();
+				return textParts.get(0).getText();
 			}
 		}
 		return null;
 	}
-		
-	public void setLabel(String newValue)
-	{
-		ShapePart shapePart = getModelPart().getShapePart();
-		if (shapePart instanceof ContainerShapePart)
-		{
-			ContainerShapePart containerShapePart = (ContainerShapePart)shapePart;
-			TextPart textPart = containerShapePart.getTextPart();
-			if (textPart != null)
-			{
-				textPart.setText(newValue);
-			}
-		}		
-	}
-	
+			
 	public Bounds getNodeBounds() {
 		Bounds bounds = getModelPart().getNodeBounds();
 		return bounds;

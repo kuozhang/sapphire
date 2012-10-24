@@ -40,8 +40,7 @@ public class ContainerShapePart extends ShapePart
 	private ValidationMarkerPart validationMarkerPart;
 	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	
-	// TODO support multiple text part
-	private TextPart textPart;
+	private List<TextPart> textParts;
 
 	@Override
     protected void init()
@@ -53,13 +52,14 @@ public class ContainerShapePart extends ShapePart
         // create children parts
         this.children = new ArrayList<ShapePart>();
         int index = 0;
+        this.textParts = new ArrayList<TextPart>();
         for (ShapeDef shape : this.containerShapeDef.getContent())
         {
         	ShapePart childPart = null;
         	if (shape instanceof TextDef)
         	{
-        		this.textPart = new TextPart();
-    	        childPart = this.textPart;
+    	        childPart = new TextPart();
+    	        this.textParts.add((TextPart)childPart);
         	}
         	else if (shape instanceof ImageDef)
         	{
@@ -125,31 +125,32 @@ public class ContainerShapePart extends ShapePart
 		return this.validationMarkerPart;
 	}
 	
-	// TODO support multiple text part
-	public TextPart getTextPart()
+	public List<TextPart> getTextParts()
 	{
-		if (this.textPart != null)
-		{
-			return this.textPart;
-		}
+		List<TextPart> textParts = new ArrayList<TextPart>();
+		textParts.addAll(this.textParts);
 		for (ShapePart shapePart : getChildren())
 		{
 			if (shapePart instanceof ContainerShapePart)
 			{
-				TextPart textPart = ((ContainerShapePart)shapePart).getTextPart();
-				if (textPart != null)
-				{
-					return textPart;
-				}
+				textParts.addAll(((ContainerShapePart)shapePart).getTextParts());
 			}
 		}
-		return null;
+		return textParts;
 	}
 	
 	@Override
 	public boolean isEditable()
 	{
-		return this.textPart != null;
+		List<TextPart> textParts = getTextParts();
+		for (TextPart textPart : textParts)
+		{
+			if (textPart.isEditable())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	// TODO support multiple shape factory

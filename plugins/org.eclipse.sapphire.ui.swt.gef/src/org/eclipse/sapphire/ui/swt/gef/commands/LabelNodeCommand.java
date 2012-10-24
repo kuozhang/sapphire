@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
@@ -28,10 +29,12 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 public class LabelNodeCommand extends Command {
 	
 	private DiagramNodeModel node;
+	private TextPart textPart;
 	private String labelText;
 
-	public LabelNodeCommand(DiagramNodeModel node, String labelText) {
+	public LabelNodeCommand(DiagramNodeModel node, TextPart textPart, String labelText) {
 		this.node = node;
+		this.textPart = textPart;
 		this.labelText = labelText;
 	}
 
@@ -65,7 +68,7 @@ public class LabelNodeCommand extends Command {
 			}
 		}		
 		
-		node.setLabel(labelText);
+		textPart.setText(labelText);
 		
 		// Refreshing endpoints of attached connections and re-enable listeners on them.
 		for (DiagramConnectionPart connPart : connParts1)
