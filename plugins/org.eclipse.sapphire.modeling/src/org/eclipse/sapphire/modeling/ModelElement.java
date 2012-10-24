@@ -1193,6 +1193,11 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
     
+    public ListenerContext listeners()
+    {
+        return this.listeners;
+    }
+    
     public final boolean attach( final Listener listener )
     {
         assertNotDisposed();

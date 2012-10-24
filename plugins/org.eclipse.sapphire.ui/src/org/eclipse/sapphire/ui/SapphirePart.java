@@ -36,6 +36,7 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
+import org.eclipse.sapphire.modeling.ModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -137,6 +138,8 @@ public abstract class SapphirePart implements ISapphirePart
         };
         
         this.modelElement.attach( this.modelElementListener );
+        
+        this.listeners.coordinate( ( (ModelElement) this.modelElement ).listeners() );
         
         this.validationState = Status.createOkStatus();
         

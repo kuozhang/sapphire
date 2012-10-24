@@ -247,10 +247,9 @@ public abstract class PageBookPart extends FormComponentPart
             throw new IllegalArgumentException();
         }
         
-        if( this.currentPage != null )
-        {
-            this.currentPage.dispose();
-        }
+        final FormPart pageToDispose = this.currentPage;
+
+        this.currentPage = null;
         
         if( pageDef != null )
         {
@@ -261,9 +260,10 @@ public abstract class PageBookPart extends FormComponentPart
                 this.currentPage.attach( this.childPartListener );
             }
         }
-        else
+        
+        if( pageToDispose != null )
         {
-            this.currentPage = null;
+            pageToDispose.dispose();
         }
         
         updateValidationState();
