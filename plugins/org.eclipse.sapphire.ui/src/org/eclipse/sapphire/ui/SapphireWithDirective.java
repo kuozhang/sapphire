@@ -46,7 +46,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.CompositeDef;
+import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
@@ -71,6 +71,8 @@ import org.eclipse.swt.widgets.Label;
 
 public final class SapphireWithDirective extends PageBookPart
 {
+    private static FormDef defaultPageDef;
+    
     private ModelPath path;
     private IModelElement element;
     private ElementProperty property;
@@ -128,14 +130,19 @@ public final class SapphireWithDirective extends PageBookPart
     }
     
     @Override
-    protected CompositeDef initDefaultPageDef()
+    protected FormDef initDefaultPageDef()
     {
-        final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        final CompositeDef composite = (CompositeDef) root.getPartDefs().insert( CompositeDef.TYPE );
-        final ISapphireLabelDef label = (ISapphireLabelDef) composite.getContent().insert( ISapphireLabelDef.TYPE );
-        label.setText( Resources.noAdditionalPropertiesMessage );
+        if( defaultPageDef == null )
+        {
+            final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
+            final FormDef form = (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+            final ISapphireLabelDef label = (ISapphireLabelDef) form.getContent().insert( ISapphireLabelDef.TYPE );
+            label.setText( Resources.noAdditionalPropertiesMessage );
+            
+            defaultPageDef = form;
+        }
         
-        return composite;
+        return defaultPageDef;
     }
     
     public ModelPath getPath()

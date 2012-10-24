@@ -44,6 +44,8 @@ import org.eclipse.swt.widgets.Control;
 
 public abstract class PageBookPart extends FormComponentPart
 {
+    private static FormDef systemDefaultPageDef;
+    
     private Map<Object,FormDef> pageDefs;
     private FormDef defaultPageDef;
     private FormPart currentPage;
@@ -75,8 +77,13 @@ public abstract class PageBookPart extends FormComponentPart
     
     protected FormDef initDefaultPageDef()
     {
-        final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        return (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+        if( systemDefaultPageDef == null )
+        {
+            final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
+            systemDefaultPageDef = (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+        }
+        
+        return systemDefaultPageDef;
     }
     
     @Override
