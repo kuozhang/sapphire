@@ -68,7 +68,7 @@ public abstract class FunctionResult
         }
         
         init();
-        refresh();
+        refresh( false );
     }
     
     protected List<FunctionResult> initOperands()
@@ -164,6 +164,11 @@ public abstract class FunctionResult
 
     protected final void refresh()
     {
+        refresh( true );
+    }
+    
+    private final void refresh( final boolean broadcastIfNecessary )
+    {
         Object newValue = null;
         Status newStatus = Status.createOkStatus();
         
@@ -189,7 +194,11 @@ public abstract class FunctionResult
         {
             this.value = newValue;
             this.status = newStatus;
-            this.listeners.broadcast( new Event() );
+            
+            if( broadcastIfNecessary )
+            {
+                this.listeners.broadcast( new Event() );
+            }
         }
     }
     
