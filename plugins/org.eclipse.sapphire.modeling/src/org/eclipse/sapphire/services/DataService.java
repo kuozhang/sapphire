@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.services;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -18,12 +20,17 @@ package org.eclipse.sapphire.services;
 public abstract class DataService<T> extends Service
 {
     private T data;
+    private boolean initialized;
+    private boolean readPriorToInit;
     
     @Override
     protected final void init()
     {
         initDataService();
+        
         refresh();
+        
+        this.initialized = true;
     }
 
     protected void initDataService()
@@ -34,6 +41,11 @@ public abstract class DataService<T> extends Service
     
     public T data()
     {
+        if( ! this.initialized )
+        {
+            this.readPriorToInit = true;
+        }
+        
         return this.data;
     }
     
@@ -43,14 +55,14 @@ public abstract class DataService<T> extends Service
     {
         final T newData = compute();
         
-        // Due to possibility of the service being accessed in reentrant fashion during service
-        // initialization it isn't safe to assume that data hasn't been seen before the initial
-        // refresh call. As such, a service event must be broadcast even after the initial refresh.
-        
-        if( this.data == null || ! this.data.equals( newData ) )
+        if( ! equal( this.data, newData ) )
         {
             this.data = newData;
-            broadcast();
+            
+            if( this.initialized || this.readPriorToInit )
+            {
+                broadcast();
+            }
         }
     }
 
