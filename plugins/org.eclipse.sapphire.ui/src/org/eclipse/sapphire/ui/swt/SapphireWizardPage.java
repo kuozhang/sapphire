@@ -21,8 +21,10 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardContainer2;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SapphireWizardPagePart;
@@ -101,7 +103,7 @@ public class SapphireWizardPage extends WizardPage
         {
             public void run()
             {
-                final Status st = SapphireWizardPage.this.part.getValidationState();
+                final Status st = SapphireWizardPage.this.part.validation();
                 
                 if( st.severity() == Status.Severity.ERROR )
                 {
@@ -123,19 +125,17 @@ public class SapphireWizardPage extends WizardPage
         
         messageUpdateOperation.run();
         
-        final Listener messageUpdateListener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
+        this.part.attach
+        (
+            new FilteredListener<PartValidationEvent>()
             {
-                if( event instanceof SapphirePart.ValidationChangedEvent )
+                @Override
+                protected void handleTypedEvent( PartValidationEvent event )
                 {
                     messageUpdateOperation.run();
                 }
             }
-        };
-        
-        this.part.attach( messageUpdateListener );
+        );
         
         final ISapphireDocumentation doc = this.part.definition().getDocumentation().element();
         

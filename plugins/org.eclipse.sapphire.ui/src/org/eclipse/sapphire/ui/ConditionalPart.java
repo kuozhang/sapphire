@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
@@ -76,15 +76,12 @@ public final class ConditionalPart extends SapphirePart
         final boolean newConditionState = (Boolean) this.conditionFunctionResult.value();
         final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         
-        final Listener childPartListener = new Listener()
+        final Listener childPartListener = new FilteredListener<PartValidationEvent>()
         {
             @Override
-            public void handle( final Event event )
+            protected void handleTypedEvent( PartValidationEvent event )
             {
-                if( event instanceof ValidationChangedEvent )
-                {
-                    updateValidationState();
-                }
+                refreshValidation();
             }
         };
         
@@ -97,7 +94,7 @@ public final class ConditionalPart extends SapphirePart
         
         this.currentBranchContent = partsListFactory.result();
     
-        updateValidationState();
+        refreshValidation();
         
         if( ! initializing )
         {
@@ -119,13 +116,13 @@ public final class ConditionalPart extends SapphirePart
     }
     
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
         for( SapphirePart child : this.currentBranchContent )
         {
-            factory.merge( child.getValidationState() );
+            factory.merge( child.validation() );
         }
         
         return factory.create();

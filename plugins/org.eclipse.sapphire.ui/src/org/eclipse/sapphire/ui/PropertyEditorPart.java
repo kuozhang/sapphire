@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -174,7 +173,7 @@ public final class PropertyEditorPart extends FormComponentPart
                             return;
                         }
                         
-                        updateValidationState();
+                        refreshValidation();
                     }
                 };
                 
@@ -263,15 +262,12 @@ public final class PropertyEditorPart extends FormComponentPart
         
         final ListFactory<SapphirePart> relatedContentPartsListFactory = ListFactory.start();
         
-        final Listener relatedContentPartListener = new Listener()
+        final Listener relatedContentPartListener = new FilteredListener<PartValidationEvent>()
         {
             @Override
-            public void handle( final Event event )
+            protected void handleTypedEvent( PartValidationEvent event )
             {
-                if( event instanceof ValidationChangedEvent )
-                {
-                    updateValidationState();
-                }
+                refreshValidation();
             }
         };
 
@@ -564,7 +560,7 @@ public final class PropertyEditorPart extends FormComponentPart
     }
 
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
@@ -588,7 +584,7 @@ public final class PropertyEditorPart extends FormComponentPart
         
         for( SapphirePart relatedContentPart : this.relatedContentParts )
         {
-            factory.merge( relatedContentPart.getValidationState() );
+            factory.merge( relatedContentPart.validation() );
         }
         
         return factory.create();

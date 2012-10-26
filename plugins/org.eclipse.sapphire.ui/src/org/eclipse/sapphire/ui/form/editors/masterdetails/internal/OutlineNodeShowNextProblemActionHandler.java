@@ -20,11 +20,11 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.FormPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PageBookPart;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePart.ValidationChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
@@ -56,10 +56,10 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
             }
         };
         
-        this.sectionListener = new FilteredListener<ValidationChangedEvent>()
+        this.sectionListener = new FilteredListener<PartValidationEvent>()
         {
             @Override
-            protected void handleTypedEvent( final ValidationChangedEvent event )
+            protected void handleTypedEvent( final PartValidationEvent event )
             {
                 refreshVisibility();
             }
@@ -146,7 +146,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
     {
         for( SectionPart section : node.getSections() )
         {
-            if( section.visible() && section.getValidationState().severity() == this.severity )
+            if( section.visible() && section.validation().severity() == this.severity )
             {
                 return node;
             }
@@ -218,7 +218,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
         {
             if( part instanceof PropertyEditorPart )
             {
-                if( part.getValidationState().severity() == this.severity )
+                if( part.validation().severity() == this.severity )
                 {
                     return (PropertyEditorPart) part;
                 }

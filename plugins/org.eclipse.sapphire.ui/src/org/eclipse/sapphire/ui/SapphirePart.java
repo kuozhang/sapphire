@@ -98,7 +98,7 @@ public abstract class SapphirePart implements ISapphirePart
     protected PartDef definition;
     protected Map<String,String> params;
     private Listener modelElementListener;
-    private Status validationState;
+    private Status validation;
     private final ListenerContext listeners = new ListenerContext();
     private Set<SapphirePartListener> listenersDeprecated;
     private SapphireImageCache imageCache;
@@ -140,8 +140,6 @@ public abstract class SapphirePart implements ISapphirePart
         this.modelElement.attach( this.modelElementListener );
         
         this.listeners.coordinate( ( (ModelElement) this.modelElement ).listeners() );
-        
-        this.validationState = Status.createOkStatus();
         
         for( ISapphirePartListenerDef listenerDefinition : this.definition.getListeners() )
         {
@@ -193,8 +191,6 @@ public abstract class SapphirePart implements ISapphirePart
                 }
             }
         );
-        
-        updateValidationState();
         
         this.initialized = true;
         
@@ -413,24 +409,38 @@ public abstract class SapphirePart implements ISapphirePart
         return Collections.unmodifiableMap( this.params );
     }
     
-    public final Status getValidationState()
+    public final Status validation()
     {
-        return this.validationState;
+        if( this.validation == null )
+        {
+            refreshValidation();
+        }
+        
+        return this.validation;
     }
     
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         return Status.createOkStatus();
     }
     
-    public final void updateValidationState()
+    protected final void refreshValidation()
     {
-        final Status newValidationState = computeValidationState();
+        final Status newValidationState = computeValidation();
         
-        if( this.validationState == null || newValidationState == null || ! this.validationState.equals( newValidationState ) )
+        if( newValidationState == null )
         {
-            this.validationState = newValidationState;
-            broadcast( new ValidationChangedEvent( this ) );
+            throw new IllegalStateException();
+        }
+        
+        if( this.validation == null )
+        {
+            this.validation = newValidationState;
+        }
+        else if( ! this.validation.equals( newValidationState ) )
+        {
+            this.validation = newValidationState;
+            broadcast( new PartValidationEvent( this ) );
         }
     }
     
@@ -841,7 +851,11 @@ public abstract class SapphirePart implements ISapphirePart
     
     protected final class ImageManager
     {
-        private final FunctionResult imageFunctionResult;
+        private final IModelElement element;
+        private final Function imageFunction;
+        private final Function defaultValueFunction;        
+        private boolean initialized;
+        private FunctionResult imageFunctionResult;
         private ImageData baseImageData;
         private ImageDescriptor base;
         private ImageDescriptor error;
@@ -858,47 +872,58 @@ public abstract class SapphirePart implements ISapphirePart
                              final Function imageFunction,
                              final Function defaultValueFunction )
         {
-            this.imageFunctionResult = initExpression
-            (
-                element,
-                imageFunction,
-                ImageData.class,
-                defaultValueFunction,
-                new Runnable()
-                {
-                    public void run()
+            this.element = element;
+            this.imageFunction = imageFunction;
+            this.defaultValueFunction = defaultValueFunction;
+        }
+        
+        private void init()
+        {
+            if( ! this.initialized )
+            {
+                this.initialized = true;
+                
+                this.imageFunctionResult = initExpression
+                (
+                    this.element,
+                    this.imageFunction,
+                    ImageData.class,
+                    this.defaultValueFunction,
+                    new Runnable()
                     {
-                        refresh( true );
-                    }
-                }
-            );
-            
-            attach
-            (
-                new Listener()
-                {
-                    @Override
-                    public void handle( final Event event )
-                    {
-                        if( event instanceof ValidationChangedEvent )
+                        public void run()
                         {
                             refresh( true );
                         }
                     }
-                }
-            );
-            
-            refresh( false );
+                );
+                
+                attach
+                (
+                    new FilteredListener<PartValidationEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( PartValidationEvent event )
+                        {
+                            refreshValidation();
+                        }
+                    }
+                );
+                
+                refresh( false );
+            }
         }
         
         public ImageDescriptor getImage()
         {
+            init();
+            
             return this.current;
         }
         
         private void refresh( final boolean notifyListenersIfNecessary )
         {
-            final Status st = getValidationState();
+            final Status st = validation();
             final Status.Severity severity = st.severity();
             final ImageDescriptor old = this.current;
             
@@ -975,14 +1000,6 @@ public abstract class SapphirePart implements ISapphirePart
     public static final class PartInitializationEvent extends PartEvent
     {
         public PartInitializationEvent( final SapphirePart part )
-        {
-            super( part );
-        }
-    }
-    
-    public static final class ValidationChangedEvent extends PartEvent
-    {
-        public ValidationChangedEvent( final SapphirePart part )
         {
             super( part );
         }

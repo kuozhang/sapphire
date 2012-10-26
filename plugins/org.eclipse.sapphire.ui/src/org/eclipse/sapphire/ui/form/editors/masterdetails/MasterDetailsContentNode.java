@@ -53,6 +53,7 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -160,7 +161,7 @@ public final class MasterDetailsContentNode
             @Override
             protected void handleTypedEvent( final ElementValidationEvent event )
             {
-                updateValidationState();
+                refreshValidation();
             }
         };
         
@@ -171,9 +172,9 @@ public final class MasterDetailsContentNode
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof ValidationChangedEvent || event instanceof VisibilityChangedEvent )
+                if( event instanceof PartValidationEvent || event instanceof VisibilityChangedEvent )
                 {
-                    updateValidationState();
+                    refreshValidation();
                 }
             }
         };
@@ -685,7 +686,7 @@ public final class MasterDetailsContentNode
     }
 
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
@@ -698,7 +699,7 @@ public final class MasterDetailsContentNode
         {
             if( section.visible() )
             {
-                factory.merge( section.getValidationState() );
+                factory.merge( section.validation() );
             }
         }
 
@@ -706,7 +707,7 @@ public final class MasterDetailsContentNode
         {
             if( node.visible() )
             {
-                factory.merge( node.getValidationState() );
+                factory.merge( node.validation() );
             }
         }
         
@@ -751,7 +752,7 @@ public final class MasterDetailsContentNode
                     {
                         public void run()
                         {
-                            updateValidationState();
+                            refreshValidation();
                         }
                     }
                 );

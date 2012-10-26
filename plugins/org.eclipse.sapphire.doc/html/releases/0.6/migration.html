@@ -83,6 +83,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireUiDefFactory">SapphireUiDefFactory</a></li>
   <li><a href="#SapphireWizard">SapphireWizard</a></li>
   <li><a href="#Status">Status</a></li>
+  <li><a href="#ValidationChangedEvent">ValidationChangedEvent</a></li>
   <li><a href="#Conditional">Conditional</a></li>
   <li><a href="#SectionVisibility">Section Visibility</a></li>
   <li><a href="#NodeVisibility">Node Visibility</a></li>
@@ -1124,6 +1125,38 @@ implementation may be defining this method already, in which case the method wil
 post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>getValidationState()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>validation()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>computeValidationState()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>computeValidation()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>updateValidationState()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>refreshValidation()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>SapphirePart.ValidationChangedEvent</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>PartValidationEvent</code></pre>
+    </td>
+  </tr>
 </table>
 
 
@@ -1500,6 +1533,24 @@ finally
     </td>
     <td>
 <pre class="source-code"><code>SortedSet<font color="#888888">&lt;Status> children = status.children()</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValidationChangedEvent">ValidationChangedEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>SapphirePart.ValidationChangedEvent</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>PartValidationEvent</code></pre>
     </td>
   </tr>
 </table>

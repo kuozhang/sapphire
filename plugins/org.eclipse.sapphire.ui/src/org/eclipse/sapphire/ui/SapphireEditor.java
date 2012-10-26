@@ -853,7 +853,7 @@ public abstract class SapphireEditor
         return this.actionsManager.getAction( id );
     }
     
-    public Status getValidationState()
+    public Status validation()
     {
         throw new UnsupportedOperationException();
     }

@@ -109,7 +109,7 @@ public final class SapphireWithDirective extends PageBookPart
                 }
                 else if( event instanceof PropertyValidationEvent )
                 {
-                    updateValidationState();
+                    refreshValidation();
                 }
             }
         };
@@ -555,9 +555,9 @@ public final class SapphireWithDirective extends PageBookPart
     }
     
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
-        Status state = super.computeValidationState();
+        Status state = super.computeValidation();
         
         if( this.property != null )
         {

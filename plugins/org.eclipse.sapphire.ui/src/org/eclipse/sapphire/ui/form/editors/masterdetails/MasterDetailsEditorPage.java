@@ -754,7 +754,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 
                 if( node != null )
                 {
-                    res = ! node.getValidationState().ok();
+                    res = ! node.validation().ok();
                 }
 
                 return res;
@@ -793,7 +793,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 SapphireFormText text = new SapphireFormText( parent, SWT.NO_FOCUS );
                 text.setLayoutData( gdfill() );
                 
-                final org.eclipse.sapphire.modeling.Status validation = node.getValidationState();
+                final org.eclipse.sapphire.modeling.Status validation = node.validation();
                 final List<org.eclipse.sapphire.modeling.Status> items = gather( validation );
                 
                 final StringBuffer buffer = new StringBuffer();

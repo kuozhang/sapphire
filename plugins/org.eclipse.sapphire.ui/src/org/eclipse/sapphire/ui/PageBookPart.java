@@ -273,7 +273,7 @@ public abstract class PageBookPart extends FormComponentPart
             pageToDispose.dispose();
         }
         
-        updateValidationState();
+        refreshValidation();
         
         broadcast( new PageChangedEvent( this ) );
     }
@@ -281,7 +281,7 @@ public abstract class PageBookPart extends FormComponentPart
     protected abstract Object parsePageKey( final String pageKeyString );
     
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         if( this.exposePageValidationState == true )
         {
@@ -289,7 +289,7 @@ public abstract class PageBookPart extends FormComponentPart
             
             if( currentPage != null )
             {
-                return currentPage.getValidationState();
+                return currentPage.validation();
             }
         }
         
@@ -304,15 +304,12 @@ public abstract class PageBookPart extends FormComponentPart
             
             if( this.exposePageValidationState == true )
             {
-                this.childPartListener = new Listener()
+                this.childPartListener = new FilteredListener<PartValidationEvent>()
                 {
                     @Override
-                    public void handle( final Event event )
+                    protected void handleTypedEvent( PartValidationEvent event )
                     {
-                        if( event instanceof ValidationChangedEvent )
-                        {
-                            updateValidationState();
-                        }
+                        refreshValidation();
                     }
                 };
                 
@@ -326,7 +323,7 @@ public abstract class PageBookPart extends FormComponentPart
                 this.childPartListener = null;
             }
             
-            updateValidationState();
+            refreshValidation();
         }
     }
     

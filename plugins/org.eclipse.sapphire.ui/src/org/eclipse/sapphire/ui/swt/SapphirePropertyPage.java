@@ -12,14 +12,13 @@
 package org.eclipse.sapphire.ui.swt;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.swt.widgets.Composite;
@@ -113,7 +112,7 @@ public class SapphirePropertyPage extends PropertyPage
         {
             public void run()
             {
-                final Status st = form.part().getValidationState();
+                final Status st = form.part().validation();
                 
                 if( st.severity() == Status.Severity.ERROR )
                 {
@@ -135,19 +134,17 @@ public class SapphirePropertyPage extends PropertyPage
         
         messageUpdateOperation.run();
         
-        final Listener messageUpdateListener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
+        form.part().attach
+        (
+            new FilteredListener<PartValidationEvent>()
             {
-                if( event instanceof SapphirePart.ValidationChangedEvent )
+                @Override
+                protected void handleTypedEvent( PartValidationEvent event )
                 {
                     messageUpdateOperation.run();
                 }
             }
-        };
-        
-        form.part().attach( messageUpdateListener );
+        );
         
         return form;
     }

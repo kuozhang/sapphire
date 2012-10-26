@@ -33,7 +33,7 @@ public interface ISapphirePart
     <T> T nearest( final Class<T> partType );
     IModelElement getModelElement();
     IModelElement getLocalModelElement();
-    Status getValidationState();
+    Status validation();
     IContext getDocumentationContext();
     SapphireImageCache getImageCache();
     void dispose();
