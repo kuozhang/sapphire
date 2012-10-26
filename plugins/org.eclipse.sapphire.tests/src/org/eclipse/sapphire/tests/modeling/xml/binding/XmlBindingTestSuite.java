@@ -33,15 +33,13 @@ import org.eclipse.sapphire.tests.modeling.xml.binding.t0011e.TestXmlBinding0011
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0011f.TestXmlBinding0011f;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0011g.TestXmlBinding0011g;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0011h.TestXmlBinding0011h;
+import org.eclipse.sapphire.tests.modeling.xml.binding.t0012.TestXmlBinding0012;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlBindingTestSuite
-
-    extends TestCase
-    
+public final class XmlBindingTestSuite extends TestCase
 {
     private XmlBindingTestSuite( final String name )
     {
@@ -72,6 +70,7 @@ public final class XmlBindingTestSuite
         suite.addTest( TestXmlBinding0011f.suite() );
         suite.addTest( TestXmlBinding0011g.suite() );
         suite.addTest( TestXmlBinding0011h.suite() );
+        suite.addTest( TestXmlBinding0012.suite() );
         
         return suite;
     }
