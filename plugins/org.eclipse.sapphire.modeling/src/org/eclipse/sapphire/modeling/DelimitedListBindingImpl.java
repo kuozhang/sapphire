@@ -118,7 +118,7 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
             {
                 entry = this.head;
                 
-                for( int i = 0; i < position; i++ )
+                for( int i = 0, n = position - 1; i < n; i++ )
                 {
                     entry = entry.next;
                 }
