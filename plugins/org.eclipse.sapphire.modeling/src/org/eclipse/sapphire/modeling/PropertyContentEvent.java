@@ -22,5 +22,5 @@ public final class PropertyContentEvent extends PropertyEvent
     {
         super( element, property );
     }
-
+    
 }

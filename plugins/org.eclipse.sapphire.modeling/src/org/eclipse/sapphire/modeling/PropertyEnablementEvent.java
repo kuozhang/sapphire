@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.Map;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -42,19 +44,14 @@ public final class PropertyEnablementEvent extends PropertyEvent
     }
     
     @Override
-    public String toString()
+    public Map<String,String> fillTracingInfo( final Map<String,String> info )
     {
-        final StringBuilder buf = new StringBuilder();
+        super.fillTracingInfo( info );
         
-        buf.append( getClass().getSimpleName() ).append( '\n' );
-        buf.append( "{\n" );
-        buf.append( "    element = " ).append( element().type().getQualifiedName() ).append( '(' ).append( System.identityHashCode( element() ) ).append( ")\n" );
-        buf.append( "    property = " ).append( property().getName() ).append( '\n' );
-        buf.append( "    before = " ).append( before() ).append( '\n' );
-        buf.append( "    after = " ).append( after() ).append( '\n' );
-        buf.append( "}" );
+        info.put( "before", Boolean.toString( before() ) );
+        info.put( "after", Boolean.toString( after() ) );
         
-        return buf.toString();
+        return info;
     }
 
 }
