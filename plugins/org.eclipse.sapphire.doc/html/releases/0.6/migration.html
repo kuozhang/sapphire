@@ -62,6 +62,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#MasterDetailsContentNode">MasterDetailsContentNode</a></li>
   <li><a href="#MasterDetailsContentOutline">MasterDetailsContentOutline</a></li>
   <li><a href="#MasterDetailsEditorPage">MasterDetailsEditorPage</a></li>
+  <li><a href="#ModelElementType">ModelElementType</a></li>
   <li><a href="#ModelProperty">ModelProperty</a></li>
   <li><a href="#PartDef">PartDef</a></li>
   <li><a href="#PropertyEditorDef">PropertyEditorDef</a></li>
@@ -701,6 +702,26 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
 </table>
 
 
+<h2><a name="ModelElementType">ModelElementType</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">type</font>.attach( listener )</code></pre>
+    </td>
+    <td>
+<p>No direct equivalent has been provided, but attaching the listener via @Listener annotation may be a viable
+substitute in some cases. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ModelProperty">ModelProperty</a></h2>
 
 <table>
@@ -722,6 +743,16 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
     </td>
     <td>
 <pre class="source-code"><code>element.property( property.getName() )</code></pre> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">property</font>.attach( listener )</code></pre>
+    </td>
+    <td>
+<p>No direct equivalent has been provided, but attaching the listener via @Listener annotation may be a viable
+substitute in some cases. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
     </td>
   </tr>
 </table>

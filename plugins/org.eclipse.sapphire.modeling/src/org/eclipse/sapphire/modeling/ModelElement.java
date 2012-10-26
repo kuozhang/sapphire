@@ -86,7 +86,19 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         
         resource.init( this );
         
-        attach( new GlobalBridgeListener() );
+        for( Listener listener : this.type.listeners() )
+        {
+            attach( listener );
+        }
+        
+        for( ModelProperty property : this.type.properties() )
+        {
+            for( Listener listener : property.listeners() )
+            {
+                attach( listener, property );
+            }
+        }
+        
         attach( new PropertyInitializationListener() );
     }
     
@@ -1782,21 +1794,6 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     
                     this.listener.handle( event );
                 }
-            }
-        }
-    }
-    
-    private final class GlobalBridgeListener extends Listener
-    {
-        @Override
-        public void handle( final Event event )
-        {
-            type().broadcast( event );
-
-            if( event instanceof PropertyEvent )
-            {
-                final PropertyEvent evt = (PropertyEvent) event;
-                evt.property().broadcast( evt );
             }
         }
     }
