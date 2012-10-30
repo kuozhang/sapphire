@@ -106,6 +106,7 @@ public abstract class SapphirePart implements ISapphirePart
     private PartServiceContext serviceContext;
     private FunctionResult visibleWhenFunctionResult;
     private boolean initialized;
+    private boolean disposed;
     
     public final boolean initialized()
     {
@@ -249,7 +250,10 @@ public abstract class SapphirePart implements ISapphirePart
                         {
                             public void run()
                             {
-                                refreshOp.run();
+                                if( ! disposed() && ! getLocalModelElement().disposed() )
+                                {
+                                    refreshOp.run();
+                                }
                             }
                         };
                      
@@ -821,32 +825,51 @@ public abstract class SapphirePart implements ISapphirePart
     
     public void dispose()
     {
-        this.modelElement.detach( this.modelElementListener );
-        
-        if( this.parent == null )
+        synchronized( this )
         {
-            this.imageCache.dispose();
-        }
-        
-        if( this.actions != null )
-        {
-            for( SapphireActionGroup actionsForContext : this.actions.values() )
+            if( ! this.disposed )
             {
-                actionsForContext.dispose();
+                this.disposed = true;
             }
         }
         
-        if( this.serviceContext != null )
+        if( ! this.disposed )
         {
-            this.serviceContext.dispose();
-        }
+            this.modelElement.detach( this.modelElementListener );
         
-        if( this.visibleWhenFunctionResult != null )
+            if( this.parent == null )
+            {
+                this.imageCache.dispose();
+            }
+            
+            if( this.actions != null )
+            {
+                for( SapphireActionGroup actionsForContext : this.actions.values() )
+                {
+                    actionsForContext.dispose();
+                }
+            }
+            
+            if( this.serviceContext != null )
+            {
+                this.serviceContext.dispose();
+            }
+            
+            if( this.visibleWhenFunctionResult != null )
+            {
+                this.visibleWhenFunctionResult.dispose();
+            }
+            
+            broadcast( new DisposeEvent() );
+        }
+    }
+    
+    public final boolean disposed()
+    {
+        synchronized( this )
         {
-            this.visibleWhenFunctionResult.dispose();
+            return this.disposed;
         }
-        
-        broadcast( new DisposeEvent() );
     }
     
     protected final class ImageManager
