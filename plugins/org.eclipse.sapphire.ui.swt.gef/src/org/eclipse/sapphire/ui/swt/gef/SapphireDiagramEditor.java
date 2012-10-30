@@ -118,6 +118,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -580,15 +581,23 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		getConfigurationManager().getDiagramRenderingContextCache().put(part, ctx);		
 	}
 
-	protected void updateNode(DiagramNodePart part) {
-		if (diagramModel == null) {
-			return;
-		}
+	protected void updateNode(final DiagramNodePart part) 
+	{
+        Display.getDefault().asyncExec
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+            		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
+            		if (nodeModel != null) 
+            		{
+            			nodeModel.handleUpdateNode();
+            		}
+                }
+            }
+        );
 		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleUpdateNode();
-		}
 	}
 	
 	@Override
@@ -996,32 +1005,41 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		return null;
 	}
 	
-	public void selectAndDirectEditPart(ISapphirePart part)
+	public void selectAndDirectEditPart(final ISapphirePart part)
 	{
-		if (part instanceof DiagramNodePart || part instanceof DiagramConnectionPart)
-		{
-			GraphicalViewer viewer = this.getGraphicalViewer();
-			// Bug 370869 - DND from the tool palette would show an invalid cursor before placing the new node 
-			// in direct edit mode. TODO why?
-			//viewer.getControl().forceFocus();
-			
-			GraphicalEditPart editpart = getGraphicalEditPart(part);
-			if (editpart != null) 
-			{
-				// Force a layout first.
-				viewer.flush();
-				viewer.select(editpart);
-				if (part instanceof DiagramNodePart)
-				{
-					this.getDiagramModel().handleDirectEditing((DiagramNodePart)part);
-				}
-				else if (part instanceof DiagramConnectionPart)
-				{
-					this.getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
-				}
-				
-			}
-		}
+        Display.getDefault().asyncExec
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+					if (part instanceof DiagramNodePart || part instanceof DiagramConnectionPart)
+					{
+						GraphicalViewer viewer = getGraphicalViewer();
+						// Bug 370869 - DND from the tool palette would show an invalid cursor before placing the new node 
+						// in direct edit mode. TODO why?
+						//viewer.getControl().forceFocus();
+						
+						GraphicalEditPart editpart = getGraphicalEditPart(part);
+						if (editpart != null) 
+						{
+							// Force a layout first.
+							viewer.flush();
+							viewer.select(editpart);
+							if (part instanceof DiagramNodePart)
+							{
+								getDiagramModel().handleDirectEditing((DiagramNodePart)part);
+							}
+							else if (part instanceof DiagramConnectionPart)
+							{
+								getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
+							}
+							
+						}
+					}
+                }
+            }
+        );
 	}
 	
 	public void selectAll()
