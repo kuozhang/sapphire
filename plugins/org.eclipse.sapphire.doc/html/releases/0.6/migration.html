@@ -83,6 +83,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireSpacer">SapphireSpacer</a></li>
   <li><a href="#SapphireUiDefFactory">SapphireUiDefFactory</a></li>
   <li><a href="#SapphireWizard">SapphireWizard</a></li>
+  <li><a href="#Service">Service</a></li>
   <li><a href="#Status">Status</a></li>
   <li><a href="#ValidationChangedEvent">ValidationChangedEvent</a></li>
   <li><a href="#Conditional">Conditional</a></li>
@@ -1546,6 +1547,27 @@ finally
     </td>
     <td>
 <pre class="source-code"><code><font color="#888888">wizard.</font>element()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="Service">Service</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>broadcast( <font color="#888888">new Event()</font> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>broadcast( <font color="#888888">new ServiceEvent( this )</font> )</code></pre>
+
+<p>Events broadcast by a service must now extend ServiceEvent class. This facilitates differentiation
+of service events from other events and identifies the originating service.</p>
     </td>
   </tr>
 </table>

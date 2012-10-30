@@ -17,9 +17,9 @@ import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdenti
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceEvent;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -62,7 +62,7 @@ public final class ListSelectionService extends Service
             
             this.elements = elements;
 
-            broadcast( new ListSelectionChangedEvent( before, this.elements ) );
+            broadcast( new ListSelectionChangedEvent( this, before, this.elements ) );
         }
     }
 
@@ -81,7 +81,7 @@ public final class ListSelectionService extends Service
             
             this.elements = ListFactory.unmodifiable( elements );
 
-            broadcast( new ListSelectionChangedEvent( before, this.elements ) );
+            broadcast( new ListSelectionChangedEvent( this, before, this.elements ) );
         }
     }
     
@@ -89,14 +89,17 @@ public final class ListSelectionService extends Service
      * The event that is fired when list selection changes.
      */
 
-    public static final class ListSelectionChangedEvent extends Event
+    public static final class ListSelectionChangedEvent extends ServiceEvent
     {
         private List<IModelElement> before;
         private List<IModelElement> after;
 
-        public ListSelectionChangedEvent( final List<IModelElement> before, 
-                                          final List<IModelElement> after )
+        ListSelectionChangedEvent( final ListSelectionService service,
+                                   final List<IModelElement> before, 
+                                   final List<IModelElement> after )
         {
+            super( service );
+            
             this.before = before;
             this.after = after;
         }

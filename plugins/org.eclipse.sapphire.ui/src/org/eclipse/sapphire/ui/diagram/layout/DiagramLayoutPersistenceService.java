@@ -12,8 +12,8 @@
 
 package org.eclipse.sapphire.ui.diagram.layout;
 
-import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceEvent;
 
 /**
  * <p>Responsible for persisting layout of the diagram, such a location and size of nodes, connection bend points, etc.</p>
@@ -41,13 +41,15 @@ public abstract class DiagramLayoutPersistenceService extends Service
 	    return false;
 	}
 	
-	public static class DirtyStateEvent extends Event
+	public static class DirtyStateEvent extends ServiceEvent
 	{
 	    private final boolean before;
 	    private final boolean after;
 	    
-	    public DirtyStateEvent( final boolean before, final boolean after )
+	    public DirtyStateEvent( final Service service, final boolean before, final boolean after )
 	    {
+	        super( service );
+	        
 	        this.before = before;
 	        this.after = after;
 	    }

@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.LoggingService;
@@ -77,12 +76,12 @@ public abstract class Service
         
     }
     
-    protected final ServiceContext context()
+    public final ServiceContext context()
     {
         return this.context;
     }
     
-    protected final <T> T context( final Class<T> type )
+    public final <T> T context( final Class<T> type )
     {
         return this.context.find( type );
     }
@@ -122,14 +121,14 @@ public abstract class Service
         return this.listeners.detach( listener );
     }
     
-    protected final void broadcast( final Event event )
+    protected final void broadcast( final ServiceEvent event )
     {
         this.listeners.broadcast( event );
     }
     
     protected final void broadcast()
     {
-        broadcast( new Event() );
+        broadcast( new ServiceEvent( this ) );
     }
     
     public void dispose()

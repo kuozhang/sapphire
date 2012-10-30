@@ -42,6 +42,7 @@
     <li><a href="#Modeling-PreferDefaultValue">@PreferDefaultValue</a></li>
     <li><a href="#Modeling-Service">Service</a></li>
     <li><a href="#Modeling-ServiceContext">ServiceContext</a></li>
+    <li><a href="#Modeling-ServiceEvent">ServiceEvent</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -630,6 +631,15 @@ convenience methods have been added that delegate to the current context.</p>
 
 <pre class="source-code"><code>service( ExampleService.class )</code></pre>
 
+<p>Code outside the service implementation can now access service context. The existing protected methods have
+been made public.</p>
+
+<pre class="source-code"><code><font color="#888888">Service
+{</font>
+    public <font color="#888888">ServiceContext context()</font>
+    public <font color="#888888">&lt;T> T context( final Class&lt;T> type )
+}</font></code></pre>
+
 
 <h2><a name="Modeling-ServiceContext">ServiceContext</a></h2>
 
@@ -640,6 +650,24 @@ event delivery queue.</p>
 {</font>
     void coordinate( ListenerContext context )
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Modeling-ServiceEvent">ServiceEvent</a></h2>
+
+<p>Events broadcast by a service must now extend ServiceEvent class. This facilitates differentiation
+of service events from other events and identifies the originating service.</p>
+
+<pre class="source-code"><code><font color="#888888">Service
+{
+    broadcast(</font> ServiceEvent <font color="#888888">service )
+    broadcast()
+}</font></code></pre>
+
+<pre class="source-code"><code>ServiceEvent extends Event
+{
+    ServiceEvent( Service service )
+    Service service()
+}</code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
