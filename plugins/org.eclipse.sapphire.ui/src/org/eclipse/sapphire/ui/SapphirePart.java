@@ -878,6 +878,7 @@ public abstract class SapphirePart implements ISapphirePart
         private final Function imageFunction;
         private final Function defaultValueFunction;        
         private boolean initialized;
+        private boolean broadcastImageEvents;
         private FunctionResult imageFunctionResult;
         private ImageData baseImageData;
         private ImageDescriptor base;
@@ -916,7 +917,7 @@ public abstract class SapphirePart implements ISapphirePart
                     {
                         public void run()
                         {
-                            refresh( true );
+                            refresh();
                         }
                     }
                 );
@@ -928,12 +929,14 @@ public abstract class SapphirePart implements ISapphirePart
                         @Override
                         protected void handleTypedEvent( PartValidationEvent event )
                         {
-                            refreshValidation();
+                            refresh();
                         }
                     }
                 );
                 
-                refresh( false );
+                refresh();
+                
+                this.broadcastImageEvents = true;
             }
         }
         
@@ -941,13 +944,13 @@ public abstract class SapphirePart implements ISapphirePart
         {
             init();
             
+            this.broadcastImageEvents = true;
+            
             return this.current;
         }
         
-        private void refresh( final boolean notifyListenersIfNecessary )
+        private void refresh()
         {
-            final Status st = validation();
-            final Status.Severity severity = st.severity();
             final ImageDescriptor old = this.current;
             
             if( this.imageFunctionResult != null )
@@ -968,6 +971,11 @@ public abstract class SapphirePart implements ISapphirePart
                 }
                 else
                 {
+                    this.current = this.base;
+                    
+                    final Status st = validation();
+                    final Status.Severity severity = st.severity();
+
                     if( severity == Status.Severity.ERROR )
                     {
                         if( this.error == null )
@@ -986,14 +994,10 @@ public abstract class SapphirePart implements ISapphirePart
                         
                         this.current = this.warning;
                     }
-                    else
-                    {
-                        this.current = this.base;
-                    }
                 }
             }
             
-            if( notifyListenersIfNecessary && this.current != old )
+            if( this.broadcastImageEvents && this.current != old )
             {
                 broadcast( new ImageChangedEvent( SapphirePart.this ) );
             }
