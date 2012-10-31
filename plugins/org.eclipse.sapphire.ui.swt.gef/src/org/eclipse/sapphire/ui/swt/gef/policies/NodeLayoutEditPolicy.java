@@ -13,8 +13,9 @@ package org.eclipse.sapphire.ui.swt.gef.policies;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 
@@ -26,7 +27,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
  * node containment.
  */
 
-public class NodeLayoutEditPolicy extends XYLayoutEditPolicy 
+public class NodeLayoutEditPolicy extends LayoutEditPolicy 
 {
 	private DiagramNodeModel nodeModel;
 	
@@ -35,16 +36,24 @@ public class NodeLayoutEditPolicy extends XYLayoutEditPolicy
 		this.nodeModel = nodeModel;		
 	}
 	
-	@Override
-	protected Command getCreateCommand(CreateRequest request) 
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 		return new RectangleSelectionEditPolicy();
+	}
+
+
+	@Override
+	protected Command getCreateCommand(CreateRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	protected Command getMoveChildrenCommand(Request request) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
