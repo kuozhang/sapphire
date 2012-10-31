@@ -518,17 +518,24 @@ public final class PropertyEditorPart extends FormComponentPart
                     
                     if( style.equals( "Sapphire.PropertyEditor.PopUpListField" ) )
                     {
-                        final PossibleValues possibleValuesAnnotation = this.property.getAnnotation( PossibleValues.class );
-                        
-                        if( possibleValuesAnnotation != null )
+                        if( Enum.class.isAssignableFrom( this.property.getTypeClass() ) )
                         {
-                            popUpListFieldPresentationStyle 
-                                = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
-                                    ? PopUpListFieldStyle.STRICT : PopUpListFieldStyle.EDITABLE );
+                            popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
                         }
                         else
                         {
-                            popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
+                            final PossibleValues possibleValuesAnnotation = this.property.getAnnotation( PossibleValues.class );
+                            
+                            if( possibleValuesAnnotation != null )
+                            {
+                                popUpListFieldPresentationStyle 
+                                    = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
+                                        ? PopUpListFieldStyle.STRICT : PopUpListFieldStyle.EDITABLE );
+                            }
+                            else
+                            {
+                                popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
+                            }
                         }
                     }
                     else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Editable" ) )
