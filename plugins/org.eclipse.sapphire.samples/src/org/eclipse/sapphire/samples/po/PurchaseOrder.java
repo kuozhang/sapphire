@@ -17,9 +17,11 @@ import java.util.Date;
 import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityTarget;
+import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
@@ -129,6 +131,16 @@ public interface PurchaseOrder extends IModelElement
     ImpliedElementProperty PROP_SHIPPING_INFORMATION = new ImpliedElementProperty( TYPE, "ShippingInformation" );
     
     ShippingInformation getShippingInformation();
+    
+    // *** Payment ***
+    
+    @Type( base = Payment.class, possible = { CreditCardPayment.class, CheckPayment.class, CashPayment.class } )
+    @Label( standard = "payment" )
+    @Since( "1.5" )
+    
+    ElementProperty PROP_PAYMENT = new ElementProperty( TYPE, "Payment" );
+    
+    ModelElementHandle<Payment> getPayment();
     
     // *** Entries ***
     

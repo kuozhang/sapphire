@@ -17,6 +17,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
@@ -54,6 +55,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroup;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -555,6 +557,15 @@ public final class SapphireWithDirective extends PageBookPart
     }
     
     @Override
+    protected FormPart createPagePart( final IModelElement modelElementForPage,
+                                       final FormDef pageDef )
+    {
+        final PagePart page = new PagePart();
+        page.init( this, modelElementForPage, pageDef, this.params );
+        return page;
+    }
+    
+    @Override
     protected Status computeValidation()
     {
         Status state = super.computeValidation();
@@ -620,6 +631,42 @@ public final class SapphireWithDirective extends PageBookPart
         if( this.listener != null )
         {
             this.element.detach( this.listener, this.property );
+        }
+    }
+    
+    private static final class PagePart extends FormPart
+    {
+        @Override
+        public void render( final SapphireRenderingContext context )
+        {
+            super.render( context );
+            
+            if( empty() )
+            {
+                final SapphireFormText text = new SapphireFormText( context.getComposite(), SWT.NONE );
+                text.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
+                text.setText( Resources.noAdditionalPropertiesMessage, false, false );
+                context.adapt( text );
+            }
+        }
+        
+        private boolean empty()
+        {
+            for( SapphirePart part : getChildParts() )
+            {
+                if( part.visible() )
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        @Override
+        protected Function initVisibleWhenFunction()
+        {
+            return null;
         }
     }
     

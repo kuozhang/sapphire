@@ -260,7 +260,7 @@ public abstract class PageBookPart extends FormComponentPart
         
         if( pageDef != null )
         {
-            this.currentPage = (FormPart) create( this, modelElementForPage, pageDef, this.params );
+            this.currentPage = createPagePart( modelElementForPage, pageDef );
             
             if( this.childPartListener != null )
             {
@@ -279,6 +279,12 @@ public abstract class PageBookPart extends FormComponentPart
     }
     
     protected abstract Object parsePageKey( final String pageKeyString );
+    
+    protected FormPart createPagePart( final IModelElement modelElementForPage,
+                                       final FormDef pageDef )
+    {
+        return (FormPart) create( this, modelElementForPage, pageDef, this.params );
+    }
     
     @Override
     protected Status computeValidation()
