@@ -162,7 +162,7 @@ public class SectionPart extends CompositePart
         refreshDescription();
         
         this.sectionContentInnerComposite = new Composite( this.sectionContentOuterComposite, SWT.NONE );
-        this.sectionContentInnerComposite.setLayoutData( gdhfill() );
+        this.sectionContentInnerComposite.setLayoutData( gdfill() );
         this.sectionContentInnerComposite.setLayout( glayout( 2, 0, 0 ) );
         context.adapt( this.sectionContentInnerComposite );
         
