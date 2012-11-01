@@ -30,6 +30,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
@@ -499,10 +500,10 @@ public class DiagramConnectionTemplate extends SapphirePart
     public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
     {
         DiagramConnectionPart connPart = new DiagramConnectionPart(this.bindingDef, this.endpoint1Path, this.endpoint2Path);
+        addConnectionPart(srcNodeElement, connPart);
         connPart.init(this, connElement, this.connectionDef, 
                 Collections.<String,String>emptyMap());
         connPart.addListener(this.connPartListener);
-        addConnectionPart(srcNodeElement, connPart);
         return connPart;
     }
         

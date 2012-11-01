@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
@@ -38,15 +38,12 @@ public final class PropertiesViewContributionPart extends SapphirePart
         final IModelElement element = getModelElement();
         final ListFactory<PropertiesViewContributionPagePart> pagesListFactory = ListFactory.start();
         
-        final Listener pagePartListener = new Listener()
+        final Listener pagePartListener = new FilteredListener<PartValidationEvent>()
         {
             @Override
-            public void handle( final Event event )
+            protected void handleTypedEvent( PartValidationEvent event )
             {
-                if( event instanceof ValidationChangedEvent )
-                {
-                    updateValidationState();
-                }
+                refreshValidation();
             }
         };
         
@@ -85,13 +82,13 @@ public final class PropertiesViewContributionPart extends SapphirePart
     }
     
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
         for( PropertiesViewContributionPagePart pagePart : this.pages )
         {
-            factory.merge( pagePart.getValidationState() );
+            factory.merge( pagePart.validation() );
         }
         
         return factory.create();

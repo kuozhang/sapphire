@@ -20,15 +20,12 @@ import org.eclipse.sapphire.samples.contacts.Contact;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ConnectionsListController
-
-    extends XmlDelimitedListBindingImpl
-
+public final class ConnectionsListBinding extends XmlDelimitedListBindingImpl
 {
     private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( Contact.TYPE );
     private static final XmlPath PATH_CONNECTIONS = new XmlPath( "connections", NAMESPACE_RESOLVER );
     
-    public ConnectionsListController()
+    public ConnectionsListBinding()
     {
         super( PATH_CONNECTIONS );
     }

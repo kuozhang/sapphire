@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
@@ -55,15 +56,12 @@ public final class TabGroupPart extends SapphirePart
         final IModelElement element = getModelElement();
         final ListFactory<TabGroupPagePart> pagesListFactory = ListFactory.start();
 
-        final Listener tabPartListener = new Listener()
+        final Listener tabPartListener = new FilteredListener<PartValidationEvent>()
         {
             @Override
-            public void handle( final Event event )
+            protected void handleTypedEvent( PartValidationEvent event )
             {
-                if( event instanceof ValidationChangedEvent )
-                {
-                    updateValidationState();
-                }
+                refreshValidation();
             }
         };
         
@@ -180,13 +178,13 @@ public final class TabGroupPart extends SapphirePart
     }
     
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
         for( TabGroupPagePart page : this.pages )
         {
-            factory.merge( page.getValidationState() );
+            factory.merge( page.validation() );
         }
         
         return factory.create();

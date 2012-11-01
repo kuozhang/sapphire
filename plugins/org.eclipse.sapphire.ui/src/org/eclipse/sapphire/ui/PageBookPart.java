@@ -44,6 +44,8 @@ import org.eclipse.swt.widgets.Control;
 
 public abstract class PageBookPart extends FormComponentPart
 {
+    private static FormDef systemDefaultPageDef;
+    
     private Map<Object,FormDef> pageDefs;
     private FormDef defaultPageDef;
     private FormPart currentPage;
@@ -75,8 +77,13 @@ public abstract class PageBookPart extends FormComponentPart
     
     protected FormDef initDefaultPageDef()
     {
-        final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        return (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+        if( systemDefaultPageDef == null )
+        {
+            final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
+            systemDefaultPageDef = (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+        }
+        
+        return systemDefaultPageDef;
     }
     
     @Override
@@ -247,34 +254,40 @@ public abstract class PageBookPart extends FormComponentPart
             throw new IllegalArgumentException();
         }
         
-        if( this.currentPage != null )
-        {
-            this.currentPage.dispose();
-        }
+        final FormPart pageToDispose = this.currentPage;
+
+        this.currentPage = null;
         
         if( pageDef != null )
         {
-            this.currentPage = (FormPart) create( this, modelElementForPage, pageDef, this.params );
+            this.currentPage = createPagePart( modelElementForPage, pageDef );
             
             if( this.childPartListener != null )
             {
                 this.currentPage.attach( this.childPartListener );
             }
         }
-        else
+        
+        if( pageToDispose != null )
         {
-            this.currentPage = null;
+            pageToDispose.dispose();
         }
         
-        updateValidationState();
+        refreshValidation();
         
         broadcast( new PageChangedEvent( this ) );
     }
     
     protected abstract Object parsePageKey( final String pageKeyString );
     
+    protected FormPart createPagePart( final IModelElement modelElementForPage,
+                                       final FormDef pageDef )
+    {
+        return (FormPart) create( this, modelElementForPage, pageDef, this.params );
+    }
+    
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         if( this.exposePageValidationState == true )
         {
@@ -282,7 +295,7 @@ public abstract class PageBookPart extends FormComponentPart
             
             if( currentPage != null )
             {
-                return currentPage.getValidationState();
+                return currentPage.validation();
             }
         }
         
@@ -297,15 +310,12 @@ public abstract class PageBookPart extends FormComponentPart
             
             if( this.exposePageValidationState == true )
             {
-                this.childPartListener = new Listener()
+                this.childPartListener = new FilteredListener<PartValidationEvent>()
                 {
                     @Override
-                    public void handle( final Event event )
+                    protected void handleTypedEvent( PartValidationEvent event )
                     {
-                        if( event instanceof ValidationChangedEvent )
-                        {
-                            updateValidationState();
-                        }
+                        refreshValidation();
                     }
                 };
                 
@@ -319,7 +329,7 @@ public abstract class PageBookPart extends FormComponentPart
                 this.childPartListener = null;
             }
             
-            updateValidationState();
+            refreshValidation();
         }
     }
     

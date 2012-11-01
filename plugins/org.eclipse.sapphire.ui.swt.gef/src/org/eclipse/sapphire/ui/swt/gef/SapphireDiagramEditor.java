@@ -123,6 +123,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -615,11 +616,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		getConfigurationManager().getDiagramRenderingContextCache().put(part, ctx);		
 	}
 
-	protected void updateNodeValidation(DiagramNodePart part) {
-		if (diagramModel == null) {
-			return;
-		}
-		
+	
+    protected void updateNodeValidation(DiagramNodePart part) {
+    	if (diagramModel == null) {
+    		return;
+    	}
 		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
 		if (nodeModel != null) {
 			nodeModel.handleNodeValidation();
@@ -659,15 +660,25 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 	}
 	
-	protected void updateShapeVisibility(DiagramNodePart part, ShapePart shapePart) {
-		if (diagramModel == null) {
-			return;
-		}
+	protected void updateShapeVisibility(final DiagramNodePart part, final ShapePart shapePart) {
+        Display.getDefault().asyncExec
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+            		if (diagramModel == null) {
+            			return;
+            		}
+            		
+            		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
+            		if (nodeModel != null) {
+            			nodeModel.handleUpdateShapeVisibility(shapePart);
+            		}
+                }
+            }
+        );
 		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleUpdateShapeVisibility(shapePart);
-		}
 	}
 
 	protected void addNodeShape(DiagramNodePart part, ShapePart shapePart) 
@@ -1118,47 +1129,56 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		return null;
 	}
 	
-	public void selectAndDirectEditPart(ISapphirePart part)
+	public void selectAndDirectEditPart(final ISapphirePart part)
 	{
-		if (part instanceof DiagramNodePart || part instanceof ShapePart || part instanceof DiagramConnectionPart)
-		{
-			GraphicalViewer viewer = this.getGraphicalViewer();
-			// Bug 370869 - DND from the tool palette would show an invalid cursor before placing the new node 
-			// in direct edit mode. TODO why?
-			//viewer.getControl().forceFocus();
-			
-			GraphicalEditPart editpart = getGraphicalEditPart(part);
-			if (editpart != null) 
-			{
-				// Force a layout first.
-				viewer.flush();
-				if (part instanceof DiagramNodePart)
-				{
-					viewer.select(editpart);
-					this.getDiagramModel().handleDirectEditing((DiagramNodePart)part);
-				}
-				else if (part instanceof ShapePart)
-				{
-					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
-					DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)getGraphicalEditPart(nodePart);
-					org.eclipse.draw2d.geometry.Rectangle partBounds = editpart.getFigure().getBounds();
-					org.eclipse.draw2d.geometry.Rectangle nodeBounds = nodeEditPart.getFigure().getBounds();
-					if (nodeBounds.contains(partBounds))
-					{
-						viewer.select(editpart);
-						DiagramNodeModel nodeModel = this.getDiagramModel().getDiagramNodeModel(nodePart);
-						ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
-						shapeModel.handleDirectEditing();
-					}
-				}
-				else if (part instanceof DiagramConnectionPart)
-				{
-					viewer.select(editpart);
-					this.getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
-				}
-				
-			}
-		}
+        Display.getDefault().asyncExec
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+            		if (part instanceof DiagramNodePart || part instanceof ShapePart || part instanceof DiagramConnectionPart)
+            		{
+            			GraphicalViewer viewer = getGraphicalViewer();
+            			// Bug 370869 - DND from the tool palette would show an invalid cursor before placing the new node 
+            			// in direct edit mode. TODO why?
+            			//viewer.getControl().forceFocus();
+            			
+            			GraphicalEditPart editpart = getGraphicalEditPart(part);
+            			if (editpart != null) 
+            			{
+            				// Force a layout first.
+            				viewer.flush();
+            				if (part instanceof DiagramNodePart)
+            				{
+            					viewer.select(editpart);
+            					getDiagramModel().handleDirectEditing((DiagramNodePart)part);
+            				}
+            				else if (part instanceof ShapePart)
+            				{
+            					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
+            					DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)getGraphicalEditPart(nodePart);
+            					org.eclipse.draw2d.geometry.Rectangle partBounds = editpart.getFigure().getBounds();
+            					org.eclipse.draw2d.geometry.Rectangle nodeBounds = nodeEditPart.getFigure().getBounds();
+            					if (nodeBounds.contains(partBounds))
+            					{
+            						viewer.select(editpart);
+            						DiagramNodeModel nodeModel = getDiagramModel().getDiagramNodeModel(nodePart);
+            						ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
+            						shapeModel.handleDirectEditing();
+            					}
+            				}
+            				else if (part instanceof DiagramConnectionPart)
+            				{
+            					viewer.select(editpart);
+            					getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
+            				}
+            				
+            			}
+            		}
+                }
+            }
+        );
 	}
 	
 	public void selectAll()

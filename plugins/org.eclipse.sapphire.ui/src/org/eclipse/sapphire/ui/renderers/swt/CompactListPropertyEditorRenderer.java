@@ -9,6 +9,7 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [343677] Element property validation is not surfaced by with directive
  *    Konstantin Komissarchik - [338857] List property editor doesn't disable add action button when the list property is disabled
+ *    Konstantin Komissarchik - [392773] IllegalArgumentException while selecting outline node in gallery
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
@@ -70,6 +71,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class CompactListPropertyEditorRenderer extends ListPropertyEditorRenderer
@@ -195,7 +197,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         // add back text controls and add link
         for (int i = 0; i < count; i++) {
             final ProxyResource resource = new ProxyResource();
-            final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
+            final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getList(), getPart().getProperty(), resource); 
             resource.init(proxyElement, this.memberProperty);
             final PropertyEditorPart editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
             
@@ -343,7 +345,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
     
     private void addActivated() {
         ProxyResource resource = new ProxyResource();
-        final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getPart().getLocalModelElement(), getPart().getProperty(), resource); 
+        final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getList(), getPart().getProperty(), resource); 
         resource.init(proxyElement, this.memberProperty);
         PropertyEditorPart editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
 

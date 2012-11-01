@@ -549,7 +549,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
             final boolean before = this.dirty;
             this.dirty = after;
             
-            broadcast( new DirtyStateEvent( before, after ) );
+            broadcast( new DirtyStateEvent( this, before, after ) );
         }
     }
 	

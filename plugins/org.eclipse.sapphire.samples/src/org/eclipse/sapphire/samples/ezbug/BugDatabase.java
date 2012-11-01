@@ -12,17 +12,15 @@
 
 package org.eclipse.sapphire.samples.ezbug;
 
-import org.eclipse.sapphire.modeling.IExecutableModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ProgressMonitor;
-import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.ezbug.internal.FileBugReportOpMethods;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,26 +28,20 @@ import org.eclipse.sapphire.samples.ezbug.internal.FileBugReportOpMethods;
  */
 
 @GenerateImpl
-@XmlBinding( path = "report" )
+@XmlBinding( path = "bug-database" )
 
-public interface IFileBugReportOp extends IExecutableModelElement
+public interface BugDatabase extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IFileBugReportOp.class );
+    ModelElementType TYPE = new ModelElementType( BugDatabase.class );
+
+    // *** BugReports ***
     
-    // *** BugReport ***
-    
-    @Type( base = IBugReport.class )
+    @Type( base = BugReport.class )
     @Label( standard = "bug report" )
-    @XmlBinding( path = "bug" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "bug", type = BugReport.class ) )
     
-    ImpliedElementProperty PROP_BUG_REPORT = new ImpliedElementProperty( TYPE, "BugReport" );
+    ListProperty PROP_BUG_REPORTS = new ListProperty( TYPE, "BugReports" );
     
-    IBugReport getBugReport();
-    
-    // *** Method: execute ***
-    
-    @DelegateImplementation( FileBugReportOpMethods.class )
-    
-    Status execute( ProgressMonitor monitor );
+    ModelElementList<BugReport> getBugReports();
     
 }

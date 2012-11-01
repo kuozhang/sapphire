@@ -18,10 +18,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class XmlDelimitedListBindingImpl
-
-    extends DelimitedListBindingImpl
-
+public abstract class XmlDelimitedListBindingImpl extends DelimitedListBindingImpl
 {
     private final XmlPath path;
     

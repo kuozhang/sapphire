@@ -623,7 +623,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                                 {
                                     if( event instanceof LabelChangedEvent || event instanceof ImageChangedEvent )
                                     {
-                                        treeViewer.update( node, null );
+                                        Display.getCurrent().asyncExec( new TreeViewerUpdateJob( treeViewer, node ) );
                                     }
                                     else if( event instanceof NodeListEvent )
                                     {
@@ -754,7 +754,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 
                 if( node != null )
                 {
-                    res = ! node.getValidationState().ok();
+                    res = ! node.validation().ok();
                 }
 
                 return res;
@@ -793,7 +793,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 SapphireFormText text = new SapphireFormText( parent, SWT.NO_FOCUS );
                 text.setLayoutData( gdfill() );
                 
-                final org.eclipse.sapphire.modeling.Status validation = node.getValidationState();
+                final org.eclipse.sapphire.modeling.Status validation = node.validation();
                 final List<org.eclipse.sapphire.modeling.Status> items = gather( validation );
                 
                 final StringBuffer buffer = new StringBuffer();
@@ -1460,10 +1460,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         }
     }
     
-    private static final class ContentOutlineFilteredTree
-    
-        extends FilteredTree
-        
+    private static final class ContentOutlineFilteredTree extends FilteredTree
     {
         private final MasterDetailsContentOutline contentTree;
         private WorkbenchJob refreshJob;
@@ -2070,6 +2067,24 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             {
                 section.detach( this.listener );
             }
+        }
+    }
+    
+    private static final class TreeViewerUpdateJob implements Runnable
+    {
+        private final TreeViewer tree;
+        private final Object element;
+        
+        public TreeViewerUpdateJob( final TreeViewer tree,
+                                    final Object element )
+        {
+            this.tree = tree;
+            this.element = element;
+        }
+
+        public void run()
+        {
+            this.tree.update( this.element, null );
         }
     }
 

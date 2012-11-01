@@ -62,6 +62,7 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#MasterDetailsContentNode">MasterDetailsContentNode</a></li>
   <li><a href="#MasterDetailsContentOutline">MasterDetailsContentOutline</a></li>
   <li><a href="#MasterDetailsEditorPage">MasterDetailsEditorPage</a></li>
+  <li><a href="#ModelElementType">ModelElementType</a></li>
   <li><a href="#ModelProperty">ModelProperty</a></li>
   <li><a href="#PartDef">PartDef</a></li>
   <li><a href="#PropertyEditorDef">PropertyEditorDef</a></li>
@@ -82,7 +83,9 @@ to 0.6 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireSpacer">SapphireSpacer</a></li>
   <li><a href="#SapphireUiDefFactory">SapphireUiDefFactory</a></li>
   <li><a href="#SapphireWizard">SapphireWizard</a></li>
+  <li><a href="#Service">Service</a></li>
   <li><a href="#Status">Status</a></li>
+  <li><a href="#ValidationChangedEvent">ValidationChangedEvent</a></li>
   <li><a href="#Conditional">Conditional</a></li>
   <li><a href="#SectionVisibility">Section Visibility</a></li>
   <li><a href="#NodeVisibility">Node Visibility</a></li>
@@ -700,6 +703,26 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
 </table>
 
 
+<h2><a name="ModelElementType">ModelElementType</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">type</font>.attach( listener )</code></pre>
+    </td>
+    <td>
+<p>No direct equivalent has been provided, but attaching the listener via @Listener annotation may be a viable
+substitute in some cases. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ModelProperty">ModelProperty</a></h2>
 
 <table>
@@ -721,6 +744,16 @@ post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm
     </td>
     <td>
 <pre class="source-code"><code>element.property( property.getName() )</code></pre> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">property</font>.attach( listener )</code></pre>
+    </td>
+    <td>
+<p>No direct equivalent has been provided, but attaching the listener via @Listener annotation may be a viable
+substitute in some cases. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
     </td>
   </tr>
 </table>
@@ -1124,6 +1157,38 @@ implementation may be defining this method already, in which case the method wil
 post a question on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>getValidationState()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>validation()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>computeValidationState()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>computeValidation()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>updateValidationState()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">part.</font>refreshValidation()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>SapphirePart.ValidationChangedEvent</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>PartValidationEvent</code></pre>
+    </td>
+  </tr>
 </table>
 
 
@@ -1488,6 +1553,27 @@ finally
 </table>
 
 
+<h2><a name="Service">Service</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>broadcast( <font color="#888888">new Event()</font> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>broadcast( <font color="#888888">new ServiceEvent( this )</font> )</code></pre>
+
+<p>Events broadcast by a service must now extend ServiceEvent class. This facilitates differentiation
+of service events from other events and identifies the originating service.</p>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="Status">Status</a></h2>
 
 <table>
@@ -1501,6 +1587,24 @@ finally
     </td>
     <td>
 <pre class="source-code"><code>SortedSet<font color="#888888">&lt;Status> children = status.children()</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValidationChangedEvent">ValidationChangedEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>SapphirePart.ValidationChangedEvent</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>PartValidationEvent</code></pre>
     </td>
   </tr>
 </table>

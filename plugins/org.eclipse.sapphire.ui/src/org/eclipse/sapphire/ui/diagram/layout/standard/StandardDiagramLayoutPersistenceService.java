@@ -643,7 +643,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
             final boolean before = this.dirty;
             this.dirty = after;
             
-            broadcast( new DirtyStateEvent( before, after ) );
+            broadcast( new DirtyStateEvent( this, before, after ) );
         }
     }
     

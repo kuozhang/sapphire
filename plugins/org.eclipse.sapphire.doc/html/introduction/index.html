@@ -56,13 +56,13 @@ artifacts and are not source controlled. In fact, you will rarely have any reaso
 them. All model authoring and consumption happens through the interfaces.</p>
 
 <p>In this article we will walk through a Sapphire sample called EzBug. The sample is based
-around a scenario of building a bug reporting system. Let's start by looking at IBugReport.</p>
+around a scenario of building a bug reporting system. Let's start by looking at BugReport.</p>
 
 <pre class="source-code"><code>@GenerateImpl
 
-public interface IBugReport extends IModelElement
+public interface BugReport extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IBugReport.class );
+    ModelElementType TYPE = new ModelElementType( BugReport.class );
 
     // *** CustomerId ***
 
@@ -125,13 +125,13 @@ public interface IBugReport extends IModelElement
 
     // *** Hardware ***
 
-    @Type( base = IHardwareItem.class )
-    @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "hardware-item", type = IHardwareItem.class ) } )
+    @Type( base = HardwareItem.class )
+    @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "hardware-item", type = HardwareItem.class ) } )
     @Label( standard = "hardware" )
 
     ListProperty PROP_HARDWARE = new ListProperty( TYPE, "Hardware" );
 
-    ModelElementList&lt;IHardwareItem> getHardware();
+    ModelElementList&lt;HardwareItem> getHardware();
 }</code></pre>
 
 <p>As you can see in the above code listing, a model element definition in Sapphire is composed of a series
@@ -150,14 +150,14 @@ type of elements) or heterogeneous (holds elements of various specified types). 
 arbitrary object reference that does not need to be persisted to permanent storage.</p>
 
 <p>Using a combination of list and element properties, it is possible to create an arbitrary model hierarchy. In the
-above listing, there is one list property. It is homogeneous and references IHardwareItem element type. Let's
+above listing, there is one list property. It is homogeneous and references HardwareItem element type. Let's
 look at that type next.</p>
 
 <pre class="source-code"><code>@GenerateImpl
 
-public interface IHardwareItem extends IModelElement
+public interface HardwareItem extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IHardwareItem.class );
+    ModelElementType TYPE = new ModelElementType( HardwareItem.class );
 
     // *** Type ***
 
@@ -205,27 +205,27 @@ public interface IHardwareItem extends IModelElement
     void setDescription( String value );
 }</code></pre>
 
-<p>The IHardwareItem listing should look very similar to IBugReport and that's the point. A Sapphire model
+<p>The HardwareItem listing should look very similar to BugReport and that's the point. A Sapphire model
 is just a collection of Java interfaces that are annotated in a certain way and reference each other.</p>
 
-<p>A bug report is contained in IFileBugReportOp, which serves as the top level type in the model.</p>
+<p>A bug report is contained in FileBugReportOp, which serves as the top level type in the model.</p>
 
 <pre class="source-code"><code>@GenerateImpl
 @XmlBinding( path = "report" )
 
-public interface IFileBugReportOp extends IModelElement
+public interface FileBugReportOp extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IFileBugReportOp.class );
+    ModelElementType TYPE = new ModelElementType( FileBugReportOp.class );
 
     // *** BugReport ***
 
-    @Type( base = IBugReport.class )
+    @Type( base = BugReport.class )
     @Label( standard = "bug report" )
     @XmlBinding( path = "bug" )
 
     ImpliedElementProperty PROP_BUG_REPORT = new ImpliedElementProperty( TYPE, "BugReport" );
 
-    IBugReport getBugReport();
+    BugReport getBugReport();
 }</code></pre>
 
 
@@ -378,7 +378,7 @@ arranging the properties on the screen. This is done via an XML file.</p>
                             &lt;property>Hardware&lt;/property>
                         &lt;/list-selection-controller>
                         &lt;panel>
-                            &lt;key>IHardwareItem&lt;/key>
+                            &lt;key>HardwareItem&lt;/key>
                             &lt;content>
                                 &lt;property-editor>
                                     &lt;property>Description&lt;/property>
@@ -421,14 +421,14 @@ externally from Java code.</p>
 
 <p>Next we will write a little bit of Java code to open the dialog that we defined.</p>
 
-<pre class="source-code"><code>IFileBugReportOp operation = IFileBugReportOp.TYPE.instantiate();
+<pre class="source-code"><code>FileBugReportOp operation = FileBugReportOp.TYPE.instantiate();
 
 try
 {
     SapphireDialog dialog = new SapphireDialog
     (
         shell, operation.getBugReport(),
-        DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).dialog( "bug.report.dialog" )
+        DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug.sdef" ).dialog( "bug.report.dialog" )
     );
 
     if( dialog.open() == Dialog.OK )
@@ -461,7 +461,7 @@ Our model is not really an operation yet. We can create and populate a bug repor
 with it.</p>
 
 <p>Any Sapphire model element can be turned into an operation by adding an execute method. We will do that
-now with IFileBugReportOp. In particular, IFileBugReportOp will be changed to extend IExecutableModelElement
+now with FileBugReportOp. In particular, FileBugReportOp will be changed to extend IExecutableModelElement
 and will acquire the following method definition:</p>
 
 <pre class="source-code"><code>// *** Method: execute ***
@@ -477,7 +477,7 @@ hookup.</p>
 
 <pre class="source-code"><code>public class FileBugReportOpMethods
 {
-    public static final Status execute( IFileBugReportOp context, ProgressMonitor monitor )
+    public static final Status execute( FileBugReportOp context, ProgressMonitor monitor )
     {
         // Do something here.
 
@@ -492,7 +492,7 @@ hookup.</p>
 
 <pre class="source-code"><code>&lt;wizard>
     &lt;id>wizard&lt;/id>
-    &lt;element-type>IFileBugReportOp&lt;/element-type>
+    &lt;element-type>FileBugReportOp&lt;/element-type>
     &lt;label>create bug report (sapphire sample)&lt;/label>
     &lt;page>
         &lt;id>main.page&lt;/id>
@@ -516,10 +516,10 @@ hookup.</p>
 <p>The above defines a one page wizard by re-using the composite definition created earlier. Now back to Java
 to use the wizard...</p>
 
-<pre class="source-code"><code>SapphireWizard&lt;IFileBugReportOp> wizard = new SapphireWizard&lt;IFileBugReportOp>
+<pre class="source-code"><code>SapphireWizard&lt;FileBugReportOp> wizard = new SapphireWizard&lt;FileBugReportOp>
 (
-    IFileBugReportOp.TYPE, 
-    DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug.sdef" ).wizard( "wizard" )
+    FileBugReportOp.TYPE, 
+    DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug.sdef" ).wizard( "wizard" )
 );
 
 WizardDialog dialog = new WizardDialog( shell, wizard );
@@ -543,25 +543,25 @@ the operation and references the correct UI definition.</p>
 <p>Now that we have a system for submitting bug reports, it would be nice to have a way to maintain a collection of these reports.
 Even better if we can re-use some of our existing code to do this. Back to the model.</p>
 
-<p>The first step is to create IBugDatabase type which will hold a collection of bug reports. By now you should
+<p>The first step is to create BugDatabase type which will hold a collection of bug reports. By now you should
 have a pretty good idea of what that will look like.</p>
 
 <pre class="source-code"><code>@GenerateImpl
 @XmlBinding( path = "bug-database" )
 
-public interface IBugDatabase extends IModelElement
+public interface BugDatabase extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( IBugDatabase.class );
+    ModelElementType TYPE = new ModelElementType( BugDatabase.class );
 
     // *** BugReports ***
 
-    @Type( base = IBugReport.class )
+    @Type( base = BugReport.class )
     @Label( standard = "bug report" )
-    @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "bug", type = IBugReport.class ) } )
+    @XmlListBinding( mappings = { @XmlListBinding.Mapping( element = "bug", type = BugReport.class ) } )
 
     ListProperty PROP_BUG_REPORTS = new ListProperty( TYPE, "BugReports" );
 
-    ModelElementList&lt;IBugReport> getBugReports();
+    ModelElementList&lt;BugReport> getBugReports();
 }</code></pre>
 
 <p>That was easy. Now let's go back to the UI definition file.</p>
@@ -576,7 +576,7 @@ of content on the left and a series of sections on the right that change dependi
 
 <pre class="source-code"><code>&lt;editor-page>
     &lt;id>editor.page&lt;/id>
-    &lt;element-type>IBugDatabase&lt;/element-type>
+    &lt;element-type>BugDatabase&lt;/element-type>
     &lt;page-name>bug database&lt;/page-name>
     &lt;page-header-text>bug database (sapphire sample)&lt;/page-header-text>
     &lt;initial-selection>bug reports&lt;/initial-selection>

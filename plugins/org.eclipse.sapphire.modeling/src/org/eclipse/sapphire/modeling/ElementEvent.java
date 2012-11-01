@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.Map;
+
 import org.eclipse.sapphire.Event;
 
 /**
@@ -30,4 +32,15 @@ public abstract class ElementEvent extends Event
     {
         return this.element;
     }
+    
+    @Override
+    public Map<String,String> fillTracingInfo( final Map<String,String> info )
+    {
+        super.fillTracingInfo( info );
+        
+        info.put( "element", element().type().getQualifiedName() + '(' + System.identityHashCode( element() ) + ')' );
+        
+        return info;
+    }
+    
 }

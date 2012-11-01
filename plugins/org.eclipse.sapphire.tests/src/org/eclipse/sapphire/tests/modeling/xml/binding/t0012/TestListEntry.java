@@ -9,18 +9,29 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.tests.modeling.xml.binding.t0012;
+
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyContentEvent extends PropertyEvent
+@GenerateImpl
+
+public interface TestListEntry extends IModelElement
 {
-    public PropertyContentEvent( final IModelElement element,
-                                 final ModelProperty property )
-    {
-        super( element, property );
-    }
+    ModelElementType TYPE = new ModelElementType( TestListEntry.class );
     
+    // *** Value ***
+    
+    ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    
+    Value<String> getValue();
+    void setValue( String value );
+
 }

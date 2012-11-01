@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -44,15 +44,12 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
         final IModelElement element = getLocalModelElement();
         final ListFactory<SapphirePart> childPartsListFactory = ListFactory.start();
         
-        final Listener childPartListener = new Listener()
+        final Listener childPartListener = new FilteredListener<PartValidationEvent>()
         {
             @Override
-            public void handle( final Event event )
+            protected void handleTypedEvent( PartValidationEvent event )
             {
-                if( event instanceof ValidationChangedEvent )
-                {
-                    updateValidationState();
-                }
+                refreshValidation();
             }
         };
         
@@ -64,9 +61,7 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
         }
         
         this.childParts = childPartsListFactory.result();
-
-        updateValidationState();
-    }
+   }
     
     public List<? extends SapphirePart> getChildParts()
     {
@@ -74,13 +69,13 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
     }
     
     @Override
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
         for( SapphirePart child : getChildParts() )
         {
-            factory.merge( child.getValidationState() );
+            factory.merge( child.validation() );
         }
         
         return factory.create();

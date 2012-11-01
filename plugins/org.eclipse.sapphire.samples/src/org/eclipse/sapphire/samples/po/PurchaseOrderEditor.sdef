@@ -59,6 +59,33 @@
                                 <property-editor>FulfillmentDate</property-editor>
                             </content>
                         </section>
+                        <section>
+                            <label>payment</label>
+                            <content>
+                                <with>
+                                    <path>Payment</path>
+                                    <panel>
+                                        <key>CreditCardPayment</key>
+                                        <content>
+                                            <property-editor>Number</property-editor>
+                                            <property-editor>Expiration</property-editor>
+                                            <property-editor>
+                                                <style>Sapphire.PropertyEditor.PopUpListField</style>
+                                                <property>Type</property>
+                                            </property-editor>
+                                            <property-editor>Bank</property-editor>
+                                        </content>
+                                    </panel>
+                                    <panel>
+                                        <key>CheckPayment</key>
+                                        <content>
+                                            <property-editor>Number</property-editor>
+                                            <property-editor>Bank</property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
+                            </content>
+                        </section>
                     </content>
                 </block>
                 <block>

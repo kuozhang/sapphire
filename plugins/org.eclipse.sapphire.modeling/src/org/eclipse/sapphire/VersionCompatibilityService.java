@@ -67,7 +67,7 @@ public abstract class VersionCompatibilityService extends DataService<VersionCom
     public final boolean compatible()
     {
         final Data data = data();
-        return ( data == null ? false : data.compatible() );
+        return ( data == null ? true : data.compatible() );
     }
     
     public static class Data

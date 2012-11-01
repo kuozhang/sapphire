@@ -12,9 +12,6 @@
 package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
-import org.eclipse.sapphire.VersionCompatibilityService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -29,7 +26,7 @@ public final class MasterVersionCompatibilityServiceFactory extends ServiceFacto
     public boolean applicable( final ServiceContext context,
                                final Class<? extends Service> service )
     {
-        return ! context.find( IModelElement.class ).services( context.find( ModelProperty.class ), VersionCompatibilityService.class ).isEmpty();
+        return true;
     }
 
     @Override

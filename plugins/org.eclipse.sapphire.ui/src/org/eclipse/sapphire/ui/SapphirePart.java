@@ -36,6 +36,7 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
+import org.eclipse.sapphire.modeling.ModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
@@ -97,7 +98,7 @@ public abstract class SapphirePart implements ISapphirePart
     protected PartDef definition;
     protected Map<String,String> params;
     private Listener modelElementListener;
-    private Status validationState;
+    private Status validation;
     private final ListenerContext listeners = new ListenerContext();
     private Set<SapphirePartListener> listenersDeprecated;
     private SapphireImageCache imageCache;
@@ -105,6 +106,7 @@ public abstract class SapphirePart implements ISapphirePart
     private PartServiceContext serviceContext;
     private FunctionResult visibleWhenFunctionResult;
     private boolean initialized;
+    private boolean disposed;
     
     public final boolean initialized()
     {
@@ -138,7 +140,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         this.modelElement.attach( this.modelElementListener );
         
-        this.validationState = Status.createOkStatus();
+        this.listeners.coordinate( ( (ModelElement) this.modelElement ).listeners() );
         
         for( ISapphirePartListenerDef listenerDefinition : this.definition.getListeners() )
         {
@@ -190,8 +192,6 @@ public abstract class SapphirePart implements ISapphirePart
                 }
             }
         );
-        
-        updateValidationState();
         
         this.initialized = true;
         
@@ -250,7 +250,10 @@ public abstract class SapphirePart implements ISapphirePart
                         {
                             public void run()
                             {
-                                refreshOp.run();
+                                if( ! disposed() && ! getLocalModelElement().disposed() )
+                                {
+                                    refreshOp.run();
+                                }
                             }
                         };
                      
@@ -280,87 +283,84 @@ public abstract class SapphirePart implements ISapphirePart
         {
             final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
             
-            if( service != null )
+            final Function function = new Function()
             {
-                final Function function = new Function()
+                @Override
+                public String name()
                 {
-                    @Override
-                    public String name()
-                    {
-                        return "VersionCompatible";
-                    }
-    
-                    @Override
-                    public FunctionResult evaluate( final FunctionContext context )
-                    {
-                        return new FunctionResult( this, context )
-                        {
-                            private Listener serviceListener;
-                            private Listener propertyListener;
-                            
-                            @Override
-                            protected void init()
-                            {
-                                this.serviceListener = new Listener()
-                                {
-                                    @Override
-                                    public void handle( final Event event )
-                                    {
-                                        refresh();
-                                    }
-                                };
-                                
-                                service.attach( this.serviceListener );
-                                
-                                this.propertyListener = new FilteredListener<PropertyContentEvent>()
-                                {
-                                    @Override
-                                    protected void handleTypedEvent( final PropertyContentEvent event )
-                                    {
-                                        refresh();
-                                    }
-                                };
-                                
-                                if( property instanceof ImpliedElementProperty )
-                                {
-                                    element.attach( this.propertyListener, property.getName() + "/*" );
-                                }
-                                else
-                                {
-                                    element.attach( this.propertyListener, property.getName() );
-                                }
-                            }
-    
-                            @Override
-                            protected Object evaluate()
-                            {
-                                return service.compatible() || ! element.empty( property );
-                            }
-                            
-                            @Override
-                            public void dispose()
-                            {
-                                super.dispose();
-                                
-                                service.detach( this.serviceListener );
+                    return "VersionCompatible";
+                }
 
-                                if( property instanceof ImpliedElementProperty )
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        private Listener serviceListener;
+                        private Listener propertyListener;
+                        
+                        @Override
+                        protected void init()
+                        {
+                            this.serviceListener = new Listener()
+                            {
+                                @Override
+                                public void handle( final Event event )
                                 {
-                                    element.attach( this.propertyListener, property.getName() + "/*" );
+                                    refresh();
                                 }
-                                else
+                            };
+                            
+                            service.attach( this.serviceListener );
+                            
+                            this.propertyListener = new FilteredListener<PropertyContentEvent>()
+                            {
+                                @Override
+                                protected void handleTypedEvent( final PropertyContentEvent event )
                                 {
-                                    element.attach( this.propertyListener, property.getName() );
+                                    refresh();
                                 }
+                            };
+                            
+                            if( property instanceof ImpliedElementProperty )
+                            {
+                                element.attach( this.propertyListener, property.getName() + "/*" );
                             }
-                        };
-                    }
-                };
-                
-                function.init();
-                
-                return function;
-            }
+                            else
+                            {
+                                element.attach( this.propertyListener, property.getName() );
+                            }
+                        }
+
+                        @Override
+                        protected Object evaluate()
+                        {
+                            return service.compatible() || ! element.empty( property );
+                        }
+                        
+                        @Override
+                        public void dispose()
+                        {
+                            super.dispose();
+                            
+                            service.detach( this.serviceListener );
+
+                            if( property instanceof ImpliedElementProperty )
+                            {
+                                element.detach( this.propertyListener, property.getName() + "/*" );
+                            }
+                            else
+                            {
+                                element.detach( this.propertyListener, property.getName() );
+                            }
+                        }
+                    };
+                }
+            };
+            
+            function.init();
+            
+            return function;
         }
         
         return null;
@@ -413,24 +413,38 @@ public abstract class SapphirePart implements ISapphirePart
         return Collections.unmodifiableMap( this.params );
     }
     
-    public final Status getValidationState()
+    public final Status validation()
     {
-        return this.validationState;
+        if( this.validation == null )
+        {
+            refreshValidation();
+        }
+        
+        return this.validation;
     }
     
-    protected Status computeValidationState()
+    protected Status computeValidation()
     {
         return Status.createOkStatus();
     }
     
-    public final void updateValidationState()
+    protected final void refreshValidation()
     {
-        final Status newValidationState = computeValidationState();
+        final Status newValidationState = computeValidation();
         
-        if( this.validationState == null || newValidationState == null || ! this.validationState.equals( newValidationState ) )
+        if( newValidationState == null )
         {
-            this.validationState = newValidationState;
-            broadcast( new ValidationChangedEvent( this ) );
+            throw new IllegalStateException();
+        }
+        
+        if( this.validation == null )
+        {
+            this.validation = newValidationState;
+        }
+        else if( ! this.validation.equals( newValidationState ) )
+        {
+            this.validation = newValidationState;
+            broadcast( new PartValidationEvent( this ) );
         }
     }
     
@@ -811,37 +825,61 @@ public abstract class SapphirePart implements ISapphirePart
     
     public void dispose()
     {
-        this.modelElement.detach( this.modelElementListener );
-        
-        if( this.parent == null )
+        synchronized( this )
         {
-            this.imageCache.dispose();
-        }
-        
-        if( this.actions != null )
-        {
-            for( SapphireActionGroup actionsForContext : this.actions.values() )
+            if( ! this.disposed )
             {
-                actionsForContext.dispose();
+                this.disposed = true;
             }
         }
         
-        if( this.serviceContext != null )
+        if( ! this.disposed )
         {
-            this.serviceContext.dispose();
-        }
+            this.modelElement.detach( this.modelElementListener );
         
-        if( this.visibleWhenFunctionResult != null )
+            if( this.parent == null )
+            {
+                this.imageCache.dispose();
+            }
+            
+            if( this.actions != null )
+            {
+                for( SapphireActionGroup actionsForContext : this.actions.values() )
+                {
+                    actionsForContext.dispose();
+                }
+            }
+            
+            if( this.serviceContext != null )
+            {
+                this.serviceContext.dispose();
+            }
+            
+            if( this.visibleWhenFunctionResult != null )
+            {
+                this.visibleWhenFunctionResult.dispose();
+            }
+            
+            broadcast( new DisposeEvent() );
+        }
+    }
+    
+    public final boolean disposed()
+    {
+        synchronized( this )
         {
-            this.visibleWhenFunctionResult.dispose();
+            return this.disposed;
         }
-        
-        broadcast( new DisposeEvent() );
     }
     
     protected final class ImageManager
     {
-        private final FunctionResult imageFunctionResult;
+        private final IModelElement element;
+        private final Function imageFunction;
+        private final Function defaultValueFunction;        
+        private boolean initialized;
+        private boolean broadcastImageEvents;
+        private FunctionResult imageFunctionResult;
         private ImageData baseImageData;
         private ImageDescriptor base;
         private ImageDescriptor error;
@@ -858,48 +896,61 @@ public abstract class SapphirePart implements ISapphirePart
                              final Function imageFunction,
                              final Function defaultValueFunction )
         {
-            this.imageFunctionResult = initExpression
-            (
-                element,
-                imageFunction,
-                ImageData.class,
-                defaultValueFunction,
-                new Runnable()
-                {
-                    public void run()
+            this.element = element;
+            this.imageFunction = imageFunction;
+            this.defaultValueFunction = defaultValueFunction;
+        }
+        
+        private void init()
+        {
+            if( ! this.initialized )
+            {
+                this.initialized = true;
+                
+                this.imageFunctionResult = initExpression
+                (
+                    this.element,
+                    this.imageFunction,
+                    ImageData.class,
+                    this.defaultValueFunction,
+                    new Runnable()
                     {
-                        refresh( true );
-                    }
-                }
-            );
-            
-            attach
-            (
-                new Listener()
-                {
-                    @Override
-                    public void handle( final Event event )
-                    {
-                        if( event instanceof ValidationChangedEvent )
+                        public void run()
                         {
-                            refresh( true );
+                            refresh();
                         }
                     }
-                }
-            );
-            
-            refresh( false );
+                );
+                
+                attach
+                (
+                    new FilteredListener<PartValidationEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( PartValidationEvent event )
+                        {
+                            refresh();
+                        }
+                    }
+                );
+                
+                refresh();
+                
+                this.broadcastImageEvents = true;
+            }
         }
         
         public ImageDescriptor getImage()
         {
+            init();
+            
+            this.broadcastImageEvents = true;
+            
             return this.current;
         }
         
-        private void refresh( final boolean notifyListenersIfNecessary )
+        private void refresh()
         {
-            final Status st = getValidationState();
-            final Status.Severity severity = st.severity();
             final ImageDescriptor old = this.current;
             
             if( this.imageFunctionResult != null )
@@ -920,6 +971,11 @@ public abstract class SapphirePart implements ISapphirePart
                 }
                 else
                 {
+                    this.current = this.base;
+                    
+                    final Status st = validation();
+                    final Status.Severity severity = st.severity();
+
                     if( severity == Status.Severity.ERROR )
                     {
                         if( this.error == null )
@@ -938,14 +994,10 @@ public abstract class SapphirePart implements ISapphirePart
                         
                         this.current = this.warning;
                     }
-                    else
-                    {
-                        this.current = this.base;
-                    }
                 }
             }
             
-            if( notifyListenersIfNecessary && this.current != old )
+            if( this.broadcastImageEvents && this.current != old )
             {
                 broadcast( new ImageChangedEvent( SapphirePart.this ) );
             }
@@ -975,14 +1027,6 @@ public abstract class SapphirePart implements ISapphirePart
     public static final class PartInitializationEvent extends PartEvent
     {
         public PartInitializationEvent( final SapphirePart part )
-        {
-            super( part );
-        }
-    }
-    
-    public static final class ValidationChangedEvent extends PartEvent
-    {
-        public ValidationChangedEvent( final SapphirePart part )
         {
             super( part );
         }

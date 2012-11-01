@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.internal;
 
-import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.services.Service;
@@ -51,10 +50,7 @@ public final class VersionCompatibilityValidationServiceForProperty extends Vers
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = context.find( ModelProperty.class );
-            
-            return property != null && element.service( property, MasterVersionCompatibilityService.class ) != null; 
+            return true;
         }
 
         @Override

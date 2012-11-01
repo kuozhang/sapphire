@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.services.ServiceEvent;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -42,6 +43,13 @@ public final class ElementDisposeEvent extends ElementEvent
         else if( event instanceof PropertyEvent )
         {
             if( ( (PropertyEvent) event ).element() == element )
+            {
+                return true;
+            }
+        }
+        else if( event instanceof ServiceEvent )
+        {
+            if( ( (ServiceEvent) event ).service().context( IModelElement.class ) == element )
             {
                 return true;
             }

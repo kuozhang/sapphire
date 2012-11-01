@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
+import org.eclipse.sapphire.samples.ezbug.FileBugReportOp;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.SapphireWizard;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -30,10 +30,10 @@ public final class FileBugReportHandler3 extends AbstractHandler
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final SapphireWizard<IFileBugReportOp> wizard = new SapphireWizard<IFileBugReportOp>
+        final SapphireWizard<FileBugReportOp> wizard = new SapphireWizard<FileBugReportOp>
         ( 
-            IFileBugReportOp.TYPE,
-            DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).wizard( "wizard" )
+            FileBugReportOp.TYPE,
+            DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).wizard( "wizard" )
         );
         
         final WizardDialog dialog = new WizardDialog( window.getShell(), wizard );

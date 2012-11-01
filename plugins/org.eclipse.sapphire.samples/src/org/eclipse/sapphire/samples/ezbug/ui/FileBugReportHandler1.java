@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.ezbug.ui;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
+import org.eclipse.sapphire.samples.ezbug.FileBugReportOp;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.swt.SapphireDialog;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -30,14 +30,14 @@ public final class FileBugReportHandler1 extends AbstractHandler
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final IFileBugReportOp operation = IFileBugReportOp.TYPE.instantiate();
+        final FileBugReportOp operation = FileBugReportOp.TYPE.instantiate();
         
         try
         {
             final SapphireDialog dialog = new SapphireDialog
             (
                 window.getShell(), operation.getBugReport(),
-                DefinitionLoader.context( IFileBugReportOp.class ).sdef( "EzBug" ).dialog( "dialog1" )
+                DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).dialog( "dialog1" )
             );
             
             if( dialog.open() == Dialog.OK )

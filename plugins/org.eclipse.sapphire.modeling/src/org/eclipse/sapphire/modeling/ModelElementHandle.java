@@ -45,7 +45,7 @@ public final class ModelElementHandle<T extends IModelElement>
     
     public void init()
     {
-        refresh();
+        refresh( false );
     }
     
     public IModelElement root()
@@ -216,6 +216,11 @@ public final class ModelElementHandle<T extends IModelElement>
 
     public boolean refresh()
     {
+        return refresh( true );
+    }
+    
+    private boolean refresh( final boolean broadcastChangeIfNecessary )
+    {
         boolean changed = false;
         
         synchronized( this )
@@ -267,13 +272,13 @@ public final class ModelElementHandle<T extends IModelElement>
         
         if( changed )
         {
-            if( ! ( this.property instanceof ImpliedElementProperty ) )
+            if( broadcastChangeIfNecessary && ! ( this.property instanceof ImpliedElementProperty ) )
             {
                 this.parent.broadcastPropertyContentEvent( this.property );
             }
         }
         
-        changed = changed | refreshEnablement( true ) | refreshValidation( true );
+        changed = changed | refreshEnablement( broadcastChangeIfNecessary ) | refreshValidation( broadcastChangeIfNecessary );
         
         return changed;
     }

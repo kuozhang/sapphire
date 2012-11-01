@@ -32,12 +32,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @GenerateImpl
 
-public interface IBugReport
+public interface BugReport
 
     extends IModelElement
     
 {
-    ModelElementType TYPE = new ModelElementType( IBugReport.class );
+    ModelElementType TYPE = new ModelElementType( BugReport.class );
     
     // *** CustomerId ***
     
@@ -100,12 +100,12 @@ public interface IBugReport
     
     // *** Hardware ***
 
-    @Type( base = IHardwareItem.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "hardware-item", type = IHardwareItem.class ) )
+    @Type( base = HardwareItem.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "hardware-item", type = HardwareItem.class ) )
     @Label( standard = "&hardware" )
     
     ListProperty PROP_HARDWARE = new ListProperty( TYPE, "Hardware" );
     
-    ModelElementList<IHardwareItem> getHardware();
+    ModelElementList<HardwareItem> getHardware();
     
 }

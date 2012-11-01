@@ -18,13 +18,12 @@ import java.util.Collections;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphireDialogPart;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.DialogDef;
@@ -155,19 +154,17 @@ public class SapphireDialog extends Dialog
         
         this.okButton = getButton( IDialogConstants.OK_ID );
         
-        final Listener listener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
+        this.part.attach
+        (
+            new FilteredListener<PartValidationEvent>()
             {
-                if( event instanceof SapphirePart.ValidationChangedEvent )
+                @Override
+                protected void handleTypedEvent( PartValidationEvent event )
                 {
                     updateOkButtonEnablement();
                 }
             }
-        };
-        
-        this.part.attach( listener );
+        );
         
         updateOkButtonEnablement();
         
@@ -207,7 +204,7 @@ public class SapphireDialog extends Dialog
     {
         if( ! this.okButton.isDisposed() )
         {
-            final boolean expected = ( this.part.getValidationState().severity() != Status.Severity.ERROR );
+            final boolean expected = ( this.part.validation().severity() != Status.Severity.ERROR );
             final boolean actual = this.okButton.isEnabled();
             
             if( expected != actual )

@@ -18,7 +18,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
@@ -44,7 +43,7 @@ public abstract class ModelProperty extends ModelMetadataItem
     private final Class<?> typeClass;
     private final ModelElementType type;
     
-    private final ListenerContext listeners;
+    private List<Listener> listeners;
     private ServiceContext serviceContext;
     
     public ModelProperty( final ModelElementType modelElementType,
@@ -54,25 +53,6 @@ public abstract class ModelProperty extends ModelMetadataItem
         this.modelElementType = modelElementType;
         this.propertyName = propertyName;
         this.baseProperty = baseProperty;
-        
-        this.listeners = new ListenerContext();
-        
-        final Listeners listenersAnnotation = getAnnotation( Listeners.class );
-        
-        if( listenersAnnotation != null )
-        {
-            for( Class<? extends Listener> cl : listenersAnnotation.value() )
-            {
-                try
-                {
-                    this.listeners.attach( cl.newInstance() );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
-            }
-        }
         
         try
         {
@@ -260,14 +240,32 @@ public abstract class ModelProperty extends ModelMetadataItem
         }
     }
     
-    public final void attach( final Listener listener )
+    synchronized List<Listener> listeners()
     {
-        this.listeners.attach( listener );
-    }
-    
-    final void broadcast( final PropertyEvent event )
-    {
-        this.listeners.broadcast( event );
+        if( this.listeners == null )
+        {
+            final ListFactory<Listener> listenersListFactory = ListFactory.start();
+            final Listeners listenersAnnotation = getAnnotation( Listeners.class );
+            
+            if( listenersAnnotation != null )
+            {
+                for( Class<? extends Listener> cl : listenersAnnotation.value() )
+                {
+                    try
+                    {
+                        listenersListFactory.add( cl.newInstance() );
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                    }
+                }
+            }
+            
+            this.listeners = listenersListFactory.result();
+        }
+        
+        return this.listeners;
     }
 
     public <S extends Service> S service( final Class<S> serviceType )

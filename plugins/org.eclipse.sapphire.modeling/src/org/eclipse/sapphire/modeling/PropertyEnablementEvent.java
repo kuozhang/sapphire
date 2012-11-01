@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.Map;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -39,6 +41,17 @@ public final class PropertyEnablementEvent extends PropertyEvent
     public boolean after()
     {
         return this.after;
+    }
+    
+    @Override
+    public Map<String,String> fillTracingInfo( final Map<String,String> info )
+    {
+        super.fillTracingInfo( info );
+        
+        info.put( "before", Boolean.toString( before() ) );
+        info.put( "after", Boolean.toString( after() ) );
+        
+        return info;
     }
 
 }

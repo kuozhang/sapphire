@@ -17,6 +17,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
@@ -46,7 +47,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.def.CompositeDef;
+import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
@@ -54,6 +55,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroup;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
+import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -71,6 +73,8 @@ import org.eclipse.swt.widgets.Label;
 
 public final class SapphireWithDirective extends PageBookPart
 {
+    private static FormDef defaultPageDef;
+    
     private ModelPath path;
     private IModelElement element;
     private ElementProperty property;
@@ -107,7 +111,7 @@ public final class SapphireWithDirective extends PageBookPart
                 }
                 else if( event instanceof PropertyValidationEvent )
                 {
-                    updateValidationState();
+                    refreshValidation();
                 }
             }
         };
@@ -128,14 +132,19 @@ public final class SapphireWithDirective extends PageBookPart
     }
     
     @Override
-    protected CompositeDef initDefaultPageDef()
+    protected FormDef initDefaultPageDef()
     {
-        final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-        final CompositeDef composite = (CompositeDef) root.getPartDefs().insert( CompositeDef.TYPE );
-        final ISapphireLabelDef label = (ISapphireLabelDef) composite.getContent().insert( ISapphireLabelDef.TYPE );
-        label.setText( Resources.noAdditionalPropertiesMessage );
+        if( defaultPageDef == null )
+        {
+            final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
+            final FormDef form = (FormDef) root.getPartDefs().insert( FormDef.TYPE );
+            final ISapphireLabelDef label = (ISapphireLabelDef) form.getContent().insert( ISapphireLabelDef.TYPE );
+            label.setText( Resources.noAdditionalPropertiesMessage );
+            
+            defaultPageDef = form;
+        }
         
-        return composite;
+        return defaultPageDef;
     }
     
     public ModelPath getPath()
@@ -548,9 +557,18 @@ public final class SapphireWithDirective extends PageBookPart
     }
     
     @Override
-    protected Status computeValidationState()
+    protected FormPart createPagePart( final IModelElement modelElementForPage,
+                                       final FormDef pageDef )
     {
-        Status state = super.computeValidationState();
+        final PagePart page = new PagePart();
+        page.init( this, modelElementForPage, pageDef, this.params );
+        return page;
+    }
+    
+    @Override
+    protected Status computeValidation()
+    {
+        Status state = super.computeValidation();
         
         if( this.property != null )
         {
@@ -613,6 +631,42 @@ public final class SapphireWithDirective extends PageBookPart
         if( this.listener != null )
         {
             this.element.detach( this.listener, this.property );
+        }
+    }
+    
+    private static final class PagePart extends FormPart
+    {
+        @Override
+        public void render( final SapphireRenderingContext context )
+        {
+            super.render( context );
+            
+            if( empty() )
+            {
+                final SapphireFormText text = new SapphireFormText( context.getComposite(), SWT.NONE );
+                text.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
+                text.setText( Resources.noAdditionalPropertiesMessage, false, false );
+                context.adapt( text );
+            }
+        }
+        
+        private boolean empty()
+        {
+            for( SapphirePart part : getChildParts() )
+            {
+                if( part.visible() )
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        @Override
+        protected Function initVisibleWhenFunction()
+        {
+            return null;
         }
     }
     

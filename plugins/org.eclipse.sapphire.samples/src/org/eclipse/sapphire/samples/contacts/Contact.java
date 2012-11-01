@@ -35,7 +35,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.samples.contacts.internal.ConnectionsListController;
+import org.eclipse.sapphire.samples.contacts.internal.ConnectionsListBinding;
 import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryPossibleValueService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactEqualityService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactImageService;
@@ -151,7 +151,7 @@ public interface Contact extends IModelElement
     
     @Label( standard = "connections" )
     @Type( base = Connection.class )
-    @CustomXmlListBinding( impl = ConnectionsListController.class )
+    @CustomXmlListBinding( impl = ConnectionsListBinding.class )
                              
     ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
     

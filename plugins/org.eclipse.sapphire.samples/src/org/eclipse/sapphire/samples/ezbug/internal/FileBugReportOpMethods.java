@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.ezbug.internal;
 
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
+import org.eclipse.sapphire.samples.ezbug.FileBugReportOp;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.samples.ezbug.IFileBugReportOp;
 
 public final class FileBugReportOpMethods
 {
-    public static final Status execute( final IFileBugReportOp context,
+    public static final Status execute( final FileBugReportOp context,
                                         final ProgressMonitor monitor )
     {
         // Do something here.

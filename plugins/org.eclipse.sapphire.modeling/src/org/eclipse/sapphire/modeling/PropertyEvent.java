@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import java.util.Map;
+
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 
@@ -38,6 +40,17 @@ public abstract class PropertyEvent extends Event
     public final ModelProperty property()
     {
         return this.property;
+    }
+    
+    @Override
+    public Map<String,String> fillTracingInfo( final Map<String,String> info )
+    {
+        super.fillTracingInfo( info );
+        
+        info.put( "element", element().type().getQualifiedName() + '(' + System.identityHashCode( element() ) + ')' );
+        info.put( "property", property().getName() );
+        
+        return info;
     }
     
     public static final Listener filter( final Listener listener )

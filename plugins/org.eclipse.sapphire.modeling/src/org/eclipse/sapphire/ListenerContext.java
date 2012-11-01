@@ -26,6 +26,8 @@ import org.eclipse.sapphire.modeling.LoggingService;
 
 public final class ListenerContext
 {
+    private static final boolean TRACE = false;
+    
     private final Set<Listener> listeners = new CopyOnWriteArraySet<Listener>();
     private Queue<BroadcastJob> queue = new ConcurrentLinkedQueue<BroadcastJob>();
     private final Map<Class<? extends Event>,Event> suspended = new HashMap<Class<? extends Event>,Event>();
@@ -91,6 +93,11 @@ public final class ListenerContext
         
         if( post )
         {
+            if( TRACE )
+            {
+                event.trace();
+            }
+            
             for( BroadcastJob job : this.queue )
             {
                 if( event.supersedes( job.event() ) )
@@ -105,7 +112,7 @@ public final class ListenerContext
             }
         }
     }
-
+    
     public void broadcast()
     {
         for( BroadcastJob job = this.queue.poll(); job != null; job = this.queue.poll() )

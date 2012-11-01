@@ -9,18 +9,17 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.samples.po;
+
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyContentEvent extends PropertyEvent
+public interface Payment extends IModelElement
 {
-    public PropertyContentEvent( final IModelElement element,
-                                 final ModelProperty property )
-    {
-        super( element, property );
-    }
+    ModelElementType TYPE = new ModelElementType( Payment.class );
     
 }
