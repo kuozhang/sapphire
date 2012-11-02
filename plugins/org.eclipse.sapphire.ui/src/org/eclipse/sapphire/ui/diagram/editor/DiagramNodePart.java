@@ -38,6 +38,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
+import org.eclipse.sapphire.ui.swt.renderer.SwtUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -295,15 +296,25 @@ public class DiagramNodePart
 	
 	private void notifyNodeValidation()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramNodeEvent nue = new DiagramNodeEvent(this);
-				((SapphireDiagramPartListener)listener).handleNodeValidationEvent(nue);
-			}
-		}
+        SwtUtil.runOnDisplayThread
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+            		Set<SapphirePartListener> listeners = getListeners();
+            		for(SapphirePartListener listener : listeners)
+            		{
+            			if (listener instanceof SapphireDiagramPartListener)
+            			{
+            				DiagramNodeEvent nue = new DiagramNodeEvent(DiagramNodePart.this);
+            				((SapphireDiagramPartListener)listener).handleNodeValidationEvent(nue);
+            			}
+            		}
+                }
+            }
+        );
+		
 	}
 	
 	private void notifyNodeMove()
