@@ -44,6 +44,7 @@
   <li><a href="#ListSelectionService">ListSelectionService</a></li>
   <li><a href="#MasterConversionService">MasterConversionService</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
+  <li><a href="#ProblemsTraversalService">ProblemsTraversalService</a></li>
 </ul>
 
 
@@ -865,6 +866,143 @@ ModelElementList&lt;Shape> getShapes();</font></code></pre>
 <p>If the set of possible types is not specified via @Type annotation or via a custom PossibleTypesService
 implementation, the set of possible types is defined to be a singleton set composed of the property's base
 type.</p>
+
+
+<a name="ProblemsTraversalService"><h2>ProblemsTraversalService</h2></a>
+
+<p>ProblemsTraversalService produces a problem-annotated traversal order through the content outline, which can 
+be used to find the next error or warning from any location in the content outline.</p>
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to be implemented 
+by adopters.</p>
+
+<pre class="source-code"><code>ProblemsTraversalService extends DataService&lt;ProblemsTraversalServiceData>
+{
+    MasterDetailsContentNode findNextProblem( MasterDetailsContentNode reference, Status.Severity severity )
+    MasterDetailsContentNode findNextError( MasterDetailsContentNode reference )
+    MasterDetailsContentNode findNextWarning( MasterDetailsContentNode reference )
+}</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ShowNextErrorActionHandler extends SapphireActionHandler
+{
+    private ProblemsTraversalService service;
+    
+    @Override
+    public void init( final SapphireAction action,
+                      final ActionHandlerDef def )
+    {
+        super.init( action, def );
+        
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
+        final MasterDetailsEditorPagePart page = node.nearest( MasterDetailsEditorPagePart.class );
+        
+        this.service = page.service( ProblemsTraversalService.class );
+        
+        final Listener listener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refreshVisibility();
+            }
+        };
+        
+        this.service.attach( listener );
+        
+        attach
+        (
+            new FilteredListener&lt;DisposeEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final DisposeEvent event )
+                {
+                    ShowNextErrorActionHandler.this.service.detach( listener );
+                }
+            }
+        );
+        
+        refreshVisibility();
+    }
+    
+    private void refreshVisibility()
+    {
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
+        final MasterDetailsContentNode nextProblemNode = this.service.findNextError( node );
+        
+        setVisible( nextProblemNode != null );
+    }
+    
+    private PropertyEditorPart findFirstError( final List&lt;SectionPart> sections )
+    {
+        for( SectionPart section : sections )
+        {
+            final PropertyEditorPart res = findFirstError( section );
+            
+            if( res != null )
+            {
+                return res;
+            }
+        }
+        
+        return null;
+    }
+    
+    private PropertyEditorPart findFirstError( final SapphirePart part )
+    {
+        if( part != null )
+        {
+            if( part instanceof PropertyEditorPart )
+            {
+                if( part.validation().severity() == Status.Severity.ERROR )
+                {
+                    return (PropertyEditorPart) part;
+                }
+            }
+            else if( part instanceof FormPart )
+            {
+                for( SapphirePart p : ( (FormPart) part ).getChildParts() )
+                {
+                    final PropertyEditorPart result = findFirstError( p );
+                    
+                    if( result != null )
+                    {
+                        return result;
+                    }
+                }
+            }
+            else if( part instanceof PageBookPart )
+            {
+                return findFirstError( ( (PageBookPart) part ).getCurrentPage() );
+            }
+        }
+        
+        return null;
+    }
+    
+    @Override
+    protected Object run( final SapphireRenderingContext context )
+    {
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
+        final MasterDetailsContentNode nextProblemNode = this.service.findNextError( node );
+        
+        if( nextProblemNode != null )
+        {
+            nextProblemNode.select();
+            
+            final PropertyEditorPart firstProblemPropertyEditor = findFirstError( nextProblemNode.getSections() );
+            
+            if( firstProblemPropertyEditor != null )
+            {
+                firstProblemPropertyEditor.setFocus();
+            }
+        }
+        
+        return null;
+    }
+}</code></pre>
+
 
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

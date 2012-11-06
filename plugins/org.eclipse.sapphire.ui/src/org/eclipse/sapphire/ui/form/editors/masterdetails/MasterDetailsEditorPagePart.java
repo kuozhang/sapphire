@@ -76,6 +76,7 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         );
 
         this.contentOutline = new MasterDetailsContentOutline( this );
+        this.contentOutline.getRoot();
         
         this.contentOutline.attach
         (

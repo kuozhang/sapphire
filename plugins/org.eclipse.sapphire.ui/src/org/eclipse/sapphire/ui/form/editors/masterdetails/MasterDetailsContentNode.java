@@ -96,7 +96,7 @@ public final class MasterDetailsContentNode
     private ImageManager imageManager;
     private Listener childPartListener;
     private List<Object> rawChildren;
-    private MasterDetailsContentNodeList nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNode>emptyList() );
+    private MasterDetailsContentNodeList nodes;
     private List<SectionPart> sections;
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private boolean expanded;
@@ -497,7 +497,7 @@ public final class MasterDetailsContentNode
             
         if( applyToChildren )
         {
-            for( MasterDetailsContentNode child : this.nodes )
+            for( MasterDetailsContentNode child : nodes() )
             {
                 if( ! child.nodes().visible().isEmpty() )
                 {
@@ -529,7 +529,7 @@ public final class MasterDetailsContentNode
         {
             result.add( this );
             
-            for( MasterDetailsContentNode child : this.nodes )
+            for( MasterDetailsContentNode child : nodes() )
             {
                 child.getExpandedNodes( result );
             }
@@ -587,7 +587,7 @@ public final class MasterDetailsContentNode
         return false;
     }
     
-    public final List<NodeFactory> factories()
+    public List<NodeFactory> factories()
     {
         final ListFactory<NodeFactory> factories = ListFactory.start();
         
@@ -602,14 +602,19 @@ public final class MasterDetailsContentNode
         return factories.result();
     }
     
-    public final MasterDetailsContentNodeList nodes()
+    public MasterDetailsContentNodeList nodes()
     {
+        if( this.nodes == null )
+        {
+            this.nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNode>emptyList() );
+        }
+        
         return this.nodes;
     }
     
     public MasterDetailsContentNode findNode( final String label )
     {
-        for( MasterDetailsContentNode child : this.nodes )
+        for( MasterDetailsContentNode child : nodes() )
         {
             if( label.equals( child.getLabel() ) )
             {
@@ -627,7 +632,7 @@ public final class MasterDetailsContentNode
             return this;
         }
 
-        for( MasterDetailsContentNode child : this.nodes )
+        for( MasterDetailsContentNode child : nodes() )
         {
             final MasterDetailsContentNode res = child.findNode( element );
             
@@ -662,7 +667,11 @@ public final class MasterDetailsContentNode
         
         final MasterDetailsContentNodeList nodes = new MasterDetailsContentNodeList( nodeListFactory.result() );
         
-        if( ! this.nodes.equals( nodes ) )
+        if( this.nodes == null )
+        {
+            this.nodes = nodes;
+        }
+        else if( ! this.nodes.equals( nodes ) )
         {
             this.nodes = nodes;
             broadcast( new NodeListEvent( this ) );
@@ -703,7 +712,7 @@ public final class MasterDetailsContentNode
             }
         }
 
-        for( SapphirePart node : this.nodes )
+        for( SapphirePart node : nodes() )
         {
             if( node.visible() )
             {
@@ -775,7 +784,7 @@ public final class MasterDetailsContentNode
             section.dispose();
         }
         
-        for( SapphirePart node : this.nodes )
+        for( SapphirePart node : nodes() )
         {
             node.dispose();
         }
