@@ -1022,6 +1022,17 @@ public abstract class SapphirePart implements ISapphirePart
         {
             return this.part;
         }
+
+        @Override
+        protected Map<String,String> fillTracingInfo( Map<String,String> info )
+        {
+            super.fillTracingInfo( info );
+            
+            final IModelElement element = this.part.getLocalModelElement();
+            info.put( "element", element.type().getQualifiedName() + '(' + System.identityHashCode( element ) + ')' );
+            
+            return info;
+        }
     }
     
     public static final class PartInitializationEvent extends PartEvent
