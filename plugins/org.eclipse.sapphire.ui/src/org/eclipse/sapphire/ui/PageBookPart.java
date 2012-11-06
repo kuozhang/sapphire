@@ -114,23 +114,24 @@ public abstract class PageBookPart extends FormComponentPart
                             }
                         };
                         
-                        final Listener pageChangeListener = new FilteredListener<PageChangedEvent>()
-                        {
-                            @Override
-                            protected void handleTypedEvent( final PageChangedEvent event )
+                        PageBookPart.this.attach
+                        (
+                            new FilteredListener<PageChangedEvent>()
                             {
-                                final FormPart page = getCurrentPage();
-                                
-                                if( page != null )
+                                @Override
+                                protected void handleTypedEvent( final PageChangedEvent event )
                                 {
-                                    page.attach( pageVisibilityListener );
+                                    final FormPart page = getCurrentPage();
+                                    
+                                    if( page != null )
+                                    {
+                                        page.attach( pageVisibilityListener );
+                                    }
+                                    
+                                    refresh();
                                 }
-                                
-                                refresh();
                             }
-                        };
-                        
-                        attach( pageChangeListener );
+                        );
                         
                         final FormPart page = getCurrentPage();
                         
