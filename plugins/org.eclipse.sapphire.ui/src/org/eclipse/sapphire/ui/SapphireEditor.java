@@ -165,9 +165,9 @@ public abstract class SapphireEditor
     private final String pluginId;
     private IModelElement model;
     private IResourceChangeListener fileChangeListener;
-    private final SapphireImageCache imageCache;
+    private SapphireImageCache imageCache;
     private SapphireEditorContentOutline outline;
-    private final SapphireActionManager actionsManager;
+    private SapphireActionManager actionsManager;
     private SapphirePropertySheetPage propertiesViewPage;
     private Listener propertiesViewContributionChangeListener;
     private PartServiceContext serviceContext;
@@ -669,20 +669,30 @@ public abstract class SapphireEditor
         if( this.fileChangeListener != null )
         {
             ResourcesPlugin.getWorkspace().removeResourceChangeListener( this.fileChangeListener );
+            this.fileChangeListener = null;
         }
         
         this.imageCache.dispose();
+        this.imageCache = null;
+        
         this.actionsManager.dispose();
+        this.actionsManager = null;
         
         if( this.model != null )
         {
             this.model.dispose();
+            this.model = null;
         }
         
         if( this.serviceContext != null )
         {
             this.serviceContext.dispose();
+            this.serviceContext = null;
         }
+        
+        this.outline = null;
+        this.propertiesViewPage = null;
+        this.propertiesViewContributionChangeListener = null;
     }
     
     @Override
