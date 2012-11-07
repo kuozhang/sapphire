@@ -79,6 +79,9 @@ public final class DiagramNodeTemplate extends SapphirePart
         public void handleShapeDelete(final DiagramShapeEvent event)
         {        	
         }
+        public void handleShapeReorder(final DiagramShapeEvent event)
+        {        	
+        }
     }
     
 	private SapphireDiagramEditorPagePart diagramEditor;
@@ -148,6 +151,12 @@ public final class DiagramNodeTemplate extends SapphirePart
             public void handleShapeDeleteEvent(final DiagramShapeEvent event)
             {
                 notifyShapeDelete(event);
+            }
+
+        	@Override
+            public void handleShapeReorderEvent(final DiagramShapeEvent event)
+            {
+                notifyShapeReorder(event);
             }
 
         	@Override
@@ -517,6 +526,14 @@ public final class DiagramNodeTemplate extends SapphirePart
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
             listener.handleShapeDelete(event);
+        }        
+    }
+
+    private void notifyShapeReorder(final DiagramShapeEvent event)
+    {    	
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleShapeReorder(event);
         }        
     }
 

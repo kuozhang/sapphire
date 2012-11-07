@@ -39,6 +39,11 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
         // The default implementation doesn't do anything.
     }
 
+    public void handleShapeReorderEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
     public void handleShapeDeleteEvent(final DiagramShapeEvent event)
     {
         // The default implementation doesn't do anything.

@@ -20,6 +20,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
@@ -38,6 +39,7 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public final static String SHAPE_VISIBILITY_UPDATES = "SHAPE_VISIBILITY_UPDATES";
 	public final static String SHAPE_ADD = "SHAPE_ADD";
 	public final static String SHAPE_DELETE = "SHAPE_DELETE";
+	public final static String SHAPE_REORDER = "SHAPE_REORDER";
 	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
 	private DiagramModel parent;
@@ -134,6 +136,13 @@ public class DiagramNodeModel extends DiagramModelBase {
 		assert(parentModel instanceof ContainerShapeModel);
 		((ContainerShapeModel)parentModel).refreshChildren();
 		firePropertyChange(SHAPE_DELETE, null, shapePart);
+	}
+
+	public void handleReorderShapes(ShapeFactoryPart shapeFactory) {
+		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), shapeFactory);
+		assert(parentModel instanceof ContainerShapeModel);
+		((ContainerShapeModel)parentModel).refreshChildren();
+		firePropertyChange(SHAPE_REORDER, null, shapeFactory);
 	}
 
 	public List<DiagramConnectionModel> getSourceConnections() {

@@ -36,6 +36,7 @@ import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -83,7 +84,10 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new DiagramNodeEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new NodeLabelDirectEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new NodeEditPolicy());
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new NodeLayoutEditPolicy((DiagramNodeModel)getModel()));
+		if (containsShapeFactory())
+		{
+			installEditPolicy(EditPolicy.LAYOUT_ROLE, new NodeLayoutEditPolicy((DiagramNodeModel)getModel()));
+		}
 	}
 
 	@Override
@@ -333,6 +337,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			refreshChildren();
 		} else if(DiagramNodeModel.SHAPE_DELETE.equals(prop)) {
 			refreshChildren();
+		} else if (DiagramNodeModel.SHAPE_REORDER.equals(prop)) {
+			refreshChildren();
 		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
 			performDirectEdit();
 		}
@@ -385,5 +391,17 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			textParts.addAll(((ContainerShapePart)shapePart).getTextParts());
 		}
 		return textParts;
+	}
+	
+	private boolean containsShapeFactory()
+	{
+		DiagramNodePart nodePart = getCastedModel().getModelPart();
+		ShapePart shapePart = nodePart.getShapePart();
+		if (shapePart instanceof ContainerShapePart)
+		{
+			ShapeFactoryPart shapeFactory = ((ContainerShapePart)shapePart).getShapeFactoryPart();
+			return shapeFactory != null;
+		}
+		return false;
 	}
 }

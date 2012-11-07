@@ -486,7 +486,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     {
     	this.notifySelectAllNodes();
     }
-    
+        
     private void refreshPropertiesViewContribution()
     {
         final List<ISapphirePart> selections = getSelections();
@@ -797,6 +797,18 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 
+    private void notifyShapeReorder(DiagramShapeEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(event);
+			}
+		}		
+	}
+
     private void notifyNodeAdd(DiagramNodePart nodePart)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -1095,6 +1107,11 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         	notifyShapeDelete(event);
         }        
         
+        @Override
+        public void handleShapeReorder(final DiagramShapeEvent event)
+        {        
+        	notifyShapeReorder(event);
+        }        
 	}
 	
 	private class ConnectionTemplateListener extends DiagramConnectionTemplateListener

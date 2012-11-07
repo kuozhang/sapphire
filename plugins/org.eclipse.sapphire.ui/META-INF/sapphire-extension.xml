@@ -108,6 +108,7 @@
         <id>Sapphire.Move.Down</id>
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
         <label>move down</label>
         <image>org/eclipse/sapphire/ui/actions/MoveDown.png</image>
         <location>after:Sapphire.Add</location>
@@ -137,6 +138,7 @@
         <id>Sapphire.Move.Up</id>
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
         <label>move up</label>
         <image>org/eclipse/sapphire/ui/actions/MoveUp.png</image>
         <location>after:Sapphire.Add</location>
@@ -504,6 +506,22 @@
         <context>Sapphire.Diagram.Header</context>
         <impl>org.eclipse.sapphire.ui.diagram.actions.ZoomActualDiagramActionHandler</impl>
     </action-handler>
+    <action-handler>
+        <action>Sapphire.Move.Down</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.MoveShapeDownActionHandler</impl>
+        <id>Sapphire.Diagram.MoveShapeDown</id>
+        <description>Moves the model element one position towards the end of the containing list, swapping places with the following element. Activates if selected part is a child of a shape factory.</description>
+        <context>Sapphire.Diagram.Node.Shape</context>
+        <condition>org.eclipse.sapphire.ui.diagram.actions.internal.MoveShapeActionHandlerCondition</condition>
+    </action-handler>    
+    <action-handler>
+        <action>Sapphire.Move.Up</action>
+        <impl>org.eclipse.sapphire.ui.diagram.actions.MoveShapeUpActionHandler</impl>
+        <id>Sapphire.Diagram.MoveShapeUp</id>
+        <description>Moves the model element one position towards the beginning of the containing list, swapping places with the preceding element. Activates if selected part is a child of a shape factory.</description>
+        <context>Sapphire.Diagram.Node.Shape</context>
+        <condition>org.eclipse.sapphire.ui.diagram.actions.internal.MoveShapeActionHandlerCondition</condition>
+    </action-handler>    
     <action-handler-factory>
         <action>Sapphire.Add</action>
         <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>

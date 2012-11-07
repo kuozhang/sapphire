@@ -221,6 +221,20 @@ public class DiagramNodePart
 		}    	    	
     }
     
+    public void reorderShapes(ShapeFactoryPart shapeFactory)
+    {
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapeFactory);
+				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(nue);
+			}
+		}    	    	
+    	
+    }
+    
     public String getNodeTypeId()
     {
         return this.definition.getId().getContent();
