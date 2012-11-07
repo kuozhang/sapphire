@@ -825,15 +825,18 @@ public abstract class SapphirePart implements ISapphirePart
     
     public void dispose()
     {
+        boolean performOnDisposeTasks = false;
+        
         synchronized( this )
         {
             if( ! this.disposed )
             {
                 this.disposed = true;
+                performOnDisposeTasks = true;
             }
         }
         
-        if( ! this.disposed )
+        if( performOnDisposeTasks )
         {
             this.modelElement.detach( this.modelElementListener );
         
@@ -1005,7 +1008,10 @@ public abstract class SapphirePart implements ISapphirePart
         
         public void dispose()
         {
-            this.imageFunctionResult.dispose();
+            if( this.imageFunctionResult != null )
+            {
+                this.imageFunctionResult.dispose();
+            }
         }
     }
     

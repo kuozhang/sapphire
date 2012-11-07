@@ -170,6 +170,16 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         {
             this.outlineHeaderTextFunctionResult.dispose();
         }
+        
+        if( this.contentOutline != null )
+        {
+            this.contentOutline.dispose();
+        }
+        
+        if( this.state != null )
+        {
+            this.state.dispose();
+        }
     }
     
     public static final class OutlineHeaderTextEvent extends PartEvent
