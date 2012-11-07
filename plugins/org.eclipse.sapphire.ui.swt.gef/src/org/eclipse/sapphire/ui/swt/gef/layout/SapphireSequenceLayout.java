@@ -458,7 +458,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				((TextFigure) child).setHorizontalAlignment(constraint.horizontalAlignment);
 			}
 
-			y += newBounds.height + spacing + marginInset.bottom;
+			y += availableBoundHeight + spacing + marginInset.bottom;
 		}
 	}
 	
