@@ -39,6 +39,7 @@ import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
@@ -138,10 +139,10 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             
             nodeTemplate.attach
             (
-                 new FilteredListener<VisibilityChangedEvent>()
+                 new FilteredListener<PartVisibilityEvent>()
                  {
                     @Override
-                    protected void handleTypedEvent( final VisibilityChangedEvent event )
+                    protected void handleTypedEvent( final PartVisibilityEvent event )
                     {
                         refreshDiagramPalette( (DiagramNodeTemplate) event.part() );
                     }

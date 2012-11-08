@@ -17,10 +17,10 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.DataService;
 import org.eclipse.sapphire.ui.PartValidationEvent;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart.PartEvent;
 import org.eclipse.sapphire.ui.SapphirePart.PartInitializationEvent;
-import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode.NodeListEvent;
 
@@ -49,7 +49,7 @@ public final class ProblemsTraversalService extends DataService<ProblemsTraversa
                 {
                     refresh();
                 }
-                else if( part instanceof SectionPart && ( event instanceof PartValidationEvent || event instanceof VisibilityChangedEvent ) )
+                else if( part instanceof SectionPart && ( event instanceof PartValidationEvent || event instanceof PartVisibilityEvent ) )
                 {
                     refresh();
                 }

@@ -30,10 +30,10 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.services.PossibleTypesService;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
-import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
@@ -68,10 +68,10 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             }
         };
         
-        this.nodeFactoryListener = new FilteredListener<VisibilityChangedEvent>()
+        this.nodeFactoryListener = new FilteredListener<PartVisibilityEvent>()
         {
             @Override
-            protected void handleTypedEvent( final VisibilityChangedEvent event )
+            protected void handleTypedEvent( final PartVisibilityEvent event )
             {
                 broadcast( new Event() );
             }

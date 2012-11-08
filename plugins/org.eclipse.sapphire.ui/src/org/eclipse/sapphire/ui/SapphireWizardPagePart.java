@@ -81,7 +81,7 @@ public final class SapphireWizardPagePart extends CompositePart
         if( this.visible != visible )
         {
             this.visible = visible;
-            broadcast( new VisibilityChangedEvent( this ) );
+            broadcast( new PartVisibilityEvent( this ) );
         }
     }
 

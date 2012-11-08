@@ -54,6 +54,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartValidationEvent;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -172,7 +173,7 @@ public final class MasterDetailsContentNode
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof PartValidationEvent || event instanceof VisibilityChangedEvent )
+                if( event instanceof PartValidationEvent || event instanceof PartVisibilityEvent )
                 {
                     refreshValidation();
                 }
@@ -285,7 +286,7 @@ public final class MasterDetailsContentNode
                 @Override
                 public void handle( final Event event )
                 {
-                    if( event instanceof VisibilityChangedEvent || event instanceof NodeListEvent )
+                    if( event instanceof PartVisibilityEvent || event instanceof NodeListEvent )
                     {
                         getContentTree().refreshSelection();
                     }
@@ -324,10 +325,10 @@ public final class MasterDetailsContentNode
                             @Override
                             protected void init()
                             {
-                                final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                                final Listener listener = new FilteredListener<PartVisibilityEvent>()
                                 {
                                     @Override
-                                    protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                    protected void handleTypedEvent( final PartVisibilityEvent event )
                                     {
                                         refresh();
                                     }
@@ -870,7 +871,7 @@ public final class MasterDetailsContentNode
                 {
                     public void run()
                     {
-                        broadcast( new VisibilityChangedEvent( null ) );
+                        broadcast( new PartVisibilityEvent( null ) );
                     }
                 }
             );

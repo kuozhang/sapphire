@@ -97,13 +97,20 @@ public final class SplitFormPart extends FormPart
             
             block.render( blockContext );
             
-            final Listener blockPartListener = new Listener()
+            final Listener blockChildPartsListener = new Listener()
             {
                 @Override
                 public void handle( final Event event )
                 {
-                    if( event instanceof StructureChangedEvent && isReRenderNeeded( block, (StructureChangedEvent) event ) )
+                    if( event instanceof PartVisibilityEvent || event instanceof PartChildrenEvent )
                     {
+                        final SapphirePart part = ( (PartEvent) event ).part();
+                        
+                        if( event instanceof PartChildrenEvent && ! ( part instanceof CompositePart ) && ! ( part instanceof SplitFormBlockPart ) )
+                        {
+                            attachChildPartsListener( part, this );
+                        }
+                        
                         for( Control control : blockComposite.getChildren() )
                         {
                             control.dispose();
@@ -115,7 +122,7 @@ public final class SplitFormPart extends FormPart
                 }
             };
             
-            block.attach( blockPartListener );
+            attachChildPartsListener( block, blockChildPartsListener );
             
             blockComposite.addDisposeListener
             (
@@ -123,7 +130,7 @@ public final class SplitFormPart extends FormPart
                 {
                     public void widgetDisposed( final DisposeEvent event )
                     {
-                        block.detach( blockPartListener );
+                        detachChildPartsListener( block, blockChildPartsListener );
                     }
                 }
             );
@@ -132,6 +139,60 @@ public final class SplitFormPart extends FormPart
         }
         
         form.setWeights( weights );
+    }
+    
+    private static void attachChildPartsListener( final SapphirePart part,
+                                                  final Listener listener )
+    {
+        part.attach( listener );
+        
+        if( part instanceof FormPart )
+        {
+            for( SapphirePart child : ( (FormPart) part ).getChildParts() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    attachChildPartsListener( child, listener );
+                }
+            }
+        }
+        else if( part instanceof ConditionalPart )
+        {
+            for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    attachChildPartsListener( child, listener );
+                }
+            }
+        }
+    }
+    
+    private static void detachChildPartsListener( final SapphirePart part,
+                                                  final Listener listener )
+    {
+        part.detach( listener );
+        
+        if( part instanceof FormPart )
+        {
+            for( SapphirePart child : ( (FormPart) part ).getChildParts() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    detachChildPartsListener( child, listener );
+                }
+            }
+        }
+        else if( part instanceof ConditionalPart )
+        {
+            for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    detachChildPartsListener( child, listener );
+                }
+            }
+        }
     }
     
 }

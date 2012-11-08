@@ -197,13 +197,20 @@ public class CompositePart extends FormPart
             scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
         }
         
-        final Listener partListener = new Listener()
+        final Listener childPartsListener = new Listener()
         {
             @Override
             public void handle( final Event event )
             {
-                if( event instanceof StructureChangedEvent && isReRenderNeeded( (StructureChangedEvent) event ) )
+                if( event instanceof PartVisibilityEvent || event instanceof PartChildrenEvent )
                 {
+                    final SapphirePart part = ( (PartEvent) event ).part();
+                    
+                    if( event instanceof PartChildrenEvent && ! ( part instanceof CompositePart ) && ! ( part instanceof SplitFormBlockPart ) )
+                    {
+                        attachChildPartsListener( part, this );
+                    }
+                    
                     for( Control control : composite.getChildren() )
                     {
                         control.dispose();
@@ -221,7 +228,7 @@ public class CompositePart extends FormPart
             }
         };
         
-        attach( partListener );
+        attachChildPartsListener( this, childPartsListener );
         
         composite.addDisposeListener
         (
@@ -229,10 +236,64 @@ public class CompositePart extends FormPart
             {
                 public void widgetDisposed( final DisposeEvent event )
                 {
-                    detach( partListener );
+                    detachChildPartsListener( CompositePart.this, childPartsListener );
                 }
             }
         );
+    }
+    
+    private static void attachChildPartsListener( final SapphirePart part,
+                                                  final Listener listener )
+    {
+        part.attach( listener );
+        
+        if( part instanceof FormPart )
+        {
+            for( SapphirePart child : ( (FormPart) part ).getChildParts() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    attachChildPartsListener( child, listener );
+                }
+            }
+        }
+        else if( part instanceof ConditionalPart )
+        {
+            for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    attachChildPartsListener( child, listener );
+                }
+            }
+        }
+    }
+    
+    private static void detachChildPartsListener( final SapphirePart part,
+                                                  final Listener listener )
+    {
+        part.detach( listener );
+        
+        if( part instanceof FormPart )
+        {
+            for( SapphirePart child : ( (FormPart) part ).getChildParts() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    detachChildPartsListener( child, listener );
+                }
+            }
+        }
+        else if( part instanceof ConditionalPart )
+        {
+            for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
+            {
+                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
+                {
+                    detachChildPartsListener( child, listener );
+                }
+            }
+        }
     }
     
     protected Composite createOuterComposite( final SapphireRenderingContext context )

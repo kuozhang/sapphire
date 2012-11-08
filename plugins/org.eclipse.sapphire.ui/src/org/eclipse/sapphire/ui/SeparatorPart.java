@@ -65,10 +65,10 @@ public abstract class SeparatorPart extends FormComponentPart
                                 @Override
                                 protected void init()
                                 {
-                                    final Listener listener = new FilteredListener<VisibilityChangedEvent>()
+                                    final Listener listener = new FilteredListener<PartVisibilityEvent>()
                                     {
                                         @Override
-                                        protected void handleTypedEvent( final VisibilityChangedEvent event )
+                                        protected void handleTypedEvent( final PartVisibilityEvent event )
                                         {
                                             refresh();
                                         }

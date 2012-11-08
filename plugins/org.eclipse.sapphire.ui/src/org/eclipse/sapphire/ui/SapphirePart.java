@@ -187,8 +187,7 @@ public abstract class SapphirePart implements ISapphirePart
             {
                 public void run()
                 {
-                    broadcast( new VisibilityChangedEvent( SapphirePart.this ) );
-                    broadcast( new StructureChangedEvent( SapphirePart.this ) );
+                    broadcast( new PartVisibilityEvent( SapphirePart.this ) );
                 }
             }
         );
@@ -488,48 +487,6 @@ public abstract class SapphirePart implements ISapphirePart
         // The default implement doesn't do anything.
     }
     
-    /**
-     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
-     */
-    
-    protected final boolean isReRenderNeeded( final StructureChangedEvent event )
-    {
-        return isReRenderNeeded( this, event );
-    }
-
-    /**
-     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
-     */
-    
-    protected static final boolean isReRenderNeeded( final SapphirePart context,
-                                                     final StructureChangedEvent event )
-    {
-        // Something changed in the tree of parts arranged beneath this part. If this is
-        // the composite closest to the affected part, it will need to re-render.
-        
-        ISapphirePart part = event.part();
-        Boolean needToReRender = null;
-        
-        while( part != null && needToReRender == null )
-        {
-            part = part.getParentPart();
-            
-            if( part instanceof CompositePart || part instanceof SplitFormBlockPart )
-            {
-                if( part == context )
-                {
-                    needToReRender = Boolean.TRUE;
-                }
-                else
-                {
-                    needToReRender = Boolean.FALSE;
-                }
-            }
-        }
-        
-        return ( needToReRender == Boolean.TRUE );
-    }
-    
     public final boolean attach( final Listener listener )
     {
         return this.listeners.attach( listener );
@@ -543,13 +500,6 @@ public abstract class SapphirePart implements ISapphirePart
     protected final void broadcast( final Event event )
     {
         this.listeners.broadcast( event );
-        
-        // HACK
-        
-        if( event instanceof StructureChangedEvent && this.parent != null && this.parent instanceof SapphirePart )
-        {
-            ( (SapphirePart) this.parent ).broadcast( event );
-        }
     }
     
     @Deprecated
@@ -1035,6 +985,7 @@ public abstract class SapphirePart implements ISapphirePart
             super.fillTracingInfo( info );
             
             final IModelElement element = this.part.getLocalModelElement();
+            info.put( "part", this.part.getClass().getName() + '(' + System.identityHashCode( this.part ) + ')' );
             info.put( "element", element.type().getQualifiedName() + '(' + System.identityHashCode( element ) + ')' );
             
             return info;
@@ -1044,14 +995,6 @@ public abstract class SapphirePart implements ISapphirePart
     public static final class PartInitializationEvent extends PartEvent
     {
         public PartInitializationEvent( final SapphirePart part )
-        {
-            super( part );
-        }
-    }
-    
-    public static final class VisibilityChangedEvent extends PartEvent
-    {
-        public VisibilityChangedEvent( final SapphirePart part )
         {
             super( part );
         }
@@ -1081,14 +1024,6 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
     
-    public static final class StructureChangedEvent extends PartEvent
-    {
-        public StructureChangedEvent( final SapphirePart part )
-        {
-            super( part );
-        }
-    }
-
     public static final SapphirePart create( final ISapphirePart parent,
                                              final IModelElement element,
                                              final PartDef definition,

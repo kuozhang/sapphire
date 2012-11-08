@@ -105,10 +105,10 @@ public abstract class PageBookPart extends FormComponentPart
                     @Override
                     protected void init()
                     {
-                        final Listener pageVisibilityListener = new FilteredListener<VisibilityChangedEvent>()
+                        final Listener pageVisibilityListener = new FilteredListener<PartVisibilityEvent>()
                         {
                             @Override
-                            protected void handleTypedEvent( final VisibilityChangedEvent event )
+                            protected void handleTypedEvent( final PartVisibilityEvent event )
                             {
                                 refresh();
                             }
