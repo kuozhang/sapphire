@@ -105,7 +105,13 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
     {
         super.dispose();
         
-        this.base.detach( this.listener );
+        if( this.listener != null )
+        {
+            this.base.detach( this.listener );
+            this.listener = null;
+        }
+        
+        this.base = null;
     }
 
     public static final class Factory extends ServiceFactory
