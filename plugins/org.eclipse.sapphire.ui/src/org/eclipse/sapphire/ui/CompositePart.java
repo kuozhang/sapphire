@@ -190,8 +190,6 @@ public class CompositePart extends FormPart
 
         final SapphireRenderingContext innerContext = new SapphireRenderingContext( this, ctxt, composite );
         
-        super.render( innerContext );
-        
         if( scrolledComposite != null )
         {
             scrolledComposite.setMinSize( composite.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
@@ -206,7 +204,7 @@ public class CompositePart extends FormPart
                 {
                     final SapphirePart part = ( (PartEvent) event ).part();
                     
-                    if( event instanceof PartChildrenEvent && ! ( part instanceof CompositePart ) && ! ( part instanceof SplitFormBlockPart ) )
+                    if( event instanceof PartChildrenEvent && ! ( part instanceof CompositePart || part instanceof SplitFormBlockPart ) )
                     {
                         attachChildPartsListener( part, this );
                     }
@@ -228,7 +226,10 @@ public class CompositePart extends FormPart
             }
         };
         
-        attachChildPartsListener( this, childPartsListener );
+        for( SapphirePart child : getChildParts() )
+        {
+            attachChildPartsListener( child, childPartsListener );
+        }
         
         composite.addDisposeListener
         (
@@ -240,6 +241,8 @@ public class CompositePart extends FormPart
                 }
             }
         );
+        
+        super.render( innerContext );
     }
     
     private static void attachChildPartsListener( final SapphirePart part,
@@ -247,24 +250,18 @@ public class CompositePart extends FormPart
     {
         part.attach( listener );
         
-        if( part instanceof FormPart )
+        if( part instanceof FormPart && ! ( part instanceof CompositePart || part instanceof SplitFormBlockPart ) )
         {
             for( SapphirePart child : ( (FormPart) part ).getChildParts() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    attachChildPartsListener( child, listener );
-                }
+                attachChildPartsListener( child, listener );
             }
         }
         else if( part instanceof ConditionalPart )
         {
             for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    attachChildPartsListener( child, listener );
-                }
+                attachChildPartsListener( child, listener );
             }
         }
     }
@@ -274,24 +271,18 @@ public class CompositePart extends FormPart
     {
         part.detach( listener );
         
-        if( part instanceof FormPart )
+        if( part instanceof FormPart && ! ( part instanceof CompositePart || part instanceof SplitFormBlockPart )  )
         {
             for( SapphirePart child : ( (FormPart) part ).getChildParts() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    detachChildPartsListener( child, listener );
-                }
+                detachChildPartsListener( child, listener );
             }
         }
         else if( part instanceof ConditionalPart )
         {
             for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    detachChildPartsListener( child, listener );
-                }
+                detachChildPartsListener( child, listener );
             }
         }
     }

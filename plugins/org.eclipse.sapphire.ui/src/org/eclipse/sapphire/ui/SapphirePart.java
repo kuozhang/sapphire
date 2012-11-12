@@ -104,7 +104,8 @@ public abstract class SapphirePart implements ISapphirePart
     private SapphireImageCache imageCache;
     private Map<String,SapphireActionGroup> actions;
     private PartServiceContext serviceContext;
-    private FunctionResult visibleWhenFunctionResult;
+    private FunctionResult visibilityFunctionResult;
+    private boolean visibilityReadBeforeInit;
     private boolean initialized;
     private boolean disposed;
     
@@ -177,7 +178,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         init();
         
-        this.visibleWhenFunctionResult = initExpression
+        this.visibilityFunctionResult = initExpression
         (
             getModelElement(),
             initVisibleWhenFunction(), 
@@ -195,6 +196,11 @@ public abstract class SapphirePart implements ISapphirePart
         this.initialized = true;
         
         broadcast( new PartInitializationEvent( this ) );
+        
+        if( this.visibilityReadBeforeInit && this.visibilityFunctionResult.value().equals( Boolean.TRUE ) )
+        {
+            broadcast( new PartVisibilityEvent( this ) );
+        }
     }
     
     protected void init()
@@ -449,7 +455,13 @@ public abstract class SapphirePart implements ISapphirePart
     
     public final boolean visible()
     {
-        return ( this.visibleWhenFunctionResult == null ? false : (Boolean) this.visibleWhenFunctionResult.value() );
+        if( this.visibilityFunctionResult == null )
+        {
+            this.visibilityReadBeforeInit = true;
+            return false;
+        }
+        
+        return (Boolean) this.visibilityFunctionResult.value();
     }
     
     public boolean setFocus()
@@ -808,9 +820,9 @@ public abstract class SapphirePart implements ISapphirePart
                 this.serviceContext.dispose();
             }
             
-            if( this.visibleWhenFunctionResult != null )
+            if( this.visibilityFunctionResult != null )
             {
-                this.visibleWhenFunctionResult.dispose();
+                this.visibilityFunctionResult.dispose();
             }
             
             broadcast( new DisposeEvent() );

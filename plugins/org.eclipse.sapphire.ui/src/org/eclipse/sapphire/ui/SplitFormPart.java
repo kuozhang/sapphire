@@ -106,7 +106,7 @@ public final class SplitFormPart extends FormPart
                     {
                         final SapphirePart part = ( (PartEvent) event ).part();
                         
-                        if( event instanceof PartChildrenEvent && ! ( part instanceof CompositePart ) && ! ( part instanceof SplitFormBlockPart ) )
+                        if( event instanceof PartChildrenEvent && ! ( part instanceof CompositePart || part instanceof SplitFormBlockPart ) )
                         {
                             attachChildPartsListener( part, this );
                         }
@@ -122,7 +122,10 @@ public final class SplitFormPart extends FormPart
                 }
             };
             
-            attachChildPartsListener( block, blockChildPartsListener );
+            for( SapphirePart child : block.getChildParts() )
+            {
+                attachChildPartsListener( child, blockChildPartsListener );
+            }
             
             blockComposite.addDisposeListener
             (
@@ -146,24 +149,18 @@ public final class SplitFormPart extends FormPart
     {
         part.attach( listener );
         
-        if( part instanceof FormPart )
+        if( part instanceof FormPart && ! ( part instanceof CompositePart || part instanceof SplitFormBlockPart ) )
         {
             for( SapphirePart child : ( (FormPart) part ).getChildParts() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    attachChildPartsListener( child, listener );
-                }
+                attachChildPartsListener( child, listener );
             }
         }
         else if( part instanceof ConditionalPart )
         {
             for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    attachChildPartsListener( child, listener );
-                }
+                attachChildPartsListener( child, listener );
             }
         }
     }
@@ -173,24 +170,18 @@ public final class SplitFormPart extends FormPart
     {
         part.detach( listener );
         
-        if( part instanceof FormPart )
+        if( part instanceof FormPart && ! ( part instanceof CompositePart || part instanceof SplitFormBlockPart ) )
         {
             for( SapphirePart child : ( (FormPart) part ).getChildParts() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    detachChildPartsListener( child, listener );
-                }
+                detachChildPartsListener( child, listener );
             }
         }
         else if( part instanceof ConditionalPart )
         {
             for( SapphirePart child : ( (ConditionalPart) part ).getCurrentBranchContent() )
             {
-                if( ! ( child instanceof CompositePart ) && ! ( child instanceof SplitFormBlockPart ) )
-                {
-                    detachChildPartsListener( child, listener );
-                }
+                detachChildPartsListener( child, listener );
             }
         }
     }
