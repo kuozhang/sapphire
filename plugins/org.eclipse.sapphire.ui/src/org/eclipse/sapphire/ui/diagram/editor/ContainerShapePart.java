@@ -41,6 +41,7 @@ public class ContainerShapePart extends ShapePart
 	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	
 	private List<TextPart> textParts;
+	private List<ShapeFactoryPart> shapeFactoryParts;
 
 	@Override
     protected void init()
@@ -51,8 +52,11 @@ public class ContainerShapePart extends ShapePart
         
         // create children parts
         this.children = new ArrayList<ShapePart>();
-        int index = 0;
         this.textParts = new ArrayList<TextPart>();
+        this.shapeFactoryParts = new ArrayList<ShapeFactoryPart>();
+        
+        int index = 0;        
+        
         for (ShapeDef shape : this.containerShapeDef.getContent())
         {
         	ShapePart childPart = null;
@@ -78,6 +82,8 @@ public class ContainerShapePart extends ShapePart
         	else if (shape instanceof ShapeFactoryDef)
         	{
         		childPart = new ShapeFactoryPart();
+        		childPart.setActive(true);
+        		this.shapeFactoryParts.add((ShapeFactoryPart)childPart);
         	}
         	if (childPart != null)
         	{
@@ -153,25 +159,18 @@ public class ContainerShapePart extends ShapePart
 		return false;
 	}
 	
-	// TODO support multiple shape factory
-	public ShapeFactoryPart getShapeFactoryPart()
+	public List<ShapeFactoryPart> getShapeFactoryParts()
 	{
+		List<ShapeFactoryPart> shapeFactories = new ArrayList<ShapeFactoryPart>();
+		shapeFactories.addAll(this.shapeFactoryParts);
 		for (ShapePart shapePart : getChildren())
 		{
-			if (shapePart instanceof ShapeFactoryPart)
+			if (shapePart instanceof ContainerShapePart)
 			{
-				return (ShapeFactoryPart)shapePart;
-			}
-			else if (shapePart instanceof ContainerShapePart)
-			{
-				ShapeFactoryPart shapeFactoryPart = ((ContainerShapePart)shapePart).getShapeFactoryPart();
-				if (shapeFactoryPart != null)
-				{
-					return shapeFactoryPart;
-				}
+				shapeFactories.addAll(((ContainerShapePart)shapePart).getShapeFactoryParts());
 			}
 		}
-		return null;
+		return shapeFactories;		
 	}
 	
 	@Override
@@ -184,14 +183,7 @@ public class ContainerShapePart extends ShapePart
 			{
 				activeChildren.add(child);
 			}
-			else if (child instanceof ShapeFactoryPart)
-			{
-				activeChildren.addAll(((ShapeFactoryPart)child).getActiveChildren());
-			}
-			else if (child instanceof ContainerShapePart)
-			{
-				activeChildren.addAll(((ContainerShapePart)child).getActiveChildren());
-			}
+			activeChildren.addAll(child.getActiveChildren());
 		}
     	return activeChildren;
     }	

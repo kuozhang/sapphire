@@ -46,9 +46,9 @@ public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
 		}
 	}
 
-	private Rectangle getAbsoluteBounds(GraphicalEditPart ep) {
-		Rectangle bounds = ep.getFigure().getBounds().getCopy();
-		ep.getFigure().translateToAbsolute(bounds);
+	private Rectangle getAbsoluteBounds(GraphicalEditPart ep) {		
+		Rectangle bounds = ep.getContentPane().getBounds().getCopy();
+		ep.getContentPane().translateToAbsolute(bounds);
 		return bounds;
 	}
 
@@ -269,7 +269,7 @@ public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
 		ChangeBoundsRequest cbReq = (ChangeBoundsRequest)request;
 		List editParts = cbReq.getEditParts();
 		GraphicalEditPart shapeEditPart = (GraphicalEditPart)editParts.get(0);		
-		IFigure figure = shapeEditPart.getFigure().getParent();
+		IFigure figure = shapeEditPart.getContentPane().getParent();
 		return ((SapphireSequenceLayout) figure.getLayoutManager()).isHorizontal();
 	}
 

@@ -14,14 +14,8 @@ package org.eclipse.sapphire.ui.swt.gef.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
-import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.TextPart;
-import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -39,84 +33,22 @@ public class ContainerShapeModel extends ShapeModel
 		children = new ArrayList<ShapeModel>();
 		for (ShapePart shapePart : part.getChildren())
 		{
-			ShapeModel childModel = createShapeModel(nodeModel, shapePart);
+			ShapeModel childModel = ShapeModelFactory.createShapeModel(nodeModel, this, shapePart);
         	if (childModel != null)
         	{        		
         		this.children.add(childModel);
         	}        				
 		}
 	}
-	
-	public ContainerShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapeFactoryPart part)
-	{
-		super(nodeModel, parent, part);
-		children = new ArrayList<ShapeModel>();
-		for (ShapePart shapePart : part.getChildren())
-		{
-			ShapeModel childModel = createShapeModel(nodeModel, shapePart);
-        	if (childModel != null)
-        	{        		
-        		this.children.add(childModel);
-        	}        				
-		}
-	}
-	
+		
 	public List<ShapeModel> getChildren()
 	{
 		return this.children;
 	}
-	
-	public void refreshChildren()
-	{
-		this.children.clear();
-		ISapphirePart sapphirePart = getSapphirePart();
-		List<ShapePart> children = new ArrayList<ShapePart>();
-		if (sapphirePart instanceof ContainerShapePart)
-		{
-			children.addAll(((ContainerShapePart)sapphirePart).getChildren());
-		}
-		else if (sapphirePart instanceof ShapeFactoryPart)
-		{
-			children.addAll(((ShapeFactoryPart)sapphirePart).getChildren());
-		}
-		for (ShapePart shapePart : children)
-		{
-			ShapeModel childModel = createShapeModel(getNodeModel(), shapePart);
-        	if (childModel != null)
-        	{        		
-        		this.children.add(childModel);
-        	}        				
-		}				
-	}
-	
+		
 	public void handleShapeValidation() 
 	{
 		firePropertyChange(SHAPE_VALIDATION, null, null);
 	}
 
-	private ShapeModel createShapeModel(DiagramNodeModel nodeModel, ShapePart shapePart)
-	{
-		ShapeModel childModel = null;
-    	if (shapePart instanceof TextPart)
-    	{
-	        childModel = new TextModel(nodeModel, this, (TextPart)shapePart);
-    	}
-    	else if (shapePart instanceof ImagePart)
-    	{
-    		childModel = new ImageModel(nodeModel, this, (ImagePart)shapePart);
-    	}
-    	else if (shapePart instanceof ValidationMarkerPart)
-    	{
-    		childModel = new ValidationMarkerModel(nodeModel, this, (ValidationMarkerPart)shapePart);
-    	}
-    	else if (shapePart instanceof RectanglePart)
-    	{
-    		childModel = new RectangleModel(nodeModel, this, (RectanglePart)shapePart);
-    	}
-    	else if (shapePart instanceof ShapeFactoryPart)
-    	{
-        	childModel = new ContainerShapeModel(nodeModel, this, (ShapeFactoryPart)shapePart);        		
-    	}
-		return childModel;
-	}
 }

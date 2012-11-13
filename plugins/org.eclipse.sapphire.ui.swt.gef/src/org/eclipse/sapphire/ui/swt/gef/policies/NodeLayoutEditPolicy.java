@@ -15,11 +15,13 @@ import java.util.List;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editpolicies.LayoutEditPolicy;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.swt.gef.commands.MoveShapeInFactoryCommand;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
@@ -32,7 +34,7 @@ import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
  * node containment.
  */
 
-public class NodeLayoutEditPolicy extends SequenceLayoutEditPolicy 
+public class NodeLayoutEditPolicy extends LayoutEditPolicy 
 {
 	private DiagramNodeModel nodeModel;
 	
@@ -41,35 +43,6 @@ public class NodeLayoutEditPolicy extends SequenceLayoutEditPolicy
 		this.nodeModel = nodeModel;		
 	}
 	
-	@Override
-	protected Command createAddCommand(EditPart child, EditPart after) 
-	{
-		return null;
-	}
-
-
-	@Override
-	protected Command createMoveChildCommand(EditPart child, EditPart after) 
-	{
-		if (!(child instanceof ShapeEditPart))
-		{
-			return null;
-		}
-		if (!(after instanceof ShapeEditPart))
-		{
-			return null;
-		}
-		ShapeEditPart toMove = (ShapeEditPart)child;
-		ShapeEditPart afterShape = (ShapeEditPart)after;
-		ShapePart toMovePart = (ShapePart)(((ShapeModel)toMove.getModel()).getSapphirePart());
-		ShapePart afterShapePart = (ShapePart)(((ShapeModel)afterShape.getModel()).getSapphirePart());
-		ShapeFactoryPart factoryPart = (ShapeFactoryPart)toMovePart.getParentPart();
-		List<ShapePart> childShapes = factoryPart.getChildren();
-		
-		int oldIndex = childShapes.indexOf(toMovePart);
-		int newIndex = childShapes.indexOf(afterShapePart);
-		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, oldIndex, newIndex);
-	}
 
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) {
@@ -83,5 +56,52 @@ public class NodeLayoutEditPolicy extends SequenceLayoutEditPolicy
 		return null;
 	}
 
+
+	@Override
+	protected Command getMoveChildrenCommand(Request request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public EditPart getTargetEditPart(Request request) 
+	{
+		if (request instanceof ChangeBoundsRequest)
+		{
+			ChangeBoundsRequest cbr = (ChangeBoundsRequest)request;
+			List editParts = cbr.getEditParts();
+			boolean moveShapeFactoryPart = true;
+			for (Object obj : editParts)
+			{
+				EditPart editPart = (EditPart)obj;
+				if (editPart instanceof ShapeEditPart)
+				{
+					ShapeEditPart shapeEditPart = (ShapeEditPart)editPart;
+					ShapeModel shapeModel = (ShapeModel)shapeEditPart.getModel();
+					ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
+					if (!(shapePart.getParentPart() instanceof ShapeFactoryPart))
+					{
+						moveShapeFactoryPart = false;
+						break;
+					}
+				}
+				else
+				{
+					moveShapeFactoryPart = false;
+					break;
+				}
+			}
+			if (moveShapeFactoryPart)
+			{
+				return ((EditPart)(editParts.get(0))).getParent();
+			}
+		}
+		if (REQ_ADD.equals(request.getType())
+				|| REQ_MOVE.equals(request.getType())
+				|| REQ_CREATE.equals(request.getType())
+				|| REQ_CLONE.equals(request.getType()))
+			return getHost();
+		return null;
+	}
 	
 }

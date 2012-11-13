@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.actions.internal;
 
+import java.util.List;
+
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -36,8 +38,8 @@ public class DiagramNodeAddShapeFactoryCondition extends SapphireCondition
 	    	}
 	    	else if (shapePart instanceof ContainerShapePart)
 	    	{
-	    		ShapeFactoryPart shapeFactoryPart = ((ContainerShapePart)shapePart).getShapeFactoryPart();
-	    		return shapeFactoryPart != null;
+	    		List<ShapeFactoryPart> shapeFactories = ((ContainerShapePart)shapePart).getShapeFactoryParts();
+	    		return !(shapeFactories.isEmpty());
 	    	}
     	}
         return false;

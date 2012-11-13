@@ -36,7 +36,6 @@ import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -84,10 +83,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new DiagramNodeEditPolicy());
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new NodeLabelDirectEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new NodeEditPolicy());
-		if (containsShapeFactory())
-		{
-			installEditPolicy(EditPolicy.LAYOUT_ROLE, new NodeLayoutEditPolicy((DiagramNodeModel)getModel()));
-		}
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new NodeLayoutEditPolicy((DiagramNodeModel)getModel()));
 	}
 
 	@Override
@@ -114,6 +110,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	protected void addChildVisual(EditPart childEditPart, int index) 
 	{
 		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+		if (child == null)
+			return;
 		
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
 		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
@@ -131,6 +129,9 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	protected void removeChildVisual(EditPart childEditPart) 
 	{
 		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+		if (child == null)
+			return;
+		
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
 		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
 		ShapePart parentPart = (ShapePart)shapePart.getParentPart();
@@ -332,13 +333,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			Object obj = evt.getNewValue();
 			if (obj instanceof ShapePart) {
 				updateShapeVisibility((ShapePart)obj);
-			}
-		} else if(DiagramNodeModel.SHAPE_ADD.equals(prop)) {
-			refreshChildren();
-		} else if(DiagramNodeModel.SHAPE_DELETE.equals(prop)) {
-			refreshChildren();
-		} else if (DiagramNodeModel.SHAPE_REORDER.equals(prop)) {
-			refreshChildren();
+			}		
 		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
 			performDirectEdit();
 		}
@@ -399,8 +394,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		ShapePart shapePart = nodePart.getShapePart();
 		if (shapePart instanceof ContainerShapePart)
 		{
-			ShapeFactoryPart shapeFactory = ((ContainerShapePart)shapePart).getShapeFactoryPart();
-			return shapeFactory != null;
+			return !((((ContainerShapePart)shapePart).getShapeFactoryParts()).isEmpty());
 		}
 		return false;
 	}

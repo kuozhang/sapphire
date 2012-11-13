@@ -12,6 +12,12 @@
 package org.eclipse.sapphire.ui.swt.gef.model;
 
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
+import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
+import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -71,5 +77,35 @@ public class ShapeModel extends DiagramModelBase
             }
         }
     }
-	
+    
+    public static final class ShapeModelFactory
+    {
+    	public static ShapeModel createShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapePart shapePart)
+    	{
+    		ShapeModel childModel = null;
+        	if (shapePart instanceof TextPart)
+        	{
+    	        childModel = new TextModel(nodeModel, parent, (TextPart)shapePart);
+        	}
+        	else if (shapePart instanceof ImagePart)
+        	{
+        		childModel = new ImageModel(nodeModel, parent, (ImagePart)shapePart);
+        	}
+        	else if (shapePart instanceof ValidationMarkerPart)
+        	{
+        		childModel = new ValidationMarkerModel(nodeModel, parent, (ValidationMarkerPart)shapePart);
+        	}
+        	else if (shapePart instanceof RectanglePart)
+        	{
+        		childModel = new RectangleModel(nodeModel, parent, (RectanglePart)shapePart);
+        	}
+        	else if (shapePart instanceof ShapeFactoryPart)
+        	{
+            	childModel = new ShapeFactoryModel(nodeModel, parent, (ShapeFactoryPart)shapePart);        		
+        	}
+    		return childModel;
+    	}
+    	
+   	
+    }
 }

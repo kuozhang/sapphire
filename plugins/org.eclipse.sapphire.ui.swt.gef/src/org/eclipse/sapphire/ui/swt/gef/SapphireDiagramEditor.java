@@ -729,7 +729,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
 		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
 		if (nodeModel != null) {
-			nodeModel.handleDeleteShape(shapeFactory);
+			nodeModel.handleReorderShapes(shapeFactory);
 		}
 	}
 	

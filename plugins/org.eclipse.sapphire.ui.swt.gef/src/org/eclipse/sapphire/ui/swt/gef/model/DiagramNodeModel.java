@@ -37,9 +37,6 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public final static String NODE_VALIDATION = "NODE_VALIDATION";
 	public final static String SHAPE_UPDATES = "SHAPE_UPDATES";
 	public final static String SHAPE_VISIBILITY_UPDATES = "SHAPE_VISIBILITY_UPDATES";
-	public final static String SHAPE_ADD = "SHAPE_ADD";
-	public final static String SHAPE_DELETE = "SHAPE_DELETE";
-	public final static String SHAPE_REORDER = "SHAPE_REORDER";
 	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
 	private DiagramModel parent;
@@ -126,23 +123,20 @@ public class DiagramNodeModel extends DiagramModelBase {
 
 	public void handleAddShape(ShapePart shapePart) {
 		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
-		assert(parentModel instanceof ContainerShapeModel);
-		((ContainerShapeModel)parentModel).refreshChildren();
-		firePropertyChange(SHAPE_ADD, null, shapePart);
+		assert(parentModel instanceof ShapeFactoryModel);
+		((ShapeFactoryModel)parentModel).handleAddShape(shapePart);
 	}
 
 	public void handleDeleteShape(ShapePart shapePart) {
 		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
-		assert(parentModel instanceof ContainerShapeModel);
-		((ContainerShapeModel)parentModel).refreshChildren();
-		firePropertyChange(SHAPE_DELETE, null, shapePart);
+		assert(parentModel instanceof ShapeFactoryModel);
+		((ShapeFactoryModel)parentModel).handleDeleteShape(shapePart);
 	}
 
 	public void handleReorderShapes(ShapeFactoryPart shapeFactory) {
 		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), shapeFactory);
-		assert(parentModel instanceof ContainerShapeModel);
-		((ContainerShapeModel)parentModel).refreshChildren();
-		firePropertyChange(SHAPE_REORDER, null, shapeFactory);
+		assert(parentModel instanceof ShapeFactoryModel);
+		((ShapeFactoryModel)parentModel).handleReorderShapes(shapeFactory);
 	}
 
 	public List<DiagramConnectionModel> getSourceConnections() {

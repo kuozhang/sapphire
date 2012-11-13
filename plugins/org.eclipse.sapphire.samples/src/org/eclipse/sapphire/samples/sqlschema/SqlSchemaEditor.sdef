@@ -96,9 +96,22 @@
                                             </image>
                                             <text>
                                                 <content>${Name == null ? &quot;&lt;column&gt;&quot; : Name}</content>
+                                                <sequence-layout-constraint>                            						
+                                                	<horizontal-alignment>left</horizontal-alignment>
+                                                </sequence-layout-constraint>
+                                            </text>
+                                            <text>
+                                                <content>:</content>
+                                                <sequence-layout-constraint>                            						
+                                                	<horizontal-alignment>left</horizontal-alignment>
+                                                </sequence-layout-constraint>
+                                            </text>
+                                            <text>
+                                                <content>${Type == null ? &quot;&lt;type&gt;&quot; : Type}</content>
                                                 <sequence-layout-constraint>
                             						<expand-cell-horizontally>true</expand-cell-horizontally>
-                                                	<horizontal-alignment>left</horizontal-alignment>
+                                                	<horizontal-alignment>right</horizontal-alignment>
+                                                    <right-margin>10</right-margin>
                                                 </sequence-layout-constraint>
                                             </text>
                                         </content>
@@ -137,7 +150,7 @@
                     </rectangle>
                 </content>
             </rectangle>
-            <width>120</width>
+            <width>160</width>
             <resizable>true</resizable>
             <connection-binding>
                 <connection-id>foreign_keys</connection-id>

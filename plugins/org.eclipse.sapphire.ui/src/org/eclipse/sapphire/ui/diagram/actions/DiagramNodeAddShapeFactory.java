@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.java.JavaType;
@@ -43,16 +44,16 @@ public class DiagramNodeAddShapeFactory extends SapphireActionHandlerFactory
         final ListFactory<SapphireActionHandler> handlers = ListFactory.start();
         DiagramNodePart nodePart = (DiagramNodePart)getPart();
         ShapePart shapePart = nodePart.getShapePart();
-        ShapeFactoryPart shapeFactoryPart = null;
+        List<ShapeFactoryPart> shapeFactories = new ArrayList<ShapeFactoryPart>();
         if (shapePart instanceof ShapeFactoryPart)
         {
-        	shapeFactoryPart = (ShapeFactoryPart)shapePart;
+        	shapeFactories.add((ShapeFactoryPart)shapePart);
         }
         else if (shapePart instanceof ContainerShapePart)
         {
-        	shapeFactoryPart = ((ContainerShapePart)shapePart).getShapeFactoryPart();
+        	shapeFactories.addAll(((ContainerShapePart)shapePart).getShapeFactoryParts());
         }
-        if (shapeFactoryPart != null)
+        for (ShapeFactoryPart shapeFactoryPart : shapeFactories)
         {
         	for (JavaType javaType : shapeFactoryPart.getSupportedTypes())
         	{
