@@ -61,13 +61,11 @@ public class NodeDirectEditManager extends DirectEditManager {
 	 */
 	protected void bringDown() {
 		this.diagramEditor.setDirectEditingActive(false);
-		
-		ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
+		ZoomManager zoomMgr = (ZoomManager) this.diagramEditor.getGraphicalViewer()
 				.getProperty(ZoomManager.class.toString());
 		if (zoomMgr != null)
 			zoomMgr.removeZoomListener(zoomListener);
-
-		if (actionHandler != null) {
+		if (actionHandler != null) { 
 			actionHandler.dispose();
 			actionHandler = null;
 		}
