@@ -139,41 +139,37 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
         final ListEntryResource x = (ListEntryResource) resource;
         
         ListEntryResource y = this.head;
+        ListEntryResource yPrev = null;
 
         for( int i = 0; i < position; i++ )
         {
+            yPrev = y;
             y = y.next;
         }
         
-        final ListEntryResource xPrev = x.prev;
-        final ListEntryResource xNext = x.next;
-        final ListEntryResource yPrev = y.prev;
-        
-        x.next = y;
-        x.prev = yPrev;
-        y.prev = x;
-        
-        if( yPrev != null )
+        if( x != y && x.next != y )
         {
-            yPrev.next = x;
+            x.remove();
+            
+            x.next = y;
+            x.prev = yPrev;
+            
+            if( x.prev == null )
+            {
+                this.head = x;
+            }
+            else
+            {
+                x.prev.next = x;
+            }
+            
+            if( y != null )
+            {
+                y.prev = x;
+            }
+            
+            writeListString();
         }
-        
-        if( xPrev != null )
-        {
-            xPrev.next = xNext;
-        }
-        
-        if( xNext != null )
-        {
-            xNext.prev = xPrev;
-        }
-        
-        if( position == 0 )
-        {
-            this.head = x;
-        }
-        
-        writeListString();
     }
 
     @Override
