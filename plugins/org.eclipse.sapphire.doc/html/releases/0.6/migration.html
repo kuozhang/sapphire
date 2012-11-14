@@ -1590,10 +1590,26 @@ of service events from other events and identifies the originating service.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>List<font color="#888888">&lt;Status> children = status.children()</font></code></pre>
+<pre class="source-code"><code>List<font color="#888888">&lt;Status> children = status.children()</code></pre>
     </td>
     <td>
 <pre class="source-code"><code>SortedSet<font color="#888888">&lt;Status> children = status.children()</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">Status.Severity.</font>INFO</font></code></pre>
+    </td>
+    <td>
+<p>INFO is no longer available as validation severity. Use WARNING or OK instead.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">Status.</font>createInfoStatus( message )</code></pre>
+    </td>
+    <td>
+<p>INFO is no longer available as validation severity. Use WARNING or OK instead.</p>
     </td>
   </tr>
 </table>

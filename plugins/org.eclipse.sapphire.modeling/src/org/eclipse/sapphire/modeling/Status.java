@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.modeling;
 
-import static org.eclipse.sapphire.modeling.util.MiscUtil.*;
+import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -36,11 +36,6 @@ public final class Status
     public static Status createOkStatus()
     {
         return OK_STATUS;
-    }
-    
-    public static Status createInfoStatus( final String message )
-    {
-        return createStatus( Severity.INFO, message );
     }
     
     public static Status createWarningStatus( final String message )
@@ -225,9 +220,8 @@ public final class Status
     public enum Severity
     {
         OK( 0 ),
-        INFO( 1 ),
-        WARNING( 2 ),
-        ERROR( 4 );
+        WARNING( 1 ),
+        ERROR( 2 );
         
         private int code;
         
