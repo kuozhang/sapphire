@@ -202,6 +202,11 @@ public class CompositePart extends FormPart
             {
                 if( event instanceof PartVisibilityEvent || event instanceof PartChildrenEvent )
                 {
+                    if( composite.isDisposed() )
+                    {
+                        return;
+                    }
+                    
                     final SapphirePart part = ( (PartEvent) event ).part();
                     
                     if( event instanceof PartChildrenEvent && ! ( part instanceof CompositePart || part instanceof SplitFormBlockPart ) )
