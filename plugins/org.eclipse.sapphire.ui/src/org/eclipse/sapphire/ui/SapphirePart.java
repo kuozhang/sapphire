@@ -180,7 +180,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         this.visibilityFunctionResult = initExpression
         (
-            getModelElement(),
+            getLocalModelElement(),
             initVisibleWhenFunction(), 
             Boolean.class,
             Literal.TRUE,
