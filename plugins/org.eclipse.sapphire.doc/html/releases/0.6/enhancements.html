@@ -26,6 +26,7 @@
   <li><a href="#Key">Key Enhancements</a></li>
   <ol type="A">
     <li><a href="#Key-MinimalGeneratedCode">Minimal Generated Code</a></li>
+    <li><a href="#Key-ImprovedEntryPoints">Improved Entry Points</a></li>
   </ol>
   <li><a href="#Modeling">Modeling</a></li>
   <ol type="A">
@@ -162,7 +163,135 @@ into the base class provided by the framework. This reduces the disk and memory 
     {
         write( PROP_TITLE, value );
     }
-}</code></pre> 
+}</code></pre>
+
+
+<h2><a name="Key-ImprovedEntryPoints">Improved Entry Points</a></h2>
+
+<p>The entry points by which Sapphire UI is embedded into an overall SWT or Eclipse RCP application have been improved.</p>
+
+<p>The new DefinitionLoader facility standardizes how sdef is accessed by entry points and is not based on OSGi assumptions.</p>
+
+<pre class="source-code"><code>DefinitionLoader
+{
+    static DefinitionLoader context( Context context )
+    static DefinitionLoader context( ClassLoader loader )
+    static DefinitionLoader context( Class&lt;?> cl )
+
+    static DefinitionLoader sdef( Class&lt;?> cl )
+    DefinitionLoader sdef( String name )
+    
+    Reference&lt;T extends IModelElement>
+    {
+        T resolve()
+        void dispose()
+    }
+    
+    Reference&lt;ISapphireUiDef> root()
+    Reference&lt;EditorPageDef> page()
+    Reference&lt;EditorPageDef> page( String id )
+    Reference&lt;WizardDef> wizard()
+    Reference&lt;WizardDef> wizard( String id )
+    Reference&lt;DialogDef> dialog()
+    Reference&lt;DialogDef> dialog( String id )
+    Reference&lt;FormComponentDef> form()
+    Reference&lt;FormComponentDef> form( String id )
+}</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">SapphireDialog dialog = new SapphireDialog
+(
+    shell, element,</font>
+    DefinitionLoader.context( getClass() ).sdef( "SecurityDialogs" ).dialog( "PasswordDialog" )
+<font color="#888888">);</font></code></pre>
+
+<p>SapphireEditorForXml can now be parameterized with a reference to sdef directly in the plugin.xml declaration. 
+In the past, one needed to subclass it just to reference sdef.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension point="org.eclipse.ui.editors">
+  &lt;editor
+    id="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"
+    name="Contacts Database Editor (Sapphire Sample)"
+    icon="org/eclipse/sapphire/samples/SapphireFile.png"
+    filenames="contacts.xml"
+    default="true"></font>
+    &lt;class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+      &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+    &lt;/class>
+  <font color="#888888">&lt;/editor>
+&lt;/extension></font></code></pre>
+
+<p>A new entry point has been added for wizards that create workspace files.</p>
+
+<p><b>CreateWorkspaceFileOp</b> - Base element type that should be extended to specify file constraints
+and to further parameterize the creation.</p>
+
+<p><b>CreateWorkspaceFileWizard</b> - Corresponding wizard implementation that can be referenced declaratively
+in an extension contributing the wizard or subclassed.</p>
+
+<p><b>CreateWorkspaceFileForm.sdef</b> - A standard form to be used on the first page of a workspace file
+creation wizard in order to gather folder and file name input from the user.</p>
+
+<p><b>@WorkspaceFileType</b> - An annotation used to link the file creation operation with root element type
+of the created file (in cases where there is a Sapphire model for the file). If this annotation is present,
+the default execution logic of CreateWorkspaceFileOp will instantiate the model for the created file, apply
+initial values (as specified by the model) and save the result. For instance, for an XML file, these extra
+steps will ensure that the file at least has the XML declaration line and the appropriate root element.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@WorkspaceFileType( ContactsDatabase.class )
+@GenerateImpl
+
+public interface CreateContactsDatabaseOp extends CreateWorkspaceFileOp
+{
+    ModelElementType TYPE = new ModelElementType( CreateContactsDatabaseOp.class );
+    
+    // *** FileName ***
+    
+    @DefaultValue( text = "contacts.xml" )
+    @PreferDefaultValue
+    
+    ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
+}</code></pre>
+
+<pre class="source-code"><code>&lt;definition>
+    &lt;import>
+        &lt;definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm&lt;/definition>
+    &lt;/import>
+    &lt;wizard>
+        &lt;id>CreateContactsDatabaseWizard&lt;/id>
+        &lt;label>New Contacts Database (Sapphire Sample)&lt;/label>
+        &lt;page>
+            &lt;id>CreateContactsDatabaseWizard.MainPage&lt;/id>
+            &lt;label>Contacts Database (Sapphire Sample)&lt;/label>
+            &lt;description>Create a contacts database.&lt;/description>
+            &lt;image>org/eclipse/sapphire/samples/SapphireWizardBanner.png&lt;/image>
+            &lt;scale-vertically>true&lt;/scale-vertically>
+            &lt;content>
+                &lt;include>CreateWorkspaceFileForm&lt;/include>
+            &lt;/content>
+        &lt;/page>
+        &lt;element-type>org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseOp&lt;/element-type>
+    &lt;/wizard>    
+&lt;/definition></code></pre>
+
+<pre class="source-code"><code>&lt;extension point="org.eclipse.ui.newWizards">
+    &lt;wizard
+        id="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"
+        category="Sapphire/Samples"
+        name="Contacts Database (Sapphire Sample)"
+        icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+        &lt;description>Create a contacts database.&lt;/description>
+        &lt;class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+            &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"/>
+            &lt;parameter name="editor" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+        &lt;/class>
+    &lt;/wizard>
+&lt;/extension></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/CreateContactsDatabaseWizard.png"/></p>
 
 
 <h2><a name="Modeling"><a name="Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></a></h2>
