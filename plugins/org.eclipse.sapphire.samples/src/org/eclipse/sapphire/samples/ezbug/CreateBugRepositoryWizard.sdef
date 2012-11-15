@@ -18,18 +18,18 @@
         <definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm</definition>
     </import>
     <wizard>
-        <id>CreateBugDatabaseWizard</id>
-        <label>New Bug Database (Sapphire Sample)</label>
+        <id>CreateBugRepositoryWizard</id>
+        <label>New Bug Repository (Sapphire Sample)</label>
         <page>
-            <id>CreateBugDatabaseWizard.MainPage</id>
-            <label>Bug Database (Sapphire Sample)</label>
-            <description>Create a bug database.</description>
+            <id>CreateBugRepositoryWizard.MainPage</id>
+            <label>Bug Repository (Sapphire Sample)</label>
+            <description>Create a bug repository.</description>
             <content>
                 <include>CreateWorkspaceFileForm</include>
             </content>
             <scale-vertically>true</scale-vertically>
             <image>org/eclipse/sapphire/samples/SapphireWizardBanner.png</image>
         </page>
-        <element-type>org.eclipse.sapphire.samples.ezbug.CreateBugDatabaseOp</element-type>
+        <element-type>org.eclipse.sapphire.samples.ezbug.CreateBugRepositoryOp</element-type>
     </wizard>    
 </definition>

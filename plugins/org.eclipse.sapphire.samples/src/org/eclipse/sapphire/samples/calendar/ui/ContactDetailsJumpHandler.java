@@ -33,7 +33,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
     protected void initDependencies( final List<String> dependencies )
     {
         super.initDependencies( dependencies );
-        dependencies.add( IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
+        dependencies.add( IAttendee.PROP_IN_CONTACT_REPOSITORY.getName() );
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
         if( super.computeEnablementState() == true )
         {
             final IAttendee attendee = (IAttendee) getModelElement();
-            return attendee.isInContactsDatabase().getContent();
+            return attendee.isInContactRepository().getContent();
         }
         
         return false;
@@ -66,7 +66,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
         {
             Contact contact = null;
             
-            for( Contact c : editor.getContactsDatabase().getContacts() )
+            for( Contact c : editor.getContactRepository().getContacts() )
             {
                 if( name.equals( c.getName().getText() ) )
                 {

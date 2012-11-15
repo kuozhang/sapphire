@@ -28,11 +28,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @GenerateImpl
-@XmlBinding( path = "bug-database" )
+@XmlBinding( path = "bugs" )
 
-public interface BugDatabase extends IModelElement
+public interface BugRepository extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( BugDatabase.class );
+    ModelElementType TYPE = new ModelElementType( BugRepository.class );
 
     // *** BugReports ***
     

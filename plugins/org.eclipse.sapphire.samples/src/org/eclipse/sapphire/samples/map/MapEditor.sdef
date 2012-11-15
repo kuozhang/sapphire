@@ -27,7 +27,7 @@
     
     <diagram-page>
         <id>DiagramPage</id>
-        <page-header-text>map</page-header-text>        
+        <page-header-text>Map (Sapphire Sample)</page-header-text>        
         <connection>
             <id>railway_routes</id>
             <tool-palette-label>railway route</tool-palette-label>
@@ -139,7 +139,7 @@
     <editor-page>
         <id>DetailsPage</id>
         <page-name>details</page-name>
-        <page-header-text>map details</page-header-text>
+        <page-header-text>Map Details (Sapphire Sample)</page-header-text>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>

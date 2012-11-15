@@ -211,13 +211,13 @@ In the past, one needed to subclass it just to reference sdef.</p>
 
 <pre class="source-code"><code><font color="#888888">&lt;extension point="org.eclipse.ui.editors">
   &lt;editor
-    id="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"
-    name="Contacts Database Editor (Sapphire Sample)"
+    id="org.eclipse.sapphire.samples.contacts.ContactRepositoryEditor"
+    name="Contact Repository Editor (Sapphire Sample)"
     icon="org/eclipse/sapphire/samples/SapphireFile.png"
     filenames="contacts.xml"
     default="true"></font>
     &lt;class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
-      &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+      &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.ContactRepositoryEditor"/>
     &lt;/class>
   <font color="#888888">&lt;/editor>
 &lt;/extension></font></code></pre>
@@ -241,12 +241,12 @@ steps will ensure that the file at least has the XML declaration line and the ap
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code>@WorkspaceFileType( ContactsDatabase.class )
+<pre class="source-code"><code>@WorkspaceFileType( ContactRepository.class )
 @GenerateImpl
 
-public interface CreateContactsDatabaseOp extends CreateWorkspaceFileOp
+public interface CreateContactRepositoryOp extends CreateWorkspaceFileOp
 {
-    ModelElementType TYPE = new ModelElementType( CreateContactsDatabaseOp.class );
+    ModelElementType TYPE = new ModelElementType( CreateContactRepositoryOp.class );
     
     // *** FileName ***
     
@@ -261,37 +261,37 @@ public interface CreateContactsDatabaseOp extends CreateWorkspaceFileOp
         &lt;definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm&lt;/definition>
     &lt;/import>
     &lt;wizard>
-        &lt;id>CreateContactsDatabaseWizard&lt;/id>
-        &lt;label>New Contacts Database (Sapphire Sample)&lt;/label>
+        &lt;id>CreateContactRepositoryWizard&lt;/id>
+        &lt;label>New Contact Repository (Sapphire Sample)&lt;/label>
         &lt;page>
-            &lt;id>CreateContactsDatabaseWizard.MainPage&lt;/id>
-            &lt;label>Contacts Database (Sapphire Sample)&lt;/label>
-            &lt;description>Create a contacts database.&lt;/description>
+            &lt;id>CreateContactRepositoryWizard.MainPage&lt;/id>
+            &lt;label>Contact Repository (Sapphire Sample)&lt;/label>
+            &lt;description>Create a contact repository.&lt;/description>
             &lt;image>org/eclipse/sapphire/samples/SapphireWizardBanner.png&lt;/image>
             &lt;scale-vertically>true&lt;/scale-vertically>
             &lt;content>
                 &lt;include>CreateWorkspaceFileForm&lt;/include>
             &lt;/content>
         &lt;/page>
-        &lt;element-type>org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseOp&lt;/element-type>
+        &lt;element-type>org.eclipse.sapphire.samples.contacts.CreateContactRepositoryOp&lt;/element-type>
     &lt;/wizard>    
 &lt;/definition></code></pre>
 
 <pre class="source-code"><code>&lt;extension point="org.eclipse.ui.newWizards">
     &lt;wizard
-        id="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"
+        id="org.eclipse.sapphire.samples.contacts.CreateContactRepositoryWizard"
         category="Sapphire/Samples"
-        name="Contacts Database (Sapphire Sample)"
+        name="Contact Repository (Sapphire Sample)"
         icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
-        &lt;description>Create a contacts database.&lt;/description>
+        &lt;description>Create a contact repository.&lt;/description>
         &lt;class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
-            &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"/>
-            &lt;parameter name="editor" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+            &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.CreateContactRepositoryWizard"/>
+            &lt;parameter name="editor" value="org.eclipse.sapphire.samples.contacts.ContactRepositoryEditor"/>
         &lt;/class>
     &lt;/wizard>
 &lt;/extension></code></pre>
 
-<p style="margin-left: 20px;"><img src="images/CreateContactsDatabaseWizard.png"/></p>
+<p style="margin-left: 20px;"><img src="images/CreateContactRepositoryWizard.png"/></p>
 
 
 <h2><a name="Modeling"><a name="Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></a></h2>
@@ -532,8 +532,8 @@ be implemented by adopters. See <a href="#Modeling-ConversionService">Conversion
 Note how this code is not aware of the details of the conversion or what type of a resource is created.</p>
 
  <pre class="source-code"><code><font color="#888888">IFile file = project.getFile( "contacts.xml" )</font>
-Resource resource = ContactsDatabase.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
-<font color="#888888">ContactsDatabase model = ContactsDatabase.TYPE.instantiate( resource );</font></code></pre>
+Resource resource = ContactRepository.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+<font color="#888888">ContactRepository model = ContactRepository.TYPE.instantiate( resource );</font></code></pre>
 
 
 <h2><a name="Modeling-ModelElement">ModelElement</a></h2>

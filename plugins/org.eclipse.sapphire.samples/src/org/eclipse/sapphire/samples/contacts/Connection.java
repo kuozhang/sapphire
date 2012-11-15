@@ -46,7 +46,7 @@ public interface Connection
     ( 
         property = "/Contacts/Name", 
         caseSensitive = false, 
-        invalidValueMessage = "Could not find contact name \"{0}\" in the database." 
+        invalidValueMessage = "Could not find contact name \"{0}\" in the repository." 
     )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );

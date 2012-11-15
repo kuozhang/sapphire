@@ -801,8 +801,8 @@ be implemented by adopters. See <a href="#ConversionService">ConversionService</
 Note how this code is not aware of the details of the conversion or what type of a resource is created.</p>
 
  <pre class="source-code"><code><font color="#888888">IFile file = project.getFile( "contacts.xml" )</font>
-Resource resource = ContactsDatabase.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
-<font color="#888888">ContactsDatabase model = ContactsDatabase.TYPE.instantiate( resource );</font></code></pre>
+Resource resource = ContactRepository.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+<font color="#888888">ContactRepository model = ContactRepository.TYPE.instantiate( resource );</font></code></pre>
 
 
 <a name="PossibleTypesService"><h2>PossibleTypesService</h2></a>

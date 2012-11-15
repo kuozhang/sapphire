@@ -25,7 +25,7 @@
     <editor-page>
         <id>main</id>
         <page-name>calendar</page-name>
-        <page-header-text>calendar</page-header-text>
+        <page-header-text>Calendar (Sapphire Sample)</page-header-text>
         <initial-selection>events</initial-selection>
         <action>
             <id>Sapphire.Samples.OpenSapphireWebSite</id>

@@ -68,7 +68,7 @@ public interface JobOccupation
     ( 
         property = "/Contacts/Name", 
         caseSensitive = false, 
-        invalidValueMessage = "Could not find contact name \"{0}\" in the database." 
+        invalidValueMessage = "Could not find contact name \"{0}\" in the repository." 
     )
 
     ValueProperty PROP_MANAGER = new ValueProperty( TYPE, "Manager" );

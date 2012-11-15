@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -52,7 +52,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
         
         final IModelElement element = getModelElement();
         
-        element.nearest( ContactsDatabase.class ).attach( listener, "Contacts/Name" );
+        element.nearest( ContactRepository.class ).attach( listener, "Contacts/Name" );
         element.attach( listener, this.property );
         
         refreshEnablementState();
@@ -64,7 +64,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    element.nearest( ContactsDatabase.class ).detach( listener, "Contacts/Name" );
+                    element.nearest( ContactRepository.class ).detach( listener, "Contacts/Name" );
                     element.detach( listener, CreateContactActionHandler.this.property );
                 }
             }
@@ -75,7 +75,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
     {
         final IModelElement element = getModelElement();
         final String name = element.read( this.property ).getText();
-        final ContactsDatabase cdb = element.nearest( ContactsDatabase.class );
+        final ContactRepository cdb = element.nearest( ContactRepository.class );
         
         boolean enabled;
         
@@ -105,7 +105,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
     {
         final IModelElement element = getModelElement();
         final String name = element.read( this.property ).getText();
-        final ContactsDatabase cdb = element.nearest( ContactsDatabase.class );
+        final ContactRepository cdb = element.nearest( ContactRepository.class );
         
         final Contact newContact = cdb.getContacts().insert();
         newContact.setName( name );

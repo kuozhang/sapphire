@@ -543,15 +543,15 @@ the operation and references the correct UI definition.</p>
 <p>Now that we have a system for submitting bug reports, it would be nice to have a way to maintain a collection of these reports.
 Even better if we can re-use some of our existing code to do this. Back to the model.</p>
 
-<p>The first step is to create BugDatabase type which will hold a collection of bug reports. By now you should
+<p>The first step is to create BugRepository type which will hold a collection of bug reports. By now you should
 have a pretty good idea of what that will look like.</p>
 
 <pre class="source-code"><code>@GenerateImpl
-@XmlBinding( path = "bug-database" )
+@XmlBinding( path = "bugs" )
 
-public interface BugDatabase extends IModelElement
+public interface BugRepository extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( BugDatabase.class );
+    ModelElementType TYPE = new ModelElementType( BugRepository.class );
 
     // *** BugReports ***
 
@@ -576,16 +576,16 @@ of content on the left and a series of sections on the right that change dependi
 
 <pre class="source-code"><code>&lt;editor-page>
     &lt;id>editor.page&lt;/id>
-    &lt;element-type>BugDatabase&lt;/element-type>
-    &lt;page-name>bug database&lt;/page-name>
-    &lt;page-header-text>bug database (sapphire sample)&lt;/page-header-text>
+    &lt;element-type>BugRepository&lt;/element-type>
+    &lt;page-name>bug repository&lt;/page-name>
+    &lt;page-header-text>bug repository (sapphire sample)&lt;/page-header-text>
     &lt;initial-selection>bug reports&lt;/initial-selection>
     &lt;root-node>
         &lt;node>
             &lt;label>bug reports&lt;/label>
             &lt;section>
                 &lt;content>
-                    &lt;label>Use this editor to manage your bug database.&lt;/label>
+                    &lt;label>Use this editor to manage your bug repository.&lt;/label>
                     &lt;spacer/>
                     &lt;action-link>
                         &lt;action-id>Sapphire.Add&lt;/action-id>
@@ -621,8 +621,8 @@ registered as the default choice for files named "bugs.xml".</p>
 
 <pre class="source-code"><code>&lt;extension point="org.eclipse.ui.editors">
   &lt;editor
-    id="org.eclipse.sapphire.samples.ezbug.BugDatabaseEditor"
-    name="Bug Database Editor (Sapphire Sample)"
+    id="org.eclipse.sapphire.samples.ezbug.BugRepositoryEditor"
+    name="Bug Repository Editor (Sapphire Sample)"
     filenames="bugs.xml"
     default="true">
     &lt;class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">

@@ -19,7 +19,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.calendar.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResource;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.ui.CorruptedResourceExceptionInterceptorImpl;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -41,7 +41,7 @@ public final class CalendarEditor extends SapphireEditor
     
     private ICalendar modelCalendar;
     private org.eclipse.sapphire.samples.calendar.integrated.ICalendar modelCalendarIntegrated;
-    private ContactsDatabase modelContacts;
+    private ContactRepository modelContacts;
     
     private MasterDetailsEditorPage calendarDesignPage;
     private MasterDetailsEditorPage contactsDesignPage;
@@ -73,7 +73,7 @@ public final class CalendarEditor extends SapphireEditor
     protected IModelElement createModel()
     {
         this.modelCalendar = ICalendar.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.calendarSourceEditor ) ) );
-        this.modelContacts = ContactsDatabase.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.contactsSourceEditor ) ) );
+        this.modelContacts = ContactRepository.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.contactsSourceEditor ) ) );
         this.modelCalendarIntegrated = org.eclipse.sapphire.samples.calendar.integrated.ICalendar.TYPE.instantiate( new CalendarResource( this.modelCalendar, this.modelContacts ) );
         
         return this.modelCalendarIntegrated;
@@ -103,7 +103,7 @@ public final class CalendarEditor extends SapphireEditor
         this.contactsDesignPage = new MasterDetailsEditorPage
         (
             this, this.modelContacts,
-            DefinitionLoader.context( ContactsDatabase.class ).sdef( "ContactsDatabaseEditor" ).page(),
+            DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).page(),
             Resources.contactsPageName
         );
         
@@ -135,7 +135,7 @@ public final class CalendarEditor extends SapphireEditor
         return this.modelCalendarIntegrated;
     }
     
-    public ContactsDatabase getContactsDatabase()
+    public ContactRepository getContactRepository()
     {
         return this.modelContacts;
     }

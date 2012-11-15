@@ -44,13 +44,13 @@ public final class AttendeeImageService extends ImageService
             }
         };
         
-        context( IModelElement.class ).attach( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
+        context( IModelElement.class ).attach( this.listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
     }
 
     @Override
     protected ImageServiceData compute()
     {
-        if( context( IAttendee.class ).isInContactsDatabase().getContent() )
+        if( context( IAttendee.class ).isInContactRepository().getContent() )
         {
             return IMG_PERSON;
         }
@@ -65,7 +65,7 @@ public final class AttendeeImageService extends ImageService
     {
         super.dispose();
         
-        context( IModelElement.class ).detach( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
+        context( IModelElement.class ).detach( this.listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
     }
     
 }

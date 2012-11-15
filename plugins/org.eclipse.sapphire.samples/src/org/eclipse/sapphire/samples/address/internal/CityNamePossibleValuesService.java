@@ -15,7 +15,7 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.address.Address;
-import org.eclipse.sapphire.samples.zipcodes.ZipCodesDatabase;
+import org.eclipse.sapphire.samples.zipcodes.ZipCodeRepository;
 import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
@@ -32,7 +32,7 @@ public final class CityNamePossibleValuesService extends PossibleValuesService
         final String zipCode = address.getZipCode().getText();
         final String stateCode = address.getState().getText();
         
-        values.addAll( ZipCodesDatabase.getCities( zipCode, stateCode ) );
+        values.addAll( ZipCodeRepository.getCities( zipCode, stateCode ) );
     }
 
     @Override

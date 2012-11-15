@@ -18,18 +18,18 @@
         <definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm</definition>
     </import>
     <wizard>
-        <id>CreateContactsDatabaseWizard</id>
-        <label>New Contacts Database (Sapphire Sample)</label>
+        <id>CreateContactRepositoryWizard</id>
+        <label>New Contact Repository (Sapphire Sample)</label>
         <page>
-            <id>CreateContactsDatabaseWizard.MainPage</id>
-            <label>Contacts Database (Sapphire Sample)</label>
-            <description>Create a contacts database.</description>
+            <id>CreateContactRepositoryWizard.MainPage</id>
+            <label>Contact Repository (Sapphire Sample)</label>
+            <description>Create a contact repository.</description>
             <content>
                 <include>CreateWorkspaceFileForm</include>
             </content>
             <scale-vertically>true</scale-vertically>
             <image>org/eclipse/sapphire/samples/SapphireWizardBanner.png</image>
         </page>
-        <element-type>org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseOp</element-type>
+        <element-type>org.eclipse.sapphire.samples.contacts.CreateContactRepositoryOp</element-type>
     </wizard>    
 </definition>

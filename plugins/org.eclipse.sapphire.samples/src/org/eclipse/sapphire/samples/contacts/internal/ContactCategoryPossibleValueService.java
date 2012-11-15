@@ -15,7 +15,7 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
@@ -30,7 +30,7 @@ public final class ContactCategoryPossibleValueService extends PossibleValuesSer
         values.add( "Personal" );
         
         final Contact c = context( Contact.class );
-        final ContactsDatabase cdb = c.nearest( ContactsDatabase.class );
+        final ContactRepository cdb = c.nearest( ContactRepository.class );
         
         if( cdb != null )
         {
