@@ -19,6 +19,8 @@ import java.util.Collections;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
@@ -263,7 +265,14 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
 
     private final void refreshImage()
     {
-        setDefaultPageImageDescriptor( toImageDescriptor( this.part.getImage() ) );
+        ImageDescriptor img = toImageDescriptor( this.part.getImage() );
+        
+        if( img == null )
+        {
+            img = JFaceResources.getImageRegistry().getDescriptor( DEFAULT_IMAGE );
+        }
+        
+        setDefaultPageImageDescriptor( img );
     }
 
     @Override
