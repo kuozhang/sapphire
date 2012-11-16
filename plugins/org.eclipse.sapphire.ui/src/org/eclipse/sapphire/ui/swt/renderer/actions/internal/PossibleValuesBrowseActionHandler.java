@@ -16,8 +16,8 @@ import java.util.Collection;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.renderers.swt.ValueLabelProvider;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
@@ -39,11 +39,11 @@ public final class PossibleValuesBrowseActionHandler extends SapphireBrowseActio
     protected String browse( final SapphireRenderingContext context )
     {
         final ValueProperty property = getProperty();
-        final PossibleValuesService valuesProvider = getModelElement().service( property, PossibleValuesService.class );
+        final PossibleValuesService possibleValuesService = getModelElement().service( property, PossibleValuesService.class );
 
-        if( valuesProvider != null )
+        if( possibleValuesService != null )
         {
-            final Collection<String> valuesList = valuesProvider.values();
+            final Collection<String> valuesList = possibleValuesService.values();
             final String[] valuesArray = valuesList.toArray( new String[ valuesList.size() ] );
             
             final ValueLabelProvider labelProvider = new ValueLabelProvider( (PropertyEditorPart) getPart(), property );
@@ -51,6 +51,7 @@ public final class PossibleValuesBrowseActionHandler extends SapphireBrowseActio
             final ElementListSelectionDialog dialog = new ElementListSelectionDialog( context.getShell(), labelProvider );
             
             dialog.setElements( valuesArray );
+            dialog.setIgnoreCase( ! possibleValuesService.isCaseSensitive() );
             dialog.setMultipleSelection( false );
             dialog.setHelpAvailable( false );
             dialog.setTitle( property.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
