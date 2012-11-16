@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.ValueNormalizationService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PossibleValue implements Comparable<PossibleValue>
+public final class PossibleValue
 {
     public static final class Factory
     {
@@ -50,8 +50,6 @@ public final class PossibleValue implements Comparable<PossibleValue>
                 entries.add( entry( value ) );
             }
             
-            Collections.sort( entries );
-            
             return Collections.unmodifiableList( entries );
         }
         
@@ -74,7 +72,7 @@ public final class PossibleValue implements Comparable<PossibleValue>
     private final String label;
     
     private PossibleValue( final String value,
-                                 final String label )
+                           final String label )
     {
         this.value = value;
         this.label = label;
@@ -90,16 +88,6 @@ public final class PossibleValue implements Comparable<PossibleValue>
         return this.label;
     }
     
-    public int compareTo( final PossibleValue entry )
-    {
-        if( this == entry )
-        {
-            return 0;
-        }
-        
-        return this.label.compareTo( entry.label );
-    }
-
     @Override
     public boolean equals( final Object obj )
     {
