@@ -1162,7 +1162,7 @@ public abstract class SapphirePart implements ISapphirePart
                     }
                 }
                 
-                return create( parent, element, def, params );
+                return create( parent, element, def, partParams );
             }
         }
         else if( definition instanceof TabGroupDef )
