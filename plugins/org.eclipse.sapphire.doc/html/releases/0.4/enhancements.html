@@ -59,7 +59,6 @@
   </ol>
 </ol>
 
- 
 <h2><a name="ExpressionLanguage"><a name="ScaleFunction">Scale Function</a></a></h2>
 
 <p>When working with decimals, controlling the scale of the number is very
@@ -69,7 +68,6 @@ increase the scale ahead of arithmetic operations.</p>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ Scale( UnitPrice * Scale( Quantity, 2 ), 2 ) }</code></pre>
-
 
 <h2><a name="AggregateFunctions">Aggregate Functions</a></h2>
 
@@ -87,7 +85,6 @@ ${ Min( Entries, 'Total' ) }
 ${ Max( Entries, 'Total' ) }
 ${ Sum( List( 1.2, 3.4, 5.6, 7.8 ) ) }</code></pre>
 
-
 <h2><a name="ExprInDerived">Use in @Derived</a></h2>
 
 <p>Use expression language when specifying derived value in @Derived annotation.</p>
@@ -98,7 +95,6 @@ ${ Sum( List( 1.2, 3.4, 5.6, 7.8 ) ) }</code></pre>
 <font color="#888888">ValueProperty PROP_TOTAL = new ValueProperty( TYPE, "Total" );
 
 Value&lt;BigDecimal> getTotal();</font></code></pre>
-
 
 <h2><a name="ExprDefaultValue">Use in @DefaultValue</a></h2>
 
@@ -111,7 +107,6 @@ Value&lt;BigDecimal> getTotal();</font></code></pre>
 Value<String> getStreet();
 void setStreet( String street );</font></code></pre>
 
-
 <h2><a name="ExprInitialValue">Use in @InitialValue</a></h2>
 
 <p>Use expression language when specifying initial value in @InitialValue annotation.</p>
@@ -122,7 +117,6 @@ void setStreet( String street );</font></code></pre>
 
 Value<String> getStreet();
 void setStreet( String street );</font></code></pre>
-
 
 <h2><a name="Services"><a name="FactsService">FactsService</a></a></h2>
 <p>When a property is described to a user in documentation one does it with a series of short statements that
@@ -142,7 +136,6 @@ in generation of facts on equal footing with the framework. Also new for 0.4 is 
 of annotations that generate corresponding facts.</p>
 
 <p><a href="../../services/index.html#FactsService">See Documentation</a></p>
-
 
 <h2><a name="InitialValueService">InitialValueService and @InitialValue</a></h2>
 
@@ -165,7 +158,6 @@ Now, if the XML schema dictates that the phone number type element is required, 
 
 <p><a href="../../services/index.html#InitialValueService">See Documentation</a></p>
 
-
 <h2><a name="PossibleTypesService">PossibleTypesService</a></h2>
 
 <p>The set of possible types for a list or an element property is usually static and as such can be
@@ -174,7 +166,6 @@ types needs to vary due to runtime conditions, a custom PossibleTypesService imp
 be supplied.</p>
 
 <p><a href="../../services/index.html#PossibleTypesService">See Documentation</a></p>
-
 
 <h2><a name="ContentProposalService">ContentProposalService</a></h2>
 
@@ -191,7 +182,6 @@ adopters.</p>
 
 <p><a href="../../services/index.html#ContentProposalService">See Documentation</a></p>
 
-
 <h2><a name="JavaTypeConstraintService">JavaTypeConstraintService</a></h2>
 
 <p>The JavaTypeConstraintService describes constraints on the Java type that a property can reference, such as the kind of
@@ -203,7 +193,6 @@ annotation, but this service can also be implemented directly by adopters. This 
 type constraint can vary at runtime.</p> 
 
 <p><a href="../../services/index.html#JavaTypeConstraintService">See Documentation</a></p>
-
 
 <h2><a name="UI"><a name="SplitForm">Split Form</a></a></h2>
 
@@ -280,7 +269,6 @@ to the list property editor versus the description text field.</p>
 &lt;/dialog></font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/SplitForm.png"/></p>
-
 
 <h2><a name="MultiSectionFormEditorPage">Multi-Section Form Editor Page</a></h2>
 
@@ -413,7 +401,6 @@ purchase order entry fields.</p>
 
 <p style="margin-left: 20px;"><img src="images/MultiSectionFormEditorPage2.png"/></p>
 
-
 <h2><a name="XML"><a name="XmlDocumentType">@XmlDocumentType Annotation</a></a></h2>
 
 <p>The new @XmlDocumentType annotation can be used when working with DTD-based documents to easily specify systemId or
@@ -436,7 +423,6 @@ public interface Root extends IModelElement
 &lt;root>
     ...
 &lt;/root></code></pre>
-
 
 <h2><a name="XmlSchema">@XmlSchema Annotation</a></h2>
 
@@ -465,7 +451,6 @@ public interface Root extends IModelElement
 &lt;/e:root&gt;</code></pre>
 
 <p>To specify locations of multiple schemas, use @XmlSchemas annotation.</p>
-
 
 <h2><a name="ListElementPropertyBindingNoMappings">List and Element Property Binding Without Mappings</a></h2>
 
@@ -530,7 +515,7 @@ public interface Child extends IModelElement
 
     ...
 }</font></code></pre>
-  
+
 <pre class="source-code"><code><font color="#888888">@GenerateImpl</font>
 @XmlBinding( path = "root" )
 
@@ -583,7 +568,6 @@ public interface ChildB extends Child
     ...
 }</font></code></pre>
 
-
 <h2><a name="Miscellaneous"><a name="Copy">Model Copy Method</a></a></h2>
 
 <p>Easily copy content of model elements using the new copy method. Copy a few model elements or the
@@ -610,10 +594,8 @@ instance was loaded from disk via an XML resource.</p>
 Model duplicate = Model.TYPE.instantiate();
 duplicate.copy( original );</code></pre>
 
-
 <div class="copyright">Copyright (c) 2012 Oracle, Accenture and Liferay<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
-
 
 </body>
 

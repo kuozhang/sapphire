@@ -25,12 +25,12 @@
 <ol>
   <li><a href="#Key">Key Enhancements</a></li>
   <ol type="A">
+    <li><a href="#Key-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
     <li><a href="#Key-MinimalGeneratedCode">Minimal Generated Code</a></li>
     <li><a href="#Key-ImprovedEntryPoints">Improved Entry Points</a></li>
   </ol>
   <li><a href="#Modeling">Modeling</a></li>
   <ol type="A">
-    <li><a href="#Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></li>
     <li><a href="#Modeling-Context">Context</a></li>
     <li><a href="#Modeling-ConversionService">ConversionService</a></li>
     <li><a href="#Modeling-FileName">FileName</a></li>
@@ -74,8 +74,281 @@
   </ol>
 </ol>
 
+<h2><a name="Key"><a name="Key-VersionsAndVersionConstraints">Versions and Version Constraints</a></a></h2>
 
-<h2><a name="Key"><a name="Key-MinimalGeneratedCode">Minimal Generated Code</a></a></h2>
+<p>In many complex Sapphire models, it is useful to be able to constrain functionality based on a version. To simplify these scenarios,
+Sapphire now has native constructs for dealing with versions and version constraints.</p>
+
+<p><b>Version</b> - Represents a version as a sequence of long integers. In string format, it is represented as a dot-separated
+list of numeric segments, such as "1.2.3" or "5.7.3.2012070310003".</p>
+
+<p><b>VersionConstraint</b> - A boolean expression that can check versions for applicability. In string 
+format, it is represented as a comma-separated list of specific versions, closed 
+ranges (expressed using "[1.2.3-4.5)" syntax and open ranges (expressed using "[1.2.3" or "4.5)" 
+syntax). The square brackets indicate that the range includes the specified version. The parenthesis 
+indicate that the range goes up to, but does not actually include the specified version.</p>
+
+<p><b>Sapphire.version()</b> - Determines the version of Sapphire.</p>
+
+<p>Both Version and VersionConstraint classes can be used as a type of a value property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">// *** Version ***</font>
+
+@Type( base = Version.class )
+
+<font color="#888888">ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
+
+Value&lt;</font>Version<font color="#888888">> getVersion();
+void setVersion( String value );
+void setVersion(</font> Version <font color="#888888">value );
+
+// *** VersionConstraint ***</font>
+
+@Type( base = VersionConstraint.class )
+
+<font color="#888888">ValueProperty PROP_VERSION_CONSTRAINT = new ValueProperty( TYPE, "VersionConstraint" );
+
+Value&lt;</font>VersionConstraint<font color="#888888">> getVersionConstraint();
+void setVersionConstraint( String value );
+void setVersionConstraint(</font> VersionConstraint <font color="#888888">value );</font></code></pre>
+
+<p>Further, version constraints can be evaluated in an expression via a pair of new functions. The VersionMatches function takes a version
+as the first parameter, a version constraint as a second parameter and returns a boolean. The SapphireVersionMatches function takes a version
+constraint as the sole parameter, evaluates it against Sapphire version and returns a boolean.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the VersionMatches function is used to control property enablement.</p>
+
+<pre class="source-code"><code><font color="#888888">// *** Provider ***
+
+@Label( standard = "provider" )</font>
+@Enablement( expr = "${ VersionMatches( Root().Version, '[1.1' ) }" )
+<font color="#888888">@XmlBinding( path = "provider" )
+
+ValueProperty PROP_PROVIDER = new ValueProperty( TYPE, "Provider" );
+
+Value&lt;String> getProvider();
+void setProvider( String value );</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the VersionMatches function is used in sdef to control visibility of a properties
+view page.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;properties-view>
+    &lt;page>
+        &lt;label>provider&lt;/label></font>
+        &lt;visible-when>${ VersionMatches( Root().Version, '[1.1' ) }&lt;/visible-when>
+        <font color="#888888">&lt;content>
+            &lt;property-editor>Provider&lt;/property-editor>
+            &lt;property-editor>
+                &lt;property>Copyright&lt;/property>
+                &lt;scale-vertically>true&lt;/scale-vertically>
+            &lt;/property-editor>
+        &lt;/content>
+    &lt;/page>
+&lt;/properties-view></font></code></pre>
+
+<p>Even simpler, version compatibility can be attached to a property by using an @Since or an @VersionCompatibility annotation. This
+will configure enablement, validation and visibility. The @VersionCompatibilityTarget annotation works in conjunction with
+these annotations to specify the current version. This annotation is typically placed on the root element of the model and
+typically references a property that defines the version.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
+<font color="#888888">@GenerateImpl
+
+public interface PurchaseOrder extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );</font>
+
+    // *** Version ***
+
+    @Type( base = Version.class )
+    @DefaultValue( text = "2.0" )
+
+    ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
+
+    Value&lt;Version> getVersion();
+    void setVersion( String value );
+    void setVersion( Version value );
+
+    <font color="#888888">// *** Id ***
+
+    @Required
+
+    ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+
+    Value&lt;String> getId();
+    void setId( String value );
+
+    // *** Customer ***
+
+    @Required
+
+    ValueProperty PROP_CUSTOMER = new ValueProperty( TYPE, "Customer" );
+
+    Value&lt;String> getCustomer();
+    void setCustomer( String value );
+
+    // *** InitialQuoteDate ***
+
+    @Type( base = Date.class )</font>
+    @Since( "1.5" )
+
+    <font color="#888888">ValueProperty PROP_INITIAL_QUOTE_DATE = new ValueProperty( TYPE, "InitialQuoteDate" );
+
+    Value&lt;Date> getInitialQuoteDate();
+    void setInitialQuoteDate( String value );
+    void setInitialQuoteDate( Date value );
+
+    // *** OrderDate ***
+
+    @Type( base = Date.class )
+
+    ValueProperty PROP_ORDER_DATE = new ValueProperty( TYPE, "OrderDate" );
+
+    Value&lt;Date> getOrderDate();
+    void setOrderDate( String value );
+    void setOrderDate( Date value );
+
+    // *** FulfillmentDate ***
+
+    @Type( base = Date.class )</font>
+    @Since( "2.0" )
+
+    <font color="#888888">ValueProperty PROP_FULFILLMENT_DATE = new ValueProperty( TYPE, "FulfillmentDate" );
+
+    Value&lt;Date> getFulfillmentDate();
+    void setFulfillmentDate( String value );
+    void setFulfillmentDate( Date value );
+
+    // *** BillingInformation ***
+
+    @Type( base = BillingInformation.class )
+
+    ImpliedElementProperty PROP_BILLING_INFORMATION = new ImpliedElementProperty( TYPE, "BillingInformation" );
+
+    BillingInformation getBillingInformation();
+
+    // *** ShippingInformation ***
+
+    @Type( base = ShippingInformation.class )</font>
+    @Since( "2.0" )
+
+    <font color="#888888">ImpliedElementProperty PROP_SHIPPING_INFORMATION = new ImpliedElementProperty( TYPE, "ShippingInformation" );
+
+    ShippingInformation getShippingInformation();
+
+    // *** Payment ***
+
+    @Type( base = Payment.class, possible = { CreditCardPayment.class, CheckPayment.class, CashPayment.class } )
+    @Label( standard = "payment" )
+    @Since( "1.5" )
+
+    ElementProperty PROP_PAYMENT = new ElementProperty( TYPE, "Payment" );
+
+    ModelElementHandle&lt;Payment> getPayment();
+}</font></code></pre>
+
+<p style="margin-left: 20px;">With the default 2.0 version, all of the purchase order fields are visible.</p>
+
+<p style="margin-left: 20px;"><img src="images/VersionCompatibility-1.png"/></p>
+
+<p style="margin-left: 20px;">When user changes the version to 1.0, the fulfillment date, payment information and shipping
+information fields are automatically hidden. The initial quote date field remains visible because it has a value. A validation
+error alerts the user to the issue.</p>
+
+<p style="margin-left: 20px;"><img src="images/VersionCompatibility-2.png"/></p>
+
+<p style="margin-left: 20px;">If the user chooses to resolve the version compatibility validation error by removing the
+initial quote date, the field automatically disappears.</p>
+
+<p style="margin-left: 20px;"><img src="images/VersionCompatibility-3.png"/></p>
+
+<p>If more flexibility is necessary, the annotations can be replaced by VersionCompatibilityService and VersionCompatibilityTargetService
+implementations.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ExampleVersionCompatibilityService extends VersionCompatibilityService
+{
+    private VersionCompatibilityTargetService versionCompatibilityTargetService;
+    private Listener versionCompatibilityTargetServiceListener;
+
+    protected void initVersionCompatibilityService()
+    {
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+
+        this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( element, property );
+
+        this.versionCompatibilityTargetServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refresh();
+            }
+        };
+
+        this.versionCompatibilityTargetService.attach( this.versionCompatibilityTargetServiceListener );
+    }
+
+    @Override
+    protected Data compute()
+    {
+        final Version version = this.versionCompatibilityTargetService.version();
+        final String versioned = this.versionCompatibilityTargetService.versioned();
+
+        final boolean compatible = ...
+
+        return new Data( compatible, version, versioned );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        if( this.versionCompatibilityTargetService != null )
+        {
+            this.versionCompatibilityTargetService.detach( this.versionCompatibilityTargetServiceListener );
+        }
+    }
+}</code></pre>
+
+<pre class="source-code"><code>public class ExampleVersionCompatibilityTargetService extends VersionCompatibilityTargetService
+{
+    @Override
+    protected void initContextVersionService()
+    {
+        // Listen on the source of the version and call refresh() when necessary.
+    }
+
+    @Override
+    protected Data compute()
+    {
+        Version version = ...
+        String versioned = ...
+
+        return new Data( version, versioned );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Detach any listeners attached in the initContextVersionService() method.
+    }
+}</code></pre>
+
+<h2><a name="Key-MinimalGeneratedCode">Minimal Generated Code</a></h2>
 
 <p>The size of the generated model element implementation classes has been greatly reduced by shifting as much as possible
 into the base class provided by the framework. This reduces the disk and memory footprint of a Sapphire application.</p>
@@ -83,82 +356,81 @@ into the base class provided by the framework. This reduces the disk and memory 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>public final class BugReportImpl
-    
+
     extends ModelElement
     implements BugReport
-    
+
 {
     public BugReportImpl( final IModelParticle parent, final ModelProperty parentProperty, final Resource resource )
     {
         super( TYPE, parent, parentProperty, resource );
     }
-    
+
     public Value&lt;String> getCustomerId()
     {
         return (Value) read( PROP_CUSTOMER_ID );
     }
-    
+
     public void setCustomerId( String value )
     {
         write( PROP_CUSTOMER_ID, value );
     }
-    
+
     public Value&lt;String> getDetails()
     {
         return (Value) read( PROP_DETAILS );
     }
-    
+
     public void setDetails( String value )
     {
         write( PROP_DETAILS, value );
     }
-    
+
     public ModelElementList&lt;HardwareItem> getHardware()
     {
         return (ModelElementList) read( PROP_HARDWARE );
     }
-    
+
     public Value&lt;ProductStage> getProductStage()
     {
         return (Value) read( PROP_PRODUCT_STAGE );
     }
-    
+
     public void setProductStage( String value )
     {
         write( PROP_PRODUCT_STAGE, value );
     }
-    
+
     public void setProductStage( final ProductStage value )
     {
         write( PROP_PRODUCT_STAGE, value );
     }
-    
+
     public Value&lt;ProductVersion> getProductVersion()
     {
         return (Value) read( PROP_PRODUCT_VERSION );
     }
-    
+
     public void setProductVersion( String value )
     {
         write( PROP_PRODUCT_VERSION, value );
     }
-    
+
     public void setProductVersion( final ProductVersion value )
     {
         write( PROP_PRODUCT_VERSION, value );
     }
-    
+
     public Value&lt;String> getTitle()
     {
         return (Value) read( PROP_TITLE );
     }
-    
+
     public void setTitle( String value )
     {
         write( PROP_TITLE, value );
     }
 }</code></pre>
-
 
 <h2><a name="Key-ImprovedEntryPoints">Improved Entry Points</a></h2>
 
@@ -174,13 +446,13 @@ into the base class provided by the framework. This reduces the disk and memory 
 
     static DefinitionLoader sdef( Class&lt;?> cl )
     DefinitionLoader sdef( String name )
-    
+
     Reference&lt;T extends IModelElement>
     {
         T resolve()
         void dispose()
     }
-    
+
     Reference&lt;ISapphireUiDef> root()
     Reference&lt;EditorPageDef> page()
     Reference&lt;EditorPageDef> page( String id )
@@ -241,12 +513,12 @@ steps will ensure that the file at least has the XML declaration line and the ap
 public interface CreateContactRepositoryOp extends CreateWorkspaceFileOp
 {
     ModelElementType TYPE = new ModelElementType( CreateContactRepositoryOp.class );
-    
+
     // *** FileName ***
-    
+
     @DefaultValue( text = "contacts.xml" )
     @PreferDefaultValue
-    
+
     ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
 }</code></pre>
 
@@ -287,87 +559,7 @@ public interface CreateContactRepositoryOp extends CreateWorkspaceFileOp
 
 <p style="margin-left: 20px;"><img src="images/CreateContactRepositoryWizard.png"/></p>
 
-
-<h2><a name="Modeling"><a name="Modeling-VersionsAndVersionConstraints">Versions and Version Constraints</a></a></h2>
-
-<p>In many complex Sapphire models, it is useful to be able to constrain functionality based on a version. To simplify these scenarios,
-Sapphire now has native constructs for dealing with versions and version constraints.</p>
-
-<p><b>Version</b> - Represents a version as a sequence of long integers. In string format, it is represented as a dot-separated
-list of numeric segments, such as "1.2.3" or "5.7.3.2012070310003".</p>
-
-<p><b>VersionConstraint</b> - A boolean expression that can check versions for applicability. In string 
-format, it is represented as a comma-separated list of specific versions, closed 
-ranges (expressed using "[1.2.3-4.5)" syntax and open ranges (expressed using "[1.2.3" or "4.5)" 
-syntax). The square brackets indicate that the range includes the specified version. The parenthesis 
-indicate that the range goes up to, but does not actually include the specified version.</p>
-
-<p><b>Sapphire.version()</b> - Determines the version of Sapphire.</p>
-
-<p>Both Version and VersionConstraint classes can be used as a type of a value property.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<pre class="source-code"><code><font color="#888888">// *** Version ***</font>
-    
-@Type( base = Version.class )
-
-<font color="#888888">ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
-    
-Value&lt;</font>Version<font color="#888888">> getVersion();
-void setVersion( String value );
-void setVersion(</font> Version <font color="#888888">value );
-    
-// *** VersionConstraint ***</font>
-    
-@Type( base = VersionConstraint.class )
-
-<font color="#888888">ValueProperty PROP_VERSION_CONSTRAINT = new ValueProperty( TYPE, "VersionConstraint" );
-    
-Value&lt;</font>VersionConstraint<font color="#888888">> getVersionConstraint();
-void setVersionConstraint( String value );
-void setVersionConstraint(</font> VersionConstraint <font color="#888888">value );</font></code></pre>
-
-<p>Further, version constraints can be evaluated in an expression via a pair of new functions. The VersionMatches function takes a version
-as the first parameter, a version constraint as a second parameter and returns a boolean. The SapphireVersionMatches function takes a version
-constraint as the sole parameter, evaluates it against Sapphire version and returns a boolean.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">In this example, the VersionMatches function is used to control property enablement.</p>
-
-<pre class="source-code"><code><font color="#888888">// *** Provider ***
-    
-@Label( standard = "provider" )</font>
-@Enablement( expr = "${ VersionMatches( Root().Version, '[1.1' ) }" )
-<font color="#888888">@XmlBinding( path = "provider" )
-
-ValueProperty PROP_PROVIDER = new ValueProperty( TYPE, "Provider" );
-
-Value&lt;String> getProvider();
-void setProvider( String value );</font></code></pre>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">In this example, the VersionMatches function is used in sdef to control visibility of a properties
-view page.</p>
-
-<pre class="source-code"><code><font color="#888888">&lt;properties-view>
-    &lt;page>
-        &lt;label>provider&lt;/label></font>
-        &lt;visible-when>${ VersionMatches( Root().Version, '[1.1' ) }&lt;/visible-when>
-        <font color="#888888">&lt;content>
-            &lt;property-editor>Provider&lt;/property-editor>
-            &lt;property-editor>
-                &lt;property>Copyright&lt;/property>
-                &lt;scale-vertically>true&lt;/scale-vertically>
-            &lt;/property-editor>
-        &lt;/content>
-    &lt;/page>
-&lt;/properties-view></font></code></pre>
-
-
-<h2><a name="Modeling-Context">Context</a></h2>
+<h2><a name="Modeling"><a name="Modeling-Context">Context</a></a></h2>
 
 <p>The existing ClassLocator and ResourceLocator abstractions have been combined into a single abstraction.
 This abstraction enables Sapphire to find classes and other resources typically loaded from
@@ -378,12 +570,12 @@ be exposed.</p>
 {
      static Context adapt( ClassLoader loader )
      static Context adapt( Class&lt;?> cl )
-     
+
      abstract &lt;T> Class&lt;T> findClass( String name )
      abstract URL findResource( String name )
      abstract List&lt;URL> findResources( String name )
 }
- 
+
 BundleBasedContext extends Context
 {
      static Context adapt( Bundle bundle )
@@ -397,9 +589,8 @@ BundleBasedContext extends Context
 
   <li>When Context is constructed based on a class instead of a class loader, the implementation is 
   capable of resolving classes and resources using a simple name relative to the package of context class.</li>
-  
-</ol>
 
+</ol>
 
 <a name="Modeling-ConversionService"><h2>ConversionService</h2></a>
 
@@ -451,13 +642,13 @@ implementations from engaging.</p>
         if( type == XmlResource.class || type == Resource.class )
         {
             final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
-            
+
             if( store != null )
             {
                 return type.cast( new RootXmlResource( new XmlResourceStore( store ) ) );
             }
         }
-        
+
         return null;
     }
 }</code></pre>
@@ -465,7 +656,6 @@ implementations from engaging.</p>
 <p style="margin-left: 20px;">Note the use of chaining as part of the presented ConversionService implementation. The 
 input could be any number of things, but as long as another ConversionService implementation knows how to convert it 
 to a ByteArrayResourceStore, this implementation will take the conversion the rest of the way to a Resource.</p> 
-
 
 <h2><a name="Modeling-FileName">FileName</a></h2>
 
@@ -482,20 +672,19 @@ normalization should be performed to simplify file name input.</p>
   <li><b>ValueSerializationService</b> – Only creates FileName objects that are valid for the current platform.</li>
 
   <li><b>ValueNormalizationService</b></li>
-  
+
   <ol type="A">
 
     <li>Leading whitespace is removed.</li>
-   
+
     <li>Trailing whitespace and dots are removed.</li>
-   
+
     <li>Extension is added if the file name does not have one already and if the property has 
     a FileExtensionsService (usually via @FileExtensions annotation).</li>
-    
-  </ol>
-  
-</ol>
 
+  </ol>
+
+</ol>
 
 <h2><a name="Modeling-ListenerContext">ListenerContext</a></h2>
 
@@ -510,7 +699,6 @@ The variant of the broadcast method that takes an event is simply a post followe
     void broadcast()
     <font color="#888888">void broadcast( Event event )
 }</font></code></pre>
-
 
 <a name="Modeling-MasterConversionService"><h2>MasterConversionService</h2></a>
 
@@ -528,7 +716,6 @@ Note how this code is not aware of the details of the conversion or what type of
  <pre class="source-code"><code><font color="#888888">IFile file = project.getFile( "contacts.xml" )</font>
 Resource resource = ContactRepository.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
 <font color="#888888">ContactRepository model = ContactRepository.TYPE.instantiate( resource );</font></code></pre>
-
 
 <h2><a name="Modeling-ModelElement">ModelElement</a></h2>
 
@@ -553,7 +740,7 @@ to a particular property.</p>
     void attach( Listener listener, String path )
     void attach( Listener listener, ModelPath path )</font>
     void attach( Listener listener, ModelProperty property )
-    
+
     <font color="#888888">boolean detach( Listener listener )
     void detach( Listener listener, String path )
     void detach( Listener listener, ModelPath path )</font>
@@ -588,10 +775,10 @@ instance handy.</p>
 
     <font color="#888888">boolean enabled( ModelProperty property )</font>
     boolean enabled( String property )
-    
+
     <font color="#888888">Status validation( ModelProperty property )</font>
     Status validation( String property )
-    
+
     <font color="#888888">void refresh( ModelProperty property )</font>
     void refresh( String property )
     <font color="#888888">void refresh( ModelProperty property, boolean force )</font>
@@ -601,7 +788,7 @@ instance handy.</p>
 
     <font color="#888888">&lt;S extends Service> S service( ModelProperty property, Class&lt;S> serviceType )</font>
     &lt;S extends Service> S service( String property, Class&lt;S> serviceType )
-    
+
     <font color="#888888">&lt;S extends Service> List&lt;S> services( ModelProperty property, Class&lt;S> serviceType )</font>
     &lt;S extends Service> List&lt;S> services( String property, Class&lt;S> serviceType )
 <font color="#888888">}</font></code></pre>
@@ -646,7 +833,6 @@ directly through the property accessor.</p>
 
 <pre class="source-code"><code>container.enabled( Container.PROP_ENTITIES )</code></pre>
 
-
 <h2><a name="Modeling-ModelElementType">ModelElementType</a></h2>
 
 <p>A new variant of instantiate method provides a way to create a model instance from an arbitrary input
@@ -672,7 +858,6 @@ PurchaseOrder po = PuchaseOrder.TYPE.instantiate( resource );</code></pre>
 
 <pre class="source-code"><code>PurchaseOrder po = PuchaseOrder.TYPE.instantiate( file );</code></pre>
 
-
 <h2><a name="Modeling-PossibleValuesService">PossibleValueService</a></h2>
 
 <p>PossibleValueService can now be attached to the list property instead of the value property when modeling the
@@ -684,31 +869,30 @@ be compatible with property editors like the slush bucket and the check box list
 <pre class="source-code"><code><font color="#888888">public interface Example extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Example.class );
-    
+
     // *** FavoriteColors ***
 
     interface FavoriteColor extends IModelElement
     {
         ModelElementType TYPE = new ModelElementType( FavoriteColor.class );
-        
+
         // *** Name ***
-        
+
         @NoDuplicates
 
         ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
-        
+
         Value&lt;String> getName();
         void setName( String value );
     }
-    
+
     @Type( base = MultiSelectStringItem.class )</font>
     @Service( impl = ColorsPossibleValuesService.class )
-    
+
     <font color="#888888">ListProperty PROP_FAVORITY_COLORS = new ListProperty( TYPE, "FavoriteColors" );
-    
+
     ModelElementList&lt;FavoriteColor> getMultiSelectString();
 }</font></code></pre>
-
 
 <h2><a name="Modeling-PreferDefaultValue">@PreferDefaultValue</a></h2>
 
@@ -729,11 +913,10 @@ Fact: <i>Recommended value is [default-value].</i></p>
 
 <pre class="source-code"><code><font color="#888888">@DefaultValue( text = "sapphire-extension.xml" )</font>
 @PreferDefaultValue
- 
+
 <font color="#888888">ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );</font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/PreferDefaultValue.png"/></p>
-
 
 <h2><a name="Modeling-Service">Service</a></h2>
 
@@ -764,7 +947,6 @@ been made public.</p>
     public <font color="#888888">&lt;T> T context( final Class&lt;T> type )
 }</font></code></pre>
 
-
 <h2><a name="Modeling-ServiceContext">ServiceContext</a></h2>
 
 <p>Solve certain types of out-of-order event delivery problems by making services use an existing
@@ -774,7 +956,6 @@ event delivery queue.</p>
 {</font>
     void coordinate( ListenerContext context )
 <font color="#888888">}</font></code></pre>
-
 
 <h2><a name="Modeling-ServiceEvent">ServiceEvent</a></h2>
 
@@ -793,7 +974,6 @@ of service events from other events and identifies the originating service.</p>
     Service service()
 }</code></pre>
 
-
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
 
 <p>Determines if a property is enabled. Can be used either with two arguments (element and property name) or with
@@ -808,7 +988,6 @@ if Assistant property is enable for this employee's manager.</p>
 <pre class="source-code"><code>${ Enabled( 'Assistant' ) }
 ${ Enabled( Manager, 'Assistant' ) }</code></pre>
 
-
 <h2><a name="ExpressionLanguage-CastThroughString">Cast Through a String</a></a></h2>
 
 <p>Sapphire EL performs type casts in order to convert the type of an operand into the type that the operator expects. 
@@ -817,7 +996,6 @@ specify a literal. So, while a direct X-to-Y cast may not be implemented, an ind
 possible.</p>
 
 <p>Sapphire EL will now attempt an indirect cast through a string if a direct cast fails before giving up.</p>
- 
 
 <h2><a name="ExpressionLanguage-UpperCaseFunction">UpperCase Function</a></h2>
 
@@ -828,7 +1006,6 @@ possible.</p>
 <pre class="source-code"><code>${ UpperCase( Name ) }
 ${ Name.UpperCase() }</code></pre>
 
-
 <h2><a name="ExpressionLanguage-LowerCaseFunction">LowerCase Function</a></h2>
 
 <p>Converts a string to lower case.</p>
@@ -837,7 +1014,6 @@ ${ Name.UpperCase() }</code></pre>
 
 <pre class="source-code"><code>${ LowerCase( Name ) }
 ${ Name.LowerCase() }</code></pre>
-
 
 <h2><a name="ExpressionLanguage-UseInMorePlaces">Use EL in More Places</a></h2>
 
@@ -914,7 +1090,6 @@ ${ Name.LowerCase() }</code></pre>
     &lt;visible-when></font>${ VersionMatches( Root().Version, "[1.1" ) }<font color="#888888">&lt;/condition>
 &lt;/property-editor></font></code></pre>
 
-
 <h2><a name="Forms"><a name="Forms-SectionDescription">Section Description</a></a></h2>
 
 <p>A common pattern in forms involves a description text at the top of a section to explain the contents of the section. This 
@@ -947,11 +1122,9 @@ the developer's intent and can lead to inconsistent presentation. A common mista
 
 <p style="margin-left: 20px;"><img src="images/SectionDescription.png"/></p>
 
-
 <h2><a name="Forms-ActuatorActionHandlerEvent">ActuatorActionHandlerEvent</a></h2>
 
 <p>Detect when an actuator's action handler changes using ActuatorActionHandlerEvent.</p>
-
 
 <h2><a name="Forms-ProblemsTraversalService">ProblemsTraversalService</a></h2>
 
@@ -961,7 +1134,6 @@ be used to find the next error or warning from any location in the content outli
 <p>An implementation of this service is provided with Sapphire. This service is not intended to be implemented 
 by adopters.</p>
 
-
 <h2><a name="Miscellaneous"><a name="Miscellaneous-ConvertToFromNamespace">XmlUtil.convertToNamespaceFrom and convertFromNamespaceForm</a></a></h2>
 
 <p>Two static utility methods have been added to XmlUtil to make it easier to convert documents to and from namespace-qualified form.</p>
@@ -969,7 +1141,6 @@ by adopters.</p>
 <pre class="source-code"><code>public static void convertToNamespaceForm( Document document, String namespace )
 public static void convertToNamespaceForm( Document document, String namespace, String schemaLocation )
 public static void convertFromNamespaceForm( Document document )</code></pre>
-
 
 <h2><a name="Miscellaneous-CollectionFactoriesEnhancements">Enhancements to Collection Factories</a></h2>
 
@@ -982,7 +1153,7 @@ brand new SortedSetFactory.</p>
     static List&lt;E> singleton( E element )
     static List&lt;E> unmodifiable( E... elements )
     static List&lt;E> unmodifiable( Collection&lt;E> elements )
-    
+
     <font color="#888888">static ListFactory&lt;E> start()
 
     ListFactory&lt;E> add( E element )
@@ -993,17 +1164,17 @@ brand new SortedSetFactory.</p>
     E get( int index )
     boolean contains( E element )
     int size()
-    
+
     <font color="#888888">ListFactory&lt;E> result()
 }
- 
+
 SetFactory
 {</font>
     static Set&lt;E> empty()
     static Set&lt;E> singleton( E element )
     static Set&lt;E> unmodifiable( E... elements )
     static Set&lt;E> unmodifiable( Collection&lt;E> elements )
-    
+
     <font color="#888888">static SetFactory&lt;E> start()
 
     SetFactory&lt;E> add( E element )
@@ -1013,20 +1184,20 @@ SetFactory
     boolean remove( E element )
     boolean contains( E element )
     int size()
-    
+
     <font color="#888888">SortedSet&lt;E> result()
 }</font>
- 
+
 SortedSetFactory
 {
     static SortedSet&lt;E> empty()
     static SortedSet&lt;E> singleton( E element )
     static SortedSet&lt;E> unmodifiable( E... elements )
     static SortedSet&lt;E> unmodifiable( Collection&lt;E> elements )
-    
+
     static SortedSetFactory&lt;E> start()
     static SortedSetFactory&lt;E> start( Comparator&lt;E> comparator )
-    
+
     SortedSetFactory&lt;E> add( E element )
     SortedSetFactory&lt;E> add( E... element )
     SortedSetFactory&lt;E> add( Collection&lt;E> element )
@@ -1036,16 +1207,16 @@ SortedSetFactory
     E last()
     boolean contains( E element )
     int size()
-    
+
     SortedSet&lt;E> result()
 }
- 
+
 <font color="#888888">MapFactory
 {</font>
     static Map&lt;K,V> empty()
     static Map&lt;K,V> singleton( K key, V value )
     static Map&lt;K,V> unmodifiable( Map&lt;K,V> map )
-    
+
     <font color="#888888">static MapFactory&lt;K,V> start()
 
     MapFactory&lt;K,V> add( K key, V value )
@@ -1057,10 +1228,9 @@ SortedSetFactory
     boolean containsKey( K key )
     boolean containsValue( V value )
     int size()
-    
+
     <font color="#888888">Map&lt;K,V> result()
 }</font></code></pre>
-
 
 <h2><a name="Miscellaneous-JdtUtil">JdtUtil</a></h2>
 
@@ -1083,7 +1253,6 @@ Sapphire JDT integration now includes a set of utility functions to make this ea
     static List&lt;IContainer> findSourceFolders( IProject project )
     static List&lt;IContainer> findSourceFolders( IJavaProject project )
 }</code></pre>
-
 
 <h2><a name="Miscellaneous-MasterDetailsContentNode">MasterDetailsContentNode</a></h2>
 
@@ -1116,7 +1285,6 @@ does not fire when child node visibility changes. See VisibilityChangedEvent for
     }
 )</code></pre>
 
-
 <h2><a name="Miscellaneous-SapphirePart">SapphirePart</a></h2>
 
 <p>Check part's visibility using SapphirePart.visible() method. To get notified of changes to part's visibility,
@@ -1125,7 +1293,7 @@ listen for VisibilityChangedEvent.</p>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>boolean visible = editor.visible()
- 
+
 editor.attach
 (
     new FilteredListener&lt;VisibilityChangedEvent>()
@@ -1144,7 +1312,7 @@ has completed its initialization, listen for PartInitializationEvent.</p>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>boolean initialized = editor.initialized()
- 
+
 editor.attach
 (
     new FilteredListener&lt;PartInitializationEvent>()
@@ -1174,7 +1342,6 @@ fully initialized. If the part has already been initialized, the job is executed
     }
 );</code></pre>
 
-
 <h2><a name="Miscellaneous-Status">Status</a></h2>
 
 <p>The new Status.contains() method provides a simpler way to check if property validation has a problem
@@ -1186,7 +1353,6 @@ of certain type. This can be useful when implementing automated validation probl
 {
     ...
 }</code></pre>
-
 
 <h2><a name="Miscellaneous-Value">Value</a></h2>
 
@@ -1201,7 +1367,6 @@ directly through the property accessor.</p>
 
 <pre class="source-code"><code>entity.enabled( Entity.PROP_NAME )</code></pre>
 
-
 <h2><a name="Miscellaneous-OverwriteExistingFile">Overwrite Existing File</a></h2>
 
 <p>The reusable form for creating workspace files has been enhanced with an automated problem resolution to overwrite
@@ -1209,7 +1374,6 @@ an existing file. This makes it slightly easier for user to go from problem to r
 in the same popup.</p>
 
 <p style="margin-left: 20px;"><img src="images/OverwriteExistingFile.png"/></p>
-
 
 <h2><a name="Miscellaneous-DynamicActionVisibility">Dynamic Action Visibility</a></h2>
 
@@ -1233,14 +1397,14 @@ for dynamic action enablement.</p>
     public void init( SapphireAction action, ActionHandlerDef def )
     {
         super.init( action, def );
-        
+
         <font color="#008444">// Attach a listener to something that will call refreshVisibility()
         // when needed.</font>
-        
+
         ...
-        
+
         <font color="#008444">// Remove the listener on action handler dispose.</font>
-        
+
         attach
         (
             new FilteredListener&lt;DisposeEvent>()
@@ -1252,24 +1416,23 @@ for dynamic action enablement.</p>
                 }
             }
         }
-        
+
         <font color="#008444">// Perform initial visibility refresh.</font>
-        
+
         refreshVisibility();
     }
-    
+
     private void refreshVisibility()
     {
         setVisible( ... );
     }
-    
+
     @Override
     protected Object run( SapphireRenderingContext context )
     {
         ...
     }
 }</code></pre>
-
 
 <h2><a name="Miscellaneous-ShowNextProblem">Show Next Problem</a></h2>
 
@@ -1279,10 +1442,8 @@ in a deeply nested outline.</p>
 
 <p style="margin-left: 20px;"><img src="images/ShowNextProblem.png"/></p>
 
-
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
-
 
 </body>
 

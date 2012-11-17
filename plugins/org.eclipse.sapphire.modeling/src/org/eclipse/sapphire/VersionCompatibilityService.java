@@ -16,7 +16,8 @@ import org.eclipse.sapphire.util.EqualsFactory;
 import org.eclipse.sapphire.util.HashCodeFactory;
 
 /**
- * Determines whether a property is compatible with the version compatibility target.
+ * Determines whether a property is compatible with the version compatibility target. Most frequently specified
+ * via an @Since or an @VersionCompatibility annotation.
  * 
  * <p>When looking for the version compatibility target, the framework will first check the property, then the containing
  * element, then the parent property and the parent element, etc. The search continues until version compatibility target 

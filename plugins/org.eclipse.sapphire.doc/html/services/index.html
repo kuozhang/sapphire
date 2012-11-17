@@ -45,8 +45,9 @@
   <li><a href="#MasterConversionService">MasterConversionService</a></li>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
   <li><a href="#ProblemsTraversalService">ProblemsTraversalService</a></li>
+  <li><a href="#VersionCompatibilityService">VersionCompatibilityService</a></li>
+  <li><a href="#VersionCompatibilityTargetService">VersionCompatibilityTargetService</a></li>
 </ul>
-
 
 <a name="AdapterService"><h2>AdapterService</h2></a>
 
@@ -76,17 +77,16 @@ provide a custom method for adopting IModelElement to IProject.</p>
         {
             INewProjectFileOp op = context( INewProjectFileOp.class );
             IProject project = op.getProject().resolve();
-            
+
             if( project != null )
             {
                 return adapterType.cast( project );
             }
         }
-        
+
         return null;
     }
 }</code></pre>
-
 
 <a name="ContentProposalService"><h2>ContentProposalService</h2></a>
 
@@ -100,7 +100,6 @@ annotation or a custom PossibleValuesService, but this service can also be imple
 adopters.</p> 
 
 <p style="margin-left: 20px;"><img src="images/ContentProposalService.png"/></p>
-
 
 <a name="ConversionService"><h2>ConversionService</h2></a>
 
@@ -152,13 +151,13 @@ implementations from engaging.</p>
         if( type == XmlResource.class || type == Resource.class )
         {
             final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
-            
+
             if( store != null )
             {
                 return type.cast( new RootXmlResource( new XmlResourceStore( store ) ) );
             }
         }
-        
+
         return null;
     }
 }</code></pre>
@@ -166,7 +165,6 @@ implementations from engaging.</p>
 <p style="margin-left: 20px;">Note the use of chaining as part of the presented ConversionService implementation. The 
 input could be any number of things, but as long as another ConversionService implementation knows how to convert it 
 to a ByteArrayResourceStore, this implementation will take the conversion the rest of the way to a Resource.</p> 
-
 
 <a name="DependenciesAggregationService"><h2>DependenciesAggregationService</h2></a>
 
@@ -176,7 +174,6 @@ A property listens on all of its dependencies and triggers refresh when any of t
 
 <p>An implementation of this service is provided with Sapphire. This service is not intended to
 be implemented by adopters. See <a href="#DependenciesService">DependenciesService</a> instead.</p>
-
 
 <a name="DependenciesService"><h2>DependenciesService</h2></a>
 
@@ -209,11 +206,11 @@ adds "#/Name" dependency.</p>
     protected DependenciesServiceData compute()
     {
         // Compute the list of dependencies.
-        
+
         List&lt;ModelPath> dependencies = new ArrayList&lt;ModelPath>();
-        
+
         ...
-        
+
         return new DependenciesServiceData( dependencies );
     }
 }</code></pre>
@@ -224,7 +221,6 @@ adds "#/Name" dependency.</p>
 
 Value&lt;String> getName();
 void setName( String value );</font></code></pre>
-
 
 <a name="DiagramLayoutPersistenceService"><h2>DiagramLayoutPersistenceService</h2></a>
 
@@ -242,12 +238,11 @@ implemented, but rather by its expected behavior.</p>
   <li>If implementation defers layout persistence until save, it is expected to implement dirty() method and to
    issue DirtyStateEvent when this state changes.</li>
  </ol>
- 
+
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">The architecture sample provides a comprehensive example of a custom 
 implementation that persists layout in the same file as data.</p>
-
 
 <a name="DragAndDropService"><h2>DragAndDropService</h2></a>
 
@@ -262,26 +257,26 @@ implementation that persists layout in the same file as data.</p>
     {
         return context.object() instanceof IFile;
     }
-    
+
     @Override
     public void drop( DropContext context ) 
     {
         IFile file = (IFile) context.object();
         List<String> locations = new ArrayList<String>();
-        
+
         InputStream in = null;
-        
+
         try
         {
             in = file.getContents();
             final BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
-            
+
             for( String line = br.readLine(); line != null; line = br.readLine() )
             {
                 if( line != null )
                 {
                     line = line.trim();
-                    
+
                     if( line.length() > 0 )
                     {
                         locations.add( line );
@@ -308,27 +303,27 @@ implementation that persists layout in the same file as data.</p>
                 catch( IOException e ) {}
             }
         }
-        
+
         if( ! locations.isEmpty() )
         {
             SapphireDiagramEditorPagePart diagram = context( SapphireDiagramEditorPagePart.class );
             Map map = context( Map.class );
-            
+
             Point initialDropPosition = context.position();
-            
+
             int x = initialDropPosition.getX();
             int y = initialDropPosition.getY();
-            
+
             for( String locationName : locations )
             {
                 if( ! map.hasLocation( locationName ) )
                 {
                     Location location = map.getLocations().insert();
                     location.setName( locationName );
-                    
+
                     DiagramNodePart locationNodePart = diagram.getDiagramNodePart(location);
                     locationNodePart.setNodeBounds( x, y );
-                    
+
                     x += 50;
                     y += 50;
                 }
@@ -346,7 +341,6 @@ definition in the sdef file.</p>
     &lt;/service>
 <font color="#888888">&lt;/diagram-page></font></code></pre>
 
-
 <a name="EqualityService"><h2>EqualityService</h2></a>
 
 <p>The EqualityService provides means to implement equals() and hashCode() methods when the context object doesn't support
@@ -363,21 +357,21 @@ can be useful for other purposes.</p>
     {
         Contact c1 = context( Contact.class );
         Contact c2 = (Contact) obj;
-        
+
         return equal( c1.getLastName().getText(), c2.getLastName().getText() ) &&
                equal( c1.getFirstName().getText(), c2.getFirstName().getText() );
     }
-    
+
     @Override
     public int doHashCode()
     {
         Contact c = context( Contact.class );
         String lastName = c.getLastName().getText();
         String firstName = c.getFirstName().getText();
-        
+
         return ( lastName == null ? 1 : lastName.hashCode() ) ^ ( firstName == null ? 1 : firstName.hashCode() );
     }
-    
+
     private static boolean equal( Object obj1, Object obj2 )
     {
         if( obj1 == obj2 )
@@ -388,7 +382,7 @@ can be useful for other purposes.</p>
         {
             return obj1.equals( obj2 );
         }
-        
+
         return false;
     }
 }</code></pre>
@@ -398,10 +392,9 @@ can be useful for other purposes.</p>
 public interface Contact extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Contact.class );
-    
+
     ...
 }</font></code></pre>
-
 
 <a name="FactsAggregationService"><h2>FactsAggregationService</h2></a>
 
@@ -410,7 +403,6 @@ a single list of facts. A fact is a short statement describing property semantic
 
 <p>An implementation of this service is provided with Sapphire. This service is not intended to
 be implemented by adopters. See <a href="#FactsService">FactsService</a> to contribute facts.</p>
-
 
 <a name="FactsService"><h2>FactsService</h2></a>
 
@@ -454,7 +446,7 @@ at the property level using @Service annotation.</p>
         Since since = property().getAnnotation( Since.class );
         facts.add( "Since version " + since.version() + "." );
     }
-    
+
     public static class Factory extends ServiceFactory
     {
         @Override
@@ -463,7 +455,7 @@ at the property level using @Service annotation.</p>
         {
             return context.find( ModelProperty.class ).hasAnnotation( Since.class );
         }
-        
+
         @Override
         public Service create( ServiceContext context,
                                Class&lt;? extends Service> service )
@@ -507,7 +499,6 @@ void setExampleOne( String value );
 
 Value&lt;String> getExampleMultiple();
 void setExampleMultiple( String value );</font></code></pre>
-
 
 <a name="FileExtensionsService"><h2>FileExtensionsService</h2></a>
 
@@ -554,24 +545,24 @@ be supplied.</p>
         // Optionally register listeners to invoke refresh method when the list of extensions
         // may need to be updated.
     }
-    
+
     @Override
     protected FileExtensionsServiceData compute()
     {
         // Compute the list of extensions.
-        
+
         List&lt;String> extensions = new ArrayList&lt;String>();
-        
+
         ...
-        
+
         return new FileExtensionsServiceData( extensions );
     }
-    
+
     @Override
     public void dispose()
     {
         super.dispose();
-        
+
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>
@@ -587,7 +578,6 @@ be supplied.</p>
 Value&lt;Path> getFilePath();
 void setFilePath( String value );
 void setFilePath( Path value );</font></code></pre>
-
 
 <a name="InitialValueService"><h2>InitialValueService</h2></a>
 
@@ -615,9 +605,9 @@ Now, if the XML schema dictates that the phone number type element is required, 
 <pre class="source-code"><code><font color="#888888">@Required
 @PossibleValues( values = { "home", "mobile", "work", "other" }, invalidValueSeverity = Status.Severity.OK )</font>
 @InitialValue( text = "mobile" )
-    
+
 <font color="#888888">ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
-    
+
 Value&lt;String> getType();
 void setType( String type );</font></code></pre>
 
@@ -634,24 +624,24 @@ be provided.</p>
         // Register listeners to invoke refresh() method when the initial value
         // may have changed.
     }
-    
+
     @Override
     protected InitialValueServiceData compute()
     {
         // Compute the initial value.
-        
+
         String value;
-        
+
         ...
-        
+
         return new InitialValueServiceData( value );
     }
-    
+
     @Override
     public void dispose()
     {
         super.dispose();
-        
+
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>
@@ -659,12 +649,11 @@ be provided.</p>
 <pre class="source-code"><code><font color="#888888">@Required
 @PossibleValues( values = { "home", "mobile", "work", "other" }, invalidValueSeverity = Status.Severity.OK )</font>
 @Service( impl = PhoneTypeInitialValueService.class )
-    
+
 <font color="#888888">ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
-    
+
 Value&lt;String> getType();
 void setType( String type );</font></code></pre>
-
 
 <a name="JavaTypeConstraintService"><h2>JavaTypeConstraintService</h2></a>
 
@@ -700,26 +689,26 @@ void setServletFilterImpl( String value );</font></code></pre>
         // Register listeners to invoke refresh() method when Java type constraint
         // may have changed.
     }
-    
+
     @Override
     protected JavaTypeConstraintServiceData compute()
     {
         // Compute Java type constraint.
-        
+
         List&lt;JavaTypeKind> kinds = new ArrayList&lt;JavaTypeKind>();
         List&lt;String> types = new ArrayList&lt;String>();
         JavaTypeConstraintBehavior behavior;
-        
+
         ...
-        
+
         return new JavaTypeConstraintServiceData( kinds, types, behavior );
     }
-    
+
     @Override
     public void dispose()
     {
         super.dispose();
-        
+
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>
@@ -733,7 +722,6 @@ void setServletFilterImpl( String value );</font></code></pre>
 ReferenceValue&lt;JavaTypeName,JavaType> getServletFilterImpl();
 void setServletFilterImpl( JavaTypeName value );
 void setServletFilterImpl( String value );</font></code></pre>
-
 
 <a name="ListSelectionService"><h2>ListSelectionService</h2></a>
 
@@ -755,9 +743,9 @@ refresh action handler's enablement state when selection changes.</p>
     public void init( SapphireAction action, ActionHandlerDef def )
     {
         super.init( action, def );</font>
-        
+
         final ListSelectionService selectionService = action.getPart().service( ListSelectionService.class );
-        
+
         final Listener selectionListener = new Listener()
         {
             @Override
@@ -766,9 +754,9 @@ refresh action handler's enablement state when selection changes.</p>
                 refreshEnablementState();
             }
         };
-        
+
         selectionService.attach( selectionListener );
-        
+
         attach
         (
             new Listener()
@@ -785,7 +773,6 @@ refresh action handler's enablement state when selection changes.</p>
         );
     <font color="#888888">}
 }</font></code></pre>
-
 
 <a name="MasterConversionService"><h2>MasterConversionService</h2></a>
 
@@ -804,7 +791,6 @@ Note how this code is not aware of the details of the conversion or what type of
 Resource resource = ContactRepository.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
 <font color="#888888">ContactRepository model = ContactRepository.TYPE.instantiate( resource );</font></code></pre>
 
-
 <a name="PossibleTypesService"><h2>PossibleTypesService</h2></a>
 
 <p>The PossibleTypesService enumerates the possible child element types for a list or an element property. Each 
@@ -816,9 +802,9 @@ The framework provides an implementation of PossibleTypesService that works with
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code><font color="#888888">@Type( base = Shape.class,</font> possible = { Circle.class, Triangle.class, Rectangle.class } <font color="#888888">)
-    
+
 ListProperty PROP_SHAPES = new ListProperty( TYPE, "Shapes" );
-    
+
 ModelElementList&lt;Shape> getShapes();</font></code></pre>
 
 <p>When the set of possible types varies due to model extensibility or runtime conditions, a custom implementation
@@ -834,39 +820,38 @@ of PossibleTypesService can be provided.</p>
         // Register listeners to invoke refresh() method when the list of possible types
         // may have changed.
     }
-    
+
     @Override
     protected PossibleTypesServiceData compute()
     {
         // Compute the list of possible types.
-        
+
         List&lt;ModelElementType> types = new ArrayList&lt;ModelElementType>();
-        
+
         ...
-        
+
         return new PossibleTypesServiceData( types );
     }
-    
+
     @Override
     public void dispose()
     {
         super.dispose();
-        
+
         // Remove any listeners that were added during initialization.
     }
 }</code></pre>
 
 <pre class="source-code"><code><font color="#888888">@Type( base = Shape.class )</font>
 @Service( impl = ShapesPossibleTypesService.class )
-    
+
 <code><font color="#888888">ListProperty PROP_SHAPES = new ListProperty( TYPE, "Shapes" );
-    
+
 ModelElementList&lt;Shape> getShapes();</font></code></pre>
 
 <p>If the set of possible types is not specified via @Type annotation or via a custom PossibleTypesService
 implementation, the set of possible types is defined to be a singleton set composed of the property's base
 type.</p>
-
 
 <a name="ProblemsTraversalService"><h2>ProblemsTraversalService</h2></a>
 
@@ -888,18 +873,18 @@ by adopters.</p>
 <pre class="source-code"><code>public class ShowNextErrorActionHandler extends SapphireActionHandler
 {
     private ProblemsTraversalService service;
-    
+
     @Override
     public void init( final SapphireAction action,
                       final ActionHandlerDef def )
     {
         super.init( action, def );
-        
+
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
         final MasterDetailsEditorPagePart page = node.nearest( MasterDetailsEditorPagePart.class );
-        
+
         this.service = page.service( ProblemsTraversalService.class );
-        
+
         final Listener listener = new Listener()
         {
             @Override
@@ -908,9 +893,9 @@ by adopters.</p>
                 refreshVisibility();
             }
         };
-        
+
         this.service.attach( listener );
-        
+
         attach
         (
             new FilteredListener&lt;DisposeEvent>()
@@ -922,33 +907,33 @@ by adopters.</p>
                 }
             }
         );
-        
+
         refreshVisibility();
     }
-    
+
     private void refreshVisibility()
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
         final MasterDetailsContentNode nextProblemNode = this.service.findNextError( node );
-        
+
         setVisible( nextProblemNode != null );
     }
-    
+
     private PropertyEditorPart findFirstError( final List&lt;SectionPart> sections )
     {
         for( SectionPart section : sections )
         {
             final PropertyEditorPart res = findFirstError( section );
-            
+
             if( res != null )
             {
                 return res;
             }
         }
-        
+
         return null;
     }
-    
+
     private PropertyEditorPart findFirstError( final SapphirePart part )
     {
         if( part != null )
@@ -965,7 +950,7 @@ by adopters.</p>
                 for( SapphirePart p : ( (FormPart) part ).getChildParts() )
                 {
                     final PropertyEditorPart result = findFirstError( p );
-                    
+
                     if( result != null )
                     {
                         return result;
@@ -977,32 +962,180 @@ by adopters.</p>
                 return findFirstError( ( (PageBookPart) part ).getCurrentPage() );
             }
         }
-        
+
         return null;
     }
-    
+
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
         final MasterDetailsContentNode nextProblemNode = this.service.findNextError( node );
-        
+
         if( nextProblemNode != null )
         {
             nextProblemNode.select();
-            
+
             final PropertyEditorPart firstProblemPropertyEditor = findFirstError( nextProblemNode.getSections() );
-            
+
             if( firstProblemPropertyEditor != null )
             {
                 firstProblemPropertyEditor.setFocus();
             }
         }
-        
+
         return null;
     }
 }</code></pre>
 
+<a name="VersionCompatibilityService"><h2>VersionCompatibilityService</h2></a>
+
+<p>VersionCompatibilityService determines whether a property is compatible with the version compatibility target.
+This in turn controls property enablement, validation and visibility.</p>
+
+<p>In most situations, version compatibility can be expressed using an @Since or an @VersionCompatibility annotation.
+Both of these annotations support <a href="../el/index.html">the expression language</a>.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+@Since( "1.5" )
+
+<font color="#888888">ValueProperty PROP_INITIAL_QUOTE_DATE = new ValueProperty( TYPE, "InitialQuoteDate" );
+
+Value&lt;Date> getInitialQuoteDate();
+void setInitialQuoteDate( String value );
+void setInitialQuoteDate( Date value );</font></code></pre>
+
+<p>When more control is necessary, a custom implementation of VersionCompatibilityService can be provided. A
+typical implementation will utilize VersionCompatibilityTargetService to determine the current version.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+@Service( impl = ExampleVersionCompatibilityService.class )
+
+<font color="#888888">ValueProperty PROP_INITIAL_QUOTE_DATE = new ValueProperty( TYPE, "InitialQuoteDate" );
+
+Value&lt;Date> getInitialQuoteDate();
+void setInitialQuoteDate( String value );
+void setInitialQuoteDate( Date value );</font></code></pre>
+
+<pre class="source-code"><code>public class ExampleVersionCompatibilityService extends VersionCompatibilityService
+{
+    private VersionCompatibilityTargetService versionCompatibilityTargetService;
+    private Listener versionCompatibilityTargetServiceListener;
+
+    protected void initVersionCompatibilityService()
+    {
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+
+        this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( element, property );
+
+        this.versionCompatibilityTargetServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refresh();
+            }
+        };
+
+        this.versionCompatibilityTargetService.attach( this.versionCompatibilityTargetServiceListener );
+    }
+
+    @Override
+    protected Data compute()
+    {
+        final Version version = this.versionCompatibilityTargetService.version();
+        final String versioned = this.versionCompatibilityTargetService.versioned();
+
+        final boolean compatible = ...
+
+        return new Data( compatible, version, versioned );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        if( this.versionCompatibilityTargetService != null )
+        {
+            this.versionCompatibilityTargetService.detach( this.versionCompatibilityTargetServiceListener );
+        }
+    }
+}</code></pre>
+
+<a name="VersionCompatibilityTargetService"><h2>VersionCompatibilityTargetService</h2></a>
+
+<p>VersionCompatibilityTargetService produces the version compatibility target to be referenced 
+by VersionCompatibilityService.</p>
+
+<p>When looking for the version compatibility target, the framework will first check the property, then the containing
+element, then the parent property and the parent element, etc. The search continues until version compatibility target 
+is found or the model root is reached.</p>
+
+<p>In most situations, version compatibility target can be expressed using an @VersionCompatibilityTarget annotation,
+which supports <a href="../el/index.html">the expression language</a>.</p>
+
+<pre class="source-code"><code>@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
+<font color="#888888">@GenerateImpl
+
+public interface PurchaseOrder extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );</font>
+
+    // *** Version ***
+
+    @Type( base = Version.class )
+    @DefaultValue( text = "2.0" )
+
+    ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
+
+    Value&lt;Version> getVersion();
+    void setVersion( String value );
+    void setVersion( Version value );
+
+    <font color="#888888">...
+}</font></code></pre>
+
+<p>When more control is necessary, a custom implementation of VersionCompatibilityTargetService can be provided.</p>
+
+<pre class="source-code"><code>@Service( impl = ExampleVersionCompatibilityTargetService.class )
+<font color="#888888">@GenerateImpl
+
+public interface PurchaseOrder extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code>public class ExampleVersionCompatibilityTargetService extends VersionCompatibilityTargetService
+{
+    @Override
+    protected void initContextVersionService()
+    {
+        // Listen on the source of the version and call refresh() when necessary.
+    }
+
+    @Override
+    protected Data compute()
+    {
+        Version version = ...
+        String versioned = ...
+
+        return new Data( version, versioned );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Detach any listeners attached in the initContextVersionService() method.
+    }
+}</code></pre>
 
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

@@ -65,7 +65,6 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   <li><a href="#GraphitiToGef">Graphiti to GEF Transition</a></li>
 </ol>
 
-
 <h2><a name="CompositeStatusFactory">CompositeStatusFactory</a></h2>
 
 <table>
@@ -82,7 +81,6 @@ to 0.5 release. Only changes from the previous release are covered.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="IModelElement">IModelElement</a></h2>
 
@@ -149,7 +147,6 @@ to 0.5 release. Only changes from the previous release are covered.</p>
   </tr>
 </table>
 
-
 <h2><a name="LayeredListBindingImpl">LayeredListBindingImpl</a></h2>
 
 <p>The list binding API has been improved to more efficiently support insertion into the middle of the list along with arbitrary
@@ -175,13 +172,13 @@ movement of existing list items.</p>
     {
         ...
     }</font>
-    
+
     @Override
     public <font color="#888888">void swap( Resource x, Resource y )
     {
         ...
     }
-    
+
     ...
 }</font></code></pre>
     </td>
@@ -201,18 +198,18 @@ movement of existing list items.</p>
         move( resource( obj ), position );
         return obj;
     }
-    
+
     private <font color="#888888">Object addUnderlyingObject( ModelElementType type )
     {
         ...
     }</font>
-    
+
     @Override
     public void move( Resource resource, int position )
     {
         List&lt;Resource&gt; list = read();
         int size = list.size();
-        
+
         if( position &lt; 0 || position &gt; size )
         {
             throw new IllegalArgumentException();
@@ -220,7 +217,7 @@ movement of existing list items.</p>
         else
         {
             int oldPosition = list.indexOf( resource );
-            
+
             if( position &lt; oldPosition )
             {
                 for( int i = oldPosition; i &gt;= position; i-- )
@@ -237,44 +234,44 @@ movement of existing list items.</p>
             }
         }
     }
-    
+
     private void moveUp( List&lt;Resource&gt; list, Resource resource )
     {
         int index = list.indexOf( resource );
-        
+
         if( index == -1 )
         {
             throw new IllegalArgumentException();
         }
-        
+
         if( index &gt; 0 )
         {
             Resource previous = list.get( index - 1 );
             swap( resource, previous );
         }
     }
-    
+
     private void moveDown( List&lt;Resource&gt; list, Resource resource )
     {
         int index = list.indexOf( resource );
-        
+
         if( index == -1 )
         {
             throw new IllegalArgumentException();
         }
-        
+
         if( index &lt; list.size() - 1 )
         {
             Resource next = list.get( index + 1 );
             swap( resource, next );
         }
     }
-    
+
     private <font color="#888888">void swap( Resource x, Resource y )
     {
         ...
     }
-    
+
     ...
 }</font></code></pre>
 
@@ -283,7 +280,6 @@ solution would be to implement the new insertUnderlyingObject() and move() metho
     </td>
   </tr>
 </table>
-
 
 <h2><a name="ListBindingImpl">ListBindingImpl</a></h2>
 
@@ -304,13 +300,13 @@ movement of existing list items.</p>
     {
         ...
     }</font>
-    
+
     @Override
     public <font color="#888888">void swap( Resource x, Resource y )
     {
         ...
     }
-    
+
     ...
 }</font></code></pre>
     </td>
@@ -324,18 +320,18 @@ movement of existing list items.</p>
         move( resource, position );
         return resource;
     }
-    
+
     private <font color="#888888">Resource add( ModelElementType type )
     {
         ...
     }</font>
-    
+
     @Override
     public void move( Resource resource, int position )
     {
         List&lt;Resource&gt; list = read();
         int size = list.size();
-        
+
         if( position &lt; 0 || position &gt; size )
         {
             throw new IllegalArgumentException();
@@ -343,7 +339,7 @@ movement of existing list items.</p>
         else
         {
             int oldPosition = list.indexOf( resource );
-            
+
             if( position &lt; oldPosition )
             {
                 for( int i = oldPosition; i &gt;= position; i-- )
@@ -360,44 +356,44 @@ movement of existing list items.</p>
             }
         }
     }
-    
+
     private void moveUp( List&lt;Resource&gt; list, Resource resource )
     {
         int index = list.indexOf( resource );
-        
+
         if( index == -1 )
         {
             throw new IllegalArgumentException();
         }
-        
+
         if( index &gt; 0 )
         {
             Resource previous = list.get( index - 1 );
             swap( resource, previous );
         }
     }
-    
+
     private void moveDown( List&lt;Resource&gt; list, Resource resource )
     {
         int index = list.indexOf( resource );
-        
+
         if( index == -1 )
         {
             throw new IllegalArgumentException();
         }
-        
+
         if( index &lt; list.size() - 1 )
         {
             Resource next = list.get( index + 1 );
             swap( resource, next );
         }
     }
-    
+
     private <font color="#888888">void swap( Resource x, Resource y )
     {
         ...
     }
-    
+
     ...
 }</font></code></pre>
 
@@ -406,7 +402,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="MasterDetailsEditorPage">MasterDetailsEditorPage</a></h2>
 
@@ -425,7 +420,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
   </tr>
 </table>
 
-
 <h2><a name="MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></h2>
 
 <table>
@@ -442,7 +436,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="ModelElementList">ModelElementList</a></h2>
 
@@ -468,7 +461,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="ModelElementListener">ModelElementListener</a></h2>
 
@@ -545,7 +537,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
   </tr>
 </table>
 
-
 <h2><a name="ModelElementType">ModelElementType</a></h2>
 
 <table>
@@ -579,7 +570,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
   </tr>
 </table>
 
-
 <h2><a name="ModelProperty">ModelProperty</a></h2>
 
 <table>
@@ -605,7 +595,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="ModelPropertyListener">ModelPropertyListener</a></h2>
 
@@ -637,7 +626,7 @@ solution would be to implement the new insert() and move() methods directly.</p>
 
       <p>The above is the most direct migration target, but in many cases more efficient results can be achieved by filtering
       on PropertyContentEvent instead.</p>
-      
+
 <pre class="source-code"><code><font color="#888888">public ExampleListener extends</font> FilteredListener&lt;PropertyContentEvent&gt;
 {
     @Override
@@ -646,13 +635,12 @@ solution would be to implement the new insert() and move() methods directly.</p>
         <font color="#888888">...</font>
     }
 }</code></pre>
-      
+
       <p>The other subclasses of PropertyEvent are PropertyEnablementEvent and PropertyValidationEvent.</p>
-      
+
     </td>
   </tr>
 </table>
-
 
 <h2><a name="PropertyListeners">PropertyListeners</a></h2>
 
@@ -670,7 +658,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="SapphireActionHandler">SapphireActionHandler</a></h2>
 
@@ -695,10 +682,10 @@ solution would be to implement the new insert() and move() methods directly.</p>
     public void init( SapphireAction action,</font> ISapphireActionHandlerDef <font color="#888888">def )
     {
         super.init( action, def );
-        
+
         ...
     }
-    
+
     ...
 }</font></code></pre>
     </td>
@@ -709,16 +696,15 @@ solution would be to implement the new insert() and move() methods directly.</p>
     public void init( SapphireAction action,</font> ActionHandlerDef <font color="#888888">def )
     {
         super.init( action, def );
-        
+
         ...
     }
-    
+
     ...
 }</font></code></pre>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="SapphireDiagramActionHandler">SapphireDiagramActionHandler</a></h2>
 
@@ -736,7 +722,7 @@ solution would be to implement the new insert() and move() methods directly.</p>
     {
         ...
     }
-    
+
     <font color="#888888">...
 }</font></code></pre>
     </td>
@@ -748,7 +734,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="SapphireEditor">SapphireEditor</a></h2>
 
@@ -766,7 +751,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
     </td>
   </tr>
 </table>
-
 
 <h2><a name="SapphireWizardPageListener">SapphireWizardPageListener</a></h2>
 
@@ -845,7 +829,6 @@ solution would be to implement the new insert() and move() methods directly.</p>
   </tr>
 </table>
 
-
 <h2><a name="Actuator">Actuator</a></h2>
 
 <p>The action link facility in sdef language has been generalized to support other presentations. In the
@@ -900,8 +883,6 @@ process it was renamed as actuator.</p>
 <nobr>Search: &nbsp;&nbsp;(?s)&lt;action-link>(.*?)&lt;/action-link></nobr><br/>
 <nobr>Replace: &nbsp;&lt;actuator>\1&lt;/actuator></nobr></p>
 
-
-
 <h2><a name="ContentOutlineNodeImage">Content Outline Node Image</a></h2>
 
 <p>Prior to advent of Sapphire Expression Language, sdef language included the "use-model-element-image" switch
@@ -932,7 +913,6 @@ to capture the same semantics.</p>
 <nobr>Search: &nbsp;&nbsp;&lt;use-model-element-image>[ ]*&lt;/use-model-element-image></nobr><br/>
 <nobr>Replace: &nbsp;&lt;image>\${ Image() }&lt;/image></nobr></p>
 
-
 <h2><a name="DiagramDragAndDrop">Diagram Drag-n-Drop</a></h2>
 
 <p>Drag-n-drop support in the diagram editor has been reworked to use service mechanism instead of action mechanism.</p>
@@ -951,13 +931,13 @@ to capture the same semantics.</p>
     {
         <font color="#888888">...</font>
     }
-    
+
     @Override
     protected Object run( SapphireRenderingContext context )
     {
         DiagramRenderingContext ctx = (DiagramRenderingContext) context;
         Object obj = ctx.getObject();
-        
+
         <font color="#888888">...</font>
     }
 <font color="#888888">}</font></code></pre>
@@ -969,15 +949,15 @@ to capture the same semantics.</p>
     public boolean droppable( DropContext context ) 
     {
         Object obj = context.object();
-        
+
         <font color="#888888">...</font>
     }
-    
+
     @Override
     public void drop( DropContext context ) 
     {
         Object obj = context.object();
-        
+
         <font color="#888888">...</font>
     }
 <font color="#888888">}</font></code></pre>
@@ -1001,7 +981,6 @@ to capture the same semantics.</p>
     </td>
   </tr>  
 </table>
-
 
 <h2><a name="DiagramImage">Diagram Image</a></h2>
 
@@ -1073,13 +1052,12 @@ Images are now referenced at the point of use, rather than defined separately an
   </tr>
 </table>
 
-
 <h2><a name="GraphitiToGef">Graphiti to GEF Transition</a></h2>
 
 <p>The Graphiti-based diagram presentation (introduced in 0.4 release) has been replaced with a presentation 
 written directly on top of GEF. This has significantly reduced Sapphire's dependencies and enabled diagram 
 support to more tightly integrate with the rest of Sapphire.</p>
- 
+
 <table>
   <tr>
     <th>Before</th>
@@ -1106,7 +1084,6 @@ addPage( 0, page );</font></code></pre>
     </td>
   </tr>
 </table>
-
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

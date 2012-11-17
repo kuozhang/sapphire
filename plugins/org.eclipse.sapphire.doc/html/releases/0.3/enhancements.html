@@ -60,7 +60,7 @@
     <li><a href="#collapsible-sections">Collapsible Sections</a></li>
   </ol>
 </ol>
- 
+
 <h2><a name="el"><a name="el-general">Expression Language Improvements</a></a></h2>
 
 <p>Index into any list or array using array notation.</p>
@@ -268,7 +268,7 @@ a custom relative path service.</p>
     public List&lt;Path> roots()
     {
         final File file = element().adapt( File.class );
-        
+
         if( file == null )
         {
             return Collections.emptyList();
@@ -295,7 +295,7 @@ path and path variables.</p>
 <p>The @Image annotation now resolves images straight from the class loader of the annotated type. When specifying an 
 image, either use full path from class loader root (with '/' as the segment separator) or just the image file name
 if the image is located in the same package as the annotated type.</p>
- 
+
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">The following declarations are equivalent.</p>
@@ -356,7 +356,7 @@ public class AttendeeImageService extends ImageService
     public void init( IModelElement element, String[] params )
     {
         super.init( element, params );
-        
+
         this.listener = new ModelPropertyListener()
         {
             @Override
@@ -365,7 +365,7 @@ public class AttendeeImageService extends ImageService
                 notifyListeners( new ImageChangedEvent( AttendeeImageProviderService.this ) );
             }
         };
-        
+
         element.addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
 
@@ -493,7 +493,7 @@ property editor and possible values browse dialog.</p>
                 return "Violet [8A00FF]";
             }
         }
-        
+
         return value;
     }
 }
@@ -506,11 +506,11 @@ public class ColorValueImageService extends ValueImageService
     public ImageData provide( String value )
     {
         ImageData image = this.images.get( value );
-        
+
         if( image == null )
         {
             String imageResourceName = null;
-            
+
             if( value != null )
             {
                 if( value.equals( "red" ) )
@@ -538,14 +538,14 @@ public class ColorValueImageService extends ValueImageService
                     imageResourceName = "SquareViolet.png";
                 }
             }
-            
+
             if( imageResourceName != null )
             {
                 final String imageResourcePath = "org/eclipse/sapphire/samples/" + imageResourceName;
                 image = readFromClassLoader( ColorValueImageService.class, imageResourcePath );
             }
         }
-        
+
         return image;
     }
 }
@@ -599,7 +599,7 @@ void setName( String name );</code></pre>
 
 <pre class="source-code"><code>@Type( base = IOccupation.class, possible = { IJobOccupation.class, IStudentOccupation.class, IHomemakerOccupation.class } )
 @Required
-  
+
 ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
 
 ModelElementHandle&lt;IOccupation> getPrimaryOccupation();</code></pre>
@@ -666,7 +666,7 @@ void setName( String value );</code></pre>
     public String normalize( String str )
     {
         str = super.normalize( str );
-        
+
         ...
     }
 }</code></pre>

@@ -26,6 +26,8 @@
   </topic>
   <topic href="html/java/index.html" label="Working with Java Types">
   </topic>
+  <topic href="html/versions/index.html" label="Versions and Version Constraints">
+  </topic>
   <topic href="html/extensions/index.html" label="Extension System">
      <topic href="html/extensions/existing.html" label="Existing Extensions">
      </topic>
@@ -33,24 +35,25 @@
      </topic>
   </topic>
   <topic href="html/services/index.html" label="Services">
+     <topic href="html/services/index.html#AdapterService" label="AdapterService">
      <topic href="html/services/index.html#ContentProposalService" label="ContentProposalService">
-     </topic>
+     <topic href="html/services/index.html#ConversionService" label="ConversionService">
      <topic href="html/services/index.html#DependenciesAggregationService" label="DependenciesAggregationService">
-     </topic>
      <topic href="html/services/index.html#DependenciesService" label="DependenciesService">
-     </topic>
+     <topic href="html/services/index.html#DiagramLayoutPersistenceService" label="DiagramLayoutPersistenceService">
+     <topic href="html/services/index.html#DragAndDropService" label="DragAndDropService">
+     <topic href="html/services/index.html#EqualityService" label="EqualityService">
      <topic href="html/services/index.html#FactsAggregationService" label="FactsAggregationService">
-     </topic>
      <topic href="html/services/index.html#FactsService" label="FactsService">
-     </topic>
      <topic href="html/services/index.html#FileExtensionsService" label="FileExtensionsService">
-     </topic>
      <topic href="html/services/index.html#InitialValueService" label="InitialValueService">
-     </topic>
      <topic href="html/services/index.html#JavaTypeConstraintService" label="JavaTypeConstraintService">
-     </topic>
+     <topic href="html/services/index.html#ListSelectionService" label="ListSelectionService">
+     <topic href="html/services/index.html#MasterConversionService" label="MasterConversionService">
      <topic href="html/services/index.html#PossibleTypesService" label="PossibleTypesService">
-     </topic>
+     <topic href="html/services/index.html#ProblemsTraversalService" label="ProblemsTraversalService">
+     <topic href="html/services/index.html#VersionCompatibilityService" label="VersionCompatibilityService">
+     <topic href="html/services/index.html#VersionCompatibilityTargetService" label="VersionCompatibilityTargetService">
   </topic>
   <topic href="html/releases/index.html" label="Releases">
     <topic href="html/releases/0.6/index.html" label="0.6">

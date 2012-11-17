@@ -302,7 +302,7 @@ void setLocation( </font>Path<font color="#888888"> location );</font></code></p
         {
             paths.add(</font> project.getLocation() <font color="#888888">);
         }
-        
+
         return paths;
     }
 }</font></code></pre>
@@ -318,7 +318,7 @@ void setLocation( </font>Path<font color="#888888"> location );</font></code></p
         {
             paths.add(</font> PathBridge.create( project.getLocation() ) <font color="#888888">);
         }
-        
+
         return paths;
     }
 }</font></code></pre>
@@ -343,7 +343,7 @@ Eclipse's IPath object.</p>
     ...</font>
 
     &lt;extension point="org.eclipse.sapphire.modeling.extension"/>
-  
+
 <font color="#888888">&lt;/plugin></font></code></pre>
     </td>
     <td>
@@ -1087,7 +1087,7 @@ public class AttendeeImageService extends ImageService
     public void init( IModelElement element, String[] params )
     {
         super.init( element, params );
-        
+
         this.listener = new ModelPropertyListener()
         {
             @Override
@@ -1096,7 +1096,7 @@ public class AttendeeImageService extends ImageService
                 notifyListeners( new ImageChangedEvent( AttendeeImageProviderService.this ) );
             }
         };
-        
+
         element.addListener( this.listener, IAttendee.PROP_IN_CONTACTS_DATABASE.getName() );
     }
 
@@ -1342,7 +1342,7 @@ enablement logic from the parent class rather than augmenting it.</p>
         {
             return ...
         }
-        
+
         return false;
     }
 }</code></pre>

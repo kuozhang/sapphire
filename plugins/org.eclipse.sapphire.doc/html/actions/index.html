@@ -99,7 +99,7 @@ button.</p>
         return null;
     }
 }</code></pre>
-  
+
 <p><b>Details</b></p>
 
 ##action-handler-details##
@@ -141,7 +141,7 @@ file in the specified folder. Activating one of these handlers sets the property
     public List<SapphireActionHandler> create()
     {
         List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
-        
+
         for( File file : this.folder.listFiles() )
         {
             if( file.isFile() )
@@ -149,14 +149,14 @@ file in the specified folder. Activating one of these handlers sets the property
                 handlers.add( new Handler( file ) );
             }
         }
-        
+
         return handlers;
     }
 
     private static class Handler extends SapphireBrowseActionHandler
     {
         private final File file;
-        
+
         public Handler( File file )
         {
             this.file = file;
@@ -230,7 +230,7 @@ the action that ends up bound to the link.</p>
 &lt;/action-link></code></pre>
 
 <img src="images/action-link.png" style="margin-left: 20px;"/>
- 
+
 <a name="contexts"><h2>Contexts</h2></a>
 
 <p>Every UI part that supports actions must define one or more context. Actions are contributed to a context

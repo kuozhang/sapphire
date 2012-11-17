@@ -228,7 +228,6 @@ public interface FileBugReportOp extends IModelElement
     BugReport getBugReport();
 }</code></pre>
 
-
 <p>Let's now look at the last bit of code that goes with this model, which is the enums.</p> 
 
 <pre class="source-code"><code>@Label( standard = "type", full = "hardware type" )
@@ -264,7 +263,6 @@ public enum HardwareType
     OTHER
 }
 
-
 @Label( standard = "product stage" )
 
 public enum ProductStage
@@ -281,7 +279,6 @@ public enum ProductStage
 
     FINAL
 }
-
 
 @Label( standard = "product version" )
 
@@ -339,7 +336,7 @@ arranging the properties on the screen. This is done via an XML file.</p>
     &lt;import>
         &lt;package>org.eclipse.sapphire.samples.ezbug&lt;/package>
     &lt;/import>
-    
+
     &lt;composite>
         &lt;id>bug.report&lt;/id>
         &lt;documentation>
