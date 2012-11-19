@@ -331,6 +331,11 @@ public final class DiagramNodeTemplate extends SapphirePart
 				notifyNodeDelete(nodePart);
 				nodePart.dispose();
 				this.diagramNodes.remove(nodePart);
+				if (this.embeddedConnTemplate != null)
+				{
+					// remove embedded connection parts that are attached to this node
+					this.embeddedConnTemplate.removeConnectionParts(deletedNode);
+				}
 			}
 		}    	    	
 		for (IModelElement newNode : newNodes)

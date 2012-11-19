@@ -70,15 +70,21 @@ public class LabelNodeCommand extends Command {
 		// Refreshing endpoints of attached connections and re-enable listeners on them.
 		for (DiagramConnectionPart connPart : connParts1)
 		{
-			connPart.resetEndpoint1();
-            connPart.addModelListener();
-            connPart.getDiagramConnectionTemplate().addModelListener();
+			if (!connPart.disposed())
+			{
+				connPart.resetEndpoint1();
+	            connPart.addModelListener();
+	            connPart.getDiagramConnectionTemplate().addModelListener();
+			}
 		}
 		for (DiagramConnectionPart connPart : connParts2)
 		{
-			connPart.resetEndpoint2();
-            connPart.addModelListener();
-            connPart.getDiagramConnectionTemplate().addModelListener();
+			if (!connPart.disposed())
+			{
+				connPart.resetEndpoint2();
+	            connPart.addModelListener();
+	            connPart.getDiagramConnectionTemplate().addModelListener();
+			}
 		}		
 	}
 	
