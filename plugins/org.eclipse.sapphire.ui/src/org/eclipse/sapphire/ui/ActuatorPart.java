@@ -360,6 +360,11 @@ public final class ActuatorPart extends SapphirePart
     
     public void render( final SapphireRenderingContext context )
     {
+        if( ! visible() )
+        {
+            return;
+        }
+
         final SapphireActionGroup actions = getActions( getMainActionContext() );
         final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
         final SapphireKeyboardActionPresentation keyboardActionPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
