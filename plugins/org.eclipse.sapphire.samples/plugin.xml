@@ -314,7 +314,7 @@
       icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
       <description>Create a purchase order.</description>
       <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
-        <parameter name="sdef" value="org.eclipse.sapphire.samples.po.CreatePurchaseOrderwizard"/>
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.po.CreatePurchaseOrderWizard"/>
         <parameter name="editor" value="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"/>
       </class>
     </wizard>
