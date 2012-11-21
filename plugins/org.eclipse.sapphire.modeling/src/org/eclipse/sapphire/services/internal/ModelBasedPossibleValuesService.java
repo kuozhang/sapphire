@@ -103,15 +103,20 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
     
     private void refresh()
     {
-        final Set<String> newValues = context( IModelElement.class ).read( this.path );
+        final IModelElement element = context( IModelElement.class );
         
-        if( ! this.values.equals( newValues ) )
+        if( ! element.disposed() )
         {
-            this.values = Collections.unmodifiableSet( newValues );
+            final Set<String> newValues = context( IModelElement.class ).read( this.path );
             
-            if( this.initialized || this.readPriorToInit )
+            if( ! this.values.equals( newValues ) )
             {
-                broadcast();
+                this.values = Collections.unmodifiableSet( newValues );
+                
+                if( this.initialized || this.readPriorToInit )
+                {
+                    broadcast();
+                }
             }
         }
     }
