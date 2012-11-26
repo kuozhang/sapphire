@@ -47,7 +47,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
             }
         };
         
-        element.attach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
+        element.attach( listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
         
         refreshEnablementState();
         
@@ -58,7 +58,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    element.detach( listener, IAttendee.PROP_IN_CONTACTS_DATABASE );
+                    element.detach( listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
                 }
             }
         );
@@ -66,7 +66,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
     
     protected void refreshEnablementState()
     {
-        setEnabled( ( (IAttendee) getModelElement() ).isInContactsDatabase().getContent() );
+        setEnabled( ( (IAttendee) getModelElement() ).isInContactRepository().getContent() );
     }
 
     @Override

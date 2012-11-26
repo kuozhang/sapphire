@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.samples.calendar.integrated.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.IEvent;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -36,10 +36,10 @@ import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
 public final class CalendarResource extends Resource
 {
     private final org.eclipse.sapphire.samples.calendar.ICalendar base;
-    private final ContactsDatabase contacts;
+    private final ContactRepository contacts;
     
     public CalendarResource( final org.eclipse.sapphire.samples.calendar.ICalendar base,
-                             final ContactsDatabase contacts )
+                             final ContactRepository contacts )
     {
         super( null );
         
@@ -78,7 +78,7 @@ public final class CalendarResource extends Resource
     {
         A res;
         
-        if( adapterType == ContactsDatabase.class )
+        if( adapterType == ContactRepository.class )
         {
             res = (A) this.contacts;
         }

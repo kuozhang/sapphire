@@ -431,7 +431,7 @@ public final class PropertyEditorAssistDecorator
             {
                 final Status.Severity valResultSeverity = this.problem.severity();
                 
-                if( valResultSeverity != Status.Severity.ERROR && valResultSeverity != Status.Severity.WARNING && valResultSeverity != Status.Severity.INFO )
+                if( valResultSeverity != Status.Severity.ERROR && valResultSeverity != Status.Severity.WARNING )
                 {
                     this.problem = null;
                 }
@@ -475,8 +475,7 @@ public final class PropertyEditorAssistDecorator
                     }
                     default:
                     {
-                        fieldDecorationId = FieldDecorationRegistry.DEC_INFORMATION;
-                        break;
+                        throw new IllegalStateException();
                     }
                 }
                 

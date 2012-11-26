@@ -49,7 +49,6 @@ public final class StatusBridge
         {
             case ERROR:    severity = IStatus.ERROR; break;
             case WARNING:  severity = IStatus.WARNING; break;
-            case INFO:     severity = IStatus.INFO; break;
             default:       severity = IStatus.OK; break;
         }
         
@@ -125,7 +124,6 @@ public final class StatusBridge
             {
                 case IStatus.ERROR:    factory.severity( Severity.ERROR ); break;
                 case IStatus.WARNING:  factory.severity( Severity.WARNING ); break;
-                case IStatus.INFO:     factory.severity( Severity.INFO ); break;
                 default:               factory.severity( Severity.OK ); break;
             }
             

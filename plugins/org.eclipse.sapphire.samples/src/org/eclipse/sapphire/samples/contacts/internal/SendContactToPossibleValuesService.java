@@ -15,7 +15,7 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.samples.contacts.SendContactOp;
 import org.eclipse.sapphire.services.PossibleValuesService;
 
@@ -33,7 +33,7 @@ public final class SendContactToPossibleValuesService extends PossibleValuesServ
         
         if( contact != null )
         {
-            for( Contact c : contact.nearest( ContactsDatabase.class ).getContacts() )
+            for( Contact c : contact.nearest( ContactRepository.class ).getContacts() )
             {
                 final String email = c.getEMail().getText();
                 

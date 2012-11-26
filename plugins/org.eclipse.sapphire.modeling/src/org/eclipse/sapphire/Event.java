@@ -55,9 +55,12 @@ public class Event
         }
     }
     
-    final void trace()
+    final void trace( final int listeners )
     {
-        System.err.println( toString( fillTracingInfo(), Thread.currentThread().getStackTrace() ) );
+        final Map<String,String> info = new LinkedHashMap<String,String>();
+        fillTracingInfo( info );
+        info.put( "listeners", String.valueOf( listeners ) );
+        System.err.println( toString( info, Thread.currentThread().getStackTrace() ) );
     }
     
     @Override

@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResource;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 
 /**
  * Implementation of ConversionService that is capable of converting an IFile to a Resource for the 
@@ -38,7 +38,7 @@ public final class CalendarResourceConversionService extends ConversionService
                 = org.eclipse.sapphire.samples.calendar.ICalendar.TYPE.instantiate( calendarFile ); 
             
             final IFile contactsFile = calendarFile.getParent().getFile( new Path( "contacts.xml" ) );
-            final ContactsDatabase contactsModel = ContactsDatabase.TYPE.instantiate( contactsFile );
+            final ContactRepository contactsModel = ContactRepository.TYPE.instantiate( contactsFile );
             
             return type.cast( new CalendarResource( calendarModel, contactsModel ) );
         }

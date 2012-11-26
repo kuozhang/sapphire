@@ -61,16 +61,16 @@ public interface IAttendee
     void setType( String type );
     void setType( AttendeeType type );
     
-    // *** InContactsDatabase ***
+    // *** InContactRepository ***
     
     @Type( base = Boolean.class )
-    @Label( standard = "in contacts database" )
+    @Label( standard = "in contact repository" )
     @DefaultValue( text = "false" )
     @ReadOnly
     
-    ValueProperty PROP_IN_CONTACTS_DATABASE = new ValueProperty( TYPE, "InContactsDatabase" );
+    ValueProperty PROP_IN_CONTACT_REPOSITORY = new ValueProperty( TYPE, "InContactRepository" );
     
-    Value<Boolean> isInContactsDatabase();
+    Value<Boolean> isInContactRepository();
     
     // *** EMail ***
     

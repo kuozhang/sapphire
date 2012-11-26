@@ -76,6 +76,7 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         );
 
         this.contentOutline = new MasterDetailsContentOutline( this );
+        this.contentOutline.getRoot();
         
         this.contentOutline.attach
         (
@@ -168,6 +169,16 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         if( this.outlineHeaderTextFunctionResult != null )
         {
             this.outlineHeaderTextFunctionResult.dispose();
+        }
+        
+        if( this.contentOutline != null )
+        {
+            this.contentOutline.dispose();
+        }
+        
+        if( this.state != null )
+        {
+            this.state.dispose();
         }
     }
     

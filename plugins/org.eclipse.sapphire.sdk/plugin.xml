@@ -80,7 +80,7 @@
       <description>%CreateExtensionManifestWizard.Description</description>
       <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
         <parameter name="sdef" value="org.eclipse.sapphire.sdk.CreateExtensionManifestWizard"/>
-        <parameter name="editor" value="org.eclipse.sapphire.sdk.internal.SapphireExtensionEditor"/>
+        <parameter name="editor" value="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor"/>
       </class>
     </wizard>
     <wizard

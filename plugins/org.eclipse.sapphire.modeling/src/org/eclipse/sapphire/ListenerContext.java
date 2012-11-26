@@ -95,7 +95,7 @@ public final class ListenerContext
         {
             if( TRACE )
             {
-                event.trace();
+                event.trace( this.listeners.size() );
             }
             
             for( BroadcastJob job : this.queue )

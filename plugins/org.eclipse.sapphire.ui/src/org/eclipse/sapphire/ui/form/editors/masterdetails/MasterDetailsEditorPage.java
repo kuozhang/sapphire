@@ -73,6 +73,7 @@ import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -84,7 +85,6 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePart.PartEvent;
-import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -604,7 +604,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         {
                             final MasterDetailsContentNode node = (MasterDetailsContentNode) part;
                             
-                            if( event instanceof VisibilityChangedEvent )
+                            if( event instanceof PartVisibilityEvent )
                             {
                                 final MasterDetailsContentNode parent = node.getParentNode();
                                 
@@ -1959,10 +1959,10 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         
         public DetailsSection()
         {
-            this.listener = new FilteredListener<VisibilityChangedEvent>()
+            this.listener = new FilteredListener<PartVisibilityEvent>()
             {
                 @Override
-                protected void handleTypedEvent( final VisibilityChangedEvent event )
+                protected void handleTypedEvent( final PartVisibilityEvent event )
                 {
                     refreshSections();
                 }

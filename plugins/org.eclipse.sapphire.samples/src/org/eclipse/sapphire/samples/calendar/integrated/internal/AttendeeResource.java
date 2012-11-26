@@ -22,7 +22,7 @@ import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
 public final class AttendeeResource extends Resource
 {
     private final org.eclipse.sapphire.samples.calendar.IAttendee base;
-    private final ContactsDatabase contacts;
+    private final ContactRepository contacts;
     private final Listener listener;
     
     public AttendeeResource( final Resource parent,
@@ -40,7 +40,7 @@ public final class AttendeeResource extends Resource
         super( parent );
         
         this.base = base;
-        this.contacts = adapt( ContactsDatabase.class );
+        this.contacts = adapt( ContactRepository.class );
         
         this.listener = new FilteredListener<PropertyEvent>()
         {
@@ -55,21 +55,21 @@ public final class AttendeeResource extends Resource
                     if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_NAME )
                     {
                         element.refresh( IAttendee.PROP_NAME );
-                        element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
+                        element.refresh( IAttendee.PROP_IN_CONTACT_REPOSITORY );
                         element.refresh( IAttendee.PROP_E_MAIL );
                     }
                     else if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_TYPE )
                     {
                         element.refresh( IAttendee.PROP_TYPE );
                     }
-                    else if( property == ContactsDatabase.PROP_CONTACTS )
+                    else if( property == ContactRepository.PROP_CONTACTS )
                     {
-                        element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
+                        element.refresh( IAttendee.PROP_IN_CONTACT_REPOSITORY );
                         element.refresh( IAttendee.PROP_E_MAIL );
                     }
                     else if( property == Contact.PROP_NAME )
                     {
-                        element.refresh( IAttendee.PROP_IN_CONTACTS_DATABASE );
+                        element.refresh( IAttendee.PROP_IN_CONTACT_REPOSITORY );
                         element.refresh( IAttendee.PROP_E_MAIL );
                     }
                     else if( property == Contact.PROP_E_MAIL )
@@ -149,7 +149,7 @@ public final class AttendeeResource extends Resource
                 }
             };
         }
-        else if( property == IAttendee.PROP_IN_CONTACTS_DATABASE )
+        else if( property == IAttendee.PROP_IN_CONTACT_REPOSITORY )
         {
             return new ValueBindingImpl()
             {

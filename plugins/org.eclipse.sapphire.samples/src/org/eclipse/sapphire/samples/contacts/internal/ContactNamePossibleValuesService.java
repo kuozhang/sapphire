@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.contacts.internal;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
@@ -26,7 +26,7 @@ public final class ContactNamePossibleValuesService extends PossibleValuesServic
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
-        for( Contact contact : context( ContactsDatabase.class ).getContacts() )
+        for( Contact contact : context( ContactRepository.class ).getContacts() )
         {
             final String name = contact.getName().getText();
             

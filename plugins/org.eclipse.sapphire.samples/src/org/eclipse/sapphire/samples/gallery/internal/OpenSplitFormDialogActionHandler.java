@@ -32,7 +32,7 @@ public class OpenSplitFormDialogActionHandler extends SapphireActionHandler
         final SapphireDialog dialog = new SapphireDialog
         (
             context.getShell(), element, 
-            DefinitionLoader.context( IGallery.class ).sdef( "SapphireGallery" ).dialog( "SplitFormDialog" )
+            DefinitionLoader.context( IGallery.class ).sdef( "GalleryEditor" ).dialog( "SplitFormDialog" )
         );
         
         dialog.open();

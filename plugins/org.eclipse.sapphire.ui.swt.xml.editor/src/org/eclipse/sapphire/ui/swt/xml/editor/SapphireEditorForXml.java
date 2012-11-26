@@ -128,6 +128,17 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
         return super.getContentOutline( page );
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        this.type = null;
+        this.definition = null;
+        this.sourcePage = null;
+        this.formPage = null;
+    }
+
     private static final class Resources extends NLS
     {
         public static String sourcePageTitle;

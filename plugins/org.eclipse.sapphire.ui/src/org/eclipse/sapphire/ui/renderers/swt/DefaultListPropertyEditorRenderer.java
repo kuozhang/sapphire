@@ -594,6 +594,32 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
         );
         
+        final ListSelectionService selectionService = part.service( ListSelectionService.class );
+        
+        this.selectionProvider.addSelectionChangedListener
+        (
+            new ISelectionChangedListener()
+            {
+                public void selectionChanged( SelectionChangedEvent event )
+                {
+                    selectionService.select( getSelectedElements() );
+                }
+            }
+        );
+        
+        setSelectedElements( selectionService.selection() );
+        
+        final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
+        {
+            @Override
+            public void handle( final org.eclipse.sapphire.Event event )
+            {
+                setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
+            }
+        };
+
+        selectionService.attach( selectionServiceListener );
+
         if( ! isReadOnly )
         {
             if( this.exposeAddAction )
@@ -1042,32 +1068,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         addControl( this.table );
         
-        final ListSelectionService selectionService = part.service( ListSelectionService.class );
-        
-        this.selectionProvider.addSelectionChangedListener
-        (
-            new ISelectionChangedListener()
-            {
-                public void selectionChanged( SelectionChangedEvent event )
-                {
-                    selectionService.select( getSelectedElements() );
-                }
-            }
-        );
-        
-        setSelectedElements( selectionService.selection() );
-        
-        final org.eclipse.sapphire.Listener selectionServiceListener = new org.eclipse.sapphire.Listener()
-        {
-            @Override
-            public void handle( final org.eclipse.sapphire.Event event )
-            {
-                setSelectedElements( ( (ListSelectionChangedEvent) event ).after() );
-            }
-        };
-
-        selectionService.attach( selectionServiceListener );
-
         addOnDisposeOperation
         ( 
             new Runnable()

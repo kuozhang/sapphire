@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.samples.contacts.SendContactOp;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -40,7 +40,7 @@ public final class SendContactActionHandler extends SapphireActionHandler
             final SapphireWizard<SendContactOp> wizard = new SapphireWizard<SendContactOp>
             ( 
                 operation, 
-                DefinitionLoader.context( ContactsDatabase.class ).sdef( "ContactsDatabaseEditor" ).wizard( "SendContactWizard" )
+                DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).wizard( "SendContactWizard" )
             );
             
             final WizardDialog dialog = new WizardDialog( context.getShell(), wizard );

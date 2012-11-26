@@ -576,4 +576,11 @@
         <factory>org.eclipse.sapphire.ui.internal.ListSelectionServiceFactory</factory>
         <context>Sapphire.Part</context>
     </service>
+    <service>
+        <id>Sapphire.ProblemsTraversalService</id>
+        <type>org.eclipse.sapphire.ui.form.editors.masterdetails.ProblemsTraversalService</type>
+        <factory>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.ProblemsTraversalServiceFactory</factory>
+        <context>Sapphire.Part</context>
+        <description>Produces a problem-annotated traversal order through the content outline, which can be used to find the next error or warning from any location in the content outline. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
+    </service>
 </extension>

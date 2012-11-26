@@ -17,7 +17,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.ImageServiceData;
 
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.ImageServiceData;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ContactDatabaseImageService extends ImageService
+public final class ContactRepositoryImageService extends ImageService
 {
     private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "Contact.png" ) );
     private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "ContactFaded.png" ) );
@@ -52,7 +52,7 @@ public final class ContactDatabaseImageService extends ImageService
     {
         boolean foundContactWithEMail = false;
         
-        for( Contact contact : context( ContactsDatabase.class ).getContacts() )
+        for( Contact contact : context( ContactRepository.class ).getContacts() )
         {
             if( contact.getEMail().getContent() != null )
             {

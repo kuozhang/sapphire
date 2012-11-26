@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
 /**
@@ -260,6 +261,22 @@ public final class SapphireWithDirective extends PageBookPart
                             @Override
                             protected void handleTypedEvent( final PropertyEvent event )
                             {
+                                if( Display.getCurrent() == null )
+                                {
+                                    masterCheckBox.getDisplay().asyncExec
+                                    (
+                                        new Runnable()
+                                        {
+                                            public void run()
+                                            {
+                                                handleTypedEvent( event );
+                                            }
+                                        }
+                                    );
+                                    
+                                    return;
+                                }
+                                
                                 final IModelElement subModelElement = element.read( property ).element();
                                 
                                 masterCheckBox.setSelection( subModelElement != null );
@@ -334,6 +351,22 @@ public final class SapphireWithDirective extends PageBookPart
                             @Override
                             protected void handleTypedEvent( final PropertyEvent event )
                             {
+                                if( Display.getCurrent() == null )
+                                {
+                                    radioButtonsGroup.getDisplay().asyncExec
+                                    (
+                                        new Runnable()
+                                        {
+                                            public void run()
+                                            {
+                                                handleTypedEvent( event );
+                                            }
+                                        }
+                                    );
+                                    
+                                    return;
+                                }
+                                
                                 final IModelElement subModelElement = element.read( property ).element();
                                 final Button button;
                                 
@@ -425,6 +458,22 @@ public final class SapphireWithDirective extends PageBookPart
                             @Override
                             protected void handleTypedEvent( final PropertyEvent event )
                             {
+                                if( Display.getCurrent() == null )
+                                {
+                                    combo.getDisplay().asyncExec
+                                    (
+                                        new Runnable()
+                                        {
+                                            public void run()
+                                            {
+                                                handleTypedEvent( event );
+                                            }
+                                        }
+                                    );
+                                    
+                                    return;
+                                }
+                                
                                 final IModelElement subModelElement = element.read( property ).element();
                                 final int index;
                                 

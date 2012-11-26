@@ -98,7 +98,7 @@ public final class ConditionalPart extends SapphirePart
         
         if( ! initializing )
         {
-            broadcast( new StructureChangedEvent( ConditionalPart.this ) );
+            broadcast( new PartChildrenEvent( ConditionalPart.this ) );
         }
     }
     

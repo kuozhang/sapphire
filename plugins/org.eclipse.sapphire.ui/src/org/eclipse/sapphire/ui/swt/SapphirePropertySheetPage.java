@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPagePart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -224,7 +225,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                                 list.update( index );
                             }
                         }
-                        else if( event instanceof SapphirePart.VisibilityChangedEvent )
+                        else if( event instanceof PartVisibilityEvent )
                         {
                             refresh();
                         }

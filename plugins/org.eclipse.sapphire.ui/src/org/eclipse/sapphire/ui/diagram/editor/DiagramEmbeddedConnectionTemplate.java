@@ -316,6 +316,17 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	}
     }
     
+    public void removeConnectionParts(IModelElement srcNodeModel)
+    {
+    	List<DiagramConnectionPart> connParts = new ArrayList<DiagramConnectionPart>();
+    	connParts.addAll(this.getDiagramConnections(srcNodeModel));
+    	for (DiagramConnectionPart connPart : connParts)
+    	{
+            notifyConnectionDelete(new DiagramConnectionEvent(connPart));
+            disposeConnectionPart(connPart);    		
+    	}
+    }
+    
     private void handleModelElementDispose(final ElementDisposeEvent event)
     {
         IModelElement element = event.element();

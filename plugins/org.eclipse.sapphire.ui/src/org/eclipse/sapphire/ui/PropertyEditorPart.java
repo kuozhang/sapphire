@@ -32,6 +32,8 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
@@ -158,26 +160,31 @@ public final class PropertyEditorPart extends FormComponentPart
         
         // Listen for PropertyValidationEvent and update property editor's validation.
         
-        this.listener = new FilteredListener<PropertyValidationEvent>()
+        this.listener = new FilteredListener<PropertyEvent>()
         {
             @Override
-            protected void handleTypedEvent( final PropertyValidationEvent event )
+            protected void handleTypedEvent( final PropertyEvent event )
             {
-                final Runnable op = new Runnable()
+                if( event instanceof PropertyValidationEvent || event instanceof PropertyEnablementEvent )
                 {
-                    public void run()
+                    if( Display.getCurrent() == null )
                     {
-                        if( Display.getCurrent() == null )
-                        {
-                            Display.getDefault().asyncExec( this );
-                            return;
-                        }
+                        Display.getDefault().asyncExec
+                        (
+                            new Runnable()
+                            {
+                                public void run()
+                                {
+                                    handleTypedEvent( event );
+                                }
+                            }
+                        );
                         
-                        refreshValidation();
+                        return;
                     }
-                };
-                
-                op.run();
+                    
+                    refreshValidation();
+                }
             }
         };
         

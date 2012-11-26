@@ -77,7 +77,10 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
                         @Override
                         public void run()
                         {
-                            element.refresh( property );
+                            if( ! element.disposed() && ! ( (IModelElement) element.root() ).disposed() )
+                            {
+                                element.refresh( property );
+                            }
                         }
                     };
                     

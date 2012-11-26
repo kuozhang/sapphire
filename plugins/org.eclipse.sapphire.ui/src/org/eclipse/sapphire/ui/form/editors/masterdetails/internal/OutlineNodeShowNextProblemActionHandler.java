@@ -14,13 +14,12 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 import java.util.List;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.FormPart;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PageBookPart;
-import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -29,8 +28,8 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SectionPart;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode.NodeListEvent;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.ProblemsTraversalService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -39,31 +38,16 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPag
 public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireActionHandler
 {
     private final Status.Severity severity;
-    private final Listener nodeListener;
-    private final Listener sectionListener;
+    private ProblemsTraversalService service;
     
-    public OutlineNodeShowNextProblemActionHandler( final Status.Severity severity )
+    protected OutlineNodeShowNextProblemActionHandler( final Status.Severity severity )
     {
+        if( ! ( severity == Status.Severity.ERROR || severity == Status.Severity.WARNING ) )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         this.severity = severity;
-        
-        this.nodeListener = new FilteredListener<NodeListEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final NodeListEvent event )
-            {
-                attach( event.part() );
-                refreshVisibility();
-            }
-        };
-        
-        this.sectionListener = new FilteredListener<PartValidationEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final PartValidationEvent event )
-            {
-                refreshVisibility();
-            }
-        };
     }
     
     @Override
@@ -72,7 +56,21 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
     {
         super.init( action, def );
         
-        attach( ( (MasterDetailsContentNode) getPart() ).nearest( MasterDetailsEditorPagePart.class ).outline().getRoot() );
+        final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
+        final MasterDetailsEditorPagePart page = node.nearest( MasterDetailsEditorPagePart.class );
+        
+        this.service = page.service( ProblemsTraversalService.class );
+        
+        final Listener listener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refreshVisibility();
+            }
+        };
+        
+        this.service.attach( listener );
         
         attach
         (
@@ -81,7 +79,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    detach( ( (MasterDetailsContentNode) getPart() ).nearest( MasterDetailsEditorPagePart.class ).outline().getRoot() );
+                    OutlineNodeShowNextProblemActionHandler.this.service.detach( listener );
                 }
             }
         );
@@ -89,112 +87,12 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
         refreshVisibility();
     }
     
-    private void attach( final MasterDetailsContentNode node )
-    {
-        node.attach( this.nodeListener );
-        
-        for( MasterDetailsContentNode child : node.nodes() )
-        {
-            attach( child );
-        }
-        
-        for( SectionPart section : node.getSections() )
-        {
-            section.attach( this.sectionListener );
-        }
-    }
-
-    private void detach( final MasterDetailsContentNode node )
-    {
-        node.detach( this.nodeListener );
-        
-        for( MasterDetailsContentNode child : node.nodes() )
-        {
-            detach( child );
-        }
-        
-        for( SectionPart section : node.getSections() )
-        {
-            section.detach( this.sectionListener );
-        }
-    }
-    
     private void refreshVisibility()
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final MasterDetailsContentNode nextProblemNode = findNextProblem( node );
+        final MasterDetailsContentNode nextProblemNode = this.service.findNextProblem( node, this.severity );
         
         setVisible( nextProblemNode != null );
-    }
-
-    private MasterDetailsContentNode findNextProblem( final MasterDetailsContentNode node )
-    {
-        for( MasterDetailsContentNode child : node.nodes().visible() )
-        {
-            final MasterDetailsContentNode result = findNextProblemDown( child );
-            
-            if( result != null )
-            {
-                return result;
-            }
-        }
-        
-        return findNextProblemUp( node );
-    }
-    
-    private MasterDetailsContentNode findNextProblemDown( final MasterDetailsContentNode node )
-    {
-        for( SectionPart section : node.getSections() )
-        {
-            if( section.visible() && section.validation().severity() == this.severity )
-            {
-                return node;
-            }
-        }
-
-        for( MasterDetailsContentNode child : node.nodes().visible() )
-        {
-            final MasterDetailsContentNode result = findNextProblemDown( child );
-            
-            if( result != null )
-            {
-                return result;
-            }
-        }
-        
-        return null;
-    }
-    
-    private MasterDetailsContentNode findNextProblemUp( final MasterDetailsContentNode node )
-    {
-        final ISapphirePart p = node.getParentPart();
-        
-        if( p instanceof MasterDetailsContentNode )
-        {
-            final MasterDetailsContentNode parent = (MasterDetailsContentNode) p;
-            boolean seenInputNode = false;
-            
-            for( MasterDetailsContentNode n : parent.nodes().visible() )
-            {
-                if( seenInputNode )
-                {
-                    final MasterDetailsContentNode res = findNextProblemDown( n );
-                    
-                    if( res != null )
-                    {
-                        return res;
-                    }
-                }
-                else if( n == node )
-                {
-                    seenInputNode = true;
-                }
-            }
-            
-            return findNextProblemUp( parent );
-        }
-        
-        return null;
     }
     
     private PropertyEditorPart findFirstProblem( final List<SectionPart> sections )
@@ -211,7 +109,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
         
         return null;
     }
-    
+
     private PropertyEditorPart findFirstProblem( final SapphirePart part )
     {
         if( part != null )
@@ -248,7 +146,7 @@ public abstract class OutlineNodeShowNextProblemActionHandler extends SapphireAc
     protected Object run( final SapphireRenderingContext context )
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final MasterDetailsContentNode nextProblemNode = findNextProblem( node );
+        final MasterDetailsContentNode nextProblemNode = this.service.findNextProblem( node, this.severity );
         
         if( nextProblemNode != null )
         {

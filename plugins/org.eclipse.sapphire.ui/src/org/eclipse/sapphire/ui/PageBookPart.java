@@ -105,32 +105,33 @@ public abstract class PageBookPart extends FormComponentPart
                     @Override
                     protected void init()
                     {
-                        final Listener pageVisibilityListener = new FilteredListener<VisibilityChangedEvent>()
+                        final Listener pageVisibilityListener = new FilteredListener<PartVisibilityEvent>()
                         {
                             @Override
-                            protected void handleTypedEvent( final VisibilityChangedEvent event )
+                            protected void handleTypedEvent( final PartVisibilityEvent event )
                             {
                                 refresh();
                             }
                         };
                         
-                        final Listener pageChangeListener = new FilteredListener<PageChangedEvent>()
-                        {
-                            @Override
-                            protected void handleTypedEvent( final PageChangedEvent event )
+                        PageBookPart.this.attach
+                        (
+                            new FilteredListener<PageChangedEvent>()
                             {
-                                final FormPart page = getCurrentPage();
-                                
-                                if( page != null )
+                                @Override
+                                protected void handleTypedEvent( final PageChangedEvent event )
                                 {
-                                    page.attach( pageVisibilityListener );
+                                    final FormPart page = getCurrentPage();
+                                    
+                                    if( page != null )
+                                    {
+                                        page.attach( pageVisibilityListener );
+                                    }
+                                    
+                                    refresh();
                                 }
-                                
-                                refresh();
                             }
-                        };
-                        
-                        attach( pageChangeListener );
+                        );
                         
                         final FormPart page = getCurrentPage();
                         

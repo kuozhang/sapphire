@@ -126,7 +126,7 @@ and for general API consistency.</p>
             {
                 final DocumentationResource resource 
                     = new DocumentationResource( "wikipedia", "http://en.wikipedia.org/wiki/Integer" );
-                    
+
                 return Collections.singletonList( resource );
             }
         };
@@ -410,9 +410,9 @@ expression language.</p>
 <pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
 @ValidFileExtensions( { "png", "gif", "jpeg" } )
-    
+
 <font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
-    
+
 Value&lt;Path> getFilePath();
 void setFilePath( String value );
 void setFilePath( Path value );</font></code></pre>
@@ -421,9 +421,9 @@ void setFilePath( Path value );</font></code></pre>
 <pre class="source-code"><code><font color="#888888">@Type( base = Path.class )
 @ValidFileSystemResourceType( FileSystemResourceType.FILE )</font>
 @FileExtensions( expr = "png,gif,jpeg" )
-    
+
 <font color="#888888">ValueProperty PROP_FILE_PATH = new ValueProperty( TYPE, "FilePath" );
-    
+
 Value&lt;Path> getFilePath();
 void setFilePath( String value );
 void setFilePath( Path value );</font></code></pre>
@@ -450,17 +450,17 @@ void setFilePath( Path value );</font></code></pre>
     public <font color="#888888">void init</font>( IModelElement element, String[] params )
     <font color="#888888">{
         super.init</font>( element, params )<font color="#888888">;
-        
+
         String p1 = </font>params[ 0 ]<font color="#888888">;
         String p2 = </font>params[ 1 ]<font color="#888888">;
-        
+
         ...
     }
-    
+
     public Object perform()
     {
         IModelElement element = </font>element()<font color="#888888">;
-        
+
         ...
     }
 }</font></code></pre>
@@ -472,19 +472,19 @@ void setFilePath( Path value );</font></code></pre>
     protected <font color="#888888">void init</font>()
     <font color="#888888">{
         super.init</font>()<font color="#888888">;
-        
+
         IModelElement element = </font>context( IModelElement.class )<font color="#888888">;
-        
+
         String p1 = </font>params( "p1" )<font color="#888888">;
         String p2 = </font>params( "p2" )<font color="#888888">;
-        
+
         ...
     }
-    
+
     public Object perform()
     {
         IModelElement element = </font>context( IModelElement.class )<font color="#888888">;
-        
+
         ...
     }
 }</font></code></pre>
@@ -500,7 +500,7 @@ void setFilePath( Path value );</font></code></pre>
     {
         ...
     }
-    
+
     @Override
     public</font> ModelElementService <font color="#888888">create(</font> IModelElement element,
                                        Class&lt;? extends ModelElementService> service <font color="#888888">)
@@ -520,7 +520,7 @@ void setFilePath( Path value );</font></code></pre>
 
         <font color="#888888">...
     }
-    
+
     @Override
     public</font> Service <font color="#888888">create(</font> ServiceContext context,
                            Class&lt;? extends Service> service <font color="#888888">)
@@ -561,18 +561,18 @@ void setFilePath( Path value );</font></code></pre>
     public <font color="#888888">void init</font>( IModelElement element, ModelProperty property, String[] params )
     <font color="#888888">{
         super.init</font>( element, property, params )<font color="#888888">;
-        
+
         String p1 = </font>params[ 0 ]<font color="#888888">;
         String p2 = </font>params[ 1 ]<font color="#888888">;
-        
+
         ...
     }
-    
+
     public Object perform()
     {
         IModelElement element = </font>element()<font color="#888888">;
         ModelProperty property = </font>property()<font color="#888888">;
-        
+
         ...
     }
 }</font></code></pre>
@@ -584,21 +584,21 @@ void setFilePath( Path value );</font></code></pre>
     protected <font color="#888888">void init</font>()
     <font color="#888888">{
         super.init</font>()<font color="#888888">;
-        
+
         IModelElement element = </font>context( IModelElement.class )<font color="#888888">;
         ModelProperty property = </font>context( ModelProperty.class )<font color="#888888">;
-        
+
         String p1 = </font>params( "p1" )<font color="#888888">;
         String p2 = </font>params( "p2" )<font color="#888888">;
-        
+
         ...
     }
-    
+
     public Object perform()
     {
         IModelElement element = </font>context( IModelElement.class )<font color="#888888">;
         ModelProperty property = </font>context( ModelProperty.class )<font color="#888888">;
-        
+
         ...
     }
 }</font></code></pre>
@@ -615,7 +615,7 @@ void setFilePath( Path value );</font></code></pre>
     {
         ...
     }
-    
+
     @Override
     public</font> ModelPropertyService <font color="#888888">create(</font> IModelElement element,
                                         ModelProperty property,
@@ -637,7 +637,7 @@ void setFilePath( Path value );</font></code></pre>
 
         <font color="#888888">...
     }
-    
+
     @Override
     public</font> Service <font color="#888888">create(</font> ServiceContext context,
                            Class&lt;? extends Service> service <font color="#888888">)
@@ -676,7 +676,7 @@ void setFilePath( Path value );</font></code></pre>
 <pre class="source-code"><code><font color="#888888">ValueProperty PROP_SAMPLE = new ValueProperty( TYPE, "Sample" );
 
 @Service( impl = CustomService.class, params = {</font> "a", "b" <font color="#888888">} )
-    
+
 Value&lt;String> getSample();
 void setSample( String value );</font></code></pre>
     </td>
@@ -692,7 +692,7 @@ void setSample( String value );</font></code></pre>
         @Service.Param( name = "p2", value = "b" ) 
     <font color="#888888">}
 )
-    
+
 Value&lt;String> getSample();
 void setSample( String value );</font></code></pre>
     </td>
@@ -725,7 +725,7 @@ public class CircleSerializationServiceFactory extends ServiceFactory
         ValueProperty property = context.find( ValueProperty.class ); 
         return ( property != null && property.isOfType( Circle.class ) );
     }
-    
+
     @Override
     public Service create( ServiceContext context,
                            Class&lt;? extends Service> service )
@@ -741,7 +741,7 @@ public class CircleSerializationServiceFactory extends ServiceFactory
 
 @Type( base = Circle.class )
 </font>@ValueSerialization( service = <font color="#888888">CircleSerializationService.class</font> )
-    
+
 <font color="#888888">Value&lt;Circle> getSample();
 void setSample( String value );
 void setSample( Circle value );</font></code></pre>
@@ -751,7 +751,7 @@ void setSample( Circle value );</font></code></pre>
 
 @Type( base = Circle.class )
 </font>@Service( impl = <font color="#888888">CircleSerializationService.class</font> )
-    
+
 <font color="#888888">Value&lt;Circle> getSample();
 void setSample( String value );
 void setSample( Circle value );</font></code></pre>
@@ -762,7 +762,7 @@ void setSample( Circle value );</font></code></pre>
 <pre class="source-code"><code><font color="#888888">ValueProperty PROP_SAMPLE = new ValueProperty( TYPE, "Sample" );
 
 </font>@DerivedValue( service = <font color="#888888">SampleDerivedValueService.class</font> )
-    
+
 <font color="#888888">Value&lt;String> getSample();</font></code></pre>
     </td>
     <td>
@@ -770,7 +770,7 @@ void setSample( Circle value );</font></code></pre>
 
 </font>@Derived
 @Service( impl = <font color="#888888">SampleDerivedValueService.class</font> )
-    
+
 <font color="#888888">Value&lt;String> getSample();</font></code></pre>
     </td>
   </tr>
@@ -808,9 +808,9 @@ void setSample( Circle value );</font></code></pre>
     public String getDefaultValue<font color="#888888">()
     {
         String value;
-        
+
         ...
-        
+
         return</font> value<font color="#888888">;
     }
 
@@ -831,9 +831,9 @@ void setSample( Circle value );</font></code></pre>
     protected DefaultValueServiceData compute<font color="#888888">()
     {
         String value;
-        
+
         ...
-        
+
         return</font> new DefaultValueServiceData( value )<font color="#888888">;
     }
 
@@ -855,7 +855,7 @@ refresh() method when that data changes.</p>
     <font color="#888888">{
         dependencies.add( ... );
         dependencies.add( ... );
-        
+
         ...
     }
 
@@ -872,9 +872,9 @@ refresh() method when that data changes.</p>
 
         <font color="#888888">dependencies.add( ... );
         dependencies.add( ... );
-        
+
         ...</font>
-        
+
         return new DependenciesServiceData( dependencies );
     <font color="#888888">}
 
@@ -892,10 +892,10 @@ refresh() method when that data changes.</p>
         String value;
 
         ...
-        
+
         return</font> value<font color="#888888">;
     }
-       
+
     ...
 }</font></code></pre>
     </td>
@@ -908,7 +908,7 @@ refresh() method when that data changes.</p>
         String value;
 
         ...
-        
+
         return</font> new DerivedValueServiceData( value )<font color="#888888">;
     }
 
@@ -934,10 +934,10 @@ refresh() method when that data changes.</p>
         boolean enablement;
 
         ...
-        
+
         return</font> enablement<font color="#888888">;
     }
-       
+
     ...
 }</font></code></pre>
     </td>
@@ -961,7 +961,7 @@ refresh() method when that data changes.</p>
         boolean enablement;
 
         ...
-        
+
         return</font> new EnablementServiceData( enablement )<font color="#888888">;
     }
 
@@ -980,13 +980,13 @@ refresh() method when that data changes.</p>
     {
         ...
     }
-    
+
     @Override
     protected</font> void <font color="#888888">compute</font>( List&lt;String> extensions )
     <font color="#888888">{
         extensions.add( ... );
         extensions.add( ... );
-        
+
         ...
     }
 
@@ -1006,7 +1006,7 @@ refresh() method when that data changes.</p>
 
         <font color="#888888">...
     }
-    
+
     @Override
     protected</font> FileExtensionsServiceData <font color="#888888">compute</font>()
     <font color="#888888">{</font>
@@ -1014,9 +1014,9 @@ refresh() method when that data changes.</p>
 
         <font color="#888888">extensions.add( ... );
         extensions.add( ... );
-        
+
         ...</font>
-        
+
         return new FileExtensionsServiceData( extensions );
     <font color="#888888">}
 
@@ -1032,10 +1032,10 @@ refresh() method when that data changes.</p>
     protected void</font> init<font color="#888888">()
     {</font>
         super.init();
-        
+
         <font color="#888888">// Listen on entities that influence image choice.
         // Call </font>broadcast<font color="#888888">() when something has changed.
-        
+
         ...
     }
 
@@ -1043,9 +1043,9 @@ refresh() method when that data changes.</p>
     public ImageData provide<font color="#888888">()
     {
         ImageData image;
-        
+
         ...
-        
+
         return</font> image<font color="#888888">;
     }
 
@@ -1060,7 +1060,7 @@ refresh() method when that data changes.</p>
     {</font>
         <font color="#888888">// Listen on entities that influence image choice.
         // Call </font>refresh<font color="#888888">() when something has changed.
-        
+
         ...
     }
 
@@ -1068,9 +1068,9 @@ refresh() method when that data changes.</p>
     protected ImageServiceData compute<font color="#888888">()
     {
         ImageData image;
-        
+
         ...
-        
+
         return</font> new ImageServiceData( image )<font color="#888888">;
     }
 
@@ -1087,7 +1087,7 @@ refresh() method when that data changes.</p>
         ...
     }
 }
- 
+
 service.</font>addListener<font color="#888888">( listener );
 
 ...
@@ -1109,7 +1109,7 @@ while inside service
         ...
     }
 }
- 
+
 service.</font>attach<font color="#888888">( listener );
 
 ...
@@ -1257,7 +1257,6 @@ void setDate( Date value );</font></code></pre>
   </tr>
 </table>
 
-
 <h2><a name="PossibleTypes">Possible Types</a></h2>
 
 <p>The set of possible types for a list or an element property is no longer restricted to be static. As such, previous API for
@@ -1290,7 +1289,6 @@ for( ModelElementType type : element.service( property, PossibleTypesService.cla
     </td>
   </tr>
 </table>
-
 
 <h2><a name="ActionHandlerDispose">Action Handler Dispose</a></h2>
 
@@ -1346,7 +1344,6 @@ architecture eliminates resource leaks caused by failing to call super.dispose()
     </td>
   </tr>
 </table>
-
 
 <h2><a name="XmlRootBinding">@XmlRootBinding</a></h2>
 
@@ -1405,7 +1402,6 @@ previously handled by @XmlRootBinding annotation are now handled by different co
   </tr>
 </table>
 
-
 <h2><a name="PropertyEditorAssistContribution">PropertyEditorAssistContribution</a></h2>
 
 <p>The PropertyEditorAssistContribution API has changed to remove dependencies on SWT/JFace and to make contribution
@@ -1427,7 +1423,7 @@ immutable once created.</p>
 
         contribution.</font>setText<font color="#888888">( ... );
         contribution.</font>setImage<font color="#888888">( "CustomImageId", </font>(Image) <font color="#888888">... );</font>
-        
+
         contribution.setHyperlinkListener
         (
             new HyperlinkAdapter()
@@ -1475,7 +1471,6 @@ immutable once created.</p>
     </td>
   </tr>
 </table>
-
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

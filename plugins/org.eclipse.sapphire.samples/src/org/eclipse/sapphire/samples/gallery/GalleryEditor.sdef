@@ -41,7 +41,7 @@
 
     <editor-page>
         <id>main</id>
-        <page-header-text>sapphire gallery</page-header-text>
+        <page-header-text>Gallery (Sapphire Sample)</page-header-text>
         <initial-selection>simple values</initial-selection>
         <documentation>
             <title>Sapphire Gallery</title>

@@ -25,7 +25,7 @@
 <p>The expression language provides a convenient way to embed a bit of custom logic in various
   parts of Sapphire without resorting to Java. Expressions can be used in some of the modeling
   annotations as well as in UI definitions.</p>
-  
+
 <p>The syntax and semantics borrow extensively from JSP expression language and its precursors,
   however there are a number of deviations. This document is the definitive reference.</p>
 
@@ -65,7 +65,7 @@ expressions.</p>
   <li><code>${ Name == null ? "[contact]" : Name }</code></li>
   <li><code>${ ( Month == 'February' ? ( LeapYear ? 29 : 28 ) : 30 ) * EmployeeCount }</code></li>
 </ul>
- 
+
 <a name="literals"><h2>Literals</h2></a>
 
 <p>There are literals for boolean, integer, floating point, string, and null in the expression
@@ -251,7 +251,7 @@ are the evaluation of subexpressions.</p>
     lexically.</li>
   <li>Otherwise, return <code>A.equals( B )</code>.</li>
 </ul>
-  
+
 <a name="rel-not-equal"><h3>Not Equal : A { !=, ne } B</h3></a>
 
 <ul>
@@ -273,7 +273,7 @@ are the evaluation of subexpressions.</p>
     lexically.</li>
   <li>Otherwise, return <code>! A.equals( B )</code>.</li>
 </ul>
-  
+
 <a name="rel-less-than"><h3>Less Than : A { &lt;, lt } B</h3></a>
 
 <ul>
@@ -363,7 +363,7 @@ are the evaluation of subexpressions.</p>
   <li>Otherwise, return <code>true</code> if <code>A == B[ i ]</code> for any value of <code>i</code>
     between <code>0</code> and <code>B.Size - 1</code>.  
 </ul>
-  
+
 <a name="logical"><h2>Logical Operators</h2></a>
 
 <p>Logical operators are provided to perform boolean logic.</p>
@@ -483,7 +483,7 @@ Extension System</a>.</p>
 <p>Every expression is evaluated in the context of an expected type. The result of the
   expression evaluation may not match the expected type exactly, so the rules
   described in the following sections are applied.</p>
-  
+
 <h3>Coerce A to String</h3>
 
 <ul>

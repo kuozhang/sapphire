@@ -156,9 +156,9 @@ Value&lt;String> getMessageBody();</code></pre>
         final ISendContactOp op = (ISendContactOp) element();
         final IContact contact = op.getContact().content();
         final StringBuilder buf = new StringBuilder();
-        
+
         ...
-        
+
         return buf.toString();
     }
 }</code></pre>
@@ -379,7 +379,7 @@ When the action is activated, a new contact is created using assistant name prop
     &lt;impl>AssistantCreateActionHandler&lt;/impl>
   &lt;/action-handler>
 &lt;/property-editor></code></pre>
- 
+
 <h2><a name="html">HTML Content Presentation</a></h2>
 
 <p>It is now simple to display HTML content held by a value property. Simply add @HtmlContent 

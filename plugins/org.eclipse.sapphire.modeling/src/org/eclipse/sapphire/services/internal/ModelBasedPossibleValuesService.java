@@ -41,6 +41,8 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
 {
     private final ModelPath path;
     private Set<String> values;
+    private boolean initialized;
+    private boolean readPriorToInit;
     
     public ModelBasedPossibleValuesService( final ModelPath path,
                                             final String invalidValueMessageTemplate,
@@ -84,22 +86,38 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
                 }
             }
         );
+        
+        this.initialized = true;
     }
 
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
+        if( ! this.initialized )
+        {
+            this.readPriorToInit = true;
+        }
+        
         values.addAll( this.values );
     }
     
     private void refresh()
     {
-        final Set<String> newValues = context( IModelElement.class ).read( this.path );
+        final IModelElement element = context( IModelElement.class );
         
-        if( ! this.values.equals( newValues ) )
+        if( ! element.disposed() )
         {
-            this.values = Collections.unmodifiableSet( newValues );
-            broadcast();
+            final Set<String> newValues = context( IModelElement.class ).read( this.path );
+            
+            if( ! this.values.equals( newValues ) )
+            {
+                this.values = Collections.unmodifiableSet( newValues );
+                
+                if( this.initialized || this.readPriorToInit )
+                {
+                    broadcast();
+                }
+            }
         }
     }
     

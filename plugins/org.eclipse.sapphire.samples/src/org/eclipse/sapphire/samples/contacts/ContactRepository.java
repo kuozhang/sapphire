@@ -23,7 +23,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
-import org.eclipse.sapphire.samples.contacts.internal.ContactDatabaseImageService;
+import org.eclipse.sapphire.samples.contacts.internal.ContactRepositoryImageService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -33,12 +33,12 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactDatabaseImageServic
 @XmlNamespace( uri="http://www.eclipse.org/sapphire/samples/contacts", prefix="c" )
 @XmlSchema( namespace="http://www.eclipse.org/sapphire/samples/contacts", location="http://www.eclipse.org/sapphire/samples/contacts/1.0" )
 @XmlBinding( path = "c:contacts" )
-@Service( impl = ContactDatabaseImageService.class )
+@Service( impl = ContactRepositoryImageService.class )
 @GenerateImpl
 
-public interface ContactsDatabase extends IModelElement
+public interface ContactRepository extends IModelElement
 {
-    ModelElementType TYPE = new ModelElementType( ContactsDatabase.class );
+    ModelElementType TYPE = new ModelElementType( ContactRepository.class );
     
     // *** Contacts ***
 

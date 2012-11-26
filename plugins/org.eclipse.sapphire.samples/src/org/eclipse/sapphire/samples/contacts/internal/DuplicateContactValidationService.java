@@ -22,7 +22,7 @@ import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.samples.contacts.ContactsDatabase;
+import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.samples.contacts.PhoneNumber;
 import org.eclipse.sapphire.services.ValidationService;
 
@@ -37,7 +37,7 @@ public final class DuplicateContactValidationService extends ValidationService
     @Override
     protected void init()
     {
-        final ContactsDatabase contacts = context( Contact.class ).nearest( ContactsDatabase.class );
+        final ContactRepository contacts = context( Contact.class ).nearest( ContactRepository.class );
         
         if( contacts != null )
         {
@@ -59,7 +59,7 @@ public final class DuplicateContactValidationService extends ValidationService
     public Status validate() 
     {
         final Contact contact = context( Contact.class );
-        final ContactsDatabase contacts = contact.nearest( ContactsDatabase.class );
+        final ContactRepository contacts = contact.nearest( ContactRepository.class );
         
         if( contacts != null )
         {
@@ -95,7 +95,7 @@ public final class DuplicateContactValidationService extends ValidationService
     @Override
     public void dispose()
     {
-        final ContactsDatabase contacts = context( Contact.class ).nearest( ContactsDatabase.class );
+        final ContactRepository contacts = context( Contact.class ).nearest( ContactRepository.class );
         
         if( contacts != null )
         {

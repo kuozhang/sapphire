@@ -52,7 +52,7 @@
     <li><a href="#ContentOutlineToolTip">Content Outline Validation Message Tool Tip</a></li>
   </ol>
 </ol>
- 
+
 <h2><a name="ExpressionLanguage"><a name="CastBetweenCollectionsAndStrings">Cast Between Collections and Strings</a></a></h2>
 
 <p>Transparently cast between collections and strings. The following rules have been added:</p>
@@ -311,13 +311,13 @@ create a custom serialization service..</p>
 <pre class="source-code"><code>public class CustomDateSerializationService extends DateSerializationService
 {
     private final static List&lt;DateFormat> FORMATS;
-    
+
     static 
     {
         final List&lt;DateFormat> formats = new ArrayList&lt;DateFormat>();
         formats.add( new SimpleDateFormat( "dd.MM.yyyy" ) );
         formats.add( new SimpleDateFormat( "yyyy/MM/dd" ) );
-        
+
         FORMATS = Collections.unmodifiableList(formats);
     };
 
@@ -326,7 +326,7 @@ create a custom serialization service..</p>
     {
         return FORMATS;
     }
-    
+
 }</code></pre>
 
 <pre class="source-code"><code>@Type( base = Date.class )
@@ -372,7 +372,6 @@ else
 <p>Easily see the aggregate validation messages by hovering over a node in the content outline.</p>
 
 <p style="margin-left: 20px;"><img src="images/ContentOutlineToolTip.png"/></p>
-
 
 <div class="copyright">Copyright (c) 2012 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>

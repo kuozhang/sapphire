@@ -40,6 +40,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class ListFromValuePossibleValuesService extends PossibleValuesService
 {
     private PossibleValuesService base;
+    private Listener listener;
     private boolean broadcasting;
     
     @Override
@@ -52,28 +53,27 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
         
         this.base = listMemberValueProperty.service( PossibleValuesService.class );
         
-        this.base.attach
-        (
-            new Listener()
+        this.listener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
             {
-                @Override
-                public void handle( final Event event )
+                if( ! ListFromValuePossibleValuesService.this.broadcasting )
                 {
-                    if( ! ListFromValuePossibleValuesService.this.broadcasting )
+                    try
                     {
-                        try
-                        {
-                            ListFromValuePossibleValuesService.this.broadcasting = true;
-                            broadcast();
-                        }
-                        finally
-                        {
-                            ListFromValuePossibleValuesService.this.broadcasting = false;
-                        }
+                        ListFromValuePossibleValuesService.this.broadcasting = true;
+                        broadcast();
+                    }
+                    finally
+                    {
+                        ListFromValuePossibleValuesService.this.broadcasting = false;
                     }
                 }
             }
-        );
+        };
+
+        this.base.attach( this.listener );
     }
     
     @Override
@@ -98,6 +98,20 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
     public boolean isCaseSensitive()
     {
         return this.base.isCaseSensitive();
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.listener != null )
+        {
+            this.base.detach( this.listener );
+            this.listener = null;
+        }
+        
+        this.base = null;
     }
 
     public static final class Factory extends ServiceFactory

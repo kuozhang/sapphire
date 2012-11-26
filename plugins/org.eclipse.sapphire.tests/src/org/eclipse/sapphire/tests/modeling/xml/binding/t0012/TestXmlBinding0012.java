@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
@@ -40,6 +41,8 @@ public final class TestXmlBinding0012 extends SapphireTestCase
 
         suite.addTest( new TestXmlBinding0012( "testInsertOneAtEnd" ) );
         suite.addTest( new TestXmlBinding0012( "testInsertTwoAtEnd" ) );
+        suite.addTest( new TestXmlBinding0012( "testMoveUp" ) );
+        suite.addTest( new TestXmlBinding0012( "testMoveDown" ) );
         
         return suite;
     }
@@ -70,10 +73,12 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         
         try
         {
-            final TestListEntry x = element.getList().insert();
+            final ModelElementList<TestListEntry> list = element.getList();
+            
+            final TestListEntry x = list.insert();
             x.setValue( "x" );
             
-            final TestListEntry y = element.getList().insert();
+            final TestListEntry y = list.insert();
             y.setValue( "y" );
         }
         finally
@@ -82,4 +87,94 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         }
     }
 
+    public void testMoveUp() throws Exception
+    {
+        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
+        final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) );
+        
+        try
+        {
+            final ModelElementList<TestListEntry> list = element.getList();
+            
+            final TestListEntry x = list.insert();
+            x.setValue( "x" );
+            
+            final TestListEntry y = list.insert();
+            y.setValue( "y" );
+
+            final TestListEntry z = list.insert();
+            z.setValue( "z" );
+            
+            list.moveUp( z );
+            
+            assertEquals( 3, list.size() );
+            assertSame( x, list.get( 0 ) );
+            assertEquals( x.getValue().getText(), "x" );
+            assertSame( z, list.get( 1 ) );
+            assertEquals( z.getValue().getText(), "z" );
+            assertSame( y, list.get( 2 ) );
+            assertEquals( y.getValue().getText(), "y" );
+            
+            list.moveUp( z );
+            
+            assertEquals( 3, list.size() );
+            assertSame( z, list.get( 0 ) );
+            assertEquals( z.getValue().getText(), "z" );
+            assertSame( x, list.get( 1 ) );
+            assertEquals( x.getValue().getText(), "x" );
+            assertSame( y, list.get( 2 ) );
+            assertEquals( y.getValue().getText(), "y" );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+    
+    public void testMoveDown() throws Exception
+    {
+        final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
+        final TestElement element = TestElement.TYPE.instantiate(  new RootXmlResource( xmlResourceStore ) );
+        
+        try
+        {
+            final ModelElementList<TestListEntry> list = element.getList();
+            
+            final TestListEntry x = list.insert();
+            x.setValue( "x" );
+            
+            final TestListEntry y = list.insert();
+            y.setValue( "y" );
+
+            final TestListEntry z = list.insert();
+            z.setValue( "z" );
+            
+            list.moveDown( x );
+            
+            assertEquals( 3, list.size() );
+            assertSame( y, list.get( 0 ) );
+            assertEquals( y.getValue().getText(), "y" );
+            assertSame( x, list.get( 1 ) );
+            assertEquals( x.getValue().getText(), "x" );
+            assertSame( z, list.get( 2 ) );
+            assertEquals( z.getValue().getText(), "z" );
+            
+            list.moveDown( x );
+            
+            assertEquals( 3, list.size() );
+            assertSame( y, list.get( 0 ) );
+            assertEquals( y.getValue().getText(), "y" );
+            assertSame( z, list.get( 1 ) );
+            assertEquals( z.getValue().getText(), "z" );
+            assertSame( x, list.get( 2 ) );
+            assertEquals( x.getValue().getText(), "x" );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+    
 }

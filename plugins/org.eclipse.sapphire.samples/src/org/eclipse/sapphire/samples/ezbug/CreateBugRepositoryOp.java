@@ -23,12 +23,12 @@ import org.eclipse.sapphire.workspace.WorkspaceFileType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@WorkspaceFileType( BugDatabase.class )
+@WorkspaceFileType( BugRepository.class )
 @GenerateImpl
 
-public interface CreateBugDatabaseOp extends CreateWorkspaceFileOp
+public interface CreateBugRepositoryOp extends CreateWorkspaceFileOp
 {
-    ModelElementType TYPE = new ModelElementType( CreateBugDatabaseOp.class );
+    ModelElementType TYPE = new ModelElementType( CreateBugRepositoryOp.class );
     
     // *** FileName ***
     

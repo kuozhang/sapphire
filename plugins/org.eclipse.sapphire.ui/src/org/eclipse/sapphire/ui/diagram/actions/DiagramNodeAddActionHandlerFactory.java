@@ -18,10 +18,10 @@ import java.util.List;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
-import org.eclipse.sapphire.ui.SapphirePart.VisibilityChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -43,10 +43,10 @@ public final class DiagramNodeAddActionHandlerFactory extends SapphireActionHand
     {
         super.init( action, def );
         
-        this.nodeTemplateVisibilityListener = new FilteredListener<VisibilityChangedEvent>()
+        this.nodeTemplateVisibilityListener = new FilteredListener<PartVisibilityEvent>()
         {
             @Override
-            protected void handleTypedEvent( final VisibilityChangedEvent event )
+            protected void handleTypedEvent( final PartVisibilityEvent event )
             {
                 broadcast( new Event() );
             }

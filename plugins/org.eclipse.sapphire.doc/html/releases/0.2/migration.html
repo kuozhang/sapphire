@@ -342,7 +342,7 @@ contained in a list) rather than the list property. It can be used any place whe
     <td>
 <pre class="source-code"><code><font color="#888888">@Type( base = IConnection.class )</font>
 @NoDuplicates
-                             
+
 <font color="#888888">ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
 
 ModelElementList&lt;IConnection> getConnections();
@@ -359,7 +359,7 @@ public interface IConnection extends IModelElement
     </td>
     <td>
 <pre class="source-code"><code><font color="#888888">@Type( base = IConnection.class )</font>
-                             
+
 <font color="#888888">ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
 
 ModelElementList&lt;IConnection> getConnections();
@@ -433,7 +433,7 @@ changed to override SapphireModelCondition instead.</p>
     {
         ...
     }
-    
+
     @Override
     public List<String> getDependencies()
     {
@@ -449,7 +449,7 @@ changed to override SapphireModelCondition instead.</p>
     {
         ...
     }
-    
+
     @Override
     public List<String> getDependencies()
     {
@@ -516,11 +516,11 @@ refreshing on dependent property changes.</p>
         sapphire-extension.xml file in the META-INF folder. The extension must be located in the 
         same classloader as Sapphire. On an OSGi system this is done by creating a fragment to
         the org.eclipse.sapphire.ui bundle.</p>
-        
+
       <p>Note that the factory concept has been removed. The browse handler implementation class
         is specified directly. Applicability is controlled by a separate condition class that
         must extends SapphireCondition.</p>
-         
+
 <pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension"></font>
     &lt;action-handler>
         &lt;action>Sapphire.Browse&lt;/action>
@@ -613,10 +613,10 @@ refreshing on dependent property changes.</p>
         sapphire-extension.xml file in the META-INF folder. The extension must be located in the 
         same classloader as Sapphire. On an OSGi system this is done by creating a fragment to
         the org.eclipse.sapphire.ui bundle.</p>
-        
+
       <p>Note that the logic from the isApplicable method needs to be extracted into a separate
         condition class. The condition class must extend SapphireCondition.</p>
-         
+
 <pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension"></font>
     &lt;action-handler>
         &lt;action>Sapphire.Jump&lt;/action>
@@ -658,7 +658,7 @@ refreshing on dependent property changes.</p>
                                         ValueProperty property )
     {
         // Logic for evaluating whether the jump handler is active goes here.
-        
+
         return false
     }
 
@@ -686,12 +686,12 @@ refreshing on dependent property changes.</p>
                       ISapphireActionHandlerDef def )
     {
         super.init( def );
-        
+
         // Setup listeners on external resources relevant in determining whether
         // the jump handler is active. The listeners should call refreshEnablementState
         // method. If a listener infrastructure is not available, a polling thread
         // can be used instead.
-        
+
         // If all relevant resources are other properties in the same model, skip
         // overriding this method and override initDependencies method instead.
     }
@@ -700,7 +700,7 @@ refreshing on dependent property changes.</p>
     protected void initDependencies( List&lt;String> dependencies )
     {
         super.initDependencies( dependencies );
-        
+
         // The default implementation will add the property whose editor the jump handler
         // is attached to. If the enablement state of the jump handler is dependent on other
         // properties in the model, paths to those properties should be added here.
@@ -710,7 +710,7 @@ refreshing on dependent property changes.</p>
     protected void refreshEnablementState()
     {
         // Logic for evaluating whether the jump handler is active goes here.
-        
+
         setEnabled( false );
     }
 
@@ -718,7 +718,7 @@ refreshing on dependent property changes.</p>
     protected Object run( SapphireRenderingContext context )
     {
         // Logic for executing the jump goes here.
-        
+
         return null;
     }
 
@@ -726,7 +726,7 @@ refreshing on dependent property changes.</p>
     public void dispose()
     {
         super.dispose();
-        
+
         // Remove listeners and stop threads configured in the init method.
     }
 }</code></pre>

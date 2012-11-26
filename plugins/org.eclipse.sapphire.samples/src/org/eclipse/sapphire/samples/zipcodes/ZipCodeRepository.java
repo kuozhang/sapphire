@@ -32,7 +32,7 @@ import org.eclipse.sapphire.samples.internal.SapphireSamplesPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ZipCodesDatabase
+public final class ZipCodeRepository
 {
     private static boolean initialized = false;
     
@@ -105,12 +105,12 @@ public final class ZipCodesDatabase
             return;
         }
         
-        final URL zipCodesDatabaseUrl
+        final URL zipCodesRepositoryUrl
             = FileLocator.find( SapphireSamplesPlugin.getBundle(), new Path( "zipcodes/zipcodes.txt" ), null );
         
         try
         {
-            final InputStream in = zipCodesDatabaseUrl.openStream();
+            final InputStream in = zipCodesRepositoryUrl.openStream();
             
             try
             {

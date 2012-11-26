@@ -46,27 +46,27 @@
 
   <extension point="org.eclipse.ui.editors">
     <editor
-      id="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"
-      name="Contacts Database Editor (Sapphire Sample)"
+      id="org.eclipse.sapphire.samples.contacts.ContactRepositoryEditor"
+      name="Contact Repository Editor (Sapphire Sample)"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"
       filenames="contacts.xml"
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
-        <parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.ContactRepositoryEditor"/>
       </class>
     </editor>
   </extension>
   
   <extension point="org.eclipse.ui.newWizards">
     <wizard
-      id="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"
+      id="org.eclipse.sapphire.samples.contacts.CreateContactRepositoryWizard"
       category="Sapphire/Samples"
-      name="Contacts Database (Sapphire Sample)"
+      name="Contact Repository (Sapphire Sample)"
       icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
-      <description>Create a contacts database.</description>
+      <description>Create a contact repository.</description>
       <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
-        <parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.CreateContactsDatabaseWizard"/>
-        <parameter name="editor" value="org.eclipse.sapphire.samples.contacts.ContactsDatabaseEditor"/>
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.CreateContactRepositoryWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.contacts.ContactRepositoryEditor"/>
       </class>
     </wizard>
   </extension>
@@ -201,8 +201,8 @@
   
   <extension point="org.eclipse.ui.editors">
     <editor
-      id="org.eclipse.sapphire.samples.ezbug.BugDatabaseEditor"
-      name="Bug Database Editor (Sapphire Sample)"
+      id="org.eclipse.sapphire.samples.ezbug.BugRepositoryEditor"
+      name="Bug Repository Editor (Sapphire Sample)"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"
       filenames="bugs.xml"
       default="true">
@@ -214,14 +214,14 @@
   
   <extension point="org.eclipse.ui.newWizards">
     <wizard
-      id="org.eclipse.sapphire.samples.ezbug.CreateBugDatabaseWizard"
+      id="org.eclipse.sapphire.samples.ezbug.CreateBugRepositoryWizard"
       category="Sapphire/Samples"
-      name="Bug Database (Sapphire Sample)"
+      name="Bug Repository (Sapphire Sample)"
       icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
-      <description>Create a bug database.</description>
+      <description>Create a bug repository.</description>
       <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
-        <parameter name="sdef" value="org.eclipse.sapphire.samples.ezbug.CreateBugDatabaseWizard"/>
-        <parameter name="editor" value="org.eclipse.sapphire.samples.ezbug.BugDatabaseEditor"/>
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.ezbug.CreateBugRepositoryWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.ezbug.BugRepositoryEditor"/>
       </class>
     </wizard>
   </extension>
@@ -337,7 +337,7 @@
       icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
       <description>Create a purchase order.</description>
       <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
-        <parameter name="sdef" value="org.eclipse.sapphire.samples.po.CreatePurchaseOrderwizard"/>
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.po.CreatePurchaseOrderWizard"/>
         <parameter name="editor" value="org.eclipse.sapphire.samples.po.PurchaseOrderEditor"/>
       </class>
     </wizard>

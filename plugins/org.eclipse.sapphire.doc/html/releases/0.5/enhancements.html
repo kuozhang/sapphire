@@ -62,13 +62,11 @@
   </ol>
 </ol>
 
-
 <h2><a name="Diagrams"><a name="Diagrams-GEF">Straight to GEF</a></a></h2>
 
 <p>The Graphiti-based diagram presentation (introduced in 0.4 release) has been replaced with a presentation 
 written directly on top of GEF. This has significantly reduced Sapphire's dependencies and enabled diagram 
 support to more tightly integrate with the rest of Sapphire.</p> 
-
 
 <h2><a name="Diagrams-FlexibleLayoutPersistence">Flexible Diagram Layout Persistence</a></h2>
 
@@ -101,14 +99,12 @@ implementation that persists layout in the same file as data.</p>
   &lt;/service>
 <font color="#888888">&lt;/diagram-page></font></code></pre>
 
-
 <h2><a name="Diagrams-ContextHelp">Diagram Context Help</a></h2>
 
 <p>Expose context sensitive help in a diagram by annotating the model being edited with @Documentation
 annotations. When "F1" is pressed in a diagram, context help will come from the model element associated
 with the selected node or connection. If nothing is selected, the context help will come from the model element
 associated with the diagram.</p>
-
 
 <h2><a name="Diagrams-Header">Diagram Header</a></h2>
 
@@ -145,7 +141,6 @@ diagram page level.</p>
   &lt;/action-handler>
 &lt;/diagram-page></font></code></pre>
 
-
 <h2><a name="Diagrams-NewActions">New Diagram Actions</a></h2>
 
 <p>Easily delete all bend points for one or more connections.</p>
@@ -160,7 +155,6 @@ editing sessions.</p>
 
 <p style="margin-left: 20px;"><img src="images/DiagramActions.png"/></p>
 
-
 <h2><a name="Diagrams-MultiSelectActions">Multi-Select Actions in Diagrams</a></h2>
 
 <p>Develop actions that work in the context where multiple nodes and/or connections are selected. Such
@@ -174,7 +168,7 @@ actions should specify Sapphire.Diagram.MultipleParts context and be contributed
     protected Object run( SapphireRenderingContext context ) 
     {
         final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
-        
+
         for( ISapphirePart selectedPart : page.getSelections() )
         {
             if( selectedPart instanceof DiagramNodePart )
@@ -186,9 +180,9 @@ actions should specify Sapphire.Diagram.MultipleParts context and be contributed
                 ...
             }
         }
-        
+
         ...
-        
+
         return null;
     }
 }</code></pre>
@@ -205,7 +199,6 @@ actions should specify Sapphire.Diagram.MultipleParts context and be contributed
     &lt;/action-handler>
 &lt;/diagram-page></font></code></pre>
 
-
 <h2><a name="Diagrams-FloatingToolBar">Floating Tool Bar on Diagram Nodes</a></h2>
 
 <p>A floating toolbar is now displayed around a diagram node when the mouse hovers
@@ -213,13 +206,11 @@ over it. It contains all the actions that are applicable to the node.</p>
 
 <p style="margin-left: 20px;"><img src="images/DiagramFloatingToolBar.png"/></p>
 
-
 <h2><a name="Forms"><a name="Forms-DragAndDrop">Drag-n-Drop in Forms</a></a></h2>
 
 <p>Use drag-n-drop to arrange the elements in the content outline and in table property editors.</p>
 
 <p style="margin-left: 20px;"><img src="images/FormDragAndDrop.png"/></p>
-
 
 <h2><a name="Forms-PopUpListFieldForPossibleValues">Pop-Up List Field Presentation for Possible Value Properties</a></h2>
 
@@ -301,7 +292,6 @@ a table.</p>
 
 <p style="margin-left: 20px;"><img src="images/PopUpListFieldForPossibleValues-5.png"/></p>
 
-
 <h2><a name="Forms-FlexibleActuatorPresentation">Flexible Actuator Presentation</a></h2>
 
 <p>An actuator provides means to invoke an action. The action could be drawn from the context where actuator 
@@ -329,7 +319,6 @@ along with ability to control horizontal alignment.</p>
 
 <p style="margin-left: 20px;"><img src="images/MoreFlexibleActuatorPresentation.png"/></p>
 
-
 <h2><a name="Forms-ExprForPropertyEditorLabel">Expression for Property Editor Label</a></h2>
 
 <p>Use the expression language when overriding the label in a property editor.</p>
@@ -340,7 +329,6 @@ along with ability to control horizontal alignment.</p>
     &lt;property>Name&lt;/property></font>
     &lt;label>${ Type == "Business" ? "company" : "name" }&lt;/label>
 <font color="#888888">&lt;/property-editor></font></code></pre>
-
 
 <h2><a name="Services"><a name="Services-PartServices">Part Services</a></a></h2>
 
@@ -372,7 +360,6 @@ the same API that adopters should already be familiar with from the model layer.
     <font color="#888888">&lt;/diagram-page>
 &lt;/definition></font></code></pre>
 
-
 <h2><a name="Services-AdapterService">AdapterService</a></h2>
 
 <p>The AdapterService provides means to extend the behavior of the adapt method in a given context.</p>
@@ -401,17 +388,16 @@ provide a custom method for adopting IModelElement to IProject.</p>
         {
             INewProjectFileOp op = context( INewProjectFileOp.class );
             IProject project = op.getProject().resolve();
-            
+
             if( project != null )
             {
                 return adapterType.cast( project );
             }
         }
-        
+
         return null;
     }
 }</code></pre>
-
 
 <a name="Services-DiagramLayoutPersistenceService"><h2>DiagramLayoutPersistenceService</h2></a>
 
@@ -429,7 +415,7 @@ implemented, but rather by its expected behavior.</p>
   <li>If implementation defers layout persistence until save, it is expected to implement dirty() method and to
    issue DirtyStateEvent when this state changes.</li>
  </ol>
- 
+
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <p style="margin-left: 20px;">The architecture sample provides a comprehensive example of a custom 
@@ -441,7 +427,6 @@ implementation that persists layout in the same file as data.</p>
     &lt;implementation>ArchitectureDiagramLayoutPersistenceService&lt;/implementation>
   &lt;/service>
 <font color="#888888">&lt;/diagram-page></font></code></pre>
-
 
 <a name="Services-DragAndDropService"><h2>DragAndDropService</h2></a>
 
@@ -456,26 +441,26 @@ implementation that persists layout in the same file as data.</p>
     {
         return context.object() instanceof IFile;
     }
-    
+
     @Override
     public void drop( DropContext context ) 
     {
         IFile file = (IFile) context.object();
         List<String> locations = new ArrayList<String>();
-        
+
         InputStream in = null;
-        
+
         try
         {
             in = file.getContents();
             final BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
-            
+
             for( String line = br.readLine(); line != null; line = br.readLine() )
             {
                 if( line != null )
                 {
                     line = line.trim();
-                    
+
                     if( line.length() > 0 )
                     {
                         locations.add( line );
@@ -502,27 +487,27 @@ implementation that persists layout in the same file as data.</p>
                 catch( IOException e ) {}
             }
         }
-        
+
         if( ! locations.isEmpty() )
         {
             SapphireDiagramEditorPagePart diagram = context( SapphireDiagramEditorPagePart.class );
             Map map = context( Map.class );
-            
+
             Point initialDropPosition = context.position();
-            
+
             int x = initialDropPosition.getX();
             int y = initialDropPosition.getY();
-            
+
             for( String locationName : locations )
             {
                 if( ! map.hasLocation( locationName ) )
                 {
                     Location location = map.getLocations().insert();
                     location.setName( locationName );
-                    
+
                     DiagramNodePart locationNodePart = diagram.getDiagramNodePart(location);
                     locationNodePart.setNodeBounds( x, y );
-                    
+
                     x += 50;
                     y += 50;
                 }
@@ -540,7 +525,6 @@ definition in the sdef file.</p>
     &lt;/service>
 <font color="#888888">&lt;/diagram-page></font></code></pre>
 
-
 <h2><a name="Services-EqualityService">EqualityService</a></h2>
 
 <p>The EqualityService provides means to implement equals() and hashCode() methods when the context object doesn't support
@@ -557,21 +541,21 @@ can be useful for other purposes.</p>
     {
         Contact c1 = context( Contact.class );
         Contact c2 = (Contact) obj;
-        
+
         return equal( c1.getLastName().getText(), c2.getLastName().getText() ) &&
                equal( c1.getFirstName().getText(), c2.getFirstName().getText() );
     }
-    
+
     @Override
     public int doHashCode()
     {
         Contact c = context( Contact.class );
         String lastName = c.getLastName().getText();
         String firstName = c.getFirstName().getText();
-        
+
         return ( lastName == null ? 1 : lastName.hashCode() ) ^ ( firstName == null ? 1 : firstName.hashCode() );
     }
-    
+
     private static boolean equal( Object obj1, Object obj2 )
     {
         if( obj1 == obj2 )
@@ -582,7 +566,7 @@ can be useful for other purposes.</p>
         {
             return obj1.equals( obj2 );
         }
-        
+
         return false;
     }
 }</code></pre>
@@ -592,10 +576,9 @@ can be useful for other purposes.</p>
 public interface Contact extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Contact.class );
-    
+
     ...
 }</font></code></pre>
-
 
 <a name="Services-ListSelectionService"><h2>ListSelectionService</h2></a>
 
@@ -617,9 +600,9 @@ refresh action handler's enablement state when selection changes.</p>
     public void init( SapphireAction action, ActionHandlerDef def )
     {
         super.init( action, def );</font>
-        
+
         final ListSelectionService selectionService = action.getPart().service( ListSelectionService.class );
-        
+
         final Listener selectionListener = new Listener()
         {
             @Override
@@ -628,9 +611,9 @@ refresh action handler's enablement state when selection changes.</p>
                 refreshEnablementState();
             }
         };
-        
+
         selectionService.attach( selectionListener );
-        
+
         attach
         (
             new Listener()
@@ -648,7 +631,6 @@ refresh action handler's enablement state when selection changes.</p>
     <font color="#888888">}
 }</font></code></pre>
 
-
 <a name="Services-ValidationServiceAtElementLevel"><h2>ValidationService at Element Level</h2></a>
 
 <p>The ValidationService provides means to check integrity constraints and to communicate problems to the user. In
@@ -663,12 +645,12 @@ contacts are defined as duplicates of each other if e-mail and at least one of t
 <pre class="source-code"><code>public class DuplicateContactValidationService extends ValidationService
 {
     private Listener listener;
-    
+
     @Override
     protected void init()
     {
         final ContactsDatabase contacts = context( Contact.class ).nearest( ContactsDatabase.class );
-        
+
         if( contacts != null )
         {
             this.listener = new FilteredListener&lt;PropertyContentEvent>()
@@ -679,23 +661,23 @@ contacts are defined as duplicates of each other if e-mail and at least one of t
                     broadcast();
                 }
             };
-            
+
             contacts.attach( this.listener, "Contacts/EMail" );
             contacts.attach( this.listener, "Contacts/PhoneNumbers/*" );
         }
     }
-    
+
     @Override
     public Status validate() 
     {
         Contact contact = context( Contact.class );
         ContactsDatabase contacts = contact.nearest( ContactsDatabase.class );
-        
+
         if( contacts != null )
         {
             String email = contact.getEMail().getContent();
             ModelElementList&lt;PhoneNumber> numbers = contact.getPhoneNumbers();
-            
+
             if( email != null && ! numbers.isEmpty() )
             {
                 for( Contact x : contacts.getContacts() )
@@ -718,15 +700,15 @@ contacts are defined as duplicates of each other if e-mail and at least one of t
                 }
             }
         }
-        
+
         return createOkStatus();
     }
-    
+
     @Override
     public void dispose()
     {
         ContactsDatabase contacts = context( Contact.class ).nearest( ContactsDatabase.class );
-        
+
         if( contacts != null )
         {
             contacts.detach( this.listener, "Contacts/EMail" );
@@ -740,16 +722,14 @@ contacts are defined as duplicates of each other if e-mail and at least one of t
 public interface Contact extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Contact.class );
-    
+
     ...
 }</font></code></pre>
-
 
 <h2><a name="Miscellaneous"><a name="Miscellaneous-ModelElementDisposed">IModelElement.disposed()</a></a></h2>
 
 <p>The new IModelElement.disposed() method provides a way to check if a model element has been disposed
 already.</p>
-
 
 <h2><a name="Miscellaneous-ImageFunction">Image Function</a></h2>
 
@@ -760,7 +740,6 @@ already.</p>
 <pre class="source-code"><code>${ Image() }
 ${ Address.Image() }
 ${ BusinessExpense ? BusinessAccount.Image() : PersonalAccount.Image() }</code></pre>
-
 
 <h2><a name="Miscellaneous-PropagatedKeyBindings">Propagated Key Bindings</a></h2>
 
@@ -786,7 +765,6 @@ as part of action definition.</p>
     &lt;/hint>
 &lt;/action></font></code></pre>
 
-
 <h2><a name="Miscellaneous-ActionToolTips">Action Tool Tips</a></h2>
 
 <p>By default, action label is used when a tool tip is necessary. If that's not appropriate, developer can now
@@ -809,10 +787,8 @@ set the action tool tip explicitly.</p>
     &lt;/hint>
 &lt;/action></font></code></pre>
 
-
 <div class="copyright">Copyright (c) 2012 Oracle and Liferay<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
-
 
 </body>
 

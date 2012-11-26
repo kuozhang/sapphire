@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.renderers.swt;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -38,7 +39,7 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
             @Override
             public void handle( final Event event )
             {
-                if( ! ( event instanceof PropertyInitializationEvent ) )
+                if( ! ( event instanceof PropertyInitializationEvent || event instanceof ElementDisposeEvent ) )
                 {
                     handleListElementChangedEvent( event );
                 }

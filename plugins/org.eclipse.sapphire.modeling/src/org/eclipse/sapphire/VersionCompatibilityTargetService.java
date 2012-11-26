@@ -20,7 +20,7 @@ import org.eclipse.sapphire.util.HashCodeFactory;
 
 /**
  * Produces the version compatibility target to be referenced by VersionCompatibilityService. Most frequently specified
- * via @VersionCompatibilityTarget annotation.
+ * via an @VersionCompatibilityTarget annotation.
  * 
  * <p>When looking for the version compatibility target, the framework will first check the property, then the containing
  * element, then the parent property and the parent element, etc. The search continues until version compatibility target 

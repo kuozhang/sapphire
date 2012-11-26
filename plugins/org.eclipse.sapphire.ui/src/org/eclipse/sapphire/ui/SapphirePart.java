@@ -104,7 +104,8 @@ public abstract class SapphirePart implements ISapphirePart
     private SapphireImageCache imageCache;
     private Map<String,SapphireActionGroup> actions;
     private PartServiceContext serviceContext;
-    private FunctionResult visibleWhenFunctionResult;
+    private FunctionResult visibilityFunctionResult;
+    private boolean visibilityReadBeforeInit;
     private boolean initialized;
     private boolean disposed;
     
@@ -177,9 +178,9 @@ public abstract class SapphirePart implements ISapphirePart
         
         init();
         
-        this.visibleWhenFunctionResult = initExpression
+        this.visibilityFunctionResult = initExpression
         (
-            getModelElement(),
+            getLocalModelElement(),
             initVisibleWhenFunction(), 
             Boolean.class,
             Literal.TRUE,
@@ -187,8 +188,7 @@ public abstract class SapphirePart implements ISapphirePart
             {
                 public void run()
                 {
-                    broadcast( new VisibilityChangedEvent( SapphirePart.this ) );
-                    broadcast( new StructureChangedEvent( SapphirePart.this ) );
+                    broadcast( new PartVisibilityEvent( SapphirePart.this ) );
                 }
             }
         );
@@ -196,6 +196,11 @@ public abstract class SapphirePart implements ISapphirePart
         this.initialized = true;
         
         broadcast( new PartInitializationEvent( this ) );
+        
+        if( this.visibilityReadBeforeInit && this.visibilityFunctionResult.value().equals( Boolean.TRUE ) )
+        {
+            broadcast( new PartVisibilityEvent( this ) );
+        }
     }
     
     protected void init()
@@ -450,7 +455,13 @@ public abstract class SapphirePart implements ISapphirePart
     
     public final boolean visible()
     {
-        return ( this.visibleWhenFunctionResult == null ? false : (Boolean) this.visibleWhenFunctionResult.value() );
+        if( this.visibilityFunctionResult == null )
+        {
+            this.visibilityReadBeforeInit = true;
+            return false;
+        }
+        
+        return (Boolean) this.visibilityFunctionResult.value();
     }
     
     public boolean setFocus()
@@ -488,48 +499,6 @@ public abstract class SapphirePart implements ISapphirePart
         // The default implement doesn't do anything.
     }
     
-    /**
-     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
-     */
-    
-    protected final boolean isReRenderNeeded( final StructureChangedEvent event )
-    {
-        return isReRenderNeeded( this, event );
-    }
-
-    /**
-     * Adopters should not use. This is a temporary accommodation that will change drastically in the future.
-     */
-    
-    protected static final boolean isReRenderNeeded( final SapphirePart context,
-                                                     final StructureChangedEvent event )
-    {
-        // Something changed in the tree of parts arranged beneath this part. If this is
-        // the composite closest to the affected part, it will need to re-render.
-        
-        ISapphirePart part = event.part();
-        Boolean needToReRender = null;
-        
-        while( part != null && needToReRender == null )
-        {
-            part = part.getParentPart();
-            
-            if( part instanceof CompositePart || part instanceof SplitFormBlockPart )
-            {
-                if( part == context )
-                {
-                    needToReRender = Boolean.TRUE;
-                }
-                else
-                {
-                    needToReRender = Boolean.FALSE;
-                }
-            }
-        }
-        
-        return ( needToReRender == Boolean.TRUE );
-    }
-    
     public final boolean attach( final Listener listener )
     {
         return this.listeners.attach( listener );
@@ -543,13 +512,6 @@ public abstract class SapphirePart implements ISapphirePart
     protected final void broadcast( final Event event )
     {
         this.listeners.broadcast( event );
-        
-        // HACK
-        
-        if( event instanceof StructureChangedEvent && this.parent != null && this.parent instanceof SapphirePart )
-        {
-            ( (SapphirePart) this.parent ).broadcast( event );
-        }
     }
     
     @Deprecated
@@ -825,15 +787,18 @@ public abstract class SapphirePart implements ISapphirePart
     
     public void dispose()
     {
+        boolean performOnDisposeTasks = false;
+        
         synchronized( this )
         {
             if( ! this.disposed )
             {
                 this.disposed = true;
+                performOnDisposeTasks = true;
             }
         }
         
-        if( ! this.disposed )
+        if( performOnDisposeTasks )
         {
             this.modelElement.detach( this.modelElementListener );
         
@@ -855,9 +820,9 @@ public abstract class SapphirePart implements ISapphirePart
                 this.serviceContext.dispose();
             }
             
-            if( this.visibleWhenFunctionResult != null )
+            if( this.visibilityFunctionResult != null )
             {
-                this.visibleWhenFunctionResult.dispose();
+                this.visibilityFunctionResult.dispose();
             }
             
             broadcast( new DisposeEvent() );
@@ -1005,7 +970,10 @@ public abstract class SapphirePart implements ISapphirePart
         
         public void dispose()
         {
-            this.imageFunctionResult.dispose();
+            if( this.imageFunctionResult != null )
+            {
+                this.imageFunctionResult.dispose();
+            }
         }
     }
     
@@ -1022,19 +990,23 @@ public abstract class SapphirePart implements ISapphirePart
         {
             return this.part;
         }
+
+        @Override
+        protected Map<String,String> fillTracingInfo( Map<String,String> info )
+        {
+            super.fillTracingInfo( info );
+            
+            final IModelElement element = this.part.getLocalModelElement();
+            info.put( "part", this.part.getClass().getName() + '(' + System.identityHashCode( this.part ) + ')' );
+            info.put( "element", element.type().getQualifiedName() + '(' + System.identityHashCode( element ) + ')' );
+            
+            return info;
+        }
     }
     
     public static final class PartInitializationEvent extends PartEvent
     {
         public PartInitializationEvent( final SapphirePart part )
-        {
-            super( part );
-        }
-    }
-    
-    public static final class VisibilityChangedEvent extends PartEvent
-    {
-        public VisibilityChangedEvent( final SapphirePart part )
         {
             super( part );
         }
@@ -1064,14 +1036,6 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
     
-    public static final class StructureChangedEvent extends PartEvent
-    {
-        public StructureChangedEvent( final SapphirePart part )
-        {
-            super( part );
-        }
-    }
-
     public static final SapphirePart create( final ISapphirePart parent,
                                              final IModelElement element,
                                              final PartDef definition,
@@ -1198,7 +1162,7 @@ public abstract class SapphirePart implements ISapphirePart
                     }
                 }
                 
-                part = new FormPart();
+                return create( parent, element, def, partParams );
             }
         }
         else if( definition instanceof TabGroupDef )
