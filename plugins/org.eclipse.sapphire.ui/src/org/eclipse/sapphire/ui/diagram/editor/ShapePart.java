@@ -20,6 +20,7 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -48,10 +49,10 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
         this.modelElement = getModelElement();
         this.attach
         (
-             new FilteredListener<VisibilityChangedEvent>()
+             new FilteredListener<PartVisibilityEvent>()
              {
                 @Override
-                protected void handleTypedEvent( final VisibilityChangedEvent event )
+                protected void handleTypedEvent( final PartVisibilityEvent event )
                 {
                     refreshShapeVisibility((ShapePart)event.part());
                 }
