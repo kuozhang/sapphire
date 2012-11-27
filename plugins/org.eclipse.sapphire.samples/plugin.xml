@@ -280,20 +280,6 @@
     </wizard>
   </extension>
 
-  <extension point="org.eclipse.ui.newWizards">
-    <wizard
-      id="org.eclipse.sapphire.samples.architecture.CreateArchitectureSketchWizard"
-      category="Sapphire/Samples"
-      name="Architecture Sketch (Sapphire Sample)"
-      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
-      <description>Create an architecture sketch.</description>
-      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
-        <parameter name="sdef" value="org.eclipse.sapphire.samples.architecture.CreateArchitectureSketchWizard"/>
-        <parameter name="editor" value="org.eclipse.sapphire.samples.architecture.ArchitectureSketchEditor"/>
-      </class>
-    </wizard>
-  </extension>
-
   <extension point="org.eclipse.ui.editors">
     <editor
       class="org.eclipse.sapphire.samples.sqlschema.SqlSchemaEditor"
