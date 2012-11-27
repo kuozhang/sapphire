@@ -165,7 +165,7 @@ public final class ExtensionSummaryExportOpMethods
             out.println();
             out.println( "</body>" );
             out.println();
-            out.println( "</head>" );
+            out.println( "</html>" );
         }
         
         out.flush();
