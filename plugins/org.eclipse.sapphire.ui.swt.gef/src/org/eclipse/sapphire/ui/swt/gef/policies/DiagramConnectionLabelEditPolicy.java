@@ -56,7 +56,7 @@ public class DiagramConnectionLabelEditPolicy extends NonResizableEditPolicy {
 		moveHandle.setCursor(cursor);
 
     	DiagramResourceCache resourceCache = ((DiagramConnectionLabelEditPart)owner).getCastedModel().getDiagramModel().getResourceCache();
-		moveHandle.setBorder(new LineBorder(resourceCache.getColor(NodeFigure.OUTLINE_FOREGROUND), 1, Graphics.LINE_DASH));
+		moveHandle.setBorder(new LineBorder(resourceCache.getOutlineColor(), 1, Graphics.LINE_DASH));
 
 		return moveHandle;
 	}

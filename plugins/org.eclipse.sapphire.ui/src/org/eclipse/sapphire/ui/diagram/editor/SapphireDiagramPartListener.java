@@ -19,7 +19,37 @@ import org.eclipse.sapphire.ui.SapphirePartListener;
 
 public abstract class SapphireDiagramPartListener extends SapphirePartListener 
 {
-    public void handleNodeUpdateEvent(final DiagramNodeEvent event)
+    public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
+    public void handleShapeUpdateEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
+    public void handleShapeValidationEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
+    public void handleShapeAddEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
+    public void handleShapeReorderEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
+    public void handleShapeDeleteEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
+    public void handleNodeValidationEvent(final DiagramNodeEvent event)
     {
         // The default implementation doesn't do anything.
     }

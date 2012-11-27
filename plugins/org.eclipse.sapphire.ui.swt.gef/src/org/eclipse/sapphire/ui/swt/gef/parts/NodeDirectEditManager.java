@@ -11,15 +11,20 @@
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -49,11 +54,13 @@ public class NodeDirectEditManager extends DirectEditManager {
 	};
 	private Label label;
 	private SapphireDiagramEditor diagramEditor;
+	private TextPart textPart;
 
-	public NodeDirectEditManager(GraphicalEditPart source, CellEditorLocator locator, Label label) {
+	public NodeDirectEditManager(GraphicalEditPart source, TextPart textPart, CellEditorLocator locator, Label label) {
 		super(source, null, locator);
+		this.textPart = textPart;
 		this.label = label; 
-		this.diagramEditor = ((DiagramNodeEditPart)source).getConfigurationManager().getDiagramEditor();
+		this.diagramEditor = ((ShapeEditPart)source).getConfigurationManager().getDiagramEditor();
 	}
 
 	/**
@@ -78,6 +85,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 		super.bringDown();
 		// dispose any scaled fonts that might have been created
 		disposeScaledFont();
+		label.setVisible(true);
 	}
 
 	@Override
@@ -101,7 +109,10 @@ public class NodeDirectEditManager extends DirectEditManager {
 	protected void initCellEditor() {
 		// update text
 		getCellEditor().setValue(label.getText());
-		label.setText("");
+		// Shenxue: set text to "" doesn't work since it messes the size calculation in parent's
+		// layout manager. It'd shrink the label figure size to 0. Use figure's visibility instead.
+		//label.setText("");
+		label.setVisible(false);
 		// update font
 		ZoomManager zoomMgr = (ZoomManager) getEditPart().getViewer()
 				.getProperty(ZoomManager.class.toString());
@@ -123,6 +134,16 @@ public class NodeDirectEditManager extends DirectEditManager {
 		actionHandler = new CellEditorActionHandler(actionBars);
 		actionHandler.addCellEditor(getCellEditor());
 		actionBars.updateActionBars();
+	}
+
+	@Override
+	protected DirectEditRequest createDirectEditRequest() 
+	{
+		DirectEditRequest req = super.createDirectEditRequest();
+		Map<String, TextPart> extendedData = new HashMap<String, TextPart>();
+		extendedData.put(DiagramNodeEditPart.DIRECT_EDIT_REQUEST_PARAM, this.textPart);
+		req.setExtendedData(extendedData);
+		return req;
 	}
 
 	private void restoreSavedActions(IActionBars actionBars) {

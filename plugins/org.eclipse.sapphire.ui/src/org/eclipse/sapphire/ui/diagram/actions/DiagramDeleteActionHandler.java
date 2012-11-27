@@ -32,6 +32,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -71,7 +72,7 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
         final ISapphirePart part = getPart();
     	boolean enabled = false;
     	
-    	if( part instanceof DiagramNodePart ||
+    	if( part instanceof DiagramNodePart || part instanceof ShapePart ||
     			(part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
     	{
     		enabled = true;
@@ -106,6 +107,11 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
         {
             DiagramNodePart nodePart = (DiagramNodePart)part;
             deleteNode(nodePart);
+        }
+        else if (part instanceof ShapePart)
+        {
+            ShapePart shapePart = (ShapePart)part;
+            deleteShapePart(shapePart);
         }
         else if (part instanceof SapphireDiagramEditorPagePart)
         {
@@ -200,5 +206,12 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
         ModelElementList<?> list = (ModelElementList<?>) nodeModel.parent();
         list.remove(nodeModel);            
     	
+    }
+    
+    private void deleteShapePart(ShapePart shapePart)
+    {
+    	IModelElement shapeModel = shapePart.getLocalModelElement();
+    	ModelElementList<?> list = (ModelElementList<?>) shapeModel.parent();
+        list.remove(shapeModel);    	
     }
 }

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2012 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<definition>
+    <import>
+        <package>org.eclipse.sapphire.samples.sqlschema</package>
+    </import>
+    <diagram-page>
+        <node>
+            <id>tables</id>
+            <instance-id>${Name}</instance-id>
+            <property>Tables</property>
+            <tool-palette-label>table</tool-palette-label>
+            <tool-palette-desc>sql table</tool-palette-desc>
+            <rectangle>
+                <corner-radius>0</corner-radius>
+                <scroll-horizontally>true</scroll-horizontally>
+                <scroll-vertically>true</scroll-vertically>
+                <border>
+                    <color>#333399</color>
+                </border>
+                <sequence-layout>
+                    <spacing>0</spacing>
+                    <margin>0</margin>
+                </sequence-layout>
+                <content>
+                    <rectangle>
+                        <bottom-border>
+                            <width>2</width>
+                            <color>#333399</color>
+                        </bottom-border>
+                        <sequence-layout>
+                            <orientation>horizontal</orientation>
+                        </sequence-layout>
+                        <content>
+                            <validation-marker></validation-marker>
+                            <image>
+                                <path>table.gif</path>
+                            </image>
+                            <text>
+                                <content>${Name == null ? &quot;&lt;table&gt;&quot; : Name}</content>
+                                <sequence-layout-constraint>
+                                    <expand-cell-horizontally>true</expand-cell-horizontally>
+                                    <expand-cell-vertically>true</expand-cell-vertically>
+                                </sequence-layout-constraint>
+                                <font>
+                                    <name>Arial</name>
+                                    <bold>true</bold>
+                                    <size>9</size>
+                                </font>
+                            </text>
+                        </content>
+                        <sequence-layout-constraint>
+                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                            <margin>2</margin>
+                        </sequence-layout-constraint>
+                        <background>
+                            <gradient></gradient>
+                        </background>
+                    </rectangle>
+                    <rectangle>
+                        <scroll-vertically>true</scroll-vertically>
+                        <sequence-layout>
+                    		<margin>0</margin>
+                        </sequence-layout>
+                        <content>
+                            <shape-factory>
+                                <property>Columns</property>
+                                <case>
+                                    <type>Column</type>
+                                    <rectangle>
+                                        <sequence-layout>
+                                            <orientation>horizontal</orientation>
+                                            <margin>3</margin>
+                                        </sequence-layout>
+                                        <content>    
+                                            <validation-marker>
+                                                <size>small</size>
+                                            </validation-marker>
+                                            <image>
+                                                <path>${IsPrimaryKey ? &quot;key.gif&quot; : &quot;placeholder-16.png&quot;}</path>
+                                                <sequence-layout-constraint>
+                                                    <right-margin>8</right-margin>
+                                                </sequence-layout-constraint>
+                                            </image>
+                                            <text>
+                                                <content>${Name == null ? &quot;&lt;column&gt;&quot; : Name}</content>
+                                                <sequence-layout-constraint>                            						
+                                                	<horizontal-alignment>left</horizontal-alignment>
+                                                </sequence-layout-constraint>
+                                            </text>
+                                            <text>
+                                                <content>:</content>
+                                                <sequence-layout-constraint>                            						
+                                                	<horizontal-alignment>left</horizontal-alignment>
+                                                </sequence-layout-constraint>
+                                            </text>
+                                            <text>
+                                                <content>${Type == null ? &quot;&lt;type&gt;&quot; : Type}</content>
+                                                <sequence-layout-constraint>
+                            						<expand-cell-horizontally>true</expand-cell-horizontally>
+                                                	<horizontal-alignment>right</horizontal-alignment>
+                                                    <right-margin>10</right-margin>
+                                                </sequence-layout-constraint>
+                                            </text>
+                                        </content>
+                                        <bottom-border>
+                                            <style>dot</style>
+                                            <color>#333399</color>
+                                        </bottom-border>
+                                        <sequence-layout-constraint>
+                                            <horizontal-alignment>left</horizontal-alignment>
+                                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                                        </sequence-layout-constraint>
+							            <properties-view>
+							                <page>
+							                    <label>Column</label>
+							                    <content>
+							                        <property-editor>Name</property-editor>
+							                        <property-editor>Type</property-editor>
+						                            <property-editor>
+						                                <property>IsPrimaryKey</property>
+						                                <hint>
+						                                    <name>checkbox.layout</name>
+						                                    <value>leading.label</value>
+						                                </hint>
+						                            </property-editor>
+							                    </content>
+							                </page>
+							            </properties-view>
+                                    </rectangle>
+                                </case>        
+                            </shape-factory>
+                        </content>
+                        <sequence-layout-constraint>
+                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                            <horizontal-alignment>left</horizontal-alignment>
+                        </sequence-layout-constraint>
+                    </rectangle>
+                </content>
+            </rectangle>
+            <width>160</width>
+            <resizable>true</resizable>
+            <connection-binding>
+                <connection-id>foreign_keys</connection-id>
+                <property>ForeignKeys</property>
+                <instance-id>${ReferencedTable}</instance-id>
+                <endpoint2>
+                    <property>ReferencedTable</property>
+                    <value>${Name}</value>
+                </endpoint2>
+            </connection-binding>
+            <properties-view>
+                <page>
+                    <label>Table</label>
+                    <image>table.gif</image>
+                    <content>
+                        <property-editor>Name</property-editor>
+                    </content>
+                </page>
+            </properties-view>
+        </node>
+        <connection>
+            <id>foreign_keys</id>
+            <tool-palette-label>foreign key</tool-palette-label>
+            <endpoint2>
+                <type>arrow</type>
+            </endpoint2>
+        </connection>
+        <id>DiagramPage</id>
+        <page-name>schema</page-name>
+        <page-header-text>schema</page-header-text>
+        <element-type>Schema</element-type>
+    </diagram-page>
+    <editor-page>
+        <id>DetailsPage</id>
+        <page-name>details</page-name>
+        <page-header-text>schema details</page-header-text>
+        <initial-selection>Tables</initial-selection>
+        <root-node>
+            <node>
+                <label>Tables</label>
+                <section>
+                  <content>
+                    <label>tables</label>
+                    <label>Define tables.</label>
+                    <spacer></spacer>
+                    <actuator>
+                        <action-id>Sapphire.Add</action-id>
+                        <label>Add a table</label>
+                    </actuator>
+                  </content>                   
+                </section>
+                <node-factory>
+                    <property>Tables</property>
+                    <case>
+                        <label>${ Name == null ? &quot;&lt;table&gt;&quot; : Name }</label>
+                        <image>table.gif</image>
+                        <section>
+                            <label>table</label>
+                            <content>
+                                <property-editor>Name</property-editor>
+                                <property-editor>
+                                    <property>Columns</property>
+                                    <child-property>Name</child-property>
+                                    <child-property>Type</child-property>
+                                    <child-property>IsPrimaryKey</child-property>
+                                    <hint>
+                                        <name>column.widths</name>
+                                        <value>100:40,100:40,100:20</value>
+                                    </hint>
+                                </property-editor>                                
+                                <property-editor>ForeignKeys</property-editor>
+                            </content>
+                        </section>
+                    </case>
+                </node-factory>
+            </node>
+        </root-node>
+        <element-type>Schema</element-type>
+    </editor-page>
+</definition>

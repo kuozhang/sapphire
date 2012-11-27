@@ -19,9 +19,13 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -45,6 +49,13 @@ public class DiagramDirectEditActionHandler extends SapphireActionHandler
 				if (part instanceof DiagramNodePart)
 				{
 					model.handleDirectEditing((DiagramNodePart)part);
+				}
+				else if (part instanceof ShapePart)
+				{
+					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
+					DiagramNodeModel nodeModel = model.getDiagramNodeModel(nodePart);
+					ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
+					shapeModel.handleDirectEditing();
 				}
 				else if (part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart))
 				{

@@ -18,7 +18,6 @@ import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -39,10 +38,15 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
+import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -76,6 +80,33 @@ public interface IDiagramNodeDef
     void setInstanceId( String value );
     void setInstanceId( Function value );
         
+    // *** Shape ***
+    
+    @Type
+    ( 
+        base = ShapeDef.class, 
+        possible = 
+        { 
+            TextDef.class, 
+            ImageDef.class,
+            RectangleDef.class
+        }
+    )    
+    @Label( standard = "shape" )
+    @XmlElementBinding
+    ( 
+    	mappings = 
+        {
+            @XmlElementBinding.Mapping( element = "text", type = TextDef.class ),
+            @XmlElementBinding.Mapping( element = "image", type = ImageDef.class ),
+            @XmlElementBinding.Mapping( element = "rectangle", type = RectangleDef.class )
+        }
+    )
+    
+    ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
+    
+    ModelElementHandle<ShapeDef> getShape(); 
+    
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette item label" )
@@ -163,69 +194,7 @@ public interface IDiagramNodeDef
     Value<Boolean> isResizable();
     void setResizable( String value );
     void setResizable( Boolean value );
-    
-    // *** HorizontalSpacing ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "horizontal spacing" )
-    @XmlBinding( path = "horizontal-spacing" )
-    @DefaultValue( text = "0" )
-    
-    ValueProperty PROP_HORIZONTAL_SPACING = new ValueProperty( TYPE, "HorizontalSpacing" );
-    
-    Value<Integer> getHorizontalSpacing();
-    void setHorizontalSpacing( String value );
-    void setHorizontalSpacing( Integer value );
-    
-    // *** VerticalSpacing ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "vertical spacing" )
-    @XmlBinding( path = "vertical-spacing" )
-    @DefaultValue( text = "0" )
-    
-    ValueProperty PROP_VERTICAL_SPACING = new ValueProperty( TYPE, "VerticalSpacing" );
-    
-    Value<Integer> getVerticalSpacing();
-    void setVerticalSpacing( String value );
-    void setVerticalSpacing( Integer value );
-
-    // *** Image ***
-    
-    @Type( base = IDiagramNodeImageDef.class )
-    @XmlBinding( path = "image" )
-
-    ElementProperty PROP_IMAGE = new ElementProperty( TYPE, "Image" );
-    
-    ModelElementHandle<IDiagramNodeImageDef> getImage();
-    
-    // *** Label ***
-    
-    @Type( base = IDiagramLabelDef.class )
-    @XmlBinding( path = "label" )
-    
-    ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
-    
-    ModelElementHandle<IDiagramLabelDef> getLabel();
-            
-    // *** ProblemDecorator ***
-    
-    @Type( base = IDiagramNodeProblemDecoratorDef.class )
-    @XmlBinding( path = "problem-decorator" )
-
-    ImpliedElementProperty PROP_PROBLEM_DECORATOR = new ImpliedElementProperty( TYPE, "ProblemDecorator" );
-    
-    IDiagramNodeProblemDecoratorDef getProblemDecorator();
-    
-    // *** ImageDecorators ***
-    
-    @Type( base = IDiagramImageDecoratorDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "image-decorator", type = IDiagramImageDecoratorDef.class ) )
-                             
-    ListProperty PROP_IMAGE_DECORATORS = new ListProperty( TYPE, "ImageDecorators" );
-    
-    ModelElementList<IDiagramImageDecoratorDef> getImageDecorators();
-    
+        
     // *** EmbeddedConnections ***
     
     @Type( base = IDiagramExplicitConnectionBindingDef.class )
@@ -234,5 +203,4 @@ public interface IDiagramNodeDef
     ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
     ModelElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
-                
 }

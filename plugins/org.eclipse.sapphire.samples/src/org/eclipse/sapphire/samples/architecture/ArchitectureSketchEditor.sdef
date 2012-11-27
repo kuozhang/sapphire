@@ -47,12 +47,59 @@
         </action-handler>
         <node>
             <instance-id>${ Name }</instance-id>
+            <width>70</width>
+            <rectangle>
+              <corner-radius>8</corner-radius>
+              <sequence-layout>
+                <orientation>vertical</orientation>
+              </sequence-layout>
+              <content>
+                <rectangle>
+                  <sequence-layout-constraint>
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <vertical-alignment>top</vertical-alignment>
+                    <expand-cell-horizontally>false</expand-cell-horizontally>
+                    <expand-cell-vertically>false</expand-cell-vertically>
+                  </sequence-layout-constraint>
+                  <stack-layout/>
+                  <content>
+                    <image>
+	                  <path>Architecture.png</path>
+                    </image>
+                    <validation-marker>
+                     <size>small</size>
+                     <stack-layout-constraint>
+                       <horizontal-alignment>left</horizontal-alignment>
+                       <vertical-alignment>bottom</vertical-alignment>
+                       <horizontal-margin>5</horizontal-margin>
+                       <vertical-margin>12</vertical-margin>
+                     </stack-layout-constraint>
+                    </validation-marker>                    
+                    <image>
+                      <path>DependsOn-16.png</path>
+                      <visible-when>${ Dependencies.Size > 0 }</visible-when>
+                      <stack-layout-constraint>
+                        <horizontal-alignment>right</horizontal-alignment>
+                        <vertical-alignment>bottom</vertical-alignment>
+                        <horizontal-margin>2</horizontal-margin>
+                        <vertical-margin>7</vertical-margin>
+                      </stack-layout-constraint>
+                    </image>
+                  </content>
+                </rectangle>    
+                <text>
+                  <content>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</content>
+                  <sequence-layout-constraint>
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <vertical-alignment>center</vertical-alignment>
+                    <expand-cell-horizontally>true</expand-cell-horizontally>
+                    <expand-cell-vertically>false</expand-cell-vertically>
+                  </sequence-layout-constraint>
+                </text>
+              </content>
+            </rectangle>
             <tool-palette-label>component</tool-palette-label>
             <property>Components</property>
-            <label>
-                <width>120</width>
-                <text>${ Name == null ? &quot;&lt;component&gt;&quot; : Name }</text>
-            </label>
             <connection-binding>
                 <connection-id>Dependency</connection-id>
                 <property>Dependencies</property>

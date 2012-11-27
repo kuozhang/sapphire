@@ -42,7 +42,7 @@ public class MoveNodeCommand extends Command {
 	@Override
 	public void execute() {
 		moveBendpoints();
-		node.getModelPart().setNodeBounds(rectangle.x, rectangle.y);
+		node.getModelPart().setNodeBounds(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 	}
 	
 	private void moveBendpoints() {

@@ -18,6 +18,11 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ImageModel;
+import org.eclipse.sapphire.ui.swt.gef.model.RectangleModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeFactoryModel;
+import org.eclipse.sapphire.ui.swt.gef.model.TextModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ValidationMarkerModel;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -51,21 +56,36 @@ public class SapphireDiagramEditorEditPartFactory implements EditPartFactory {
 	 * @throws RuntimeException
 	 *             if no match was found (programming error)
 	 */
-	private EditPart getPartForElement(Object modelElement) {
-		if (modelElement instanceof DiagramModel) {
+	private EditPart getPartForElement(Object model) {
+		if (model instanceof DiagramModel) {
 			return new SapphireDiagramEditorPageEditPart(this.configManager);
 		}
-		if (modelElement instanceof DiagramNodeModel) {
+		if (model instanceof DiagramNodeModel) {
 			return new DiagramNodeEditPart(this.configManager);
 		}
-		if (modelElement instanceof DiagramConnectionModel) {
+		if (model instanceof TextModel) {
+			return new TextEditPart(this.configManager);
+		}
+		if (model instanceof ImageModel) {
+			return new ImageEditPart(this.configManager);
+		}
+		if (model instanceof ValidationMarkerModel) {
+			return new ValidationMarkerEditPart(this.configManager);
+		}
+		if (model instanceof RectangleModel) {
+			return new ContainerShapeEditPart(this.configManager);
+		}
+		if (model instanceof ShapeFactoryModel) {
+			return new ShapeFactoryEditPart(this.configManager);
+		}
+		if (model instanceof DiagramConnectionModel) {
 			return new DiagramConnectionEditPart(this.configManager);
 		}
-		if (modelElement instanceof DiagramConnectionLabelModel) {
+		if (model instanceof DiagramConnectionLabelModel) {
 			return new DiagramConnectionLabelEditPart(this.configManager);
 		}
-		throw new RuntimeException("Can't create part for model element: "
-				+ ((modelElement != null) ? modelElement.getClass().getName()
+		throw new RuntimeException("Can't create part for model: "
+				+ ((model != null) ? model.getClass().getName()
 						: "null"));
 	}
 

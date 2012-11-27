@@ -59,14 +59,20 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) {
-		if (child instanceof DiagramNodeEditPart)
-			return new DiagramNodeSelectionEditPolicy();
+		if (child instanceof DiagramNodeEditPart) {
+			boolean canResizeShape = ((DiagramNodeEditPart)child).getCastedModel().getModelPart().canResizeShape();
+			if (canResizeShape) {
+				return new DiagramNodeResizableEditPolicy(((DiagramNodeEditPart)child).getCastedModel().getDiagramModel().getResourceCache());
+			} else {
+				return new DiagramNodeSelectionEditPolicy();
+			}
+		}
 		return new NonResizableEditPolicy();
 	}
 
 	@Override
 	protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child, Object constraint) {
-		if (child instanceof DiagramNodeEditPart && constraint instanceof Rectangle) {
+		if (child instanceof DiagramNodeEditPart && constraint instanceof Rectangle) {			
 			// Bug 382542 - Diagram: sometimes moving a node does not move context buttons
 			// Hide the context buttons when moving a node
 			this.model.getSapphireDiagramEditor().getContextButtonManager().hideContextButtonsInstantly();

@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.swt.SWT;
@@ -70,6 +71,10 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 			{
 				this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
 				this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_HIDDEN;
+			}
+			else if (this.sapphirePart instanceof ShapePart)
+			{
+				this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE;
 			}
 			else if (this.sapphirePart instanceof DiagramConnectionPart)
 			{

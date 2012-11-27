@@ -7,57 +7,55 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
- *    Ling Hao - [344319] Image specification for diagram parts inconsistent with the rest of sdef 
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.def;
+package org.eclipse.sapphire.ui.diagram.shape.def;
 
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.Color;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
-
 @GenerateImpl
 
-public interface IDiagramImageDecoratorDef 
-    
-    extends IDiagramDecoratorDef 
-
+public interface GradientSegmentDef extends IModelElement 
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramImageDecoratorDef.class );
-    
-    // *** ImagePath ***
-    
-    @Type( base = Function.class )
-    @Label( standard = "image path" )
+	ModelElementType TYPE = new ModelElementType( GradientSegmentDef.class );
+	
+	// *** Color ***
+	
+    @Type( base = Color.class )
+    @Label( standard = "color")
     @Required
-    @XmlBinding( path = "path" )
+    @XmlBinding( path = "color")
     
-    ValueProperty PROP_IMAGE = new ValueProperty( TYPE, "Image" );
+    ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
     
-    Value<Function> getImage();
-    void setImage( String value );
-    void setImage( Function value );
-
-    // *** VisibleWhen ***
+    Value<Color> getColor();
+    void setColor( String value );
+    void setColor( Color value );
+	
+	// *** Extent ***
     
-    @Type( base = Function.class )
-    @XmlBinding( path = "visible-when" )
-    @Label( standard = "visible when" )
+    @Type( base = Integer.class )
+    @Label( standard = "extent" )
+    @Required
+    @XmlBinding( path = "extent" )
+    @NumericRange( min = "0", max = "100")
     
-    ValueProperty PROP_VISIBLE_WHEN = new ValueProperty(TYPE, "VisibleWhen");
+    ValueProperty PROP_EXTENT = new ValueProperty( TYPE, "Extent" );
     
-    Value<Function> getVisibleWhen();
-    void setVisibleWhen( String value );
-    void setVisibleWhen( Function value );        
-    
+    Value<Integer> getExtent();
+    void setExtent( String value );
+    void setExtent( Integer value );
 }

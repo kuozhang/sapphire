@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.policies;
 
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.IShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 
 /**
@@ -21,38 +21,65 @@ import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 
 public class DiagramNodeSelectionEditPolicy extends NonResizableEditPolicy {
 
-	private NodeFigure getLabel() {
+	private IShapeFigure getNodeFigure() {
 		DiagramNodeEditPart part = (DiagramNodeEditPart) getHost();
-		return ((NodeFigure) part.getFigure());
+		if (part.getFigure() instanceof IShapeFigure)
+		{
+			return ((IShapeFigure) part.getFigure());
+		}
+		return null;
 	}
 
 	@Override
-	protected void hideFocus() {
-		getLabel().setFocus(false);
+	protected void hideFocus() 
+	{
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setFocus(false);
+		}
 	}
 
 	@Override
 	protected void showFocus() {
-		getLabel().setFocus(true);
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setFocus(true);
+		}
 	}
 
 	@Override
-	protected void hideSelection() {
-		getLabel().setSelected(false);
-		getLabel().setFocus(false);
-
+	protected void hideSelection() 
+	{
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setSelected(false);
+			shapeFigure.setFocus(false);
+		}
 	}
 
 	@Override
-	protected void showPrimarySelection() {
-		getLabel().setSelected(true);
-		getLabel().setFocus(true);
+	protected void showPrimarySelection() 
+	{
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setSelected(true);
+			shapeFigure.setFocus(true);
+		}
 	}
 
 	@Override
-	protected void showSelection() {
-		getLabel().setSelected(true);
-		getLabel().setFocus(false);
+	protected void showSelection() 
+	{
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setSelected(true);
+			shapeFigure.setFocus(false);
+		}
 	}
 
 }

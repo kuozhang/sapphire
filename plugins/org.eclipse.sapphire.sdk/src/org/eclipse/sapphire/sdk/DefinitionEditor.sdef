@@ -14,6 +14,7 @@
  *   Rob Cernich - [360362] Allow creation of custom form editor pages
  *   Gregory Amerson - [374847] Actions and Handlers node not available on Diagram page
  *   Gregory Amerson - [355566] Sapphire Diagram editor should support header similar to form editor
+ *   Shenxue Zhou - [383924] Extend Sapphire Diagram Framework to support SQL Schema diagram like editors 
  ******************************************************************************
 -->
 
@@ -25,6 +26,7 @@
         <package>org.eclipse.sapphire.ui.diagram.def</package>
         <package>org.eclipse.sapphire.sdk</package>
         <package>org.eclipse.sapphire.sdk.internal</package>
+        <package>org.eclipse.sapphire.ui.diagram.shape.def</package>
         <definition>org.eclipse.sapphire.sdk.Common</definition>
     </import>
     
@@ -125,24 +127,22 @@
                 <height>250</height>
                 <related-content>
                     <html>
-                        <content>
-                            &lt;style>
+                        <content>&lt;style&gt;
                             body, td
                             {
                                  color: grey;
                             }
-                            &lt;/style>
-                            Format content using syntax similar to HTML. The following tags are supported:&lt;br/>&lt;br/>
+                            &lt;/style&gt;
+                            Format content using syntax similar to HTML. The following tags are supported:&lt;br/&gt;&lt;br/&gt;
                             
-                            &lt;table>
-                                &lt;tr>&lt;td>[b]...[/b]&lt;/td>&lt;td>bold text&lt;/td>&lt;/tr> 
-                                &lt;tr>&lt;td>[br/]&lt;/td>&lt;td>line break&lt;/td>&lt;/tr>
-                                &lt;tr>&lt;td>[pbr/]&lt;/td>&lt;td>paragraph break&lt;/td>&lt;/tr> 
-                                &lt;tr>&lt;td>[ol]...[/ol]&lt;/td>&lt;td>ordered list&lt;/td>&lt;/tr>
-                                &lt;tr>&lt;td>[ul]...[/ul]&lt;/td>&lt;td>unordered list&lt;/td>&lt;/tr>
-                                &lt;tr>&lt;td>[li]...[/li]&lt;/td>&lt;td>list item&lt;/td>&lt;/tr>
-                            &lt;/table>
-                        </content>
+                            &lt;table&gt;
+                                &lt;tr&gt;&lt;td&gt;[b]...[/b]&lt;/td&gt;&lt;td&gt;bold text&lt;/td&gt;&lt;/tr&gt; 
+                                &lt;tr&gt;&lt;td&gt;[br/]&lt;/td&gt;&lt;td&gt;line break&lt;/td&gt;&lt;/tr&gt;
+                                &lt;tr&gt;&lt;td&gt;[pbr/]&lt;/td&gt;&lt;td&gt;paragraph break&lt;/td&gt;&lt;/tr&gt; 
+                                &lt;tr&gt;&lt;td&gt;[ol]...[/ol]&lt;/td&gt;&lt;td&gt;ordered list&lt;/td&gt;&lt;/tr&gt;
+                                &lt;tr&gt;&lt;td&gt;[ul]...[/ul]&lt;/td&gt;&lt;td&gt;unordered list&lt;/td&gt;&lt;/tr&gt;
+                                &lt;tr&gt;&lt;td&gt;[li]...[/li]&lt;/td&gt;&lt;td&gt;list item&lt;/td&gt;&lt;/tr&gt;
+                            &lt;/table&gt;</content>
                         <fragment/>
                         <scale-vertically>true</scale-vertically>
                     </html>
@@ -150,6 +150,65 @@
             </property-editor>
             <property-editor>Topics</property-editor>
         </content>
+    </form>
+    <form>
+        <id>LayoutConstraintForm</id>
+        <content>
+            <property-editor>Width</property-editor>
+            <property-editor>Height</property-editor>
+            <property-editor>HorizontalAlignment</property-editor>
+            <property-editor>VerticalAlignment</property-editor>
+            <spacer>
+                <size>5</size>
+            </spacer>
+            <property-editor>Margin</property-editor>
+            <property-editor>HorizontalMargin</property-editor>
+            <property-editor>VerticalMargin</property-editor>
+            <property-editor>LeftMargin</property-editor>
+            <property-editor>RightMargin</property-editor>
+            <property-editor>TopMargin</property-editor>
+            <property-editor>BottomMargin</property-editor>
+        </content>
+    </form>
+    <form>
+        <id>ShapeLayoutConstraintForm</id>
+        <content>
+            <with>
+                <path>LayoutConstraint</path>
+                <panel>
+                    <key>SequenceLayoutConstraintDef</key>
+                    <content>
+                        <property-editor>MinWidth</property-editor>
+                        <property-editor>MinHeight</property-editor>
+                        <property-editor>MaxWidth</property-editor>
+                        <property-editor>MaxHeight</property-editor>
+                        <spacer>
+                            <size>5</size>
+                        </spacer>
+                        <property-editor>ExpandCellHorizontally</property-editor>
+                        <property-editor>ExpandCellVertically</property-editor>
+                        <spacer>
+                            <size>5</size>
+                        </spacer>
+                        <include>LayoutConstraintForm</include>
+                    </content>
+                </panel>
+                <panel>
+                    <key>StackLayoutConstraintDef</key>
+                    <content>
+                        <include>LayoutConstraintForm</include>
+                    </content>
+                </panel>
+            </with>
+        </content>
+    </form>
+    <form>
+        <content>
+            <property-editor>Width</property-editor>
+            <property-editor>Color</property-editor>
+            <property-editor>Style</property-editor>
+        </content>
+        <id>BorderForm</id>
     </form>
     
     <node>
@@ -1389,9 +1448,6 @@
                                         <property-editor>Resizable</property-editor>
                                     </content>
                                 </composite>
-                                <spacer></spacer>
-                                <property-editor>HorizontalSpacing</property-editor>
-                                <property-editor>VerticalSpacing</property-editor>
                             </content>
                         </section>
                         <section>
@@ -1407,130 +1463,7 @@
                             </content>
                         </section>
                         <label>${ ToolPaletteLabel == null ? &quot;&lt;node&gt;&quot; : ToolPaletteLabel }</label>
-                        <node>
-                            <label>image</label>
-                            <section>
-                                <content>
-                                    <with>
-                                        <path>Image</path>
-                                        <panel>
-                                            <key>IDiagramNodeImageDef</key>
-                                            <content>
-                                                <property-editor>Image</property-editor>
-                                                <property-editor>Placement</property-editor>
-                                                <property-editor>Width</property-editor>
-                                                <property-editor>Height</property-editor>                                               
-                                            </content>
-                                        </panel>
-                                        <label>show node image</label>
-                                    </with>
-                                </content>
-                            </section>
-                        </node>
                         <image>${ Image() }</image>
-                        <node>
-                            <label>label</label>
-                            <section>
-                                <content>
-                                    <with>
-                                        <path>Label</path>
-                                        <label>show node label</label>
-                                        <panel>
-                                            <key>IDiagramLabelDef</key>
-                                            <content>
-                                                <property-editor>Text</property-editor>
-                                                <property-editor>Width</property-editor>
-                                                <property-editor>Height</property-editor>
-                                            </content>
-                                        </panel>
-                                    </with>
-                                </content>
-                            </section>
-                        </node>
-                        <node>
-                            <label>problems decorator</label>
-                            <property>ProblemDecorator</property>
-                            <section>
-                                <content>
-                                    <property-editor>ShowDecorator</property-editor>
-                                    <separator></separator>
-                                    <property-editor>
-                                        <property>DecoratorPlacement</property>
-                                        <hint>
-                                            <name>prefer.combo</name>
-                                            <value>true</value>
-                                        </hint>
-                                    </property-editor>
-                                    <property-editor>
-                                        <property>Size</property>
-                                        <hint>
-                                            <name>prefer.combo</name>
-                                            <value>true</value>
-                                        </hint>
-                                    </property-editor>
-                                    <spacer></spacer>
-                                    <property-editor>
-                                        <property>HorizontalAlignment</property>
-                                        <hint>
-                                            <name>prefer.combo</name>
-                                            <value>true</value>
-                                        </hint>
-                                    </property-editor>
-                                    <property-editor>
-                                        <property>VerticalAlignment</property>
-                                        <hint>
-                                            <name>prefer.combo</name>
-                                            <value>true</value>
-                                        </hint>
-                                    </property-editor>
-                                    <spacer></spacer>
-                                    <property-editor>HorizontalMargin</property-editor>
-                                    <property-editor>VerticalMargin</property-editor>
-                                </content>
-                            </section>
-                        </node>
-                        <node>
-                            <label>image decorators</label>                            
-                            <node-factory>
-                                <property>ImageDecorators</property>
-                                <case>
-                                    <label>${ Image == null ? &quot;&lt;image-path&gt;&quot; : Image }</label>
-                                    <section>
-                                        <label>node image decorator</label>
-                                        <content>
-                                            <property-editor>Image</property-editor>
-                                            <property-editor>VisibleWhen</property-editor>
-                                            <separator></separator>
-                                            <property-editor>
-                                                <property>DecoratorPlacement</property>
-                                                <hint>
-                                                    <name>prefer.combo</name>
-                                                    <value>true</value>
-                                                </hint>
-                                            </property-editor>
-                                            <spacer></spacer>
-                                            <property-editor>
-                                                <property>HorizontalAlignment</property>
-                                                <hint>
-                                                    <name>prefer.combo</name>
-                                                    <value>true</value>
-                                                </hint>
-                                            </property-editor>
-                                            <property-editor>
-                                                <property>VerticalAlignment</property>
-                                                <hint>
-                                                    <name>prefer.combo</name>
-                                                    <value>true</value>
-                                                </hint>
-                                            </property-editor>
-                                            <spacer></spacer>
-                                            <property-editor>HorizontalMargin</property-editor>
-                                            <property-editor>VerticalMargin</property-editor>
-                                        </content>
-                                    </section>
-                                </case>
-                            </node-factory>
-                        </node>
                         <node>
                             <label>embedded connection bindings</label>
                             <node-factory>
@@ -1561,6 +1494,7 @@
                                         </content>
                                         <label>label</label>
                                     </section>
+                                    
                                     <label>${ Property == null ? &quot;&lt;connection-binding&gt;&quot; : Property }</label>
                                     <section>
                                         <label>endpoint 1</label>
@@ -1601,6 +1535,28 @@
                         </node>
                         <node-include>ActionsOverallNode</node-include>
                         <node-include>PropertiesViewContributionNode</node-include>
+                        <node>
+                            <label>shape</label>
+                            <node-factory>
+                                <property>Shape</property>
+                                <case>
+                                    <model-element-type>TextDef</model-element-type>
+                                    <node-include>TextNode</node-include>
+                                    <label>text</label>
+                                </case>
+                                <case>
+                                    <model-element-type>ImageDef</model-element-type>
+                                    <label>image</label>
+                                    <node-include>ImageNode</node-include>
+                                </case>
+                                <case>
+                                    <model-element-type>RectangleDef</model-element-type>
+                                    <label>Rectangle</label>
+                                    <node-include>RectangleNode</node-include>
+                    				<node-include>PropertiesViewContributionNode</node-include>
+                                </case>
+                            </node-factory>
+                        </node>
                     </case>
                 </node-factory>
             </node>
@@ -1779,7 +1735,293 @@
             <node-include>PropertiesViewContributionNode</node-include>
             <node-include>ServicesNode</node-include>
         </case>
-        
     </node-factory>
+    <node>
+        <id>TextNode</id>
+        <section>
+            <label>text attributes</label>
+            <content>
+                <property-editor>Content</property-editor>
+                <property-editor>Color</property-editor>
+                <property-editor>VisibleWhen</property-editor>
+                <with>
+                    <path>Font</path>
+                    <label>font</label>
+                    <panel>
+                        <key>FontDef</key>
+                        <content>
+                            <property-editor>Name</property-editor>
+                            <property-editor>Size</property-editor>
+                            <property-editor>Bold</property-editor>
+                            <property-editor>Italic</property-editor>
+                        </content>
+                    </panel>
+                </with>
+            </content>
+        </section>
+        <node>
+            <label>layout constraint</label>
+            <section>
+                <label>layout constraint</label>
+                <content>
+                    <include>ShapeLayoutConstraintForm</include>
+                </content>
+            </section>
+        </node>
+        <label>Text Properties</label>
+    </node>
+    <node>
+        <id>ImageNode</id>
+        <section>
+            <label>image attributes</label>
+            <content>
+                <property-editor>Path</property-editor>
+                <property-editor>Resizable</property-editor>
+                <property-editor>ResizeHorizontally</property-editor>
+                <property-editor>ResizeVertically</property-editor>
+                <property-editor>VisibleWhen</property-editor>
+            </content>
+        </section>
+        <node>
+            <label>layout constraint</label>
+            <section>
+                <label>layout constraint</label>
+                <content>
+                    <include>ShapeLayoutConstraintForm</include>
+                </content>
+            </section>
+        </node>
+        <label>Image Properties</label>
+    </node>
+    <node>
+        <id>ValidationMarkerNode</id>
+        <label>Validation Marker Properties</label>
+        <section>
+            <label>validation marker attributes</label>
+            <content>
+                <property-editor>Size</property-editor>
+            </content>
+        </section>
+        <node>
+            <label>layout constraint</label>
+            <section>
+                <label>layout constraint</label>
+                <content>
+                    <include>ShapeLayoutConstraintForm</include>
+                </content>
+            </section>
+        </node>
+    </node>
+    <node>
+        <id>RectangleNode</id>
+        <label>Rectangle Properties</label>
+        <section>
+            <label>rectangle</label>
+            <content>
+                <property-editor>CornerRadius</property-editor>
+                <property-editor>ScrollHorizontally</property-editor>
+                <property-editor>ScrollVertically</property-editor>
+                <property-editor>VisibleWhen</property-editor>
+            </content>
+        </section>
+        <section>
+            <label>border</label>
+            <content>
+                <with>
+                    <path>Border</path>
+                    <label>border</label>
+                    <panel>
+                        <key>BorderDef</key>
+                        <content>
+                            <include>BorderForm</include>
+                        </content>
+                    </panel>
+                </with>
+                <spacer>
+                    <size>5</size>
+                </spacer>
+                <with>
+                    <path>TopBorder</path>
+                    <panel>
+                        <key>BorderDef</key>
+                        <content>
+                            <include>BorderForm</include>
+                        </content>
+                    </panel>
+                    <label>top border</label>
+                </with>
+                <spacer>
+                    <size>5</size>
+                </spacer>
+                <with>
+                    <path>BottomBorder</path>
+                    <panel>
+                        <key>BorderDef</key>
+                        <content>
+                            <include>BorderForm</include>
+                        </content>
+                    </panel>
+                    <label>bottom border</label>
+                </with>
+                <spacer>
+                    <size>5</size>
+                </spacer>
+                <with>
+                    <path>LeftBorder</path>
+                    <panel>
+                        <key>BorderDef</key>
+                        <content>
+                            <include>BorderForm</include>
+                        </content>
+                    </panel>
+                    <label>left border</label>
+                </with>
+                <spacer>
+                    <size>5</size>
+                </spacer>
+                <with>
+                    <path>RightBorder</path>
+                    <label>right border</label>
+                    <panel>
+                        <key>BorderDef</key>
+                        <content>
+                            <include>BorderForm</include>
+                        </content>
+                    </panel>
+                </with>
+            </content>
+        </section>
+        <section>
+            <label>background</label>
+            <content>
+                <with>
+                    <path>Background</path>
+                    <label>background</label>
+                    <panel>
+                        <key>SolidBackgroundDef</key>
+                        <content>
+                            <property-editor>Color</property-editor>
+                        </content>
+                    </panel>
+                    <panel>
+                        <key>GradientBackgroundDef</key>
+                        <content>
+                            <property-editor>GradientSegments</property-editor>
+                            <property-editor>Vertical</property-editor>
+                        </content>
+                    </panel>
+                </with>
+            </content>
+        </section>
+        <node>
+            <label>layout constraint</label>
+            <section>
+                <label>layout constraint</label>
+                <content>
+                    <include>ShapeLayoutConstraintForm</include>
+                </content>
+            </section>
+        </node>
+        
+        <node>
+            <label>layout</label>
+            <section>
+                <label>layout</label>
+                <content>
+                    <with>
+                        <path>Layout</path>
+                        <panel>
+                            <key>SequenceLayoutDef</key>
+                            <content>
+                                <property-editor>Orientation</property-editor>
+                                <property-editor>Spacing</property-editor>
+                                <property-editor>Margin</property-editor>
+                            </content>
+                        </panel>
+                        <label>layout</label>
+                        <panel>
+                            <key>StackLayoutDef</key>
+                            <content>
+                                <label>Nothing to configure.</label>
+                            </content>
+                        </panel>
+                    </with>
+                </content>
+            </section>
+        </node>
+        <node>
+            <label>children</label>
+            <node-factory>
+                <property>Content</property>
+                <case>
+                    <model-element-type>TextDef</model-element-type>
+                    <label>Text</label>
+                    <node-include>TextNode</node-include>
+                </case>
+                <case>
+                    <model-element-type>ImageDef</model-element-type>
+                    <label>Image</label>
+                    <node-include>ImageNode</node-include>
+                </case>
+                <case>
+                    <model-element-type>ValidationMarkerDef</model-element-type>
+                    <node-include>ValidationMarkerNode</node-include>
+                    <label>Validation Marker</label>
+                </case>
+                <case>
+                    <model-element-type>RectangleDef</model-element-type>
+                    <label>Rectangle</label>
+                    <node-include>RectangleNode</node-include>
+                </case>
+                <case>
+                    <model-element-type>ShapeFactoryDef</model-element-type>
+                    <label>Shape Factory</label>
+                    <node-include>ShapeFactoryNode</node-include>
+                </case>            
+            </node-factory>
+        </node>
+    </node>
+    <node>
+        <id>ShapeFactoryNode</id>
+        <label>Shape Factory Properties</label>
+        <section>
+            <content>
+                <property-editor>Property</property-editor>
+                <property-editor>VisibleWhen</property-editor>
+            </content>
+            <label>shape factory properties</label>
+        </section>
+        <node-factory>
+            <property>ShapeFactoryCases</property>
+            <case>
+                <model-element-type>ShapeFactoryCaseDef</model-element-type>
+                <label>Shape Factory Case</label>
+                <section>
+                    <label>type</label>
+                    <content>
+                        <property-editor>Type</property-editor>
+                    </content>
+                </section>
+                <node-factory>
+                    <property>Shape</property>
+                    <case>
+                        <model-element-type>TextDef</model-element-type>
+                        <node-include>TextNode</node-include>
+                        <label>Text</label>
+                    </case>
+                    <case>
+                        <model-element-type>ImageDef</model-element-type>
+                        <label>Image</label>
+                        <node-include>ImageNode</node-include>
+                    </case>
+                    <case>
+                        <model-element-type>RectangleDef</model-element-type>
+                        <label>Rectangle</label>
+                        <node-include>RectangleNode</node-include>
+                    </case>
+                </node-factory>
+            </case>
+        </node-factory>
+    </node>
 
 </definition>

@@ -37,4 +37,25 @@ public class ListUtil
         return retList;
     }
     
+    public static boolean ListDiffers(List<? extends IModelElement> list1, 
+    		List<? extends IModelElement> list2)
+    {
+    	if (list1.size() != list2.size())
+    	{
+    		return true;
+    	}
+    	for (int i = 0; i < list1.size(); i++)
+    	{
+    		IModelElement element1 = list1.get(i);
+    		IModelElement element2 = list2.get(i);
+    		if ((element1 != null && element2 != null && !(element1.equals(element2))) ||
+    				(element1 != null && element2 == null) ||
+    				(element1 == null && element2 != null))
+    		{
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    	
 }

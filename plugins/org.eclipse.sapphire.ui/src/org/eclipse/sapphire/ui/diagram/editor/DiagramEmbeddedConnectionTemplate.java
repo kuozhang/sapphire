@@ -247,7 +247,12 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void addModelListener()
     {
-        
+        ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
+        ModelElementList<IModelElement> srcNodeList = this.modelElement.read(nodeProperty);
+        for (IModelElement srcNodeModel : srcNodeList)
+        {
+            addModelListener(srcNodeModel);
+        }        
     }
     
     @Override

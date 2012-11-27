@@ -15,19 +15,13 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
@@ -39,10 +33,12 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImageDecoratorDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeProblemDecoratorDef;
-import org.eclipse.sapphire.ui.diagram.def.ImagePlacement;
+import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
+import org.eclipse.sapphire.ui.swt.renderer.SwtUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -55,23 +51,19 @@ public class DiagramNodePart
     implements IPropertiesViewContributorPart
     
 {
+	
 	private static final String DEFAULT_ACTION_ID = "Sapphire.Diagram.Node.Default";
 	
 	private DiagramNodeTemplate nodeTemplate;
 	private IDiagramNodeDef definition;
 	private IModelElement modelElement;
-	private FunctionResult labelFunctionResult;
 	private FunctionResult idFunctionResult;
-	private FunctionResult imageDataFunctionResult;
-	private List<FunctionResult> imageDecoratorFunctionResults;
-	private List<FunctionResult> imageDecoratorDataFunctionResults;
-	private ValueProperty labelProperty;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
-	private Listener modelPropertyListener;
 	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
+	private ShapePart shapePart;
 
 	@Override
     protected void init()
@@ -80,21 +72,6 @@ public class DiagramNodePart
         this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
         this.definition = (IDiagramNodeDef)super.definition;
         this.modelElement = getModelElement();
-        this.labelFunctionResult = initExpression
-        ( 
-            this.modelElement,
-            this.definition.getLabel().element().getText().getContent(),
-            String.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshLabel();
-                }
-            }
-        );
-        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.labelFunctionResult);
         
         this.idFunctionResult = initExpression
         ( 
@@ -109,86 +86,17 @@ public class DiagramNodePart
                 }
             }
         );
+                
+        // create shape part
         
-        if (this.definition.getImage().element() != null)
-        {
-            this.imageDataFunctionResult = initExpression
-            ( 
-                this.modelElement,
-                this.definition.getImage().element().getImage().getContent(),
-                ImageData.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        refreshImage();
-                    }
-                }
-            );
-        }
-
-        // Image decorator functions
-        
-        ModelElementList<IDiagramImageDecoratorDef> imageDecorators = this.definition.getImageDecorators();
-        this.imageDecoratorFunctionResults = new ArrayList<FunctionResult>();
-        for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
-        {
-            FunctionResult imageResult = initExpression
-            ( 
-                this.modelElement,
-                imageDecorator.getVisibleWhen().getContent(),
-                String.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        refreshDecorator();
-                    }
-                }
-            );
-            this.imageDecoratorFunctionResults.add(imageResult);
-        }
-        
-        this.imageDecoratorDataFunctionResults = new ArrayList<FunctionResult>();
-        for (IDiagramImageDecoratorDef imageDecorator : imageDecorators)
-        {
-            FunctionResult imageResult = initExpression
-            ( 
-                this.modelElement,
-                imageDecorator.getImage().getContent(),
-                ImageData.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        refreshDecorator();
-                    }
-                }
-            );
-            this.imageDecoratorDataFunctionResults.add(imageResult);
-        }
-        
-        // Add model property listener. It listens to all the properties so that the
-        // validation status change would trigger node update
-        this.modelPropertyListener =  new FilteredListener<PropertyEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final PropertyEvent event )
-            {
-                notifyNodeUpdate();
-            }
-        };
-        this.modelElement.attach(this.modelPropertyListener, "*");
-        
+        createShapePart();
+                
         this.elementValidationListener = new FilteredListener<ElementValidationEvent>()
         {
             @Override
             protected void handleTypedEvent( final ElementValidationEvent event )
             {
-                notifyNodeUpdate();
+                notifyNodeValidation();
             }
         };
         this.modelElement.attach(this.elementValidationListener);        
@@ -204,27 +112,10 @@ public class DiagramNodePart
     {
         return this.modelElement;
     }    
-           
-    public List<NodeImageDecorator> getImageDecorators()
+         
+    public ShapePart getShapePart()
     {
-        List<NodeImageDecorator> imageDecorators = new ArrayList<NodeImageDecorator>();
-        ModelElementList<IDiagramImageDecoratorDef> defs = this.definition.getImageDecorators();
-        for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
-        {
-            FunctionResult result = this.imageDecoratorFunctionResults.get(i);
-            if (result != null)
-            {
-                String show = (String)result.value();
-                if (show != null && show.equals("true"))
-                {
-                    IDiagramImageDecoratorDef def = defs.get(i);
-                	FunctionResult imageDataResult = this.imageDecoratorDataFunctionResults.get(i);
-                	NodeImageDecorator nodeImageDecorator = new NodeImageDecorator((ImageData)imageDataResult.value(), def);
-                    imageDecorators.add(nodeImageDecorator);
-                }
-            }
-        }
-        return imageDecorators;
+    	return this.shapePart;
     }
     
     @Override
@@ -257,86 +148,91 @@ public class DiagramNodePart
     public void dispose()
     {
         super.dispose();
-        if (this.labelFunctionResult != null)
-        {
-            this.labelFunctionResult.dispose();
-        }
-        
         if (this.idFunctionResult != null)
         {
             this.idFunctionResult.dispose();
         }
         
-        if (this.imageDataFunctionResult != null)
-        {
-            this.imageDataFunctionResult.dispose();
-        }
-    
-        for (int i = 0; i < this.imageDecoratorFunctionResults.size(); i++)
-        {
-            FunctionResult result = this.imageDecoratorFunctionResults.get(i);
-            if (result != null)
-            {
-                result.dispose();
-            }
-        }
-        
-        for (int i = 0; i < this.imageDecoratorDataFunctionResults.size(); i++)
-        {
-            FunctionResult result = this.imageDecoratorDataFunctionResults.get(i);
-            if (result != null)
-            {
-                result.dispose();
-            }
-        }
-
-        this.modelElement.detach(this.modelPropertyListener, "*");
         this.modelElement.detach(this.elementValidationListener);
     }
     
-    public String getLabel()
+    public void refreshShape(ShapePart shapePart)
     {
-        String label = null;
-        
-        if( this.labelFunctionResult != null )
-        {
-            label = (String) this.labelFunctionResult.value();
-        }
-        
-        if( label == null )
-        {
-            label = "#null#";
-        }
-        
-        return label;
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeUpdateEvent(nue);
+			}
+		}    	
     }
 
-    public void setLabel(String newValue)
+    public void refreshShapeVisibility(ShapePart shapePart)
     {
-        if (this.labelProperty != null)
-        {
-            this.modelElement.write(this.labelProperty, newValue);
-        }
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(nue);
+			}
+		}    	
     }
     
-    public void refreshLabel()
+    public void refreshShapeValidation(ShapePart shapePart)
     {
-        notifyNodeUpdate();
-    }
-    
-    public void refreshImage()
-    {
-        notifyNodeUpdate();
-    }
-    
-    public void refreshDecorator()
-    {
-        notifyNodeUpdate();
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeValidationEvent(nue);
+			}
+		}    	
     }
 
-    public boolean canEditLabel()
+    public void addShape(ShapePart shapePart)
     {
-        return this.labelProperty != null;
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeAddEvent(nue);
+			}
+		}    	    	
+    }
+    
+    public void deleteShape(ShapePart shapePart)
+    {    	
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeDeleteEvent(nue);
+			}
+		}    	    	
+    }
+    
+    public void reorderShapes(ShapeFactoryPart shapeFactory)
+    {
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapeFactory);
+				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(nue);
+			}
+		}    	    	
+    	
     }
     
     public String getNodeTypeId()
@@ -363,7 +259,16 @@ public class DiagramNodePart
 	
 	public DiagramNodeBounds getNodeBounds()
 	{
-		return new DiagramNodeBounds(this.nodeBounds);
+		DiagramNodeBounds bounds = new DiagramNodeBounds(this.nodeBounds);
+		if (bounds.getWidth() < 0 && this.definition.getWidth().getContent() != null )
+		{
+			bounds.setWidth(this.definition.getWidth().getContent());
+		}
+		if (bounds.getHeight() < 0 && this.definition.getHeight().getContent() != null)
+		{
+			bounds.setHeight(this.definition.getHeight().getContent());
+		}
+		return bounds;
 	}
 	
 	public void setNodeBounds(int x, int y)
@@ -371,6 +276,11 @@ public class DiagramNodePart
 		setNodeBounds(new DiagramNodeBounds(x, y, -1, -1, false, false));
 	}
 	
+	public void setNodeBounds(int x, int y, int width, int height)
+	{
+		setNodeBounds(new DiagramNodeBounds(x, y, width, height, false, false));
+	}
+
 	public void setNodeBounds(int x, int y, boolean autoLayout, boolean defaultPosition)
 	{
 		setNodeBounds(new DiagramNodeBounds(x, y, -1, -1, autoLayout, defaultPosition));
@@ -384,111 +294,41 @@ public class DiagramNodePart
 	
 	public void setNodeBounds(DiagramNodeBounds bounds)
 	{
-		// TODO handle node resizing events
+		// TODO handle node resizing events - rename move?
 		if (!this.nodeBounds.equals(bounds))
 		{
 			this.nodeBounds.setX(bounds.getX());
 			this.nodeBounds.setY(bounds.getY());
+			this.nodeBounds.setWidth(bounds.getWidth());
+			this.nodeBounds.setHeight(bounds.getHeight());
 			this.nodeBounds.setAutoLayout(bounds.isAutoLayout());
 			this.nodeBounds.setDefaultPosition(bounds.isDefaultPosition());
 			notifyNodeMove();
 		}			
 	}
 
-	public int getHorizontalSpacing()
-	{
-		if (this.definition.getHorizontalSpacing().getContent() != null)
-		{
-			return this.definition.getHorizontalSpacing().getContent();
-		}
-		return 0;
-	}
 	
-	public int getVerticalSpacing()
+	private void notifyNodeValidation()
 	{
-		if (this.definition.getVerticalSpacing().getContent() != null)
-		{
-			return this.definition.getVerticalSpacing().getContent();
-		}
-		return 0;
-	}
-
-    public ImageData getImage()
-    {
-        if( this.imageDataFunctionResult != null )
-        {
-        	return (ImageData) this.imageDataFunctionResult.value();
-        }
-        return null;        
-    }
-    
-    public ImagePlacement getImagePlacement()
-    {
-        if (this.definition.getImage().element() != null)
-        {
-            return this.definition.getImage().element().getPlacement().getContent();
-        }
-        return null;
-    }
-    
-    public int getImageWidth()
-    {
-        if (this.definition.getImage().element() != null)
-        {
-            if (this.definition.getImage().element().getWidth().getContent() != null)
+        SwtUtil.runOnDisplayThread
+        (
+            new Runnable()
             {
-                this.definition.getImage().element().getWidth().getContent();
+                public void run()
+                {
+            		Set<SapphirePartListener> listeners = getListeners();
+            		for(SapphirePartListener listener : listeners)
+            		{
+            			if (listener instanceof SapphireDiagramPartListener)
+            			{
+            				DiagramNodeEvent nue = new DiagramNodeEvent(DiagramNodePart.this);
+            				((SapphireDiagramPartListener)listener).handleNodeValidationEvent(nue);
+            			}
+            		}
+                }
             }
-        }
-        return 0;
-    }
-    
-    public int getImageHeight()
-    {
-        if (this.definition.getImage().element() != null)
-        {
-            if (this.definition.getImage().element().getHeight().getContent() != null)
-            {
-                this.definition.getImage().element().getHeight().getContent();
-            }
-        }
-        return 0;
-    }
-
-    public int getLabelWidth()
-    {
-        if (this.definition.getLabel().element().getWidth().getContent() != null)
-        {
-            return this.definition.getLabel().element().getWidth().getContent();
-        }
-        return 0;
-    }
-
-	public int getLabelHeight()
-	{
-		if (this.definition.getLabel().element().getHeight().getContent() != null)
-		{
-			return this.definition.getLabel().element().getHeight().getContent();
-		}
-		return 0;
-	}
-	
-	public IDiagramNodeProblemDecoratorDef getProblemIndicatorDef()
-	{
-		return this.definition.getProblemDecorator();
-	}
-					
-	private void notifyNodeUpdate()
-	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramNodeEvent nue = new DiagramNodeEvent(this);
-				((SapphireDiagramPartListener)listener).handleNodeUpdateEvent(nue);
-			}
-		}
+        );
+		
 	}
 	
 	private void notifyNodeMove()
@@ -514,24 +354,21 @@ public class DiagramNodePart
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
     }
     
-    public final static class NodeImageDecorator {
-    	
-    	ImageData imageData;
-    	IDiagramImageDecoratorDef imageDecoratorDef;
-    	
-    	public NodeImageDecorator(ImageData imageData, IDiagramImageDecoratorDef imageDecoratorDef) {
-    		this.imageData = imageData;
-    		this.imageDecoratorDef = imageDecoratorDef;
+    private void createShapePart()
+    {
+    	ShapeDef shape = this.definition.getShape().element();
+    	if (shape instanceof TextDef)
+    	{
+	        this.shapePart = new TextPart();
     	}
-    	
-    	public ImageData getImageData() {
-    		return this.imageData;
+    	else if (shape instanceof ImageDef)
+    	{
+    		this.shapePart = new ImagePart();
     	}
-    	
-    	public IDiagramImageDecoratorDef getImageDecoratorDef() {
-    		return this.imageDecoratorDef;
+    	else if (shape instanceof RectangleDef)
+    	{
+    		this.shapePart = new RectanglePart();
     	}
-    	
+        this.shapePart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());    	
     }
-    
 }

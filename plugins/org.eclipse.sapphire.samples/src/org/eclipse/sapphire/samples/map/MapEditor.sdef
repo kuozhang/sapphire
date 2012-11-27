@@ -47,10 +47,35 @@
         </connection>
         <node>
             <id>locations</id>
+            <width>100</width>
+            <height>30</height>
+            <rectangle>
+              <corner-radius>8</corner-radius>
+              <border>
+                <width>1</width>
+                <style>solid</style>
+                <color>#333399</color>
+              </border>
+              <background>
+                <gradient/>
+              </background>
+              <sequence-layout>
+                <orientation>horizontal</orientation>
+              </sequence-layout>
+              <content>
+                <validation-marker/>
+                <text>
+                  <content>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</content>                
+                  <sequence-layout-constraint>
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <expand-cell-horizontally>true</expand-cell-horizontally>
+                  </sequence-layout-constraint>
+                </text>
+              </content>
+            </rectangle>
             <tool-palette-label>location</tool-palette-label>
             <tool-palette-desc>map location</tool-palette-desc>
             <property>Locations</property>
-            <label>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</label>
             <instance-id>${Name}</instance-id>
             <connection-binding>
                 <connection-id>railway_routes</connection-id>

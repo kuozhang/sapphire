@@ -1557,7 +1557,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             }
         }
     }
-    
+        
     public final void detach( final Listener listener,
                               final ModelProperty property )
     {
