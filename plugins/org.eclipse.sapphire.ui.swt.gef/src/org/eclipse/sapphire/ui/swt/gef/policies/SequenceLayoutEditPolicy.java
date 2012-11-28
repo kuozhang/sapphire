@@ -163,15 +163,6 @@ public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
 	}
 
 	/**
-	 * @return <code>true</code> if the host's LayoutManager is in a horizontal
-	 *         orientation
-	 * @deprecated Use {@link #isLayoutHorizontal()} instead.
-	 */
-	protected boolean isHorizontal() {
-		return isLayoutHorizontal();
-	}
-
-	/**
 	 * Shows an insertion line if there is one or more current children.
 	 * 
 	 * @see LayoutEditPolicy#showLayoutTargetFeedback(Request)
