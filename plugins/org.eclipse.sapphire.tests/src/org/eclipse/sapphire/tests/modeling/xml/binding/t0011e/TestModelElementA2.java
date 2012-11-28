@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
  */
 
 @GenerateImpl
-@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/0011e/4", prefix = "ns4" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/4", prefix = "ns4" )
 @XmlBinding( path = "ns4:a2" )
 
 public interface TestModelElementA2 extends TestModelElementA
