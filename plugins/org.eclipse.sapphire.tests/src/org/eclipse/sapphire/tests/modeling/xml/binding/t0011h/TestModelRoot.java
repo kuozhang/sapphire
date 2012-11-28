@@ -34,11 +34,11 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
 @XmlNamespaces
 (
     {
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/0011h/1", prefix = "" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/0011h/2", prefix = "ns2" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/0011h/3", prefix = "ns3" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/0011h/4", prefix = "ns4" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/0011h/5", prefix = "ns5" )
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011h/1", prefix = "" ),
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011h/2", prefix = "ns2" ),
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011h/3", prefix = "ns3" ),
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011h/4", prefix = "ns4" ),
+        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011h/5", prefix = "ns5" )
     }
 )
 

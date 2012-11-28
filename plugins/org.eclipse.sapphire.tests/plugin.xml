@@ -124,6 +124,56 @@
     </catalogContribution>
     <catalogContribution>
       <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011e/1"
+        uri="schemas/xml/binding/0011e1.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011e/2"
+        uri="schemas/xml/binding/0011e2.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011e/3"
+        uri="schemas/xml/binding/0011e3.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011e/4"
+        uri="schemas/xml/binding/0011e4.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011e/5"
+        uri="schemas/xml/binding/0011e5.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011h/1"
+        uri="schemas/xml/binding/0011h1.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011h/2"
+        uri="schemas/xml/binding/0011h2.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011h/3"
+        uri="schemas/xml/binding/0011h3.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011h/4"
+        uri="schemas/xml/binding/0011h4.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/binding/0011h/5"
+        uri="schemas/xml/binding/0011h5.xsd"/>
+    </catalogContribution>
+    <catalogContribution>
+      <system
         systemId="TestXmlDtd0003.dtd"
         uri="schemas/xml/dtd/0003.dtd"/>
     </catalogContribution>
