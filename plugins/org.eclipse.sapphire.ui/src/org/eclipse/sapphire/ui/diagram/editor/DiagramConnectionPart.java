@@ -101,7 +101,6 @@ public class DiagramConnectionPart
         {
             this.labelFunctionResult = initExpression
             ( 
-                this.modelElement,
                 labelDef.getText().getContent(), 
                 String.class,
                 null,
@@ -120,7 +119,6 @@ public class DiagramConnectionPart
         
         this.idFunctionResult = initExpression
         ( 
-            this.modelElement,
             this.bindingDef.getInstanceId().getContent(), 
             String.class,
             null,

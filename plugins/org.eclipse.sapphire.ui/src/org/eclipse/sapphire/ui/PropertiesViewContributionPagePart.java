@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributionPageDef;
 
@@ -30,12 +29,10 @@ public final class PropertiesViewContributionPagePart extends FormPart
     {
         super.init();
 
-        final IModelElement element = getModelElement();
         final IPropertiesViewContributionPageDef def = definition();
         
         this.labelFunctionResult = initExpression
         (
-            element,
             def.getLabel().getContent(), 
             String.class,
             null,
@@ -48,7 +45,7 @@ public final class PropertiesViewContributionPagePart extends FormPart
             }
         );
         
-        this.imageManager = new ImageManager( element, def.getImage().getContent() );
+        this.imageManager = new ImageManager( def.getImage().getContent() );
     }
 
     @Override

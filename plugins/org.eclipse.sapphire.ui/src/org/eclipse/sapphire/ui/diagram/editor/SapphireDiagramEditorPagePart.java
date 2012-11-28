@@ -190,7 +190,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             FunctionResult imageResult = initExpression
             ( 
-                this.modelElement,
                 connectionDef.getToolPaletteImage().getContent(),
                 ImageData.class,
                 null,

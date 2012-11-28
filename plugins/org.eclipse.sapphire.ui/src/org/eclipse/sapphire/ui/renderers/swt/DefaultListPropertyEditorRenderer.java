@@ -414,7 +414,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 
                 final FunctionResult labelFunctionResult = part.initExpression
                 (
-                    element,
                     childPropertyEditorDef.getLabel().getContent(), 
                     String.class,
                     Literal.create( memberProperty.getLabel( false, CapitalizationType.NO_CAPS, true ) ),

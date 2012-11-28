@@ -40,7 +40,6 @@ public final class SapphireWizardPart extends SapphirePart
         
         this.imageFunctionResult = initExpression
         (
-            element,
             def.getImage().getContent(),
             ImageData.class,
             null,

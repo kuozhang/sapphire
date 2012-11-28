@@ -22,7 +22,6 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -56,7 +55,6 @@ public final class HtmlPanelPart extends FormComponentPart
     {
         super.init();
         
-        final IModelElement element = getModelElement();
         this.def = (HtmlPanelDef) this.definition;
 
         if( this.def.getContentSourceType().getContent() == HtmlContentSourceType.EMBEDDED )
@@ -71,7 +69,6 @@ public final class HtmlPanelPart extends FormComponentPart
     
             this.contentFunctionResult = initExpression
             (
-                element,
                 contentFunction, 
                 String.class,
                 null,
@@ -88,7 +85,6 @@ public final class HtmlPanelPart extends FormComponentPart
         {
             this.urlFunctionResult = initExpression
             (
-                element,
                 this.def.getContentUrl().getContent(), 
                 String.class,
                 null,

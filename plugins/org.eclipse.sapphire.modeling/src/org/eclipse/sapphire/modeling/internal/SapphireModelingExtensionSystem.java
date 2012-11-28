@@ -29,11 +29,14 @@ import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.TypeCast;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ServiceFactoryProxy;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.SetFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,6 +59,7 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_FACTORY = "factory";
     private static final String EL_IMPL = "impl";
     private static final String EL_ID = "id";
+    private static final String EL_OPERAND_COUNT = "operand-count";
     private static final String EL_OVERRIDES = "overrides";
     private static final String EL_CONTEXT = "context";
     private static final String EL_SOURCE = "source";
@@ -64,7 +68,7 @@ public final class SapphireModelingExtensionSystem
 
     private static boolean initialized = false;
     private static List<ServiceFactoryProxy> serviceFactories;
-    private static Map<String,FunctionFactory> functionFactories;
+    private static Map<String,List<FunctionFactory>> functionFactories;
     private static List<TypeCast> typeCasts;
 
     public static List<ServiceFactoryProxy> getServiceFactories()
@@ -78,14 +82,31 @@ public final class SapphireModelingExtensionSystem
     {
         initialize();
 
-        final FunctionFactory factory = functionFactories.get( name.toLowerCase() );
+        final List<FunctionFactory> factories = functionFactories.get( name.toLowerCase() );
 
-        if( factory != null )
+        if( factories != null )
         {
-            return factory.create( operands );
+            for( FunctionFactory factory : factories )
+            {
+                final Function function = factory.create( operands );
+                
+                if( function != null )
+                {
+                    return function;
+                }
+            }
+            
+            if( operands.length == 1 )
+            {
+            	throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt1, name ) );
+            }
+            else
+            {
+            	throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt, name, operands.length ) );
+            }
         }
-
-        return null;
+        
+        throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
     }
     
     public static List<TypeCast> getTypeCasts()
@@ -100,7 +121,7 @@ public final class SapphireModelingExtensionSystem
         {
             initialized = true;
             serviceFactories = new ArrayList<ServiceFactoryProxy>();
-            functionFactories = new HashMap<String,FunctionFactory>();
+            functionFactories = new HashMap<String,List<FunctionFactory>>();
             typeCasts = new ArrayList<TypeCast>();
 
             for( final ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
@@ -128,8 +149,8 @@ public final class SapphireModelingExtensionSystem
                                     final String id = value( el, EL_ID );
                                     final Class<? extends Service> serviceType = context.findClass( value( el, EL_TYPE ) );
                                     final Class<? extends ServiceFactory> serviceFactory = context.findClass( value( el, EL_FACTORY ) );
-                                    final Set<String> contexts = set( el, EL_CONTEXT );
-                                    final Set<String> overrides = set( el, EL_OVERRIDES );
+                                    final Set<String> contexts = values( el, EL_CONTEXT );
+                                    final Set<String> overrides = values( el, EL_OVERRIDES );
                                     
                                     if( serviceType == null || serviceFactory == null )
                                     {
@@ -142,10 +163,16 @@ public final class SapphireModelingExtensionSystem
                                 }
                                 else if( elname.equals( EL_FUNCTION ) )
                                 {
-                                    final String name = value( el, EL_NAME );
+                                    final String name = value( el, EL_NAME ).toLowerCase();
                                     final Class<? extends Function> impl = context.findClass( value( el, EL_IMPL ) );
-
-                                    functionFactories.put( name.toLowerCase(), new FunctionFactory( impl ) );
+                                    final Set<Integer> compatibleOperandCounts = integers( el, EL_OPERAND_COUNT );
+                                    
+                                    final ListFactory<FunctionFactory> factories = ListFactory.start();
+                                    
+                                    factories.add( functionFactories.get( name ) );
+                                    factories.add( new FunctionFactory( impl, compatibleOperandCounts ) );
+                                    
+                                    functionFactories.put( name, factories.result() );
                                 }
                                 else if( elname.equals( EL_TYPE_CAST ) )
                                 {
@@ -254,8 +281,8 @@ public final class SapphireModelingExtensionSystem
         throw new InvalidExtensionException();
     }
 
-    private static Set<String> set( final Element root,
-                                    final String entryElementName )
+    private static Set<String> values( final Element root,
+                                       final String entryElementName )
     {
         final SetFactory<String> factory = SetFactory.start();
         final NodeList nodes = root.getChildNodes();
@@ -273,6 +300,30 @@ public final class SapphireModelingExtensionSystem
                     factory.add( text );
                 }
             }
+        }
+        
+        return factory.result();
+    }
+    
+    private static Set<Integer> integers( final Element root,
+                                          final String entryElementName )
+    {
+        final SetFactory<Integer> factory = SetFactory.start();
+        
+        for( String string : values( root, entryElementName ) )
+        {
+            final int integer;
+            
+            try
+            {
+                integer = Integer.parseInt( string );
+            }
+            catch( NumberFormatException e )
+            {
+                throw new InvalidExtensionException();
+            }
+            
+            factory.add( integer );
         }
         
         return factory.result();
@@ -377,10 +428,13 @@ public final class SapphireModelingExtensionSystem
     {
         private final Class<? extends Function> functionClass;
         private boolean functionInstantiationFailed;
+        private final Set<Integer> compatibleOperandCounts;
 
-        public FunctionFactory( final Class<? extends Function> functionClass )
+        public FunctionFactory( final Class<? extends Function> functionClass,
+                                final Set<Integer> compatibleOperandCounts )
         {
             this.functionClass = functionClass;
+            this.compatibleOperandCounts = compatibleOperandCounts;
         }
 
         public Function create( final Function... operands )
@@ -389,16 +443,19 @@ public final class SapphireModelingExtensionSystem
 
             if( ! this.functionInstantiationFailed )
             {
-                try
+                if( this.compatibleOperandCounts.isEmpty() || this.compatibleOperandCounts.contains( operands.length ) )
                 {
-                    function = this.functionClass.newInstance();
-                    function.init( operands );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                    function = null;
-                    this.functionInstantiationFailed = true;
+                    try
+                    {
+                        function = this.functionClass.newInstance();
+                        function.init( operands );
+                    }
+                    catch( Exception e )
+                    {
+                        LoggingService.log( e );
+                        function = null;
+                        this.functionInstantiationFailed = true;
+                    }
                 }
             }
 
@@ -468,6 +525,18 @@ public final class SapphireModelingExtensionSystem
             }
             
             return this.implInstance.evaluate( context, requestor, value, target );
+        }
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String undefinedFunctionMessage;
+        public static String undefinedFunctionMessageExt;
+        public static String undefinedFunctionMessageExt1;
+        
+        static
+        {
+            initializeMessages( SapphireModelingExtensionSystem.class.getName(), Resources.class );
         }
     }
 

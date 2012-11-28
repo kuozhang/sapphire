@@ -184,7 +184,6 @@ public final class MasterDetailsContentNode
         
         this.labelFunctionResult = initExpression
         ( 
-            this.modelElement, 
             this.definition.getLabel().getContent(),
             String.class,
             null,
@@ -202,7 +201,7 @@ public final class MasterDetailsContentNode
         final Literal defaultImageLiteral = Literal.create( ( this.definition.getChildNodes().isEmpty() ? IMG_LEAF_NODE : IMG_CONTAINER_NODE ) );
         final Function imageFunction = this.definition.getImage().getContent();
         
-        this.imageManager = new ImageManager( this.modelElement, imageFunction, defaultImageLiteral );
+        this.imageManager = new ImageManager( imageFunction, defaultImageLiteral );
         
         // Sections and Child Nodes
         
@@ -268,7 +267,7 @@ public final class MasterDetailsContentNode
             }
             else if( entry instanceof MasterDetailsContentNodeFactoryDef )
             {
-                final NodeFactory factory = new NodeFactory( getLocalModelElement(), (MasterDetailsContentNodeFactoryDef) entry, params );
+                final NodeFactory factory = new NodeFactory( (MasterDetailsContentNodeFactoryDef) entry, params );
                 this.rawChildren.add( factory );
             }
             else
@@ -834,7 +833,6 @@ public final class MasterDetailsContentNode
     
     public final class NodeFactory
     {
-        private final IModelElement element;
         private final ModelProperty property;
         private final MasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
@@ -843,11 +841,11 @@ public final class MasterDetailsContentNode
         private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
         private final ListenerContext listeners = new ListenerContext();
         
-        public NodeFactory( final IModelElement element,
-                            final MasterDetailsContentNodeFactoryDef definition,
+        public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
         {
-            this.element = element;
+            final IModelElement element = getLocalModelElement();
+            
             this.property = resolve( element, definition.getProperty().getContent(), params );
             this.definition = definition;
             this.params = params;
@@ -859,11 +857,10 @@ public final class MasterDetailsContentNode
             
             this.visibleWhenFunctionResult = initExpression
             (
-                this.element,
                 AndFunction.create
                 (
                     definition.getVisibleWhen().getContent(),
-                    createVersionCompatibleFunction( this.element, this.property )
+                    createVersionCompatibleFunction( element, this.property )
                 ),
                 Boolean.class,
                 Literal.TRUE,
@@ -938,15 +935,16 @@ public final class MasterDetailsContentNode
         
         protected List<IModelElement> elements()
         {
+            final IModelElement element = getLocalModelElement();
             final ListFactory<IModelElement> elementsListFactory = ListFactory.start();
             
             if( this.property instanceof ListProperty )
             {
-                elementsListFactory.add( this.element.read( (ListProperty) this.property ) );
+                elementsListFactory.add( element.read( (ListProperty) this.property ) );
             }
             else
             {
-                elementsListFactory.add( this.element.read( (ElementProperty) this.property ).element() );
+                elementsListFactory.add( element.read( (ElementProperty) this.property ).element() );
             }
             
             return elementsListFactory.result();

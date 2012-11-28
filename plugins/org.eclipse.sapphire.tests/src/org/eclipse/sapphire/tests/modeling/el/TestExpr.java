@@ -15,6 +15,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
@@ -65,17 +66,24 @@ public abstract class TestExpr extends SapphireTestCase
                                                 final String expr,
                                                 final String expected )
     {
-        final FunctionResult result = ExpressionLanguageParser.parse( expr ).evaluate( context );
-        
         try
         {
-            final Status status = result.status();
-            assertEquals( Status.Severity.ERROR, status.severity() );
-            assertEquals( expected, status.message() );
+            final FunctionResult result = ExpressionLanguageParser.parse( expr ).evaluate( context );
+            
+            try
+            {
+                final Status status = result.status();
+                assertEquals( Status.Severity.ERROR, status.severity() );
+                assertEquals( expected, status.message() );
+            }
+            finally
+            {
+                result.dispose();
+            }
         }
-        finally
+        catch( FunctionException e )
         {
-            result.dispose();
+            assertEquals( expected, e.getMessage() );
         }
     }
     

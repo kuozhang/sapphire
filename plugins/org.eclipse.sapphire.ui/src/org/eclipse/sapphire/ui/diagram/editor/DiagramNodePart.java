@@ -75,7 +75,6 @@ public class DiagramNodePart
         
         this.idFunctionResult = initExpression
         ( 
-            this.modelElement,
             this.definition.getInstanceId().getContent(), 
             String.class,
             null,

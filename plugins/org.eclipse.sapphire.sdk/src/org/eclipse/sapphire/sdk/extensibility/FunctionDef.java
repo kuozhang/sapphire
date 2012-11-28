@@ -16,6 +16,8 @@ import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
@@ -25,12 +27,15 @@ import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
@@ -58,6 +63,46 @@ public interface FunctionDef extends IModelElement
     
     Value<String> getName();
     void setName( String value );
+    
+    // *** OperandCounts ***
+    
+    @Label( standard = "operand count" )
+    @GenerateImpl
+    
+    interface OperandCount extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( OperandCount.class );
+        
+        // *** Count ***
+        
+        @Type( base = Integer.class )
+        @Label( standard = "operand count" )
+        @Required
+        @NoDuplicates
+        @NumericRange( min = "0" )
+        @XmlBinding( path = "" )
+        
+        ValueProperty PROP_COUNT = new ValueProperty( TYPE, "Count" );
+        
+        Value<Integer> getCount();
+        void setCount( String value );
+        void setCount( Integer value );
+    }
+    
+    @Type( base = OperandCount.class )
+    @Label( standard = "operand counts" )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "operand-count", type = OperandCount.class ) )
+    
+    @Documentation
+    (
+        content = "A function can be restricted to apply only to a specified number of operands. If not restricted, the function will " +
+                  "apply for any number of operands. The function is responsible for throwing a FunctionExeption during evaluation " +
+                  "if a problem with the operands is detected."
+    )
+    
+    ListProperty PROP_OPERAND_COUNTS = new ListProperty( TYPE, "OperandCounts" );
+    
+    ModelElementList<OperandCount> getOperandCounts();
     
     // *** Description ***
     

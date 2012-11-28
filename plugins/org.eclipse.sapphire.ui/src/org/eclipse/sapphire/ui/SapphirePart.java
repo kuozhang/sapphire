@@ -47,8 +47,6 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
-import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
-import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.Service;
@@ -180,7 +178,6 @@ public abstract class SapphirePart implements ISapphirePart
         
         this.visibilityFunctionResult = initExpression
         (
-            getLocalModelElement(),
             initVisibleWhenFunction(), 
             Boolean.class,
             Literal.TRUE,
@@ -208,15 +205,30 @@ public abstract class SapphirePart implements ISapphirePart
         // The default implement doesn't do anything.
     }
     
-    public final FunctionResult initExpression( final IModelElement contextModelElement,
+    public final FunctionResult initExpression( final Function function,
+                                                final Class<?> expectedType,
+                                                final Function defaultValue )
+    {
+        return initExpression( getLocalModelElement(), function, expectedType, defaultValue, null );
+    }
+    
+    public final FunctionResult initExpression( final Function function,
+                                                final Class<?> expectedType,
+                                                final Function defaultValue,
+                                                final Runnable refreshOp )
+    {
+        return initExpression( getLocalModelElement(), function, expectedType, defaultValue, refreshOp );
+    }
+    
+    public final FunctionResult initExpression( final IModelElement element,
                                                 final Function function,
                                                 final Class<?> expectedType,
                                                 final Function defaultValue )
     {
-        return initExpression( contextModelElement, function, expectedType, defaultValue, null );
+        return initExpression( function, expectedType, defaultValue, null );
     }
     
-    public final FunctionResult initExpression( final IModelElement contextModelElement,
+    public final FunctionResult initExpression( final IModelElement element,
                                                 final Function function,
                                                 final Class<?> expectedType,
                                                 final Function defaultValue,
@@ -225,22 +237,7 @@ public abstract class SapphirePart implements ISapphirePart
         Function f = ( function == null ? Literal.NULL : function );
         f = FailSafeFunction.create( f, Literal.create( expectedType ), defaultValue );
         
-        final FunctionContext context = new ModelElementFunctionContext( contextModelElement, this.definition.adapt( LocalizationService.class ) )
-        {
-            @Override
-            public FunctionResult property( final Object element,
-                                            final String name )
-            {
-                if( name.equalsIgnoreCase( "params" ) )
-                {
-                    return Literal.create( SapphirePart.this.params ).evaluate( this );
-                }
-
-                return super.property( element, name );
-            }
-        };
-        
-        final FunctionResult fr = f.evaluate( context );
+        final FunctionResult fr = f.evaluate( new PartFunctionContext( this, element ) );
         
         if( refreshOp != null )
         {
@@ -839,7 +836,6 @@ public abstract class SapphirePart implements ISapphirePart
     
     protected final class ImageManager
     {
-        private final IModelElement element;
         private final Function imageFunction;
         private final Function defaultValueFunction;        
         private boolean initialized;
@@ -851,17 +847,14 @@ public abstract class SapphirePart implements ISapphirePart
         private ImageDescriptor warning;
         private ImageDescriptor current;
         
-        public ImageManager( final IModelElement element,
-                             final Function imageFunction )
+        public ImageManager( final Function imageFunction )
         {
-            this( element, imageFunction, Literal.NULL );
+            this( imageFunction, Literal.NULL );
         }
         
-        public ImageManager( final IModelElement element,
-                             final Function imageFunction,
+        public ImageManager( final Function imageFunction,
                              final Function defaultValueFunction )
         {
-            this.element = element;
             this.imageFunction = imageFunction;
             this.defaultValueFunction = defaultValueFunction;
         }
@@ -874,7 +867,6 @@ public abstract class SapphirePart implements ISapphirePart
                 
                 this.imageFunctionResult = initExpression
                 (
-                    this.element,
                     this.imageFunction,
                     ImageData.class,
                     this.defaultValueFunction,

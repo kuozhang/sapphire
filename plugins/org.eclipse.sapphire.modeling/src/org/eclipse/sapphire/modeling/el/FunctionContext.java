@@ -163,14 +163,7 @@ public class FunctionContext
     public Function function( final String name,
                               final List<Function> arguments )
     {
-        final Function function = SapphireModelingExtensionSystem.createFunction( name, arguments.toArray( new Function[ arguments.size() ] ) );
-        
-        if( function != null )
-        {
-            return function;
-        }
-        
-        throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
+        return SapphireModelingExtensionSystem.createFunction( name, arguments.toArray( new Function[ arguments.size() ] ) );
     }
     
     public LocalizationService getLocalizationService()
@@ -182,7 +175,6 @@ public class FunctionContext
     {
         public static String undefinedPropertyMessage;
         public static String undefinedPropertyMessageExt;
-        public static String undefinedFunctionMessage;
         public static String cannotReadPropertiesFromNull;
         public static String indexOutOfBounds;
         

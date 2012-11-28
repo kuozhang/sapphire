@@ -624,6 +624,8 @@
     </service>
     <function>
         <name>Enabled</name>
+        <operand-count>1</operand-count>
+        <operand-count>2</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.EnabledFunction</impl>
         <description>Determines if a property is enabled. Can be used either with two arguments (element and property name) or with a single property name argument. In the single argument form, the context element is used.</description>
     </function>

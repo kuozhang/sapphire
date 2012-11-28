@@ -583,4 +583,10 @@
         <context>Sapphire.Part</context>
         <description>Produces a problem-annotated traversal order through the content outline, which can be used to find the next error or warning from any location in the content outline. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
     </service>
+    <function>
+        <name>Enabled</name>
+        <operand-count>0</operand-count>
+        <impl>org.eclipse.sapphire.ui.internal.PropertyEditorEnabledFunction</impl>
+        <description>Determines if the property associated with the property editor is enabled. Can only be used in the context of a property editor.</description>
+    </function>
 </extension>

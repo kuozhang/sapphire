@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -47,7 +46,6 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
     {
         super.init();
         
-        final IModelElement element = getModelElement();
         final MasterDetailsEditorPageDef def = definition();
 
         try
@@ -62,7 +60,6 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
         
         this.outlineHeaderTextFunctionResult = initExpression
         (
-            element,
             def.getOutlineHeaderText().getContent(),
             String.class,
             null,

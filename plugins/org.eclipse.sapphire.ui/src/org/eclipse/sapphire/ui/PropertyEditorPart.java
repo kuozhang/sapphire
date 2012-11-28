@@ -289,7 +289,6 @@ public final class PropertyEditorPart extends FormComponentPart
         
         this.labelFunctionResult = initExpression
         (
-            getLocalModelElement(),
             propertyEditorPartDef.getLabel().getContent(), 
             String.class,
             Literal.create( this.property.getLabel( false, CapitalizationType.NO_CAPS, true ) ),

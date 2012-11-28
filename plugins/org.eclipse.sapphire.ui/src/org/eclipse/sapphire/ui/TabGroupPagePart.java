@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
@@ -37,12 +36,10 @@ public final class TabGroupPagePart extends FormPart
     {
         super.init();
 
-        final IModelElement element = getModelElement();
         final TabGroupPageDef def = definition();
         
         this.labelFunctionResult = initExpression
         (
-            element,
             def.getLabel().getContent(), 
             String.class,
             Literal.create( "tab" ),
@@ -55,7 +52,7 @@ public final class TabGroupPagePart extends FormPart
             }
         );
         
-        this.imageManager = new ImageManager( element, def.getImage().getContent(), Literal.create( IMG_TAB_GROUP_PAGE ) );
+        this.imageManager = new ImageManager( def.getImage().getContent(), Literal.create( IMG_TAB_GROUP_PAGE ) );
     }
 
     @Override

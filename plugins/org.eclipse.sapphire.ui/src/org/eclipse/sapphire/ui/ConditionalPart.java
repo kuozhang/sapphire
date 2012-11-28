@@ -42,7 +42,6 @@ public final class ConditionalPart extends SapphirePart
         
         this.conditionFunctionResult = initExpression
         (
-            getModelElement(),
             this.def.getCondition().getContent(), 
             Boolean.class,
             Literal.FALSE,

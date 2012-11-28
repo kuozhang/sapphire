@@ -77,8 +77,8 @@ public final class TestExpr0015 extends TestExpr
         testForExpectedValue( context, "${ Enabled( null, 'Value' ) }", null );
         testForExpectedValue( context, "${ Enabled( null, null ) }", null );
         
-        testForExpectedError( context, "${ Enabled() }", "Enabled() function does not support 0 arguments." );
-        testForExpectedError( context, "${ Enabled( null, null, null ) }", "Enabled() function does not support 3 arguments." );
+        testForExpectedError( context, "${ Enabled() }", "Context property editor not found." );
+        testForExpectedError( context, "${ Enabled( null, null, null ) }", "Function \"Enabled\" does not support 3 operands." );
         
         testForExpectedError( new FunctionContext(), "${ Enabled( 'Abc') }", "Context element not found." );
     }

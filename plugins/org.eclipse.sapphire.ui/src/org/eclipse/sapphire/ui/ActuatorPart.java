@@ -30,7 +30,6 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -85,15 +84,12 @@ public final class ActuatorPart extends SapphirePart
         this.actionId = def.getActionId().getContent();
         this.actionHandlerId = def.getActionHandlerId().getContent();
         
-        final IModelElement element = getLocalModelElement();
-        
         this.showLabel = def.getShowLabel().getContent();
         
         if( this.showLabel )
         {
             this.labelFunctionResult = initExpression
             (
-                element,
                 def.getLabel().getContent(), 
                 String.class,
                 null,
@@ -117,7 +113,6 @@ public final class ActuatorPart extends SapphirePart
             {
                 final FunctionResult imageFunctionResult = initExpression
                 (
-                    element,
                     imageReference.getImage().getContent(),
                     ImageData.class,
                     null,

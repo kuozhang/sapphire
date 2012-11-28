@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
@@ -44,12 +43,10 @@ public class SapphireEditorPagePart
     {
         super.init();
         
-        final IModelElement element = getModelElement();
         final EditorPageDef def = definition();
         
         this.pageHeaderTextFunctionResult = initExpression
         (
-            element,
             def.getPageHeaderText().getContent(),
             String.class,
             null,
@@ -64,7 +61,6 @@ public class SapphireEditorPagePart
 
         this.pageHeaderImageFunctionResult = initExpression
         (
-            element,
             def.getPageHeaderImage().getContent(),
             ImageData.class,
             null,

@@ -190,7 +190,6 @@ public final class DiagramNodeTemplate extends SapphirePart
 
         this.toolPaletteImageFunctionResult = initExpression
         (
-        	this.modelElement,
             this.definition.getToolPaletteImage().getContent(),
             ImageData.class,
             null,

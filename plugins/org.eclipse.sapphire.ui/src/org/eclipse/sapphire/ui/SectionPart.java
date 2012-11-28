@@ -125,7 +125,6 @@ public class SectionPart extends CompositePart
         
         this.titleFunctionResult = initExpression
         (
-            getModelElement(),
             def.getLabel().getContent(), 
             String.class,
             null,
@@ -146,7 +145,6 @@ public class SectionPart extends CompositePart
 
         this.descriptionFunctionResult = initExpression
         (
-            getModelElement(),
             def.getDescription().getContent(), 
             String.class,
             null,

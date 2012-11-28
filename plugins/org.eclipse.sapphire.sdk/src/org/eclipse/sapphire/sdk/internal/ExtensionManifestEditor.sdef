@@ -15,9 +15,9 @@
 
     <import>
         <package>org.eclipse.sapphire.sdk.internal</package>
+        <package>org.eclipse.sapphire.sdk.extensibility</package>
         <package>org.eclipse.sapphire.ui.renderers.swt</package>
         <definition>org.eclipse.sapphire.sdk.Common</definition>
-        <package>org.eclipse.sapphire.sdk.extensibility</package>
     </import>
 
     <editor-page>
@@ -92,6 +92,13 @@
                             <label>function</label>
                             <content>
                                 <property-editor>Name</property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>show.header</name>
+                                        <value>false</value>
+                                    </hint>
+                                    <property>OperandCounts</property>
+                                </property-editor>
                                 <property-editor>ImplClass</property-editor>
                                 <property-editor>
                                     <property>Description</property>

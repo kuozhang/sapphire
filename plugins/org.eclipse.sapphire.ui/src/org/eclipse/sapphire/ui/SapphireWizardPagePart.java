@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.WizardPageDef;
@@ -31,12 +30,10 @@ public final class SapphireWizardPagePart extends CompositePart
     {
         super.init();
         
-        final IModelElement element = getModelElement();
         final WizardPageDef def = definition();
         
         this.imageFunctionResult = initExpression
         (
-            element,
             def.getImage().getContent(),
             ImageData.class,
             null,
