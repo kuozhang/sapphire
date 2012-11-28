@@ -131,9 +131,12 @@ public final class ListFactory<E>
     
     public ListFactory<E> add( final E... elements )
     {
-        for( E element : elements )
+        if( elements != null )
         {
-            add( element );
+            for( E element : elements )
+            {
+                add( element );
+            }
         }
         
         return this;
@@ -141,9 +144,12 @@ public final class ListFactory<E>
 
     public ListFactory<E> add( final Collection<E> elements )
     {
-        for( E element : elements )
+        if( elements != null )
         {
-            add( element );
+            for( E element : elements )
+            {
+                add( element );
+            }
         }
         
         return this;
