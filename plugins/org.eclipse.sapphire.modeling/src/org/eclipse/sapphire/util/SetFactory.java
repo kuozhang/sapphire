@@ -131,20 +131,26 @@ public final class SetFactory<E>
     
     public SetFactory<E> add( final E... elements )
     {
-        for( E element : elements )
-        {
-            add( element );
-        }
+    	if( elements != null )
+    	{
+	        for( E element : elements )
+	        {
+	            add( element );
+	        }
+    	}
         
         return this;
     }
     
     public SetFactory<E> add( final Collection<E> elements )
     {
-        for( E element : elements )
-        {
-            add( element );
-        }
+    	if( elements != null )
+    	{
+	        for( E element : elements )
+	        {
+	            add( element );
+	        }
+    	}
         
         return this;
     }

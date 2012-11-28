@@ -131,10 +131,13 @@ public final class MapFactory<K,V>
     
     public MapFactory<K,V> add( final Map<K,V> map )
     {
-        for( Map.Entry<K,V> entry : map.entrySet() )
-        {
-            add( entry.getKey(), entry.getValue() );
-        }
+    	if( map != null )
+    	{
+	        for( Map.Entry<K,V> entry : map.entrySet() )
+	        {
+	            add( entry.getKey(), entry.getValue() );
+	        }
+    	}
         
         return this;
     }

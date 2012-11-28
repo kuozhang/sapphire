@@ -151,20 +151,26 @@ public final class SortedSetFactory<E>
     
     public SortedSetFactory<E> add( final E... elements )
     {
-        for( E element : elements )
-        {
-            add( element );
-        }
+    	if( elements != null )
+    	{
+	        for( E element : elements )
+	        {
+	            add( element );
+	        }
+    	}
         
         return this;
     }
     
     public SortedSetFactory<E> add( final Collection<E> elements )
     {
-        for( E element : elements )
-        {
-            add( element );
-        }
+    	if( elements != null )
+    	{
+	        for( E element : elements )
+	        {
+	            add( element );
+	        }
+    	}
         
         return this;
     }
