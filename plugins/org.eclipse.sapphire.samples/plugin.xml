@@ -289,6 +289,20 @@
       name="Schema Editor"
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
+
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.sqlschema.CreateSqlSchemaEditorWizard"
+      category="Sapphire/Samples"
+      name="SQL Schema Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create an SQL schema editor.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.sqlschema.CreateSqlSchemaEditorWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.sqlschema.SqlSchemaEditor"/>
+      </class>
+    </wizard>
+  </extension>
   <!-- 
     *************************
     * Purchase Order Sample *
