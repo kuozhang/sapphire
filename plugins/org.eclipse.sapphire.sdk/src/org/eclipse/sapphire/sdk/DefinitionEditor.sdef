@@ -1537,25 +1537,13 @@
                         <node-include>PropertiesViewContributionNode</node-include>
                         <node>
                             <label>shape</label>
-                            <node-factory>
-                                <property>Shape</property>
-                                <case>
-                                    <model-element-type>TextDef</model-element-type>
-                                    <node-include>TextNode</node-include>
-                                    <label>text</label>
-                                </case>
-                                <case>
-                                    <model-element-type>ImageDef</model-element-type>
-                                    <label>image</label>
-                                    <node-include>ImageNode</node-include>
-                                </case>
-                                <case>
-                                    <model-element-type>RectangleDef</model-element-type>
-                                    <label>Rectangle</label>
-                                    <node-include>RectangleNode</node-include>
-                    				<node-include>PropertiesViewContributionNode</node-include>
-                                </case>
-                            </node-factory>
+                            <node-include>
+                                <param>
+                                    <name>Property</name>
+                                    <value>Shape</value>
+                                </param>
+                                <part>DiagramShapeNodeFactory</part>
+                            </node-include>
                         </node>
                     </case>
                 </node-factory>
@@ -1736,292 +1724,259 @@
             <node-include>ServicesNode</node-include>
         </case>
     </node-factory>
-    <node>
-        <id>TextNode</id>
-        <section>
-            <label>text attributes</label>
-            <content>
-                <property-editor>Content</property-editor>
-                <property-editor>Color</property-editor>
-                <property-editor>VisibleWhen</property-editor>
-                <with>
-                    <path>Font</path>
-                    <label>font</label>
-                    <panel>
-                        <key>FontDef</key>
-                        <content>
-                            <property-editor>Name</property-editor>
-                            <property-editor>Size</property-editor>
-                            <property-editor>Bold</property-editor>
-                            <property-editor>Italic</property-editor>
-                        </content>
-                    </panel>
-                </with>
-            </content>
-        </section>
-        <node>
-            <label>layout constraint</label>
+    <node-factory>
+        <id>DiagramShapeNodeFactory</id>
+        <property>@{Property}</property>
+        <case>
+            <model-element-type>TextDef</model-element-type>
+            <label>Text</label>
             <section>
-                <label>layout constraint</label>
                 <content>
-                    <include>ShapeLayoutConstraintForm</include>
-                </content>
-            </section>
-        </node>
-        <label>Text Properties</label>
-    </node>
-    <node>
-        <id>ImageNode</id>
-        <section>
-            <label>image attributes</label>
-            <content>
-                <property-editor>Path</property-editor>
-                <property-editor>Resizable</property-editor>
-                <property-editor>ResizeHorizontally</property-editor>
-                <property-editor>ResizeVertically</property-editor>
-                <property-editor>VisibleWhen</property-editor>
-            </content>
-        </section>
-        <node>
-            <label>layout constraint</label>
-            <section>
-                <label>layout constraint</label>
-                <content>
-                    <include>ShapeLayoutConstraintForm</include>
-                </content>
-            </section>
-        </node>
-        <label>Image Properties</label>
-    </node>
-    <node>
-        <id>ValidationMarkerNode</id>
-        <label>Validation Marker Properties</label>
-        <section>
-            <label>validation marker attributes</label>
-            <content>
-                <property-editor>Size</property-editor>
-            </content>
-        </section>
-        <node>
-            <label>layout constraint</label>
-            <section>
-                <label>layout constraint</label>
-                <content>
-                    <include>ShapeLayoutConstraintForm</include>
-                </content>
-            </section>
-        </node>
-    </node>
-    <node>
-        <id>RectangleNode</id>
-        <label>Rectangle Properties</label>
-        <section>
-            <label>rectangle</label>
-            <content>
-                <property-editor>CornerRadius</property-editor>
-                <property-editor>ScrollHorizontally</property-editor>
-                <property-editor>ScrollVertically</property-editor>
-                <property-editor>VisibleWhen</property-editor>
-            </content>
-        </section>
-        <section>
-            <label>border</label>
-            <content>
-                <with>
-                    <path>Border</path>
-                    <label>border</label>
-                    <panel>
-                        <key>BorderDef</key>
-                        <content>
-                            <include>BorderForm</include>
-                        </content>
-                    </panel>
-                </with>
-                <spacer>
-                    <size>5</size>
-                </spacer>
-                <with>
-                    <path>TopBorder</path>
-                    <panel>
-                        <key>BorderDef</key>
-                        <content>
-                            <include>BorderForm</include>
-                        </content>
-                    </panel>
-                    <label>top border</label>
-                </with>
-                <spacer>
-                    <size>5</size>
-                </spacer>
-                <with>
-                    <path>BottomBorder</path>
-                    <panel>
-                        <key>BorderDef</key>
-                        <content>
-                            <include>BorderForm</include>
-                        </content>
-                    </panel>
-                    <label>bottom border</label>
-                </with>
-                <spacer>
-                    <size>5</size>
-                </spacer>
-                <with>
-                    <path>LeftBorder</path>
-                    <panel>
-                        <key>BorderDef</key>
-                        <content>
-                            <include>BorderForm</include>
-                        </content>
-                    </panel>
-                    <label>left border</label>
-                </with>
-                <spacer>
-                    <size>5</size>
-                </spacer>
-                <with>
-                    <path>RightBorder</path>
-                    <label>right border</label>
-                    <panel>
-                        <key>BorderDef</key>
-                        <content>
-                            <include>BorderForm</include>
-                        </content>
-                    </panel>
-                </with>
-            </content>
-        </section>
-        <section>
-            <label>background</label>
-            <content>
-                <with>
-                    <path>Background</path>
-                    <label>background</label>
-                    <panel>
-                        <key>SolidBackgroundDef</key>
-                        <content>
-                            <property-editor>Color</property-editor>
-                        </content>
-                    </panel>
-                    <panel>
-                        <key>GradientBackgroundDef</key>
-                        <content>
-                            <property-editor>GradientSegments</property-editor>
-                            <property-editor>Vertical</property-editor>
-                        </content>
-                    </panel>
-                </with>
-            </content>
-        </section>
-        <node>
-            <label>layout constraint</label>
-            <section>
-                <label>layout constraint</label>
-                <content>
-                    <include>ShapeLayoutConstraintForm</include>
-                </content>
-            </section>
-        </node>
-        
-        <node>
-            <label>layout</label>
-            <section>
-                <label>layout</label>
-                <content>
+                    <property-editor>Content</property-editor>
+                    <property-editor>Color</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                     <with>
-                        <path>Layout</path>
+                        <label>font</label>
                         <panel>
-                            <key>SequenceLayoutDef</key>
                             <content>
-                                <property-editor>Orientation</property-editor>
-                                <property-editor>Spacing</property-editor>
-                                <property-editor>Margin</property-editor>
+                                <property-editor>Name</property-editor>
+                                <property-editor>Size</property-editor>
+                                <property-editor>Bold</property-editor>
+                                <property-editor>Italic</property-editor>
                             </content>
+                            <key>FontDef</key>
                         </panel>
-                        <label>layout</label>
-                        <panel>
-                            <key>StackLayoutDef</key>
-                            <content>
-                                <label>Nothing to configure.</label>
-                            </content>
-                        </panel>
+                        <path>Font</path>
                     </with>
                 </content>
             </section>
-        </node>
-        <node>
-            <label>children</label>
-            <node-factory>
-                <property>Content</property>
-                <case>
-                    <model-element-type>TextDef</model-element-type>
-                    <label>Text</label>
-                    <node-include>TextNode</node-include>
-                </case>
-                <case>
-                    <model-element-type>ImageDef</model-element-type>
-                    <label>Image</label>
-                    <node-include>ImageNode</node-include>
-                </case>
-                <case>
-                    <model-element-type>ValidationMarkerDef</model-element-type>
-                    <node-include>ValidationMarkerNode</node-include>
-                    <label>Validation Marker</label>
-                </case>
-                <case>
-                    <model-element-type>RectangleDef</model-element-type>
-                    <label>Rectangle</label>
-                    <node-include>RectangleNode</node-include>
-                </case>
-                <case>
-                    <model-element-type>ShapeFactoryDef</model-element-type>
-                    <label>Shape Factory</label>
-                    <node-include>ShapeFactoryNode</node-include>
-                </case>            
-            </node-factory>
-        </node>
-    </node>
-    <node>
-        <id>ShapeFactoryNode</id>
-        <label>Shape Factory Properties</label>
-        <section>
-            <content>
-                <property-editor>Property</property-editor>
-                <property-editor>VisibleWhen</property-editor>
-            </content>
-            <label>shape factory properties</label>
-        </section>
-        <node-factory>
-            <property>ShapeFactoryCases</property>
-            <case>
-                <model-element-type>ShapeFactoryCaseDef</model-element-type>
-                <label>Shape Factory Case</label>
+            <node>
+                <label>layout constraint</label>
                 <section>
-                    <label>type</label>
                     <content>
-                        <property-editor>Type</property-editor>
+                        <include>ShapeLayoutConstraintForm</include>
                     </content>
+                    <label>layout constraint</label>
                 </section>
-                <node-factory>
-                    <property>Shape</property>
-                    <case>
-                        <model-element-type>TextDef</model-element-type>
-                        <node-include>TextNode</node-include>
-                        <label>Text</label>
-                    </case>
-                    <case>
-                        <model-element-type>ImageDef</model-element-type>
-                        <label>Image</label>
-                        <node-include>ImageNode</node-include>
-                    </case>
-                    <case>
-                        <model-element-type>RectangleDef</model-element-type>
-                        <label>Rectangle</label>
-                        <node-include>RectangleNode</node-include>
-                    </case>
-                </node-factory>
-            </case>
-        </node-factory>
-    </node>
+            </node>
+        </case>
+        <case>
+            <model-element-type>ImageDef</model-element-type>
+            <label>Image</label>
+            <section>
+                <content>
+                    <property-editor>Path</property-editor>
+                    <property-editor>Resizable</property-editor>
+                    <property-editor>ResizeHorizontally</property-editor>
+                    <property-editor>ResizeVertically</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>layout constraint</label>
+                <section>
+                    <content>
+                        <include>ShapeLayoutConstraintForm</include>
+                    </content>
+                    <label>layout constraint</label>
+                </section>
+            </node>
+        </case>
+        <case>
+            <model-element-type>ValidationMarkerDef</model-element-type>
+            <label>Validation Marker</label>
+            <section>
+                <content>
+                    <property-editor>Size</property-editor>
+                </content>
+            </section>
+            <node>
+                <label>layout constraint</label>
+                <section>
+                    <content>
+                        <include>ShapeLayoutConstraintForm</include>
+                    </content>
+                    <label>layout constraint</label>
+                </section>
+            </node>
+        </case>
+        <case>
+            <model-element-type>RectangleDef</model-element-type>
+            <label>Rectangle</label>
+            <section>
+                <label>rectangle</label>
+                <content>
+                    <property-editor>CornerRadius</property-editor>
+                    <property-editor>ScrollHorizontally</property-editor>
+                    <property-editor>ScrollVertically</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
+                </content>
+            </section>
+            <section>
+                <label>border</label>
+                <content>
+                    <with>
+                        <label>border</label>
+                        <panel>
+                            <content>
+                                <include>BorderForm</include>
+                            </content>
+                            <key>BorderDef</key>
+                        </panel>
+                        <path>Border</path>
+                    </with>
+                    <spacer>
+                        <size>5</size>
+                    </spacer>
+                    <with>
+                        <label>top border</label>
+                        <panel>
+                            <content>
+                                <include>BorderForm</include>
+                            </content>
+                            <key>BorderDef</key>
+                        </panel>
+                        <path>TopBorder</path>
+                    </with>
+                    <spacer>
+                        <size>5</size>
+                    </spacer>
+                    <with>
+                        <label>bottom border</label>
+                        <panel>
+                            <content>
+                                <include>BorderForm</include>
+                            </content>
+                            <key>BorderDef</key>
+                        </panel>
+                        <path>BottomBorder</path>
+                    </with>
+                    <spacer>
+                        <size>5</size>
+                    </spacer>
+                    <with>
+                        <label>left border</label>
+                        <panel>
+                            <content>
+                                <include>BorderForm</include>
+                            </content>
+                            <key>BorderDef</key>
+                        </panel>
+                        <path>LeftBorder</path>
+                    </with>
+                    <spacer>
+                        <size>5</size>
+                    </spacer>
+                    <with>
+                        <label>right border</label>
+                        <panel>
+                            <content>
+                                <include>BorderForm</include>
+                            </content>
+                            <key>BorderDef</key>
+                        </panel>
+                        <path>RightBorder</path>
+                    </with>
+                </content>
+            </section>
+            <section>
+                <label>background</label>
+                <content>
+                    <with>
+                        <label>background</label>
+                        <panel>
+                            <content>
+                                <property-editor>Color</property-editor>
+                            </content>
+                            <key>SolidBackgroundDef</key>
+                        </panel>
+                        <panel>
+                            <content>
+                                <property-editor>GradientSegments</property-editor>
+                                <property-editor>Vertical</property-editor>
+                            </content>
+                            <key>GradientBackgroundDef</key>
+                        </panel>
+                        <path>Background</path>
+                    </with>
+                </content>
+            </section>
+            <node>
+                <label>layout constraint</label>
+                <section>
+                    <content>
+                        <include>ShapeLayoutConstraintForm</include>
+                    </content>
+                    <label>layout constraint</label>
+                </section>
+            </node>
+            <node>
+                <label>layout</label>
+                <section>
+                    <content>
+                        <with>
+                            <label>layout</label>
+                            <panel>
+                                <content>
+                                    <property-editor>Orientation</property-editor>
+                                    <property-editor>Spacing</property-editor>
+                                    <property-editor>Margin</property-editor>
+                                </content>
+                                <key>SequenceLayoutDef</key>
+                            </panel>
+                            <panel>
+                                <content>
+                                    <label>Nothing to configure.</label>
+                                </content>
+                                <key>StackLayoutDef</key>
+                            </panel>
+                            <path>Layout</path>
+                        </with>
+                    </content>
+                    <label>layout</label>
+                </section>
+            </node>
+            <node>
+                <label>content</label>
+                <node-include>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                    <part>DiagramShapeNodeFactory</part>
+                </node-include>
+            </node>
+        </case>
+        <case>
+            <model-element-type>ShapeFactoryDef</model-element-type>
+            <label>Shape Factory</label>
+            <section>
+                <content>
+                    <property-editor>Property</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
+                </content>
+            </section>
+            <node-factory>
+                <case>
+                    <label>Shape Factory Case</label>
+                    <section>
+                        <content>
+                            <property-editor>Type</property-editor>
+                        </content>
+                        <label>type</label>
+                    </section>
+                    <model-element-type>ShapeFactoryCaseDef</model-element-type>
+                    <node-include>
+                        <param>
+                            <name>Property</name>
+                            <value>Shape</value>
+                        </param>
+                        <part>DiagramShapeNodeFactory</part>
+                    </node-include>
+                </case>
+                <property>ShapeFactoryCases</property>
+            </node-factory>
+        </case>
+    </node-factory>
 
 </definition>
