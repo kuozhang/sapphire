@@ -1938,12 +1938,12 @@
             </section>
             <node-factory>
                 <case>
-                    <label>Shape Factory Case</label>
+                    <label>Case${ Type != null ? Concat( &quot; : &quot;, Type ) : &quot;&quot; }</label>
                     <section>
                         <content>
                             <property-editor>Type</property-editor>
                         </content>
-                        <label>type</label>
+                        <label>case</label>
                     </section>
                     <model-element-type>ShapeFactoryCaseDef</model-element-type>
                     <node-include>
