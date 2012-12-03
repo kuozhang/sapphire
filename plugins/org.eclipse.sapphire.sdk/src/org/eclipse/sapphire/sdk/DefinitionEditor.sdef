@@ -171,38 +171,6 @@
         </content>
     </form>
     <form>
-        <id>ShapeLayoutConstraintForm</id>
-        <content>
-            <with>
-                <path>LayoutConstraint</path>
-                <panel>
-                    <key>SequenceLayoutConstraintDef</key>
-                    <content>
-                        <property-editor>MinWidth</property-editor>
-                        <property-editor>MinHeight</property-editor>
-                        <property-editor>MaxWidth</property-editor>
-                        <property-editor>MaxHeight</property-editor>
-                        <spacer>
-                            <size>5</size>
-                        </spacer>
-                        <property-editor>ExpandCellHorizontally</property-editor>
-                        <property-editor>ExpandCellVertically</property-editor>
-                        <spacer>
-                            <size>5</size>
-                        </spacer>
-                        <include>LayoutConstraintForm</include>
-                    </content>
-                </panel>
-                <panel>
-                    <key>StackLayoutConstraintDef</key>
-                    <content>
-                        <include>LayoutConstraintForm</include>
-                    </content>
-                </panel>
-            </with>
-        </content>
-    </form>
-    <form>
         <content>
             <property-editor>Width</property-editor>
             <property-editor>Color</property-editor>
@@ -1544,6 +1512,7 @@
                                 </param>
                                 <part>DiagramShapeNodeFactory</part>
                             </node-include>
+                            <image>${ &quot;ShapeDef.png&quot; }</image>
                         </node>
                     </case>
                 </node-factory>
@@ -1724,6 +1693,43 @@
             <node-include>ServicesNode</node-include>
         </case>
     </node-factory>
+    <node>
+        <label>layout constraint</label>
+        <section>
+            <content>
+                <with>
+                    <panel>
+                        <content>
+                            <property-editor>MinWidth</property-editor>
+                            <property-editor>MinHeight</property-editor>
+                            <property-editor>MaxWidth</property-editor>
+                            <property-editor>MaxHeight</property-editor>
+                            <spacer>
+                                <size>5</size>
+                            </spacer>
+                            <property-editor>ExpandCellHorizontally</property-editor>
+                            <property-editor>ExpandCellVertically</property-editor>
+                            <spacer>
+                                <size>5</size>
+                            </spacer>
+                            <include>LayoutConstraintForm</include>
+                        </content>
+                        <key>SequenceLayoutConstraintDef</key>
+                    </panel>
+                    <panel>
+                        <content>
+                            <include>LayoutConstraintForm</include>
+                        </content>
+                        <key>StackLayoutConstraintDef</key>
+                    </panel>
+                    <path>LayoutConstraint</path>
+                </with>
+            </content>
+            <label>layout constraint</label>
+        </section>
+        <id>DiagramShapeLayoutConstraintNode</id>
+        <image>${ &quot;LayoutConstraintDef.png&quot; }</image>
+    </node>
     <node-factory>
         <id>DiagramShapeNodeFactory</id>
         <property>@{Property}</property>
@@ -1750,15 +1756,8 @@
                     </with>
                 </content>
             </section>
-            <node>
-                <label>layout constraint</label>
-                <section>
-                    <content>
-                        <include>ShapeLayoutConstraintForm</include>
-                    </content>
-                    <label>layout constraint</label>
-                </section>
-            </node>
+            <image>${ Image() }</image>
+            <node-include>DiagramShapeLayoutConstraintNode</node-include>
         </case>
         <case>
             <model-element-type>ImageDef</model-element-type>
@@ -1772,15 +1771,8 @@
                     <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
-            <node>
-                <label>layout constraint</label>
-                <section>
-                    <content>
-                        <include>ShapeLayoutConstraintForm</include>
-                    </content>
-                    <label>layout constraint</label>
-                </section>
-            </node>
+            <image>${ Image() }</image>
+            <node-include>DiagramShapeLayoutConstraintNode</node-include>
         </case>
         <case>
             <model-element-type>ValidationMarkerDef</model-element-type>
@@ -1790,15 +1782,8 @@
                     <property-editor>Size</property-editor>
                 </content>
             </section>
-            <node>
-                <label>layout constraint</label>
-                <section>
-                    <content>
-                        <include>ShapeLayoutConstraintForm</include>
-                    </content>
-                    <label>layout constraint</label>
-                </section>
-            </node>
+            <image>${ Image() }</image>
+            <node-include>DiagramShapeLayoutConstraintNode</node-include>
         </case>
         <case>
             <model-element-type>RectangleDef</model-element-type>
@@ -1901,15 +1886,7 @@
                     </with>
                 </content>
             </section>
-            <node>
-                <label>layout constraint</label>
-                <section>
-                    <content>
-                        <include>ShapeLayoutConstraintForm</include>
-                    </content>
-                    <label>layout constraint</label>
-                </section>
-            </node>
+            <node-include>DiagramShapeLayoutConstraintNode</node-include>
             <node>
                 <label>layout</label>
                 <section>
@@ -1935,6 +1912,7 @@
                     </content>
                     <label>layout</label>
                 </section>
+                <image>${ &quot;ShapeLayoutDef.png&quot; }</image>
             </node>
             <node>
                 <label>content</label>
@@ -1945,7 +1923,9 @@
                     </param>
                     <part>DiagramShapeNodeFactory</part>
                 </node-include>
+                <image>${ &quot;Content.png&quot; }</image>
             </node>
+            <image>${ Image() }</image>
         </case>
         <case>
             <model-element-type>ShapeFactoryDef</model-element-type>
@@ -1973,9 +1953,11 @@
                         </param>
                         <part>DiagramShapeNodeFactory</part>
                     </node-include>
+                    <image>${ Image() }</image>
                 </case>
                 <property>ShapeFactoryCases</property>
             </node-factory>
+            <image>${ Image() }</image>
         </case>
     </node-factory>
 

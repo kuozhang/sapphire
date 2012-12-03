@@ -14,12 +14,14 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.modeling.annotations.Image;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 @GenerateImpl
+@Image( path = "ShapeLayoutDef.png" )
 
 public interface ShapeLayoutDef extends IModelElement 
 {
