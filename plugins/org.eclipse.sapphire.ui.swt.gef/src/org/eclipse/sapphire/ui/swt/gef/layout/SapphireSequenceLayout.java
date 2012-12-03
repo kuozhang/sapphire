@@ -257,12 +257,6 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		if (constraint.minHeight > SWT.DEFAULT && dimension.height < constraint.minHeight) {
 			dimension.height = constraint.minHeight; 
 		}
-		if (constraint.minWidth > SWT.DEFAULT && dimension.width < constraint.minWidth) {
-			dimension.width = constraint.minWidth; 
-		}
-		if (constraint.minHeight > SWT.DEFAULT && dimension.height < constraint.minHeight) {
-			dimension.height = constraint.minHeight; 
-		}
 		if (constraint.maxWidth > SWT.DEFAULT && dimension.width > constraint.maxWidth) {
 			dimension.width = constraint.maxWidth; 
 		}

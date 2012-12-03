@@ -37,8 +37,9 @@ public class TextEditPart extends ShapeEditPart
 	{
 		TextModel textModel = (TextModel)getModel();
 		TextPart textPart = (TextPart)textModel.getSapphirePart();
+		int textAlignment = ShapeUtil.getTextAlignment(textPart.getLayoutConstraint());
 		TextFigure figure = new TextFigure(textModel.getNodeModel().getDiagramModel().getResourceCache(), 
-				textPart.getText(), textPart.getTextColor(), textPart.getFontDef());
+				textPart.getText(), textPart.getTextColor(), textPart.getFontDef(), textAlignment);
 		return figure;
 	}
 		

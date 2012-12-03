@@ -15,8 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
@@ -25,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
+import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
@@ -82,7 +85,9 @@ public class ShapeUtil {
 		if (shapePart instanceof TextPart)
 		{
 			TextPart textPart = (TextPart)shapePart;
-			figure = new TextFigure(resourceCache, textPart.getText(), textPart.getTextColor(), textPart.getFontDef());
+			int textALignment = getTextAlignment(textPart.getLayoutConstraint());
+			figure = new TextFigure(resourceCache, textPart.getText(), 
+					textPart.getTextColor(), textPart.getFontDef(), textALignment);
 		}
 		else if (shapePart instanceof ImagePart)
 		{
@@ -208,6 +213,24 @@ public class ShapeUtil {
 			
 		}
 		return layoutConstraint;
+	}
+	
+	public static int getTextAlignment(LayoutConstraintDef constraint)
+	{
+		int alignment = PositionConstants.CENTER;
+		HorizontalAlignment sapphireAlign = constraint.getHorizontalAlignment().getContent();
+		switch (sapphireAlign) 
+		{
+			case LEFT:
+				alignment = PositionConstants.LEFT;
+				break;
+			case RIGHT:
+				alignment = PositionConstants.RIGHT;
+				break;
+			default:			
+				break;
+		}
+		return alignment;
 	}
 	
 }

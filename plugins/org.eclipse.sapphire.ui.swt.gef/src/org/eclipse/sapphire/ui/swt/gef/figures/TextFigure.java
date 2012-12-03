@@ -33,11 +33,16 @@ public class TextFigure extends Label
 	
 	public TextFigure(DiagramResourceCache resourceCache, String value, Color textColor, FontDef fontDef)
 	{
+		this(resourceCache, value, textColor, fontDef, PositionConstants.CENTER);
+	}
+	
+	public TextFigure(DiagramResourceCache resourceCache, String value, Color textColor, FontDef fontDef, int labelAlignment)
+	{
 		this.resourceCache = resourceCache;
 		
 		Color color =  textColor != null ? textColor : DEFAULT_TEXT_FOREGROUND;
-		setForegroundColor(resourceCache.getColor(color));
-		setLabelAlignment(PositionConstants.CENTER);
+		setForegroundColor(resourceCache.getColor(color));		
+		setLabelAlignment(labelAlignment);
 		setFont(this.resourceCache.getFont(fontDef));
 		setText(value);
 	}
