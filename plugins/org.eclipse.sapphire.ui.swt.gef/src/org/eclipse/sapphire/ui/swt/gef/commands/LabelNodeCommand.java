@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.gef.commands.Command;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
@@ -68,8 +70,10 @@ public class LabelNodeCommand extends Command {
 			}
 		}		
 		
-		textPart.setText(labelText);
-		
+		ValueProperty prop = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
+				this.textPart.getContentFunction());
+		this.textPart.getLocalModelElement().write(prop, this.labelText);
+				
 		// Refreshing endpoints of attached connections and re-enable listeners on them.
 		for (DiagramConnectionPart connPart : connParts1)
 		{

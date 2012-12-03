@@ -86,7 +86,7 @@ public class ShapeUtil {
 		{
 			TextPart textPart = (TextPart)shapePart;
 			int textALignment = getTextAlignment(textPart.getLayoutConstraint());
-			figure = new TextFigure(resourceCache, textPart.getText(), 
+			figure = new TextFigure(resourceCache, textPart.getContent(), 
 					textPart.getTextColor(), textPart.getFontDef(), textALignment);
 		}
 		else if (shapePart instanceof ImagePart)

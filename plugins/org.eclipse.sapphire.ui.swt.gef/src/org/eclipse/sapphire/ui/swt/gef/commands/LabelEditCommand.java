@@ -12,6 +12,8 @@
 package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 
 /**
@@ -32,7 +34,9 @@ public class LabelEditCommand extends Command
 	@Override
 	public void execute() 
 	{
-		textPart.setText(labelText);
+		ValueProperty prop = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
+				this.textPart.getContentFunction());
+		this.textPart.getLocalModelElement().write(prop, this.labelText);
 		
 	}
 

@@ -24,6 +24,8 @@ import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.swt.SWT;
@@ -108,7 +110,14 @@ public class NodeDirectEditManager extends DirectEditManager {
 
 	protected void initCellEditor() {
 		// update text
-		getCellEditor().setValue(label.getText());
+		ValueProperty prop = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
+							this.textPart.getContentFunction());
+		String initValue = this.textPart.getLocalModelElement().read(prop).getText();
+		if (initValue == null)
+		{
+			initValue = this.textPart.getContent();
+		}
+		getCellEditor().setValue(initValue);
 		// Shenxue: set text to "" doesn't work since it messes the size calculation in parent's
 		// layout manager. It'd shrink the label figure size to 0. Use figure's visibility instead.
 		//label.setText("");

@@ -268,7 +268,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		if (shapePart instanceof TextPart)
 		{
 			TextFigure textFigure = (TextFigure)this.partToFigure.get(shapePart);
-			textFigure.setText(((TextPart)shapePart).getText());
+			textFigure.setText(((TextPart)shapePart).getContent());
 		}
 		else
 		{

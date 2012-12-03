@@ -39,7 +39,7 @@ public class TextFigure extends Label
 		this.resourceCache = resourceCache;
 		
 		setForegroundColor(resourceCache.getColor(textColor));
-		setLabelAlignment(PositionConstants.CENTER);
+		setLabelAlignment(labelAlignment);
 		setFont(this.resourceCache.getFont(fontDef));
 		setText(value);
 	}

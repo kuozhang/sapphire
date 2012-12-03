@@ -96,6 +96,7 @@
                                                 <content>${ Name == null ? &quot;&lt;column&gt;&quot; : Name }:</content>
                                                 <sequence-layout-constraint>                            						
                                                 	<horizontal-alignment>left</horizontal-alignment>
+                                                    <width>80</width>
                                                 </sequence-layout-constraint>
                                             </text>
                                             <text>
@@ -142,7 +143,7 @@
                     </rectangle>
                 </content>
             </rectangle>
-            <width>160</width>
+            <width>180</width>
             <resizable>true</resizable>
             <connection-binding>
                 <connection-id>foreign_keys</connection-id>

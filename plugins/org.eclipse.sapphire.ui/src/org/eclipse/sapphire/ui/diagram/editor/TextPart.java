@@ -29,7 +29,8 @@ public class TextPart extends ShapePart
 {
 	private TextDef textDef;
 	private IModelElement modelElement;
-	private FunctionResult textFunction;
+	private Function textFunction;
+	private FunctionResult functionResult;
 	private ValueProperty labelProperty;
 	
 	@Override
@@ -39,11 +40,11 @@ public class TextPart extends ShapePart
         this.textDef = (TextDef)super.definition;
         this.modelElement = getModelElement();
         
-        Function func = this.textDef.getContent().getContent();
-        this.textFunction = initExpression
+        this.textFunction = this.textDef.getContent().getContent();
+        this.functionResult = initExpression
         ( 
             this.modelElement,
-            func,
+            this.textFunction,
             String.class,
             null,
             new Runnable()
@@ -54,39 +55,35 @@ public class TextPart extends ShapePart
                 }
             }
         );
-        this.setEditable(!(func instanceof Literal));
-        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.textFunction);
+        this.setEditable(!(this.textFunction instanceof Literal));
+        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.functionResult);
     }
 	
     @Override
     public void dispose()
     {
         super.dispose();
-        if (this.textFunction != null)
+        if (this.functionResult != null)
         {
-            this.textFunction.dispose();
+            this.functionResult.dispose();
         }
     }
 	
-    public String getText()
+    public String getContent()
     {
     	String path = null;
-    	if (this.textFunction != null)
+    	if (this.functionResult != null)
     	{
-    		path = (String)this.textFunction.value();
+    		path = (String)this.functionResult.value();
     	}
     	return path;
     }
     
-    public void setText(String text)
+    public FunctionResult getContentFunction()
     {
-        if (this.labelProperty != null)
-        {
-            this.modelElement.write(this.labelProperty, text);
-        }
-    	
+    	return this.functionResult;
     }
-    
+        
     public Color getTextColor()
     {
     	return this.textDef.getColor().getContent();
