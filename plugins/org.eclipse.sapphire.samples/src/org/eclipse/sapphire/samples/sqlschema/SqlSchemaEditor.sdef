@@ -55,9 +55,7 @@
                                     <expand-cell-vertically>true</expand-cell-vertically>
                                 </sequence-layout-constraint>
                                 <font>
-                                    <name>Arial</name>
-                                    <bold>true</bold>
-                                    <size>9</size>
+                                    <bold/>
                                 </font>
                             </text>
                         </content>
@@ -95,13 +93,7 @@
                                                 </sequence-layout-constraint>
                                             </image>
                                             <text>
-                                                <content>${Name == null ? &quot;&lt;column&gt;&quot; : Name}</content>
-                                                <sequence-layout-constraint>                            						
-                                                	<horizontal-alignment>left</horizontal-alignment>
-                                                </sequence-layout-constraint>
-                                            </text>
-                                            <text>
-                                                <content>:</content>
+                                                <content>${ Name == null ? &quot;&lt;column&gt;&quot; : Name }:</content>
                                                 <sequence-layout-constraint>                            						
                                                 	<horizontal-alignment>left</horizontal-alignment>
                                                 </sequence-layout-constraint>

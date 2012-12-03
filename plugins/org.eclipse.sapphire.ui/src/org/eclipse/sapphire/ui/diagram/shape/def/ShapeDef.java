@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
  */
 
 @GenerateImpl
+@Label( standard = "shape" )
 @Image( path = "ShapeDef.png" )
 
 public interface ShapeDef extends PartDef, IPropertiesViewContributorDef

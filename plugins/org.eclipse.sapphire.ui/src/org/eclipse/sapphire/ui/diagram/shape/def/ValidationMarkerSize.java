@@ -18,6 +18,8 @@ import org.eclipse.sapphire.modeling.annotations.Label;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
+@Label( standard = "validation marker size" )
+
 public enum ValidationMarkerSize
 {
     @Label( standard = "large" )

@@ -18,15 +18,16 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 @GenerateImpl
+@Label( standard = "font" )
 
 public interface FontDef extends IModelElement
 {
@@ -34,9 +35,9 @@ public interface FontDef extends IModelElement
 	
 	// *** Name ***
 
-	@Label( standard = "name" )
+	@Label( standard = "font family" )
+	@DefaultValue( text = "System" )
     @XmlBinding( path = "name" )
-    @Required
     
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     
@@ -46,7 +47,8 @@ public interface FontDef extends IModelElement
 	// *** Size ***
 	
     @Type( base = Integer.class )
-    @Label( standard = "size" )
+    @Label( standard = "font size" )
+    @DefaultValue( text = "9" )
     @XmlBinding( path = "size" )
     
     ValueProperty PROP_SIZE = new ValueProperty( TYPE, "Size" );
@@ -58,7 +60,7 @@ public interface FontDef extends IModelElement
 	// *** Bold ***
     
     @Type( base = Boolean.class )
-    @XmlBinding( path = "bold" )
+    @XmlValueBinding( path = "bold", mapExistanceToValue = "true" )
     @DefaultValue( text = "false" )
     @Label( standard = "bold")
     
@@ -71,7 +73,7 @@ public interface FontDef extends IModelElement
 	// *** Italic ***
     
     @Type( base = Boolean.class )
-    @XmlBinding( path = "italic" )
+    @XmlValueBinding( path = "italic", mapExistanceToValue = "true" )
     @DefaultValue( text = "false" )
     @Label( standard = "italic")
     

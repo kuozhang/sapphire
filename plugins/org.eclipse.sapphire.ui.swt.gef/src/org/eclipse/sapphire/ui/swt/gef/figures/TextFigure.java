@@ -13,7 +13,6 @@
 package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.Color;
@@ -26,7 +25,6 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 public class TextFigure extends Label 
 {
-	private static final org.eclipse.sapphire.ui.Color DEFAULT_TEXT_FOREGROUND = new org.eclipse.sapphire.ui.Color(51, 51, 153);
 	private DiagramResourceCache resourceCache;
 	private Rectangle availableArea;
 	private int horizontalAlignment;
@@ -40,9 +38,8 @@ public class TextFigure extends Label
 	{
 		this.resourceCache = resourceCache;
 		
-		Color color =  textColor != null ? textColor : DEFAULT_TEXT_FOREGROUND;
-		setForegroundColor(resourceCache.getColor(color));		
-		setLabelAlignment(labelAlignment);
+		setForegroundColor(resourceCache.getColor(textColor));
+		setLabelAlignment(PositionConstants.CENTER);
 		setFont(this.resourceCache.getFont(fontDef));
 		setText(value);
 	}

@@ -94,7 +94,7 @@ public class TextPart extends ShapePart
 
     public FontDef getFontDef() 
     {
-    	return this.textDef.getFont().element();
+    	return this.textDef.getFont();
     }
     
 	private void refreshLabel()

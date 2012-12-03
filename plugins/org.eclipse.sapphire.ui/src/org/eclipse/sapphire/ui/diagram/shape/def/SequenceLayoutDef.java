@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.def.Orientation;
  */
 
 @GenerateImpl
+@Label( standard = "sequence layout" )
 
 public interface SequenceLayoutDef extends ShapeLayoutDef, MarginConstraintDef
 {

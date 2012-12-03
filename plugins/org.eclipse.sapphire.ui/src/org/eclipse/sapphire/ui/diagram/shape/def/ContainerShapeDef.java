@@ -29,6 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @GenerateImpl
+@Label( standard = "container shape" )
 
 public interface ContainerShapeDef extends ShapeDef
 {

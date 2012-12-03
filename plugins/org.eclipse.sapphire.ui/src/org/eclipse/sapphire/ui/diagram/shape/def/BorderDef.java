@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ui.LineStyle;
  */
 
 @GenerateImpl
+@Label( standard = "border" )
 
 public interface BorderDef extends IModelElement 
 {

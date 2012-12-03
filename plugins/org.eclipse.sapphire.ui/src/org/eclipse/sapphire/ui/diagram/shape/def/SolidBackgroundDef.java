@@ -24,6 +24,7 @@ import org.eclipse.sapphire.ui.Color;
  */
 
 @GenerateImpl
+@Label( standard = "solid background" )
 
 public interface SolidBackgroundDef extends BackgroundDef 
 {

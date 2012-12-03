@@ -1739,25 +1739,41 @@
             <section>
                 <content>
                     <property-editor>Content</property-editor>
-                    <property-editor>Color</property-editor>
                     <property-editor>VisibleWhen</property-editor>
-                    <with>
-                        <label>font</label>
-                        <panel>
-                            <content>
-                                <property-editor>Name</property-editor>
-                                <property-editor>Size</property-editor>
-                                <property-editor>Bold</property-editor>
-                                <property-editor>Italic</property-editor>
-                            </content>
-                            <key>FontDef</key>
-                        </panel>
-                        <path>Font</path>
-                    </with>
                 </content>
             </section>
             <image>${ Image() }</image>
             <node-include>DiagramShapeLayoutConstraintNode</node-include>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <property-editor>Color</property-editor>
+                    <with>
+                        <label>font</label>
+                        <path>Font</path>
+                        <default-panel>
+                            <content>
+                                <property-editor>Name</property-editor>
+                                <property-editor>Size</property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>checkbox.layout</name>
+                                        <value>leading.label</value>
+                                    </hint>
+                                    <property>Bold</property>
+                                </property-editor>
+                                <property-editor>
+                                    <hint>
+                                        <name>checkbox.layout</name>
+                                        <value>leading.label</value>
+                                    </hint>
+                                    <property>Italic</property>
+                                </property-editor>
+                            </content>
+                        </default-panel>
+                    </with>
+                </content>
+            </section>
         </case>
         <case>
             <model-element-type>ImageDef</model-element-type>

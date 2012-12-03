@@ -96,29 +96,37 @@ public class DiagramResourceCache {
     }
     
     public Font getFont(FontDef fontDef) {
-
-    	if (fontDef != null) {
-    		final String name = fontDef.getName().getContent();
-    		final int size = fontDef.getSize().getContent();
-    		int style = SWT.NORMAL;
-    		if (fontDef.isBold().getContent()) {
-    			style |= SWT.BOLD;
-    		}
-    		if (fontDef.isItalic().getContent()) {
-    			style |= SWT.ITALIC;
-    		}
-        	for (Font existingFont : fonts) {
-        		FontData data = existingFont.getFontData()[0];
-        		if (data.getName().equals(name) && data.getHeight() == size && data.getStyle() == style) {
-        			return existingFont;
-        		}
-        	}
-        	final FontData newFontData = new FontData(name, size, style);
-        	final Font newFont = new Font(Display.getCurrent(), newFontData);
-        	fonts.add(newFont);
-        	return newFont;
+    	
+    	if( fontDef == null )
+    	{
+    		throw new IllegalArgumentException();
     	}
-    	return fonts.get(0);
+
+		String name = fontDef.getName().getContent();
+		
+		if( name.equalsIgnoreCase( "System" ) )
+		{
+			name = getDefaultFont().getFontData()[ 0 ].getName();
+		}
+		
+		final int size = fontDef.getSize().getContent();
+		int style = SWT.NORMAL;
+		if (fontDef.isBold().getContent()) {
+			style |= SWT.BOLD;
+		}
+		if (fontDef.isItalic().getContent()) {
+			style |= SWT.ITALIC;
+		}
+    	for (Font existingFont : fonts) {
+    		FontData data = existingFont.getFontData()[0];
+    		if (data.getName().equals(name) && data.getHeight() == size && data.getStyle() == style) {
+    			return existingFont;
+    		}
+    	}
+    	final FontData newFontData = new FontData(name, size, style);
+    	final Font newFont = new Font(Display.getCurrent(), newFontData);
+    	fonts.add(newFont);
+    	return newFont;
     }
     
     public void dispose() {

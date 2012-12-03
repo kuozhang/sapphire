@@ -35,6 +35,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
  */
 
 @GenerateImpl
+@Label( standard = "shape factory case" )
 @Image( path = "ShapeFactoryCaseDef.png" )
 
 public interface ShapeFactoryCaseDef extends IModelElement 

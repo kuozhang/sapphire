@@ -28,6 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @GenerateImpl
+@Label( standard = "gradient background" )
 
 public interface GradientBackgroundDef extends BackgroundDef 
 {

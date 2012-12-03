@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @GenerateImpl
+@Label( standard = "margin constraint" )
 
 public interface MarginConstraintDef extends IModelElement 
 {

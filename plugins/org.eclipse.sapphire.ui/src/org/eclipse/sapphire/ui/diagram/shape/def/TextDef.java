@@ -12,11 +12,11 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -57,6 +57,7 @@ public interface TextDef extends ShapeDef
     
     @Type( base = Color.class )
     @Label( standard = "color")
+    @DefaultValue( text = "#333399" )
     @XmlBinding( path = "color")
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
@@ -68,11 +69,11 @@ public interface TextDef extends ShapeDef
     // *** Font ***
     
     @Type( base = FontDef.class )
+    @Label( standard = "font" )
     @XmlBinding( path = "font" )
     
-    ElementProperty PROP_FONT = new ElementProperty( TYPE, "Font" );
+    ImpliedElementProperty PROP_FONT = new ImpliedElementProperty( TYPE, "Font" );
     
-    ModelElementHandle<FontDef> getFont();
-    
+    FontDef getFont();
 	
 }

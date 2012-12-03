@@ -23,7 +23,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
 @GenerateImpl
+@Label( standard = "sequence layout constraint" )
 
 public interface SequenceLayoutConstraintDef extends LayoutConstraintDef 
 {

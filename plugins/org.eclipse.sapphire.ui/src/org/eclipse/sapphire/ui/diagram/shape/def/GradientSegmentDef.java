@@ -26,7 +26,9 @@ import org.eclipse.sapphire.ui.Color;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
+
 @GenerateImpl
+@Label( standard = "gradient segment" )
 
 public interface GradientSegmentDef extends IModelElement 
 {
