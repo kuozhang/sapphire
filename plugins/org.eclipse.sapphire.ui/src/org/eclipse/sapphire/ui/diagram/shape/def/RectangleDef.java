@@ -7,11 +7,13 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
@@ -26,6 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
@@ -51,48 +54,48 @@ public interface RectangleDef extends ContainerShapeDef
 	
     // *** Border ***
     
-    @Type( base = BorderDef.class )
+    @Type( base = Border.class )
     @XmlBinding( path = "border" )
 
-    ElementProperty PROP_BORDER = new ElementProperty( TYPE, "Border" );
+    ImpliedElementProperty PROP_BORDER = new ImpliedElementProperty( TYPE, "Border" );
     
-    ModelElementHandle<BorderDef> getBorder();
+    Border getBorder();
     
     // *** TopBorder ***
     
-    @Type( base = BorderDef.class )
+    @Type( base = BorderComponent.class )
     @XmlBinding( path = "top-border" )
 
-    ElementProperty PROP_TOP_BORDER = new ElementProperty( TYPE, "TopBorder" );
+    ImpliedElementProperty PROP_TOP_BORDER = new ImpliedElementProperty( TYPE, "TopBorder" );
     
-    ModelElementHandle<BorderDef> getTopBorder();
+    BorderComponent getTopBorder();
     
     // *** BottomBorder ***
     
-    @Type( base = BorderDef.class )
+    @Type( base = BorderComponent.class )
     @XmlBinding( path = "bottom-border" )
 
-    ElementProperty PROP_BOTTOM_BORDER = new ElementProperty( TYPE, "BottomBorder" );
+    ImpliedElementProperty PROP_BOTTOM_BORDER = new ImpliedElementProperty( TYPE, "BottomBorder" );
     
-    ModelElementHandle<BorderDef> getBottomBorder();
+    BorderComponent getBottomBorder();
     
     // *** LeftBorder ***
     
-    @Type( base = BorderDef.class )
+    @Type( base = BorderComponent.class )
     @XmlBinding( path = "left-border" )
 
-    ElementProperty PROP_LEFT_BORDER = new ElementProperty( TYPE, "LeftBorder" );
+    ImpliedElementProperty PROP_LEFT_BORDER = new ImpliedElementProperty( TYPE, "LeftBorder" );
     
-    ModelElementHandle<BorderDef> getLeftBorder();
+    BorderComponent getLeftBorder();
     
     // *** RightBorder ***
     
-    @Type( base = BorderDef.class )
+    @Type( base = BorderComponent.class )
     @XmlBinding( path = "right-border" )
 
-    ElementProperty PROP_RIGHT_BORDER = new ElementProperty( TYPE, "RightBorder" );
+    ImpliedElementProperty PROP_RIGHT_BORDER = new ImpliedElementProperty( TYPE, "RightBorder" );
     
-    ModelElementHandle<BorderDef> getRightBorder();
+    BorderComponent getRightBorder();
     
     // *** Background ***
     

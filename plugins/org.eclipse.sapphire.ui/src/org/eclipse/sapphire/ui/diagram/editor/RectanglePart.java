@@ -7,16 +7,18 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.BorderDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.BorderComponent;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class RectanglePart extends ContainerShapePart
@@ -30,34 +32,24 @@ public class RectanglePart extends ContainerShapePart
         this.rectangleDef = (RectangleDef)super.definition;
     }
 
-	public boolean hasBorder()
+	public BorderComponent getTopBorder() 
 	{
-		return this.rectangleDef.getBorder().element() != null;
+		return this.rectangleDef.getTopBorder();
 	}
 	
-	public BorderDef getBorderDef() 
+	public BorderComponent getBottomBorder() 
 	{
-		return this.rectangleDef.getBorder().element();
-	}
-	
-	public BorderDef getTopBorderDef() 
-	{
-		return this.rectangleDef.getTopBorder().element();
-	}
-	
-	public BorderDef getBottomBorderDef() 
-	{
-		return this.rectangleDef.getBottomBorder().element();
+		return this.rectangleDef.getBottomBorder();
 	}
 
-	public BorderDef getLeftBorderDef() 
+	public BorderComponent getLeftBorder() 
 	{
-		return this.rectangleDef.getLeftBorder().element();
+		return this.rectangleDef.getLeftBorder();
 	}
 	
-	public BorderDef getRightBorderDef() 
+	public BorderComponent getRightBorder() 
 	{
-		return this.rectangleDef.getRightBorder().element();
+		return this.rectangleDef.getRightBorder();
 	}
 	
 	public BackgroundDef getBackground()

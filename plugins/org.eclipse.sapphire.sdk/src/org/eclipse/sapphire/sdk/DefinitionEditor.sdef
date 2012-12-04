@@ -14,7 +14,7 @@
  *   Rob Cernich - [360362] Allow creation of custom form editor pages
  *   Gregory Amerson - [374847] Actions and Handlers node not available on Diagram page
  *   Gregory Amerson - [355566] Sapphire Diagram editor should support header similar to form editor
- *   Shenxue Zhou - [383924] Extend Sapphire Diagram Framework to support SQL Schema diagram like editors 
+ *   Shenxue Zhou - [383924] Flexible diagram node shapes 
  ******************************************************************************
 -->
 
@@ -169,14 +169,6 @@
             <property-editor>TopMargin</property-editor>
             <property-editor>BottomMargin</property-editor>
         </content>
-    </form>
-    <form>
-        <content>
-            <property-editor>Width</property-editor>
-            <property-editor>Color</property-editor>
-            <property-editor>Style</property-editor>
-        </content>
-        <id>BorderForm</id>
     </form>
     
     <node>
@@ -1814,73 +1806,6 @@
                 </content>
             </section>
             <section>
-                <label>border</label>
-                <content>
-                    <with>
-                        <label>border</label>
-                        <panel>
-                            <content>
-                                <include>BorderForm</include>
-                            </content>
-                            <key>BorderDef</key>
-                        </panel>
-                        <path>Border</path>
-                    </with>
-                    <spacer>
-                        <size>5</size>
-                    </spacer>
-                    <with>
-                        <label>top border</label>
-                        <panel>
-                            <content>
-                                <include>BorderForm</include>
-                            </content>
-                            <key>BorderDef</key>
-                        </panel>
-                        <path>TopBorder</path>
-                    </with>
-                    <spacer>
-                        <size>5</size>
-                    </spacer>
-                    <with>
-                        <label>bottom border</label>
-                        <panel>
-                            <content>
-                                <include>BorderForm</include>
-                            </content>
-                            <key>BorderDef</key>
-                        </panel>
-                        <path>BottomBorder</path>
-                    </with>
-                    <spacer>
-                        <size>5</size>
-                    </spacer>
-                    <with>
-                        <label>left border</label>
-                        <panel>
-                            <content>
-                                <include>BorderForm</include>
-                            </content>
-                            <key>BorderDef</key>
-                        </panel>
-                        <path>LeftBorder</path>
-                    </with>
-                    <spacer>
-                        <size>5</size>
-                    </spacer>
-                    <with>
-                        <label>right border</label>
-                        <panel>
-                            <content>
-                                <include>BorderForm</include>
-                            </content>
-                            <key>BorderDef</key>
-                        </panel>
-                        <path>RightBorder</path>
-                    </with>
-                </content>
-            </section>
-            <section>
                 <label>background</label>
                 <content>
                     <with>
@@ -1931,6 +1856,75 @@
                 <image>${ &quot;ShapeLayoutDef.png&quot; }</image>
             </node>
             <node>
+                <label>border</label>
+                <section>
+                    <content>
+                        <with>
+                            <default-panel>
+                                <content>
+                                    <include>LinePresentationForm</include>
+                                </content>
+                            </default-panel>
+                            <path>Border</path>
+                        </with>
+                    </content>
+                    <label>border</label>
+                </section>
+                <section>
+                    <content>
+                        <with>
+                            <default-panel>
+                                <content>
+                                    <include>LinePresentationForm</include>
+                                </content>
+                            </default-panel>
+                            <path>TopBorder</path>
+                        </with>
+                    </content>
+                    <label>top border</label>
+                </section>
+                <section>
+                    <content>
+                        <with>
+                            <default-panel>
+                                <content>
+                                    <include>LinePresentationForm</include>
+                                </content>
+                            </default-panel>
+                            <path>BottomBorder</path>
+                        </with>
+                    </content>
+                    <label>bottom border</label>
+                </section>
+                <section>
+                    <content>
+                        <with>
+                            <default-panel>
+                                <content>
+                                    <include>LinePresentationForm</include>
+                                </content>
+                            </default-panel>
+                            <path>LeftBorder</path>
+                        </with>
+                    </content>
+                    <label>left border</label>
+                </section>
+                <section>
+                    <content>
+                        <with>
+                            <default-panel>
+                                <content>
+                                    <include>LinePresentationForm</include>
+                                </content>
+                            </default-panel>
+                            <path>RightBorder</path>
+                        </with>
+                    </content>
+                    <label>right border</label>
+                </section>
+                <image>Border${ TopBorder.Weight &gt; 0 ? &quot;Top&quot; : &quot;&quot; }${ BottomBorder.Weight &gt; 0 ? &quot;Bottom&quot; : &quot;&quot; }${ LeftBorder.Weight &gt; 0 ? &quot;Left&quot; : &quot;&quot; }${ RightBorder.Weight &gt; 0 ? &quot;Right&quot; : &quot;&quot; }.png</image>
+            </node>
+            <node>
                 <label>content</label>
                 <node-include>
                     <param>
@@ -1976,5 +1970,13 @@
             <image>${ Image() }</image>
         </case>
     </node-factory>
+    <form>
+        <content>
+            <property-editor>Color</property-editor>
+            <property-editor>Weight</property-editor>
+            <property-editor>Style</property-editor>
+        </content>
+        <id>LinePresentationForm</id>
+    </form>
 
 </definition>

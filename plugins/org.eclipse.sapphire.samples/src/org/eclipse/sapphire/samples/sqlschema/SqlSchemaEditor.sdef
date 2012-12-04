@@ -9,6 +9,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************
 -->
 
@@ -29,6 +30,7 @@
                 <scroll-vertically>true</scroll-vertically>
                 <border>
                     <color>#333399</color>
+                    <weight>1</weight>
                 </border>
                 <sequence-layout>
                     <spacing>0</spacing>
@@ -37,7 +39,7 @@
                 <content>
                     <rectangle>
                         <bottom-border>
-                            <width>2</width>
+                            <weight>2</weight>
                             <color>#333399</color>
                         </bottom-border>
                         <sequence-layout>
@@ -111,6 +113,7 @@
                                         <bottom-border>
                                             <style>dot</style>
                                             <color>#333399</color>
+                                            <weight>1</weight>
                                         </bottom-border>
                                         <sequence-layout-constraint>
                                             <horizontal-alignment>left</horizontal-alignment>

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.figures;
@@ -18,7 +19,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.BorderDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.BorderComponent;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
@@ -33,6 +34,7 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class RectangleFigure extends ContainerShapeFigure implements IShapeFigure
@@ -149,48 +151,41 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		int cornerRadius = this.rectPart.getCornerRadius();
 		final Dimension cornerDimension = new Dimension(cornerRadius, cornerRadius); 
 		
-		BorderDef borderDef = this.rectPart.getBorderDef(); 
-		if (borderDef != null)
-		{	
-			graphics.setLineWidth(borderDef.getWidth().getContent());
-			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
-			graphics.drawRoundRectangle(r,
-					Math.max(0, cornerDimension.width - (int) lineInset),
-					Math.max(0, cornerDimension.height - (int) lineInset));
-		}
-		
-		borderDef = this.rectPart.getTopBorderDef(); 
-		if (borderDef != null)
-		{	
-			graphics.setLineWidth(borderDef.getWidth().getContent());
+		BorderComponent borderDef = this.rectPart.getTopBorder(); 
+
+		if( borderDef.getWeight().getContent() > 0 )
+		{
+			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
 			graphics.drawLine(r.x, r.y, r.x + r.width, r.y);
 		}
 
-		borderDef = this.rectPart.getBottomBorderDef(); 
-		if (borderDef != null)
+		borderDef = this.rectPart.getBottomBorder();
+		
+		if( borderDef.getWeight().getContent() > 0 )
 		{	
-			graphics.setLineWidth(borderDef.getWidth().getContent());
+			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
 			graphics.drawLine(r.x, r.y + r.height, r.x + r.width, r.y + r.height);
 		}
 
-		borderDef = this.rectPart.getRightBorderDef(); 
-		if (borderDef != null)
+		borderDef = this.rectPart.getRightBorder();
+		
+		if( borderDef.getWeight().getContent() > 0 )
 		{	
-			graphics.setLineWidth(borderDef.getWidth().getContent());
+			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
 			graphics.drawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
 		}
 
-		borderDef = this.rectPart.getLeftBorderDef(); 
-		if (borderDef != null)
+		borderDef = this.rectPart.getLeftBorder();
+		
+		if( borderDef.getWeight().getContent() > 0 )
 		{	
-			graphics.setLineWidth(borderDef.getWidth().getContent());
+			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
 			graphics.drawLine(r.x, r.y, r.x, r.y + r.height);
