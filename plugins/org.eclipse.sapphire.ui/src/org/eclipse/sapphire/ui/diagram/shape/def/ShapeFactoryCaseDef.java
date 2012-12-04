@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -77,16 +77,16 @@ public interface ShapeFactoryCaseDef extends IModelElement
 	
 	@Label( standard = "shape" )
 	
-	@XmlListBinding
+	@XmlElementBinding
 	( 
 	    mappings = 
 	    {
-	        @XmlListBinding.Mapping( element = "text", type = TextDef.class ),
-	        @XmlListBinding.Mapping( element = "image", type = ImageDef.class ),
-	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
-	        @XmlListBinding.Mapping( element = "rectangle", type = RectangleDef.class ),
-	        @XmlListBinding.Mapping( element = "line", type = LineShapeDef.class ),
-	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class )
+	    	@XmlElementBinding.Mapping( element = "text", type = TextDef.class ),
+	        @XmlElementBinding.Mapping( element = "image", type = ImageDef.class ),
+	        @XmlElementBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
+	        @XmlElementBinding.Mapping( element = "rectangle", type = RectangleDef.class ),
+	        @XmlElementBinding.Mapping( element = "line", type = LineShapeDef.class ),
+	        @XmlElementBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class )
 	    }
 	)	
 	

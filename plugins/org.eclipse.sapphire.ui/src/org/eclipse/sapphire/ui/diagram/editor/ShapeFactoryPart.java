@@ -53,7 +53,7 @@ public class ShapeFactoryPart extends ShapePart
         this.children = new ArrayList<ShapePart>();
         this.javaTypes = new ArrayList<JavaType>();
         
-        for (ShapeFactoryCaseDef shapeCase : this.shapeFactoryDef.getShapeFactoryCases())
+        for (ShapeFactoryCaseDef shapeCase : this.shapeFactoryDef.getCases())
         {
         	this.javaTypes.add(shapeCase.getType().resolve());
         }
@@ -162,7 +162,7 @@ public class ShapeFactoryPart extends ShapePart
 
     private ShapeFactoryCaseDef getShapeFactoryCase(IModelElement listEntryModelElement)
 	{
-        for (ShapeFactoryCaseDef shapeFactoryCase : this.shapeFactoryDef.getShapeFactoryCases())
+        for (ShapeFactoryCaseDef shapeFactoryCase : this.shapeFactoryDef.getCases())
         {
         	JavaType javaType = shapeFactoryCase.getType().resolve();
         	Class<?> cl = javaType.artifact();

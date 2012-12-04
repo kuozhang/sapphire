@@ -1990,9 +1990,25 @@
                     </node-include>
                     <image>${ Image() }</image>
                 </case>
-                <property>ShapeFactoryCases</property>
+                <property>Cases</property>
             </node-factory>
             <image>${ Image() }</image>
+            <node>
+                <label>separator</label>
+                <section>
+                    <content>
+                        <label>The shape factory can insert a shape between the main model-based shapes to act a separator.</label>
+                    </content>
+                </section>
+                <node-include>
+                    <param>
+                        <name>Property</name>
+                        <value>Separator</value>
+                    </param>
+                    <part>DiagramShapeNodeFactory</part>
+                </node-include>
+                <image>Separator.png</image>
+            </node>
         </case>
     </node-factory>
     <form>
