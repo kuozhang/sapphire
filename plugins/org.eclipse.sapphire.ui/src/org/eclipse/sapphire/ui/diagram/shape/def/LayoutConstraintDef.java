@@ -32,7 +32,7 @@ import org.eclipse.sapphire.ui.def.VerticalAlignment;
 @Label( standard = "layout constraint" )
 @Image( path = "LayoutConstraintDef.png" )
 
-public interface LayoutConstraintDef extends MarginConstraintDef 
+public interface LayoutConstraintDef extends MarginPresentation 
 {
 	ModelElementType TYPE = new ModelElementType( LayoutConstraintDef.class );
 	

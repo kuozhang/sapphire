@@ -201,8 +201,10 @@ public class ShapeUtil {
 					constraint = new SapphireStackLayoutConstraint(
 										stackLayoutConstraint.getHorizontalAlignment().getContent(),
 										stackLayoutConstraint.getVerticalAlignment().getContent(),
-										stackLayoutConstraint.getHorizontalMargin().getContent(),
-										stackLayoutConstraint.getVerticalMargin().getContent());
+										stackLayoutConstraint.getTopMargin().getContent(),
+										stackLayoutConstraint.getBottomMargin().getContent(),
+										stackLayoutConstraint.getLeftMargin().getContent(),
+										stackLayoutConstraint.getRightMargin().getContent());
 				}
 				else
 				{

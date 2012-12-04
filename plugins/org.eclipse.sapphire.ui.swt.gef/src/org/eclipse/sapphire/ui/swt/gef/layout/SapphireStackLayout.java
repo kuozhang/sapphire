@@ -81,11 +81,11 @@ public class SapphireStackLayout extends AbstractLayout
 			HorizontalAlignment horizontalAlign = constraint.getHorizontalAlignment();
 			if (horizontalAlign == HorizontalAlignment.LEFT)
 			{
-				offsetX = constraint.getHorizontalMargin();
+				offsetX = constraint.getLeftMargin();
 			}
 			else if (horizontalAlign == HorizontalAlignment.RIGHT)
 			{
-				offsetX = baseSize.width - constraint.getHorizontalMargin() - childSize.width;
+				offsetX = baseSize.width - constraint.getRightMargin() - childSize.width;
 			}
 			else if (horizontalAlign == HorizontalAlignment.CENTER)
 			{
@@ -95,11 +95,11 @@ public class SapphireStackLayout extends AbstractLayout
 			VerticalAlignment verticalAlign = constraint.getVerticalAlignment();
 			if (verticalAlign == VerticalAlignment.TOP)
 			{
-				offsetY = constraint.getVerticalMargin();
+				offsetY = constraint.getTopMargin();
 			}
 			else if (verticalAlign == VerticalAlignment.BOTTOM)
 			{
-				offsetY = baseSize.height - constraint.getVerticalMargin() - childSize.height;
+				offsetY = baseSize.height - constraint.getBottomMargin() - childSize.height;
 			}
 			else if (verticalAlign == VerticalAlignment.CENTER)
 			{

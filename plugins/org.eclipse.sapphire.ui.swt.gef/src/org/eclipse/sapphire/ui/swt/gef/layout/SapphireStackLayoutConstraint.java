@@ -22,27 +22,35 @@ public class SapphireStackLayoutConstraint
 {
 	private HorizontalAlignment horizontalAlignment;
 	private VerticalAlignment verticalAlignment;
-	private int horizontalMargin, verticalMargin;
+	private int topMargin;
+	private int bottomMargin;
+	private int leftMargin;
+	private int rightMargin;
 	
 	public SapphireStackLayoutConstraint()
 	{
-		this(HorizontalAlignment.CENTER, VerticalAlignment.CENTER, 0, 0);
+		this(HorizontalAlignment.CENTER, VerticalAlignment.CENTER, 0, 0, 0, 0);
 	}
 	
 	public SapphireStackLayoutConstraint(HorizontalAlignment horizontalAlignment, 
 										VerticalAlignment verticalAlignment)
 	{
-		this(horizontalAlignment, verticalAlignment, 0, 0);
+		this(horizontalAlignment, verticalAlignment, 0, 0, 0, 0);
 	}
 
-	public SapphireStackLayoutConstraint(HorizontalAlignment horizontalAlignment, 
-										VerticalAlignment verticalAlignment, 
-										int horizontalMargin, int verticalMargin)
+	public SapphireStackLayoutConstraint( final HorizontalAlignment horizontalAlignment, 
+										  final VerticalAlignment verticalAlignment, 
+										  final int topMargin,
+										  final int bottomMargin,
+										  final int leftMargin,
+										  final int rightMargin )
 	{
 		this.horizontalAlignment = horizontalAlignment;
 		this.verticalAlignment = verticalAlignment;
-		this.horizontalMargin = horizontalMargin;
-		this.verticalMargin = verticalMargin;
+		this.topMargin = topMargin;
+		this.bottomMargin = bottomMargin;
+		this.leftMargin = leftMargin;
+		this.rightMargin = rightMargin;
 	}
 
 	public HorizontalAlignment getHorizontalAlignment() 
@@ -50,39 +58,29 @@ public class SapphireStackLayoutConstraint
 		return horizontalAlignment;
 	}
 
-	public void setHorizontalAlignment(HorizontalAlignment horizontalAlignment) 
-	{
-		this.horizontalAlignment = horizontalAlignment;
-	}
-
 	public VerticalAlignment getVerticalAlignment() 
 	{
 		return verticalAlignment;
 	}
 
-	public void setVerticalAlignment(VerticalAlignment verticalAlignment) 
+	public int getTopMargin() 
 	{
-		this.verticalAlignment = verticalAlignment;
+		return this.topMargin;
 	}
 
-	public int getHorizontalMargin() 
+	public int getBottomMargin() 
 	{
-		return horizontalMargin;
+		return this.bottomMargin;
 	}
-
-	public void setHorizontalMargin(int horizontalMargin) 
+	
+	public int getLeftMargin()
 	{
-		this.horizontalMargin = horizontalMargin;
+		return this.leftMargin;
 	}
-
-	public int getVerticalMargin() 
+	
+	public int getRightMargin()
 	{
-		return verticalMargin;
+		return this.rightMargin;
 	}
-
-	public void setVerticalMargin(int verticalMargin) 
-	{
-		this.verticalMargin = verticalMargin;
-	}
-		
+	
 }

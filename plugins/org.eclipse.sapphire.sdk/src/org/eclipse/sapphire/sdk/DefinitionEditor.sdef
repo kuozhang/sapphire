@@ -161,13 +161,7 @@
             <spacer>
                 <size>5</size>
             </spacer>
-            <property-editor>Margin</property-editor>
-            <property-editor>HorizontalMargin</property-editor>
-            <property-editor>VerticalMargin</property-editor>
-            <property-editor>LeftMargin</property-editor>
-            <property-editor>RightMargin</property-editor>
-            <property-editor>TopMargin</property-editor>
-            <property-editor>BottomMargin</property-editor>
+            <include>MarginsForm</include>
         </content>
     </form>
     
@@ -1838,7 +1832,8 @@
                                 <content>
                                     <property-editor>Orientation</property-editor>
                                     <property-editor>Spacing</property-editor>
-                                    <property-editor>Margin</property-editor>
+                                    <spacer></spacer>
+                                    <include>MarginsForm</include>
                                 </content>
                                 <key>SequenceLayoutDef</key>
                             </panel>
@@ -2018,6 +2013,20 @@
             <property-editor>Style</property-editor>
         </content>
         <id>LinePresentationForm</id>
+    </form>
+    <form>
+        <id>MarginsForm</id>
+        <content>
+            <label>Margin is the space inside the shape, between the border and the shape's content.</label>
+            <spacer></spacer>
+            <property-editor>Margin</property-editor>
+            <property-editor>HorizontalMargin</property-editor>
+            <property-editor>VerticalMargin</property-editor>
+            <property-editor>TopMargin</property-editor>
+            <property-editor>BottomMargin</property-editor>
+            <property-editor>LeftMargin</property-editor>
+            <property-editor>RightMargin</property-editor>
+        </content>
     </form>
 
 </definition>
