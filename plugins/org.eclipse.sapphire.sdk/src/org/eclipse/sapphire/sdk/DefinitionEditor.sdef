@@ -1767,9 +1767,6 @@
             <section>
                 <content>
                     <property-editor>Path</property-editor>
-                    <property-editor>Resizable</property-editor>
-                    <property-editor>ResizeHorizontally</property-editor>
-                    <property-editor>ResizeVertically</property-editor>
                     <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>

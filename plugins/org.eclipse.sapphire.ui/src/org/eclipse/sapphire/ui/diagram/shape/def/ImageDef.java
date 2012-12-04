@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
@@ -14,7 +15,6 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
@@ -45,44 +46,5 @@ public interface ImageDef extends ShapeDef
     Value<Function> getPath();
     void setPath( String value );
     void setPath( Function value );	
-	
-	// *** Resizable ***
-	
-    @Type( base = Boolean.class )
-    @XmlBinding( path = "resizable" )
-    @DefaultValue( text = "false" )
-    @Label( standard = "resizable")
-    
-    ValueProperty PROP_RESIZABLE = new ValueProperty(TYPE, "Resizable");
-    
-    Value<Boolean> isResizable();
-    void setResizable( String value );
-    void setResizable( Boolean value );
-	
-    // ** ResizeHorizontally ***
-    
-    @Type( base = Boolean.class )
-    @XmlBinding( path = "resize-horizontally" )
-    @DefaultValue( text = "false" )
-    @Label( standard = "resize horizontally")
-    
-    ValueProperty PROP_RESIZE_HORIZONTALLY = new ValueProperty(TYPE, "ResizeHorizontally");
-    
-    Value<Boolean> isResizeHorizontally();
-    void setResizeHorizontally( String value );
-    void setResizeHorizontally( Boolean value );
-
-    // ** ResizeVertically ***
-    
-    @Type( base = Boolean.class )
-    @XmlBinding( path = "resize-vertically" )
-    @DefaultValue( text = "false" )
-    @Label( standard = "resize vertically")
-    
-    ValueProperty PROP_RESIZE_VERTICALLY = new ValueProperty(TYPE, "ResizeVertically");
-    
-    Value<Boolean> isResizeVertically();
-    void setResizeVertically( String value );
-    void setResizeVertically( Boolean value );
     
 }
