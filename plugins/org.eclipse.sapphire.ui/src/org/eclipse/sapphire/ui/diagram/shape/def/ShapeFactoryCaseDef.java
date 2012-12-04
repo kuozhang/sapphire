@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
@@ -28,10 +29,11 @@ import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
@@ -59,18 +61,34 @@ public interface ShapeFactoryCaseDef extends IModelElement
 
     // *** Shape ***
     
-	@Type( base = ShapeDef.class, 
-			possible = {TextDef.class, ImageDef.class, RectangleDef.class })
+	@Type
+	(
+		base = ShapeDef.class, 
+		possible =
+		{
+			TextDef.class, 
+			ImageDef.class, 
+			ValidationMarkerDef.class, 
+		    RectangleDef.class,
+		    LineShapeDef.class,
+		    ShapeFactoryDef.class
+		}
+	)
+	
 	@Label( standard = "shape" )
-    @XmlElementBinding
-    ( 
-        mappings = 
-        {
-            @XmlElementBinding.Mapping( element = "text", type = TextDef.class ),
-            @XmlElementBinding.Mapping( element = "image", type = ImageDef.class ),
-            @XmlElementBinding.Mapping( element = "rectangle", type = RectangleDef.class )
-        }
-    )
+	
+	@XmlListBinding
+	( 
+	    mappings = 
+	    {
+	        @XmlListBinding.Mapping( element = "text", type = TextDef.class ),
+	        @XmlListBinding.Mapping( element = "image", type = ImageDef.class ),
+	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
+	        @XmlListBinding.Mapping( element = "rectangle", type = RectangleDef.class ),
+	        @XmlListBinding.Mapping( element = "line", type = LineShapeDef.class ),
+	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class )
+	    }
+	)	
 	
     ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
     

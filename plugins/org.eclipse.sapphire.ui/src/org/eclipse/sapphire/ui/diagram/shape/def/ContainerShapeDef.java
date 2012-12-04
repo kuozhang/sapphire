@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @GenerateImpl
@@ -63,11 +65,23 @@ public interface ContainerShapeDef extends ShapeDef
     
     // *** Content ***
     
-	@Type( base = ShapeDef.class, 
-			possible = { TextDef.class, ImageDef.class, ValidationMarkerDef.class, 
-		                RectangleDef.class, ShapeFactoryDef.class })
+	@Type
+	(
+		base = ShapeDef.class, 
+		possible =
+		{
+			TextDef.class, 
+			ImageDef.class, 
+			ValidationMarkerDef.class, 
+		    RectangleDef.class,
+		    LineShapeDef.class,
+		    ShapeFactoryDef.class
+		}
+	)
+	
 	@CountConstraint( min = 1 )
 	@Label( standard = "content" )
+	
 	@XmlListBinding
 	( 
 	    path = "content",
@@ -77,6 +91,7 @@ public interface ContainerShapeDef extends ShapeDef
 	        @XmlListBinding.Mapping( element = "image", type = ImageDef.class ),
 	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
 	        @XmlListBinding.Mapping( element = "rectangle", type = RectangleDef.class ),
+	        @XmlListBinding.Mapping( element = "line", type = LineShapeDef.class ),
 	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class )
 	    }
 	)	

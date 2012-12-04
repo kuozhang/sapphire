@@ -1938,6 +1938,31 @@
             <image>${ Image() }</image>
         </case>
         <case>
+            <model-element-type>LineShapeDef</model-element-type>
+            <label>Line</label>
+            <image>${ Orientation == 'horizontal' ? 'LineShapeHorizontal.png' : 'LineShapeVertical.png' }</image>
+            <section>
+                <content>
+                    <property-editor>VisibleWhen</property-editor>
+                    <property-editor>Orientation</property-editor>
+                </content>
+            </section>
+            <node-include>DiagramShapeLayoutConstraintNode</node-include>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <with>
+                        <path>Presentation</path>
+                        <default-panel>
+                            <content>
+                                <include>LinePresentationForm</include>
+                            </content>
+                        </default-panel>
+                    </with>
+                </content>
+            </section>
+        </case>
+        <case>
             <model-element-type>ShapeFactoryDef</model-element-type>
             <label>Shape Factory</label>
             <section>
