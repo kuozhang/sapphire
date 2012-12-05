@@ -151,19 +151,6 @@
             <property-editor>Topics</property-editor>
         </content>
     </form>
-    <form>
-        <id>LayoutConstraintForm</id>
-        <content>
-            <property-editor>Width</property-editor>
-            <property-editor>Height</property-editor>
-            <property-editor>HorizontalAlignment</property-editor>
-            <property-editor>VerticalAlignment</property-editor>
-            <spacer>
-                <size>5</size>
-            </spacer>
-            <include>MarginsForm</include>
-        </content>
-    </form>
     
     <node>
         <id>ActionsOverallNode</id>
@@ -1686,25 +1673,63 @@
                 <with>
                     <panel>
                         <content>
+                            <label>A layout cell cannot be smaller than the minimum size of the shape that it contains. The cell can be bigger than the maximum size of the shape that it contains only if the cell is allowed to expand. Explicit minimum and maximum sizing that does not respect these rules will be ignored. All sizes include margins.</label>
+                            <spacer></spacer>
                             <property-editor>MinWidth</property-editor>
                             <property-editor>MinHeight</property-editor>
                             <property-editor>MaxWidth</property-editor>
                             <property-editor>MaxHeight</property-editor>
+                            <spacer></spacer>
+                            <label>The initial size of the layout cell, within the range specified by the minimum and maximum sizes.</label>
+                            <spacer></spacer>
+                            <property-editor>Width</property-editor>
+                            <property-editor>Height</property-editor>
+                            <spacer></spacer>
+                            <label>Margins provide extra space in the layout cell around the contained shape.</label>
+                            <spacer></spacer>
+                            <include>MarginsForm</include>
                             <spacer>
                                 <size>5</size>
                             </spacer>
-                            <property-editor>ExpandCellHorizontally</property-editor>
-                            <property-editor>ExpandCellVertically</property-editor>
-                            <spacer>
-                                <size>5</size>
-                            </spacer>
-                            <include>LayoutConstraintForm</include>
+                            <label>By default, the layout cell conforms to the size of the shape that it contains. This behavior can be overridden to allow the cell to expand beyond the size of its contained shape. Note that in certain cases, the cell will expand regardless of these settings. For instance, in a vertical sequence, all cells have to be at least as wide as the minimum width of the widest shape.</label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <hint>
+                                    <name>checkbox.layout</name>
+                                    <value>leading.label</value>
+                                </hint>
+                                <property>ExpandCellHorizontally</property>
+                            </property-editor>
+                            <property-editor>
+                                <hint>
+                                    <name>checkbox.layout</name>
+                                    <value>leading.label</value>
+                                </hint>
+                                <property>ExpandCellVertically</property>
+                            </property-editor>
+                            <spacer></spacer>
+                            <label>If a layout cell is larger than the shape that it contains, the alignment of the shape within the cell can be controlled.</label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <style>Sapphire.PropertyEditor.PopUpListField</style>
+                                <property>HorizontalAlignment</property>
+                            </property-editor>
+                            <property-editor>
+                                <style>Sapphire.PropertyEditor.PopUpListField</style>
+                                <property>VerticalAlignment</property>
+                            </property-editor>
                         </content>
                         <key>SequenceLayoutConstraintDef</key>
                     </panel>
                     <panel>
                         <content>
-                            <include>LayoutConstraintForm</include>
+                            <property-editor>Width</property-editor>
+                            <property-editor>Height</property-editor>
+                            <spacer></spacer>
+                            <property-editor>HorizontalAlignment</property-editor>
+                            <property-editor>VerticalAlignment</property-editor>
+                            <spacer></spacer>
+                            <include>MarginsForm</include>
                         </content>
                         <key>StackLayoutConstraintDef</key>
                     </panel>
@@ -1829,6 +1854,8 @@
                                 <content>
                                     <property-editor>Orientation</property-editor>
                                     <property-editor>Spacing</property-editor>
+                                    <spacer></spacer>
+                                    <label>Margin is the space inside the shape, between the border and the shape's content.</label>
                                     <spacer></spacer>
                                     <include>MarginsForm</include>
                                 </content>
@@ -2014,8 +2041,6 @@
     <form>
         <id>MarginsForm</id>
         <content>
-            <label>Margin is the space inside the shape, between the border and the shape's content.</label>
-            <spacer></spacer>
             <property-editor>Margin</property-editor>
             <property-editor>HorizontalMargin</property-editor>
             <property-editor>VerticalMargin</property-editor>
