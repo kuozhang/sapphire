@@ -1098,7 +1098,7 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
         (
             ExampleElement.TYPE,
             DefinitionLoader
-                .context( getClass().getClassLoader() )
+                .context( ExampleEditor.class.getClassLoader() )
                 .sdef( "org.eclipse.sapphire.examples.Examples" )
                 .page( "EditorPage" )
         );
