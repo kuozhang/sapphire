@@ -19,10 +19,8 @@ import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
@@ -30,7 +28,6 @@ import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.handles.NonResizableHandleKit;
 import org.eclipse.gef.handles.ResizableHandleKit;
 import org.eclipse.gef.handles.ResizeHandle;
-import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.gef.tools.SelectEditPartTracker;
@@ -161,30 +158,7 @@ public class DiagramNodeResizableEditPolicy extends ResizableEditPolicy
 	 * @since 3.7
 	 */
 	protected ResizeTracker getResizeTracker(int direction) {
-		return new ResizeTracker((GraphicalEditPart) getHost(), direction)
-		{
-			@Override
-			protected Dimension getMaximumSizeFor(ChangeBoundsRequest request) {
-				return new Dimension(250, 250);
-			}
-
-			/**
-			 * Determines the <em>minimum</em> size that the specified child can be
-			 * resized to.By default, a default value is returned. The value is
-			 * interpreted to be a dimension in the host figure's coordinate system
-			 * (i.e. relative to its bounds), so it is not affected by zooming effects.
-			 * 
-			 * @param request
-			 *            the ChangeBoundsRequest
-			 * @return the minimum size
-			 * @since 3.7
-			 */
-			@Override
-			protected Dimension getMinimumSizeFor(ChangeBoundsRequest request) {
-				return new Dimension(100, 100);
-			}
-			
-		};
+		return new ResizeTracker((GraphicalEditPart) getHost(), direction);
 	}
 	
 	/**
