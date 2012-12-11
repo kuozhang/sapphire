@@ -34,6 +34,12 @@ public class VirtualChildXmlResource extends XmlResource
     }
     
     @Override
+    public XmlResource parent()
+    {
+        return (XmlResource) super.parent();
+    }
+
+    @Override
     public void init( final IModelElement element )
     {
         super.init( element );

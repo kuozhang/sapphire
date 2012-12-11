@@ -12,19 +12,17 @@
 package org.eclipse.sapphire.modeling.xml;
 
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.Resource;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ChildXmlResource
-
-    extends XmlResource
-    
+public class ChildXmlResource extends XmlResource
 {
     private final XmlElement xmlElement;
 
-    public ChildXmlResource( final XmlResource parent,
+    public ChildXmlResource( final Resource parent,
                              final XmlElement xmlElement )
     {
         super( parent );
