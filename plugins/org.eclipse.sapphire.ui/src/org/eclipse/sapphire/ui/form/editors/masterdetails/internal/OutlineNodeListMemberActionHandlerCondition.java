@@ -24,10 +24,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPag
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class OutlineNodeListMemberActionHandlerCondition 
-
-    extends SapphireCondition
-    
+public class OutlineNodeListMemberActionHandlerCondition extends SapphireCondition
 {
     @Override
     protected boolean evaluate()
@@ -78,7 +75,7 @@ public class OutlineNodeListMemberActionHandlerCondition
     {
         final IModelElement element = node.getModelElement();
         
-        if( element.parent() instanceof ModelElementList<?> )
+        if( element.parent() instanceof ModelElementList<?> && ! element.getParentProperty().isReadOnly() )
         {
             final ISapphirePart parentPart = node.getParentPart();
             

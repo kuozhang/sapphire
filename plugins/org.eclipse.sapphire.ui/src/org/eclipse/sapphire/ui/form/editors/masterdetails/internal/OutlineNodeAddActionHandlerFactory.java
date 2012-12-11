@@ -109,9 +109,10 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         
         for( MasterDetailsContentNode.NodeFactory factory : node.factories() )
         {
-            if( factory.visible() )
+            final ModelProperty property = factory.property();
+            
+            if( factory.visible() && ! property.isReadOnly() )
             {
-                final ModelProperty property = factory.property();
                 final PossibleTypesService possibleTypesService = element.service( property, PossibleTypesService.class );
     
                 if( property instanceof ListProperty )
