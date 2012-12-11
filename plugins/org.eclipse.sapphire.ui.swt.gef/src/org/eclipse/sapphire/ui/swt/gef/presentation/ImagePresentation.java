@@ -9,18 +9,29 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.gef.model;
+package org.eclipse.sapphire.ui.swt.gef.presentation;
 
-import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
+import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class TextModel extends ShapeModel 
+public class ImagePresentation extends ShapePresentation 
 {
-	public TextModel(DiagramNodeModel rootModel, ShapeModel parent, TextPresentation text)
+	public ImagePresentation(ShapePresentation parent, ImagePart imagePart)
 	{
-		 super(rootModel, parent, text);
+		super(parent, imagePart);
+	}
+
+	public ImagePart getImagePart()
+	{
+		return (ImagePart)getPart();
+	}
+	
+	public ImageData getImage()
+	{
+		return getImagePart().getImage();
 	}
 }

@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -26,7 +25,6 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
-import org.eclipse.sapphire.ui.swt.gef.parts.ValidationMarkerEditPart;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
 

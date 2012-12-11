@@ -19,12 +19,12 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeFactoryModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.ShapeFactoryLayoutEditPolicy;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -47,14 +47,8 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 	public IFigure getContentPane() 
 	{
 		ShapeFactoryModel model = (ShapeFactoryModel)getModel();
-		ShapePart shapePart = (ShapePart)model.getSapphirePart();
-		DiagramNodeEditPart nodeEditPart = this.getNodeEditPart();
-		ShapePart parentPart = (ShapePart)shapePart.getParentPart();
-		while (!(parentPart instanceof ContainerShapePart))
-		{
-			parentPart = (ShapePart)parentPart.getParentPart();
-		}
-		IFigure parentFigure = nodeEditPart.getPartFigureMap().get(parentPart);
+		ShapePresentation parentPresentation = getParentContainer(model.getShapePresentation());
+		IFigure parentFigure = parentPresentation.getFigure();
 		return parentFigure;
 	}
 	
@@ -73,15 +67,12 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
 		
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
-		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
-		ShapePart parentPart = (ShapePart)shapePart.getParentPart();
-		while (!(parentPart instanceof ContainerShapePart))
-		{
-			parentPart = (ShapePart)parentPart.getParentPart();
-		}
-		
-		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePart, ((ContainerShapePart)parentPart).getLayout());
-		getContentPane().add(child, layoutConstraint, index);
+		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
+		ContainerShapePresentation parentPresentation = getParentContainer(shapePresentation);
+		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePresentation, 
+				parentPresentation.getLayout());
+		IFigure parentFigure = parentPresentation.getFigure();
+		parentFigure.add(child, layoutConstraint, index);
 		
 	}
 	

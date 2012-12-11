@@ -18,15 +18,15 @@ import org.eclipse.draw2d.Shape;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.Orientation;
-import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -34,21 +34,21 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 public class ContainerShapeFigure extends Shape 
 {
-	private ContainerShapePart containerShapePart;
+	private ContainerShapePresentation containerShapePresentation;
 	private DiagramResourceCache resourceCache;
 	private IModelElement model;
 	private int validationMarkerIndex;
 	private Status validationStatus;
 	private ShapeLayoutDef layout;
 	
-	public ContainerShapeFigure(ContainerShapePart containerShapePart, DiagramResourceCache resourceCache)
+	public ContainerShapeFigure(ContainerShapePresentation containerShapePresentation, DiagramResourceCache resourceCache)
 	{
-		this.containerShapePart = containerShapePart;
+		this.containerShapePresentation = containerShapePresentation;
 		this.resourceCache = resourceCache;
-		this.validationMarkerIndex = this.containerShapePart.getValidationMarkerIndex();
-		this.model = this.containerShapePart.getLocalModelElement();
+		this.validationMarkerIndex = this.containerShapePresentation.getValidationMarkerIndex();
+		this.model = this.containerShapePresentation.getPart().getLocalModelElement();
 		this.validationStatus = this.model.validation();
-		this.layout = this.containerShapePart.getLayout();
+		this.layout = this.containerShapePresentation.getLayout();
 	}
 	
 	@Override
@@ -92,15 +92,6 @@ public class ContainerShapeFigure extends Shape
 	
 	public void refreshValidationStatus()
 	{
-//		List children = getChildren();
-//		for (Object figureObj : children)
-//		{
-//			if (figureObj instanceof ContainerShapeFigure)
-//			{
-//				((ContainerShapeFigure)figureObj).refreshValidationStatus();
-//			}
-//		}
-		
 		if (this.validationMarkerIndex == -1)
 		{
 			return;
@@ -116,13 +107,14 @@ public class ContainerShapeFigure extends Shape
 			}
 			if (newStatus.severity() != Status.Severity.OK)
 			{
-				DiagramNodePart nodePart = this.containerShapePart.nearest(DiagramNodePart.class);
-				ValidationMarkerPart markerPart = this.containerShapePart.getValidationMarkerPart();
+				DiagramNodePart nodePart = this.containerShapePresentation.getPart().nearest(DiagramNodePart.class);
 				ValidationMarkerFigure newMarkerFigure = 
-						FigureUtil.createValidationMarkerFigure(markerPart.getSize(), this.model, nodePart.getImageCache()) ;
+						FigureUtil.createValidationMarkerFigure(this.containerShapePresentation.getValidationMarkerSize(), 
+									this.model, nodePart.getImageCache()) ;
 				if (this.layout instanceof StackLayoutDef)
 				{
-					StackLayoutConstraintDef stackLayoutConstraint = (StackLayoutConstraintDef)markerPart.getLayoutConstraint();
+					ValidationMarkerPresentation markerPresentation = this.containerShapePresentation.getValidationMarkerPresentation();
+					StackLayoutConstraintDef stackLayoutConstraint = (StackLayoutConstraintDef)markerPresentation.getLayoutConstraint();
 					SapphireStackLayoutConstraint constraint = null;
 					if (stackLayoutConstraint != null)
 					{

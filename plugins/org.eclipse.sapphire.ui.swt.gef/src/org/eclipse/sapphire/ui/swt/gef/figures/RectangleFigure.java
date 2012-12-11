@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.BorderComponent;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
@@ -29,6 +28,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 
@@ -44,17 +44,17 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
     private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_END = new org.eclipse.sapphire.ui.Color(0xD4, 0xE7, 0xF8);
     private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
 	
-	private RectanglePart rectPart;
+	private RectanglePresentation rectPresentation;
 	private ShapeLayoutDef layout;
 	private DiagramResourceCache resourceCache;
     private boolean selected;
 	private boolean hasFocus;
 	
-	public RectangleFigure(RectanglePart rectPart, DiagramResourceCache resourceCache)
+	public RectangleFigure(RectanglePresentation rectPresentation, DiagramResourceCache resourceCache)
 	{
-		super(rectPart, resourceCache);
-		this.rectPart = rectPart;
-		this.layout = rectPart.getLayout();
+		super(rectPresentation, resourceCache);
+		this.rectPresentation = rectPresentation;
+		this.layout = rectPresentation.getLayout();
 		this.resourceCache = resourceCache;		
 		
 		if (this.layout instanceof SequenceLayoutDef)
@@ -72,7 +72,7 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 	@Override
 	protected void fillShape(Graphics graphics) 
 	{
-		BackgroundDef bg = this.rectPart.getBackground();
+		BackgroundDef bg = this.rectPresentation.getBackground();
 		if (bg != null)
 		{
 			final Dimension cornerDimension = new Dimension(1, 1);
@@ -148,49 +148,61 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		final Color oldColor = graphics.getForegroundColor();
 		final int oldLineStyle = graphics.getLineStyle();
 		
-		int cornerRadius = this.rectPart.getCornerRadius();
+		int cornerRadius = this.rectPresentation.getCornerRadius();
 		final Dimension cornerDimension = new Dimension(cornerRadius, cornerRadius); 
-		
-		BorderComponent borderDef = this.rectPart.getTopBorder(); 
-
-		if( borderDef.getWeight().getContent() > 0 )
+		BorderComponent borderDef = this.rectPresentation.getTopBorder(); 
+		if (hasUniformBorders() && borderDef.getWeight().getContent() > 0)
 		{
 			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
-			graphics.drawLine(r.x, r.y, r.x + r.width, r.y);
+			graphics.drawRoundRectangle(r,
+					Math.max(0, cornerDimension.width - (int) lineInset),
+					Math.max(0, cornerDimension.height - (int) lineInset));
+			
 		}
-
-		borderDef = this.rectPart.getBottomBorder();
+		else
+		{
+	
+			if( borderDef.getWeight().getContent() > 0 )
+			{
+				graphics.setLineWidth(borderDef.getWeight().getContent());
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
+				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.drawLine(r.x, r.y, r.x + r.width, r.y);
+			}
+	
+			borderDef = this.rectPresentation.getBottomBorder();
+			
+			if( borderDef.getWeight().getContent() > 0 )
+			{	
+				graphics.setLineWidth(borderDef.getWeight().getContent());
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
+				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.drawLine(r.x, r.y + r.height, r.x + r.width, r.y + r.height);
+			}
+	
+			borderDef = this.rectPresentation.getRightBorder();
+			
+			if( borderDef.getWeight().getContent() > 0 )
+			{	
+				graphics.setLineWidth(borderDef.getWeight().getContent());
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
+				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.drawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
+			}
+	
+			borderDef = this.rectPresentation.getLeftBorder();
+			
+			if( borderDef.getWeight().getContent() > 0 )
+			{	
+				graphics.setLineWidth(borderDef.getWeight().getContent());
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
+				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.drawLine(r.x, r.y, r.x, r.y + r.height);
+			}
+		}
 		
-		if( borderDef.getWeight().getContent() > 0 )
-		{	
-			graphics.setLineWidth(borderDef.getWeight().getContent());
-			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
-			graphics.drawLine(r.x, r.y + r.height, r.x + r.width, r.y + r.height);
-		}
-
-		borderDef = this.rectPart.getRightBorder();
-		
-		if( borderDef.getWeight().getContent() > 0 )
-		{	
-			graphics.setLineWidth(borderDef.getWeight().getContent());
-			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
-			graphics.drawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
-		}
-
-		borderDef = this.rectPart.getLeftBorder();
-		
-		if( borderDef.getWeight().getContent() > 0 )
-		{	
-			graphics.setLineWidth(borderDef.getWeight().getContent());
-			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
-			graphics.drawLine(r.x, r.y, r.x, r.y + r.height);
-		}
-
 		if (hasFocus || selected) 
 		{
 			graphics.setForegroundColor(resourceCache.getColor(OUTLINE_FOREGROUND));
@@ -235,6 +247,38 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			swtStyle = SWT.LINE_DOT;
 		}
 		return swtStyle;
+	}
+	
+	private boolean hasUniformBorders()
+	{
+		org.eclipse.sapphire.ui.Color tc, bc, lc, rc;
+		tc = this.rectPresentation.getTopBorder().getColor().getContent();
+		bc = this.rectPresentation.getBottomBorder().getColor().getContent();
+		lc = this.rectPresentation.getLeftBorder().getColor().getContent();
+		rc = this.rectPresentation.getRightBorder().getColor().getContent();
+		if (!(tc.equals(bc) && tc.equals(lc) && tc.equals(rc)))
+		{
+			return false;
+		}
+		int tw, bw, lw, rw;
+		tw = this.rectPresentation.getTopBorder().getWeight().getContent();
+		bw = this.rectPresentation.getBottomBorder().getWeight().getContent();
+		lw = this.rectPresentation.getLeftBorder().getWeight().getContent();
+		rw = this.rectPresentation.getRightBorder().getWeight().getContent();
+		if (!(tw == bw && tw == lw && tw == rw))
+		{
+			return false;
+		}
+		LineStyle ts, bs, ls, rs;
+		ts = this.rectPresentation.getTopBorder().getStyle().getContent();
+		bs = this.rectPresentation.getBottomBorder().getStyle().getContent();
+		ls = this.rectPresentation.getLeftBorder().getStyle().getContent();
+		rs = this.rectPresentation.getRightBorder().getStyle().getContent();
+		if (!(ts == bs && ts == ls && ts == rs))
+		{
+			return false;
+		}
+		return true;
 	}
 	
 }

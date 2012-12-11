@@ -111,8 +111,7 @@ public class ContainerShapeEditPart extends ShapeEditPart
 	{
 		if (textPart.isEditable())
 		{
-			DiagramNodeEditPart nodeEditPart = this.getNodeEditPart();
-			TextFigure textFigure = (TextFigure)nodeEditPart.getPartFigureMap().get(textPart);
+			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
 			if (textFigure != null)
 			{
 				NodeDirectEditManager manager = 
@@ -149,11 +148,10 @@ public class ContainerShapeEditPart extends ShapeEditPart
 	private TextPart getTextPart(Point mouseLocation)
 	{
 		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
-		DiagramNodeEditPart nodeEditPart = this.getNodeEditPart();
 		List<TextPart> textParts = getTextParts();
 		for (TextPart textPart : textParts)
 		{
-			TextFigure textFigure = (TextFigure)nodeEditPart.getPartFigureMap().get(textPart);
+			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
 			if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
 			{
 				return textPart;

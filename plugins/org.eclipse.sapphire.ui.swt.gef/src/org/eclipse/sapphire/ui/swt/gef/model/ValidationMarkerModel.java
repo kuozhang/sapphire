@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef.model;
 
-import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -19,9 +19,10 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 
 public class ValidationMarkerModel extends ShapeModel 
 {
-	public ValidationMarkerModel(DiagramNodeModel rootModel, ShapeModel parent, ValidationMarkerPart part)
+	public ValidationMarkerModel(DiagramNodeModel rootModel, ShapeModel parent, 
+			ValidationMarkerPresentation validationMarker)
 	{
-		 super(rootModel, parent, part);
+		 super(rootModel, parent, validationMarker);
 	}
 
 }

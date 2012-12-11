@@ -52,6 +52,9 @@ import org.eclipse.sapphire.ui.swt.gef.policies.DiagramNodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLabelDirectEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLayoutEditPolicy;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -65,16 +68,14 @@ public class DiagramNodeEditPart extends ShapeEditPart
     private ConnectionAnchor sourceAnchor;
     private ConnectionAnchor targetAnchor;
     
-	private HashMap<ShapePart, IFigure> partToFigure = new HashMap<ShapePart, IFigure>();
-
     public DiagramNodeEditPart(DiagramConfigurationManager configManager) {
     	super(configManager);
     }
     
     @Override
 	protected IFigure createFigure() {
-    	DiagramNodePart nodePart = getCastedModel().getModelPart();
-    	return ShapeUtil.createFigureForShape(nodePart.getShapePart(), partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+    	ShapePresentation shapePresentation = getCastedModel().getShapePresentation();
+    	return ShapeUtil.createFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
     	
 	}
 
@@ -114,14 +115,11 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			return;
 		
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
-		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
-		ShapePart parentPart = (ShapePart)shapePart.getParentPart();
-		while (!(parentPart instanceof ContainerShapePart))
-		{
-			parentPart = (ShapePart)parentPart.getParentPart();
-		}
-		IFigure parentFigure = this.partToFigure.get(parentPart);
-		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePart, ((ContainerShapePart)parentPart).getLayout());
+		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
+		ContainerShapePresentation parentPresentation = getParentContainer(shapePresentation);
+		IFigure parentFigure = parentPresentation.getFigure();
+		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePresentation, 
+				parentPresentation.getLayout());
 		parentFigure.add(child, layoutConstraint, index);
 	}
 	
@@ -133,13 +131,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			return;
 		
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
-		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
-		ShapePart parentPart = (ShapePart)shapePart.getParentPart();
-		while (!(parentPart instanceof ContainerShapePart))
-		{
-			parentPart = (ShapePart)parentPart.getParentPart();
-		}
-		IFigure parentFigure = this.partToFigure.get(parentPart);
+		ContainerShapePresentation parentPresentation = getParentContainer(shapeModel.getShapePresentation());
+		IFigure parentFigure = parentPresentation.getFigure();
 		parentFigure.remove(child);		
 	}
 	
@@ -171,7 +164,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	{
 		if (textPart.isEditable())
 		{
-			TextFigure textFigure = (TextFigure)this.partToFigure.get(textPart);
+			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
 			if (textFigure != null)
 			{
 				NodeDirectEditManager manager = 
@@ -254,7 +247,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 		else if (obj instanceof ShapePart)
 		{
-			figure = this.partToFigure.get((ShapePart)obj);
+			figure = getPartFigure((ShapePart)obj);
 		}
 		if (figure instanceof ContainerShapeFigure)
 		{
@@ -265,20 +258,24 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	
 	private void updateShape(ShapePart shapePart) 
 	{
-		if (shapePart instanceof TextPart)
+		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
+		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);
+		if (shapePresentation instanceof TextPresentation)
 		{
-			TextFigure textFigure = (TextFigure)this.partToFigure.get(shapePart);
-			textFigure.setText(((TextPart)shapePart).getContent());
+			TextFigure textFigure = (TextFigure)shapePresentation.getFigure();
+			textFigure.setText(((TextPresentation)shapePresentation).getContent());
 		}
 		else
 		{
-			ShapeUtil.updateFigureForShape(shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+			ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
 		}
 	}
 	
 	private void updateShapeVisibility(ShapePart shapePart) 
 	{
-		boolean updated = ShapeUtil.updateFigureForShape(shapePart, partToFigure, getCastedModel().getDiagramModel().getResourceCache());
+		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
+		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);		
+		boolean updated = ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
 		if (updated && (shapePart instanceof TextPart))
 		{
 			// The label figure has been recreated; we need to throw away the direct edit cache.
@@ -339,11 +336,6 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 	}
 	
-	public HashMap<ShapePart, IFigure> getPartFigureMap()
-	{
-		return this.partToFigure;
-	}
-	
 	public TextPart getTextPart(Point mouseLocation)
 	{
 		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
@@ -351,7 +343,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		ShapePart shapePart = nodePart.getShapePart();
 		if (shapePart instanceof TextPart)
 		{
-			TextFigure textFigure = (TextFigure)this.partToFigure.get(shapePart);
+			TextFigure textFigure = (TextFigure)getPartFigure(shapePart);
 			if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
 			{
 				return (TextPart)shapePart;
@@ -362,7 +354,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			List<TextPart> textParts = ((ContainerShapePart)shapePart).getTextParts();
 			for (TextPart textPart : textParts)
 			{
-				TextFigure textFigure = (TextFigure)this.partToFigure.get(textPart);
+				TextFigure textFigure = (TextFigure)getPartFigure(textPart);
 				if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
 				{
 					return textPart;
@@ -398,4 +390,5 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 		return false;
 	}
+	
 }

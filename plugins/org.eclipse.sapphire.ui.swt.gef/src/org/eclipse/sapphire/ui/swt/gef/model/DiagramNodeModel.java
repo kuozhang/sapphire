@@ -18,12 +18,12 @@ import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
-import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
-import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel.ShapeModelFactory;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation.ShapePresentationFactory;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -43,6 +43,7 @@ public class DiagramNodeModel extends DiagramModelBase {
     private DiagramNodePart part;
 	private List<DiagramConnectionModel> sourceConnections = new ArrayList<DiagramConnectionModel>();
 	private List<DiagramConnectionModel> targetConnections = new ArrayList<DiagramConnectionModel>();
+	private ShapePresentation shapePresentation;
 	private ShapeModel shapeModel;
 	
 	public DiagramNodeModel(DiagramModel parent, DiagramNodePart part) 
@@ -50,22 +51,8 @@ public class DiagramNodeModel extends DiagramModelBase {
 		this.parent = parent;
 		this.part = part;
 		ShapePart shapePart = this.part.getShapePart();
-		if (shapePart instanceof TextPart)
-		{
-			this.shapeModel = new TextModel(this, null, (TextPart)shapePart);
-		}
-		else if (shapePart instanceof ImagePart)
-		{
-			this.shapeModel = new ImageModel(this, null, (ImagePart)shapePart);
-		}
-		else if (shapePart instanceof ValidationMarkerPart)
-		{
-			this.shapeModel = new ValidationMarkerModel(this, null, (ValidationMarkerPart)shapePart);
-		}
-		else if (shapePart instanceof RectanglePart)
-		{
-			this.shapeModel = new RectangleModel(this, null, (RectanglePart)shapePart);
-		}
+		this.shapePresentation = ShapePresentationFactory.createShapePresentation(null, shapePart);
+		this.shapeModel = ShapeModelFactory.createShapeModel(this, null, this.shapePresentation);
 	}
 	
 	public DiagramModel getDiagramModel() {
@@ -181,4 +168,9 @@ public class DiagramNodeModel extends DiagramModelBase {
 		return this.shapeModel;
 	}
 	
+	public ShapePresentation getShapePresentation()
+	{
+		return this.shapePresentation;
+	}
+		
 }

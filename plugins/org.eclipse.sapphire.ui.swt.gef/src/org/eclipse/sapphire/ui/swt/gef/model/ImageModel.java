@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef.model;
 
-import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -19,9 +19,9 @@ import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 
 public class ImageModel extends ShapeModel 
 {
-	public ImageModel(DiagramNodeModel rootModel, ShapeModel parent, ImagePart part)
+	public ImageModel(DiagramNodeModel rootModel, ShapeModel parent, ImagePresentation image)
 	{
-		 super(rootModel, parent, part);
+		 super(rootModel, parent, image);
 	}
 
 }

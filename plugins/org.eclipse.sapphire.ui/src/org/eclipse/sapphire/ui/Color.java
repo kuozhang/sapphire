@@ -61,4 +61,21 @@ public class Color
         return this.b;
     }
     
+    @Override
+    public boolean equals(Object another)
+    {
+    	boolean isEqual = false;
+    	if (another instanceof Color)
+    	{
+    		Color color = (Color)another;
+    		if (color.getRed() == getRed() && color.getGreen() == getGreen() &&
+    				color.getBlue() == getBlue())
+    		{
+    			isEqual = true;
+    		}
+    	}
+    	return isEqual;
+    }
+    
+    
 }

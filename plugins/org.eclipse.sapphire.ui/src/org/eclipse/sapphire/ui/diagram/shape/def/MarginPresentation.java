@@ -74,7 +74,7 @@ public interface MarginPresentation extends IModelElement
     @Type( base = Integer.class )
     @Label( standard = "top margin" )
     @XmlBinding( path = "top-margin" )
-    @DefaultValue( text = "${ HorizontalMargin }" )
+    @DefaultValue( text = "${ VerticalMargin }" )
     
     ValueProperty PROP_TOP_MARGIN = new ValueProperty( TYPE, "TopMargin" );
     
@@ -87,7 +87,7 @@ public interface MarginPresentation extends IModelElement
     @Type( base = Integer.class )
     @Label( standard = "bottom margin" )
     @XmlBinding( path = "bottom-margin" )
-    @DefaultValue( text = "${ HorizontalMargin }" )
+    @DefaultValue( text = "${ VerticalMargin }" )
     
     ValueProperty PROP_BOTTOM_MARGIN = new ValueProperty( TYPE, "BottomMargin" );
     
@@ -100,7 +100,7 @@ public interface MarginPresentation extends IModelElement
     @Type( base = Integer.class )
     @Label( standard = "left margin" )
     @XmlBinding( path = "left-margin" )
-    @DefaultValue( text = "${ VerticalMargin }" )
+    @DefaultValue( text = "${ HorizontalMargin }" )
     
     ValueProperty PROP_LEFT_MARGIN = new ValueProperty( TYPE, "LeftMargin" );
     
@@ -113,7 +113,7 @@ public interface MarginPresentation extends IModelElement
     @Type( base = Integer.class )
     @Label( standard = "right margin" )
     @XmlBinding( path = "right-margin" )
-    @DefaultValue( text = "${ VerticalMargin }" )
+    @DefaultValue( text = "${ HorizontalMargin }" )
     
     ValueProperty PROP_RIGHT_MARGIN = new ValueProperty( TYPE, "RightMargin" );
     

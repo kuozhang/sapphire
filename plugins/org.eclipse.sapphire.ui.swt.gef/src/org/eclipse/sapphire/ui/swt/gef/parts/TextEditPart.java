@@ -13,13 +13,13 @@
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.RequestConstants;
-import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 import org.eclipse.sapphire.ui.swt.gef.model.TextModel;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -37,9 +37,10 @@ public class TextEditPart extends ShapeEditPart
 	{
 		TextModel textModel = (TextModel)getModel();
 		TextPart textPart = (TextPart)textModel.getSapphirePart();
-		int textAlignment = ShapeUtil.getTextAlignment(textPart.getLayoutConstraint());
+		ShapePresentation nodePresentation = getNodeEditPart().getCastedModel().getShapePresentation();
+		TextPresentation textPresentation = (TextPresentation)ShapeModelUtil.getChildShapePresentation(nodePresentation, textPart);
 		TextFigure figure = new TextFigure(textModel.getNodeModel().getDiagramModel().getResourceCache(), 
-				textPart.getContent(), textPart.getTextColor(), textPart.getFontDef(), textAlignment);
+				textPresentation);
 		return figure;
 	}
 		
@@ -50,22 +51,5 @@ public class TextEditPart extends ShapeEditPart
 		TextPart textPart = (TextPart)textModel.getSapphirePart();
 		((TextFigure)getFigure()).setText(textPart.getContent());
 	}
-	
-	@Override
-	public void performRequest(Request request) 
-	{
-		if (request.getType() == RequestConstants.REQ_DIRECT_EDIT)
-		{
-			if (!(request instanceof DirectEditRequest))
-			{
-				// Direct edit invoked using key command
-				
-			}
-		}
-		else if (request.getType().equals(REQ_OPEN))
-		{
-			int i = 0;
-		}
-	}
-	
+		
 }

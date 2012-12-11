@@ -52,7 +52,7 @@
             <rectangle>
               <corner-radius>8</corner-radius>
               <border>
-                <width>1</width>
+                <weight>1</weight>
                 <style>solid</style>
                 <color>#333399</color>
               </border>

@@ -20,6 +20,9 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -75,9 +78,9 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	protected IFigure createFigure() 
 	{
 		ShapeModel shapeModel = (ShapeModel)getModel();
-		ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
+		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
 		DiagramNodeEditPart nodeEditPart = getNodeEditPart();
-		IFigure fig = ShapeUtil.createFigureForShape(shapePart, nodeEditPart.getPartFigureMap(), 
+		IFigure fig = ShapeUtil.createFigureForShape(shapePresentation,  
 					nodeEditPart.getCastedModel().getDiagramModel().getResourceCache());
 		return fig;
 	}
@@ -100,6 +103,24 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 			parent = parent.getParent();
 		}
 		return (DiagramNodeEditPart)parent;
+	}
+	
+	protected ContainerShapePresentation getParentContainer(ShapePresentation shapePresentation)
+	{
+		ShapePresentation parentPresentation = shapePresentation.getParent();
+		while (!(parentPresentation instanceof ContainerShapePresentation) && parentPresentation != null)
+		{
+			parentPresentation = parentPresentation.getParent();
+		}
+		return (ContainerShapePresentation)parentPresentation;
+	}
+	
+	protected IFigure getPartFigure(ShapePart shapePart)
+	{
+		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(
+				getNodeEditPart().getCastedModel().getShapePresentation(), shapePart);
+		return shapePresentation.getFigure();
+		
 	}
 	
 }

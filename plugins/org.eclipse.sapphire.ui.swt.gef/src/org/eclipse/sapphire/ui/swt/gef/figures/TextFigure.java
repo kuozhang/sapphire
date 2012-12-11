@@ -15,9 +15,10 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.sapphire.ui.Color;
-import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
+import org.eclipse.sapphire.ui.def.HorizontalAlignment;
+import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -26,22 +27,19 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 public class TextFigure extends Label 
 {
 	private DiagramResourceCache resourceCache;
+	private TextPresentation textPresentation;
 	private Rectangle availableArea;
 	private int horizontalAlignment;
 	
-	public TextFigure(DiagramResourceCache resourceCache, String value, Color textColor, FontDef fontDef)
-	{
-		this(resourceCache, value, textColor, fontDef, PositionConstants.CENTER);
-	}
-	
-	public TextFigure(DiagramResourceCache resourceCache, String value, Color textColor, FontDef fontDef, int labelAlignment)
+	public TextFigure(DiagramResourceCache resourceCache, TextPresentation textPresentation)
 	{
 		this.resourceCache = resourceCache;
-		
-		setForegroundColor(resourceCache.getColor(textColor));
-		setLabelAlignment(labelAlignment);
-		setFont(this.resourceCache.getFont(fontDef));
-		setText(value);
+		this.textPresentation = textPresentation;
+		setForegroundColor(resourceCache.getColor(textPresentation.getTextColor()));
+		this.horizontalAlignment = getSwtTextAlignment();
+		setLabelAlignment(this.horizontalAlignment);
+		setFont(this.resourceCache.getFont(textPresentation.getFontDef()));
+		setText(textPresentation.getContent());
 	}
 
 	public Rectangle getAvailableArea() {
@@ -58,6 +56,30 @@ public class TextFigure extends Label
 
 	public void setHorizontalAlignment(int horizontalAlignment) {
 		this.horizontalAlignment = horizontalAlignment;
+	}
+	
+	public TextPresentation getTextPresentation()
+	{
+		return this.textPresentation;
+	}
+	
+	private int getSwtTextAlignment()
+	{
+		int alignment = PositionConstants.CENTER;
+		LayoutConstraintDef constraint = this.textPresentation.getLayoutConstraint();
+		HorizontalAlignment sapphireAlign = constraint.getHorizontalAlignment().getContent();
+		switch (sapphireAlign) 
+		{
+			case LEFT:
+				alignment = PositionConstants.LEFT;
+				break;
+			case RIGHT:
+				alignment = PositionConstants.RIGHT;
+				break;
+			default:			
+				break;
+		}
+		return alignment;
 	}
 	
 }

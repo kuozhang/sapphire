@@ -12,12 +12,12 @@
 package org.eclipse.sapphire.ui.swt.gef.model;
 
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
-import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.TextPart;
-import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapeFactoryPresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -27,22 +27,27 @@ public class ShapeModel extends DiagramModelBase
 {
 	private DiagramNodeModel nodeModel;
 	private ShapeModel parent;
-    private SapphirePart sapphirePart;
+	private ShapePresentation shapePresentation;
     public final static String SHAPE_START_EDITING = "SHAPE_START_EDITING";
 
-    public ShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, SapphirePart part)
+    public ShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapePresentation shapePresentation)
     {
     	this.nodeModel = nodeModel;
     	this.parent = parent;
-    	this.sapphirePart = part;
+    	this.shapePresentation = shapePresentation;
     }
     
 	@Override
 	public SapphirePart getSapphirePart() 
 	{		
-		return this.sapphirePart;
+		return this.shapePresentation.getPart();
 	}
 
+	public ShapePresentation getShapePresentation()
+	{
+		return this.shapePresentation;
+	}
+	
 	public ShapeModel getParent()
 	{
 		return this.parent;
@@ -80,28 +85,28 @@ public class ShapeModel extends DiagramModelBase
     
     public static final class ShapeModelFactory
     {
-    	public static ShapeModel createShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapePart shapePart)
+    	public static ShapeModel createShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapePresentation shapePresentation)
     	{
     		ShapeModel childModel = null;
-        	if (shapePart instanceof TextPart)
+        	if (shapePresentation instanceof TextPresentation)
         	{
-    	        childModel = new TextModel(nodeModel, parent, (TextPart)shapePart);
+    	        childModel = new TextModel(nodeModel, parent, (TextPresentation)shapePresentation);
         	}
-        	else if (shapePart instanceof ImagePart)
+        	else if (shapePresentation instanceof ImagePresentation)
         	{
-        		childModel = new ImageModel(nodeModel, parent, (ImagePart)shapePart);
+        		childModel = new ImageModel(nodeModel, parent, (ImagePresentation)shapePresentation);
         	}
-        	else if (shapePart instanceof ValidationMarkerPart)
+        	else if (shapePresentation instanceof ValidationMarkerPresentation)
         	{
-        		childModel = new ValidationMarkerModel(nodeModel, parent, (ValidationMarkerPart)shapePart);
+        		childModel = new ValidationMarkerModel(nodeModel, parent, (ValidationMarkerPresentation)shapePresentation);
         	}
-        	else if (shapePart instanceof RectanglePart)
+        	else if (shapePresentation instanceof RectanglePresentation)
         	{
-        		childModel = new RectangleModel(nodeModel, parent, (RectanglePart)shapePart);
+        		childModel = new RectangleModel(nodeModel, parent, (RectanglePresentation)shapePresentation);
         	}
-        	else if (shapePart instanceof ShapeFactoryPart)
+        	else if (shapePresentation instanceof ShapeFactoryPresentation)
         	{
-            	childModel = new ShapeFactoryModel(nodeModel, parent, (ShapeFactoryPart)shapePart);        		
+            	childModel = new ShapeFactoryModel(nodeModel, parent, (ShapeFactoryPresentation)shapePresentation);        		
         	}
     		return childModel;
     	}

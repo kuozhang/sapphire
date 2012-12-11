@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef.model;
 
-import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -19,8 +19,8 @@ import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 
 public class RectangleModel extends ContainerShapeModel 
 {
-	public RectangleModel(DiagramNodeModel rootModel, ShapeModel parent, RectanglePart part)
+	public RectangleModel(DiagramNodeModel rootModel, ShapeModel parent, RectanglePresentation rectangle)
 	{
-		 super(rootModel, parent, part);
+		 super(rootModel, parent, rectangle);
 	}
 }

@@ -9,18 +9,29 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.gef.model;
+package org.eclipse.sapphire.ui.swt.gef.presentation;
 
-import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
+import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
+import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class TextModel extends ShapeModel 
+public class ValidationMarkerPresentation extends ShapePresentation 
 {
-	public TextModel(DiagramNodeModel rootModel, ShapeModel parent, TextPresentation text)
+	public ValidationMarkerPresentation(ShapePresentation parent, ValidationMarkerPart validationMarkerPart)
 	{
-		 super(rootModel, parent, text);
+		super(parent, validationMarkerPart);
+	}
+
+	public ValidationMarkerPart getValidationMarkerPart()
+	{
+		return (ValidationMarkerPart)getPart();
+	}
+	
+	public ValidationMarkerSize getSize()
+	{
+		return getValidationMarkerPart().getSize();
 	}
 }

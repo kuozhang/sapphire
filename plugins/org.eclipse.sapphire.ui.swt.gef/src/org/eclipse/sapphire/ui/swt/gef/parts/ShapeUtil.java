@@ -11,21 +11,14 @@
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
-import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
-import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraintDef;
@@ -40,6 +33,12 @@ import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -47,23 +46,23 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 public class ShapeUtil {  
 	
-	public static IFigure createFigureForShape(ShapePart shapePart, HashMap<ShapePart, IFigure> partToFigure, DiagramResourceCache resourceCache)
+	public static IFigure createFigureForShape(ShapePresentation shapePresentation, DiagramResourceCache resourceCache)
 	{
-		IFigure figure = createFigure(shapePart, resourceCache);
-		partToFigure.put(shapePart, figure);
+		IFigure figure = createFigure(shapePresentation, resourceCache);
+		shapePresentation.setFigure(figure);
 		
-		if (shapePart instanceof ContainerShapePart)
+		if (shapePresentation instanceof ContainerShapePresentation)
 		{
-			ContainerShapePart containerPart = (ContainerShapePart)shapePart;
-			ShapeLayoutDef layoutDef = containerPart.getLayout();
-			for (ShapePart childShapePart : containerPart.getChildren())
+			ContainerShapePresentation containerPresentation = (ContainerShapePresentation)shapePresentation;
+			ShapeLayoutDef layoutDef = containerPresentation.getLayout();
+			for (ShapePresentation childShapePresentation : containerPresentation.getChildren())
 			{
-				if (!childShapePart.isActive())
+				if (!childShapePresentation.getPart().isActive())
 				{
-					IFigure childFigure = createFigureForShape(childShapePart, partToFigure, resourceCache);
+					IFigure childFigure = createFigureForShape(childShapePresentation, resourceCache);
 					if (childFigure != null)
 					{
-						Object layoutConstraint = getLayoutConstraint(childShapePart, layoutDef);
+						Object layoutConstraint = getLayoutConstraint(childShapePresentation, layoutDef);
 						if (layoutConstraint != null)
 						{
 							figure.add(childFigure, layoutConstraint);
@@ -79,59 +78,50 @@ public class ShapeUtil {
 		return figure;
 	}
 	
-	private static IFigure createFigure(ShapePart shapePart, DiagramResourceCache resourceCache)
+	private static IFigure createFigure(ShapePresentation shapePresentation, DiagramResourceCache resourceCache)
 	{
 		IFigure figure = null;
-		if (shapePart instanceof TextPart)
+		if (shapePresentation instanceof TextPresentation)
 		{
-			TextPart textPart = (TextPart)shapePart;
-			int textALignment = getTextAlignment(textPart.getLayoutConstraint());
-			figure = new TextFigure(resourceCache, textPart.getContent(), 
-					textPart.getTextColor(), textPart.getFontDef(), textALignment);
+			TextPresentation textPresentation = (TextPresentation)shapePresentation;
+			figure = new TextFigure(resourceCache, textPresentation);
 		}
-		else if (shapePart instanceof ImagePart)
+		else if (shapePresentation instanceof ImagePresentation)
 		{
-			ImagePart imagePart = (ImagePart)shapePart;
-			if (imagePart.visible()) {
+			ImagePresentation imagePresentation = (ImagePresentation)shapePresentation;
+			if (imagePresentation.visible()) 
+			{
+				ImagePart imagePart = imagePresentation.getImagePart();
 				DiagramNodePart nodePart = imagePart.nearest(DiagramNodePart.class);
-				final ImageData data = imagePart.getImage();
-				if (data != null) {
+				final ImageData data = imagePresentation.getImage();
+				if (data != null) 
+				{
 					figure = new DecoratorImageFigure(nodePart.getImageCache().getImage(data));
 				}
 			}
 		}
-		else if (shapePart instanceof ValidationMarkerPart)
+		else if (shapePresentation instanceof ValidationMarkerPresentation)
 		{
-			ValidationMarkerPart markerPart = (ValidationMarkerPart)shapePart;
+			ValidationMarkerPresentation markerPresentation = (ValidationMarkerPresentation)shapePresentation;
+			ValidationMarkerPart markerPart = markerPresentation.getValidationMarkerPart();
 			DiagramNodePart nodePart = markerPart.nearest(DiagramNodePart.class);
-			figure = FigureUtil.createValidationMarkerFigure(markerPart.getSize(), shapePart.getLocalModelElement(), nodePart.getImageCache());
+			figure = FigureUtil.createValidationMarkerFigure(markerPresentation.getSize(), markerPart.getLocalModelElement(), nodePart.getImageCache());
 		}
-		else if (shapePart instanceof RectanglePart)
+		else if (shapePresentation instanceof RectanglePresentation)
 		{
-			RectanglePart rectPart = (RectanglePart)shapePart;
-			figure = new RectangleFigure(rectPart, resourceCache);
+			RectanglePresentation rectPresentation = (RectanglePresentation)shapePresentation;
+			figure = new RectangleFigure(rectPresentation, resourceCache);
 		}
 		return figure;
 	}
 	
-	public static boolean updateFigureForShape(ShapePart updateShapePart, HashMap<ShapePart, IFigure> partToFigure, DiagramResourceCache resourceCache)
+	public static boolean updateFigureForShape(ShapePresentation updateShape, DiagramResourceCache resourceCache)
 	{
-		IFigure updateFigure = partToFigure.get(updateShapePart);
-		ContainerShapePart containerShapePart = null;
-		ISapphirePart pp = updateShapePart.getParentPart();
-		if (pp instanceof ContainerShapePart)
+		IFigure updateFigure = updateShape.getFigure();
+		if (updateShape.visible()) 
 		{
-			containerShapePart = (ContainerShapePart)pp;
-		}
-		else if (pp instanceof ShapeFactoryPart)
-		{
-			ISapphirePart ppp = pp.getParentPart();
-			assert (ppp instanceof ContainerShapePart);
-			containerShapePart = (ContainerShapePart)ppp;
-		}
-		if (updateShapePart.visible()) 
-		{
-			IFigure containerFigure = partToFigure.get(containerShapePart);
+			IFigure containerFigure = updateShape.getParentFigure();
+			ContainerShapePresentation containerPresentation = (ContainerShapePresentation)updateShape.getParent();
 			// find the parent figure
 			if (containerFigure != null) 
 			{
@@ -143,10 +133,10 @@ public class ShapeUtil {
 					containerFigure.remove(updateFigure);
 				}
 				// add it
-				updateFigure = createFigure(updateShapePart, resourceCache);
-				partToFigure.put(updateShapePart, updateFigure);
+				updateFigure = createFigure(updateShape, resourceCache);
+				updateShape.setFigure(updateFigure);
 
-				Object layoutConstraint = getLayoutConstraint(updateShapePart, containerShapePart.getLayout());
+				Object layoutConstraint = getLayoutConstraint(updateShape, containerPresentation.getLayout());
 				if (layoutConstraint != null)
 				{
 					containerFigure.add(updateFigure, layoutConstraint, index);
@@ -158,11 +148,11 @@ public class ShapeUtil {
 				containerFigure.revalidate();
 			}
 		} 
-		else if (!updateShapePart.visible() && updateFigure != null) 
+		else if (!updateShape.visible() && updateFigure != null) 
 		{
 			// remove it
-			partToFigure.remove(updateShapePart);
-			IFigure containerFigure = partToFigure.get(containerShapePart);
+			updateShape.removeFigure();
+			IFigure containerFigure = updateShape.getParentFigure();
 			containerFigure.remove(updateFigure);
 			containerFigure.revalidate();
 		}
@@ -181,20 +171,20 @@ public class ShapeUtil {
 		return -1;
 	}
 	
-	public static Object getLayoutConstraint(ShapePart childShapePart, ShapeLayoutDef layoutDef)
+	public static Object getLayoutConstraint(ShapePresentation childShapePresentation, ShapeLayoutDef layoutDef)
 	{
 		Object layoutConstraint = null;
 		if (layoutDef instanceof SequenceLayoutDef)
 		{
-			SequenceLayoutConstraintDef def = (SequenceLayoutConstraintDef)childShapePart.getLayoutConstraint();
+			SequenceLayoutConstraintDef def = (SequenceLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
 			layoutConstraint = new SapphireSequenceLayoutConstraint(def);
 		}
 		else if (layoutDef instanceof StackLayoutDef)
 		{
-			if (childShapePart.getLayoutConstraint() != null)
+			if (childShapePresentation.getLayoutConstraint() != null)
 			{
 				StackLayoutConstraintDef stackLayoutConstraint = 
-						(StackLayoutConstraintDef)childShapePart.getLayoutConstraint();
+						(StackLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
 				SapphireStackLayoutConstraint constraint = null;
 				if (stackLayoutConstraint != null)
 				{

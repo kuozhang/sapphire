@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapeFactoryPresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -24,19 +26,19 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 public class ShapeFactoryModel extends ShapeModel 
 {
 	private List<ShapeModel> children;
-	private ShapeFactoryPart shapeFactoryPart;
+	private ShapeFactoryPresentation shapeFactoryPresentation;
 	public final static String SHAPE_ADD = "SHAPE_ADD";
 	public final static String SHAPE_DELETE = "SHAPE_DELETE";
 	public final static String SHAPE_REORDER = "SHAPE_REORDER";	
 	
-	public ShapeFactoryModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapeFactoryPart part)
+	public ShapeFactoryModel(DiagramNodeModel nodeModel, ShapeModel parent, ShapeFactoryPresentation presentation)
 	{
-		super(nodeModel, parent, part);
-		this.shapeFactoryPart = part;
+		super(nodeModel, parent, presentation);
+		this.shapeFactoryPresentation = presentation;
 		children = new ArrayList<ShapeModel>();
-		for (ShapePart shapePart : part.getChildren())
+		for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
 		{
-			ShapeModel childModel = ShapeModelFactory.createShapeModel(nodeModel, this, shapePart);
+			ShapeModel childModel = ShapeModelFactory.createShapeModel(nodeModel, this, shapePresentation);
         	if (childModel != null)
         	{        		
         		this.children.add(childModel);
@@ -65,17 +67,17 @@ public class ShapeFactoryModel extends ShapeModel
 	
 	public void refreshChildren()
 	{
+		this.shapeFactoryPresentation.refreshChildren();
 		this.children.clear();
-		List<ShapePart> children = new ArrayList<ShapePart>();
-		children.addAll(this.shapeFactoryPart.getChildren());
-		for (ShapePart shapePart : children)
+		children = new ArrayList<ShapeModel>();
+		for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
 		{
-			ShapeModel childModel = ShapeModelFactory.createShapeModel(getNodeModel(), this, shapePart);
+			ShapeModel childModel = ShapeModelFactory.createShapeModel(getNodeModel(), this, shapePresentation);
         	if (childModel != null)
         	{        		
         		this.children.add(childModel);
         	}        				
-		}
+		}		
 	}
 	
 	public List<ShapeModel> getChildren()

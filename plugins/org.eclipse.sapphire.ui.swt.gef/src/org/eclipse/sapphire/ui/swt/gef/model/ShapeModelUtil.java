@@ -13,7 +13,11 @@ package org.eclipse.sapphire.ui.swt.gef.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapeFactoryPresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -93,4 +97,37 @@ public class ShapeModelUtil
 		return null;
 	}
 	
+	public static ShapePresentation getChildShapePresentation(ShapePresentation parent, ShapePart shapePart)
+	{
+		if (parent.getPart().equals(shapePart))
+		{
+			return parent;
+		}
+		else if (parent instanceof ContainerShapePresentation)
+		{
+			ContainerShapePresentation container = (ContainerShapePresentation)parent;
+			for (ShapePresentation child :container.getChildren())
+			{
+				ShapePresentation presentation = getChildShapePresentation(child, shapePart);
+				if (presentation != null)
+				{
+					return presentation;
+				}
+			}
+		}
+		else if (parent instanceof ShapeFactoryPresentation)
+		{
+			ShapeFactoryPresentation container = (ShapeFactoryPresentation)parent;
+			for (ShapePresentation child : container.getChildren())
+			{
+				ShapePresentation presentation = getChildShapePresentation(child, shapePart);
+				if (presentation != null)
+				{
+					return presentation;
+				}
+			}
+			
+		}
+		return null;
+	}
 }
