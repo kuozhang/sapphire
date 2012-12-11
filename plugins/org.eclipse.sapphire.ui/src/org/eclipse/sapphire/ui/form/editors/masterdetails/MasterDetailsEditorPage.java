@@ -1270,7 +1270,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         final IModelElement precedingElement = precedingNode.getModelElement();
                         
-                        if( precedingElement.parent() instanceof ModelElementList<?> && precedingNode.controls( precedingElement ) )
+                        if( precedingElement.parent() instanceof ModelElementList<?> && ! precedingElement.getParentProperty().isReadOnly() &&
+                            precedingNode.controls( precedingElement ) )
                         {
                             list = (ModelElementList<IModelElement>) precedingElement.parent();
                             
@@ -1296,7 +1297,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         final IModelElement trailingElement = trailingNode.getModelElement();
                         
-                        if( trailingElement.parent() instanceof ModelElementList<?> && trailingNode.controls( trailingElement ) )
+                        if( trailingElement.parent() instanceof ModelElementList<?> && ! trailingElement.getParentProperty().isReadOnly() &&
+                            trailingNode.controls( trailingElement ) )
                         {
                             list = (ModelElementList<IModelElement>) trailingElement.parent();
                             
@@ -1322,7 +1324,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         for( ModelProperty dropTargetChildProperty : dropTargetNode.getChildNodeFactoryProperties() )
                         {
-                            if( dropTargetChildProperty instanceof ListProperty )
+                            if( dropTargetChildProperty instanceof ListProperty && ! dropTargetChildProperty.isReadOnly() )
                             {
                                 final ListProperty dropTargetChildListProperty = (ListProperty) dropTargetChildProperty;
                                 

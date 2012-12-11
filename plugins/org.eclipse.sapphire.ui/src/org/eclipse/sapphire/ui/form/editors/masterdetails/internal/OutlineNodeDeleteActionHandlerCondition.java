@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 
@@ -20,33 +21,34 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNo
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class OutlineNodeDeleteActionHandlerCondition 
-
-    extends OutlineNodeListMemberActionHandlerCondition
-    
+public final class OutlineNodeDeleteActionHandlerCondition extends OutlineNodeListMemberActionHandlerCondition
 {
     @Override
     protected boolean check( final MasterDetailsContentNode node )
     {
-        if( super.check( node ) )
-        {
-            return true;
-        }
-        
         final IModelElement element = node.getModelElement();
-        
-        if( element.getParentProperty() instanceof ElementProperty )
+        final ModelProperty property = element.getParentProperty();
+
+        if( property != null && ! property.isReadOnly() )
         {
-            final ISapphirePart parentPart = node.getParentPart();
-            
-            if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
+            if( super.check( node ) )
             {
-                final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
-                
-                return ( element != parentNode.getLocalModelElement() );
+                return true;
             }
             
-            return true;
+            if( property instanceof ElementProperty )
+            {
+                final ISapphirePart parentPart = node.getParentPart();
+                
+                if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
+                {
+                    final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
+                    
+                    return ( element != parentNode.getLocalModelElement() );
+                }
+                
+                return true;
+            }
         }
         
         return false;
