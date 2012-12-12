@@ -55,6 +55,10 @@
      <topic href="html/services/index.html#VersionCompatibilityService" label="VersionCompatibilityService"/>
      <topic href="html/services/index.html#VersionCompatibilityTargetService" label="VersionCompatibilityTargetService"/>
   </topic>
+  <topic href="html/samples/index.html" label="Samples">
+     <topic href="html/samples/catalog.html" label="Catalog Editor">
+     </topic>
+  </topic>
   <topic href="html/releases/index.html" label="Releases">
     <topic href="html/releases/0.7/index.html" label="0.7">
        <topic href="html/releases/0.7/enhancements.html" label="Enhancements">

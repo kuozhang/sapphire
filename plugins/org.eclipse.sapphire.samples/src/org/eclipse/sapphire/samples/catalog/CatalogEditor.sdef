@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2012 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<definition>
+    
+    <editor-page>
+        <id>CatalogEditorPage</id>
+        <page-header-text>Catalog (Sapphire Sample)</page-header-text>
+        <initial-selection>items</initial-selection>
+        <action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
+            <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
+            <key-binding-behavior>propagated</key-binding-behavior>
+            <image>Web.png</image>
+            <context>Sapphire.EditorPage</context>
+            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <location>after:Sapphire.Outline.Hide</location>
+            <hint>
+                <name>style</name>
+                <value>image+text</value>
+            </hint>
+        </action>
+        <action-handler>
+            <action>Sapphire.Samples.OpenSapphireWebSite</action>
+            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <label>Sapphire Web Site</label>
+            <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
+        <page-name>catalog</page-name>
+        <element-type>Catalog</element-type>
+        <root-node>
+            <node>
+                <label>items</label>
+                <node-include>CatalogItemsNodeFactory</node-include>
+                <section>
+                    <content>
+                        <actuator>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>add an item</label>
+                        </actuator>
+                    </content>
+                    <description>Manage all items in the catalog.</description>
+                </section>
+            </node>
+            <node>
+                <label>items by category</label>
+                <node-factory>
+                    <property>Categories</property>
+                    <case>
+                        <label>${ Name == null ? &quot;Uncategorized&quot; : Name }</label>
+                        <node-include>CatalogItemsNodeFactory</node-include>
+                        <section>
+                            <label>category</label>
+                            <content>
+                                <property-editor>Name</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>items</label>
+                            <description>Manage ${ Name == null ? &quot;uncategorized items&quot; : Concat( &quot;items for &quot;, Name, &quot; category&quot; ) }.</description>
+                            <content>
+                                <actuator>
+                                    <action-id>Sapphire.Add</action-id>
+                                    <label>add an item</label>
+                                </actuator>
+                            </content>
+                        </section>
+                    </case>
+                </node-factory>
+                <section>
+                    <content>
+                        <label>Manage items organized by category. To add a new category, simply reference it in an item.</label>
+                    </content>
+                </section>
+            </node>
+            <node>
+                <label>items by manufacturer</label>
+                <node-factory>
+                    <property>Manufacturers</property>
+                    <case>
+                        <label>${ Name == null ? &quot;Unknown&quot; : Name }</label>
+                        <node-include>CatalogItemsNodeFactory</node-include>
+                        <section>
+                            <label>manufacturer</label>
+                            <content>
+                                <property-editor>Name</property-editor>
+                            </content>
+                        </section>
+                        <section>
+                            <label>items</label>
+                            <description>Manage items made by ${ Name == null ? &quot;unknown manufacturers&quot; : Name }.</description>
+                            <content>
+                                <actuator>
+                                    <action-id>Sapphire.Add</action-id>
+                                    <label>add an item</label>
+                                </actuator>
+                            </content>
+                        </section>
+                    </case>
+                </node-factory>
+                <section>
+                    <content>
+                        <label>Manage items organized by manufacturer. To add a new manufacturer, simply reference it in an item.</label>
+                    </content>
+                </section>
+            </node>
+        </root-node>
+    </editor-page>
+    <import>
+        <package>org.eclipse.sapphire.samples</package>
+        <package>org.eclipse.sapphire.samples.catalog</package>
+    </import>
+    <node-factory>
+        <case>
+            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : Name }</label>
+            <section>
+                <content>
+                    <property-editor>Name</property-editor>
+                    <property-editor>Category</property-editor>
+                    <property-editor>Manufacturer</property-editor>
+                    <property-editor>Description</property-editor>
+                </content>
+                <label>item</label>
+            </section>
+        </case>
+        <id>CatalogItemsNodeFactory</id>
+        <property>Items</property>
+    </node-factory>
+    
+</definition>
