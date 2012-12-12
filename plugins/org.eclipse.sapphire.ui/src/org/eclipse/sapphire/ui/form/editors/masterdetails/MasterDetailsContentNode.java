@@ -617,7 +617,7 @@ public final class MasterDetailsContentNode
     {
         for( MasterDetailsContentNode child : nodes() )
         {
-            if( label.equals( child.getLabel() ) )
+            if( label.equalsIgnoreCase( child.getLabel() ) )
             {
                 return child;
             }
