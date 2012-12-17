@@ -20,7 +20,6 @@ import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.diagram.shape.def.BorderComponent;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
-import org.eclipse.swt.SWT;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -69,7 +68,7 @@ public class RectangleBorder extends AbstractBorder
 			
 			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-			graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+			graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 			// Shrink the border to leave 1 pixel space for the selection border
 			tempRect.shrink(1, 1);
 			graphics.drawRoundRectangle(tempRect,
@@ -84,7 +83,7 @@ public class RectangleBorder extends AbstractBorder
 				int w = borderDef.getWeight().getContent();
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));		
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));		
 				int inset = Math.max(1, w / 2);
 				int x = tempRect.x + inset;
 				int y = tempRect.y - inset;
@@ -98,7 +97,7 @@ public class RectangleBorder extends AbstractBorder
 				int w = borderDef.getWeight().getContent();
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 				int inset = Math.max(1, w / 2);
 				int x = tempRect.x + inset;
 				int y = tempRect.y + tempRect.height - inset;
@@ -112,7 +111,7 @@ public class RectangleBorder extends AbstractBorder
 				int w = borderDef.getWeight().getContent();
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 				int inset = Math.max(1, w / 2);
 				int x = tempRect.x + tempRect.width - inset;
 				int y = tempRect.y + inset;
@@ -126,7 +125,7 @@ public class RectangleBorder extends AbstractBorder
 				int w = borderDef.getWeight().getContent();
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 				int inset = Math.max(1, w / 2);
 				int x = tempRect.x - inset;
 				int y = tempRect.y + inset;
@@ -136,25 +135,7 @@ public class RectangleBorder extends AbstractBorder
 			
 		}
 	}
-	
-	private int convertLineStyle(LineStyle style)
-	{
-		int swtStyle = SWT.LINE_SOLID;
-		if (style == LineStyle.DASH)
-		{
-			swtStyle = SWT.LINE_DASH;
-		}
-		else if (style == LineStyle.DASH_DOT)
-		{
-			swtStyle = SWT.LINE_DASHDOT;
-		}
-		else if (style == LineStyle.DOT)
-		{
-			swtStyle = SWT.LINE_DOT;
-		}
-		return swtStyle;
-	}
-	
+		
 	private boolean hasUniformBorders()
 	{
 		org.eclipse.sapphire.ui.Color tc, bc, lc, rc;

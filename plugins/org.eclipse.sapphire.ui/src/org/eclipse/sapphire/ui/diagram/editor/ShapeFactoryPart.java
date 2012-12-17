@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryCaseDef;
@@ -43,6 +44,7 @@ public class ShapeFactoryPart extends ShapePart
 	private List<ShapePart> children;
 	private Listener shapePropertyListener;
 	private List<JavaType> javaTypes;
+	private ShapePart separator;
 	
 	@Override
     protected void init()
@@ -72,6 +74,12 @@ public class ShapeFactoryPart extends ShapePart
         	}
         }
         
+        // Separator
+        if (this.shapeFactoryDef.getSeparator().element() != null)
+        {
+        	this.separator = createShapePart(this.shapeFactoryDef.getSeparator().element(), this.modelElement);
+        }
+        
         // Add listeners
         this.shapePropertyListener = new FilteredListener<PropertyEvent>()
         {
@@ -96,6 +104,11 @@ public class ShapeFactoryPart extends ShapePart
     	return this.children;
     }	
 	
+	public ShapePart getSeparator()
+	{
+		return this.separator;
+	}
+
 	public List<JavaType> getSupportedTypes()
 	{
 		return this.javaTypes;
@@ -185,6 +198,10 @@ public class ShapeFactoryPart extends ShapePart
     	else if (shapeDef instanceof ImageDef)
     	{
     		shapePart = new ImagePart();
+    	}
+    	else if (shapeDef instanceof LineShapeDef)
+    	{
+    		shapePart = new LinePart();
     	}
     	else if (shapeDef instanceof RectangleDef)
     	{

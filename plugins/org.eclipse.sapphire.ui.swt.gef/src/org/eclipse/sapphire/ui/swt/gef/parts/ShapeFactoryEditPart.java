@@ -19,11 +19,13 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.editparts.AbstractEditPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeFactoryModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.ShapeFactoryLayoutEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapeFactoryPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
@@ -66,14 +68,53 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 	{
 		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
 		
+		ShapeFactoryPresentation factory = (ShapeFactoryPresentation)getCastedModel().getShapePresentation();
+		int newIndex = index;
+		if (factory.getSeparator() != null)
+		{
+			newIndex = index * 2;
+		}
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
 		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
 		ContainerShapePresentation parentPresentation = getParentContainer(shapePresentation);
 		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePresentation, 
 				parentPresentation.getLayout());
 		IFigure parentFigure = parentPresentation.getFigure();
-		parentFigure.add(child, layoutConstraint, index);
+		parentFigure.add(child, layoutConstraint, newIndex);
 		
+		if (factory.getSeparator() != null && index < getModelChildren().size() - 1)
+		{
+			// Add separator figure to the parent container
+			IFigure separatorFig = ShapeUtil.createFigureForShape(factory.getSeparator(), 
+					getNodeEditPart().getCastedModel().getDiagramModel().getResourceCache());
+			Object separatorConstraint = ShapeUtil.getLayoutConstraint(factory.getSeparator(), 
+					parentPresentation.getLayout());
+			parentFigure.add(separatorFig, separatorConstraint, newIndex + 1);
+			factory.addSeparatorFigure(shapePresentation, separatorFig);
+		}
+		
+	}
+	
+	/**
+	 * Remove the child's Figure from the {@link #getContentPane() contentPane}.
+	 * 
+	 * @see AbstractEditPart#removeChildVisual(EditPart)
+	 */
+	@Override
+	protected void removeChildVisual(EditPart childEditPart) 
+	{
+		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+		IFigure parentFig = getContentPane();
+		parentFig.remove(child);
+		ShapeFactoryPresentation factory = (ShapeFactoryPresentation)getCastedModel().getShapePresentation();
+		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
+		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
+		IFigure separatorFig = factory.getSeparatorFigure(shapePresentation);
+		if (separatorFig != null)
+		{
+			parentFig.remove(separatorFig);
+			factory.removeSeparatorFigure(shapePresentation);
+		}		
 	}
 	
 	@Override

@@ -20,6 +20,7 @@ import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryDef;
@@ -74,6 +75,10 @@ public class ContainerShapePart extends ShapePart
         		this.validationMarkerPart = new ValidationMarkerPart();
         		this.validationMarkerIndex = index;
         		childPart = this.validationMarkerPart;
+        	}
+        	else if (shape instanceof LineShapeDef)
+        	{
+        		childPart = new LinePart();
         	}
         	else if (shape instanceof RectangleDef)
         	{

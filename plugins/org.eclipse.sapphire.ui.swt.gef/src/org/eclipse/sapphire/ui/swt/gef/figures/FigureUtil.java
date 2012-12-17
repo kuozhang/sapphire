@@ -22,9 +22,11 @@ import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
 
@@ -247,6 +249,24 @@ public class FigureUtil {
 			return markerFigure;
 		}
 		return null;
+	}
+	
+	public static int convertLineStyle(LineStyle style)
+	{
+		int swtStyle = SWT.LINE_SOLID;
+		if (style == LineStyle.DASH)
+		{
+			swtStyle = SWT.LINE_DASH;
+		}
+		else if (style == LineStyle.DASH_DOT)
+		{
+			swtStyle = SWT.LINE_DASHDOT;
+		}
+		else if (style == LineStyle.DOT)
+		{
+			swtStyle = SWT.LINE_DOT;
+		}
+		return swtStyle;
 	}
 	
 }

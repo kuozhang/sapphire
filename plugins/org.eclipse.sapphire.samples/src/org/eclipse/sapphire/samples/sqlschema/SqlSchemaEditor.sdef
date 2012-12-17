@@ -110,11 +110,6 @@
                                                 </sequence-layout-constraint>
                                             </text>
                                         </content>
-                                        <bottom-border>
-                                            <style>dot</style>
-                                            <color>#333399</color>
-                                            <weight>1</weight>
-                                        </bottom-border>
                                         <sequence-layout-constraint>
                                             <horizontal-alignment>left</horizontal-alignment>
                                             <expand-cell-horizontally>true</expand-cell-horizontally>
@@ -136,7 +131,17 @@
 							                </page>
 							            </properties-view>
                                     </rectangle>
-                                </case>        
+                                </case>
+                                <separator>
+                                    <line>
+                                        <color>#333399</color>
+                                        <style>dot</style>
+                                        <sequence-layout-constraint>
+                                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                                        </sequence-layout-constraint>
+                                        <weight>1</weight>
+                                    </line>
+                                </separator>        
                             </shape-factory>
                         </content>
                         <sequence-layout-constraint>

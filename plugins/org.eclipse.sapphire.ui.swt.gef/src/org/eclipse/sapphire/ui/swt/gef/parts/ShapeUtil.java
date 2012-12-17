@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
+import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayoutConstraint;
@@ -35,6 +36,7 @@ import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.LineShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
@@ -106,6 +108,11 @@ public class ShapeUtil {
 			ValidationMarkerPart markerPart = markerPresentation.getValidationMarkerPart();
 			DiagramNodePart nodePart = markerPart.nearest(DiagramNodePart.class);
 			figure = FigureUtil.createValidationMarkerFigure(markerPresentation.getSize(), markerPart.getLocalModelElement(), nodePart.getImageCache());
+		}
+		else if (shapePresentation instanceof LineShapePresentation)
+		{
+			LineShapePresentation linePresentation = (LineShapePresentation)shapePresentation;
+			figure = new OrthogonalLineFigure(linePresentation, resourceCache);
 		}
 		else if (shapePresentation instanceof RectanglePresentation)
 		{

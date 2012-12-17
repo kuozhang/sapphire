@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
+import org.eclipse.sapphire.ui.diagram.editor.LinePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
@@ -103,6 +104,10 @@ public class ShapePresentation
         	else if (shapePart instanceof ValidationMarkerPart)
         	{
         		shapePresentation = new ValidationMarkerPresentation(parent, (ValidationMarkerPart)shapePart);
+        	}
+        	else if (shapePart instanceof LinePart)
+        	{
+        		shapePresentation = new LineShapePresentation(parent, (LinePart)shapePart);
         	}
         	else if (shapePart instanceof RectanglePart)
         	{
