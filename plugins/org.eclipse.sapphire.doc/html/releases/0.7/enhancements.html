@@ -23,6 +23,10 @@
 <h1>Enhancements in 0.7</h1>
 
 <ol>
+  <li><a href="#Core">Core</a></li>
+  <ol type="A">
+    <li><a href="#Core-ModelElement">ModelElement</a></li>
+  </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
@@ -33,6 +37,18 @@
     <li><a href="#Samples-CatalogEditor">Catalog Editor</a></li>
   </ol>
 </ol>
+
+<h2><a name="Core"><a name="Core-ModelElement">ModelElement</a></a></h2>
+
+<p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
+copy individual properties is also available.</p>
+
+<pre class="source-code"><code><font color="#888888">IModelElement
+{
+    void copy( IModelElement element )</font>
+    void copy( IModelElement element, ModelProperty property )
+    void copy( IModelElement element, String property )
+<font color="#888888">}</font></code></pre>
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
 

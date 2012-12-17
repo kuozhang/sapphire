@@ -753,59 +753,102 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         assertNotDisposed();
 
-        if( this.type != element.type() )
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+
+        for( ModelProperty property : element.properties() )
+        {
+            copy( element, property );
+        }
+    }
+
+    public final void copy( final IModelElement element,
+                            final ModelProperty property )
+    {
+        assertNotDisposed();
+    
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+    
+        if( property == null )
         {
             throw new IllegalArgumentException();
         }
         
-        for( ModelProperty property : this.type.properties() )
+        copy( element, property.getName() );
+    }
+
+    public final void copy( final IModelElement element,
+                            final String property )
+    {
+        assertNotDisposed();
+
+        if( element == null )
         {
-            if( ! property.isReadOnly() )
+            throw new IllegalArgumentException();
+        }
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+
+        if( ! prop.isReadOnly() )
+        {
+            if( prop instanceof ValueProperty )
             {
-                if( property instanceof ValueProperty )
+                final ValueProperty p = (ValueProperty) prop;
+                write( p, element.read( p ).getText( false ) );
+            }
+            else if( prop instanceof ImpliedElementProperty )
+            {
+                final ImpliedElementProperty p = (ImpliedElementProperty) prop;
+                read( p ).element().copy( element.read( p ).element() );
+            }
+            else if( prop instanceof ElementProperty )
+            {
+                final ElementProperty p = (ElementProperty) prop;
+                final IModelElement elementChild = element.read( p ).element();
+                final ModelElementHandle<?> handle = read( p );
+                
+                if( elementChild == null )
                 {
-                    final ValueProperty prop = (ValueProperty) property;
-                    write( prop, element.read( prop ).getText( false ) );
+                    handle.remove();
                 }
-                else if( property instanceof ImpliedElementProperty )
+                else
                 {
-                    final ImpliedElementProperty prop = (ImpliedElementProperty) property;
-                    read( prop ).element().copy( element.read( prop ).element() );
+                    final IModelElement thisChild = handle.element( true, elementChild.type() );
+                    thisChild.copy( elementChild );
                 }
-                else if( property instanceof ElementProperty )
+            }
+            else if( prop instanceof ListProperty )
+            {
+                final ListProperty p = (ListProperty) prop;
+                final ModelElementList<?> list = read( p );
+                
+                list.clear();
+                
+                for( final IModelElement elementChild : element.read( p ) )
                 {
-                    final ElementProperty prop = (ElementProperty) property;
-                    final IModelElement elementChild = element.read( prop ).element();
-                    final ModelElementHandle<?> handle = read( prop );
-                    
-                    if( elementChild == null )
-                    {
-                        handle.remove();
-                    }
-                    else
-                    {
-                        final IModelElement thisChild = handle.element( true, elementChild.type() );
-                        thisChild.copy( elementChild );
-                    }
+                    final IModelElement thisChild = list.insert( elementChild.type() );
+                    thisChild.copy( elementChild );
                 }
-                else if( property instanceof ListProperty )
-                {
-                    final ListProperty prop = (ListProperty) property;
-                    final ModelElementList<?> list = read( prop );
-                    
-                    list.clear();
-                    
-                    for( final IModelElement elementChild : element.read( prop ) )
-                    {
-                        final IModelElement thisChild = list.insert( elementChild.type() );
-                        thisChild.copy( elementChild );
-                    }
-                }
-                else if( property instanceof TransientProperty )
-                {
-                    final TransientProperty prop = (TransientProperty) property;
-                    write( prop, element.read( prop ).content() );
-                }
+            }
+            else if( prop instanceof TransientProperty )
+            {
+                final TransientProperty p = (TransientProperty) prop;
+                write( p, element.read( p ).content() );
             }
         }
     }

@@ -168,16 +168,30 @@ public interface IModelElement extends IModelParticle
                   boolean deep );
     
     /**
-     * Copies the values of the provided element's properties to this element. This
-     * operation overwrites any previous values held by this element. The type of the
-     * provided element must be identical to the type of this element. 
+     * Copies all properties of the provided element to this element.
      * 
-     * @param element the element to copy
-     * @throws IllegalArgumentException if the type of the provided element does not
-     *   match the type of this element
+     * @param element the element to copy from
      */
     
     void copy( IModelElement element );
+    
+    /**
+     * Copies a property from the provided element to this element.
+     * 
+     * @param element the element to copy from
+     * @param property the property to copy
+     */
+    
+    void copy( IModelElement element, ModelProperty property );
+    
+    /**
+     * Copies a property from the provided element to this element.
+     * 
+     * @param element the element to copy from
+     * @param property the name of the property to copy
+     */
+    
+    void copy( IModelElement element, String property );
 
     /**
      * Retrieves the specified service for this model element. Not all services will 
