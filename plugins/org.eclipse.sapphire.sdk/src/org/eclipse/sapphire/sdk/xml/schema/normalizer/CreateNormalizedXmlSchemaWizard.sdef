@@ -26,12 +26,32 @@
             <id>CreateNormalizedXmlSchemaWizard.SourcePage</id>
             <content>
                 <property-editor>SourceFile</property-editor>
-                <spacer></spacer>
-                <label>The normalization process makes it easier to compare two schema versions.</label>
-                <spacer></spacer>
-                <label>* All schema annotations and comments are removed.</label>
-                <label>* Element and type definitions are grouped together and sorted according to their names.</label>
-                <label>* The schema is formatted.</label>
+                <property-editor>RootElements</property-editor>
+            </content>
+        </page>
+        <page>
+            <label>Normalized XML Schema</label>
+            <description>Create a normalized XML Schema.</description>
+            <image>org/eclipse/sapphire/sdk/XmlSchemaWizardBanner.gif</image>
+            <id>CreateNormalizedXmlSchemaWizard.SourcePage</id>
+            <content>
+                <property-editor>
+                    <child-property>Type</child-property>
+                    <property>Exclusions</property>
+                    <child-property>Name</child-property>
+                </property-editor>
+                <property-editor>
+                    <child-property>Before</child-property>
+                    <property>TypeSubstitutions</property>
+                    <child-property>After</child-property>
+                </property-editor>
+                <property-editor>
+                    <hint>
+                        <name>checkbox.layout</name>
+                        <value>leading.label</value>
+                    </hint>
+                    <property>SortSequenceContent</property>
+                </property-editor>
             </content>
         </page>
         <page>
@@ -44,7 +64,7 @@
             <scale-vertically>true</scale-vertically>
             <image>org/eclipse/sapphire/sdk/XmlSchemaWizardBanner.gif</image>
         </page>
-        <element-type>org.eclipse.sapphire.sdk.CreateNormalizedXmlSchemaOp</element-type>
+        <element-type>org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp</element-type>
     </wizard>
     
 </definition>

@@ -84,13 +84,13 @@
       </class>
     </wizard>
     <wizard
-      id="org.eclipse.sapphire.sdk.CreateNormalizedXmlSchemaWizard"
+      id="org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaWizard"
       category="Sapphire"
       name="%CreateNormalizedXmlSchemaWizard.Name"
       icon="org/eclipse/sapphire/sdk/XmlSchemaCreateFileWizard.gif">
       <description>%CreateNormalizedXmlSchemaWizard.Description</description>
       <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
-        <parameter name="sdef" value="org.eclipse.sapphire.sdk.CreateNormalizedXmlSchemaWizard"/>
+        <parameter name="sdef" value="org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaWizard"/>
       </class>
     </wizard>
   </extension>

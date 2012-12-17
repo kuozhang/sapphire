@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation
  ******************************************************************************/
 
-package org.eclipse.sapphire.sdk.internal;
+package org.eclipse.sapphire.sdk.xml.schema.normalizer.internal;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -19,7 +19,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.platform.PathBridge;
-import org.eclipse.sapphire.sdk.CreateNormalizedXmlSchemaOp;
+import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.InitialValueServiceData;
 
@@ -110,6 +110,27 @@ public final class CreateNormalizedXmlSchemaOpServices
             
             op.setFolder( folder );
             op.setFileName( fileName );
+            
+            final PersistedState state = PersistedStateManager.load( sourceFilePath );
+            
+            if( state == null )
+            {
+                op.getRootElements().clear();
+            }
+            else
+            {
+                try
+                {
+                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_ROOT_ELEMENTS );
+                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_EXCLUSIONS );
+                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_TYPE_SUBSTITUTIONS );
+                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_SORT_SEQUENCE_CONTENT );
+                }
+                finally
+                {
+                    state.dispose();
+                }
+            }
         }
     }
     
