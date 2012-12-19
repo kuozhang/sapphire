@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.BorderComponent;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -60,5 +61,11 @@ public class RectanglePresentation extends ContainerShapePresentation
 	{
 		return getRectanglePart().getRightBorder();
 	}
+	
+	public SelectionPresentation getSelectionPresentation()
+	{
+		return getRectanglePart().getSelectionPresentation();
+	}
+	
 	
 }

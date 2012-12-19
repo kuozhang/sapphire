@@ -143,4 +143,5 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
         
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
     }
+        
 }

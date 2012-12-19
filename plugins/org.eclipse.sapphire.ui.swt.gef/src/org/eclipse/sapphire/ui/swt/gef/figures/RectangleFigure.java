@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackgroundDef;
@@ -26,7 +27,6 @@ import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -39,7 +39,6 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 	private static final org.eclipse.sapphire.ui.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.ui.Color(0xAC, 0xD2, 0xF4);
     private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_START = new org.eclipse.sapphire.ui.Color(0xFF, 0xFF, 0xFF);
     private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_END = new org.eclipse.sapphire.ui.Color(0xD4, 0xE7, 0xF8);
-    private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
 	
 	private RectanglePresentation rectPresentation;
 	private ShapeLayoutDef layout;
@@ -148,10 +147,21 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			int cornerRadius = this.rectPresentation.getCornerRadius();
 			final Dimension cornerDimension = new Dimension(cornerRadius, cornerRadius); 
 
-			graphics.setForegroundColor(resourceCache.getColor(OUTLINE_FOREGROUND));
-			graphics.setLineStyle(SWT.LINE_DASH);
-			r.width--;
-			r.height--;
+			SelectionPresentation selectionPresentation = this.rectPresentation.getSelectionPresentation();
+			graphics.setForegroundColor(resourceCache.getColor(selectionPresentation.getColor().getContent()));
+			graphics.setLineStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().getContent()));
+			int lineWidth = selectionPresentation.getWeight().getContent();
+			graphics.setLineWidth(lineWidth);
+			int lineInset = Math.max(1, lineWidth / 2);
+			int selectionInset = selectionPresentation.getInset().getContent();
+			
+			r.x += lineInset - 1;
+			r.y += lineInset - 1;
+			r.width -= lineInset + lineInset - 1;
+			r.height -= lineInset + lineInset - 1;
+			
+			r.shrink(selectionInset, selectionInset);
+			
 			graphics.drawRoundRectangle(r,
 					Math.max(0, cornerDimension.width),
 					Math.max(0, cornerDimension.height));				
