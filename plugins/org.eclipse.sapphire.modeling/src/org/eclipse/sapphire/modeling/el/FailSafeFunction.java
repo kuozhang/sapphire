@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.modeling.el;
 
-import org.eclipse.sapphire.modeling.Value;
-
 /**
  * Function that ensures that the returned value is of specified type and prevents function
  * exceptions from propagating.  
@@ -20,15 +18,18 @@ import org.eclipse.sapphire.modeling.Value;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class FailSafeFunction
-
-    extends Function
-
+public final class FailSafeFunction extends Function
 {
     public static Function create( final Function operand,
                                    final Function expectedType )
     {
         return create( operand, expectedType, Literal.NULL );
+    }
+
+    public static Function create( final Function operand,
+                                   final Class<?> expectedType )
+    {
+        return create( operand, Literal.create( expectedType ), Literal.NULL );
     }
 
     public static Function create( Function operand,
@@ -87,19 +88,21 @@ public class FailSafeFunction
             {
                 Object val = operand( 0 ).value();
                 
-                if( val == null || ( val instanceof Value && ( (Value<?>) val ).getContent() == null ) )
-                {
-                    val = operand( 2 ).value();
-                }
-                
                 try
                 {
-                    return cast( val, cast( operand( 1 ).value(), Class.class ) );
+                    val = cast( val, cast( operand( 1 ).value(), Class.class ) );
                 }
                 catch( FunctionException e )
                 {
                     return handleFunctionException( e );
                 }
+                
+                if( val == null )
+                {
+                    val = operand( 2 ).value();
+                }
+                
+                return val;
             }
         };
     }
