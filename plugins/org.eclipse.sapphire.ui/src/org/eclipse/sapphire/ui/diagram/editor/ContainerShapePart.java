@@ -40,7 +40,7 @@ public class ContainerShapePart extends ShapePart
 	private int validationMarkerIndex = -1;
 	private ValidationMarkerPart validationMarkerPart;
 	private FilteredListener<ElementValidationEvent> elementValidationListener;
-	
+	private SapphireDiagramPartListener shapeListener;
 	private List<TextPart> textParts;
 	private List<ShapeFactoryPart> shapeFactoryParts;
 
@@ -55,9 +55,9 @@ public class ContainerShapePart extends ShapePart
         this.children = new ArrayList<ShapePart>();
         this.textParts = new ArrayList<TextPart>();
         this.shapeFactoryParts = new ArrayList<ShapeFactoryPart>();
+        createShapeListener();
         
         int index = 0;        
-        
         for (ShapeDef shape : this.containerShapeDef.getContent())
         {
         	ShapePart childPart = null;
@@ -94,6 +94,7 @@ public class ContainerShapePart extends ShapePart
         	{
         		childPart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
         		this.children.add(childPart);
+        		childPart.addListener(this.shapeListener);
         	}
         	index++;
         }
@@ -104,7 +105,7 @@ public class ContainerShapePart extends ShapePart
                 @Override
                 protected void handleTypedEvent( final ElementValidationEvent event )
                 {
-                    refreshShapeValidation();
+                    notifyShapeValidation(ContainerShapePart.this);
                 }
 	        };
             this.modelElement.attach(this.elementValidationListener); 
@@ -202,11 +203,27 @@ public class ContainerShapePart extends ShapePart
         	this.modelElement.detach(this.elementValidationListener);
         }
     }
+    
+    private void createShapeListener()
+    {
+    	this.shapeListener = new SapphireDiagramPartListener()
+    	{    		
+    	    public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
+    	    {
+    	    	notifyShapeVisibility(event.getShapePart());
+    	    }
 
-    private void refreshShapeValidation()
-	{
-    	DiagramNodePart nodePart = getNodePart();
-    	nodePart.refreshShapeValidation(this);		
-	}
-	
+    	    public void handleShapeUpdateEvent(final DiagramShapeEvent event)
+    	    {
+    	    	notifyShapeUpdate(event.getShapePart());
+    	    }
+    		
+    	    public void handleShapeValidationEvent(final DiagramShapeEvent event)
+    	    {
+    	    	notifyShapeValidation(event.getShapePart());
+    	    }
+
+    	};
+    }
+    
 }

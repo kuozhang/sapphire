@@ -25,6 +25,7 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
@@ -54,7 +55,7 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
                 @Override
                 protected void handleTypedEvent( final PartVisibilityEvent event )
                 {
-                    refreshShapeVisibility((ShapePart)event.part());
+                    notifyShapeVisibility((ShapePart)event.part());
                 }
              }
         );
@@ -92,12 +93,47 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
 		this.isEditable = editable;
 	}
 	
-	public void refreshShapeVisibility(ShapePart shapePart)
+	protected void notifyShapeVisibility(ShapePart shapePart)
 	{
 		DiagramNodePart nodePart = getNodePart();
-		nodePart.refreshShapeVisibility(shapePart);
+		Set<SapphirePartListener> listeners = getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(nodePart, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(nue);
+			}
+		}    	
 	}
 	
+	protected void notifyShapeUpdate(ShapePart shapePart)
+	{
+		DiagramNodePart nodePart = getNodePart();
+		Set<SapphirePartListener> listeners = getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(nodePart, shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeUpdateEvent(nue);
+			}
+		}    	
+	}
+	
+    protected void notifyShapeValidation(ShapePart shapePart)
+	{
+		Set<SapphirePartListener> listeners = getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent se = new DiagramShapeEvent(getNodePart(), shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeValidationEvent(se);
+			}
+		}    	
+	}
+		
     @Override
     public Set<String> getActionContexts()
     {

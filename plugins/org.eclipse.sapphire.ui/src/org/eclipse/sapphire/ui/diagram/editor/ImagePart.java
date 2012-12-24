@@ -44,7 +44,7 @@ public class ImagePart extends ShapePart
             {
                 public void run()
                 {
-                    refreshImage();
+                    notifyShapeUpdate(ImagePart.this);
                 }
             }
         );
@@ -59,7 +59,7 @@ public class ImagePart extends ShapePart
             {
                 public void run()
                 {
-                    refreshImage();
+                    notifyShapeUpdate(ImagePart.this);
                 }
             }
         );
@@ -99,10 +99,4 @@ public class ImagePart extends ShapePart
     	return path;
     }
     
-	private void refreshImage()
-	{
-    	DiagramNodePart nodePart = getNodePart();
-    	nodePart.refreshShape(this);
-	}
-	   
 }

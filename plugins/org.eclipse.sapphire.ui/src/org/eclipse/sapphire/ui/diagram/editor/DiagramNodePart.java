@@ -64,6 +64,7 @@ public class DiagramNodePart
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
 	private ShapePart shapePart;
+	private SapphireDiagramPartListener shapeListener;
 
 	@Override
     protected void init()
@@ -85,7 +86,9 @@ public class DiagramNodePart
                 }
             }
         );
-                
+         
+        createShapeListener();
+        
         // create shape part
         
         createShapePart();
@@ -155,7 +158,12 @@ public class DiagramNodePart
         this.modelElement.detach(this.elementValidationListener);
     }
     
-    public void refreshShape(ShapePart shapePart)
+    public void addShape(ShapePart shapePart)
+    {
+    	notifyShapeAdd(shapePart);
+    }
+    
+    private void notifyShapeUpdate(ShapePart shapePart)
     {
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -168,7 +176,7 @@ public class DiagramNodePart
 		}    	
     }
 
-    public void refreshShapeVisibility(ShapePart shapePart)
+    private void notifyShapeVisibility(ShapePart shapePart)
     {
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -181,7 +189,7 @@ public class DiagramNodePart
 		}    	
     }
     
-    public void refreshShapeValidation(ShapePart shapePart)
+    private void notifyShapeValidation(ShapePart shapePart)
     {
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -194,7 +202,7 @@ public class DiagramNodePart
 		}    	
     }
 
-    public void addShape(ShapePart shapePart)
+    private void notifyShapeAdd(ShapePart shapePart)
     {
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -207,7 +215,7 @@ public class DiagramNodePart
 		}    	    	
     }
     
-    public void deleteShape(ShapePart shapePart)
+    private void notifyShapeDelete(ShapePart shapePart)
     {    	
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -220,7 +228,7 @@ public class DiagramNodePart
 		}    	    	
     }
     
-    public void reorderShapes(ShapeFactoryPart shapeFactory)
+    private void notifyShapeReorder(ShapeFactoryPart shapeFactory)
     {
 		Set<SapphirePartListener> listeners = this.getListeners();
 		for(SapphirePartListener listener : listeners)
@@ -353,6 +361,43 @@ public class DiagramNodePart
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
     }
     
+    private void createShapeListener()
+    {
+    	this.shapeListener = new SapphireDiagramPartListener()
+    	{
+    	    public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
+    	    {
+    	    	notifyShapeVisibility(event.getShapePart());
+    	    }
+
+    	    public void handleShapeUpdateEvent(final DiagramShapeEvent event)
+    	    {
+    	    	notifyShapeUpdate(event.getShapePart());
+    	    }
+    		
+    	    public void handleShapeValidationEvent(final DiagramShapeEvent event)
+    	    {
+    	    	notifyShapeValidation(event.getShapePart());
+    	    }
+
+    	    public void handleShapeAddEvent(final DiagramShapeEvent event)
+    	    {
+    	        notifyShapeAdd(event.getShapePart());
+    	    }
+
+    	    public void handleShapeReorderEvent(final DiagramShapeEvent event)
+    	    {
+    	        notifyShapeReorder((ShapeFactoryPart)event.getShapePart());
+    	    }
+
+    	    public void handleShapeDeleteEvent(final DiagramShapeEvent event)
+    	    {
+    	        notifyShapeDelete(event.getShapePart());
+    	    }
+    	    
+    	};
+    }
+    
     private void createShapePart()
     {
     	ShapeDef shape = this.definition.getShape().element();
@@ -368,6 +413,8 @@ public class DiagramNodePart
     	{
     		this.shapePart = new RectanglePart();
     	}
-        this.shapePart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());    	
+        this.shapePart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
+        
+        this.shapePart.addListener(this.shapeListener);
     }
 }

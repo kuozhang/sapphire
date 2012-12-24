@@ -13,7 +13,6 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
@@ -31,7 +30,6 @@ public class TextPart extends ShapePart
 	private IModelElement modelElement;
 	private Function textFunction;
 	private FunctionResult functionResult;
-	private ValueProperty labelProperty;
 	
 	@Override
     protected void init()
@@ -51,12 +49,11 @@ public class TextPart extends ShapePart
             {
                 public void run()
                 {
-                    refreshLabel();
+                    notifyShapeUpdate(TextPart.this);
                 }
             }
         );
         this.setEditable(!(this.textFunction instanceof Literal));
-        this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, this.functionResult);
     }
 	
     @Override
@@ -71,12 +68,12 @@ public class TextPart extends ShapePart
 	
     public String getContent()
     {
-    	String path = null;
+    	String value = null;
     	if (this.functionResult != null)
     	{
-    		path = (String)this.functionResult.value();
+    		value = (String)this.functionResult.value();
     	}
-    	return path;
+    	return value;
     }
     
     public FunctionResult getContentFunction()
@@ -94,10 +91,4 @@ public class TextPart extends ShapePart
     	return this.textDef.getFont();
     }
     
-	private void refreshLabel()
-	{
-    	DiagramNodePart nodePart = getNodePart();
-    	nodePart.refreshShape(this);
-	}
-	
 }
