@@ -13,7 +13,6 @@ package org.eclipse.sapphire.tests.modeling.el;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
@@ -63,28 +62,6 @@ public abstract class TestExpr extends SapphireTestCase
         testForExpectedValue( new ModelElementFunctionContext( element ), expr, expected );
     }
     
-    protected static void testForExpectedString( final FunctionContext context,
-                                                 final String expr,
-                                                 final String expected )
-    {
-        testForExpectedString( context, ExpressionLanguageParser.parse( expr ), expected );
-    }
-    
-    protected static void testForExpectedString( final FunctionContext context,
-                                                 final Function expr,
-                                                 final String expected )
-    {
-        
-        testForExpectedValue( context, FailSafeFunction.create( expr, String.class ), expected );
-    }
-    
-    protected static void testForExpectedString( final IModelElement element,
-                                                 final String expr,
-                                                 final String expected )
-    {
-        testForExpectedString( new ModelElementFunctionContext( element ), expr, expected );
-    }
-
     protected static void testForExpectedError( final FunctionContext context,
                                                 final String expr,
                                                 final String expected )
