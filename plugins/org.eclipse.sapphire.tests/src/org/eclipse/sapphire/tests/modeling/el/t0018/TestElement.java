@@ -29,32 +29,74 @@ public interface TestElement extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( TestElement.class );
     
-    enum DataType
+    // *** BooleanValue ***
+    
+    @Type( base = Boolean.class )
+    
+    ValueProperty PROP_BOOLEAN_VALUE = new ValueProperty( TYPE, "BooleanValue" );
+    
+    Value<Boolean> getBooleanValue();
+    void setBooleanValue( String value );
+    void setBooleanValue( Boolean value );
+    
+    // *** BooleanValueWithDefault ***
+    
+    @Type( base = Boolean.class )
+    @DefaultValue( text = "true" )
+    
+    ValueProperty PROP_BOOLEAN_VALUE_WITH_DEFAULT = new ValueProperty( TYPE, "BooleanValueWithDefault" );
+    
+    Value<Boolean> getBooleanValueWithDefault();
+    void setBooleanValueWithDefault( String value );
+    void setBooleanValueWithDefault( Boolean value );
+    
+    // *** IntegerValue ***
+    
+    @Type( base = Integer.class )
+
+    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
+    
+    Value<Integer> getIntegerValue();
+    void setIntegerValue( String value );
+    void setIntegerValue( Integer value );
+    
+    // *** IntegerValueWithDefault ***
+    
+    @Type( base = Integer.class )
+    @DefaultValue( text = "1" )
+
+    ValueProperty PROP_INTEGER_VALUE_WITH_DEFAULT = new ValueProperty( TYPE, "IntegerValueWithDefault" );
+    
+    Value<Integer> getIntegerValueWithDefault();
+    void setIntegerValueWithDefault( String value );
+    void setIntegerValueWithDefault( Integer value );
+    
+    // *** EnumValue ***
+    
+    enum EnumType
     {
-        INTEGER,
-        FLOAT,
-        STRING
+        A,
+        B,
+        C
     }
     
-    // *** Type ***
+    @Type( base = EnumType.class )
     
-    @Type( base = DataType.class )
+    ValueProperty PROP_ENUM_VALUE = new ValueProperty( TYPE, "EnumValue" );
     
-    ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
+    Value<EnumType> getEnumValue();
+    void setEnumValue( String value );
+    void setEnumValue( EnumType value );
     
-    Value<DataType> getType();
-    void setType( String value );
-    void setType( DataType value );
+    // *** EnumValueWithDefault ***
     
-    // *** TypeWithDefault ***
-    
-    @Type( base = DataType.class )
-    @DefaultValue( text = "INTEGER" )
+    @Type( base = EnumType.class )
+    @DefaultValue( text = "A" )
 
-    ValueProperty PROP_TYPE_WITH_DEFAULT = new ValueProperty( TYPE, "TypeWithDefault" );
+    ValueProperty PROP_ENUM_VALUE_WITH_DEFAULT = new ValueProperty( TYPE, "EnumValueWithDefault" );
     
-    Value<DataType> getTypeWithDefault();
-    void setTypeWithDefault( String value );
-    void setTypeWithDefault( DataType value );
+    Value<EnumType> getEnumValueWithDefault();
+    void setEnumValueWithDefault( String value );
+    void setEnumValueWithDefault( EnumType value );
     
 }

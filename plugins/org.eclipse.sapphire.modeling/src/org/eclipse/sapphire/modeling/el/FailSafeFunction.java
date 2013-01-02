@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Function that ensures that the returned value is of specified type and prevents function
  * exceptions from propagating.  
@@ -18,18 +20,25 @@ package org.eclipse.sapphire.modeling.el;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FailSafeFunction extends Function
+public class FailSafeFunction extends Function
 {
+    public static Function create( final Function operand,
+                                   final Class<?> expectedType )
+    {
+        return create( operand, expectedType, null );
+    }
+
+    public static Function create( final Function operand,
+                                   final Class<?> expectedType,
+                                   final Object defaultValue )
+    {
+        return create( operand, Literal.create( expectedType ), Literal.create( defaultValue ) );
+    }
+
     public static Function create( final Function operand,
                                    final Function expectedType )
     {
         return create( operand, expectedType, Literal.NULL );
-    }
-
-    public static Function create( final Function operand,
-                                   final Class<?> expectedType )
-    {
-        return create( operand, Literal.create( expectedType ), Literal.NULL );
     }
 
     public static Function create( Function operand,
@@ -82,19 +91,24 @@ public final class FailSafeFunction extends Function
         return new FunctionResult( this, context )
         {
             @Override
-            @SuppressWarnings( "unchecked" )
-            
             protected Object evaluate()
             {
+                final Class<?> type = cast( operand( 1 ).value(), Class.class );
+                
                 Object val = operand( 0 ).value();
                 
-                try
+                if( val instanceof Value )
                 {
-                    val = cast( val, cast( operand( 1 ).value(), Class.class ) );
-                }
-                catch( FunctionException e )
-                {
-                    return handleFunctionException( e );
+                    final Value<?> value = (Value<?>) val;
+                    
+                    if( type == String.class )
+                    {
+                        val = value.getText();
+                    }
+                    else
+                    {
+                        val = value.getContent();
+                    }
                 }
                 
                 if( val == null )
@@ -102,7 +116,14 @@ public final class FailSafeFunction extends Function
                     val = operand( 2 ).value();
                 }
                 
-                return val;
+                try
+                {
+                    return cast( val, type );
+                }
+                catch( FunctionException e )
+                {
+                    return handleFunctionException( e );
+                }
             }
         };
     }
