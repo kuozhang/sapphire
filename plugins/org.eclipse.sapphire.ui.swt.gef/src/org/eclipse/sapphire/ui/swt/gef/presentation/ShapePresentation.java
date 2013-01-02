@@ -78,6 +78,18 @@ public class ShapePresentation
 		return parentFigure;
 	}
 	
+	public IFigure getNodeFigure()
+	{
+		IFigure parentFigure = null;
+		ShapePresentation parentPresentation = getParent();
+		while (parentPresentation != null)
+		{
+			parentFigure = parentPresentation.getFigure();
+			parentPresentation = parentPresentation.getParent();
+		}
+		return parentFigure;		
+	}
+	
 	public LayoutConstraintDef getLayoutConstraint()
 	{
 		return this.shapePart.getLayoutConstraint();

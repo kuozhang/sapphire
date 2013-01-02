@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef.figures;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -41,13 +42,22 @@ public class TextFigure extends Label
 		setFont(this.resourceCache.getFont(textPresentation.getFontDef()));
 		setText(textPresentation.getContent());
 	}
-
+	
 	public Rectangle getAvailableArea() {
-		return availableArea;
+		IFigure nodeFigure = this.textPresentation.getNodeFigure();
+		Rectangle nodeBounds = nodeFigure.getBounds();
+		return new Rectangle(this.availableArea.x + nodeBounds.x, this.availableArea.y + nodeBounds.y,
+				this.availableArea.width, this.availableArea.height);
 	}
 
 	public void setAvailableArea(Rectangle availableArea) {
-		this.availableArea = availableArea;
+		// Translate the available area to relative to the node. We don't need to
+		// adjust the available area when node is moved.
+		IFigure nodeFigure = this.textPresentation.getNodeFigure();
+		Rectangle nodeBounds = nodeFigure.getBounds();
+		this.availableArea = new Rectangle(availableArea.x - nodeBounds.x, availableArea.y - nodeBounds.y,
+				availableArea.width, availableArea.height);
+		
 	}
 
 	public int getHorizontalAlignment() {
