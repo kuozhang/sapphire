@@ -238,8 +238,7 @@ public class DiagramNodePart
 				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapeFactory);
 				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(nue);
 			}
-		}    	    	
-    	
+		}    	
     }
     
     public String getNodeTypeId()

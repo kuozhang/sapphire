@@ -174,7 +174,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             ModelElementList<?> list = this.modelElement.read(listProperty);
             for (IModelElement listEntryModelElement : list)
             {
-                if (listEntryModelElement.equals(srcNodeModel))
+                if (listEntryModelElement == srcNodeModel)
                 {
                     found = true;
                     break;

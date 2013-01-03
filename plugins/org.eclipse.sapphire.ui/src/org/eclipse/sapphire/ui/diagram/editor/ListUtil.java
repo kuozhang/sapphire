@@ -48,7 +48,7 @@ public class ListUtil
     	{
     		IModelElement element1 = list1.get(i);
     		IModelElement element2 = list2.get(i);
-    		if ((element1 != null && element2 != null && !(element1.equals(element2))) ||
+    		if ((element1 != null && element2 != null && element1 != element2) ||
     				(element1 != null && element2 == null) ||
     				(element1 == null && element2 != null))
     		{

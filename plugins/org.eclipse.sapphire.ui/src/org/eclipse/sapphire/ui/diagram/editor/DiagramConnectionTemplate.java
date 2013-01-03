@@ -681,7 +681,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         List<DiagramConnectionPart> connParts = getDiagramConnections(srcNodeModel);
         for (DiagramConnectionPart connPart : connParts)
         {
-            if (connPart.getLocalModelElement().equals(connModel))
+            if (connPart.getLocalModelElement() == connModel)
             {
                 return connPart;
             }

@@ -414,7 +414,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         List<DiagramNodePart> nodeParts = getDiagramNodes();
         for (DiagramNodePart nodePart : nodeParts)
         {
-            if (nodePart.getLocalModelElement().equals(element))
+            if (nodePart.getLocalModelElement() == element)
             {
                 return nodePart;
             }

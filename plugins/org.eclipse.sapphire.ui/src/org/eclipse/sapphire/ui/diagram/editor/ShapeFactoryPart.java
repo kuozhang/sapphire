@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
@@ -24,7 +23,6 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
@@ -156,51 +154,9 @@ public class ShapeFactoryPart extends ShapePart
     	this.modelElement.attach(this.shapePropertyListener, this.propertyName);
     	this.children.remove(childPart);
     	this.children.add(newIndex, childPart);
-    	notifyShapeReorder();
+    	notifyShapeReorder(this);
     }
     
-	private void notifyShapeAdd(ShapePart shapePart)
-	{
-		DiagramNodePart nodePart = getNodePart();
-		Set<SapphirePartListener> listeners = getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(nodePart, shapePart);
-				((SapphireDiagramPartListener)listener).handleShapeAddEvent(nue);
-			}
-		}    	
-	}
-    
-	private void notifyShapeDelete(ShapePart shapePart)
-	{
-		DiagramNodePart nodePart = getNodePart();
-		Set<SapphirePartListener> listeners = getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(nodePart, shapePart);
-				((SapphireDiagramPartListener)listener).handleShapeDeleteEvent(nue);
-			}
-		}    	
-	}
-
-	private void notifyShapeReorder()
-	{
-		DiagramNodePart nodePart = getNodePart();
-		Set<SapphirePartListener> listeners = getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(nodePart, this);
-				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(nue);
-			}
-		}    	
-	}
-	
 	@Override
     public void dispose()
     {
@@ -213,7 +169,7 @@ public class ShapeFactoryPart extends ShapePart
         List<ShapePart> shapeParts = getChildren();
         for (ShapePart shapePart : shapeParts)
         {
-            if (shapePart.getLocalModelElement().equals(element))
+            if (shapePart.getLocalModelElement() == element)
             {
                 return shapePart;
             }
@@ -283,7 +239,6 @@ public class ShapeFactoryPart extends ShapePart
     	
     	List<IModelElement> deletedShapes = ListUtil.ListDiff(oldList, newList);
     	List<IModelElement> newShapes = ListUtil.ListDiff(newList, oldList);
-    	DiagramNodePart nodePart = this.getNodePart();
     	if (deletedShapes.isEmpty() && newShapes.isEmpty() && ListUtil.ListDiffers(oldList, newList))
     	{
     		// List has been re-ordered
@@ -295,7 +250,7 @@ public class ShapeFactoryPart extends ShapePart
     		}
     		this.children.clear();
     		this.children.addAll(newChildren);
-    		notifyShapeReorder();
+    		notifyShapeReorder(this);
     	}
     	else
     	{

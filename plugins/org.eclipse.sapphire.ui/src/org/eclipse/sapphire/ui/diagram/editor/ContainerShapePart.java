@@ -222,6 +222,21 @@ public class ContainerShapePart extends ShapePart
     	    {
     	    	notifyShapeValidation(event.getShapePart());
     	    }
+    	    
+    	    public void handleShapeAddEvent(final DiagramShapeEvent event)
+    	    {
+    	        notifyShapeAdd(event.getShapePart());
+    	    }
+
+    	    public void handleShapeReorderEvent(final DiagramShapeEvent event)
+    	    {
+    	        notifyShapeReorder((ShapeFactoryPart)event.getShapePart());
+    	    }
+
+    	    public void handleShapeDeleteEvent(final DiagramShapeEvent event)
+    	    {
+    	        notifyShapeDelete(event.getShapePart());
+    	    }
 
     	};
     }

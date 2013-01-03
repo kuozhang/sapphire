@@ -15,7 +15,6 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
@@ -379,16 +378,5 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 		return textParts;
 	}
-	
-	private boolean containsShapeFactory()
-	{
-		DiagramNodePart nodePart = getCastedModel().getModelPart();
-		ShapePart shapePart = nodePart.getShapePart();
-		if (shapePart instanceof ContainerShapePart)
-		{
-			return !((((ContainerShapePart)shapePart).getShapeFactoryParts()).isEmpty());
-		}
-		return false;
-	}
-	
+		
 }

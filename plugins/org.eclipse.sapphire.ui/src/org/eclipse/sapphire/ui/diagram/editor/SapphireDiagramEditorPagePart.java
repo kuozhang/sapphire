@@ -586,7 +586,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             List<DiagramNodePart> nodeParts = nodeTemplate.getDiagramNodes();
             for (DiagramNodePart nodePart : nodeParts)
             {
-                if (nodePart.getLocalModelElement().equals(nodeElement))
+                if (nodePart.getLocalModelElement() == nodeElement)
                 {
                     return nodePart;
                 }
@@ -607,7 +607,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
     		 for (DiagramConnectionPart connPart : connParts)
     		 {
-    			 if (connPart.getLocalModelElement().equals(connElement))
+    			 if (connPart.getLocalModelElement() == connElement)
     			 {
     				 return connPart;
     			 }
@@ -623,7 +623,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         		List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
 	       		 for (DiagramConnectionPart connPart : connParts)
 	       		 {
-	       			 if (connPart.getLocalModelElement().equals(connElement))
+	       			 if (connPart.getLocalModelElement() == connElement)
 	       			 {
 	       				 return connPart;
 	       			 }
@@ -649,8 +649,8 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
     		 for (DiagramConnectionPart connPart : connParts)
     		 {
-    			 if ((connPart.getEndpoint1() != null && connPart.getEndpoint1().equals(nodeElement)) || 
-    					 connPart.getEndpoint2() != null && connPart.getEndpoint2().equals(nodeElement))
+    			 if ((connPart.getEndpoint1() != null && connPart.getEndpoint1() == nodeElement) || 
+    					 connPart.getEndpoint2() != null && connPart.getEndpoint2() == nodeElement)
     			 {
     				 attachedConnections.add(connPart);
     			 }
@@ -666,7 +666,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         		List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
 	       		 for (DiagramConnectionPart connPart : connParts)
 	       		 {
-	    			 if (connPart.getEndpoint1().equals(nodeElement) || connPart.getEndpoint2().equals(nodeElement))
+	    			 if (connPart.getEndpoint1() == nodeElement || connPart.getEndpoint2() == nodeElement)
 	    			 {
 	    				 attachedConnections.add(connPart);
 	    			 }

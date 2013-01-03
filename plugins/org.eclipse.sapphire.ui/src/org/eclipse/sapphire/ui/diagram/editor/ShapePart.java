@@ -133,6 +133,45 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
 			}
 		}    	
 	}
+    
+    protected void notifyShapeAdd(ShapePart shapePart)
+    {
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(getNodePart(), shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeAddEvent(nue);
+			}
+		}    	    	
+    }
+    
+    protected void notifyShapeDelete(ShapePart shapePart)
+    {    	
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(getNodePart(), shapePart);
+				((SapphireDiagramPartListener)listener).handleShapeDeleteEvent(nue);
+			}
+		}    	    	
+    }
+    
+    protected void notifyShapeReorder(ShapeFactoryPart shapeFactory)
+    {
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				DiagramShapeEvent nue = new DiagramShapeEvent(getNodePart(), shapeFactory);
+				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(nue);
+			}
+		}    	    	    	
+    }
 		
     @Override
     public Set<String> getActionContexts()
