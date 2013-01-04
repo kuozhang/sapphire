@@ -11,14 +11,12 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0018;
 
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.internal.ElementCompiler;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.tests.SapphireTestCase;
@@ -42,20 +40,11 @@ public final class TestModelingMisc0018 extends SapphireTestCase
         
         suite.setName( "TestModelingMisc0018" );
 
-        suite.addTest( new TestModelingMisc0018( "test" ) );
         suite.addTest( new TestModelingMisc0018( "testRuntimeTypeCompilation" ) );
         
         return suite;
     }
     
-    public void test() throws Exception
-    {
-        final byte[] bytes = ( new ElementCompiler( TestElement.TYPE ) ).compile();
-        final FileOutputStream out = new FileOutputStream( "d:/result/Result.class" );
-        out.write( bytes );
-        out.close();
-    }
-
     public void testRuntimeTypeCompilation() throws Exception
     {
         final TestElement element = TestElement.TYPE.instantiate();
