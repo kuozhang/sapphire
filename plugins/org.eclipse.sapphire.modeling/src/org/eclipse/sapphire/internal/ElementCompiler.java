@@ -602,7 +602,7 @@ public final class ElementCompiler
                 final Type[] delegateParameterTypes = new Type[ methodParameterTypes.length + 1 ];
 
                 mv.visitVarInsn( ALOAD, 0 );
-                delegateParameterTypes[ 0 ] = Type.getType( this.typeInterfaceClass );
+                delegateParameterTypes[ 0 ] = Type.getType( method.getDeclaringClass() );
                 
                 for( int i = 0, j = 1, n = methodParameterTypes.length; i < n; i++, j++ )
                 {
