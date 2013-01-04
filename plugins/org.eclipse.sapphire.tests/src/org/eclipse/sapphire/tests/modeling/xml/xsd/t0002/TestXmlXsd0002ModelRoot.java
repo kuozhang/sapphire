@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
@@ -27,7 +26,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-@GenerateImpl
 @XmlNamespace( uri="http://www.eclipse.org/sapphire/tests/xml/xsd/0002" )
 @XmlBinding( path= "element" )
 

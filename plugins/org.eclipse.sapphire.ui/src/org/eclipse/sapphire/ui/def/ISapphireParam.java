@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -26,12 +25,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "param" )
-@GenerateImpl
 
-public interface ISapphireParam
-
-    extends IModelElement
-    
+public interface ISapphireParam extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ISapphireParam.class );
     

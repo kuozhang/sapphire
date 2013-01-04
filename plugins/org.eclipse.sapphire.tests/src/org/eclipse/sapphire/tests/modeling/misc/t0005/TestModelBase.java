@@ -14,13 +14,10 @@ package org.eclipse.sapphire.tests.modeling.misc.t0005;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@GenerateImpl
 
 public interface TestModelBase extends IModelElement
 {

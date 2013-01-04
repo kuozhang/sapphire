@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
@@ -31,12 +30,8 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDet
  */
 
 @Label( standard = "content outline node include" )
-@GenerateImpl
 
-public interface MasterDetailsContentNodeInclude
-
-    extends MasterDetailsContentNodeChildDef
-    
+public interface MasterDetailsContentNodeInclude extends MasterDetailsContentNodeChildDef
 {
     ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeInclude.class );
     

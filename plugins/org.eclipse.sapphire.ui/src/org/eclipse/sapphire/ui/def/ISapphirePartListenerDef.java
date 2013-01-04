@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -28,12 +27,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "listener" )
-@GenerateImpl
 
-public interface ISapphirePartListenerDef
-
-    extends IModelElement
-    
+public interface ISapphirePartListenerDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ISapphirePartListenerDef.class );
     

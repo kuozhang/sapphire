@@ -22,14 +22,11 @@ import org.eclipse.sapphire.modeling.Transient;
 import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@GenerateImpl
 
 public interface RootElement extends IModelElement
 {

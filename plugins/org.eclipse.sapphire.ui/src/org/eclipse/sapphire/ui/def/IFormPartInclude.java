@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -34,12 +33,8 @@ import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
  */
 
 @Label( standard = "include" )
-@GenerateImpl
 
-public interface IFormPartInclude
-
-    extends FormComponentDef
-    
+public interface IFormPartInclude extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( IFormPartInclude.class );
     

@@ -27,7 +27,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -53,12 +52,8 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
  */
 
 @Label( standard = "diagram node" )
-@GenerateImpl
 
-public interface IDiagramNodeDef 
-
-    extends PartDef, IDiagramDimension, IPropertiesViewContributorDef
-    
+public interface IDiagramNodeDef extends PartDef, IDiagramDimension, IPropertiesViewContributorDef
 {
     ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
     

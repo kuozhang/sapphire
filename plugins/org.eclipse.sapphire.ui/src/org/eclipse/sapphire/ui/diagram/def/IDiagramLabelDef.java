@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.diagram.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -27,12 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-@GenerateImpl
-
-public interface IDiagramLabelDef 
-
-    extends IDiagramDimension
-    
+public interface IDiagramLabelDef extends IDiagramDimension
 {
     ModelElementType TYPE = new ModelElementType( IDiagramLabelDef.class );
     

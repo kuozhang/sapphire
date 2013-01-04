@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
@@ -25,7 +24,6 @@ import org.eclipse.sapphire.ui.def.internal.LocationHintBinding;
 
 @Label( standard = "before location hint" )
 @Image( path = "ActionLocationHintBefore.png" )
-@GenerateImpl
 
 public interface ActionLocationHintBefore extends ActionLocationHint
 {

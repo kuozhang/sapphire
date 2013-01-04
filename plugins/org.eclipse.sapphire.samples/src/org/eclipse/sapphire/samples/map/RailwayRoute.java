@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -29,8 +28,6 @@ import org.eclipse.sapphire.samples.map.internal.LocationReferenceService;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@GenerateImpl
 
 public interface RailwayRoute extends IModelElement 
 {

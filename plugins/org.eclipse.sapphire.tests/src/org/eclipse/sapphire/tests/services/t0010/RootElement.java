@@ -25,7 +25,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -34,7 +33,6 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  */
 
 @VersionCompatibilityTarget( version = "${ Version }", versioned = "Test Versioned System" )
-@GenerateImpl
 
 public interface RootElement extends IModelElement
 {

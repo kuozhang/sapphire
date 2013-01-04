@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -30,12 +29,7 @@ import org.eclipse.sapphire.samples.contacts.internal.LocalNumberBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface PhoneNumber
-
-    extends IModelElement
-    
+public interface PhoneNumber extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( PhoneNumber.class );
     

@@ -1,0 +1,78 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2012 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Migration Guide for Sapphire 0.7</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Migration Guide for 0.7</h1>
+
+<p>This documents covers code changes that need to be made by Sapphire adopters as part of migrating 
+to 0.7 release. Only changes from the previous release are covered.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#GenerateImpl">GenerateImpl</a></li>
+  <li><a href="#ModelElementType">ModelElementType</a></li>
+</ol>
+
+<h2><a name="GenerateImpl">GenerateImpl</a></h2>
+
+<p>With the switch to on-demand element compilation, there is no longer a need to signal to the framework
+which elements should be compiled. Also, the developer no longer has control over the name
+of the generated implementation class. As such, the @GenerateImpl annotation has been removed and no direct 
+equivalent has been provided. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+
+<h2><a name="ModelElementType">ModelElementType</a></h2>
+
+<p>With the switch to on-demand element compilation, the developer no longer has control over the name
+of the generated implementation class. As such, the following methods have been removed and no direct 
+equivalents have been provided. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElementType
+{</font>
+    Class<?> getImplClass()
+    String getImplClassName( Class<?> elementTypeClass )
+    String getImplClassName( String elementTypeClassName, GenerateImpl generateImplAnnotation )
+    String getImplClassName( String elementTypeClassName, String preferredImplPackageName, String preferredImplClassName )
+<font color="#888888">}</font></code></pre>
+
+<div class="copyright">Copyright (c) 2012 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

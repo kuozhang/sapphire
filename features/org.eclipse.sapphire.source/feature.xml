@@ -107,13 +107,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.sapphire.sdk.build.processor.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.sapphire.tests.source"
          download-size="0"
          install-size="0"

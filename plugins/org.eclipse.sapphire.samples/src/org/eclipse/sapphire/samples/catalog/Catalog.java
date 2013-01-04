@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
@@ -27,7 +26,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @XmlBinding( path = "Catalog" )
-@GenerateImpl
 
 public interface Catalog extends IModelElement
 {

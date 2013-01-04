@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.samples.po;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
@@ -20,7 +19,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
  */
 
 @Label( standard = "cash" )
-@GenerateImpl
 
 public interface CashPayment extends Payment
 {

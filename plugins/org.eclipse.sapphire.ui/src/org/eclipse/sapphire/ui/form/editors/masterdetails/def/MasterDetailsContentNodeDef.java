@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -30,12 +29,8 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
  */
 
 @Label( standard = "content outline node" )
-@GenerateImpl
 
-public interface MasterDetailsContentNodeDef
-
-    extends MasterDetailsContentNodeChildDef, IPropertiesViewContributorDef
-    
+public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChildDef, IPropertiesViewContributorDef
 {
     ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeDef.class );
     

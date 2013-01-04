@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -27,7 +26,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "content outline node factory" )
-@GenerateImpl
 
 public interface MasterDetailsContentNodeFactoryDef extends MasterDetailsContentNodeChildDef
 {

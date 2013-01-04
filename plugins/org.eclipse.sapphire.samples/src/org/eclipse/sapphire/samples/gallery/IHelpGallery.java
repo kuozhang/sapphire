@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Documentation.Topic;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -31,8 +30,6 @@ import org.eclipse.sapphire.samples.gallery.internal.PositiveIntegerDocumentatio
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
-
-@GenerateImpl
 
 public interface IHelpGallery extends IModelElement
 {

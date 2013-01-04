@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -28,8 +27,6 @@ import org.eclipse.sapphire.modeling.annotations.Type;
     impl = CalendarResourceConversionService.class,
     overrides = "Sapphire.ConversionService.IFileToWorkspaceFileResourceStore"
 )
-
-@GenerateImpl
 
 public interface ICalendar extends IModelElement
 {

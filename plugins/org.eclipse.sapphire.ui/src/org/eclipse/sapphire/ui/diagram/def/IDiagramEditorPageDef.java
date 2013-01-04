@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -38,12 +37,8 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
  */
 
 @Label( standard = "diagram editor page" )
-@GenerateImpl
 
-public interface IDiagramEditorPageDef 
-    
-    extends EditorPageDef, IPropertiesViewContributorDef
-    
+public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewContributorDef
 {
     ModelElementType TYPE = new ModelElementType( IDiagramEditorPageDef.class);
     

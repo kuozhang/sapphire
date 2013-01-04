@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 
@@ -23,12 +22,7 @@ import org.eclipse.sapphire.modeling.annotations.Required;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface ExtensionSummarySectionColumnDef
-
-    extends IModelElement
-    
+public interface ExtensionSummarySectionColumnDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ExtensionSummarySectionColumnDef.class );
     

@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.diagram.shape.def;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -26,7 +25,6 @@ import org.eclipse.sapphire.ui.def.PartDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-@GenerateImpl
 @Label( standard = "shape" )
 @Image( path = "ShapeDef.png" )
 

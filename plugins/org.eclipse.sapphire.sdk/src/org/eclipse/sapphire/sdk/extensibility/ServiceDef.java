@@ -24,7 +24,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -41,7 +40,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "service" )
-@GenerateImpl
 
 public interface ServiceDef extends IModelElement
 {
@@ -138,7 +136,6 @@ public interface ServiceDef extends IModelElement
     // *** Overrides ***
     
     @Label( standard = "service override" )
-    @GenerateImpl
 
     public interface Override extends IModelElement
     {

@@ -15,12 +15,10 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.modeling.misc.t0001.TestModelingMisc0001;
 import org.eclipse.sapphire.tests.modeling.misc.t0002.TestModelingMisc0002;
 import org.eclipse.sapphire.tests.modeling.misc.t0003.TestModelingMisc0003;
 import org.eclipse.sapphire.tests.modeling.misc.t0004.TestModelingMisc0004;
 import org.eclipse.sapphire.tests.modeling.misc.t0005.TestModelingMisc0005;
-import org.eclipse.sapphire.tests.modeling.misc.t0006.TestModelingMisc0006;
 import org.eclipse.sapphire.tests.modeling.misc.t0007.TestModelingMisc0007;
 import org.eclipse.sapphire.tests.modeling.misc.t0008.TestModelingMisc0008;
 import org.eclipse.sapphire.tests.modeling.misc.t0009.TestModelingMisc0009;
@@ -32,6 +30,7 @@ import org.eclipse.sapphire.tests.modeling.misc.t0014.TestModelingMisc0014;
 import org.eclipse.sapphire.tests.modeling.misc.t0015.TestModelingMisc0015;
 import org.eclipse.sapphire.tests.modeling.misc.t0016.TestModelingMisc0016;
 import org.eclipse.sapphire.tests.modeling.misc.t0017.TestModelingMisc0017;
+import org.eclipse.sapphire.tests.modeling.misc.t0018.TestModelingMisc0018;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -50,12 +49,10 @@ public final class ModelingMiscTests extends TestCase
         
         suite.setName( "ModelingMiscTests" );
 
-        suite.addTest( TestModelingMisc0001.suite() );
         suite.addTest( TestModelingMisc0002.suite() );
         suite.addTest( TestModelingMisc0003.suite() );
         suite.addTest( TestModelingMisc0004.suite() );
         suite.addTest( TestModelingMisc0005.suite() );
-        suite.addTest( TestModelingMisc0006.suite() );
         suite.addTest( TestModelingMisc0007.suite() );
         suite.addTest( TestModelingMisc0008.suite() );
         suite.addTest( TestModelingMisc0009.suite() );
@@ -67,6 +64,7 @@ public final class ModelingMiscTests extends TestCase
         suite.addTest( TestModelingMisc0015.suite() );
         suite.addTest( TestModelingMisc0016.suite() );
         suite.addTest( TestModelingMisc0017.suite() );
+        suite.addTest( TestModelingMisc0018.suite() );
         
         return suite;
     }

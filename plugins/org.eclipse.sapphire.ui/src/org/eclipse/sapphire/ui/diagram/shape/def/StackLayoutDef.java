@@ -12,14 +12,12 @@
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-@GenerateImpl
 @Label( standard = "stack layout" )
 
 public interface StackLayoutDef extends ShapeLayoutDef 

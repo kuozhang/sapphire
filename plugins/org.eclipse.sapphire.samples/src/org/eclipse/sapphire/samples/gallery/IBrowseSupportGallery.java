@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -38,12 +37,7 @@ import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface IBrowseSupportGallery
-
-    extends IModelElement
-    
+public interface IBrowseSupportGallery extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IBrowseSupportGallery.class );
     

@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -30,12 +29,8 @@ import org.eclipse.sapphire.samples.calendar.integrated.internal.AttendeeImageSe
  */
 
 @Service( impl = AttendeeImageService.class )
-@GenerateImpl
 
-public interface IAttendee
-
-    extends IModelElement
-
+public interface IAttendee extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IAttendee.class );
     

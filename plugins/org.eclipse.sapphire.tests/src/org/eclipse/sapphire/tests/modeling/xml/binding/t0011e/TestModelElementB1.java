@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0011e;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
@@ -20,7 +19,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/5", prefix = "ns5" )
 @XmlBinding( path = "ns5:b1" )
 

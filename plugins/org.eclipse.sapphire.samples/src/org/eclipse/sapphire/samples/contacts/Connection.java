@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
@@ -27,12 +26,8 @@ import org.eclipse.sapphire.modeling.annotations.Required;
  */
 
 @Image( path = "Contact.png" )
-@GenerateImpl
 
-public interface Connection
-
-    extends IModelElement
-
+public interface Connection extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Connection.class );
 

@@ -60,8 +60,7 @@ provide a custom method for adopting IModelElement to IProject.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code><font color="#888888">@GenerateImpl</font>
-@Service( impl = NewProjectFileOpAdapterService.class )
+<pre class="source-code"><code>@Service( impl = NewProjectFileOpAdapterService.class )
 
 <font color="#888888">public interface INewProjectFileOp extends IModelElement
 {
@@ -1081,9 +1080,8 @@ is found or the model root is reached.</p>
 which supports <a href="../el/index.html">the expression language</a>.</p>
 
 <pre class="source-code"><code>@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
-<font color="#888888">@GenerateImpl
 
-public interface PurchaseOrder extends IModelElement
+<font color="#888888">public interface PurchaseOrder extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );</font>
 
@@ -1104,9 +1102,8 @@ public interface PurchaseOrder extends IModelElement
 <p>When more control is necessary, a custom implementation of VersionCompatibilityTargetService can be provided.</p>
 
 <pre class="source-code"><code>@Service( impl = ExampleVersionCompatibilityTargetService.class )
-<font color="#888888">@GenerateImpl
 
-public interface PurchaseOrder extends IModelElement
+<font color="#888888">public interface PurchaseOrder extends IModelElement
 {
     ...
 }</font></code></pre>

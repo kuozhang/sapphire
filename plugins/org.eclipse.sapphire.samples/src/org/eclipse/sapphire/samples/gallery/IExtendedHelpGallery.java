@@ -17,23 +17,16 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Documentation.Topic;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-@GenerateImpl
-
 @Label( standard = "extended help gallery" )
-
 @Documentation ( content = "Content help for extended help gallery." )
 
-public interface IExtendedHelpGallery
-
-    extends IHelpGallery
-
+public interface IExtendedHelpGallery extends IHelpGallery
 {
     ModelElementType TYPE = new ModelElementType( IExtendedHelpGallery.class );
 

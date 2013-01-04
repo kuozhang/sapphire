@@ -87,180 +87,180 @@
         <not><isset property="build.repository.completed"/></not>
         <then>
 
+          <delete dir="${build.dir}/repository" quiet="true"/>
+          <mkdir dir="${build.dir}/repository"/>
+
+          <!-- Stage 1 -->
+
+          <echo message="Performing source code verification..."/>
+            
+          <VerifyCopyrightHeaders Source="${root.dir}"/>
+          <VerifyAuthorTags Source="${root.dir}"/>
+
+          <!-- Stage 2: Build the SDK. -->
+
           <with-target-platform configuration="${configuration.recommended}">
-
-            <delete dir="${build.dir}/repository" quiet="true"/>
-            <mkdir dir="${build.dir}/repository"/>
-
-            <!-- Stage 1 -->
-
-            <echo message="Performing source code verification..."/>
-            
-            <VerifyCopyrightHeaders Source="${root.dir}"/>
-            <VerifyAuthorTags Source="${root.dir}"/>
-
-            <!-- Stage 2: Build the modeling framework and the annotation processor. -->
-
             <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage1" eclipse="${.target.platform}" root.dir="${root.dir}"/>
-
-            <unzip src="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip" dest="${build.dir}/repository">
-              <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-            </unzip>
-
-            <delete file="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip"/>
-
-            <!-- Stage 3: Build the SDK. -->
-
-            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
-
-            <delete dir="${build.dir}/repository"/>
-
-            <unzip src="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip" dest="${build.dir}/repository">
-              <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-            </unzip>
-
-            <delete file="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip"/>
-
-            <!-- Stage 4: Now build everything together. -->
-
-            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage3" eclipse="${.target.platform}" root.dir="${root.dir}"/>
-
-            <delete dir="${build.dir}/repository"/>
-
-            <unzip src="${build.dir}/org.eclipse.sapphire.stage3-${DSTAMP}.zip" dest="${build.dir}/repository">
-              <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-            </unzip>
-
-            <delete file="${build.dir}/org.eclipse.sapphire.stage3-${DSTAMP}.zip"/>
-
-            <zip-dirs source.dir="${build.dir}/repository/features" suffix="jar"/>
-
-            <delete>
-              <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.stage3_*.jar"/>
-            </delete>
-
-            <!-- Stage 5 -->
-
-            <echo message="Setting Require-Bundle version constraints..."/>
-
-            <mkdir dir="${build.dir}/repository/temp"/>
-
-            <expand-all source.dir="${build.dir}/repository/plugins" dest.dir="${build.dir}/repository/temp" suffix="jar">
-              <delete file="@{archive.file}"/>
-            </expand-all>
-
-            <with-target-platform configuration="${configuration.min}">
-              <create-inventory dest="${build.dir}/repository/temp/min-platform-inventory.txt">
-                <plugins>
-                  <pathelement location="${.target.platform}/plugins"/>
-                </plugins>
-              </create-inventory>
-            </with-target-platform>
-
-            <with-target-platform configuration="${configuration.max}">
-              <create-inventory dest="${build.dir}/repository/temp/max-platform-inventory.txt">
-                <plugins>
-                  <pathelement location="${.target.platform}/plugins"/>
-                </plugins>
-              </create-inventory>
-            </with-target-platform>
-
-            <set-bundle-version-constraints
-              minPlatformInventory="${build.dir}/repository/temp/min-platform-inventory.txt"
-              targetPlatformInventory="${build.dir}/repository/temp/max-platform-inventory.txt"
-              pluginsDirectory="${build.dir}/repository/temp">
-              <exclude id=".*\.source"/>
-              <rule bundle="org.junit" expr="[M1.M2.M3,5.0.0)"/>
-              <rule bundle="org.eclipse.sapphire*" expr="[M1.M2.M3,T1.T2.T3+1)"/>
-              <rule bundle="*" expr="[M1.M2.M3,T1+1.0.0)"/>
-            </set-bundle-version-constraints>
-
-            <!-- Stage 6 -->
-
-            <echo message="Setting versions of Export-Package entries..."/>
-
-            <set-export-package-version bundles="${build.dir}/repository/temp"/>
-            
-            <zip-dirs source.dir="${build.dir}/repository/temp" dest.dir="${build.dir}/repository/plugins" suffix="jar"/>
-
-            <delete dir="${build.dir}/repository/temp"/>
-            
-            <!-- Stage 7 -->
-            
-            <echo message="Generating samples test translation..."/>
-            
-            <BuildTestTranslation 
-              Bundle="org.eclipse.sapphire.samples" 
-              Feature="org.eclipse.sapphire.samples" 
-              Repository="${build.dir}/repository"
-              WorkArea="${build.dir}/test-translation"/>
-
-            <BuildTestTranslation 
-              Bundle="org.eclipse.sapphire.modeling" 
-              Feature="org.eclipse.sapphire.samples" 
-              Repository="${build.dir}/repository"
-              WorkArea="${build.dir}/test-translation"/>
-
-            <BuildTestTranslation 
-              Bundle="org.eclipse.sapphire.ui" 
-              Feature="org.eclipse.sapphire.samples" 
-              Repository="${build.dir}/repository"
-              WorkArea="${build.dir}/test-translation"/>
-              
-            <!-- Stage 8 -->
-            
-            <echo message="Performing repository verification..."/>
-            
-            <VerifyAboutHtml Repository="${build.dir}/repository"/>
-
-            <!-- Stage 9 -->
-            
-            <property-from-set property=".sapphire.feature">
-              <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.modeling_*.jar"/>
-            </property-from-set>
-
-            <var name="sapphire.version" unset="true"/>
-            <propertyregex property="sapphire.version" input="${.sapphire.feature}" regexp=".*_([0-9]*.[0-9]*.[0-9]*.[0-9]*).jar" select="\1"/>
-            
-            <var name="sapphire.version.no.qualifier" unset="true"/>
-            <propertyregex property="sapphire.version.no.qualifier" input="${sapphire.version}" regexp="([0-9]*.[0-9]*.[0-9]*).[0-9]*" select="\1"/>
-
-            <if>
-              <istrue value="${sign}"/>
-              <then>
-               
-                <echo message="Signing features and plugins..."/>
-                
-                <zip destfile="${build.dir}/repository.zip" basedir="${build.dir}/repository"/>
-                <delete dir="${build.dir}/repository"/>
-            
-                <Sign Project="sapphire" Job="${sapphire.version.no.qualifier}" File="${build.dir}/repository.zip" Output="${build.dir}/repository.zip"/>
-            
-                <unzip src="${build.dir}/repository.zip" dest="${build.dir}/repository"/>
-                <delete file="${build.dir}/repository.zip"/>
-                
-              </then>
-            </if>
-
-            <!-- Stage 10 -->
-
-            <echo message="Packaging the repository..."/>
-
-            <copy file="${releng.dir}/site.xml" tofile="${build.dir}/repository/site.xml"/>
-
-            <replace file="${build.dir}/repository/site.xml">
-              <replacefilter token="##version##" value="${sapphire.version}"/>
-            </replace>
-
-            <p2.publish.UpdateSite location="${build.dir}/repository"/>
-
-            <delete file="${build.dir}/repository/site.xml"/>
-
-            <load-build-repository url="file:${build.dir}/repository"/>
-
-            <property name="build.repository.completed" value="true"/>
-
           </with-target-platform>
+
+          <unzip src="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip" dest="${build.dir}/repository">
+            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+          </unzip>
+
+          <delete file="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip"/>
+
+          <!-- Stage 3: Now build everything together. -->
+
+          <with-target-platform configuration="${configuration.recommended}">
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+          </with-target-platform>
+
+          <delete dir="${build.dir}/repository"/>
+
+          <unzip src="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip" dest="${build.dir}/repository">
+            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
+          </unzip>
+
+          <delete file="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip"/>
+
+          <zip-dirs source.dir="${build.dir}/repository/features" suffix="jar"/>
+
+          <delete>
+            <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.stage2_*.jar"/>
+          </delete>
+
+          <!-- Stage 4 -->
+
+          <echo message="Setting Require-Bundle version constraints..."/>
+
+          <mkdir dir="${build.dir}/repository/temp"/>
+
+          <expand-all source.dir="${build.dir}/repository/plugins" dest.dir="${build.dir}/repository/temp" suffix="jar">
+            <delete file="@{archive.file}"/>
+          </expand-all>
+
+          <with-target-platform configuration="${configuration.min}">
+            <create-inventory dest="${build.dir}/repository/temp/min-platform-inventory.txt">
+              <plugins>
+                <pathelement location="${.target.platform}/plugins"/>
+              </plugins>
+            </create-inventory>
+          </with-target-platform>
+
+          <with-target-platform configuration="${configuration.max}">
+            <create-inventory dest="${build.dir}/repository/temp/max-platform-inventory.txt">
+              <plugins>
+                <pathelement location="${.target.platform}/plugins"/>
+              </plugins>
+            </create-inventory>
+          </with-target-platform>
+
+          <set-bundle-version-constraints
+            minPlatformInventory="${build.dir}/repository/temp/min-platform-inventory.txt"
+            targetPlatformInventory="${build.dir}/repository/temp/max-platform-inventory.txt"
+            pluginsDirectory="${build.dir}/repository/temp">
+            <exclude id=".*\.source"/>
+            <rule bundle="org.junit" expr="[M1.M2.M3,5.0.0)"/>
+            <rule bundle="org.eclipse.sapphire*" expr="[M1.M2.M3,T1.T2.T3+1)"/>
+            <rule bundle="*" expr="[M1.M2.M3,T1+1.0.0)"/>
+          </set-bundle-version-constraints>
+
+          <!-- Stage 5 -->
+
+          <echo message="Setting versions of Export-Package entries..."/>
+
+          <set-export-package-version bundles="${build.dir}/repository/temp"/>
+            
+          <zip-dirs source.dir="${build.dir}/repository/temp" dest.dir="${build.dir}/repository/plugins" suffix="jar"/>
+
+          <delete dir="${build.dir}/repository/temp"/>
+            
+          <!-- Stage 6 -->
+            
+          <echo message="Generating samples test translation..."/>
+            
+          <BuildTestTranslation 
+            Bundle="org.eclipse.sapphire.samples" 
+            Feature="org.eclipse.sapphire.samples" 
+            Repository="${build.dir}/repository"
+            WorkArea="${build.dir}/test-translation"/>
+
+          <BuildTestTranslation 
+            Bundle="org.eclipse.sapphire.modeling" 
+            Feature="org.eclipse.sapphire.samples" 
+            Repository="${build.dir}/repository"
+            WorkArea="${build.dir}/test-translation"/>
+
+          <BuildTestTranslation 
+            Bundle="org.eclipse.sapphire.ui" 
+            Feature="org.eclipse.sapphire.samples" 
+            Repository="${build.dir}/repository"
+            WorkArea="${build.dir}/test-translation"/>
+              
+          <!-- Stage 7 -->
+            
+          <echo message="Performing repository verification..."/>
+            
+          <VerifyAboutHtml Repository="${build.dir}/repository"/>
+
+          <!-- Stage 8 -->
+            
+          <property-from-set property=".sapphire.feature">
+            <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.modeling_*.jar"/>
+          </property-from-set>
+
+          <var name="sapphire.version" unset="true"/>
+          <propertyregex property="sapphire.version" input="${.sapphire.feature}" regexp=".*_([0-9]*.[0-9]*.[0-9]*.[0-9]*).jar" select="\1"/>
+            
+          <var name="sapphire.version.no.qualifier" unset="true"/>
+          <propertyregex property="sapphire.version.no.qualifier" input="${sapphire.version}" regexp="([0-9]*.[0-9]*.[0-9]*).[0-9]*" select="\1"/>
+
+          <if>
+            <istrue value="${sign}"/>
+            <then>
+               
+              <echo message="Signing features and plugins..."/>
+                
+              <zip destfile="${build.dir}/repository.zip" basedir="${build.dir}/repository"/>
+              <delete dir="${build.dir}/repository"/>
+            
+              <Sign Project="sapphire" Job="${sapphire.version.no.qualifier}" File="${build.dir}/repository.zip" Output="${build.dir}/repository.zip"/>
+            
+              <unzip src="${build.dir}/repository.zip" dest="${build.dir}/repository"/>
+              <delete file="${build.dir}/repository.zip"/>
+                
+            </then>
+          </if>
+            
+          <!-- Stage 9 -->
+            
+          <echo message="Mirroring ASM..."/>
+
+          <with-target-platform configuration="${configuration.recommended}">
+            <copy todir="${build.dir}/repository/plugins">
+              <fileset dir="${.target.platform}/plugins">
+                <include name="org.objectweb.asm_*.jar"/>
+              </fileset>
+            </copy>
+          </with-target-platform>
+
+          <!-- Stage 10 -->
+
+          <echo message="Packaging the repository..."/>
+
+          <copy file="${releng.dir}/site.xml" tofile="${build.dir}/repository/site.xml"/>
+
+          <replace file="${build.dir}/repository/site.xml">
+            <replacefilter token="##version##" value="${sapphire.version}"/>
+          </replace>
+
+          <p2.publish.UpdateSite location="${build.dir}/repository"/>
+
+          <delete file="${build.dir}/repository/site.xml"/>
+
+          <load-build-repository url="file:${build.dir}/repository"/>
+
+          <property name="build.repository.completed" value="true"/>
 
         </then>
         <else>
@@ -590,7 +590,7 @@ Fragment-Host: @{Bundle}
           <echo message="Building Sapphire with ${.configuration} configuration..."/>
 
           <with-target-platform configuration="${.configuration}">
-            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage3" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
           </with-target-platform>
 
           <delete file="${build.dir}/org.eclipse.sapphire.stage3-${DSTAMP}.zip"/>

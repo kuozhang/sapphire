@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.diagram.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -25,12 +24,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-@GenerateImpl
-
-public interface IDiagramNodeDefaultActionDef 
-
-    extends PartDef
-    
+public interface IDiagramNodeDefaultActionDef extends PartDef
 {
     ModelElementType TYPE = new ModelElementType( IDiagramNodeDefaultActionDef.class );
     

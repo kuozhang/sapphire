@@ -15,7 +15,6 @@ import org.eclipse.sapphire.PreferDefaultValue;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 import org.eclipse.sapphire.workspace.WorkspaceFileType;
 
@@ -24,7 +23,6 @@ import org.eclipse.sapphire.workspace.WorkspaceFileType;
  */
 
 @WorkspaceFileType( Schema.class )
-@GenerateImpl
 
 public interface CreateSqlSchemaEditorOp extends CreateWorkspaceFileOp
 {

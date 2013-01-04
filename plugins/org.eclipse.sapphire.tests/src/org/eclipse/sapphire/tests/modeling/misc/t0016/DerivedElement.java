@@ -14,13 +14,10 @@ package org.eclipse.sapphire.tests.modeling.misc.t0016;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@GenerateImpl
 
 public interface DerivedElement extends BaseElement
 {

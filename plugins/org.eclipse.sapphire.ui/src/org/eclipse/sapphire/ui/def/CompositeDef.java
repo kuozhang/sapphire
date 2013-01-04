@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -31,7 +30,6 @@ import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultVal
  */
 
 @Label( standard = "composite" )
-@GenerateImpl
 
 public interface CompositeDef extends FormDef
 {

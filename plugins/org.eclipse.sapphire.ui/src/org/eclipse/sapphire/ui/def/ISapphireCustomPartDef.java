@@ -16,7 +16,6 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -27,12 +26,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "custom part" )
-@GenerateImpl
 
-public interface ISapphireCustomPartDef
-
-    extends FormComponentDef
-    
+public interface ISapphireCustomPartDef extends FormComponentDef
 {
     ModelElementType TYPE = new ModelElementType( ISapphireCustomPartDef.class );
  

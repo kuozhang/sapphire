@@ -22,10 +22,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestModelingMisc0005
-
-    extends SapphireTestCase
-    
+public final class TestModelingMisc0005 extends SapphireTestCase
 {
     private TestModelingMisc0005( final String name )
     {

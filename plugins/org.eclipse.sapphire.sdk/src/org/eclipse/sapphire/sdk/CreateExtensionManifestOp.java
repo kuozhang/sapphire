@@ -15,7 +15,6 @@ import org.eclipse.sapphire.PreferDefaultValue;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
@@ -29,7 +28,6 @@ import org.eclipse.sapphire.workspace.WorkspaceFileType;
  */
 
 @WorkspaceFileType( SapphireExtensionDef.class )
-@GenerateImpl
 
 public interface CreateExtensionManifestOp extends CreateWorkspaceFileOp
 {

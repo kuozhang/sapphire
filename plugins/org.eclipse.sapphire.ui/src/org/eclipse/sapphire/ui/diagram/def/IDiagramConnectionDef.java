@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -39,12 +38,8 @@ import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossib
  */
 
 @Label( standard = "diagram connection" )
-@GenerateImpl
 
-public interface IDiagramConnectionDef 
-    
-    extends PartDef
-    
+public interface IDiagramConnectionDef extends PartDef
 {
     ModelElementType TYPE = new ModelElementType( IDiagramConnectionDef.class );
     

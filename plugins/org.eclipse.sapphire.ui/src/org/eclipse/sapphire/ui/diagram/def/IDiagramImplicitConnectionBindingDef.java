@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -29,12 +28,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "diagram connection binding" )
-@GenerateImpl
 
-public interface IDiagramImplicitConnectionBindingDef 
-
-    extends IDiagramConnectionBindingDef 
-
+public interface IDiagramImplicitConnectionBindingDef extends IDiagramConnectionBindingDef 
 {
     ModelElementType TYPE = new ModelElementType( IDiagramImplicitConnectionBindingDef.class );
     

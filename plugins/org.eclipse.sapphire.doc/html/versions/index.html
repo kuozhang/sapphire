@@ -106,9 +106,8 @@ typically references a property that defines the version.</p>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
-<font color="#888888">@GenerateImpl
 
-public interface PurchaseOrder extends IModelElement
+<font color="#888888">public interface PurchaseOrder extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );</font>
 

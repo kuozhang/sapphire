@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.ui.def.SectionDef;
@@ -24,12 +23,8 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDet
  */
 
 @Label( standard = "section" )
-@GenerateImpl
 
-public interface MasterDetailsSectionDef
-
-    extends SectionDef
-    
+public interface MasterDetailsSectionDef extends SectionDef
 {
     ModelElementType TYPE = new ModelElementType( MasterDetailsSectionDef.class );
     

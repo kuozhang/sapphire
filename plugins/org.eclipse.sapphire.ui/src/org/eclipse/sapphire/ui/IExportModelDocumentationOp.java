@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.ui.internal.ExportModelDocumentationOpMethods;
@@ -27,12 +26,7 @@ import org.eclipse.sapphire.ui.internal.ExportModelDocumentationOpMethods;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface IExportModelDocumentationOp
-
-    extends IModelElement
-    
+public interface IExportModelDocumentationOp extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IExportModelDocumentationOp.class );
     

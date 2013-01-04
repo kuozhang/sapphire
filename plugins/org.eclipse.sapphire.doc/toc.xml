@@ -63,8 +63,8 @@
     <topic href="html/releases/0.7/index.html" label="0.7">
        <topic href="html/releases/0.7/enhancements.html" label="Enhancements">
        </topic>
-       <!-- <topic href="html/releases/0.6/migration.html" label="Migration Guide">
-       </topic> -->
+       <topic href="html/releases/0.7/migration.html" label="Migration Guide">
+       </topic>
     </topic>
     <topic href="html/releases/0.6/index.html" label="0.6">
        <topic href="html/releases/0.6/enhancements.html" label="Enhancements">

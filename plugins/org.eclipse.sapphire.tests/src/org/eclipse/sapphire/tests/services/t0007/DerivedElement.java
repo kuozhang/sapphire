@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.tests.services.t0007;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
 /**
@@ -20,7 +19,6 @@ import org.eclipse.sapphire.modeling.annotations.Service;
  */
 
 @Service( impl = DerivedValidationService.class )
-@GenerateImpl
 
 public interface DerivedElement extends BaseElement
 {

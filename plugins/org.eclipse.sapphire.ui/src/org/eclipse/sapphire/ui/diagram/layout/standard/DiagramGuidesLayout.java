@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -26,12 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-@GenerateImpl
-
-public interface DiagramGuidesLayout
-
-	extends IModelElement 
-
+public interface DiagramGuidesLayout extends IModelElement 
 {
 	ModelElementType TYPE = new ModelElementType( DiagramGuidesLayout.class);
 
@@ -40,6 +34,7 @@ public interface DiagramGuidesLayout
 	@Type( base = Boolean.class )
 	@XmlBinding( path = "visible" )
 	@Label( standard = "show guides")
+	
 	ValueProperty PROP_VISIBLE = new ValueProperty(TYPE, "Visible");
 	
 	Value<Boolean> isVisible();

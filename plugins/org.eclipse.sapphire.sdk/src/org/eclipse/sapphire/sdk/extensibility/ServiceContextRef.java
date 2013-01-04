@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -29,7 +28,6 @@ import org.eclipse.sapphire.services.ServiceContext;
  */
 
 @Label( standard = "service context reference" )
-@GenerateImpl
 
 public interface ServiceContextRef extends IModelElement
 {

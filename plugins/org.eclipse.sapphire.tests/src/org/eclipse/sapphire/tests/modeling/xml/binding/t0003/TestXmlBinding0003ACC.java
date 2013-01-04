@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
@@ -23,7 +22,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/v", prefix = "v" )
 
 public interface TestXmlBinding0003ACC extends IModelElement

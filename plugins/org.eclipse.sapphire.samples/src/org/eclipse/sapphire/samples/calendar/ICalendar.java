@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -28,7 +27,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-@GenerateImpl
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/samples/calendar", prefix = "cal" )
 @XmlSchema( namespace = "http://www.eclipse.org/sapphire/samples/calendar", location = "http://www.eclipse.org/sapphire/samples/calendar/1.0" )
 @XmlBinding( path = "cal:calendar" )

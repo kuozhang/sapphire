@@ -23,6 +23,10 @@
 <h1>Enhancements in 0.7</h1>
 
 <ol>
+  <li><a href="#Key">Key Enhancements</a></li>
+  <ol type="A">
+    <li><a href="#Key-OnDemandElementCompilation">On-Demand Element Compilation</a></li>
+  </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-ModelElement">ModelElement</a></li>
@@ -37,6 +41,17 @@
     <li><a href="#Samples-CatalogEditor">Catalog Editor</a></li>
   </ol>
 </ol>
+
+<h2><a name="Key"><a name="Key-OnDemandElementCompilation">On-Demand Element Compilation</a></a></h2>
+
+<p>In past releases, Sapphire used a Java annotation processor linked to @GenerateImpl annotation to
+produce implementation classes for model element interfaces at build time. This system has been
+replaced by on-demand compilation straight to Java bytecode. When application code instantiates an
+element for the first time, Sapphire will automatically compile it and use the compiled result for
+the duration of the JVM instance.</p>
+
+<p>The on-demand approach makes it easier to get started with Sapphire as it does not require build
+customization to compile implementation classes.</p>
 
 <h2><a name="Core"><a name="Core-ModelElement">ModelElement</a></a></h2>
 

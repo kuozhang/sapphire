@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -27,7 +26,6 @@ import org.eclipse.sapphire.ui.def.internal.PageBookPartDefControlPropertyBindin
  */
 
 @Label( standard = "page book" )
-@GenerateImpl
 
 public interface PageBookExtDef extends PageBookDef
 {

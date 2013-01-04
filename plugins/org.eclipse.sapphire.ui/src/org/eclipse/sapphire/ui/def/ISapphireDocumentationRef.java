@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -28,12 +27,8 @@ import org.eclipse.sapphire.ui.def.internal.DocumentationRefMethods;
  */
 
 @Label( standard = "documentation reference" )
-@GenerateImpl
 
-public interface ISapphireDocumentationRef
-
-    extends ISapphireDocumentation
-    
+public interface ISapphireDocumentationRef extends ISapphireDocumentation
 {
     ModelElementType TYPE = new ModelElementType( ISapphireDocumentationRef.class );
     

@@ -15,7 +15,6 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.state;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -25,7 +24,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @XmlBinding( path = "master-details-editor-page-state" )
-@GenerateImpl
 
 public interface MasterDetailsEditorPageState extends IModelElement
 {

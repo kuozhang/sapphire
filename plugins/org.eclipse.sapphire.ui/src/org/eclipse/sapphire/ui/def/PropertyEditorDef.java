@@ -21,7 +21,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
@@ -42,7 +41,6 @@ import org.eclipse.sapphire.ui.def.internal.PropertyEditorDefMethods;
 
 @Label( standard = "property editor" )
 @Image( path = "PropertyEditorDef.gif" )
-@GenerateImpl
 
 public interface PropertyEditorDef extends FormComponentDef
 {

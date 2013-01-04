@@ -24,7 +24,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -43,8 +42,6 @@ import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@GenerateImpl
 
 public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
 {
@@ -82,8 +79,6 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     
     // *** RootElements ***
     
-    @GenerateImpl
-    
     interface RootElement extends IModelElement
     {
         ModelElementType TYPE = new ModelElementType( RootElement.class );
@@ -108,8 +103,6 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     ModelElementList<RootElement> getRootElements();
     
     // *** Exclusions ***
-    
-    @GenerateImpl
     
     interface Exclusion extends IModelElement
     {
@@ -153,8 +146,6 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     
     // *** TypeSubstitutions ***
 
-    @GenerateImpl
-    
     interface TypeSubstitution extends IModelElement
     {
         ModelElementType TYPE = new ModelElementType( TypeSubstitution.class );

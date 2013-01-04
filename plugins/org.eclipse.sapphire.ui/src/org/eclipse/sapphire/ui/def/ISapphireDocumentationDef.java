@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -30,12 +29,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "documentation" )
-@GenerateImpl
 
-public interface ISapphireDocumentationDef
-
-    extends ISapphireDocumentation
-    
+public interface ISapphireDocumentationDef extends ISapphireDocumentation
 {
     ModelElementType TYPE = new ModelElementType( ISapphireDocumentationDef.class );
  

@@ -12,13 +12,10 @@
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0011h;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
-
-@GenerateImpl
 
 public interface TestModelElementB1 extends TestModelElementB
 {

@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -32,7 +31,6 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHintValuePossibleValuesServi
  */
 
 @Label( standard = "hint" )
-@GenerateImpl
 
 public interface ISapphireHint extends IModelElement
 {

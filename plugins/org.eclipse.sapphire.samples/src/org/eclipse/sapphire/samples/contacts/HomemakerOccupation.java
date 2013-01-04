@@ -12,20 +12,15 @@
 package org.eclipse.sapphire.samples.contacts;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
 @Label( standard = "homemaker" )
 
-public interface HomemakerOccupation
-
-    extends Occupation
-    
+public interface HomemakerOccupation extends Occupation
 {
     ModelElementType TYPE = new ModelElementType( HomemakerOccupation.class );
     

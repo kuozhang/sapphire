@@ -17,95 +17,60 @@
       version="0.7.0.qualifier"
       provider-name="Eclipse.org - Sapphire">
 
-   <plugin
+   <includes
+         id="org.eclipse.sapphire"
+         version="0.0.0"/>
+
+   <includes
          id="org.eclipse.sapphire.modeling"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
-   <plugin
+   <includes
          id="org.eclipse.sapphire.modeling.xml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
-   <plugin
+   <includes
          id="org.eclipse.sapphire.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.sapphire.java.jdt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
+   <includes
          id="org.eclipse.sapphire.osgi"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.sapphire.osgi.fragment"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
+   <includes
          id="org.eclipse.sapphire.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.sapphire.ui.swt.xml.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
+   <includes
          id="org.eclipse.sapphire.platform"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.sapphire.workspace"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <includes
+         id="org.eclipse.sapphire.ui.swt.gef"
+         version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.sapphire.workspace.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <includes
+         id="org.eclipse.sapphire.ui.swt.xml.editor"
+         version="0.0.0"/>
 
-   <plugin
+   <includes
+         id="org.eclipse.sapphire.java.jdt"
+         version="0.0.0"/>
+
+   <includes
          id="org.eclipse.sapphire.sdk"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.sapphire.sdk.build.processor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <includes
+         id="org.eclipse.sapphire.samples"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.sapphire.tests"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.sapphire.source"
+         version="0.0.0"/>
 
 </feature>

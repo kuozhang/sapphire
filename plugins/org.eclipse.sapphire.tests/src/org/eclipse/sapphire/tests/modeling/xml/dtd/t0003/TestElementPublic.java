@@ -13,7 +13,6 @@
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0003;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlDocumentType;
 
@@ -24,7 +23,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlDocumentType;
 
 @XmlBinding( path = "root" )
 @XmlDocumentType( publicId = "-//Sapphire//DTD Country 1.0.0//EN", systemId = "TestXmlDtd0003.dtd" )
-@GenerateImpl
 
 public interface TestElementPublic extends TestElement
 {

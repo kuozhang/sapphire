@@ -13,7 +13,6 @@
 package org.eclipse.sapphire.tests.modeling.xml;
 
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
@@ -23,7 +22,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> 
  */
 
-@GenerateImpl
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml-binding", prefix = "t" )
 @XmlSchema( namespace = "http://www.eclipse.org/sapphire/tests/xml-binding", location = "http://www.eclipse.org/sapphire/tests/xml-binding/1.0" )
 @XmlBinding( path = "t:test-root" )

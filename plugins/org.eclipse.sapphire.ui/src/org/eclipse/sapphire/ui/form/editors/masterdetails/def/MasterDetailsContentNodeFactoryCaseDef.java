@@ -18,7 +18,6 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
@@ -30,12 +29,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "content outline node factory case" )
-@GenerateImpl
 
-public interface MasterDetailsContentNodeFactoryCaseDef
-
-    extends MasterDetailsContentNodeDef
-    
+public interface MasterDetailsContentNodeFactoryCaseDef extends MasterDetailsContentNodeDef
 {
     ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeFactoryCaseDef.class );
     

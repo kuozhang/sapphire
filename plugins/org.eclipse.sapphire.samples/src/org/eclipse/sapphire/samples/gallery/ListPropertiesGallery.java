@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -36,12 +35,7 @@ import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface ListPropertiesGallery
-
-    extends IModelElement
-
+public interface ListPropertiesGallery extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( ListPropertiesGallery.class );
     
@@ -109,8 +103,6 @@ public interface ListPropertiesGallery
     
     // *** MultiSelectString ***
     
-    @GenerateImpl
-
     interface MultiSelectStringItem extends IModelElement
     {
         ModelElementType TYPE = new ModelElementType( MultiSelectStringItem.class );

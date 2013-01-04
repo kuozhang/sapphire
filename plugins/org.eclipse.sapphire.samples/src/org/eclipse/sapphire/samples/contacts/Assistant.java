@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -34,12 +33,8 @@ import org.eclipse.sapphire.samples.contacts.internal.AssistantNameValidationSer
  */
 
 @Image( path = "Contact.png" )
-@GenerateImpl
 
-public interface Assistant
-
-    extends IModelElement
-
+public interface Assistant extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Assistant.class );
 

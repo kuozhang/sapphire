@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -34,7 +33,6 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactRepositoryImageServ
 @XmlSchema( namespace="http://www.eclipse.org/sapphire/samples/contacts", location="http://www.eclipse.org/sapphire/samples/contacts/1.0" )
 @XmlBinding( path = "c:contacts" )
 @Service( impl = ContactRepositoryImageService.class )
-@GenerateImpl
 
 public interface ContactRepository extends IModelElement
 {

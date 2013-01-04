@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
@@ -24,7 +23,6 @@ import org.eclipse.sapphire.modeling.annotations.Service;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-@GenerateImpl
 public interface TestElement extends IModelElement {
     ModelElementType TYPE = new ModelElementType(TestElement.class);
 

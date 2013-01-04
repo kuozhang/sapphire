@@ -9,17 +9,32 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0001;
+package org.eclipse.sapphire.tests.modeling.misc.t0018;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestMisc0001 extends IModelElement
+public class TestElementMethods
 {
-    ModelElementType TYPE = new ModelElementType( TestMisc0001.class );
+    public static void method1( final TestElement element )
+    {
+        
+    }
+    
+    public static String[] method2( final TestElement element, 
+                                    final int a,
+                                    final String b,
+                                    final String[] c,
+                                    final List<String> d )
+                                            
+        throws IOException
+        
+    {
+        return new String[] { "foo", "bar" };
+    }
     
 }

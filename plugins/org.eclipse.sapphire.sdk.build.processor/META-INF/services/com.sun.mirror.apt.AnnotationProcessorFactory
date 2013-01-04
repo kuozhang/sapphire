@@ -1,2 +1,0 @@
-# The name of the class that implements com.sun.mirror.apt.AnnotationProcessorFactory:
-org.eclipse.sapphire.sdk.build.processor.internal.APFactory

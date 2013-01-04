@@ -29,7 +29,6 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Derived;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -41,7 +40,6 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 
 @Service( impl = PurchaseOrderResourceConversionService.class )
 @VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
-@GenerateImpl
 
 public interface PurchaseOrder extends IModelElement
 {

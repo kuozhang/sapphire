@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -25,7 +24,6 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  */
 
 @Label( standard = "credit card" )
-@GenerateImpl
 
 public interface CreditCardPayment extends Payment
 {

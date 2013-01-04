@@ -23,7 +23,7 @@ import java.util.TreeMap;
 
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.MasterConversionService;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
+import org.eclipse.sapphire.internal.ElementClassLoaders;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
@@ -42,6 +42,7 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class ModelElementType extends ModelMetadataItem
 {
+    //private static final Map
     private final Class<?> typeClass;
     private Class<?> implClass = null;
     private Constructor<?> implClassConstructor = null;
@@ -145,163 +146,31 @@ public final class ModelElementType extends ModelMetadataItem
         return this.typeClass.getName();
     }
     
-    public Class<?> getImplClass()
-    {
-        synchronized( this )
-        {
-            if( ! this.implClassLoaded )
-            {
-                this.implClassLoaded = true;
-                
-                final String implClassQualifiedName = getImplClassName( this.typeClass );
-                
-                if( implClassQualifiedName != null )
-                {
-                    try
-                    {
-                        this.implClass = this.typeClass.getClassLoader().loadClass( implClassQualifiedName );
-                    }
-                    catch( ClassNotFoundException e )
-                    {
-                        // No need to report this. The null return value signifies that the impl class was not found.
-                    }
-                    
-                    if( this.implClass != null )
-                    {
-                        try
-                        {
-                            this.implClassConstructor = this.implClass.getConstructor( IModelParticle.class, ModelProperty.class, Resource.class );
-                        }
-                        catch( NoSuchMethodException e )
-                        {
-                            // todo: log a better message here
-                            
-                            LoggingService.log( e );
-                            
-                            this.implClass = null;
-                        }
-                    }
-                }
-            }
-            
-            return this.implClass;
-        }
-    }
-
-    public static String getImplClassName( final Class<?> elementTypeClass )
-    {
-        if( elementTypeClass == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return getImplClassName( elementTypeClass.getName(), elementTypeClass.getAnnotation( GenerateImpl.class ) );
-    }
-    
-    public static String getImplClassName( final String elementTypeClassName,
-                                           final GenerateImpl generateImplAnnotation )
-    {
-        if( elementTypeClassName == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        if( generateImplAnnotation != null )
-        {
-            return getImplClassName( elementTypeClassName, generateImplAnnotation.packageName(), generateImplAnnotation.className() );
-        }
-        
-        return null;
-    }
-    
-    public static String getImplClassName( final String elementTypeClassName,
-                                           final String preferredImplPackageName,
-                                           final String preferredImplClassName )
-    {
-        if( elementTypeClassName == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        final StringBuilder implClassQualifiedName = new StringBuilder();
-        
-        String elementTypePackageName = null;
-        final int lastDotSeparator = elementTypeClassName.lastIndexOf( '.' );
-        
-        if( lastDotSeparator != -1 )
-        {
-            elementTypePackageName = elementTypeClassName.substring( 0, lastDotSeparator );
-        }
-        
-        if( preferredImplPackageName == null || preferredImplPackageName.length() == 0 )
-        {
-            if( elementTypePackageName != null )
-            {
-                implClassQualifiedName.append( elementTypePackageName );
-                implClassQualifiedName.append( '.' );
-            }
-            
-            implClassQualifiedName.append( "internal" );
-        }
-        else
-        {
-            implClassQualifiedName.append( preferredImplPackageName );
-        }
-        
-        implClassQualifiedName.append( '.' );
-        
-        if( preferredImplClassName == null || preferredImplClassName.length() == 0 )
-        {
-            final String fullTypeClassName;
-            
-            if( elementTypePackageName == null )
-            {
-                fullTypeClassName = elementTypeClassName;
-            }
-            else
-            {
-                fullTypeClassName = elementTypeClassName.substring( elementTypePackageName.length() + 1 );
-            }
-            
-            final int lastSeparator = fullTypeClassName.lastIndexOf( '$' );
-            final String simpleTypeClassName;
-            
-            if( lastSeparator == -1 )
-            {
-                simpleTypeClassName = fullTypeClassName;
-            }
-            else
-            {
-                final int simpleTypeClassNameStart = lastSeparator + 1;
-                implClassQualifiedName.append( fullTypeClassName.substring( 0, simpleTypeClassNameStart ) );
-                simpleTypeClassName = fullTypeClassName.substring( simpleTypeClassNameStart );
-            }
-            
-            if( simpleTypeClassName.charAt( 0 ) == 'I' && simpleTypeClassName.length() > 1 && Character.isUpperCase( simpleTypeClassName.charAt( 1 ) ) )
-            {
-                implClassQualifiedName.append( simpleTypeClassName.substring( 1 ) );
-            }
-            else
-            {
-                implClassQualifiedName.append( simpleTypeClassName );
-                implClassQualifiedName.append( "Impl" );
-            }
-        }
-        else
-        {
-            implClassQualifiedName.append( preferredImplClassName );
-        }
-        
-        return implClassQualifiedName.toString();
-    }
-    
     @SuppressWarnings( "unchecked" )
     
     public <T extends IModelElement> T instantiate( final IModelParticle parent,
                                                     final ModelProperty parentProperty,
                                                     final Resource resource )
     {
-        getImplClass();
+        if( ! this.implClassLoaded )
+        {
+            this.implClassLoaded = true;
+            
+            this.implClass = ElementClassLoaders.loadImplementationClass( this );
+            
+            try
+            {
+                this.implClassConstructor = this.implClass.getConstructor( IModelParticle.class, ModelProperty.class, Resource.class );
+            }
+            catch( NoSuchMethodException e )
+            {
+                // todo: log a better message here
+                
+                LoggingService.log( e );
+                
+                this.implClass = null;
+            }
+        }
         
         if( this.implClassConstructor != null )
         {

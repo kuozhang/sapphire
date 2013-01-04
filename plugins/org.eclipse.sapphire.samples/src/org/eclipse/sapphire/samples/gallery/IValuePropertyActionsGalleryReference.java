@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -25,12 +24,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  */
 
 @Label( standard = "reference" )
-@GenerateImpl
 
-public interface IValuePropertyActionsGalleryReference
-
-    extends IModelElement
-
+public interface IValuePropertyActionsGalleryReference extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( IValuePropertyActionsGalleryReference.class );
     

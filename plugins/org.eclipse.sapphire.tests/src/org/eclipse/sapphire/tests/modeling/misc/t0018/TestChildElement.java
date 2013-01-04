@@ -9,22 +9,26 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.tests.modeling.misc.t0018;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.TYPE )
-
-public @interface GenerateImpl
+public interface TestChildElement extends IModelElement
 {
-    String packageName() default "";
-    String className() default "";
+    ModelElementType TYPE = new ModelElementType( TestChildElement.class );
+    
+    // *** StringValue ***
+    
+    ValueProperty PROP_STRING_VALUE = new ValueProperty( TYPE, "StringValue" );
+    
+    Value<String> getStringValue();
+    void setStringValue( String value );
+    
 }

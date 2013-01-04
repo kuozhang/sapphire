@@ -17,19 +17,13 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
-
-public interface TestExpr0001ModelElement
-
-    extends IModelElement
-    
+public interface TestExpr0001ModelElement extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( TestExpr0001ModelElement.class );
     

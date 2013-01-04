@@ -13,7 +13,6 @@ package org.eclipse.sapphire.tests.services.t0007;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
 /**
@@ -21,7 +20,6 @@ import org.eclipse.sapphire.modeling.annotations.Service;
  */
 
 @Service( impl = BaseValidationService.class )
-@GenerateImpl
 
 public interface BaseElement extends IModelElement
 {

@@ -15,7 +15,6 @@ package org.eclipse.sapphire.tests.modeling.xml.binding.t0008;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -24,7 +23,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> 
  */
 
-@GenerateImpl
 @XmlBinding( path = "root" )
 
 public interface TestModelRoot extends IModelElement

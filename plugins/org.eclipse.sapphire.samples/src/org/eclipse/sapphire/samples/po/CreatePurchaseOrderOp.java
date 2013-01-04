@@ -15,7 +15,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 import org.eclipse.sapphire.workspace.WorkspaceFileType;
 
@@ -24,7 +23,6 @@ import org.eclipse.sapphire.workspace.WorkspaceFileType;
  */
 
 @WorkspaceFileType( PurchaseOrder.class )
-@GenerateImpl
 
 public interface CreatePurchaseOrderOp extends CreateWorkspaceFileOp
 {

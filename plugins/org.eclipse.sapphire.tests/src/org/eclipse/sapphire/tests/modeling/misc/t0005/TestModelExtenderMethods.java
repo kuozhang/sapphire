@@ -17,7 +17,7 @@ package org.eclipse.sapphire.tests.modeling.misc.t0005;
 
 public final class TestModelExtenderMethods
 {
-    public static int test( final TestModelBase model )
+    public static int test( final TestModelExtender model )
     {
         return 2;
     }

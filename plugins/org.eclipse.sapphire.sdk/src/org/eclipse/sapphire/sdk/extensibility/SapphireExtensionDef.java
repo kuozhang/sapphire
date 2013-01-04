@@ -15,7 +15,6 @@ package org.eclipse.sapphire.sdk.extensibility;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -27,7 +26,6 @@ import org.eclipse.sapphire.ui.def.ISapphireUiExtensionDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@GenerateImpl
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/xmlns/extension" )
 @XmlBinding( path = "extension" )
 

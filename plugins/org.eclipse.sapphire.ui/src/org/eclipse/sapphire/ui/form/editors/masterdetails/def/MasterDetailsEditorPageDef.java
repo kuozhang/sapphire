@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -30,7 +29,6 @@ import org.eclipse.sapphire.ui.def.EditorPageDef;
  */
 
 @Label( standard = "master details editor page" )
-@GenerateImpl
 
 public interface MasterDetailsEditorPageDef extends EditorPageDef
 {

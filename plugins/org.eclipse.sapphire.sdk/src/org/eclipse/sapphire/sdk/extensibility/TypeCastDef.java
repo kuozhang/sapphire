@@ -21,7 +21,6 @@ import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -38,12 +37,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  */
 
 @Label( standard = "type cast" )
-@GenerateImpl
 
-public interface TypeCastDef
-
-    extends IModelElement
-    
+public interface TypeCastDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( TypeCastDef.class );
     

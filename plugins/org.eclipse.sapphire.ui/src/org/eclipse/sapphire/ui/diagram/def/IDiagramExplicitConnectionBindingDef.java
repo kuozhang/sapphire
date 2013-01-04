@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.diagram.def;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -24,12 +23,8 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "diagram connection binding" )
-@GenerateImpl
 
-public interface IDiagramExplicitConnectionBindingDef 
-
-    extends IDiagramConnectionBindingDef 
-    
+public interface IDiagramExplicitConnectionBindingDef extends IDiagramConnectionBindingDef 
 {
     ModelElementType TYPE = new ModelElementType( IDiagramExplicitConnectionBindingDef.class );
     
