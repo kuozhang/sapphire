@@ -1783,6 +1783,7 @@
                             </content>
                         </default-panel>
                     </with>
+                    <property-editor>Truncatable</property-editor>
                 </content>
             </section>
         </case>

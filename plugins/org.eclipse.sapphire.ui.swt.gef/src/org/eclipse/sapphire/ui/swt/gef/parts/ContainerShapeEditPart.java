@@ -152,7 +152,7 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		for (TextPart textPart : textParts)
 		{
 			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
-			if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
+			if (textFigure != null && textFigure.getBounds().contains(realLocation))
 			{
 				return textPart;
 			}

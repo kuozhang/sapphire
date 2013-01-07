@@ -57,7 +57,7 @@
                                     <expand-cell-vertically>true</expand-cell-vertically>
                                 </sequence-layout-constraint>
                                 <font>
-                                    <bold/>
+                                    <bold></bold>
                                 </font>
                             </text>
                         </content>
@@ -96,16 +96,18 @@
                                             </image>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;column&gt;&quot; : Name }:</content>
+                                                <truncatable>true</truncatable>
                                                 <sequence-layout-constraint>                            						
-                                                	<horizontal-alignment>left</horizontal-alignment>
-                                                    <width>80</width>
+                                                	<horizontal-alignment>left</horizontal-alignment>                                                    
                                                 </sequence-layout-constraint>
                                             </text>
                                             <text>
                                                 <content>${Type == null ? &quot;&lt;type&gt;&quot; : Type}</content>
+                                                <truncatable>false</truncatable>
                                                 <sequence-layout-constraint>
                             						<expand-cell-horizontally>true</expand-cell-horizontally>
                                                 	<horizontal-alignment>right</horizontal-alignment>
+                                                	<left-margin>10</left-margin>
                                                     <right-margin>10</right-margin>
                                                 </sequence-layout-constraint>
                                             </text>
@@ -155,7 +157,6 @@
                     </rectangle>
                 </content>
             </rectangle>
-            <width>180</width>
             <resizable>true</resizable>
             <connection-binding>
                 <connection-id>foreign_keys</connection-id>

@@ -15,6 +15,8 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
@@ -71,6 +73,35 @@ public class TextFigure extends Label
 	public TextPresentation getTextPresentation()
 	{
 		return this.textPresentation;
+	}
+	
+	/**
+	 * @see IFigure#getMinimumSize(int, int)
+	 */
+	public Dimension getMinimumSize(int w, int h) 
+	{
+		if (minSize != null)
+			return minSize;
+		minSize = new Dimension();
+		if (getLayoutManager() != null)
+			minSize.setSize(getLayoutManager().getMinimumSize(this, w, h));
+
+		Dimension labelSize;
+		if (getTextPresentation().truncatable())
+		{
+			labelSize = calculateLabelSize(getTextUtilities()
+				.getTextExtents(getTruncationString(), getFont())
+				.intersect(
+						getTextUtilities().getTextExtents(getText(), getFont())));
+		}
+		else
+		{
+			labelSize = calculateLabelSize(getTextUtilities().getTextExtents(getText(), getFont()));
+		}
+		Insets insets = getInsets();
+		labelSize.expand(insets.getWidth(), insets.getHeight());
+		minSize.union(labelSize);
+		return minSize;
 	}
 	
 	private int getSwtTextAlignment()

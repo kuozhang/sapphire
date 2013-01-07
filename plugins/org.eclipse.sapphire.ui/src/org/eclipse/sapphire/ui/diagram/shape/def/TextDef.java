@@ -74,4 +74,17 @@ public interface TextDef extends ShapeDef
     
     FontDef getFont();
 	
+    // *** Truncatable ***
+    
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "truncatable" )
+    @DefaultValue( text = "true" )
+    @Label( standard = "truncatable")
+    
+    ValueProperty PROP_TRUNCATABLE = new ValueProperty(TYPE, "Truncatable");
+    
+    Value<Boolean> isTruncatable();
+    void setTruncatable( String value );
+    void setTruncatable( Boolean value );
+    
 }

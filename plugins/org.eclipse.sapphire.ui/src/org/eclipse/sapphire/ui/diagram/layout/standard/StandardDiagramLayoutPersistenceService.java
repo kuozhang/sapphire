@@ -30,6 +30,7 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionBendPoints;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -314,11 +315,16 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				diagramNode.setY(bounds.getY());
 				if (nodePart.canResizeShape())
 				{
-					if (bounds.getHeight() != -1)
+					IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.definition();
+					if (bounds.getHeight() != -1 &&
+							((nodeDef.getHeight().getContent() != null && nodeDef.getHeight().getContent() != bounds.getHeight()) ||
+									nodeDef.getHeight().getContent() == null))
 					{
 						diagramNode.setHeight(bounds.getHeight());
 					}
-					if (bounds.getWidth() != -1)
+					if (bounds.getWidth() != -1 && 
+							((nodeDef.getWidth().getContent() != null && nodeDef.getWidth().getContent() != bounds.getWidth()) ||
+									nodeDef.getWidth().getContent() == null))
 					{
 						diagramNode.setWidth(bounds.getWidth());
 					}

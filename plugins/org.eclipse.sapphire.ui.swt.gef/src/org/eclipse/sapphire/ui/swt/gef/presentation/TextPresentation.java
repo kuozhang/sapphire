@@ -41,6 +41,11 @@ public class TextPresentation extends ShapePresentation
 		return getTextPart().getFontDef();
 	}
 	
+	public boolean truncatable()
+	{
+		return getTextPart().truncatable();
+	}
+	
 	private TextPart getTextPart()
 	{
 		return (TextPart)this.getPart();

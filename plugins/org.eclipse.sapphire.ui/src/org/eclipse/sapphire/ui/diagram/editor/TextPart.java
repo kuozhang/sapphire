@@ -91,4 +91,8 @@ public class TextPart extends ShapePart
     	return this.textDef.getFont();
     }
     
+    public boolean truncatable()
+    {
+    	return this.textDef.isTruncatable().getContent();
+    }
 }
