@@ -271,7 +271,7 @@ public final class ManufacturersBinding extends ListBindingImpl
                     @Override
                     protected Resource resource( final Object obj )
                     {
-                        return new ChildXmlResource( element().resource(), (XmlElement) obj );
+                        return new ChildXmlResource( ManufacturerResource.this, (XmlElement) obj );
                     }
 
                     @Override

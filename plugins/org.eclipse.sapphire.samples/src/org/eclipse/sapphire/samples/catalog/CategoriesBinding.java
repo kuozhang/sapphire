@@ -271,7 +271,7 @@ public final class CategoriesBinding extends ListBindingImpl
                     @Override
                     protected Resource resource( final Object obj )
                     {
-                        return new ChildXmlResource( element().resource(), (XmlElement) obj );
+                        return new ChildXmlResource( CategoryResource.this, (XmlElement) obj );
                     }
 
                     @Override
