@@ -82,7 +82,7 @@ public class StandardRootElementController extends RootElementController
     @Override
     public void createRootElement()
     {
-        createRootElement( resource().root().getDomDocument(), getRootElementInfo() );
+        createRootElement( resource().adapt( RootXmlResource.class ).getDomDocument(), getRootElementInfo() );
     }
     
     protected void createRootElement( final Document document,
@@ -143,7 +143,7 @@ public class StandardRootElementController extends RootElementController
     @Override
     public boolean checkRootElement()
     {
-        return checkRootElement( resource().root().getDomDocument(), getRootElementInfo() );
+        return checkRootElement( resource().adapt( RootXmlResource.class ).getDomDocument(), getRootElementInfo() );
     }
     
     protected boolean checkRootElement( final Document document,

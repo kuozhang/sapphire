@@ -77,7 +77,7 @@ public class VirtualChildXmlResource extends XmlResource
         
         if( this.lastDomNode != node )
         {
-            final XmlResourceStore store = root().store();
+            final XmlResourceStore store = adapt( RootXmlResource.class ).store();
             final IModelElement modelElement = element();
             
             if( this.lastDomNode != null )

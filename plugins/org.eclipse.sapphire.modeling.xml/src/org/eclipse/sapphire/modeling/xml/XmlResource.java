@@ -45,12 +45,6 @@ public abstract class XmlResource extends Resource
         this.xmlNamespaceResolver = new StandardXmlNamespaceResolver( modelElement.type() );
     }
 
-    @Override
-    public RootXmlResource root()
-    {
-        return (RootXmlResource) super.root();
-    }
-
     public final XmlNamespaceResolver getXmlNamespaceResolver()
     {
         return this.xmlNamespaceResolver;

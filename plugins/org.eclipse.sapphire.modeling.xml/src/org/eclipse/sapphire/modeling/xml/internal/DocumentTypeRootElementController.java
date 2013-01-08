@@ -16,6 +16,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.normalizeToNull;
 
 import org.eclipse.sapphire.modeling.xml.RootElementController;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlDocumentType;
 import org.w3c.dom.Document;
@@ -80,14 +81,14 @@ public final class DocumentTypeRootElementController extends RootElementControll
 
     @Override
     public void createRootElement() {
-        Document document = resource().root().getDomDocument();
+        Document document = resource().adapt( RootXmlResource.class ).getDomDocument();
         createRootElement(document);
     }
 
     @Override
     public boolean checkRootElement() 
     {
-        final Document document = resource().root().getDomDocument();
+        final Document document = resource().adapt( RootXmlResource.class ).getDomDocument();
         final Element root = document.getDocumentElement();
         
         if( equal( root.getLocalName(), this.rootElementName ) )

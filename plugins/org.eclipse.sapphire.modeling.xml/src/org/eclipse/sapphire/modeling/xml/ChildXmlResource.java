@@ -35,7 +35,7 @@ public class ChildXmlResource extends XmlResource
     {
         super.init( modelElement );
         
-        root().store().registerModelElement( this.xmlElement.getDomNode(), modelElement );
+        adapt( RootXmlResource.class ).store().registerModelElement( this.xmlElement.getDomNode(), modelElement );
     }
 
     @Override

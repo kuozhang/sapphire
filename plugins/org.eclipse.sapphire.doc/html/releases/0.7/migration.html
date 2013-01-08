@@ -45,7 +45,9 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 <ol>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
+  <li><a href="#XmlResource">XmlResource</a></li>
 </ol>
+
 
 <h2><a name="GenerateImpl">GenerateImpl</a></h2>
 
@@ -54,6 +56,7 @@ which elements should be compiled. Also, the developer no longer has control ove
 of the generated implementation class. As such, the @GenerateImpl annotation has been removed and no direct 
 equivalent has been provided. For further guidance, post a question 
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+
 
 <h2><a name="ModelElementType">ModelElementType</a></h2>
 
@@ -70,8 +73,40 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     String getImplClassName( String elementTypeClassName, String preferredImplPackageName, String preferredImplClassName )
 <font color="#888888">}</font></code></pre>
 
+
+<h2><a name="XmlResource">XmlResource</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
+XmlResource parent = resource.parent();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
+XmlResource parent =</font> (XmlResource) <font color="#888888">resource.parent();</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
+RootXmlResource root = resource.root();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
+RootXmlResource root =</font> (RootXmlResource) <font color="#888888">resource.root();</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <div class="copyright">Copyright (c) 2013 Oracle<br/>
 Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
 
 </body>
 
