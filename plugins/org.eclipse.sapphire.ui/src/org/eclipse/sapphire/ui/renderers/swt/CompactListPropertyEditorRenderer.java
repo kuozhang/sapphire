@@ -527,7 +527,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         private String value;
 
         public ProxyResource() {
-            super(getPart().getModelElement().resource());
+            super((XmlResource)getPart().getModelElement().resource());
         }
 
         public void init(IModelElement proxyElement, ValueProperty actualProperty) {

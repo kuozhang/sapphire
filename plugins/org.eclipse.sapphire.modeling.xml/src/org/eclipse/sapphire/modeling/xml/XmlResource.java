@@ -28,11 +28,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class XmlResource extends Resource
+public abstract class XmlResource
+
+    extends Resource
+    
 {
     private XmlNamespaceResolver xmlNamespaceResolver;
 
-    public XmlResource( final Resource parent )
+    public XmlResource( final XmlResource parent )
     {
         super( parent );
     }
@@ -43,6 +46,12 @@ public abstract class XmlResource extends Resource
         super.init( modelElement );
         
         this.xmlNamespaceResolver = new StandardXmlNamespaceResolver( modelElement.type() );
+    }
+
+    @Override
+    public XmlResource parent()
+    {
+        return (XmlResource) super.parent();
     }
 
     @Override
