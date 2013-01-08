@@ -28,6 +28,39 @@
   </extension>
 
   <!-- 
+    ******************
+    * Catalog Sample *
+    ******************
+  -->
+  
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      id="org.eclipse.sapphire.samples.catalog.CatalogEditor"
+      name="Catalog Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"
+      filenames="catalog.xml"
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.catalog.CatalogEditor"/>
+      </class>
+    </editor>
+  </extension>
+
+  <extension point="org.eclipse.ui.newWizards">
+    <wizard
+      id="org.eclipse.sapphire.samples.catalog.CreateCatalogWizard"
+      category="Sapphire/Samples"
+      name="Catalog (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireCreateFileWizard.png">
+      <description>Create a catalog.</description>
+      <class class="org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileWizard">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.catalog.CreateCatalogWizard"/>
+        <parameter name="editor" value="org.eclipse.sapphire.samples.catalog.CatalogEditor"/>
+      </class>
+    </wizard>
+  </extension>
+  
+  <!-- 
     *******************
     * Contacts Sample *
     *******************
