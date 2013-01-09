@@ -59,6 +59,7 @@
                                 <font>
                                     <bold></bold>
                                 </font>
+                                <truncatable>false</truncatable>
                             </text>
                         </content>
                         <sequence-layout-constraint>

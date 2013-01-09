@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 package org.eclipse.sapphire.ui.swt.gef.layout;
 
@@ -38,6 +39,7 @@ import org.eclipse.swt.SWT;
  * the layout can be configured to stretch the child.
  * 
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  *  
  */
 public class SapphireSequenceLayout extends AbstractHintLayout {
