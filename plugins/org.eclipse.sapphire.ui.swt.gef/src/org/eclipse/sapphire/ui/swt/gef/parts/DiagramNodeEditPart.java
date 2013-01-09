@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
@@ -228,12 +229,20 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	
 
 	@Override
-	protected void refreshVisuals() {
-		
+	protected void refreshVisuals() 
+	{
+		refreshNodeBounds();
+	}
+	
+	private void refreshNodeBounds()
+	{
 		Bounds nb = getCastedModel().getNodeBounds();
 		
-		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), nb.getWidth(), nb.getHeight());
-		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);
+		Dimension minSize = getFigure().getMinimumSize();
+		int width = nb.getWidth() != -1 ? Math.max(minSize.width, nb.getWidth()) : -1;
+		int height = nb.getHeight() != -1 ? Math.max(minSize.height, nb.getHeight()) : -1;
+		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), width, height);
+		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);		
 	}
 	
 	// Called when node is updated which could validation change
@@ -317,7 +326,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		} else if (DiagramNodeModel.TARGET_CONNECTIONS.equals(prop)) {
 			refreshTargetConnections();
 		} else if (DiagramNodeModel.NODE_BOUNDS.equals(prop)) {
-			refreshVisuals();
+			refreshNodeBounds();
 		} else if (DiagramNodeModel.NODE_VALIDATION.equals(prop)) {
 			refreshNodeValidation(evt.getNewValue());
 		} else if (DiagramNodeModel.SHAPE_UPDATES.equals(prop)) {

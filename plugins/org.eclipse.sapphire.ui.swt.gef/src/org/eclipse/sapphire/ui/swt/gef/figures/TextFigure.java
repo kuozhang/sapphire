@@ -80,9 +80,7 @@ public class TextFigure extends Label
 	 */
 	public Dimension getMinimumSize(int w, int h) 
 	{
-		if (minSize != null)
-			return minSize;
-		minSize = new Dimension();
+		Dimension minSize = new Dimension();
 		if (getLayoutManager() != null)
 			minSize.setSize(getLayoutManager().getMinimumSize(this, w, h));
 

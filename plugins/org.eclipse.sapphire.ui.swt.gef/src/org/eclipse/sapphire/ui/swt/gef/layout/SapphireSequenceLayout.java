@@ -228,7 +228,17 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * @since 3.3
 	 */
 	protected Dimension getChildMinimumSize(IFigure child, int wHint, int hHint) {
-		return child.getMinimumSize(wHint, hHint);
+		Dimension minSize =  child.getMinimumSize(wHint, hHint);
+		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
+		if (constraint.minWidth > minSize.width)
+		{
+			minSize.width = constraint.minWidth;
+		}
+		if (constraint.minHeight > minSize.height)
+		{
+			minSize.height = constraint.minHeight;
+		}
+		return minSize;
 	}
 
 	/**
