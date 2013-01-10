@@ -125,9 +125,9 @@ public class ShapeUtil {
 	public static boolean updateFigureForShape(ShapePresentation updateShape, DiagramResourceCache resourceCache)
 	{
 		IFigure updateFigure = updateShape.getFigure();
+		IFigure containerFigure = updateShape.getParentFigure();
 		if (updateShape.visible()) 
-		{
-			IFigure containerFigure = updateShape.getParentFigure();
+		{			
 			ContainerShapePresentation containerPresentation = (ContainerShapePresentation)updateShape.getParent();
 			// find the parent figure
 			if (containerFigure != null) 
@@ -159,7 +159,6 @@ public class ShapeUtil {
 		{
 			// remove it
 			updateShape.removeFigure();
-			IFigure containerFigure = updateShape.getParentFigure();
 			containerFigure.remove(updateFigure);
 			containerFigure.revalidate();
 		}

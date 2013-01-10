@@ -90,6 +90,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.Zoom
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.ActionBridge;
@@ -237,6 +238,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		        updateNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
 		    }
 			
+			@Override
+		    public void handleTextChangeEvent(final DiagramShapeEvent event)
+		    {
+		        changeText((DiagramNodePart)event.getPart(), event.getShapePart());
+		    }
+
 			@Override
 		    public void handleShapeValidationEvent(final DiagramShapeEvent event)
 		    {
@@ -671,6 +678,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 	}
 	
+	protected void changeText(DiagramNodePart part, ShapePart shapePart) {
+		if (diagramModel == null) {
+			return;
+		}
+		
+		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
+		if (nodeModel != null) {
+			nodeModel.handleChangeText((TextPart)shapePart);
+		}
+	}
+
 	protected void updateShapeVisibility(final DiagramNodePart part, final ShapePart shapePart) {
         Display.getDefault().asyncExec
         (

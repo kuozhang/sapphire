@@ -749,6 +749,18 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		}		
 	}
 	
+    private void notifyTextChange(DiagramShapeEvent event)
+	{
+		Set<SapphirePartListener> listeners = this.getListeners();
+		for(SapphirePartListener listener : listeners)
+		{
+			if (listener instanceof SapphireDiagramPartListener)
+			{
+				((SapphireDiagramPartListener)listener).handleTextChangeEvent(event);
+			}
+		}		
+	}
+
     private void notifyShapeVisibilityUpdate( DiagramShapeEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -1083,6 +1095,12 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         	notifyShapeUpdate(event);
         }        
         
+        @Override
+        public void handleTextChange(final DiagramShapeEvent event)
+        {
+        	notifyTextChange(event);
+        }        
+
         @Override
         public void handleShapeVisibilityUpdate(final DiagramShapeEvent event)
         {        

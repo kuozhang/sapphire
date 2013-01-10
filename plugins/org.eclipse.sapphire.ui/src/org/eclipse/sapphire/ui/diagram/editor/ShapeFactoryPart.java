@@ -23,6 +23,7 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
@@ -61,11 +62,8 @@ public class ShapeFactoryPart extends ShapePart
         	this.javaTypes.add(shapeCase.getType().resolve());
         }
         
-        // Create shape listener to listen on shape add, delete and reorder etc
-        createShapeListener();
-        
         this.propertyName = this.shapeFactoryDef.getProperty().getContent();
-        this.modelProperty = (ListProperty)resolve(this.modelElement, propertyName);
+        this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
         ModelElementList<?> list = this.modelElement.read(this.modelProperty);
         for( IModelElement listEntryModelElement : list )
         {
@@ -154,7 +152,7 @@ public class ShapeFactoryPart extends ShapePart
     	this.modelElement.attach(this.shapePropertyListener, this.propertyName);
     	this.children.remove(childPart);
     	this.children.add(newIndex, childPart);
-    	notifyShapeReorder(this);
+    	broadcast(new ShapeReorderEvent(this));
     }
     
 	@Override
@@ -220,6 +218,84 @@ public class ShapeFactoryPart extends ShapePart
     		shapePart.init(this, modelElement, shapeDef, Collections.<String,String>emptyMap());
     		shapePart.setActive(true);
     		shapePart.addListener(this.shapeListener);
+            shapePart.attach
+            (
+                new FilteredListener<TextChangeEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( TextChangeEvent event )
+                    {
+                    	broadcast(event);
+                    }
+                }
+            );
+            shapePart.attach
+            (
+                new FilteredListener<ShapeUpdateEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( ShapeUpdateEvent event )
+                    {
+                    	broadcast(event);
+                    }
+                }
+            );
+            shapePart.attach
+            (
+                 new FilteredListener<PartVisibilityEvent>()
+                 {
+                    @Override
+                    protected void handleTypedEvent( final PartVisibilityEvent event )
+                    {
+                    	broadcast(event);
+                    }
+                 }
+            );    		
+            shapePart.attach
+            (
+                 new FilteredListener<ShapeValidationEvent>()
+                 {
+                    @Override
+                    protected void handleTypedEvent( final ShapeValidationEvent event )
+                    {
+                    	broadcast(event);
+                    }
+                 }
+            );
+            shapePart.attach
+            (
+                 new FilteredListener<ShapeAddEvent>()
+                 {
+                    @Override
+                    protected void handleTypedEvent( final ShapeAddEvent event )
+                    {
+                    	broadcast(event);
+                    }
+                 }
+            );            
+            shapePart.attach
+            (
+                 new FilteredListener<ShapeDeleteEvent>()
+                 {
+                    @Override
+                    protected void handleTypedEvent( final ShapeDeleteEvent event )
+                    {
+                    	broadcast(event);
+                    }
+                 }
+            );            
+            shapePart.attach
+            (
+                 new FilteredListener<ShapeReorderEvent>()
+                 {
+                    @Override
+                    protected void handleTypedEvent( final ShapeReorderEvent event )
+                    {
+                    	broadcast(event);
+                    }
+                 }
+            );            
+            
     	}
     	return shapePart;
     }
@@ -250,7 +326,7 @@ public class ShapeFactoryPart extends ShapePart
     		}
     		this.children.clear();
     		this.children.addAll(newChildren);
-    		notifyShapeReorder(this);
+    		broadcast(new ShapeReorderEvent(this));
     	}
     	else
     	{
@@ -261,7 +337,7 @@ public class ShapeFactoryPart extends ShapePart
 				{
 					shapePart.dispose();
 					this.children.remove(shapePart);
-					notifyShapeDelete(shapePart);
+					broadcast(new ShapeDeleteEvent(shapePart));
 				}
 			}    	    	
 			for (IModelElement newShape : newShapes)
@@ -271,32 +347,9 @@ public class ShapeFactoryPart extends ShapePart
 				
 		    	ShapePart shapePart = createShapePart(shapeDef, newShape);
 		    	this.children.add(shapePart);
-		    	notifyShapeAdd(shapePart);
+		    	broadcast(new ShapeAddEvent(shapePart));
 			}
     	}    	
     }
-    
-    private void createShapeListener()
-    {
-    	this.shapeListener = new SapphireDiagramPartListener()
-    	{
-    	    public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
-    	    {
-    	    	notifyShapeVisibility(event.getShapePart());
-    	    }
-
-    	    public void handleShapeUpdateEvent(final DiagramShapeEvent event)
-    	    {
-    	    	notifyShapeUpdate(event.getShapePart());
-    	    }
-    		
-    	    public void handleShapeValidationEvent(final DiagramShapeEvent event)
-    	    {
-    	    	notifyShapeValidation(event.getShapePart());
-    	    }
-    	    
-    	};
-    }
-    
-    
+        
 }

@@ -36,6 +36,7 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public final static String NODE_BOUNDS = "NODE_BOUNDS";
 	public final static String NODE_VALIDATION = "NODE_VALIDATION";
 	public final static String SHAPE_UPDATES = "SHAPE_UPDATES";
+	public final static String CHANGE_TEXT = "CHANGE_TEXT";
 	public final static String SHAPE_VISIBILITY_UPDATES = "SHAPE_VISIBILITY_UPDATES";
 	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
@@ -102,6 +103,10 @@ public class DiagramNodeModel extends DiagramModelBase {
 
 	public void handleUpdateNodeShape(ShapePart shapePart) {
 		firePropertyChange(SHAPE_UPDATES, null, shapePart);
+	}
+
+	public void handleChangeText(TextPart textPart) {
+		firePropertyChange(CHANGE_TEXT, null, textPart);
 	}
 
 	public void handleUpdateShapeVisibility(ShapePart shapePart) {

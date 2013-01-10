@@ -44,7 +44,7 @@ public class ImagePart extends ShapePart
             {
                 public void run()
                 {
-                    notifyShapeUpdate(ImagePart.this);
+                	broadcast(new ShapeUpdateEvent(ImagePart.this));
                 }
             }
         );
@@ -59,7 +59,7 @@ public class ImagePart extends ShapePart
             {
                 public void run()
                 {
-                    notifyShapeUpdate(ImagePart.this);
+                	broadcast(new ShapeUpdateEvent(ImagePart.this));
                 }
             }
         );

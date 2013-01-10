@@ -67,6 +67,9 @@ public final class DiagramNodeTemplate extends SapphirePart
         public void handleShapeUpdate(final DiagramShapeEvent event)
         {        	
         }
+        public void handleTextChange(final DiagramShapeEvent event)
+        {        	
+        }
         public void handleShapeValidation(final DiagramShapeEvent event)
         {        	
         }
@@ -135,6 +138,12 @@ public final class DiagramNodeTemplate extends SapphirePart
                 notifyShapeUpdate(event);
             }
         	
+        	@Override
+            public void handleTextChangeEvent(final DiagramShapeEvent event)
+            {
+                notifyTextChange(event);
+            }
+
         	@Override
             public void handleShapeValidationEvent(final DiagramShapeEvent event)
             {
@@ -509,6 +518,14 @@ public final class DiagramNodeTemplate extends SapphirePart
         }        
     }
 
+    private void notifyTextChange(final DiagramShapeEvent event)
+    {    	
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleTextChange(event);
+        }        
+    }
+    
     private void notifyShapeValidation(final DiagramShapeEvent event)
     {    	
         for( DiagramNodeTemplateListener listener : this.listeners )

@@ -49,7 +49,7 @@ public class TextPart extends ShapePart
             {
                 public void run()
                 {
-                    notifyShapeUpdate(TextPart.this);
+                    broadcast(new TextChangeEvent(TextPart.this));
                 }
             }
         );

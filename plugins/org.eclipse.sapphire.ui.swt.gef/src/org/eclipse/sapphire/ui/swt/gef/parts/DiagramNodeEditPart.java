@@ -268,28 +268,23 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	{
 		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
 		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);
-		if (shapePresentation instanceof TextPresentation)
-		{
-			TextFigure textFigure = (TextFigure)shapePresentation.getFigure();
-			textFigure.setText(((TextPresentation)shapePresentation).getContent());
-		}
-		else
-		{
-			ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
-		}
+		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
 	}
+	
+	private void changeText(TextPart textPart)
+	{
+		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
+		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, textPart);
+		TextFigure textFigure = (TextFigure)shapePresentation.getFigure();
+		textFigure.setText(((TextPresentation)shapePresentation).getContent());		
+	}
+	
 	
 	private void updateShapeVisibility(ShapePart shapePart) 
 	{
 		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
 		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);		
-		boolean updated = ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
-		if (updated && (shapePart instanceof TextPart))
-		{
-			// The label figure has been recreated; we need to throw away the direct edit cache.
-			//this.manager = null;
-		}
-		
+		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());		
 	}
 	
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
@@ -333,6 +328,11 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			Object obj = evt.getNewValue();
 			if (obj instanceof ShapePart) {
 				updateShape((ShapePart)obj);
+			}
+		} else if (DiagramNodeModel.CHANGE_TEXT.equals(prop)) {
+			Object obj = evt.getNewValue();
+			if (obj instanceof TextPart) {
+				changeText((TextPart)obj);
 			}
 		} else if (DiagramNodeModel.SHAPE_VISIBILITY_UPDATES.equals(prop)) {
 			Object obj = evt.getNewValue();

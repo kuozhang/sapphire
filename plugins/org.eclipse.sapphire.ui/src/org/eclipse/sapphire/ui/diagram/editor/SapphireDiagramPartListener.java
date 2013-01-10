@@ -29,6 +29,11 @@ public abstract class SapphireDiagramPartListener extends SapphirePartListener
         // The default implementation doesn't do anything.
     }
 
+    public void handleTextChangeEvent(final DiagramShapeEvent event)
+    {
+        // The default implementation doesn't do anything.
+    }
+
     public void handleShapeValidationEvent(final DiagramShapeEvent event)
     {
         // The default implementation doesn't do anything.

@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
@@ -40,7 +41,6 @@ public class ContainerShapePart extends ShapePart
 	private int validationMarkerIndex = -1;
 	private ValidationMarkerPart validationMarkerPart;
 	private FilteredListener<ElementValidationEvent> elementValidationListener;
-	private SapphireDiagramPartListener shapeListener;
 	private List<TextPart> textParts;
 	private List<ShapeFactoryPart> shapeFactoryParts;
 
@@ -55,7 +55,6 @@ public class ContainerShapePart extends ShapePart
         this.children = new ArrayList<ShapePart>();
         this.textParts = new ArrayList<TextPart>();
         this.shapeFactoryParts = new ArrayList<ShapeFactoryPart>();
-        createShapeListener();
         
         int index = 0;        
         for (ShapeDef shape : this.containerShapeDef.getContent())
@@ -94,7 +93,84 @@ public class ContainerShapePart extends ShapePart
         	{
         		childPart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
         		this.children.add(childPart);
-        		childPart.addListener(this.shapeListener);
+                childPart.attach
+                (
+                    new FilteredListener<TextChangeEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( TextChangeEvent event )
+                        {
+                        	broadcast(event);
+                        }
+                    }
+                );
+                childPart.attach
+                (
+                    new FilteredListener<ShapeUpdateEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( ShapeUpdateEvent event )
+                        {
+                        	broadcast(event);
+                        }
+                    }
+                );
+                childPart.attach
+                (
+                     new FilteredListener<PartVisibilityEvent>()
+                     {
+                        @Override
+                        protected void handleTypedEvent( final PartVisibilityEvent event )
+                        {
+                        	broadcast(event);
+                        }
+                     }
+                );
+                childPart.attach
+                (
+                     new FilteredListener<ShapeValidationEvent>()
+                     {
+                        @Override
+                        protected void handleTypedEvent( final ShapeValidationEvent event )
+                        {
+                        	broadcast(event);
+                        }
+                     }
+                );        		
+                childPart.attach
+                (
+                     new FilteredListener<ShapeReorderEvent>()
+                     {
+                        @Override
+                        protected void handleTypedEvent( final ShapeReorderEvent event )
+                        {
+                        	broadcast(event);
+                        }
+                     }
+                );        		
+                childPart.attach
+                (
+                     new FilteredListener<ShapeAddEvent>()
+                     {
+                        @Override
+                        protected void handleTypedEvent( final ShapeAddEvent event )
+                        {
+                        	broadcast(event);
+                        }
+                     }
+                );
+                childPart.attach
+                (
+                     new FilteredListener<ShapeDeleteEvent>()
+                     {
+                        @Override
+                        protected void handleTypedEvent( final ShapeDeleteEvent event )
+                        {
+                        	broadcast(event);
+                        }
+                     }
+                );        		
+                
         	}
         	index++;
         }
@@ -105,7 +181,7 @@ public class ContainerShapePart extends ShapePart
                 @Override
                 protected void handleTypedEvent( final ElementValidationEvent event )
                 {
-                    notifyShapeValidation(ContainerShapePart.this);
+                    broadcast(new ShapeValidationEvent(ContainerShapePart.this));
                 }
 	        };
             this.modelElement.attach(this.elementValidationListener); 
@@ -203,42 +279,5 @@ public class ContainerShapePart extends ShapePart
         	this.modelElement.detach(this.elementValidationListener);
         }
     }
-    
-    private void createShapeListener()
-    {
-    	this.shapeListener = new SapphireDiagramPartListener()
-    	{    		
-    	    public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
-    	    {
-    	    	notifyShapeVisibility(event.getShapePart());
-    	    }
-
-    	    public void handleShapeUpdateEvent(final DiagramShapeEvent event)
-    	    {
-    	    	notifyShapeUpdate(event.getShapePart());
-    	    }
-    		
-    	    public void handleShapeValidationEvent(final DiagramShapeEvent event)
-    	    {
-    	    	notifyShapeValidation(event.getShapePart());
-    	    }
-    	    
-    	    public void handleShapeAddEvent(final DiagramShapeEvent event)
-    	    {
-    	        notifyShapeAdd(event.getShapePart());
-    	    }
-
-    	    public void handleShapeReorderEvent(final DiagramShapeEvent event)
-    	    {
-    	        notifyShapeReorder((ShapeFactoryPart)event.getShapePart());
-    	    }
-
-    	    public void handleShapeDeleteEvent(final DiagramShapeEvent event)
-    	    {
-    	        notifyShapeDelete(event.getShapePart());
-    	    }
-
-    	};
-    }
-    
+        
 }
