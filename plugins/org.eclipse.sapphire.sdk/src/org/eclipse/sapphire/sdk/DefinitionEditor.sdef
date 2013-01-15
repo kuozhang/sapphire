@@ -1945,24 +1945,6 @@
                 <image>Border${ TopBorder.Weight &gt; 0 ? &quot;Top&quot; : &quot;&quot; }${ BottomBorder.Weight &gt; 0 ? &quot;Bottom&quot; : &quot;&quot; }${ LeftBorder.Weight &gt; 0 ? &quot;Left&quot; : &quot;&quot; }${ RightBorder.Weight &gt; 0 ? &quot;Right&quot; : &quot;&quot; }.png</image>
             </node>
             <node>
-                <label>selection border</label>
-                <section>
-                    <label>selection border</label>
-                    <content>
-                        <with>
-                            <path>SelectionPresentation</path>
-                            <default-panel>
-                                <content>
-                                    <include>LinePresentationForm</include>
-                                    <property-editor>Inset</property-editor>
-                                </content>
-                            </default-panel>
-                            <path>Border</path>
-                        </with>
-                    </content>
-                </section>
-            </node>
-            <node>
                 <label>content</label>
                 <node-include>
                     <param>
@@ -2017,6 +1999,20 @@
                             <property-editor>Type</property-editor>
                         </content>
                         <label>case</label>
+                    </section>
+                    <section>
+                        <content>
+                            <with>
+                                <default-panel>
+                                    <content>
+                                        <include>LinePresentationForm</include>
+                                        <property-editor>Inset</property-editor>
+                                    </content>
+                                </default-panel>
+                                <path>SelectionPresentation</path>
+                            </with>                        
+                        </content>
+                        <label>selection border</label>
                     </section>
                     <model-element-type>ShapeFactoryCaseDef</model-element-type>
                     <node-include>

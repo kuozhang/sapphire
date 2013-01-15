@@ -94,18 +94,7 @@ public interface RectangleDef extends ContainerShapeDef
     ImpliedElementProperty PROP_RIGHT_BORDER = new ImpliedElementProperty( TYPE, "RightBorder" );
     
     BorderComponent getRightBorder();
-    
-    // *** SelectionPresentation ***
-    
-    @Type( base = SelectionPresentation.class )
-    @Label( standard = "selection presentation" )
-    @XmlBinding( path = "selection-presentation" )
-
-    ImpliedElementProperty PROP_SELECTION_PRESENTATION = new ImpliedElementProperty( TYPE, "SelectionPresentation" );
-    
-    SelectionPresentation getSelectionPresentation();
-    
-    
+        
     // *** Background ***
     
     @Type

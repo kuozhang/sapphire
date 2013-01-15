@@ -56,7 +56,7 @@ public class RectangleBorder extends AbstractBorder
 		if (this.hasUniformBorders && borderDef.getWeight().getContent() > 0)
 		{
 			int w = borderDef.getWeight().getContent();
-			int inset = Math.max(1, w / 2);
+			int inset = Math.max(1, w + 1 >> 1);
 			tempRect.x += inset;
 			tempRect.y += inset;
 			tempRect.width -= inset + inset;
@@ -80,7 +80,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w / 2);
+				int inset = Math.max(1, w + 1 >> 1);
 				int x = tempRect.x;
 				int y = tempRect.y + inset;
 				int x2 = tempRect.x + tempRect.width;				
@@ -94,7 +94,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w / 2);
+				int inset = Math.max(1, w + 1 >> 1);
 				int x = tempRect.x;
 				int y = tempRect.y + tempRect.height - inset;
 				int x2 = tempRect.x + tempRect.width;
@@ -108,7 +108,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w / 2);
+				int inset = Math.max(1, w + 1 >> 1);
 				int x = tempRect.x + inset;
 				int y = tempRect.y;
 				int y2 = tempRect.y + tempRect.height;				
@@ -122,7 +122,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w / 2);
+				int inset = Math.max(1, w + 1 >> 1);
 				int x = tempRect.x + tempRect.width - inset;
 				int y = tempRect.y;
 				int y2 = tempRect.y + tempRect.height;				

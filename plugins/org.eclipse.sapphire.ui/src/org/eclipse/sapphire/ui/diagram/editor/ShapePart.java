@@ -23,9 +23,9 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 
 /**
@@ -39,6 +39,7 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
 	private boolean isActive = false;
 	private boolean isEditable = false;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
+	private SelectionPresentation selectionPresentation = null;
 
 	@Override
     protected void init()
@@ -124,6 +125,16 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
         }
         
         return this.propertiesViewContributionManager.getPropertiesViewContribution();
+    }
+    
+    public void setSelectionPresentation(SelectionPresentation selectionPresentation)
+    {
+    	this.selectionPresentation = selectionPresentation;
+    }
+    
+    public SelectionPresentation getSelectionPresentation()
+    {
+    	return this.selectionPresentation;
     }
         
 }

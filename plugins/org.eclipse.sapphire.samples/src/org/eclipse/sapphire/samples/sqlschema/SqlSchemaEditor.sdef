@@ -117,10 +117,6 @@
                                             <horizontal-alignment>left</horizontal-alignment>
                                             <expand-cell-horizontally>true</expand-cell-horizontally>
                                         </sequence-layout-constraint>
-                                        <selection-presentation>
-                                            <weight>1</weight>
-                                            <inset>2</inset>
-                                        </selection-presentation>
 							            <properties-view>
 							                <page>
 							                    <label>Column</label>
@@ -138,6 +134,10 @@
 							                </page>
 							            </properties-view>
                                     </rectangle>
+                                    <selection-presentation>
+                                        <weight>1</weight>
+                                        <inset>2</inset>
+                                    </selection-presentation>                                    
                                 </case>
                                 <separator>
                                     <line>

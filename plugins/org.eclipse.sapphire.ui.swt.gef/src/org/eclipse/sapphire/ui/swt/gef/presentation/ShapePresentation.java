@@ -20,6 +20,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -99,6 +100,11 @@ public class ShapePresentation
 	{
 		return this.shapePart.visible();
 	}
+	
+	public SelectionPresentation getSelectionPresentation()
+	{
+		return this.shapePart.getSelectionPresentation();
+	}	
 	
     public static final class ShapePresentationFactory
     {

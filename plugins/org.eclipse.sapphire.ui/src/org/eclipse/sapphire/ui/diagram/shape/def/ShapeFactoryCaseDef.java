@@ -18,6 +18,7 @@ import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ReferenceValue;
@@ -91,5 +92,15 @@ public interface ShapeFactoryCaseDef extends IModelElement
     ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
     
     ModelElementHandle<ShapeDef> getShape();
+    
+    // *** SelectionPresentation ***
+    
+    @Type( base = SelectionPresentation.class )
+    @Label( standard = "selection presentation" )
+    @XmlBinding( path = "selection-presentation" )
+
+    ImpliedElementProperty PROP_SELECTION_PRESENTATION = new ImpliedElementProperty( TYPE, "SelectionPresentation" );
+    
+    SelectionPresentation getSelectionPresentation();
 
 }

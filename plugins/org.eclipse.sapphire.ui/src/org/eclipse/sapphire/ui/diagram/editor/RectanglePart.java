@@ -15,7 +15,6 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.BorderComponent;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -52,12 +51,6 @@ public class RectanglePart extends ContainerShapePart
 	{
 		return this.rectangleDef.getRightBorder();
 	}
-	
-    public SelectionPresentation getSelectionPresentation()
-    {
-    	return this.rectangleDef.getSelectionPresentation();
-    }
-	
 	
 	public BackgroundDef getBackground()
 	{

@@ -15,6 +15,7 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
@@ -148,17 +149,21 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			final Dimension cornerDimension = new Dimension(cornerRadius, cornerRadius); 
 
 			SelectionPresentation selectionPresentation = this.rectPresentation.getSelectionPresentation();
-			graphics.setForegroundColor(resourceCache.getColor(selectionPresentation.getColor().getContent()));
-			graphics.setLineStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().getContent()));
-			int lineWidth = selectionPresentation.getWeight().getContent();
+			org.eclipse.sapphire.ui.Color selectionColor = selectionPresentation != null ? selectionPresentation.getColor().getContent()
+					: new org.eclipse.sapphire.ui.Color(255, 165, 0);
+			LineStyle selectionStyle = selectionPresentation != null ? selectionPresentation.getStyle().getContent() 
+					: LineStyle.DASH;
+			int lineWidth = selectionPresentation != null ? selectionPresentation.getWeight().getContent() : 1;
+			int selectionInset = selectionPresentation != null ? selectionPresentation.getInset().getContent() : 0;
+			graphics.setForegroundColor(resourceCache.getColor(selectionColor));
+			graphics.setLineStyle(FigureUtil.convertLineStyle(selectionStyle));
 			graphics.setLineWidth(lineWidth);
-			int lineInset = Math.max(1, lineWidth / 2);
-			int selectionInset = selectionPresentation.getInset().getContent();
 			
-			r.x += lineInset - 1;
-			r.y += lineInset - 1;
-			r.width -= lineInset + lineInset - 1;
-			r.height -= lineInset + lineInset - 1;
+			int lineInset = Math.max(1, lineWidth + 1 >> 1);			
+			r.x += lineInset;
+			r.y += lineInset;
+			r.width -= lineInset + lineInset;
+			r.height -= lineInset + lineInset;
 			
 			r.shrink(selectionInset, selectionInset);
 			

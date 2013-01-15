@@ -61,11 +61,5 @@ public class RectanglePresentation extends ContainerShapePresentation
 	{
 		return getRectanglePart().getRightBorder();
 	}
-	
-	public SelectionPresentation getSelectionPresentation()
-	{
-		return getRectanglePart().getSelectionPresentation();
-	}
-	
-	
+		
 }

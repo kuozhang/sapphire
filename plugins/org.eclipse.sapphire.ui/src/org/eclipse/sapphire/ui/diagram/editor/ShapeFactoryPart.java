@@ -68,8 +68,7 @@ public class ShapeFactoryPart extends ShapePart
         for( IModelElement listEntryModelElement : list )
         {
         	ShapeFactoryCaseDef shapeFactoryCase = getShapeFactoryCase(listEntryModelElement);
-        	ShapeDef shapeDef = shapeFactoryCase.getShape().element();
-        	ShapePart childShapePart = createShapePart(shapeDef, listEntryModelElement);
+        	ShapePart childShapePart = createShapePart(shapeFactoryCase, listEntryModelElement);
         	if (childShapePart != null)
         	{
         		this.children.add(childShapePart);
@@ -300,6 +299,17 @@ public class ShapeFactoryPart extends ShapePart
     	return shapePart;
     }
     
+    private ShapePart createShapePart(ShapeFactoryCaseDef shapeFactoryCase, IModelElement modelElement)
+    {
+    	ShapeDef shapeDef = shapeFactoryCase.getShape().element();
+    	ShapePart shapePart = createShapePart(shapeDef, modelElement);
+    	if (shapeFactoryCase.getSelectionPresentation() != null)
+    	{
+    		shapePart.setSelectionPresentation(shapeFactoryCase.getSelectionPresentation());
+    	}
+    	return shapePart;
+    }
+    
     private void handleModelPropertyChange(final PropertyEvent event)
     {
     	final IModelElement element = event.element();
@@ -343,9 +353,8 @@ public class ShapeFactoryPart extends ShapePart
 			for (IModelElement newShape : newShapes)
 			{
 	        	ShapeFactoryCaseDef shapeFactoryCase = getShapeFactoryCase(newShape);
-	        	ShapeDef shapeDef = shapeFactoryCase.getShape().element();
 				
-		    	ShapePart shapePart = createShapePart(shapeDef, newShape);
+		    	ShapePart shapePart = createShapePart(shapeFactoryCase, newShape);
 		    	this.children.add(shapePart);
 		    	broadcast(new ShapeAddEvent(shapePart));
 			}
