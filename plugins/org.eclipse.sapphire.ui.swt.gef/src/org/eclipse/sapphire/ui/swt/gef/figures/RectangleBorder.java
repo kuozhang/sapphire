@@ -55,13 +55,12 @@ public class RectangleBorder extends AbstractBorder
 		BorderComponent borderDef = this.rectPresentation.getTopBorder();
 		if (this.hasUniformBorders && borderDef.getWeight().getContent() > 0)
 		{
-			float lineInset = Math.max(1.0f, (float)borderDef.getWeight().getContent()) / 2.0f;
-			int inset1 = (int) Math.floor(lineInset) + 1;
-			int inset2 = (int) Math.ceil(lineInset) + 1;
-			tempRect.x += inset1;
-			tempRect.y += inset1;
-			tempRect.width -= inset1 + inset2;
-			tempRect.height -= inset1 + inset2;
+			int w = borderDef.getWeight().getContent();
+			int inset = Math.max(1, w / 2);
+			tempRect.x += inset;
+			tempRect.y += inset;
+			tempRect.width -= inset + inset;
+			tempRect.height -= inset + inset;
 			
 			int cornerRadius = this.rectPresentation.getCornerRadius();
 			final Dimension cornerDimension = new Dimension(cornerRadius, cornerRadius); 
@@ -69,12 +68,9 @@ public class RectangleBorder extends AbstractBorder
 			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 			graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-			// Shrink the border to leave 1 pixel space for the selection border
-			tempRect.shrink(1, 1);
 			graphics.drawRoundRectangle(tempRect,
-					Math.max(0, cornerDimension.width - (int) lineInset),
-					Math.max(0, cornerDimension.height - (int) lineInset));
-			
+					Math.max(0, cornerDimension.width - inset),
+					Math.max(0, cornerDimension.height - inset));
 		}
 		else
 		{
@@ -83,11 +79,11 @@ public class RectangleBorder extends AbstractBorder
 				int w = borderDef.getWeight().getContent();
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));		
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 				int inset = Math.max(1, w / 2);
-				int x = tempRect.x + inset;
-				int y = tempRect.y - inset;
-				int x2 = tempRect.x + tempRect.width - inset - inset;				
+				int x = tempRect.x;
+				int y = tempRect.y + inset;
+				int x2 = tempRect.x + tempRect.width;				
 				graphics.drawLine(x, y, x2, y);
 			}
 			
@@ -99,24 +95,10 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 				int inset = Math.max(1, w / 2);
-				int x = tempRect.x + inset;
+				int x = tempRect.x;
 				int y = tempRect.y + tempRect.height - inset;
-				int x2 = tempRect.x + tempRect.width - inset - inset;
+				int x2 = tempRect.x + tempRect.width;
 				graphics.drawLine(x, y, x2, y);
-			}
-	
-			borderDef = this.rectPresentation.getRightBorder();			
-			if( borderDef.getWeight().getContent() > 0 )
-			{	
-				int w = borderDef.getWeight().getContent();
-				graphics.setLineWidth(w);
-				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w / 2);
-				int x = tempRect.x + tempRect.width - inset;
-				int y = tempRect.y + inset;
-				int y2 = tempRect.y + tempRect.height - inset - inset;				
-				graphics.drawLine(x, y, x, y2);
 			}
 	
 			borderDef = this.rectPresentation.getLeftBorder();			
@@ -127,12 +109,25 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 				int inset = Math.max(1, w / 2);
-				int x = tempRect.x - inset;
-				int y = tempRect.y + inset;
-				int y2 = tempRect.y + tempRect.height - inset - inset;				
+				int x = tempRect.x + inset;
+				int y = tempRect.y;
+				int y2 = tempRect.y + tempRect.height;				
 				graphics.drawLine(x, y, x, y2);
 			}
-			
+
+			borderDef = this.rectPresentation.getRightBorder();			
+			if( borderDef.getWeight().getContent() > 0 )
+			{	
+				int w = borderDef.getWeight().getContent();
+				graphics.setLineWidth(w);
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
+				int inset = Math.max(1, w / 2);
+				int x = tempRect.x + tempRect.width - inset;
+				int y = tempRect.y;
+				int y2 = tempRect.y + tempRect.height;				
+				graphics.drawLine(x, y, x, y2);
+			}			
 		}
 	}
 		

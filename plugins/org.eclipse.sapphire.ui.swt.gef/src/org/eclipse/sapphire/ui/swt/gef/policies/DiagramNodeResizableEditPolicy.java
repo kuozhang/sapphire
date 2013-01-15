@@ -37,7 +37,6 @@ import org.eclipse.swt.graphics.Color;
 
 public class DiagramNodeResizableEditPolicy extends ResizableEditPolicy 
 {
-	private int resizeDirections = PositionConstants.NSEW;
 	private DiagramResourceCache resourceCache;
 	
 	public DiagramNodeResizableEditPolicy(DiagramResourceCache resourceCache) {

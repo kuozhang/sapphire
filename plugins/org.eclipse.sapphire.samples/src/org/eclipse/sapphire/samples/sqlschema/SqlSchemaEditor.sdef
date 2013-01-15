@@ -64,7 +64,7 @@
                         </content>
                         <sequence-layout-constraint>
                             <expand-cell-horizontally>true</expand-cell-horizontally>
-                            <margin>2</margin>
+                            <margin>0</margin>
                         </sequence-layout-constraint>
                         <background>
                             <gradient></gradient>
