@@ -93,18 +93,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     @Override
     protected void init()
     {
-        super.init();
-        
-        try
-        {
-            final File stateFile = adapt( SapphireEditor.class ).getDefaultStateStorageFile( this );
-            this.state = DiagramEditorPageState.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( stateFile ) ) );
-        }
-        catch( ResourceStoreException e )
-        {
-            this.state = DiagramEditorPageState.TYPE.instantiate();
-        }
-            
         this.diagramPageDef = (IDiagramEditorPageDef)super.definition;
         ImpliedElementProperty modelElementProperty = (ImpliedElementProperty)resolve(this.diagramPageDef.getProperty().getContent());
         if (modelElementProperty != null)
@@ -115,7 +103,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             this.modelElement = getModelElement();
         }
-        
+    	        
+        super.init();
+
+        try
+        {
+            final File stateFile = adapt( SapphireEditor.class ).getDefaultStateStorageFile( this );
+            this.state = DiagramEditorPageState.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( stateFile ) ) );
+        }
+        catch( ResourceStoreException e )
+        {
+            this.state = DiagramEditorPageState.TYPE.instantiate();
+        }
+                    
         this.showGrid = this.diagramPageDef.getGridDefinition().isVisible().getContent();
         this.showGuides = this.diagramPageDef.getGuidesDefinition().isVisible().getContent();
         this.gridUnit = this.diagramPageDef.getGridDefinition().getGridUnit().getContent();
