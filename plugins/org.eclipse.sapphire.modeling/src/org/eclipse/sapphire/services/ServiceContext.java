@@ -30,6 +30,7 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public class ServiceContext
 {
+    public static final String ID_ROOT = "Sapphire";
     public static final String ID_ELEMENT_INSTANCE = "Sapphire.Element.Instance";
     public static final String ID_ELEMENT_METAMODEL = "Sapphire.Element.MetaModel";
     public static final String ID_PROPERTY_INSTANCE = "Sapphire.Property.Instance";
@@ -66,36 +67,46 @@ public class ServiceContext
         return null;
     }
     
-    public final <S extends Service> S service( final Class<S> serviceType )
+    public final <S extends Service> S service( final Class<S> type )
     {
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         if( this.disposed )
         {
             throw new IllegalStateException();
         }
         
-        final List<S> services = services( serviceType );
+        final List<S> services = services( type );
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
     @SuppressWarnings( "unchecked" )
     
-    public final synchronized <S extends Service> List<S> services( final Class<S> serviceType )
+    public final synchronized <S extends Service> List<S> services( final Class<S> type )
     {
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         if( this.disposed )
         {
             throw new IllegalStateException();
         }
         
-        if( ! this.initializedServiceTypes.contains( serviceType ) )
+        if( ! this.initializedServiceTypes.contains( type ) )
         {
-            if( this.initializingServiceTypes.contains( serviceType ) )
+            if( this.initializingServiceTypes.contains( type ) )
             {
                 throw new IllegalStateException();
             }
             
-            this.initializingServiceTypes.add( serviceType );
+            this.initializingServiceTypes.add( type );
             
-            final Class<? super S> serviceTypeSuperClass = serviceType.getSuperclass();
+            final Class<? super S> serviceTypeSuperClass = type.getSuperclass();
             
             if( serviceTypeSuperClass == Service.class || serviceTypeSuperClass == DataService.class )
             {
@@ -105,7 +116,7 @@ public class ServiceContext
     
                 for( ServiceFactoryProxy factory : SapphireModelingExtensionSystem.getServiceFactories() )
                 {
-                    if( factory.applicable( this, serviceType ) )
+                    if( factory.applicable( this, type ) )
                     {
                         applicable.put( factory.id(), factory );
                     }
@@ -128,7 +139,7 @@ public class ServiceContext
                 {
                     final String id = factory.id();
                     
-                    if( ! this.exhaustedServiceFactories.contains( id ) && factory.applicable( this, serviceType ) )
+                    if( ! this.exhaustedServiceFactories.contains( id ) && factory.applicable( this, type ) )
                     {
                         this.exhaustedServiceFactories.add( id );
                         
@@ -136,8 +147,8 @@ public class ServiceContext
                         
                         try
                         {
-                            service = factory.create( this, serviceType );
-                            service.init( this, factory.parameters() );
+                            service = factory.create( this, type );
+                            service.init( this, id, factory.parameters(), factory.overrides() );
                         }
                         catch( Exception e )
                         {
@@ -175,8 +186,8 @@ public class ServiceContext
                         
                         try
                         {
-                            service = factory.create( this, serviceType );
-                            service.init( this, factory.parameters() );
+                            service = factory.create( this, type );
+                            service.init( this, id, factory.parameters(), factory.overrides() );
                         }
                         catch( Exception e )
                         {
@@ -200,17 +211,20 @@ public class ServiceContext
                 services( (Class<Service>) serviceTypeSuperClass );
             }
             
-            this.initializingServiceTypes.remove( serviceType );
-            this.initializedServiceTypes.add( serviceType );
+            this.initializingServiceTypes.remove( type );
+            this.initializedServiceTypes.add( type );
         }
         
+        final Set<String> matchedServiceOverrides = new HashSet<String>();
         final ListFactory<S> matchedServicesListFactory = ListFactory.start();
         
         for( Service service : this.services )
         {
-            if( serviceType.isInstance( service ) )
+            if( type.isInstance( service ) )
             {
-                matchedServicesListFactory.add( serviceType.cast( service ) );
+                matchedServiceOverrides.add( service.id() );
+                matchedServiceOverrides.addAll( service.overrides() );
+                matchedServicesListFactory.add( type.cast( service ) );
             }
         }
         
@@ -219,9 +233,15 @@ public class ServiceContext
             matchedServicesListFactory.get( i ).initIfNecessary();
         }
         
-        if( this.parent != null && matchedServicesListFactory.size() == 0 )
+        if( this.parent != null )
         {
-            matchedServicesListFactory.add( this.parent.services( serviceType ) );
+            for( Service service : this.parent.services( type ) )
+            {
+                if( ! matchedServiceOverrides.contains( service.id() ) )
+                {
+                    matchedServicesListFactory.add( type.cast( service ) );
+                }
+            }
         }
         
         return matchedServicesListFactory.result();

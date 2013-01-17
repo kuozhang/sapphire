@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ModelProperty;
 
 /**
@@ -21,7 +22,7 @@ public final class PropertyMetaModelServiceContext extends PropertyServiceContex
 {
     public PropertyMetaModelServiceContext( final ModelProperty property )
     {
-        super( ID_PROPERTY_METAMODEL, null, property );
+        super( ID_PROPERTY_METAMODEL, Sapphire.services(), property );
     }
     
 }

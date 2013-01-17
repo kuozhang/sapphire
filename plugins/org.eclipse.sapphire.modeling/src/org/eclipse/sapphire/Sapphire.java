@@ -15,10 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,6 +33,7 @@ public final class Sapphire
     
     private static boolean devmode = Boolean.parseBoolean( System.getProperty( "sapphire.dev.mode" ) );
     private static Version version;
+    private static ServiceContext services;
     
     /**
      * This class is not meant to be instantiated.
@@ -133,6 +137,48 @@ public final class Sapphire
         }
         
         return version;
+    }
+    
+    /**
+     * Returns the service of the specified type from the root service context.
+     * 
+     * @param <S> the type of the service
+     * @param type the type of the service
+     * @return the service or <code>null</code> if not available
+     */
+    
+    public static <S extends Service> S service( final Class<S> type )
+    {
+        return services().service( type );
+    }
+
+    /**
+     * Returns services of the specified type from the root service context.
+     * 
+     * @param <S> the type of the service
+     * @param type the type of the service
+     * @return the list of services or an empty list if none are available
+     */
+    
+    public static <S extends Service> List<S> services( final Class<S> type )
+    {
+        return services().services( type );
+    }
+    
+    /**
+     * Returns the root service context.
+     * 
+     * @return the root service context
+     */
+    
+    public static synchronized ServiceContext services()
+    {
+        if( services == null )
+        {
+            services = new ServiceContext( ServiceContext.ID_ROOT, null );
+        }
+        
+        return services;
     }
     
 }

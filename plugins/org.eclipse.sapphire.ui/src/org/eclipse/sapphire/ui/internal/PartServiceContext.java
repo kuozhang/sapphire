@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.internal;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -38,7 +39,7 @@ public final class PartServiceContext extends ServiceContext
     
     public PartServiceContext( final ISapphirePart part )
     {
-        super( "Sapphire.Part", null );
+        super( "Sapphire.Part", Sapphire.services() );
         
         this.part = part;
     }
@@ -143,7 +144,6 @@ public final class PartServiceContext extends ServiceContext
                         
                         return instance;
                     }
-                    
                 };
                 
                 local.add( proxy );

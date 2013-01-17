@@ -726,20 +726,40 @@ public abstract class SapphirePart implements ISapphirePart
         return result;
     }
     
-    public final <S extends Service> S service( final Class<S> serviceType )
+    /**
+     * Returns the service of the specified type from the part service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Part</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param type the type of the service
+     * @return the service or <code>null</code> if not available
+     */
+    
+    public final <S extends Service> S service( final Class<S> type )
     {
-        final List<S> services = services( serviceType );
+        final List<S> services = services( type );
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
-    public final <S extends Service> List<S> services( final Class<S> serviceType )
+    /**
+     * Returns services of the specified type from the part service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Part</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param type the type of the service
+     * @return the list of services or an empty list if none are available
+     */
+    
+    public final <S extends Service> List<S> services( final Class<S> type )
     {
         if( this.serviceContext == null )
         {
             this.serviceContext = new PartServiceContext( this );
         }
         
-        return this.serviceContext.services( serviceType );
+        return this.serviceContext.services( type );
     }
     
     /**

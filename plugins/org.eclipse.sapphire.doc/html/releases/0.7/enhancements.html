@@ -30,6 +30,7 @@
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-ModelElement">ModelElement</a></li>
+    <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -49,6 +50,32 @@ the duration of the JVM instance.</p>
 <p>The on-demand approach makes it easier to get started with Sapphire as it does not require build
 customization to compile implementation classes.</p>
 
+
+<h2><a name="Core-RootServiceContext">Root Service Context</a></h2>
+
+<p>Certain types of services, such as many ConversionService implementations, are useful across
+different service contexts. Services that are part of the new root service context are visible to
+all other contexts.</p>
+
+<pre class="source-code"><code><font color="#888888">Sapphire
+{</font>
+    static &lt;S extends Service> S service( Class&lt;S> type )
+    static &lt;S extends Service> List&lt;S> services( Class&lt;S> type )
+    static synchronized ServiceContext services()
+<font color="#888888">}</font></code></pre>
+
+<pre class="source-code"><code><font color="#888888">Integer number =</font> Sapphire.service( MasterConversionService.class )<font color="#888888">.convert( "123", Integer.class );</font></code></pre>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    &lt;service>
+        &lt;id>Sapphire.ConversionService.StringToInteger&lt;/id>
+        &lt;description>ConversionService implementation for String to Integer conversions.&lt;/description>
+        &lt;implementation>org.eclipse.sapphire.internal.StringToIntegerConversionService&lt;/implementation></font>
+        &lt;context>Sapphire&lt;/context>
+    <font color="#888888">&lt;/service>
+&lt;/extension></code></pre>
+
+
 <h2><a name="Core"><a name="Core-ModelElement">ModelElement</a></a></h2>
 
 <p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
@@ -60,6 +87,7 @@ copy individual properties is also available.</p>
     void copy( IModelElement element, ModelProperty property )
     void copy( IModelElement element, String property )
 <font color="#888888">}</font></code></pre>
+
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
 

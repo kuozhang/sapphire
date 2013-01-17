@@ -11,14 +11,15 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.util.MapFactory;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -28,30 +29,20 @@ public abstract class Service
 {
     private boolean initialized;
     private ServiceContext context;
+    private String id;
     private Map<String,String> params;
+    private Set<String> overrides;
     private final ListenerContext listeners = new ListenerContext();
     
     final void init( final ServiceContext context,
-                     final Map<String,String> params )
+                     final String id,
+                     final Map<String,String> params,
+                     final Set<String> overrides )
     {
         this.context = context;
-        
-        final int paramsCount = params.size();
-        
-        if( paramsCount == 0 )
-        {
-            this.params = Collections.emptyMap();
-        }
-        else if( paramsCount == 1 )
-        {
-            final Map.Entry<String,String> entry = params.entrySet().iterator().next();
-            this.params = Collections.singletonMap( entry.getKey(), entry.getValue() );
-        }
-        else
-        {
-            this.params = new HashMap<String,String>( params );
-            this.params = Collections.unmodifiableMap( this.params );
-        }
+        this.id = id;
+        this.params = MapFactory.unmodifiable( params );
+        this.overrides = SetFactory.unmodifiable( overrides );
     }
     
     final void initIfNecessary()
@@ -96,6 +87,11 @@ public abstract class Service
         return this.context.services( serviceType );
     }
     
+    final String id()
+    {
+        return this.id;
+    }
+    
     protected final Map<String,String> params()
     {
         return this.params;
@@ -104,6 +100,11 @@ public abstract class Service
     protected final String param( final String name )
     {
         return this.params.get( name );
+    }
+    
+    final Set<String> overrides()
+    {
+        return this.overrides;
     }
     
     final void coordinate( final ListenerContext context )

@@ -42,7 +42,6 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class ModelElementType extends ModelMetadataItem
 {
-    //private static final Map
     private final Class<?> typeClass;
     private Class<?> implClass = null;
     private Constructor<?> implClassConstructor = null;
@@ -404,17 +403,44 @@ public final class ModelElementType extends ModelMetadataItem
         return this.listeners;
     }
 
-    public <S extends Service> S service( final Class<S> serviceType )
+    /**
+     * Returns the service of the specified type from the element meta-model service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Element.MetaModel</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param type the type of the service
+     * @return the service or <code>null</code> if not available
+     */
+    
+    public <S extends Service> S service( final Class<S> type )
     {
-        final List<S> services = services( serviceType );
-        return ( services.isEmpty() ? null : services.get( 0 ) );
+        return services().service( type );
     }
 
-    public <S extends Service> List<S> services( final Class<S> serviceType )
+    /**
+     * Returns services of the specified type from the element meta-model service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Element.MetaModel</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param type the type of the service
+     * @return the list of services or an empty list if none are available
+     */
+    
+    public <S extends Service> List<S> services( final Class<S> type )
     {
-        return services().services( serviceType );
+        return services().services( type );
     }
 
+    /**
+     * Returns the element meta-model service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Element.MetaModel</b></p>
+     * 
+     * @return the element meta-model service context
+     */
+    
     public synchronized ServiceContext services()
     {
         if( this.serviceContext == null )

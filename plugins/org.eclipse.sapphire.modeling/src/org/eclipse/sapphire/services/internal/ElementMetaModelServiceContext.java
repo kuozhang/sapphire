@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ModelElementType;
 
 /**
@@ -21,7 +22,7 @@ public final class ElementMetaModelServiceContext extends ElementServiceContext
 {
     public ElementMetaModelServiceContext( final ModelElementType elementMetaModel )
     {
-        super( ID_ELEMENT_METAMODEL, null, elementMetaModel );
+        super( ID_ELEMENT_METAMODEL, Sapphire.services(), elementMetaModel );
     }
     
 }

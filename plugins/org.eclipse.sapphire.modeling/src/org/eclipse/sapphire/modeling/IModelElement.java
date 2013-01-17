@@ -194,22 +194,80 @@ public interface IModelElement extends IModelParticle
     void copy( IModelElement element, String property );
 
     /**
-     * Retrieves the specified service for this model element. Not all services will 
-     * be available for all model elements. This method will return <code>null</code>
-     * if the service is not available.
+     * Returns the service of the specified type from the element instance service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Element.Instance</b></p>
      * 
      * @param <S> the type of the service
-     * @param serviceType the type of the service
+     * @param type the type of the service
      * @return the service or <code>null</code> if not available
      */
     
-    <S extends Service> S service( Class<S> serviceType );
-    <S extends Service> List<S> services( Class<S> serviceType );
+    <S extends Service> S service( Class<S> type );
     
-    <S extends Service> S service( ModelProperty property, Class<S> serviceType );
-    <S extends Service> S service( String property, Class<S> serviceType );
-    <S extends Service> List<S> services( ModelProperty property, Class<S> serviceType );
-    <S extends Service> List<S> services( String property, Class<S> serviceType );
+    /**
+     * Returns services of the specified type from the element instance service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Element.Instance</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param type the type of the service
+     * @return the list of services or an empty list if none are available
+     */
+    
+    <S extends Service> List<S> services( Class<S> type );
+    
+    /**
+     * Returns the service of the specified type from the property instance service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Property.Instance</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param property the property
+     * @param type the type of the service
+     * @return the service or <code>null</code> if not available
+     */
+    
+    <S extends Service> S service( ModelProperty property, Class<S> type );
+
+    /**
+     * Returns the service of the specified type from the property instance service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Property.Instance</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param property the name of the property
+     * @param type the type of the service
+     * @return the service or <code>null</code> if not available
+     */
+    
+    <S extends Service> S service( String property, Class<S> type );
+    
+    /**
+     * Returns services of the specified type from the property instance service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Property.Instance</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param property the property
+     * @param type the type of the service
+     * @return the list of services or an empty list if none are available
+     */
+    
+    <S extends Service> List<S> services( ModelProperty property, Class<S> type );
+    
+    /**
+     * Returns services of the specified type from the property instance service context.
+     * 
+     * <p>Service Context: <b>Sapphire.Property.Instance</b></p>
+     * 
+     * @param <S> the type of the service
+     * @param property the name of the property
+     * @param type the type of the service
+     * @return the list of services or an empty list if none are available
+     */
+    
+    <S extends Service> List<S> services( String property, Class<S> type );
     
     boolean enabled( ModelProperty property );
     boolean enabled( String property );

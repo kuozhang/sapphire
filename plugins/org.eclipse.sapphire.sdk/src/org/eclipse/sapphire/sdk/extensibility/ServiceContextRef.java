@@ -44,6 +44,7 @@ public interface ServiceContextRef extends IModelElement
     (
         values = 
         {
+            ServiceContext.ID_ROOT,
             ServiceContext.ID_ELEMENT_INSTANCE,
             ServiceContext.ID_ELEMENT_METAMODEL,
             ServiceContext.ID_PROPERTY_INSTANCE,
