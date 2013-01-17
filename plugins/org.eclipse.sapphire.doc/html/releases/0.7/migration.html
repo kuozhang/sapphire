@@ -46,6 +46,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
   <li><a href="#XmlResource">XmlResource</a></li>
+  <li><a href="#Service">@Service</a></li>
 </ol>
 
 
@@ -99,6 +100,29 @@ RootXmlResource root = resource.root();</font></code></pre>
     <td>
 <pre class="source-code"><code><font color="#888888">XmlResource resource = ...
 RootXmlResource root =</font> (RootXmlResource) <font color="#888888">resource.root();</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="Service">@Service</a></h2>
+
+<p>Services registered with an @Service annotation on an element or a property will now be placed
+in either metamodel or instance context, instead of both. Instance context is default, which is the
+most common intention when using the @Service annotation. Registrations of services intended for the 
+metamodel context will need an adjustment.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Service( impl = ExampleService.class )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Service( impl = ExampleService.class</font>, context = Service.Context.METAMODEL <font color="#888888">)</font></code></pre>
     </td>
   </tr>
 </table>

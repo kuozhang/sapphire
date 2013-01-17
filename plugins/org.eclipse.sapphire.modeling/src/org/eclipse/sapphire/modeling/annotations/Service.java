@@ -28,10 +28,17 @@ public @interface Service
     Class<? extends org.eclipse.sapphire.services.Service> impl();
     Param[] params() default {};
     String[] overrides() default {};
+    Context context() default Context.INSTANCE;
     
     @interface Param
     {
         String name();
         String value();
+    }
+    
+    enum Context
+    {
+        METAMODEL,
+        INSTANCE
     }
 }

@@ -404,7 +404,7 @@ public final class ModelElementType extends ModelMetadataItem
     }
 
     /**
-     * Returns the service of the specified type from the element meta-model service context.
+     * Returns the service of the specified type from the element metamodel service context.
      * 
      * <p>Service Context: <b>Sapphire.Element.MetaModel</b></p>
      * 
@@ -419,7 +419,7 @@ public final class ModelElementType extends ModelMetadataItem
     }
 
     /**
-     * Returns services of the specified type from the element meta-model service context.
+     * Returns services of the specified type from the element metamodel service context.
      * 
      * <p>Service Context: <b>Sapphire.Element.MetaModel</b></p>
      * 
@@ -434,11 +434,11 @@ public final class ModelElementType extends ModelMetadataItem
     }
 
     /**
-     * Returns the element meta-model service context.
+     * Returns the element metamodel service context.
      * 
      * <p>Service Context: <b>Sapphire.Element.MetaModel</b></p>
      * 
-     * @return the element meta-model service context
+     * @return the element metamodel service context
      */
     
     public synchronized ServiceContext services()

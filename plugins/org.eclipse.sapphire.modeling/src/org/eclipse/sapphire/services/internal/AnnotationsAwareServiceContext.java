@@ -14,9 +14,6 @@ package org.eclipse.sapphire.services.internal;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +23,8 @@ import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactoryProxy;
+import org.eclipse.sapphire.util.MapFactory;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -58,101 +57,77 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
             }
         }
         
+        final boolean isInstanceContext = type().endsWith( ".Instance" );
+        
         for( org.eclipse.sapphire.modeling.annotations.Service svc : serviceAnnotations )
         {
-            final Class<? extends Service> cl = svc.impl();
-            
-            final String[] overridesInAnnotation = svc.overrides();
-            final Set<String> overrides;
-            
-            if( overridesInAnnotation.length == 0 )
+            if( isInstanceContext && svc.context() == org.eclipse.sapphire.modeling.annotations.Service.Context.INSTANCE )
             {
-                overrides = Collections.emptySet();
-            }
-            else if( overridesInAnnotation.length == 1 )
-            {
-                overrides = Collections.singleton( overridesInAnnotation[ 0 ] );
-            }
-            else
-            {
-                final Set<String> temp = new HashSet<String>();
-                overrides = Collections.unmodifiableSet( temp );
-
-                for( String override : overridesInAnnotation )
-                {
-                    temp.add( override );
-                }
-            }
-            
-            final org.eclipse.sapphire.modeling.annotations.Service.Param[] paramsInAnnotation = svc.params();
-            final Map<String,String> params;
-            
-            if( paramsInAnnotation.length == 0 )
-            {
-                params = Collections.emptyMap();
-            }
-            else if( paramsInAnnotation.length == 1 )
-            {
-                params = Collections.singletonMap( paramsInAnnotation[ 0 ].name(), paramsInAnnotation[ 0 ].value() );
-            }
-            else
-            {
-                final Map<String,String> temp = new HashMap<String,String>();
+                final Class<? extends Service> cl = svc.impl();
                 
-                for( org.eclipse.sapphire.modeling.annotations.Service.Param param : paramsInAnnotation )
+                final SetFactory<String> overridesSetFactory = SetFactory.start();
+                final MapFactory<String,String> paramsMapFactory = MapFactory.start();
+                
+                for( String override : svc.overrides() )
                 {
-                    temp.put( param.name(), param.value() );
+                    overridesSetFactory.add( override );
                 }
                 
-                params = Collections.unmodifiableMap( temp );
-            }
-            
-            final ServiceFactoryProxy proxy = new ServiceFactoryProxy()
-            {
-                @Override
-                public String id()
+                for( org.eclipse.sapphire.modeling.annotations.Service.Param param : svc.params() )
                 {
-                    return cl.getName();
+                    paramsMapFactory.add( param.name(), param.value() );
                 }
                 
-                @Override
-                public Class<? extends Service> type()
+                final Set<String> overrides = overridesSetFactory.result();
+                final Map<String,String> params = paramsMapFactory.result();
+                
+                final ServiceFactoryProxy proxy = new ServiceFactoryProxy()
                 {
-                    return cl;
-                }
-
-                @Override
-                public Set<String> overrides()
-                {
-                    return overrides;
-                }
-
-                @Override
-                public Map<String,String> parameters()
-                {
-                    return params;
-                }
-
-                @Override
-                protected Service createHandOff( final ServiceContext context,
-                                                 final Class<? extends Service> service )
-                {
-                    Service instance = null;
-                    
-                    try
+                    @Override
+                    public String id()
                     {
-                        instance = cl.newInstance();
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
+                        return cl.getName();
                     }
                     
-                    return instance;
-                }
-            };
-            
-            local.add( proxy );
+                    @Override
+                    public Class<? extends Service> type()
+                    {
+                        return cl;
+                    }
+    
+                    @Override
+                    public Set<String> overrides()
+                    {
+                        return overrides;
+                    }
+    
+                    @Override
+                    public Map<String,String> parameters()
+                    {
+                        return params;
+                    }
+    
+                    @Override
+                    protected Service createHandOff( final ServiceContext context,
+                                                     final Class<? extends Service> service )
+                    {
+                        Service instance = null;
+                        
+                        try
+                        {
+                            instance = cl.newInstance();
+                        }
+                        catch( Exception e )
+                        {
+                            LoggingService.log( e );
+                        }
+                        
+                        return instance;
+                    }
+                };
+                
+                local.add( proxy );
+            }
         }
         
         return local;

@@ -269,7 +269,7 @@ public abstract class ModelProperty extends ModelMetadataItem
     }
 
     /**
-     * Returns the service of the specified type from the property meta-model service context.
+     * Returns the service of the specified type from the property metamodel service context.
      * 
      * <p>Service Context: <b>Sapphire.Property.MetaModel</b></p>
      * 
@@ -284,7 +284,7 @@ public abstract class ModelProperty extends ModelMetadataItem
     }
 
     /**
-     * Returns services of the specified type from the property meta-model service context.
+     * Returns services of the specified type from the property metamodel service context.
      * 
      * <p>Service Context: <b>Sapphire.Property.MetaModel</b></p>
      * 
@@ -299,11 +299,11 @@ public abstract class ModelProperty extends ModelMetadataItem
     }
 
     /**
-     * Returns the property meta-model service context.
+     * Returns the property metamodel service context.
      * 
      * <p>Service Context: <b>Sapphire.Property.MetaModel</b></p>
      * 
-     * @return the property meta-model service context
+     * @return the property metamodel service context
      */
     
     public synchronized ServiceContext services()
