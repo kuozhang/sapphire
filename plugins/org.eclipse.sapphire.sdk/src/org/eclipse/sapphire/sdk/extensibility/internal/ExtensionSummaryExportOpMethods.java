@@ -184,11 +184,31 @@ public final class ExtensionSummaryExportOpMethods
         }
         
         @Override
+        protected void sort( final List<IModelElement> extElements )
+        {
+            Collections.sort
+            ( 
+                extElements, 
+                new Comparator<IModelElement>()
+                {
+                    public int compare( final IModelElement a,
+                                        final IModelElement b )
+                    {
+                        final ServiceDef x = (ServiceDef) a;
+                        final ServiceDef y = (ServiceDef) b;
+                        
+                        return comp( x.getId().getContent(), y.getId().getContent() );
+                    }
+                }
+            );
+        }
+
+        @Override
         protected List<ModelProperty> getDefaultColumns()
         {
             final List<ModelProperty> columns = new ArrayList<ModelProperty>();
-            columns.add( ServiceDef.PROP_TYPE );
-            columns.add( ServiceDef.PROP_FACTORY );
+            columns.add( ServiceDef.PROP_ID );
+            columns.add( ServiceDef.PROP_DESCRIPTION );
             columns.add( ServiceDef.PROP_CONTEXTS );
             return columns;
         }

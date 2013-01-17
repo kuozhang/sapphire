@@ -57,6 +57,7 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_NAME = "name";
     private static final String EL_TYPE = "type";
     private static final String EL_FACTORY = "factory";
+    private static final String EL_IMPLEMENTATION = "implementation";
     private static final String EL_IMPL = "impl";
     private static final String EL_ID = "id";
     private static final String EL_OPERAND_COUNT = "operand-count";
@@ -98,11 +99,11 @@ public final class SapphireModelingExtensionSystem
             
             if( operands.length == 1 )
             {
-            	throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt1, name ) );
+                throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt1, name ) );
             }
             else
             {
-            	throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt, name, operands.length ) );
+                throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt, name, operands.length ) );
             }
         }
         
@@ -147,18 +148,78 @@ public final class SapphireModelingExtensionSystem
                                 if( elname.equals( EL_SERVICE ) )
                                 {
                                     final String id = value( el, EL_ID );
-                                    final Class<? extends Service> serviceType = context.findClass( value( el, EL_TYPE ) );
-                                    final Class<? extends ServiceFactory> serviceFactory = context.findClass( value( el, EL_FACTORY ) );
                                     final Set<String> contexts = values( el, EL_CONTEXT );
                                     final Set<String> overrides = values( el, EL_OVERRIDES );
                                     
-                                    if( serviceType == null || serviceFactory == null )
+                                    try
                                     {
-                                        // TODO: Report this.
+                                        final Class<? extends Service> serviceImplClass = context.findClass( value( el, EL_IMPLEMENTATION ) );
+                                        
+                                        if( serviceImplClass != null )
+                                        {
+                                            serviceFactories.add
+                                            (
+                                                new ServiceFactoryProxy()
+                                                {
+                                                    @Override
+                                                    public String id()
+                                                    {
+                                                        return id;
+                                                    }
+                                                    
+                                                    @Override
+                                                    public Class<? extends Service> type()
+                                                    {
+                                                        return serviceImplClass;
+                                                    }
+                                
+                                                    @Override
+                                                    public Set<String> overrides()
+                                                    {
+                                                        return overrides;
+                                                    }
+                                                    
+                                                    @Override
+                                                    protected boolean applicableHandOff( final ServiceContext context,
+                                                                                         final Class<? extends Service> service )
+                                                    {
+                                                        return contexts.contains( context.type() );
+                                                    }
+
+                                                    @Override
+                                                    protected Service createHandOff( ServiceContext context,
+                                                                                     Class<? extends Service> service )
+                                                    {
+                                                        Service instance = null;
+                                                        
+                                                        try
+                                                        {
+                                                            instance = serviceImplClass.newInstance();
+                                                        }
+                                                        catch( Exception e )
+                                                        {
+                                                            LoggingService.log( e );
+                                                        }
+                                                        
+                                                        return instance;
+                                                    }
+                                                }
+                                            );
+                                        }
                                     }
-                                    else
+                                    catch( InvalidExtensionException e )
                                     {
-                                        serviceFactories.add( new ServiceFactoryProxyImpl( id, serviceType, serviceFactory, contexts, overrides ) );
+                                        final Class<? extends Service> serviceType = context.findClass( value( el, EL_TYPE ) );
+                                        final Class<? extends ServiceFactory> serviceFactory = context.findClass( value( el, EL_FACTORY ) );
+                                        
+                                        if( serviceType == null || serviceFactory == null )
+                                        {
+                                            // TODO: Report this.
+                                        }
+                                        else
+                                        {
+                                            serviceFactories.add( new ServiceFactoryProxyImpl( id, serviceType, serviceFactory, contexts, overrides ) );
+                                        }
                                     }
                                 }
                                 else if( elname.equals( EL_FUNCTION ) )

@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -80,14 +81,35 @@ public interface ServiceDef extends IModelElement
     Value<String> getDescription();
     void setDescription( String value );
     
+    // *** Implementation ***
+    
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
+    @Label( standard = "implementation" )
+    @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.services.Service" )
+    @MustExist
+    @Enablement( expr = "${ Type == null && Factory == null }" )
+    @XmlBinding( path = "implementation" )
+    
+    @Documentation
+    (
+        content = "The implementation of the service."
+    )
+
+    ValueProperty PROP_IMPLEMENTATION = new ValueProperty( TYPE, "Implementation" );
+    
+    ReferenceValue<JavaTypeName,JavaType> getImplementation();
+    void setImplementation( String value );
+    void setImplementation( JavaTypeName value );
+    
     // *** Type ***
     
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "service type class" )
-    @Required
     @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = "org.eclipse.sapphire.services.Service" )
     @MustExist
+    @Enablement( expr = "${ Implementation == null }" )
     @XmlBinding( path = "type" )
     
     @Documentation
@@ -106,9 +128,9 @@ public interface ServiceDef extends IModelElement
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "service factory class" )
-    @Required
     @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.services.ServiceFactory" )
     @MustExist
+    @Enablement( expr = "${ Implementation == null }" )
     @XmlBinding( path = "factory" )
     
     @Documentation

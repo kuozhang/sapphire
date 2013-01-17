@@ -31,6 +31,7 @@
   <ol type="A">
     <li><a href="#Core-ModelElement">ModelElement</a></li>
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
+    <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -73,7 +74,23 @@ all other contexts.</p>
         &lt;implementation>org.eclipse.sapphire.internal.StringToIntegerConversionService&lt;/implementation></font>
         &lt;context>Sapphire&lt;/context>
     <font color="#888888">&lt;/service>
-&lt;/extension></code></pre>
+&lt;/extension></font></code></pre>
+
+
+<h2><a name="Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></h2>
+
+<p>Registering services through Sapphire extension system has been made even easier by removing the
+need to implement a ServiceFactory for services that do not require custom applicability logic. The
+service implementation class can be specified directly.</p> 
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    &lt;service>
+        &lt;id>Sapphire.ConversionService.StringToInteger&lt;/id>
+        &lt;description>ConversionService implementation for String to Integer conversions.&lt;/description></font>
+        &lt;implementation>org.eclipse.sapphire.internal.StringToIntegerConversionService&lt;/implementation>
+        <font color="#888888">&lt;context>Sapphire&lt;/context>
+    &lt;/service>
+&lt;/extension></font></code></pre>
 
 
 <h2><a name="Core"><a name="Core-ModelElement">ModelElement</a></a></h2>
