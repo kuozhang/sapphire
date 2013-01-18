@@ -15,7 +15,6 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.gallery.CustomColor;
 import org.eclipse.sapphire.samples.gallery.IGallery;
@@ -40,12 +39,6 @@ public final class ColorPossibleValuesService extends PossibleValuesService
     protected void init()
     {
         super.init();
-        
-        if( context( IGallery.class ) == null )
-        {
-            IModelElement element = context( IModelElement.class );
-            System.err.println();
-        }
         
         context( IGallery.class ).attach( this.listener, "/CustomColors/Name" );
     }

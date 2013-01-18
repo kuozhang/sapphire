@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.ValidationAggregationService;
-import org.eclipse.sapphire.services.ValueSerializationMasterService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -271,7 +271,7 @@ public class Value<T> extends ModelParticle
         }
         else
         {
-            return (T) parent().service( this.property, ValueSerializationMasterService.class ).decode( str );
+            return (T) parent().service( this.property, MasterConversionService.class ).convert( str, this.property.getTypeClass() );
         }
     }
     

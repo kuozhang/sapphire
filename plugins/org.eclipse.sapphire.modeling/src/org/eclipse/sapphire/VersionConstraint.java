@@ -13,6 +13,8 @@ package org.eclipse.sapphire;
 
 import java.util.List;
 
+import org.eclipse.sapphire.util.EqualsFactory;
+import org.eclipse.sapphire.util.HashCodeFactory;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -372,6 +374,24 @@ public final class VersionConstraint
     }
     
     @Override
+    public boolean equals( final Object obj )
+    {
+        if( obj instanceof VersionConstraint )
+        {
+            final VersionConstraint constraint = (VersionConstraint) obj;
+            return this.ranges.equals( constraint.ranges );
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.ranges.hashCode();
+    }
+
+    @Override
     public String toString()
     {
         final StringBuffer buf = new StringBuffer();
@@ -438,6 +458,24 @@ public final class VersionConstraint
         }
         
         @Override
+        public boolean equals( final Object obj )
+        {
+            if( obj instanceof Range )
+            {
+                final Range range = (Range) obj;
+                return EqualsFactory.start().add( this.min, range.min ).add( this.max, range.max ).result();
+            }
+            
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return HashCodeFactory.start().add( this.min ).add( this.max ).result();
+        }
+
+        @Override
         public String toString()
         {
             if( this.min != null && this.max != null && 
@@ -470,7 +508,7 @@ public final class VersionConstraint
                 return buf.toString();
             }
         }
-
+        
         public static final class Limit
         {
             private final Version version;
@@ -513,7 +551,7 @@ public final class VersionConstraint
             @Override
             public int hashCode()
             {
-                return this.version.hashCode() + Boolean.valueOf( this.inclusive ).hashCode();
+                return this.version.hashCode() ^ Boolean.valueOf( this.inclusive ).hashCode();
             }
         }
         

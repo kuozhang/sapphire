@@ -1,0 +1,737 @@
+/******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.tests.conversion;
+
+import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.sapphire.FileName;
+import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.VersionConstraint;
+import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
+import org.eclipse.sapphire.modeling.Path;
+import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.modeling.ResourceStore;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
+
+/**
+ * Tests MasterConversionService and the various conversions included with Sapphire.
+ * 
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public final class ConversionTests extends SapphireTestCase
+{
+    private ConversionTests( final String name )
+    {
+        super( name );
+    }
+    
+    public static Test suite()
+    {
+        final TestSuite suite = new TestSuite();
+        
+        suite.setName( "ConversionTests" );
+
+        suite.addTest( new ConversionTests( "testStringToBoolean" ) );
+        suite.addTest( new ConversionTests( "testBooleanToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToByte" ) );
+        suite.addTest( new ConversionTests( "testByteToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToShort" ) );
+        suite.addTest( new ConversionTests( "testShortToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToInteger" ) );
+        suite.addTest( new ConversionTests( "testIntegerToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToLong" ) );
+        suite.addTest( new ConversionTests( "testLongToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToFloat" ) );
+        suite.addTest( new ConversionTests( "testFloatToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToDouble" ) );
+        suite.addTest( new ConversionTests( "testDoubleToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToBigInteger" ) );
+        suite.addTest( new ConversionTests( "testBigIntegerToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToBigDecimal" ) );
+        suite.addTest( new ConversionTests( "testBigDecimalToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToEnum" ) );
+        suite.addTest( new ConversionTests( "testEnumToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToDate" ) );
+        suite.addTest( new ConversionTests( "testDateToString" ) );
+
+        suite.addTest( new ConversionTests( "testStringToFileName" ) );
+        suite.addTest( new ConversionTests( "testFileNameToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToPath" ) );
+        suite.addTest( new ConversionTests( "testPathToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToUri" ) );
+        suite.addTest( new ConversionTests( "testUriToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToUrl" ) );
+        suite.addTest( new ConversionTests( "testUrlToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToVersion" ) );
+        suite.addTest( new ConversionTests( "testVersionToString" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToVersionConstraint" ) );
+        suite.addTest( new ConversionTests( "testVersionConstraintToString" ) );
+        
+        suite.addTest( new ConversionTests( "testIFileToWorkspaceFileResourceStore" ) );
+        suite.addTest( new ConversionTests( "testIFileToByteArrayResourceStore" ) );
+        suite.addTest( new ConversionTests( "testIFileToResourceStore" ) );
+        
+        suite.addTest( new ConversionTests( "testIFileToRootXmlResource" ) );
+        suite.addTest( new ConversionTests( "testIFileToXmlResource" ) );
+        suite.addTest( new ConversionTests( "testIFileToResource" ) );
+        
+        return suite;
+    }
+    
+    public void testStringToBoolean() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( Boolean.TRUE, service.convert( "true", Boolean.class ) );
+        assertEquals( Boolean.TRUE, service.convert( "TRUE", Boolean.class ) );
+        assertEquals( Boolean.TRUE, service.convert( "True", Boolean.class ) );
+        assertEquals( Boolean.TRUE, service.convert( "tRuE", Boolean.class ) );
+        
+        assertEquals( Boolean.FALSE, service.convert( "false", Boolean.class ) );
+        assertEquals( Boolean.FALSE, service.convert( "FALSE", Boolean.class ) );
+        assertEquals( Boolean.FALSE, service.convert( "False", Boolean.class ) );
+        assertEquals( Boolean.FALSE, service.convert( "fAlSe", Boolean.class ) );
+        
+        assertNull( service.convert( "yes", Boolean.class ) );
+        assertNull( service.convert( "no", Boolean.class ) );
+        assertNull( service.convert( "0", Boolean.class ) );
+        assertNull( service.convert( "1", Boolean.class ) );
+        assertNull( service.convert( "abcdef", Boolean.class ) );
+    }
+
+    public void testBooleanToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "true", service.convert( Boolean.TRUE, String.class ) );
+        assertEquals( "false", service.convert( Boolean.FALSE, String.class ) );
+    }
+    
+    public void testStringToByte() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( Byte.valueOf( (byte) -128 ), service.convert( "-128", Byte.class ) );
+        assertEquals( Byte.valueOf( (byte) -48 ), service.convert( "-48", Byte.class ) );
+        assertEquals( Byte.valueOf( (byte) 0 ), service.convert( "0", Byte.class ) );
+        assertEquals( Byte.valueOf( (byte) 47 ), service.convert( "47", Byte.class ) );
+        assertEquals( Byte.valueOf( (byte) 127 ), service.convert( "127", Byte.class ) );
+    }
+
+    public void testByteToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-128", service.convert( Byte.valueOf( (byte) -128 ), String.class ) );
+        assertEquals( "-48", service.convert( Byte.valueOf( (byte) -48 ), String.class ) );
+        assertEquals( "0", service.convert( Byte.valueOf( (byte) 0 ), String.class ) );
+        assertEquals( "47", service.convert( Byte.valueOf( (byte) 47 ), String.class ) );
+        assertEquals( "127", service.convert( Byte.valueOf( (byte) 127 ), String.class ) );
+    }
+    
+    public void testStringToShort() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( Short.valueOf( (short) -32768 ), service.convert( "-32768", Short.class ) );
+        assertEquals( Short.valueOf( (short) -128 ), service.convert( "-128", Short.class ) );
+        assertEquals( Short.valueOf( (short) -48 ), service.convert( "-48", Short.class ) );
+        assertEquals( Short.valueOf( (short) 0 ), service.convert( "0", Short.class ) );
+        assertEquals( Short.valueOf( (short) 47 ), service.convert( "47", Short.class ) );
+        assertEquals( Short.valueOf( (short) 127 ), service.convert( "127", Short.class ) );
+        assertEquals( Short.valueOf( (short) 32767 ), service.convert( "32767", Short.class ) );
+    }
+
+    public void testShortToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-32768", service.convert( Short.valueOf( (short) -32768 ), String.class ) );
+        assertEquals( "-128", service.convert( Short.valueOf( (short) -128 ), String.class ) );
+        assertEquals( "-48", service.convert( Short.valueOf( (short) -48 ), String.class ) );
+        assertEquals( "0", service.convert( Short.valueOf( (short) 0 ), String.class ) );
+        assertEquals( "47", service.convert( Short.valueOf( (short) 47 ), String.class ) );
+        assertEquals( "127", service.convert( Short.valueOf( (short) 127 ), String.class ) );
+        assertEquals( "32767", service.convert( Short.valueOf( (short) 32767 ), String.class ) );
+    }
+
+    public void testStringToInteger() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( Integer.valueOf( -2147483648 ), service.convert( "-2147483648", Integer.class ) );
+        assertEquals( Integer.valueOf( -32768 ), service.convert( "-32768", Integer.class ) );
+        assertEquals( Integer.valueOf( -128 ), service.convert( "-128", Integer.class ) );
+        assertEquals( Integer.valueOf( -48 ), service.convert( "-48", Integer.class ) );
+        assertEquals( Integer.valueOf( 0 ), service.convert( "0", Integer.class ) );
+        assertEquals( Integer.valueOf( 47 ), service.convert( "47", Integer.class ) );
+        assertEquals( Integer.valueOf( 127 ), service.convert( "127", Integer.class ) );
+        assertEquals( Integer.valueOf( 32767 ), service.convert( "32767", Integer.class ) );
+        assertEquals( Integer.valueOf( 2147483647 ), service.convert( "2147483647", Integer.class ) );
+    }
+
+    public void testIntegerToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-2147483648", service.convert( Integer.valueOf( -2147483648 ), String.class ) );
+        assertEquals( "-32768", service.convert( Integer.valueOf( -32768 ), String.class ) );
+        assertEquals( "-128", service.convert( Integer.valueOf( -128 ), String.class ) );
+        assertEquals( "-48", service.convert( Integer.valueOf( -48 ), String.class ) );
+        assertEquals( "0", service.convert( Integer.valueOf( 0 ), String.class ) );
+        assertEquals( "47", service.convert( Integer.valueOf( 47 ), String.class ) );
+        assertEquals( "127", service.convert( Integer.valueOf( 127 ), String.class ) );
+        assertEquals( "32767", service.convert( Integer.valueOf( 32767 ), String.class ) );
+        assertEquals( "2147483647", service.convert( Integer.valueOf( 2147483647 ), String.class ) );
+    }
+    
+    public void testStringToLong() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( Long.valueOf( -9223372036854775808L ), service.convert( "-9223372036854775808", Long.class ) );
+        assertEquals( Long.valueOf( -2147483648L ), service.convert( "-2147483648", Long.class ) );
+        assertEquals( Long.valueOf( -32768L ), service.convert( "-32768", Long.class ) );
+        assertEquals( Long.valueOf( -128L ), service.convert( "-128", Long.class ) );
+        assertEquals( Long.valueOf( -48L ), service.convert( "-48", Long.class ) );
+        assertEquals( Long.valueOf( 0L ), service.convert( "0", Long.class ) );
+        assertEquals( Long.valueOf( 47L ), service.convert( "47", Long.class ) );
+        assertEquals( Long.valueOf( 127L ), service.convert( "127", Long.class ) );
+        assertEquals( Long.valueOf( 32767L ), service.convert( "32767", Long.class ) );
+        assertEquals( Long.valueOf( 2147483647L ), service.convert( "2147483647", Long.class ) );
+        assertEquals( Long.valueOf( 9223372036854775807L ), service.convert( "9223372036854775807", Long.class ) );
+    }
+
+    public void testLongToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-9223372036854775808", service.convert( Long.valueOf( -9223372036854775808L ), String.class ) );
+        assertEquals( "-2147483648", service.convert( Long.valueOf( -2147483648L ), String.class ) );
+        assertEquals( "-32768", service.convert( Long.valueOf( -32768L ), String.class ) );
+        assertEquals( "-128", service.convert( Long.valueOf( -128L ), String.class ) );
+        assertEquals( "-48", service.convert( Long.valueOf( -48L ), String.class ) );
+        assertEquals( "0", service.convert( Long.valueOf( 0L ), String.class ) );
+        assertEquals( "47", service.convert( Long.valueOf( 47L ), String.class ) );
+        assertEquals( "127", service.convert( Long.valueOf( 127L ), String.class ) );
+        assertEquals( "32767", service.convert( Long.valueOf( 32767L ), String.class ) );
+        assertEquals( "2147483647", service.convert( Long.valueOf( 2147483647L ), String.class ) );
+        assertEquals( "9223372036854775807", service.convert( Long.valueOf( 9223372036854775807L ), String.class ) );
+    }
+    
+    public void testStringToFloat() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( Float.valueOf( -15.773523F ), service.convert( "-15.773523", Float.class ) );
+        assertEquals( Float.valueOf( 0.0F ), service.convert( "0.0", Float.class ) );
+        assertEquals( Float.valueOf( 15.773523F ), service.convert( "15.773523", Float.class ) );
+    }
+
+    public void testFloatToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-15.773523", service.convert( Float.valueOf( -15.773523F ), String.class ) );
+        assertEquals( "0.0", service.convert( Float.valueOf( 0.0F ), String.class ) );
+        assertEquals( "15.773523", service.convert( Float.valueOf( 15.773523F ), String.class ) );
+    }
+    
+    public void testStringToDouble() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( Double.valueOf( -15.773523D ), service.convert( "-15.773523", Double.class ) );
+        assertEquals( Double.valueOf( 0.0D ), service.convert( "0.0", Double.class ) );
+        assertEquals( Double.valueOf( 15.773523D ), service.convert( "15.773523", Double.class ) );
+    }
+
+    public void testDoubleToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-15.773523", service.convert( Double.valueOf( -15.773523D ), String.class ) );
+        assertEquals( "0.0", service.convert( Double.valueOf( 0.0D ), String.class ) );
+        assertEquals( "15.773523", service.convert( Double.valueOf( 15.773523D ), String.class ) );
+    }
+    
+    public void testStringToBigInteger() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new BigInteger( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808" ), service.convert( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808", BigInteger.class ) );
+        assertEquals( new BigInteger( "-9223372036854775808" ), service.convert( "-9223372036854775808", BigInteger.class ) );
+        assertEquals( new BigInteger( "-2147483648" ), service.convert( "-2147483648", BigInteger.class ) );
+        assertEquals( new BigInteger( "-32768" ), service.convert( "-32768", BigInteger.class ) );
+        assertEquals( new BigInteger( "-128" ), service.convert( "-128", BigInteger.class ) );
+        assertEquals( new BigInteger( "-48" ), service.convert( "-48", BigInteger.class ) );
+        assertEquals( new BigInteger( "0" ), service.convert( "0", BigInteger.class ) );
+        assertEquals( new BigInteger( "47" ), service.convert( "47", BigInteger.class ) );
+        assertEquals( new BigInteger( "127" ), service.convert( "127", BigInteger.class ) );
+        assertEquals( new BigInteger( "32767" ), service.convert( "32767", BigInteger.class ) );
+        assertEquals( new BigInteger( "2147483647" ), service.convert( "2147483647", BigInteger.class ) );
+        assertEquals( new BigInteger( "9223372036854775807" ), service.convert( "9223372036854775807", BigInteger.class ) );
+        assertEquals( new BigInteger( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), service.convert( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", BigInteger.class ) );
+    }
+
+    public void testBigIntegerToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808", service.convert( new BigInteger( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808" ), String.class ) );
+        assertEquals( "-9223372036854775808", service.convert( new BigInteger( "-9223372036854775808" ), String.class ) );
+        assertEquals( "-2147483648", service.convert( new BigInteger( "-2147483648" ), String.class ) );
+        assertEquals( "-32768", service.convert( new BigInteger( "-32768" ), String.class ) );
+        assertEquals( "-128", service.convert( new BigInteger( "-128" ), String.class ) );
+        assertEquals( "-48", service.convert( new BigInteger( "-48" ), String.class ) );
+        assertEquals( "0", service.convert( new BigInteger( "0" ), String.class ) );
+        assertEquals( "47", service.convert( new BigInteger( "47" ), String.class ) );
+        assertEquals( "127", service.convert( new BigInteger( "127" ), String.class ) );
+        assertEquals( "32767", service.convert( new BigInteger( "32767" ), String.class ) );
+        assertEquals( "2147483647", service.convert( new BigInteger( "2147483647" ), String.class ) );
+        assertEquals( "9223372036854775807", service.convert( new BigInteger( "9223372036854775807" ), String.class ) );
+        assertEquals( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", service.convert( new BigInteger( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), String.class ) );
+    }
+    
+    public void testStringToBigDecimal() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new BigDecimal( "-922337203685477580892233720368547758089223372036854775808.92233720368547758089223372036854775808" ), service.convert( "-922337203685477580892233720368547758089223372036854775808.92233720368547758089223372036854775808", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808" ), service.convert( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "-9223372036854775808" ), service.convert( "-9223372036854775808", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "-2147483648" ), service.convert( "-2147483648", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "-32768" ), service.convert( "-32768", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "-128" ), service.convert( "-128", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "-48" ), service.convert( "-48", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "0" ), service.convert( "0", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "47" ), service.convert( "47", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "127" ), service.convert( "127", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "32767" ), service.convert( "32767", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "2147483647" ), service.convert( "2147483647", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "9223372036854775807" ), service.convert( "9223372036854775807", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), service.convert( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", BigDecimal.class ) );
+        assertEquals( new BigDecimal( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807" ), service.convert( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807", BigDecimal.class ) );
+    }
+
+    public void testBigDecimalToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "-922337203685477580892233720368547758089223372036854775808.92233720368547758089223372036854775808", service.convert( new BigDecimal( "-922337203685477580892233720368547758089223372036854775808.92233720368547758089223372036854775808" ), String.class ) );
+        assertEquals( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808", service.convert( new BigDecimal( "-92233720368547758089223372036854775808922337203685477580892233720368547758089223372036854775808" ), String.class ) );
+        assertEquals( "-9223372036854775808", service.convert( new BigDecimal( "-9223372036854775808" ), String.class ) );
+        assertEquals( "-2147483648", service.convert( new BigDecimal( "-2147483648" ), String.class ) );
+        assertEquals( "-32768", service.convert( new BigDecimal( "-32768" ), String.class ) );
+        assertEquals( "-128", service.convert( new BigDecimal( "-128" ), String.class ) );
+        assertEquals( "-48", service.convert( new BigDecimal( "-48" ), String.class ) );
+        assertEquals( "0", service.convert( new BigDecimal( "0" ), String.class ) );
+        assertEquals( "47", service.convert( new BigDecimal( "47" ), String.class ) );
+        assertEquals( "127", service.convert( new BigDecimal( "127" ), String.class ) );
+        assertEquals( "32767", service.convert( new BigDecimal( "32767" ), String.class ) );
+        assertEquals( "2147483647", service.convert( new BigDecimal( "2147483647" ), String.class ) );
+        assertEquals( "9223372036854775807", service.convert( new BigDecimal( "9223372036854775807" ), String.class ) );
+        assertEquals( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", service.convert( new BigDecimal( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), String.class ) );
+        assertEquals( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807", service.convert( new BigDecimal( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807" ), String.class ) );
+    }
+    
+    public void testStringToEnum() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( ThreeChoiceAnswer.YES, service.convert( "YES", ThreeChoiceAnswer.class ) );
+        assertEquals( ThreeChoiceAnswer.YES, service.convert( "yes", ThreeChoiceAnswer.class ) );
+        assertEquals( ThreeChoiceAnswer.YES, service.convert( "yEs", ThreeChoiceAnswer.class ) );
+        assertNull( service.convert( "1", ThreeChoiceAnswer.class ) );
+        assertNull( service.convert( "true", ThreeChoiceAnswer.class ) );
+        
+        assertEquals( ThreeChoiceAnswer.MAYBE, service.convert( "MAYBE", ThreeChoiceAnswer.class ) );
+        assertEquals( ThreeChoiceAnswer.MAYBE, service.convert( "maybe", ThreeChoiceAnswer.class ) );
+        assertEquals( ThreeChoiceAnswer.MAYBE, service.convert( "mAyBe", ThreeChoiceAnswer.class ) );
+        assertNull( service.convert( "0", ThreeChoiceAnswer.class ) );
+        
+        assertEquals( ThreeChoiceAnswer.NO, service.convert( "NO", ThreeChoiceAnswer.class ) );
+        assertEquals( ThreeChoiceAnswer.NO, service.convert( "no", ThreeChoiceAnswer.class ) );
+        assertEquals( ThreeChoiceAnswer.NO, service.convert( "nO", ThreeChoiceAnswer.class ) );
+        assertNull( service.convert( "-1", ThreeChoiceAnswer.class ) );
+        assertNull( service.convert( "false", ThreeChoiceAnswer.class ) );
+        
+        assertEquals( ThreeChoiceAnswerCustomized.YES, service.convert( "YES", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.YES, service.convert( "yes", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.YES, service.convert( "yEs", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.YES, service.convert( "1", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.YES, service.convert( "TRUE", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.YES, service.convert( "true", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.YES, service.convert( "tRuE", ThreeChoiceAnswerCustomized.class ) );
+        
+        assertEquals( ThreeChoiceAnswerCustomized.MAYBE, service.convert( "MAYBE", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.MAYBE, service.convert( "maybe", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.MAYBE, service.convert( "mAyBe", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.MAYBE, service.convert( "0", ThreeChoiceAnswerCustomized.class ) );
+        
+        assertNull( service.convert( "NO", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.NO, service.convert( "no", ThreeChoiceAnswerCustomized.class ) );
+        assertNull( service.convert( "nO", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.NO, service.convert( "-1", ThreeChoiceAnswerCustomized.class ) );
+        assertNull( service.convert( "FALSE", ThreeChoiceAnswerCustomized.class ) );
+        assertEquals( ThreeChoiceAnswerCustomized.NO, service.convert( "false", ThreeChoiceAnswerCustomized.class ) );
+        assertNull( service.convert( "fAlSe", ThreeChoiceAnswerCustomized.class ) );
+    }
+
+    public void testEnumToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "YES", service.convert( ThreeChoiceAnswer.YES, String.class ) );
+        assertEquals( "MAYBE", service.convert( ThreeChoiceAnswer.MAYBE, String.class ) );
+        assertEquals( "NO", service.convert( ThreeChoiceAnswer.NO, String.class ) );
+        
+        assertEquals( "yes", service.convert( ThreeChoiceAnswerCustomized.YES, String.class ) );
+        assertEquals( "maybe", service.convert( ThreeChoiceAnswerCustomized.MAYBE, String.class ) );
+        assertEquals( "no", service.convert( ThreeChoiceAnswerCustomized.NO, String.class ) );
+    }
+
+    public void testStringToDate() throws Exception
+    {
+        MasterConversionService service;
+        
+        service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "2013-01-15", Date.class ) );
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2013-01-15T18:38:24" ), service.convert( "2013-01-15T18:38:24", Date.class ) );
+        assertNull( service.convert( "2013.01.15", Date.class ) );
+        
+        DateConversionTestElement element = DateConversionTestElement.TYPE.instantiate();
+        
+        service = element.service( DateConversionTestElement.PROP_DATE_1, MasterConversionService.class );
+        
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "2013-01-15", Date.class ) );
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).parse( "2013-01-15T18:38:24" ), service.convert( "2013-01-15T18:38:24", Date.class ) );
+        assertNull( service.convert( "2013.01.15", Date.class ) );
+        
+        service = element.service( DateConversionTestElement.PROP_DATE_2, MasterConversionService.class );
+        
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "2013.01.15", Date.class ) );
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "01/15/2013", Date.class ) );
+        assertNull( service.convert( "2013-01-15", Date.class ) );
+
+        service = element.service( DateConversionTestElement.PROP_DATE_3, MasterConversionService.class );
+        
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "15.01.2013", Date.class ) );
+        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "2013/01/15", Date.class ) );
+        assertNull( service.convert( "2013-01-15", Date.class ) );
+    }
+
+    public void testDateToString() throws Exception
+    {
+        final Date date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" ).parse( "2013-01-15T18:38:24.000-0800" );
+        final DateConversionTestElement element = DateConversionTestElement.TYPE.instantiate();
+        
+        MasterConversionService service;
+        
+        service = Sapphire.service( MasterConversionService.class );
+        assertEquals( "2013-01-15T18:38:24.000-0800", service.convert( date, String.class ) );
+
+        service = element.service( DateConversionTestElement.PROP_DATE_1, MasterConversionService.class );
+        assertEquals( "2013-01-15T18:38:24.000-0800", service.convert( date, String.class ) );
+        
+        service = element.service( DateConversionTestElement.PROP_DATE_2, MasterConversionService.class );
+        assertEquals( "2013.01.15", service.convert( date, String.class ) );
+
+        service = element.service( DateConversionTestElement.PROP_DATE_3, MasterConversionService.class );
+        assertEquals( "15.01.2013", service.convert( date, String.class ) );
+    }
+
+    public void testStringToFileName() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new FileName( "abc" ), service.convert( "abc", FileName.class ) );
+        assertEquals( new FileName( "abc.txt" ), service.convert( "abc.txt", FileName.class ) );
+        
+        assertNull( service.convert( "folder/abc.txt", FileName.class ) );
+    }
+
+    public void testFileNameToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "abc", service.convert( new FileName( "abc" ), String.class ) );
+        assertEquals( "abc.txt", service.convert( new FileName( "abc.txt" ), String.class ) );
+    }
+
+    public void testStringToPath() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new Path( "abc" ), service.convert( "abc", Path.class ) );
+        assertEquals( new Path( "abc.txt" ), service.convert( "abc.txt", Path.class ) );
+        assertEquals( new Path( "folder/abc.txt" ), service.convert( "folder/abc.txt", Path.class ) );
+        assertEquals( new Path( "x/y/z/folder/abc.txt" ), service.convert( "x/y/z/folder/abc.txt", Path.class ) );
+    }
+
+    public void testPathToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "abc", service.convert( new Path( "abc" ), String.class ) );
+        assertEquals( "abc.txt", service.convert( new Path( "abc.txt" ), String.class ) );
+        assertEquals( "folder/abc.txt", service.convert( new Path( "folder/abc.txt" ), String.class ) );
+        assertEquals( "x/y/z/folder/abc.txt", service.convert( new Path( "x/y/z/folder/abc.txt" ), String.class ) );
+    }
+
+    public void testStringToUri() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new URI( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt" ), service.convert( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt", URI.class ) );
+        assertEquals( new URI( "ftp://example.org/resource.txt" ), service.convert( "ftp://example.org/resource.txt", URI.class ) );
+        assertEquals( new URI( "relative/path/to/resource.txt" ), service.convert( "relative/path/to/resource.txt", URI.class ) );
+        assertEquals( new URI( "../../../resource.txt" ), service.convert( "../../../resource.txt", URI.class ) );
+    }
+
+    public void testUriToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt", service.convert( new URI( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt" ), String.class ) );
+        assertEquals( "ftp://example.org/resource.txt", service.convert( new URI( "ftp://example.org/resource.txt" ), String.class ) );
+        assertEquals( "relative/path/to/resource.txt", service.convert( new URI( "relative/path/to/resource.txt" ), String.class ) );
+        assertEquals( "../../../resource.txt", service.convert( new URI( "../../../resource.txt" ), String.class ) );
+    }
+
+    public void testStringToUrl() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new URL( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt" ), service.convert( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt", URL.class ) );
+        assertEquals( new URL( "ftp://example.org/resource.txt" ), service.convert( "ftp://example.org/resource.txt", URL.class ) );
+        
+        assertNull( service.convert( "relative/path/to/resource.txt", URL.class ) );
+        assertNull( service.convert( "../../../resource.txt", URL.class ) );
+    }
+
+    public void testUrlToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt", service.convert( new URL( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt" ), String.class ) );
+        assertEquals( "ftp://example.org/resource.txt", service.convert( new URL( "ftp://example.org/resource.txt" ), String.class ) );
+    }
+
+    public void testStringToVersion() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new Version( "1" ), service.convert( "1", Version.class ) );
+        assertEquals( new Version( "1.2" ), service.convert( "1.2", Version.class ) );
+        assertEquals( new Version( "1.2.3" ), service.convert( "1.2.3", Version.class ) );
+        assertEquals( new Version( "1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20" ), service.convert( "1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20", Version.class ) );
+        
+        assertNull( service.convert( "1..2", Version.class ) );
+        assertNull( service.convert( "1.abc", Version.class ) );
+    }
+
+    public void testVersionToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "1", service.convert( new Version( "1" ), String.class ) );
+        assertEquals( "1.2", service.convert( new Version( "1.2" ), String.class ) );
+        assertEquals( "1.2.3", service.convert( new Version( "1.2.3" ), String.class ) );
+        assertEquals( "1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20", service.convert( new Version( "1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20" ), String.class ) );
+    }
+
+    public void testStringToVersionConstraint() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new VersionConstraint( "1" ), service.convert( "1", VersionConstraint.class ) );
+        assertEquals( new VersionConstraint( "1.2" ), service.convert( "1.2", VersionConstraint.class ) );
+        assertEquals( new VersionConstraint( "1.2,3.4,5.6" ), service.convert( "1.2,3.4,5.6", VersionConstraint.class ) );
+        assertEquals( new VersionConstraint( "[1.2-3.4)" ), service.convert( "[1.2-3.4)", VersionConstraint.class ) );
+        assertEquals( new VersionConstraint( "[1.2-3.4),[5.6" ), service.convert( "[1.2-3.4),[5.6", VersionConstraint.class ) );
+        
+        assertNull( service.convert( "[1.2--3", VersionConstraint.class ) );
+        assertNull( service.convert( "[1.2-3.4}", VersionConstraint.class ) );
+    }
+    
+    public void testVersionConstraintToString() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( "1", service.convert( new VersionConstraint( "1" ), String.class ) );
+        assertEquals( "1.2", service.convert( new VersionConstraint( "1.2" ), String.class ) );
+        assertEquals( "1.2,3.4,5.6", service.convert( new VersionConstraint( "1.2,3.4,5.6" ), String.class ) );
+        assertEquals( "[1.2-3.4)", service.convert( new VersionConstraint( "[1.2-3.4)" ), String.class ) );
+        assertEquals( "[1.2-3.4),[5.6", service.convert( new VersionConstraint( "[1.2-3.4),[5.6" ), String.class ) );
+    }
+    
+    public void testIFileToWorkspaceFileResourceStore() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        final IProject project = project();
+        
+        final IFile xmlFile = project.getFile( "file.xml" );
+        xmlFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final WorkspaceFileResourceStore xmlFileStore = service.convert( xmlFile, WorkspaceFileResourceStore.class );
+        assertNotNull( xmlFileStore );
+        
+        final IFile txtFile = project.getFile( "file.txt" );
+        txtFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final WorkspaceFileResourceStore txtFileStore = service.convert( txtFile, WorkspaceFileResourceStore.class );
+        assertNotNull( txtFileStore );
+        
+        final IFile binFile = project.getFile( "file.bin" );
+        binFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final WorkspaceFileResourceStore binFileStore = service.convert( binFile, WorkspaceFileResourceStore.class );
+        assertNotNull( binFileStore );
+    }
+    
+    public void testIFileToByteArrayResourceStore() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        final IProject project = project();
+        
+        final IFile xmlFile = project.getFile( "file.xml" );
+        xmlFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final ByteArrayResourceStore xmlFileStore = service.convert( xmlFile, ByteArrayResourceStore.class );
+        assertNotNull( xmlFileStore );
+        
+        final IFile txtFile = project.getFile( "file.txt" );
+        txtFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final ByteArrayResourceStore txtFileStore = service.convert( txtFile, ByteArrayResourceStore.class );
+        assertNotNull( txtFileStore );
+        
+        final IFile binFile = project.getFile( "file.bin" );
+        binFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final ByteArrayResourceStore binFileStore = service.convert( binFile, ByteArrayResourceStore.class );
+        assertNotNull( binFileStore );
+    }
+
+    public void testIFileToResourceStore() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        final IProject project = project();
+        
+        final IFile xmlFile = project.getFile( "file.xml" );
+        xmlFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final ResourceStore xmlFileStore = service.convert( xmlFile, ResourceStore.class );
+        assertNotNull( xmlFileStore );
+        
+        final IFile txtFile = project.getFile( "file.txt" );
+        txtFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final ResourceStore txtFileStore = service.convert( txtFile, ResourceStore.class );
+        assertNotNull( txtFileStore );
+        
+        final IFile binFile = project.getFile( "file.bin" );
+        binFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final ResourceStore binFileStore = service.convert( binFile, ResourceStore.class );
+        assertNotNull( binFileStore );
+    }
+
+    public void testIFileToRootXmlResource() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        final IProject project = project();
+        
+        final IFile xmlFile = project.getFile( "file.xml" );
+        xmlFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final RootXmlResource xmlFileResource = service.convert( xmlFile, RootXmlResource.class );
+        assertNotNull( xmlFileResource );
+
+        final IFile txtFile = project.getFile( "file.txt" );
+        txtFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final RootXmlResource txtFileStore = service.convert( txtFile, RootXmlResource.class );
+        assertNull( txtFileStore );
+    }
+
+    public void testIFileToXmlResource() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        final IProject project = project();
+        
+        final IFile xmlFile = project.getFile( "file.xml" );
+        xmlFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final XmlResource xmlFileResource = service.convert( xmlFile, XmlResource.class );
+        assertNotNull( xmlFileResource );
+
+        final IFile txtFile = project.getFile( "file.txt" );
+        txtFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final XmlResource txtFileStore = service.convert( txtFile, XmlResource.class );
+        assertNull( txtFileStore );
+    }
+
+    public void testIFileToResource() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        final IProject project = project();
+        
+        final IFile xmlFile = project.getFile( "file.xml" );
+        xmlFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final Resource xmlFileResource = service.convert( xmlFile, Resource.class );
+        assertNotNull( xmlFileResource );
+
+        final IFile txtFile = project.getFile( "file.txt" );
+        txtFile.create( new ByteArrayInputStream( new byte[ 0 ] ), true, null );
+        
+        final Resource txtFileStore = service.convert( txtFile, Resource.class );
+        assertNull( txtFileStore );
+    }
+
+}

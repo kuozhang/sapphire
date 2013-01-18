@@ -15,9 +15,13 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <service>
-        <id>Sample.ValueSerializationService.Circle</id>
-        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.samples.gallery.internal.CircleSerializationService$Factory</factory>
+        <id>Sample.ConversionService.StringToCircle</id>
+        <context>Sapphire</context>
+        <implementation>org.eclipse.sapphire.samples.gallery.internal.StringToCircleConversionService</implementation>
+    </service>
+    <service>
+        <id>Sample.ConversionService.CircleToString</id>
+        <context>Sapphire</context>
+        <implementation>org.eclipse.sapphire.samples.gallery.internal.CircleToStringConversionService</implementation>
     </service>
 </extension>

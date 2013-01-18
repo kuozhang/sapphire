@@ -16,6 +16,7 @@ import static org.eclipse.sapphire.modeling.ImageData.readFromClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -24,7 +25,6 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValueImageService;
-import org.eclipse.sapphire.services.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -33,7 +33,6 @@ import org.eclipse.sapphire.services.ValueSerializationService;
 public final class EnumValueImageService extends ValueImageService
 {
     private EnumValueType enumType;
-    private ValueSerializationService valueSerializationService;
     private final Map<Enum<?>,ImageData> images = new HashMap<Enum<?>,ImageData>();
     
     @Override
@@ -41,16 +40,14 @@ public final class EnumValueImageService extends ValueImageService
     {
         super.init();
         
-        final ValueProperty property = context( ValueProperty.class );
-        
-        this.enumType = new EnumValueType( property.getTypeClass() );
-        this.valueSerializationService = property.service( ValueSerializationService.class );
+        this.enumType = new EnumValueType( context( ValueProperty.class ).getTypeClass() );
     }
     
     @Override
     public ImageData provide( final String value )
     {
-        final Enum<?> item = (Enum<?>) this.valueSerializationService.decode( value );
+        final MasterConversionService masterConversionService = context( ValueProperty.class ).service( MasterConversionService.class );
+        final Enum<?> item = masterConversionService.convert( value, this.enumType.getEnumTypeClass() );
         
         if( item == null )
         {

@@ -23,6 +23,9 @@ import java.util.Locale;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.IHelpContentProducer;
+import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.ConversionService;
+import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -88,7 +91,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                 content = loadResource( "html/el/index.html" );
                 content = content.replace( "##functions##", functions );
             }
-            else if( href.startsWith( "html/services/index.html" ) )
+            else if( href.startsWith( "html/services/ConversionService.html" ) )
             {
                 final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
                 op.setCreateFinishedDocument( false );
@@ -112,10 +115,18 @@ public class DynamicContentProducer implements IHelpContentProducer
                         {
                             final ServiceDef def = (ServiceDef) element;
                             final String id = def.getId().getText();
-                            final String type = def.getType().getText();
+                            
+                            JavaType type = def.getType().resolve();
+                            
+                            if( type == null )
+                            {
+                                type = def.getImplementation().resolve();
+                            }
+                            
+                            final Class<?> cl = ( type == null ? null : type.artifact() );
                             
                             if( id != null && id.startsWith( "Sapphire." ) && 
-                                type != null && type.equals( FactsService.class.getName() ) )
+                                cl != null && ConversionService.class.isAssignableFrom( cl ) )
                             {
                                 return true;
                             }
@@ -127,8 +138,58 @@ public class DynamicContentProducer implements IHelpContentProducer
 
                 final String functions = op.execute( getExtensions(), filter );
 
-                content = loadResource( "html/services/index.html" );
-                content = content.replace( "##facts-servicess##", functions );
+                content = loadResource( "html/services/ConversionService.html" );
+                content = content.replace( "##servicess##", functions );
+            }
+            else if( href.startsWith( "html/services/FactsService.html" ) )
+            {
+                final ExtensionSummaryExportOp op = ExtensionSummaryExportOp.TYPE.instantiate();
+                op.setCreateFinishedDocument( false );
+
+                final ExtensionSummarySectionDef section = op.getSections().insert();
+                section.setExtensionType( SapphireExtensionDef.PROP_SERVICES.getName() );
+                section.setIncludeSectionHeader( false );
+
+                final ExtensionSummarySectionColumnDef idColumn = section.getColumns().insert();
+                idColumn.setName( ServiceDef.PROP_ID.getName() );
+
+                final ExtensionSummarySectionColumnDef descColumn = section.getColumns().insert();
+                descColumn.setName( ServiceDef.PROP_DESCRIPTION.getName() );
+                
+                final Filter<IModelElement> filter = new Filter<IModelElement>()
+                {
+                    @Override
+                    public boolean allows( final IModelElement element )
+                    {
+                        if( element instanceof ServiceDef )
+                        {
+                            final ServiceDef def = (ServiceDef) element;
+                            final String id = def.getId().getText();
+                            
+                            JavaType type = def.getType().resolve();
+                            
+                            if( type == null )
+                            {
+                                type = def.getImplementation().resolve();
+                            }
+                            
+                            final Class<?> cl = ( type == null ? null : type.artifact() );
+                            
+                            if( id != null && id.startsWith( "Sapphire." ) && 
+                                cl != null && FactsService.class.isAssignableFrom( cl ) )
+                            {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    }
+                };
+
+                final String functions = op.execute( getExtensions(), filter );
+
+                content = loadResource( "html/services/FactsService.html" );
+                content = content.replace( "##servicess##", functions );
             }
             else if( href.startsWith( "html/actions/index.html" ) )
             {
@@ -205,12 +266,26 @@ public class DynamicContentProducer implements IHelpContentProducer
         {
             final List<SapphireExtensionDef> list = new ArrayList<SapphireExtensionDef>();
 
-            for( ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
+            for( final ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
             {
                 try
                 {
-                    final XmlResourceStore store = new XmlResourceStore( new UrlResourceStore( handle.extension() ) );
-                    final RootXmlResource resource = new RootXmlResource( store );
+                    final UrlResourceStore store = new UrlResourceStore( handle.extension() )
+                    {
+                        @Override
+                        public <A> A adapt( final Class<A> adapterType )
+                        {
+                            if( adapterType == Context.class )
+                            {
+                                return adapterType.cast( handle.context() );
+                            }
+                            
+                            return super.adapt( adapterType );
+                        }
+                    };
+                    
+                    final XmlResourceStore xmlResourceStore = new XmlResourceStore( store );
+                    final RootXmlResource resource = new RootXmlResource( xmlResourceStore );
                     final SapphireExtensionDef extension = SapphireExtensionDef.TYPE.instantiate( resource );
                     list.add( extension );
                 }

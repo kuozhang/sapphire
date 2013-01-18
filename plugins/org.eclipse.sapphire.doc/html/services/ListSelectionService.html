@@ -1,0 +1,80 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle and Liferay
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [358295] Need access to selection in list property editor
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>ListSelectionService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>ListSelectionService</h1>
+
+<p>ListSelectionService functions as a conduit between the presentation layer and anything that may want to see or 
+change the selection. The presentation layer pushes selection changes made by the user to ListSelectionService and at
+the same time listens for changes to selection coming from ListSelectionService.</p>
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, an action handler attaches a listener to the ListSelectionService to 
+refresh action handler's enablement state when selection changes.</p>
+
+<pre class="source-code"><code>
+<font color="#888888">public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    public void init( SapphireAction action, ActionHandlerDef def )
+    {
+        super.init( action, def );</font>
+
+        final ListSelectionService selectionService = action.getPart().service( ListSelectionService.class );
+
+        final Listener selectionListener = new Listener()
+        {
+            @Override
+            public void handle( Event event )
+            {
+                refreshEnablementState();
+            }
+        };
+
+        selectionService.attach( selectionListener );
+
+        attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( Event event )
+                {
+                    if( event instanceof DisposeEvent )
+                    {
+                        selectionService.detach( selectionListener );
+                    }
+                }
+            }
+        );
+    <font color="#888888">}
+}</font></code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle and Liferay<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

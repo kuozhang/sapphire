@@ -35,25 +35,26 @@
      </topic>
   </topic>
   <topic href="html/services/index.html" label="Services">
-     <topic href="html/services/index.html#AdapterService" label="AdapterService"/>
-     <topic href="html/services/index.html#ContentProposalService" label="ContentProposalService"/>
-     <topic href="html/services/index.html#ConversionService" label="ConversionService"/>
-     <topic href="html/services/index.html#DependenciesAggregationService" label="DependenciesAggregationService"/>
-     <topic href="html/services/index.html#DependenciesService" label="DependenciesService"/>
-     <topic href="html/services/index.html#DiagramLayoutPersistenceService" label="DiagramLayoutPersistenceService"/>
-     <topic href="html/services/index.html#DragAndDropService" label="DragAndDropService"/>
-     <topic href="html/services/index.html#EqualityService" label="EqualityService"/>
-     <topic href="html/services/index.html#FactsAggregationService" label="FactsAggregationService"/>
-     <topic href="html/services/index.html#FactsService" label="FactsService"/>
-     <topic href="html/services/index.html#FileExtensionsService" label="FileExtensionsService"/>
-     <topic href="html/services/index.html#InitialValueService" label="InitialValueService"/>
-     <topic href="html/services/index.html#JavaTypeConstraintService" label="JavaTypeConstraintService"/>
-     <topic href="html/services/index.html#ListSelectionService" label="ListSelectionService"/>
-     <topic href="html/services/index.html#MasterConversionService" label="MasterConversionService"/>
-     <topic href="html/services/index.html#PossibleTypesService" label="PossibleTypesService"/>
-     <topic href="html/services/index.html#ProblemsTraversalService" label="ProblemsTraversalService"/>
-     <topic href="html/services/index.html#VersionCompatibilityService" label="VersionCompatibilityService"/>
-     <topic href="html/services/index.html#VersionCompatibilityTargetService" label="VersionCompatibilityTargetService"/>
+     <topic href="html/services/AdapterService.html" label="AdapterService"/>
+     <topic href="html/services/ContentProposalService.html" label="ContentProposalService"/>
+     <topic href="html/services/ConversionService.html" label="ConversionService"/>
+     <topic href="html/services/DependenciesAggregationService.html" label="DependenciesAggregationService"/>
+     <topic href="html/services/DependenciesService.html" label="DependenciesService"/>
+     <topic href="html/services/DiagramLayoutPersistenceService.html" label="DiagramLayoutPersistenceService"/>
+     <topic href="html/services/DragAndDropService.html" label="DragAndDropService"/>
+     <topic href="html/services/EqualityService.html" label="EqualityService"/>
+     <topic href="html/services/FactsAggregationService.html" label="FactsAggregationService"/>
+     <topic href="html/services/FactsService.html" label="FactsService"/>
+     <topic href="html/services/FileExtensionsService.html" label="FileExtensionsService"/>
+     <topic href="html/services/InitialValueService.html" label="InitialValueService"/>
+     <topic href="html/services/JavaTypeConstraintService.html" label="JavaTypeConstraintService"/>
+     <topic href="html/services/ListSelectionService.html" label="ListSelectionService"/>
+     <topic href="html/services/MasterConversionService.html" label="MasterConversionService"/>
+     <topic href="html/services/PossibleTypesService.html" label="PossibleTypesService"/>
+     <topic href="html/services/ProblemsTraversalService.html" label="ProblemsTraversalService"/>
+     <topic href="html/services/UniversalConversionService.html" label="UniversalConversionService"/>
+     <topic href="html/services/VersionCompatibilityService.html" label="VersionCompatibilityService"/>
+     <topic href="html/services/VersionCompatibilityTargetService.html" label="VersionCompatibilityTargetService"/>
   </topic>
   <topic href="html/samples/index.html" label="Samples">
      <topic href="html/samples/catalog.html" label="Catalog Editor">

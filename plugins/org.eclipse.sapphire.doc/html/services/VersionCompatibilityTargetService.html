@@ -1,0 +1,95 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>VersionCompatibilityTargetService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>VersionCompatibilityTargetService</h1>
+
+<p>VersionCompatibilityTargetService produces the version compatibility target to be referenced 
+by <a href="VersionCompatibilityService.html">VersionCompatibilityService</a>.</p>
+
+<p>When looking for the version compatibility target, the framework will first check the property, then the containing
+element, then the parent property and the parent element, etc. The search continues until version compatibility target 
+is found or the model root is reached.</p>
+
+<p>In most situations, version compatibility target can be expressed using an @VersionCompatibilityTarget annotation,
+which supports <a href="../el/index.html">the expression language</a>.</p>
+
+<pre class="source-code"><code>@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
+
+<font color="#888888">public interface PurchaseOrder extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );</font>
+
+    // *** Version ***
+
+    @Type( base = Version.class )
+    @DefaultValue( text = "2.0" )
+
+    ValueProperty PROP_VERSION = new ValueProperty( TYPE, "Version" );
+
+    Value&lt;Version> getVersion();
+    void setVersion( String value );
+    void setVersion( Version value );
+
+    <font color="#888888">...
+}</font></code></pre>
+
+<p>When more control is necessary, a custom implementation of VersionCompatibilityTargetService can be provided.</p>
+
+<pre class="source-code"><code>@Service( impl = ExampleVersionCompatibilityTargetService.class )
+
+<font color="#888888">public interface PurchaseOrder extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code>public class ExampleVersionCompatibilityTargetService extends VersionCompatibilityTargetService
+{
+    @Override
+    protected void initContextVersionService()
+    {
+        // Listen on the source of the version and call refresh() when necessary.
+    }
+
+    @Override
+    protected Data compute()
+    {
+        Version version = ...
+        String versioned = ...
+
+        return new Data( version, versioned );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Detach any listeners attached in the initContextVersionService() method.
+    }
+}</code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

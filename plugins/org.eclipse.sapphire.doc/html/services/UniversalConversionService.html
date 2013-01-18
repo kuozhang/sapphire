@@ -1,0 +1,63 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>UniversalConversionService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>UniversalConversionService</h1>
+
+<p>UniversalConversionService converts an object to the specified type. It is intended for cases where implementing
+a regular <a href="ConversionService.html">ConversionService</a> is impossible or impractical.</p>
+
+<p>For instance, to implement a string to an enum conversion using <a href="ConversionService.html">ConversionService</a>, 
+one would need to provide a separate implementation for each enum, which is not very practical. On the other hand, a single
+UniversalConversionService implementation can handle all string to enum conversions. UniversalConversionService can also
+be used to integrate Sapphire with a third-party library of conversions.</p>
+
+<p>The cost of flexibility is performance. While every <a href="ConversionService.html">ConversionService</a> implementation
+declares what conversion it can perform, the UniversalConversionService implementations are opaque. Sapphire must try each
+one in turn until a successful conversion is found.</p>
+
+<p>For best performance, UniversalConversionService should only be used in cases where a <a href="ConversionService.html">ConversionService</a>
+implementation is impossible or impractical.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class StringToEnumConversionService extends UniversalConversionService
+{
+    @Override
+    public &lt;T> T convert( Object object, Class&lt;T> type )
+    {
+        T result = null;
+        
+        if( object instanceof String && Enum.class.isAssignableFrom( type ) )
+        {
+            ...
+        }
+
+        return result;
+    }
+}</code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

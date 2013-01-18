@@ -24,6 +24,7 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
@@ -45,7 +46,6 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationAggregationService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
-import org.eclipse.sapphire.services.ValueSerializationMasterService;
 import org.eclipse.sapphire.services.internal.ElementInstanceServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
 
@@ -416,7 +416,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     {
                         if( p.getTypeClass().isInstance( content ) )
                         {
-                            value = service( p, ValueSerializationMasterService.class ).encode( content );
+                            value = service( p, MasterConversionService.class ).convert( content, String.class );
                         }
                         else
                         {
@@ -907,24 +907,24 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
 
-    public final <S extends Service> S service( final Class<S> serviceType )
+    public final <S extends Service> S service( final Class<S> type )
     {
         assertNotDisposed();
 
-        if( serviceType == null )
+        if( type == null )
         {
             throw new IllegalArgumentException();
         }
         
-        final List<S> services = services( serviceType );
+        final List<S> services = services( type );
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
-    public final <S extends Service> List<S> services( final Class<S> serviceType )
+    public final <S extends Service> List<S> services( final Class<S> type )
     {
         assertNotDisposed();
 
-        if( serviceType == null )
+        if( type == null )
         {
             throw new IllegalArgumentException();
         }
@@ -938,11 +938,11 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             }
         }
         
-        return this.elementServiceContext.services( serviceType );
+        return this.elementServiceContext.services( type );
     }
 
     public final <S extends Service> S service( final ModelProperty property,
-                                                final Class<S> serviceType )
+                                                final Class<S> type )
     {
         assertNotDisposed();
 
@@ -951,16 +951,16 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
         
-        if( serviceType == null )
+        if( type == null )
         {
             throw new IllegalArgumentException();
         }
         
-        return service( property.getName(), serviceType );
+        return service( property.getName(), type );
     }
     
     public final <S extends Service> S service( final String property,
-                                                final Class<S> serviceType )
+                                                final Class<S> type )
     {
         assertNotDisposed();
 
@@ -969,17 +969,17 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
         
-        if( serviceType == null )
+        if( type == null )
         {
             throw new IllegalArgumentException();
         }
         
-        final List<S> services = services( property, serviceType );
+        final List<S> services = services( property, type );
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
     
     public final <S extends Service> List<S> services( final ModelProperty property,
-                                                       final Class<S> serviceType )
+                                                       final Class<S> type )
     {
         assertNotDisposed();
 
@@ -988,16 +988,16 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
         
-        if( serviceType == null )
+        if( type == null )
         {
             throw new IllegalArgumentException();
         }
         
-        return services( property.getName(), serviceType );
+        return services( property.getName(), type );
     }
 
     public final <S extends Service> List<S> services( final String property,
-                                                       final Class<S> serviceType )
+                                                       final Class<S> type )
     {
         assertNotDisposed();
 
@@ -1006,7 +1006,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
         
-        if( serviceType == null )
+        if( type == null )
         {
             throw new IllegalArgumentException();
         }
@@ -1032,7 +1032,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             }
         }
         
-        return context.services( serviceType );
+        return context.services( type );
     }
 
     public final boolean empty( final ModelProperty property )

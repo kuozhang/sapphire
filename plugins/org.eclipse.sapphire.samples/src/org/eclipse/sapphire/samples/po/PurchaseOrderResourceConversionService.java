@@ -14,9 +14,7 @@ package org.eclipse.sapphire.samples.po;
 import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
-import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 
 /**
@@ -30,19 +28,21 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PurchaseOrderResourceConversionService extends ConversionService
+public final class PurchaseOrderResourceConversionService extends ConversionService<Object,RootXmlResource>
 {
-    @Override
-    public <T> T convert( final Object object, final Class<T> type )
+    public PurchaseOrderResourceConversionService()
     {
-        if( type == XmlResource.class || type == Resource.class )
+        super( Object.class, RootXmlResource.class );
+    }
+
+    @Override
+    public RootXmlResource convert( final Object object )
+    {
+        final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
+        
+        if( store != null )
         {
-            final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
-            
-            if( store != null )
-            {
-                return type.cast( new RootXmlResource( new XmlResourceStore( store ) ) );
-            }
+            return new RootXmlResource( new XmlResourceStore( store ) );
         }
         
         return null;

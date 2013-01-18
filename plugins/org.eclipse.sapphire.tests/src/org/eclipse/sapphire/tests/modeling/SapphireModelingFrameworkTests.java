@@ -18,7 +18,6 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.tests.modeling.el.ExpressionLanguageTests;
 import org.eclipse.sapphire.tests.modeling.events.EventSystemTests;
 import org.eclipse.sapphire.tests.modeling.misc.ModelingMiscTests;
-import org.eclipse.sapphire.tests.modeling.serialization.SerializationTests;
 import org.eclipse.sapphire.tests.modeling.xml.XmlBindingTests;
 
 /**
@@ -43,7 +42,6 @@ public final class SapphireModelingFrameworkTests
         
         suite.addTest( FindInsertionPositionTests.suite() );
         suite.addTest( XmlBindingTests.suite() );
-        suite.addTest( SerializationTests.suite() );
         suite.addTest( TopologicalSorterTests.suite() );
         suite.addTest( ExpressionLanguageTests.suite() );
         suite.addTest( EventSystemTests.suite() );

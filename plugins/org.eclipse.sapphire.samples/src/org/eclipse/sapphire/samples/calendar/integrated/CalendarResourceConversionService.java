@@ -25,25 +25,23 @@ import org.eclipse.sapphire.samples.contacts.ContactRepository;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CalendarResourceConversionService extends ConversionService
+public final class CalendarResourceConversionService extends ConversionService<IFile,Resource>
 {
-    @Override
-    public <T> T convert( final Object object, final Class<T> type )
+    public CalendarResourceConversionService()
     {
-        if( object instanceof IFile && type == Resource.class )
-        {
-            final IFile calendarFile = (IFile) object;
+        super( IFile.class, Resource.class );
+    }
 
-            final org.eclipse.sapphire.samples.calendar.ICalendar calendarModel 
-                = org.eclipse.sapphire.samples.calendar.ICalendar.TYPE.instantiate( calendarFile ); 
-            
-            final IFile contactsFile = calendarFile.getParent().getFile( new Path( "contacts.xml" ) );
-            final ContactRepository contactsModel = ContactRepository.TYPE.instantiate( contactsFile );
-            
-            return type.cast( new CalendarResource( calendarModel, contactsModel ) );
-        }
+    @Override
+    public Resource convert( final IFile file )
+    {
+        final org.eclipse.sapphire.samples.calendar.ICalendar calendarModel 
+            = org.eclipse.sapphire.samples.calendar.ICalendar.TYPE.instantiate( file ); 
         
-        return null;
+        final IFile contactsFile = file.getParent().getFile( new Path( "contacts.xml" ) );
+        final ContactRepository contactsModel = ContactRepository.TYPE.instantiate( contactsFile );
+        
+        return new CalendarResource( calendarModel, contactsModel );
     }
     
 }

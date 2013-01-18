@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.xml.StandardXmlNamespaceResolver;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlNode;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
-import org.eclipse.sapphire.services.ValueSerializationService;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 
@@ -48,14 +48,14 @@ public final class SapphireHtmlPanelDefSourceBinding
             type = HtmlContentSourceType.EMBEDDED;
         }
         
-        return element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, ValueSerializationService.class ).encode( type );
+        return element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, MasterConversionService.class ).convert( type, String.class );
     }
 
     @Override
     public void write( final String value )
     {
         final XmlElement element = xml();
-        final HtmlContentSourceType type = (HtmlContentSourceType) element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, ValueSerializationService.class ).decode( value );
+        final HtmlContentSourceType type = element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, MasterConversionService.class ).convert( value, HtmlContentSourceType.class );
         
         if( value == null )
         {

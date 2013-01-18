@@ -15,10 +15,9 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <service>
-        <type>org.eclipse.sapphire.ConversionService</type>
-        <factory>org.eclipse.sapphire.modeling.xml.internal.XmlResourceConversionService$Factory</factory>
-        <description>Implementation of ConversionService that is capable of converting a ByteArrayResourceStore to an XmlResource or a Resource. Conversion is only performed if resource store corresponds to a file with &quot;xml&quot; extension or if the context element type has XML binding annotations.</description>
-        <id>Sapphire.ConversionService.ByteArrayResourceStoreToXmlResource</id>
-        <context>Sapphire.Element.MetaModel</context>
+        <id>Sapphire.ConversionService.ObjectToRootXmlResourceConversionService</id>
+        <description>ConversionService implementation for Object to RootXmlResource conversions. Conversion is only performed if the object can be converted to ByteArrayResourceStore and if the resource store corresponds to a file with &quot;xml&quot; extension or if the context element type has XML binding annotations.</description>
+        <context>Sapphire</context>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.ObjectToRootXmlResourceConversionService</implementation>
     </service>
 </extension>

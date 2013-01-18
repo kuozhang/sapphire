@@ -28,16 +28,18 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class EnumValueType extends ModelMetadataItem
 {
-    private Class<?> enumClass;
+    private Class<? extends Enum<?>> enumClass;
     private LocalizationService localizationService;
+    
+    @SuppressWarnings( "unchecked" )
     
     public EnumValueType( final Class<?> enumClass )
     {
-        this.enumClass = enumClass;
+        this.enumClass = (Class<? extends Enum<?>>) enumClass;
         this.localizationService = LocalizationSystem.service( enumClass );
     }
     
-    public Class<?> getEnumTypeClass()
+    public Class<? extends Enum<?>> getEnumTypeClass()
     {
         return this.enumClass;
     }

@@ -1,0 +1,124 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>FactsService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>FactsService</h1>
+
+<p>When a property is described to a user in documentation one does it with a series of short statements that
+define its semantics, such as "must be specified" or "maximum value is 100". When a property is
+described to Sapphire one does it with a series of annotations, such as @Required or
+@NumericRange. This duplicate specification is a maintenance problem.</p>
+
+<p>A FactsService provides a means to dynamically derive statements about property's semantics
+based on property's metadata. The derived facts can then be presented to the user as part of documentation,
+property editor information popup and in other relevant places.</p>
+
+<p>A single facts service can produce multiple facts and multiple facts services can be active 
+concurrently for a given property. See <a href="#FactsAggregationService">FactsAggregationService</a> for 
+an easier way to consume all facts.</p>
+
+<p>Sapphire includes a number of FactsService implementations.</p> 
+
+##servicess##
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">This screen capture shows user experience with some of the provided FactsService 
+implementation. See if you can match facts in the screen capture to service implementations above.</p>
+
+<p style="margin-left: 20px;"><img src="images/FactsService.png"/></p>
+
+<p>Adopters can provide custom FactService implementations either globally using Sapphire extension system or 
+at the property level using @Service annotation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">A simple global FactsService implementation that is triggered by a hypothetical 
+@Since property annotation.</p>
+
+<pre class="source-code"><code>public class SinceVersionFactsService extends FactsService
+{
+    @Override
+    protected void facts( List facts )
+    {
+        Since since = property().getAnnotation( Since.class );
+        facts.add( "Since version " + since.version() + "." );
+    }
+
+    public static class Factory extends ServiceFactory
+    {
+        @Override
+        public boolean applicable( ServiceContext context,
+                                   Class&lt;? extends Service> service )
+        {
+            return context.find( ModelProperty.class ).hasAnnotation( Since.class );
+        }
+
+        @Override
+        public Service create( ServiceContext context,
+                               Class&lt;? extends Service> service )
+        {
+            return new SinceVersionFactsService();
+        }
+    }
+}</code></pre>
+
+<p style="margin-left: 20px;">The service implementation is registered in META-INF/sapphire-extension.xml file.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension"></font>
+    &lt;service>
+        &lt;id>Example.SinceVersionFactsService&lt;/id>
+        &lt;type>org.eclipse.sapphire.services.FactsService&lt;/type>
+        &lt;context>Sapphire.Property.Instance&lt;/context>
+        &lt;factory>example.SinceVersionFactsService$Factory&lt;/factory>
+    &lt;/service>
+<font color="#888888">&lt;/extension></font></code></pre>
+
+<p>Facts can also be statically specified for a given property by using @Fact annotation. Use @Facts
+annotation to specify multiple facts. The facts contained in these annotations are surfaced by an
+included FactsService implementation (id:Sapphire.FactsService.Static).</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">// *** ExampleOne ***</font>
+
+@Fact( statement = "Important fact.")
+
+<font color="#888888">ValueProperty PROP_EXAMPLE_ONE = new ValueProperty( TYPE, "ExampleOne" );
+
+Value&lt;String> getExampleOne();
+void setExampleOne( String value );
+
+// *** ExampleMultiple ***</font>
+
+@Facts( { @Fact( statement = "First important fact." ), @Fact( statement = "Second important fact." ) } )
+
+<font color="#888888">ValueProperty PROP_EXAMPLE_MULTIPLE = new ValueProperty( TYPE, "ExampleMultiple" );
+
+Value&lt;String> getExampleMultiple();
+void setExampleMultiple( String value );</font></code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

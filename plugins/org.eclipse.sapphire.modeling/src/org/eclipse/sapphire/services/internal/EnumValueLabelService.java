@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -18,7 +19,6 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValueLabelService;
-import org.eclipse.sapphire.services.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,23 +27,20 @@ import org.eclipse.sapphire.services.ValueSerializationService;
 public final class EnumValueLabelService extends ValueLabelService
 {
     private EnumValueType enumType;
-    private ValueSerializationService valueSerializationService;
     
     @Override
     protected void init()
     {
         super.init();
         
-        final ValueProperty property = context( ValueProperty.class );
-        
-        this.enumType = new EnumValueType( property.getTypeClass() );
-        this.valueSerializationService = property.service( ValueSerializationService.class );
+        this.enumType = new EnumValueType( context( ValueProperty.class ).getTypeClass() );
     }
     
     @Override
     public String provide( final String value )
     {
-        final Enum<?> item = (Enum<?>) this.valueSerializationService.decode( value );
+        final MasterConversionService masterConversionService = context( ValueProperty.class ).service( MasterConversionService.class );
+        final Enum<?> item = masterConversionService.convert( value, this.enumType.getEnumTypeClass() );
         
         if( item == null )
         {

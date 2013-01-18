@@ -1,0 +1,46 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>MasterConversionService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>MasterConversionService</h1>
+
+<p>MasterConversionService converts an object to the specified type by delegating to available <a href="ConversionService.html">ConversionService</a> 
+and <a href="UniversalConversionService.html">UniversalConversionService</a> implementations. If object is null or is already of desired type, the 
+object is returned unchanged.</p> 
+
+<p>An implementation of this service is provided with Sapphire. This service is not intended to
+be implemented by adopters. See <a href="ConversionService.html">ConversionService</a> instead.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, an IFile is converted to a Resource as part of instantiating the model.
+Note how this code is not aware of the details of the conversion or what type of a resource is created.</p>
+
+ <pre class="source-code"><code><font color="#888888">IFile file = project.getFile( "contacts.xml" )</font>
+Resource resource = ContactRepository.TYPE.service( MasterConversionService.class ).convert( file, Resource.class );
+<font color="#888888">ContactRepository model = ContactRepository.TYPE.instantiate( resource );</font></code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>ConversionService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>ConversionService</h1>
+
+<p>ConversionService converts an object to the specified type. One common application is to convert to and from
+a string for typed value properties in the model. Another common application is to convert an input (such as a file)
+to a resource when instantiating the model.</p>
+
+<p>A ConversionService implementation can delegate to other conversion services to create a conversion chain. In fact,
+a common conversion of an IFile to an XmlResource is a chain of two ConversionService implementations.</p>
+
+<p>Sapphire includes a number of ConversionService implementations.</p> 
+
+##servicess##
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In the purchase order sample, a custom ConversionService implementation is used because the 
+default file extension for purchase order files is "po" rather than "xml" and PurchaseOrder element does not
+have XML binding annotations. The combination of these two factors prevent the framework-provided ConversionService
+implementations from engaging.</p>
+
+<pre class="source-code"><code>@Service( impl = PurchaseOrderResourceConversionService.class )
+
+<font color="#888888">public interface PurchaseOrder extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code>public class PurchaseOrderResourceConversionService extends ConversionService&lt;Object,RootXmlResource>
+{
+    public PurchaseOrderResourceConversionService()
+    {
+        super( Object.class, RootXmlResource.class );
+    }
+
+    @Override
+    public RootXmlResource convert( Object object )
+    {
+        final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
+
+        if( store != null )
+        {
+            return new RootXmlResource( new XmlResourceStore( store ) );
+        }
+
+        return null;
+    }
+}</code></pre>
+
+<p style="margin-left: 20px;">Note the use of chaining as part of the presented ConversionService implementation. The 
+input could be any number of things, but as long as another ConversionService implementation knows how to convert it 
+to a ByteArrayResourceStore, this implementation will take the conversion the rest of the way to a Resource.</p> 
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

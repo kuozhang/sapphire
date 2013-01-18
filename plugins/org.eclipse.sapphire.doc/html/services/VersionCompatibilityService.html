@@ -1,0 +1,109 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>VersionCompatibilityService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>VersionCompatibilityService</h1>
+
+<p>VersionCompatibilityService determines whether a property is compatible with the version compatibility target.
+This in turn controls property enablement, validation and visibility.</p>
+
+<p>In most situations, version compatibility can be expressed using an @Since or an @VersionCompatibility annotation.
+Both of these annotations support <a href="../el/index.html">the expression language</a>.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+@Since( "1.5" )
+
+<font color="#888888">ValueProperty PROP_INITIAL_QUOTE_DATE = new ValueProperty( TYPE, "InitialQuoteDate" );
+
+Value&lt;Date> getInitialQuoteDate();
+void setInitialQuoteDate( String value );
+void setInitialQuoteDate( Date value );</font></code></pre>
+
+<p>When more control is necessary, a custom implementation of VersionCompatibilityService can be provided. A
+typical implementation will utilize <a href="VersionCompatibilityTargetService.html">VersionCompatibilityTargetService</a>
+to determine the current version.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+@Service( impl = ExampleVersionCompatibilityService.class )
+
+<font color="#888888">ValueProperty PROP_INITIAL_QUOTE_DATE = new ValueProperty( TYPE, "InitialQuoteDate" );
+
+Value&lt;Date> getInitialQuoteDate();
+void setInitialQuoteDate( String value );
+void setInitialQuoteDate( Date value );</font></code></pre>
+
+<pre class="source-code"><code>public class ExampleVersionCompatibilityService extends VersionCompatibilityService
+{
+    private VersionCompatibilityTargetService versionCompatibilityTargetService;
+    private Listener versionCompatibilityTargetServiceListener;
+
+    protected void initVersionCompatibilityService()
+    {
+        final IModelElement element = context( IModelElement.class );
+        final ModelProperty property = context( ModelProperty.class );
+
+        this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( element, property );
+
+        this.versionCompatibilityTargetServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refresh();
+            }
+        };
+
+        this.versionCompatibilityTargetService.attach( this.versionCompatibilityTargetServiceListener );
+    }
+
+    @Override
+    protected Data compute()
+    {
+        final Version version = this.versionCompatibilityTargetService.version();
+        final String versioned = this.versionCompatibilityTargetService.versioned();
+
+        final boolean compatible = ...
+
+        return new Data( compatible, version, versioned );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        if( this.versionCompatibilityTargetService != null )
+        {
+            this.versionCompatibilityTargetService.detach( this.versionCompatibilityTargetServiceListener );
+        }
+    }
+}</code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

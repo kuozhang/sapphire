@@ -1,0 +1,97 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle and Liferay
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [363551] JavaTypeConstraintService
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>JavaTypeConstraintService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>JavaTypeConstraintService</h1>
+
+<p>JavaTypeConstraintService describes constraints on the Java type that a property can reference, such as the kind of
+type (class, interface, etc.) and the types that the type must extend or implement. The information provided by this
+service is used for validation, content assist and other needs.  
+
+<p>In majority of situations, the Java type constraint is static and should be configured using @JavaTypeConstraint 
+annotation. The framework provides an implementation of JavaTypeConstraintService that works with this annotation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )</font>
+@JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "javax.servlet.Filter" )
+
+<font color="#888888">ValueProperty PROP_SERVLET_FILTER_IMPL = new ValueProperty( TYPE, "ServletFilterImpl" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getServletFilterImpl();
+void setServletFilterImpl( JavaTypeName value );
+void setServletFilterImpl( String value );</font></code></pre>
+
+<p>When the Java type constraint varies due to runtime conditions, a custom implementation of JavaTypeConstraintService
+ can be provided.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomJavaTypeConstraintService extends JavaTypeConstraintService
+{
+    @Override
+    protected void initJavaTypeConstraintService()
+    {
+        // Register listeners to invoke refresh() method when Java type constraint
+        // may have changed.
+    }
+
+    @Override
+    protected JavaTypeConstraintServiceData compute()
+    {
+        // Compute Java type constraint.
+
+        List&lt;JavaTypeKind> kinds = new ArrayList&lt;JavaTypeKind>();
+        List&lt;String> types = new ArrayList&lt;String>();
+        JavaTypeConstraintBehavior behavior;
+
+        ...
+
+        return new JavaTypeConstraintServiceData( kinds, types, behavior );
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = JavaTypeName.class )
+@Reference( target = JavaType.class )</font>
+@Service( impl = CustomJavaTypeConstrainService.class )
+
+<font color="#888888">ValueProperty PROP_SERVLET_FILTER_IMPL = new ValueProperty( TYPE, "ServletFilterImpl" );
+
+ReferenceValue&lt;JavaTypeName,JavaType> getServletFilterImpl();
+void setServletFilterImpl( JavaTypeName value );
+void setServletFilterImpl( String value );</font></code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle and Liferay<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

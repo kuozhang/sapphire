@@ -26,10 +26,10 @@
         <overrides>Sapphire.Java.JDT.TypeReferenceService</overrides>
     </service>
     <service>
-        <id>Sapphire.ValueSerializationService.Color</id>
-        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.ui.internal.ColorSerializationService$Factory</factory>
+        <id>Sapphire.ConversionService.StringToColor</id>
+        <implementation>org.eclipse.sapphire.ui.def.internal.StringToColorConversionService</implementation>
+        <context>Sapphire</context>
+        <description>ConversionService implementation for String to Color conversions.</description>
     </service>
     <action>
         <id>Sapphire.Add</id>

@@ -43,11 +43,185 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 <p>Table of Contents</p>
 
 <ol>
+  <li><a href="#ConversionService">ConversionService</a></li>
+  <li><a href="#DateSerializationService">DateSerializationService</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
+  <li><a href="#ValueSerializationMasterService">ValueSerializationMasterService</a></li>
+  <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
   <li><a href="#XmlResource">XmlResource</a></li>
   <li><a href="#Service">@Service</a></li>
 </ol>
+
+
+<h2><a name="ConversionService">ConversionService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends</font> ConversionService
+<font color="#888888">{
+    @Override
+    public &lt;T> T convert( Object object, Class&lt;T> type )
+    {
+        if( object instanceof IFile && type == Resource.class )
+        {
+            ...
+        }
+        
+        return null;
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends</font> UniversalConversionService
+<font color="#888888">{
+    @Override
+    public &lt;T> T convert( Object object, Class&lt;T> type )
+    {
+        if( object instanceof IFile && type == Resource.class )
+        {
+            ...
+        }
+        
+        return null;
+    }
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends ConversionService
+{
+    @Override
+    public</font> &lt;T> T <font color="#888888">convert(</font> Object object, Class&lt;T> type <font color="#888888">)
+    {</font>
+        if( object instanceof IFile && type == Resource.class )
+        {
+            <font color="#888888">...</font>
+        }
+        
+        return null;
+    <font color="#888888">}
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends ConversionService</font>&lt;IFile,Resource>
+<font color="#888888">{</font>
+    protected ExampleConversionService()
+    {
+        super( IFile.class, Resource.class );
+    }
+
+    <font color="#888888">@Override
+    public</font> Resource <font color="#888888">convert(</font> IFile file <font color="#888888">)
+    {
+        ...
+    }
+}</font></code></pre>
+
+<p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
+achieved by migrating to the new the ConversionService API. Conversions implemented in this manner are quicker for
+Sapphire to find.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="DateSerializationService">DateSerializationService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+
+@Service
+(
+    impl = DateSerializationService.class, 
+    params =
+    { 
+        @Service.Param( name = "format-1", value = "yyyy.MM.dd" ), 
+        @Service.Param( name = "format-2", value = "MM/dd/yyyy" )
+    }
+)
+
+<font color="#888888">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( Date value );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+
+@Services
+(
+    {
+        @Service
+        (
+            impl = StringToDateConversionService.class,
+            params =
+            { 
+                @Service.Param( name = "format-1", value = "yyyy.MM.dd" ), 
+                @Service.Param( name = "format-2", value = "MM/dd/yyyy" )
+            },
+            overrides = "Sapphire.ConversionService.StringToDate"
+        ),
+        @Service
+        (
+            impl = DateToStringConversionService.class,
+            params = @Service.Param( name = "format", value = "yyyy.MM.dd" )
+        )
+    }
+)
+
+<font color="#888888">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( Date value );</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class ExampleDateSerializationService extends DateSerializationService
+{
+    @Override
+    public List&lt;? extends DateFormat> formats()
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class TestStringToDateConversionService extends StringToDateConversionService
+{
+    @Override
+    protected List&lt;? extends DateFormat> formats()
+    {
+        ...
+    }
+}
+    
+public class TestDateToStringConversionService extends DateToStringConversionService
+{
+    @Override
+    protected DateFormat format()
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="GenerateImpl">GenerateImpl</a></h2>
@@ -73,6 +247,92 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     String getImplClassName( String elementTypeClassName, GenerateImpl generateImplAnnotation )
     String getImplClassName( String elementTypeClassName, String preferredImplPackageName, String preferredImplClassName )
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="ValueSerializationMasterService">ValueSerializationMasterService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">Integer num = </font>(Integer) <font color="#888888">element.service( prop,</font> ValueSerializationMasterService<font color="#888888">.class ).</font>decode<font color="#888888">( str );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">Integer num = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( str</font>, Integer.class <font color="#888888">);</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">String str = </font>(String) <font color="#888888">element.service( prop,</font> ValueSerializationMasterService<font color="#888888">.class ).</font>encode<font color="#888888">( num );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( num</font>, String.class <font color="#888888">);</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValueSerializationService">ValueSerializationService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>public class ExampleSerializationService extends ValueSerializationService
+{
+    @Override
+    protected ExampleType decodeFromString( String value )
+    {
+        ...
+    }
+    
+    public String encode( Object value )
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>public class StringToExampleTypeConversionService extends ConversionService&lt;String,ExampleType>
+{
+    public ExampleConversionService()
+    {
+        super( String.class, ExampleType.class );
+    }
+
+    @Override
+    public ExampleType convert( String value )
+    {
+        ...
+    }
+}</code></pre>
+
+<p>If the ValueSerializationService does not override the encode() method, then it is not necessary to supply a conversion to a string.
+Sapphire includes a ConversionService implementation for converting an Object to a String that uses object's toString() method. This
+matches the default implementation of the encode() method.</p>
+
+<pre class="source-code"><code>public class ExampleTypeToStringTypeConversionService extends ConversionService&lt;ExampleType,String>
+{
+    public ExampleConversionService()
+    {
+        super( ExampleType.class, String.class );
+    }
+
+    @Override
+    public String convert( ExampleType value )
+    {
+        ...
+    }
+}</code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="XmlResource">XmlResource</a></h2>

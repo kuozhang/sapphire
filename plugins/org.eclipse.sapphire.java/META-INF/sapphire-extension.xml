@@ -41,15 +41,15 @@
         <id>Sapphire.FactsService.JavaTypeConstraint</id>
     </service>
     <service>
-        <id>Sapphire.ValueSerializationService.JavaTypeName</id>
-        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.java.internal.JavaTypeNameSerializationService$Factory</factory>
+        <id>Sapphire.ConversionService.StringToJavaTypeName</id>
+        <context>Sapphire</context>
+        <implementation>org.eclipse.sapphire.java.internal.StringToJavaTypeNameConversionService</implementation>
+        <description>ConversionService implementation for String to JavaTypeName conversions.</description>
     </service>
     <service>
-        <id>Sapphire.ValueSerializationService.JavaPackageName</id>
-        <type>org.eclipse.sapphire.services.ValueSerializationService</type>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.java.internal.JavaPackageNameSerializationService$Factory</factory>
+        <id>Sapphire.ConversionService.StringToJavaPackageName</id>
+        <context>Sapphire</context>
+        <implementation>org.eclipse.sapphire.java.internal.StringToJavaPackageNameConversionService</implementation>
+        <description>ConversionService implementation for String to JavaPackageName conversions.</description>
     </service>
 </extension>

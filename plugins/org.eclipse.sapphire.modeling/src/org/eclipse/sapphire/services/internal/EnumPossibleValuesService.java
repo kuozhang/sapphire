@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -22,7 +23,6 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.services.ValueSerializationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -40,11 +40,11 @@ public final class EnumPossibleValuesService extends PossibleValuesService
         final ValueProperty property = context( ValueProperty.class );
         
         final EnumValueType enumType = new EnumValueType( property.getTypeClass() );
-        final ValueSerializationService valueSerializationService = property.service( ValueSerializationService.class );
+        final MasterConversionService masterConversionService = property.service( MasterConversionService.class );
         
         for( Enum<?> item : enumType.getItems() )
         {
-            this.values.add( valueSerializationService.encode( item ) );
+            this.values.add( masterConversionService.convert( item, String.class ) );
         }
     }
     

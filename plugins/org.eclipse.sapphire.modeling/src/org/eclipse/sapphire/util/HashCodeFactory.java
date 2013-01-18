@@ -37,7 +37,7 @@ public final class HashCodeFactory
         }
         else
         {
-            return new HashCodeFactory( this.result * object.hashCode() );
+            return new HashCodeFactory( this.result ^ object.hashCode() );
         }
     }
     

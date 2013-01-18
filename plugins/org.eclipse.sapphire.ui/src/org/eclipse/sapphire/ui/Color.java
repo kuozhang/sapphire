@@ -16,49 +16,34 @@ package org.eclipse.sapphire.ui;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class Color 
+public final class Color 
 {
-	/** pre-defined colors */
-	public final static Color white = new Color(255, 255, 255);
-	public final static Color lightGray = new Color(192, 192, 192);
-	public final static Color gray = new Color(128, 128, 128);
-	public final static Color darkGray = new Color(64, 64, 64);
-	public final static Color black = new Color(0, 0, 0);
-	public final static Color red = new Color(255, 0, 0);
-	public final static Color orange = new Color(255, 196, 0);
-	public final static Color yellow = new Color(255, 255, 0);
-	public final static Color green = new Color(0, 255, 0);
-	public final static Color lightGreen = new Color(96, 255, 96);
-	public final static Color darkGreen = new Color(0, 127, 0);
-	public final static Color cyan = new Color(0, 255, 255);
-	public final static Color lightBlue = new Color(127, 127, 255);
-	public final static Color blue = new Color(0, 0, 255);
-	public final static Color darkBlue = new Color(0, 0, 127);
-
-	private final int r;
-    private final int g;
-    private final int b;
+	private final int red;
+    private final int green;
+    private final int blue;
     
-    public Color(int r, int g, int b)
+    public Color( final int red, 
+                  final int green, 
+                  final int blue )
     {
-        this.r = r;
-        this.g = g;
-        this.b = b;
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
     }
     
     public int getRed()
     {
-        return this.r;
+        return this.red;
     }
         
     public int getGreen()
     {
-        return this.g;
+        return this.green;
     }
     
     public int getBlue()
     {
-        return this.b;
+        return this.blue;
     }
     
     @Override
@@ -77,5 +62,35 @@ public class Color
     	return isEqual;
     }
     
+    @Override
+    public String toString()
+    {
+        final StringBuilder buf = new StringBuilder();
+        
+        buf.append('#');
+        
+        String temp = Integer.toHexString(this.red % 256);
+        if (temp.length() < 2)
+        {
+            buf.append('0');
+        }
+        buf.append(temp);
+        
+        temp = Integer.toHexString(this.green % 256);
+        if (temp.length() < 2)
+        {
+            buf.append('0');
+        }
+        buf.append(temp);
+        
+        temp = Integer.toHexString(this.blue % 256);
+        if (temp.length() < 2)
+        {
+            buf.append('0');
+        }
+        buf.append(temp);
+        
+        return buf.toString();
+    }
     
 }

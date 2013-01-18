@@ -1,0 +1,67 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle and Liferay
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [372359] Provide means to extend the behavior of adapt methods
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>AdapterService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>AdapterService</h1>
+
+<p>AdapterService provides means to extend the behavior of the adapt method in a given context.</p>
+
+<p>For example, out of the box, Sapphire can adapt IModelElement to IProject assuming that the model is using
+an IFile for the underlying resource store.  However, in some cases there may be no underlying IFile, so the
+default logic will no be able to find IProject. To solve this problem, we can introduce an adapter service to 
+provide a custom method for adopting IModelElement to IProject.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Service( impl = NewProjectFileOpAdapterService.class )
+
+<font color="#888888">public interface INewProjectFileOp extends IModelElement
+{
+    ...
+}</font></code></pre>
+
+<pre class="source-code"><code>public class NewProjectFileOpAdapterService extends AdapterService
+{
+    @Override
+    public &lt;A&gt; A adapt( Class&lt;A&gt; adapterType )
+    {
+        if( IProject.class == adapterType )
+        {
+            INewProjectFileOp op = context( INewProjectFileOp.class );
+            IProject project = op.getProject().resolve();
+
+            if( project != null )
+            {
+                return adapterType.cast( project );
+            }
+        }
+
+        return null;
+    }
+}</code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle and Liferay<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>DependenciesService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>DependenciesService</h1>
+
+<p>DependenciesService produces the set of model paths that point to parts of the model that the property 
+depends on. A property listens on all of its dependencies and triggers refresh when any of the dependencies change.</p>
+
+<p>Although custom implementations are supported, in most cases the supplied implementation that is
+configured via @DependsOn annotation should be sufficient.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@DependsOn( "Name" )
+
+<font color="#888888">ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
+
+Value&lt;String> getId();
+void setId( String value );</font></code></pre>
+
+<p>Other annotations, such as @NoDuplicates can also inject implied dependencies (via their own DependenciesService
+implementations). For instance, placing @NoDuplicates annotation on a Name property automatically
+adds "#/Name" dependency.</p>
+
+<p>If declarative approach is not sufficient, a custom DependenciesService implementation can be supplied.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomDependenciesService extends DependenciesService
+{
+    @Override
+    protected DependenciesServiceData compute()
+    {
+        // Compute the list of dependencies.
+
+        List&lt;ModelPath> dependencies = new ArrayList&lt;ModelPath>();
+
+        ...
+
+        return new DependenciesServiceData( dependencies );
+    }
+}</code></pre>
+
+<pre class="source-code"><code>@Service( impl = CustomDependenciesService.class )
+
+<font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
+
+Value&lt;String> getName();
+void setName( String value );</font></code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

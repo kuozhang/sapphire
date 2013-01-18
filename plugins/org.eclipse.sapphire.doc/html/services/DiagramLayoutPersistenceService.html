@@ -1,0 +1,50 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>DiagramLayoutPersistenceService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>DiagramLayoutPersistenceService</h1>
+
+<p>DiagramLayoutPersistenceService is responsible for persisting layout of the diagram, such a location and
+size of nodes, connection bend points, etc.</p>
+
+<p>Unlike other services, DiagramLayoutPersistenceService is not defined by methods that must be
+implemented, but rather by its expected behavior.</p>
+
+<ol>
+  <li>During service initialization, the implementation is expected to load layout information and transfer it to
+    diagram parts using API such as DiagramNodePart.setNodeBounds().</li>
+  <li>After initialization, the implementation is expected to listen for changes to diagram parts and persist
+    layout information. Persistence can happen immediately or be deferred until the save event is received.</li>
+  <li>If implementation defers layout persistence until save, it is expected to implement dirty() method and to
+   issue DirtyStateEvent when this state changes.</li>
+ </ol>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The architecture sample provides a comprehensive example of a custom 
+implementation that persists layout in the same file as data.</p>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

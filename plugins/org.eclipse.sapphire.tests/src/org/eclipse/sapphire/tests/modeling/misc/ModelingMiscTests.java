@@ -21,7 +21,6 @@ import org.eclipse.sapphire.tests.modeling.misc.t0004.TestModelingMisc0004;
 import org.eclipse.sapphire.tests.modeling.misc.t0005.TestModelingMisc0005;
 import org.eclipse.sapphire.tests.modeling.misc.t0007.TestModelingMisc0007;
 import org.eclipse.sapphire.tests.modeling.misc.t0008.TestModelingMisc0008;
-import org.eclipse.sapphire.tests.modeling.misc.t0009.TestModelingMisc0009;
 import org.eclipse.sapphire.tests.modeling.misc.t0010.TestModelingMisc0010;
 import org.eclipse.sapphire.tests.modeling.misc.t0011.TestModelingMisc0011;
 import org.eclipse.sapphire.tests.modeling.misc.t0012.TestModelingMisc0012;
@@ -55,7 +54,6 @@ public final class ModelingMiscTests extends TestCase
         suite.addTest( TestModelingMisc0005.suite() );
         suite.addTest( TestModelingMisc0007.suite() );
         suite.addTest( TestModelingMisc0008.suite() );
-        suite.addTest( TestModelingMisc0009.suite() );
         suite.addTest( TestModelingMisc0010.suite() );
         suite.addTest( TestModelingMisc0011.suite() );
         suite.addTest( TestModelingMisc0012.suite() );

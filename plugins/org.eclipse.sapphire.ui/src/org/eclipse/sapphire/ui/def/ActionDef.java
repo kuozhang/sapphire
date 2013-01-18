@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.internal.KeySequenceValueSerializationService;
+import org.eclipse.sapphire.ui.def.internal.StringToKeySequenceConversionService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -92,7 +92,7 @@ public interface ActionDef extends ActionSystemPartDef
     
     @Type( base = SapphireKeySequence.class )
     @Label( standard = "key binding" )
-    @Service( impl = KeySequenceValueSerializationService.class )
+    @Service( impl = StringToKeySequenceConversionService.class )
     @XmlBinding( path = "key-binding" )
     
     @Documentation

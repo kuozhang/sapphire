@@ -19,16 +19,57 @@ import org.eclipse.sapphire.services.Service;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ConversionService extends Service
+public abstract class ConversionService<S,T> extends Service
 {
+    private final Class<S> source;
+    private final Class<T> target;
+    
+    public ConversionService( final Class<S> source,
+                              final Class<T> target )
+    {
+        if( source == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( target == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.source = source;
+        this.target = target;
+    }
+    
     /**
-     * Converts an object to the specified type.
+     * Returns the conversion's source type
+     * 
+     * @return the conversion's source type
+     */
+    
+    public final Class<S> source()
+    {
+        return this.source;
+    }
+    
+    /**
+     * Return the conversion's target type.
+     * 
+     * @return the conversion's target type
+     */
+    
+    public final Class<T> target()
+    {
+        return this.target;
+    }
+    
+    /**
+     * Converts an object of source type to target type.
      * 
      * @param object the object to convert
-     * @param type the desired type of a converted object
      * @return the converted object or null if could not be converted
      */
     
-    public abstract <T> T convert( Object object, Class<T> type );
+    public abstract T convert( S object );
     
 }

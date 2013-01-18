@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.tests.conversion.ConversionTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.misc.TestMisc;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
@@ -39,6 +40,7 @@ public final class SapphireTestSuite extends TestCase
         
         suite.setName( "Sapphire" );
         
+        suite.addTest( ConversionTests.suite() );
         suite.addTest( TestMisc.suite() );
         suite.addTest( SapphireModelingFrameworkTests.suite() );
         suite.addTest( JavaTestSuite.suite() );
