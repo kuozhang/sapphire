@@ -43,6 +43,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 <p>Table of Contents</p>
 
 <ol>
+  <li><a href="#AdapterService">AdapterService</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
@@ -55,6 +56,87 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#XmlResource">XmlResource</a></li>
   <li><a href="#Service">@Service</a></li>
 </ol>
+
+
+<h2><a name="AdapterService">AdapterService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> ExampleAdapterService <font color="#888888">extends</font> AdapterService
+<font color="#888888">{
+    @Override
+    public &lt;T> T</font> adapt<font color="#888888">( Class&lt;T> type )
+    {
+        if( type == IProject.class )
+        {</font>
+            INewProjectFileOp op = context( INewProjectFileOp.class );
+            <font color="#888888">return type.cast( op.getProject().resolve() );
+        }
+
+        return null;
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> ExampleConversionService <font color="#888888">extends</font> UniversalConversionService
+<font color="#888888">{
+    @Override
+    public &lt;T> T</font> convert<font color="#888888">(</font> Object object, <font color="#888888">Class&lt;T> type )
+    {
+        if(</font> object instanceof INewProjectFileOp && <font color="#888888">type == IProject.class )
+        {</font>
+            INewProjectFileOp op = (INewProjectFileOp) object;
+            <font color="#888888">return type.cast( op.getProject().resolve() );
+        }
+
+        return null;
+    }
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> ExampleAdapterService <font color="#888888">extends</font> AdapterService
+<font color="#888888">{
+    @Override
+    public</font> &lt;T> T adapt<font color="#888888">( Class&lt;T> type )
+    {</font>
+        if( type == IProject.class )
+        {
+            INewProjectFileOp op = context( INewProjectFileOp.class );
+            <font color="#888888">return</font> type.cast( <font color="#888888">op.getProject().resolve()</font> )<font color="#888888">;</font>
+        }
+
+        return null;
+    <font color="#888888">}
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> ExampleConversionService <font color="#888888">extends</font> ConversionService&lt;INewProjectFileOp,IProject>
+<font color="#888888">{</font>
+    public ExampleConversionService()
+    {
+        super( INewProjectFileOp.class, IProject.class );
+    }
+
+    <font color="#888888">@Override
+    public</font> IProject convert<font color="#888888">(</font> INewProjectFileOp op <font color="#888888">)
+    {
+        return op.getProject().resolve();
+    }
+}</font></code></pre>
+
+<p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
+achieved by migrating to the typed ConversionService API. Conversions implemented in this manner are quicker for
+Sapphire to find.</p>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="ConversionService">ConversionService</a></h2>
@@ -115,7 +197,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
     <td>
 <pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends ConversionService</font>&lt;IFile,Resource>
 <font color="#888888">{</font>
-    protected ExampleConversionService()
+    public ExampleConversionService()
     {
         super( IFile.class, Resource.class );
     }
@@ -128,7 +210,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 }</font></code></pre>
 
 <p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
-achieved by migrating to the new the ConversionService API. Conversions implemented in this manner are quicker for
+achieved by migrating to the new ConversionService API. Conversions implemented in this manner are quicker for
 Sapphire to find.</p>
     </td>
   </tr>

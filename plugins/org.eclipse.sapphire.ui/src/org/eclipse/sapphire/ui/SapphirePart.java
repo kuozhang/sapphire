@@ -31,6 +31,7 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.IModelElement;
@@ -48,7 +49,6 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.CompositeDef;
@@ -696,17 +696,7 @@ public abstract class SapphirePart implements ISapphirePart
     
     public <A> A adapt( final Class<A> adapterType )
     {
-        A result = null;
-
-        for( AdapterService service : services( AdapterService.class ) )
-        {
-            result = service.adapt( adapterType );
-
-            if( result != null )
-            {
-                break;
-            }
-        }
+        A result = service( MasterConversionService.class ).convert( this, adapterType );
 
         if( result == null )
         {

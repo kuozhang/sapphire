@@ -37,7 +37,6 @@
      </topic>
   </topic>
   <topic href="html/services/index.html" label="Services">
-     <topic href="html/services/AdapterService.html" label="AdapterService"/>
      <topic href="html/services/ContentProposalService.html" label="ContentProposalService"/>
      <topic href="html/services/ConversionService.html" label="ConversionService"/>
      <topic href="html/services/DependenciesAggregationService.html" label="DependenciesAggregationService"/>

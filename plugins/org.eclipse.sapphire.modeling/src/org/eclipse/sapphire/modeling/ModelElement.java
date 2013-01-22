@@ -35,7 +35,6 @@ import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.services.AdapterService;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DependenciesAggregationService;
 import org.eclipse.sapphire.services.DerivedValueService;
@@ -1728,17 +1727,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         assertNotDisposed();
 
-        A result = null;
-
-        for( AdapterService service : services( AdapterService.class ) )
-        {
-            result = service.adapt( adapterType );
-            
-            if( result != null )
-            {
-                break;
-            }
-        }
+        A result = service( MasterConversionService.class ).convert( this, adapterType );
 
         if( result == null )
         {
