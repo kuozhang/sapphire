@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.state;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
@@ -19,20 +18,17 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.ui.AttributesContainer;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ContentOutlineNodeState extends IModelElement
+public interface ContentOutlineNodeState extends AttributesContainer
 {
     ModelElementType TYPE = new ModelElementType( ContentOutlineNodeState.class );
     
     // *** Label ***
-    
-    @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
     
@@ -42,7 +38,6 @@ public interface ContentOutlineNodeState extends IModelElement
     // *** Expanded ***
     
     @Type( base = Boolean.class )
-    @XmlBinding( path = "expanded" )
     @DefaultValue( text = "false" )
     
     ValueProperty PROP_EXPANDED = new ValueProperty( TYPE, "Expanded" );
@@ -54,7 +49,6 @@ public interface ContentOutlineNodeState extends IModelElement
     // *** Selected ***
     
     @Type( base = Boolean.class )
-    @XmlBinding( path = "selected" )
     @DefaultValue( text = "false" )
     
     ValueProperty PROP_SELECTED = new ValueProperty( TYPE, "Selected" );
@@ -66,7 +60,6 @@ public interface ContentOutlineNodeState extends IModelElement
     // *** Children ***
     
     @Type( base = ContentOutlineNodeState.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "node", type = ContentOutlineNodeState.class ) )
     
     ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
     

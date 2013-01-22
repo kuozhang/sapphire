@@ -16,7 +16,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 
 /**
- * An function that reads a property from the context or a child element. 
+ * A function that reads a property from the context or a child element. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

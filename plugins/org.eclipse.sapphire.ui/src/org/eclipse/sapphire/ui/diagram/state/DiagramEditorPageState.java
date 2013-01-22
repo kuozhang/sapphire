@@ -12,23 +12,20 @@
 
 package org.eclipse.sapphire.ui.diagram.state;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.EditorPageState;
 
 /**
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@XmlBinding( path = "sapphire-diagram-editor-page-state" )
-
-public interface DiagramEditorPageState extends IModelElement
+public interface DiagramEditorPageState extends EditorPageState
 {
     ModelElementType TYPE = new ModelElementType( DiagramEditorPageState.class );    
     
@@ -36,7 +33,6 @@ public interface DiagramEditorPageState extends IModelElement
     
     @Type( base = Integer.class )
     @DefaultValue( text = "100" )
-    @XmlBinding( path = "zoom-level" )
 
     ValueProperty PROP_ZOOM_LEVEL = new ValueProperty( TYPE, "ZoomLevel" );
     
@@ -47,7 +43,6 @@ public interface DiagramEditorPageState extends IModelElement
     // *** PalettePreferences ***
     
     @Type( base = PalettePreferences.class )
-    @XmlBinding( path = "palette-preferences")
     
     ImpliedElementProperty PROP_PALETTE_PREFERENCES = new ImpliedElementProperty( TYPE, "PalettePreferences" );
 

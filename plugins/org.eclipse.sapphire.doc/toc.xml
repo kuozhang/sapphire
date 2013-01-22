@@ -24,6 +24,8 @@
   </topic>
   <topic href="html/actions/index.html" label="Actions">
   </topic>
+  <topic href="html/ExtensiblePersistentState/index.html" label="Extensible Persistent State">
+  </topic>
   <topic href="html/java/index.html" label="Working with Java Types">
   </topic>
   <topic href="html/versions/index.html" label="Versions and Version Constraints">

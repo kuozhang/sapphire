@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -31,7 +30,6 @@ public interface PalettePreferences extends IModelElement
 
     @Type( base = Integer.class )
     @DefaultValue( text = "0" )
-    @XmlBinding( path = "dock-location" )
 
     ValueProperty PROP_DOCK_LOCATION = new ValueProperty( TYPE, "DockLocation" );
     
@@ -43,7 +41,6 @@ public interface PalettePreferences extends IModelElement
     
     @Type( base = Integer.class )
     @DefaultValue( text = "4" )
-    @XmlBinding( path = "palette-state" )
 
     ValueProperty PROP_PALETTE_STATE = new ValueProperty( TYPE, "PaletteState" );
     
@@ -55,7 +52,6 @@ public interface PalettePreferences extends IModelElement
     
     @Type( base = Integer.class )
     @DefaultValue( text = "0" )
-    @XmlBinding( path = "palette-width" )
 
     ValueProperty PROP_PALETTE_WIDTH = new ValueProperty( TYPE, "PaletteWidth" );
     

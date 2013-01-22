@@ -12,17 +12,31 @@
 
 package org.eclipse.sapphire.ui;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.createStringDigest;
+
+import java.io.File;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.help.IContext;
+import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IURIEditorInput;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -34,6 +48,7 @@ public class SapphireEditorPagePart
     implements IPropertiesViewContributorPart
     
 {
+    private EditorPageState state;
     private PropertiesViewContributionPart propertiesViewContributionPart;
     private FunctionResult pageHeaderTextFunctionResult;
     private FunctionResult pageHeaderImageFunctionResult;
@@ -78,6 +93,77 @@ public class SapphireEditorPagePart
     public EditorPageDef definition()
     {
         return (EditorPageDef) super.definition();
+    }
+    
+    public synchronized EditorPageState state()
+    {
+        if( this.state == null )
+        {
+            final StringBuilder key = new StringBuilder();
+            
+            final IEditorInput editorInput = adapt( SapphireEditor.class ).getEditorInput();
+            
+            key.append( editorInput.getClass().getName() );
+            key.append( '#' );
+            
+            if( editorInput instanceof IURIEditorInput )
+            {
+                final URI uri = ( (IURIEditorInput) editorInput ).getURI();
+                
+                if( uri != null )
+                {
+                    key.append( ( (IURIEditorInput) editorInput ).getURI().toString() );
+                }
+                else
+                {
+                    key.append( "%$**invalid**$%" );
+                }
+                
+                key.append( '#' );
+            }
+            
+            key.append( definition().getPageName().getContent() );
+            
+            final String digest = createStringDigest( key.toString() );
+            
+            File file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+            file = new File( file, ".metadata/.plugins/org.eclipse.sapphire.ui/state" );
+            file = new File( file, digest );
+            
+            final JavaType persistedStateElementJavaType = definition().getPersistentStateElementType().resolve();
+            
+            if( persistedStateElementJavaType == null )
+            {
+                throw new IllegalStateException();
+            }
+            
+            final ModelElementType persistedStateElementType = ModelElementType.read( persistedStateElementJavaType.artifact() );
+            
+            try
+            {
+                final Resource resource = new RootXmlResource( new XmlResourceStore( file ) ) ;
+                
+                resource.setCorruptedResourceExceptionInterceptor
+                (
+                    new CorruptedResourceExceptionInterceptor()
+                    {
+                        @Override
+                        public boolean shouldAttemptRepair()
+                        {
+                            return true;
+                        }
+                    }
+                );
+                
+                this.state = persistedStateElementType.instantiate( resource );
+            }
+            catch( ResourceStoreException e )
+            {
+                this.state = persistedStateElementType.instantiate();
+            }
+        }
+        
+        return this.state;
     }
 
     @Override
@@ -141,6 +227,21 @@ public class SapphireEditorPagePart
     public void dispose()
     {
         super.dispose();
+        
+        if( this.state != null )
+        {
+            try
+            {
+                this.state.resource().save();
+            }
+            catch( Exception e )
+            {
+                // Intentionally ignoring, since failing to persist the editor page state is just
+                // not that critical.
+            }
+            
+            this.state.dispose();
+        }
         
         if( this.pageHeaderTextFunctionResult != null )
         {

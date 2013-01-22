@@ -24,4 +24,8 @@
         <context>Sapphire</context>
         <implementation>org.eclipse.sapphire.samples.gallery.internal.CircleToStringConversionService</implementation>
     </service>
+    <function>
+        <name>CatalogItemImage</name>
+        <impl>org.eclipse.sapphire.samples.catalog.ItemImageFunction</impl>
+    </function>
 </extension>

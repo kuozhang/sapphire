@@ -1070,7 +1070,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		// context button manager
 		contextButtonManager = new ContextButtonManager(this);
 		
-		final int zoomLevel = getPart().getState().getZoomLevel().getContent();
+		final int zoomLevel = getPart().state().getZoomLevel().getContent();
 		final double zoom = (double) zoomLevel / 100;
         
         getZoomManager().setZoom( zoom );
@@ -1093,7 +1093,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	@Override
 	protected FlyoutPreferences getPalettePreferences() 
 	{
-		return new DefaultFlyoutPalettePreferences(getPart().getState());
+		return new DefaultFlyoutPalettePreferences(getPart().state());
 	}
 	
 	

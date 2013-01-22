@@ -19,15 +19,16 @@
         <id>CatalogEditorPage</id>
         <page-header-text>Catalog (Sapphire Sample)</page-header-text>
         <initial-selection>items</initial-selection>
+        <persistent-state-element-type>org.eclipse.sapphire.samples.catalog.CatalogEditorPageState</persistent-state-element-type>
         <action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <id>Sample.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
             <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
             <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
             <key-binding-behavior>propagated</key-binding-behavior>
             <image>Web.png</image>
             <context>Sapphire.EditorPage</context>
-            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <group>Sample.OpenSapphireWebSite</group>
             <location>after:Sapphire.Outline.Hide</location>
             <hint>
                 <name>style</name>
@@ -35,10 +36,36 @@
             </hint>
         </action>
         <action-handler>
-            <action>Sapphire.Samples.OpenSapphireWebSite</action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
-            <label>Sapphire Web Site</label>
+            <action>Sample.OpenSapphireWebSite</action>
+            <id>Sample.OpenSapphireWebSite</id>
             <impl>OpenSapphireWebSiteActionHandler</impl>
+        </action-handler>
+        <action>
+            <id>Sample.ShowManufacturer</id>
+            <label>Show Manufacturer</label>
+            <image>ShowManufacturer.png</image>
+            <type>TOGGLE</type>
+            <context>Sapphire.EditorPage</context>
+            <location>before:Sapphire.Outline.Hide</location>
+        </action>
+        <action-handler>
+            <action>Sample.ShowManufacturer</action>
+            <id>Sample.ShowManufacturer</id>
+            <impl>ShowManufacturerActionHandler</impl>
+        </action-handler>
+        <action>
+            <id>Sample.ShowManufacturerColor</id>
+            <label>Color Code Manufacturers</label>
+            <image>ItemPurple.png</image>
+            <type>TOGGLE</type>
+            <context>Sapphire.EditorPage</context>
+            <location>after:Sample.ShowManufacturer</location>
+            <location>before:Sapphire.Outline.Hide</location>
+        </action>
+        <action-handler>
+            <action>Sample.ShowManufacturerColor</action>
+            <id>Sample.ShowManufacturerColor</id>
+            <impl>ShowManufacturerColorActionHandler</impl>
         </action-handler>
         <page-name>catalog</page-name>
         <element-type>Catalog</element-type>
@@ -125,8 +152,11 @@
         <package>org.eclipse.sapphire.samples.catalog</package>
     </import>
     <node-factory>
+        <id>CatalogItemsNodeFactory</id>
+        <property>Items</property>
         <case>
-            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : Name }</label>
+            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }</label>
+            <image>${ CatalogItemImage() }</image>
             <section>
                 <content>
                     <property-editor>Name</property-editor>
@@ -137,8 +167,6 @@
                 <label>item</label>
             </section>
         </case>
-        <id>CatalogItemsNodeFactory</id>
-        <property>Items</property>
     </node-factory>
     
 </definition>

@@ -9,27 +9,16 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.form.editors.masterdetails.state;
+package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.ui.EditorPageState;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface MasterDetailsEditorPageState extends EditorPageState
+public interface EditorPageState extends AttributesContainer
 {
-    ModelElementType TYPE = new ModelElementType( MasterDetailsEditorPageState.class );
-    
-    // *** ContentOutlineState ***
-    
-    @Type( base = ContentOutlineState.class )
-
-    ImpliedElementProperty PROP_CONTENT_OUTLINE_STATE = new ImpliedElementProperty( TYPE, "ContentOutlineState" );
-    
-    ContentOutlineState getContentOutlineState();
+    ModelElementType TYPE = new ModelElementType( EditorPageState.class );
     
 }

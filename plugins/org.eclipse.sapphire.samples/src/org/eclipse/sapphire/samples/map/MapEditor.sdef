@@ -88,19 +88,19 @@
                 <instance-id>${ToLocation}</instance-id>                
             </connection-binding>
             <action>
-                <id>Sapphire.Samples.Map.Location.ShowInWikipedia</id>
+                <id>Sample.Map.Location.ShowInWikipedia</id>
                 <label>show in Wikipedia</label>
                 <image>org/eclipse/sapphire/samples/map/internal/ShowInWikipedia.png</image>
                 <location>after:Sapphire.ShowInSource</location>
             </action>
             <action-handler>
                 <action>Sapphire.Diagram.Node.Default</action>
-                <id>Sapphire.Samples.Map.Location.Default</id>
+                <id>Sample.Map.Location.Default</id>
                 <impl>LocationShowInWikipediaActionHandler</impl>
             </action-handler>
             <action-handler>
-                <action>Sapphire.Samples.Map.Location.ShowInWikipedia</action>
-                <id>Sapphire.Samples.Map.Location.ShowInWikipedia</id>
+                <action>Sample.Map.Location.ShowInWikipedia</action>
+                <id>Sample.Map.Location.ShowInWikipedia</id>
                 <impl>LocationShowInWikipediaActionHandler</impl>
             </action-handler>
         </node>
@@ -119,7 +119,7 @@
             <instance-id>${FromLocation}-${ToLocation}</instance-id>
         </connection-binding>
         <action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <id>Sample.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
             <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
             <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
@@ -127,7 +127,7 @@
             <context>Sapphire.Diagram.Editor</context>
             <context>Sapphire.Diagram.Header</context>
             <location>after:Sapphire.Diagram.Print</location>
-            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <group>Sample.OpenSapphireWebSite</group>
             <image>Web.png</image>
             <hint>
                 <name>style</name>
@@ -135,13 +135,13 @@
             </hint>
         </action>
         <action-handler>
-            <action>Sapphire.Samples.OpenSapphireWebSite</action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <action>Sample.OpenSapphireWebSite</action>
+            <id>Sample.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
             <impl>OpenSapphireWebSiteActionHandler</impl>
         </action-handler>
         <action>
-            <id>Sapphire.Samples.Map.ShowStatistics</id>
+            <id>Sample.Map.ShowStatistics</id>
             <label>show statistics</label>
             <context>Sapphire.Diagram.Editor</context>            
             <context>Sapphire.Diagram.MultipleParts</context>
@@ -150,8 +150,8 @@
             <group>Sapphire.Diagram.Appearance</group>
         </action>
         <action-handler>
-            <action>Sapphire.Samples.Map.ShowStatistics</action>
-            <id>Sapphire.Samples.Map.ShowStatistics</id>
+            <action>Sample.Map.ShowStatistics</action>
+            <id>Sample.Map.ShowStatistics</id>
             <impl>ShowStatisticsActionHandler</impl>
         </action-handler>
         <service>
@@ -166,14 +166,14 @@
         <page-name>details</page-name>
         <page-header-text>Map Details (Sapphire Sample)</page-header-text>
         <action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <id>Sample.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
             <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
             <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
             <key-binding-behavior>propagated</key-binding-behavior>
             <image>Web.png</image>
             <context>Sapphire.EditorPage</context>
-            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <group>Sample.OpenSapphireWebSite</group>
             <location>after:Sapphire.Outline.Hide</location>
             <hint>
                 <name>style</name>
@@ -181,8 +181,8 @@
             </hint>
         </action>
         <action-handler>
-            <action>Sapphire.Samples.OpenSapphireWebSite</action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <action>Sample.OpenSapphireWebSite</action>
+            <id>Sample.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
             <impl>OpenSapphireWebSiteActionHandler</impl>
         </action-handler>

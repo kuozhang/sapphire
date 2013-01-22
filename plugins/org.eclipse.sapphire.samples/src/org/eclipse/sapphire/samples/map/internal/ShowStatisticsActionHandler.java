@@ -22,7 +22,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
- * Action handler for Sapphire.Samples.Map.ShowStatistics action, which illustrates how
+ * Action handler for Sample.Map.ShowStatistics action, which illustrates how
  * to create actions that operate in the context where multiple diagram parts are
  * selected.
  * 

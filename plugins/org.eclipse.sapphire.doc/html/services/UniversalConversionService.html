@@ -45,7 +45,7 @@ implementation is impossible or impractical.</p>
     public &lt;T> T convert( Object object, Class&lt;T> type )
     {
         T result = null;
-        
+
         if( object instanceof String && Enum.class.isAssignableFrom( type ) )
         {
             ...

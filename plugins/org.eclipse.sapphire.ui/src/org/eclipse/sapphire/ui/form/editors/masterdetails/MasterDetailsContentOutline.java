@@ -25,7 +25,6 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsConte
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.ContentOutlineNodeState;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -301,7 +300,7 @@ public final class MasterDetailsContentOutline
     {
         final List<MasterDetailsContentNode> selection = new ArrayList<MasterDetailsContentNode>();
         
-        final MasterDetailsEditorPageState editorPageState = this.editorPagePart.getState();
+        final MasterDetailsEditorPageState editorPageState = this.editorPagePart.state();
         
         if( editorPageState != null )
         {
@@ -376,7 +375,7 @@ public final class MasterDetailsContentOutline
     
     private void saveTreeState()
     {
-        final MasterDetailsEditorPageState editorPageState = this.editorPagePart.getState();
+        final MasterDetailsEditorPageState editorPageState = this.editorPagePart.state();
         
         if( editorPageState != null )
         {
@@ -389,15 +388,6 @@ public final class MasterDetailsContentOutline
             for( MasterDetailsContentNode node : this.root.nodes().visible() )
             {
                 saveTreeState( rootNodeState, node, selection );
-            }
-
-            try
-            {
-                rootNodeState.resource().save();
-            }
-            catch( Exception e )
-            {
-                SapphireUiFrameworkPlugin.log( e );
             }
         }
     }

@@ -12,6 +12,8 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
@@ -66,5 +68,12 @@ public interface MasterDetailsEditorPageDef extends EditorPageDef
     ImpliedElementProperty PROP_ROOT_NODE = new ImpliedElementProperty( TYPE, "RootNode" );
 
     MasterDetailsContentNodeDef getRootNode();
+    
+    // *** PersistedStateElementType ***
+    
+    @DefaultValue( text = "org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState" )
+    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState" )
+    
+    ValueProperty PROP_PERSISTENT_STATE_ELEMENT_TYPE = new ValueProperty( TYPE, EditorPageDef.PROP_PERSISTENT_STATE_ELEMENT_TYPE );
     
 }

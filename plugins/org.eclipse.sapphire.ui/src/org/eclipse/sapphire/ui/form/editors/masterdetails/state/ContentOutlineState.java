@@ -11,20 +11,19 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.state;
 
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.ui.AttributesContainer;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ContentOutlineState extends IModelElement
+public interface ContentOutlineState extends AttributesContainer
 {
     ModelElementType TYPE = new ModelElementType( ContentOutlineState.class );
     
@@ -32,7 +31,6 @@ public interface ContentOutlineState extends IModelElement
     
     @Type( base = Boolean.class )
     @DefaultValue( text = "true" )
-    @XmlBinding( path = "visible" )
     
     ValueProperty PROP_VISIBLE = new ValueProperty( TYPE, "Visible" );
     
@@ -44,7 +42,6 @@ public interface ContentOutlineState extends IModelElement
     
     @Type( base = Double.class )
     @DefaultValue( text = "0.3" )
-    @XmlBinding( path = "ratio" )
 
     ValueProperty PROP_RATIO = new ValueProperty( TYPE, "Ratio" );
     
@@ -55,7 +52,6 @@ public interface ContentOutlineState extends IModelElement
     // *** Root ***
     
     @Type( base = ContentOutlineNodeState.class )
-    @XmlBinding( path = "root" )
 
     ImpliedElementProperty PROP_ROOT = new ImpliedElementProperty( TYPE, "Root" );
     

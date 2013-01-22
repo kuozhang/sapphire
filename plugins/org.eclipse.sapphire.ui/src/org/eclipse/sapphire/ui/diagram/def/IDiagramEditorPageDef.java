@@ -15,6 +15,8 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -59,6 +61,13 @@ public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewCon
     ImpliedElementProperty PROP_GUIDES_DEFINITION = new ImpliedElementProperty( TYPE, "GuidesDefinition" );
 
     IDiagramGuidesDef getGuidesDefinition(); 
+    
+    // *** PersistentStateElementType ***
+    
+    @DefaultValue( text = "org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState" )
+    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState" )
+    
+    ValueProperty PROP_PERSISTENT_STATE_ELEMENT_TYPE = new ValueProperty( TYPE, EditorPageDef.PROP_PERSISTENT_STATE_ELEMENT_TYPE );
     
     // *** LayoutPersistence ***
     

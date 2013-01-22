@@ -15,11 +15,9 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.modeling.util.MiscUtil.createStringDigest;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
-import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -293,42 +291,6 @@ public abstract class SapphireEditor
         }
         
         return null;
-    }
-
-    public final File getDefaultStateStorageFile( final SapphireEditorPagePart part )
-    {
-        final StringBuilder key = new StringBuilder();
-        
-        final IEditorInput editorInput = getEditorInput();
-        
-        key.append( editorInput.getClass().getName() );
-        key.append( '#' );
-        
-        if( editorInput instanceof IURIEditorInput )
-        {
-            final URI uri = ( (IURIEditorInput) editorInput ).getURI();
-            
-            if( uri != null )
-            {
-                key.append( ( (IURIEditorInput) editorInput ).getURI().toString() );
-            }
-            else
-            {
-                key.append( "%$**invalid**$%" );
-            }
-            
-            key.append( '#' );
-        }
-        
-        key.append( part.definition().getPageName().getContent() );
-        
-        final String digest = createStringDigest( key.toString() );
-        
-        File file = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
-        file = new File( file, ".metadata/.plugins/org.eclipse.sapphire.ui/state" );
-        file = new File( file, digest );
-        
-        return file;
     }
 
     private final int getLastActivePage()

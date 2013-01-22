@@ -28,14 +28,14 @@
         <page-header-text>Calendar (Sapphire Sample)</page-header-text>
         <initial-selection>events</initial-selection>
         <action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <id>Sample.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
             <tooltip>Open Sapphire Web Site (Ctrl+Alt+Shift+S)</tooltip>
             <key-binding>CONTROL+ALT+SHIFT+s</key-binding>
             <key-binding-behavior>propagated</key-binding-behavior>
             <image>Web.png</image>
             <context>Sapphire.EditorPage</context>
-            <group>Sapphire.Samples.OpenSapphireWebSite</group>
+            <group>Sample.OpenSapphireWebSite</group>
             <location>after:Sapphire.Outline.Hide</location>
             <hint>
                 <name>style</name>
@@ -43,8 +43,8 @@
             </hint>
         </action>
         <action-handler>
-            <action>Sapphire.Samples.OpenSapphireWebSite</action>
-            <id>Sapphire.Samples.OpenSapphireWebSite</id>
+            <action>Sample.OpenSapphireWebSite</action>
+            <id>Sample.OpenSapphireWebSite</id>
             <label>Sapphire Web Site</label>
             <impl>OpenSapphireWebSiteActionHandler</impl>
         </action-handler>

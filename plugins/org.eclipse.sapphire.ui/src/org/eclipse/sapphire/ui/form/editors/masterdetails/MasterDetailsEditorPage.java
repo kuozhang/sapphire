@@ -317,7 +317,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 {
                     if( ! isDetailsMaximized() )
                     {
-                        setOutlineRatioCookie( MasterDetailsEditorPage.this.mainSection.getOutlineRatio() );
+                        getPart().state().getContentOutlineState().setRatio( MasterDetailsEditorPage.this.mainSection.getOutlineRatio() );
                     }
                 }
 
@@ -434,27 +434,18 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     
     public boolean isDetailsMaximized()
     {
-        return ! getPart().getState().getContentOutlineState().getVisible().getContent();
+        return ! getPart().state().getContentOutlineState().getVisible().getContent();
     }
     
     public void setDetailsMaximized( final boolean maximized )
     {
         this.mainSection.setDetailsMaximized( maximized );
-        
-        try
-        {
-            getPart().getState().getContentOutlineState().setVisible( ! maximized );
-            getPart().getState().resource().save();
-        }
-        catch( Exception e )
-        {
-            SapphireUiFrameworkPlugin.log( e );
-        }
+        getPart().state().getContentOutlineState().setVisible( ! maximized );
     }
     
     public double getOutlineRatio()
     {
-        double contentOutlineRatio = getPart().getState().getContentOutlineState().getRatio().getContent();
+        double contentOutlineRatio = getPart().state().getContentOutlineState().getRatio().getContent();
         
         if( contentOutlineRatio < 0 || contentOutlineRatio > 1 )
         {
@@ -472,20 +463,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         }
         
         this.mainSection.setOutlineRatio( ratio );
-        setOutlineRatioCookie( ratio );
-    }
-    
-    private void setOutlineRatioCookie( final Double ratio )
-    {
-        try
-        {
-            getPart().getState().getContentOutlineState().setRatio( ratio );
-            getPart().getState().resource().save();
-        }
-        catch( Exception e )
-        {
-            SapphireUiFrameworkPlugin.log( e );
-        }
+        getPart().state().getContentOutlineState().setRatio( ratio );
     }
     
     @Override

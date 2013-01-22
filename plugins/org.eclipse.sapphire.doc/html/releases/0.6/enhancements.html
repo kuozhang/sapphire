@@ -853,28 +853,28 @@ be compatible with property editors like the slush bucket and the check box list
 <pre class="source-code"><code><font color="#888888">public interface Example extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( Example.class );
-    
+
     // *** FavoriteColors ***
 
     interface FavoriteColor extends IModelElement
     {
         ModelElementType TYPE = new ModelElementType( FavoriteColor.class );
-        
+
         // *** Name ***
-        
+
         @NoDuplicates
 
         ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
-        
+
         Value&lt;String> getName();
         void setName( String value );
     }
-    
+
     @Type( base = MultiSelectStringItem.class )</font>
     @Service( impl = ColorsPossibleValuesService.class )
-    
+
     <font color="#888888">ListProperty PROP_FAVORITY_COLORS = new ListProperty( TYPE, "FavoriteColors" );
-    
+
     ModelElementList&lt;FavoriteColor> getMultiSelectString();
 }</font></code></pre>
 
@@ -898,7 +898,7 @@ Fact: <i>Recommended value is [default-value].</i></p>
 
 <pre class="source-code"><code><font color="#888888">@DefaultValue( text = "sapphire-extension.xml" )</font>
 @PreferDefaultValue
- 
+
 <font color="#888888">ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );</font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/PreferDefaultValue.png"/></p>
@@ -936,12 +936,12 @@ be exposed.</p>
 {
      static Context adapt( ClassLoader loader )
      static Context adapt( Class&lt;?> cl )
-     
+
      abstract &lt;T> Class&lt;T> findClass( String name )
      abstract URL findResource( String name )
      abstract List&lt;URL> findResources( String name )
 }
- 
+
 BundleBasedContext extends Context
 {
      static Context adapt( Bundle bundle )
@@ -955,7 +955,7 @@ BundleBasedContext extends Context
 
   <li>When Context is constructed based on a class instead of a class loader, the implementation is 
   capable of resolving classes and resources using a simple name relative to the package of context class.</li>
-  
+
 </ol>
 
 
@@ -1009,13 +1009,13 @@ implementations from engaging.</p>
         if( type == XmlResource.class || type == Resource.class )
         {
             final ByteArrayResourceStore store = service( MasterConversionService.class ).convert( object, ByteArrayResourceStore.class );
-            
+
             if( store != null )
             {
                 return type.cast( new RootXmlResource( new XmlResourceStore( store ) ) );
             }
         }
-        
+
         return null;
     }
 }</code></pre>
@@ -1040,18 +1040,18 @@ normalization should be performed to simplify file name input.</p>
   <li><b>ValueSerializationService</b> – Only creates FileName objects that are valid for the current platform.</li>
 
   <li><b>ValueNormalizationService</b></li>
-  
+
   <ol type="A">
 
     <li>Leading whitespace is removed.</li>
-   
+
     <li>Trailing whitespace and dots are removed.</li>
-   
+
     <li>Extension is added if the file name does not have one already and if the property has 
     a FileExtensionsService (usually via @FileExtensions annotation).</li>
-    
+
   </ol>
-  
+
 </ol>
 
 
@@ -1096,7 +1096,7 @@ to a particular property.</p>
     void attach( Listener listener, String path )
     void attach( Listener listener, ModelPath path )</font>
     void attach( Listener listener, ModelProperty property )
-    
+
     <font color="#888888">boolean detach( Listener listener )
     void detach( Listener listener, String path )
     void detach( Listener listener, ModelPath path )</font>
@@ -1119,13 +1119,13 @@ instance handy.</p>
 {
     &lt;S extends Service> S service( ModelProperty property, Class&lt;S> serviceType )</font>
     &lt;S extends Service> S service( String property, Class&lt;S> serviceType )
-    
+
     <font color="#888888">&lt;S extends Service> List&lt;S> services( ModelProperty property, Class&lt;S> serviceType )</font>
     &lt;S extends Service> List&lt;S> services( String property, Class&lt;S> serviceType )
-    
+
     <font color="#888888">boolean enabled( ModelProperty property )</font>
     boolean enabled( String property )
-    
+
     <font color="#888888">Status validation( ModelProperty property )</font>
     Status validation( String property )
 <font color="#888888">}</font></code></pre>

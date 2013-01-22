@@ -46,7 +46,10 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
+  <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
+  <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
+  <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#ValueSerializationMasterService">ValueSerializationMasterService</a></li>
   <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
   <li><a href="#XmlResource">XmlResource</a></li>
@@ -72,7 +75,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
         {
             ...
         }
-        
+
         return null;
     }
 }</font></code></pre>
@@ -87,7 +90,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
         {
             ...
         }
-        
+
         return null;
     }
 }</font></code></pre>
@@ -104,7 +107,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
         {
             <font color="#888888">...</font>
         }
-        
+
         return null;
     <font color="#888888">}
 }</font></code></pre>
@@ -210,7 +213,7 @@ void setDate( Date value );</font></code></pre>
         ...
     }
 }
-    
+
 public class TestDateToStringConversionService extends DateToStringConversionService
 {
     @Override
@@ -233,6 +236,24 @@ equivalent has been provided. For further guidance, post a question
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
 
 
+<h2><a name="MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">MasterDetailsEditorPageState state = page.</font>getState<font color="#888888">();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">MasterDetailsEditorPageState state = page.</font>state<font color="#888888">();</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ModelElementType">ModelElementType</a></h2>
 
 <p>With the switch to on-demand element compilation, the developer no longer has control over the name
@@ -246,6 +267,35 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     String getImplClassName( Class<?> elementTypeClass )
     String getImplClassName( String elementTypeClassName, GenerateImpl generateImplAnnotation )
     String getImplClassName( String elementTypeClassName, String preferredImplPackageName, String preferredImplClassName )
+<font color="#888888">}</font></code></pre>
+
+
+<h2><a name="SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">DiagramEditorPageState state = page.</font>getState<font color="#888888">();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">DiagramEditorPageState state = page.</font>state<font color="#888888">();</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireEditor">SapphireEditor</a></h2>
+
+<p>The following method has been removed and no direct equivalent have been provided. For further guidance, post a question 
+on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+
+<pre class="source-code"><code><font color="#888888">SapphireEditor
+{</font>
+    File getDefaultStateStorageFile( SapphireEditorPagePart part )
 <font color="#888888">}</font></code></pre>
 
 
@@ -291,7 +341,7 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     {
         ...
     }
-    
+
     public String encode( Object value )
     {
         ...

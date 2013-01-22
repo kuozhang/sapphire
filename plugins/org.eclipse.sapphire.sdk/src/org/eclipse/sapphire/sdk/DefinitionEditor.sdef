@@ -817,6 +817,7 @@
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
+                    <property-editor>PersistentStateElementType</property-editor>
                 </content>
             </section>
             <node>
@@ -1294,6 +1295,7 @@
                     <property-editor>PageHeaderImage</property-editor>
                     <property-editor>OutlineHeaderText</property-editor>
                     <property-editor>InitialSelectionPath</property-editor>
+                    <property-editor>PersistentStateElementType</property-editor>
                 </content>
             </section>
             <node>
@@ -1320,10 +1322,11 @@
                 <content>
                     <include>PartId</include>
                     <property-editor>ElementType</property-editor>
+                    <property-editor>Property</property-editor>
                     <property-editor>PageName</property-editor>
                     <property-editor>PageHeaderText</property-editor>
                     <property-editor>PageHeaderImage</property-editor>
-                    <property-editor>Property</property-editor>
+                    <property-editor>PersistentStateElementType</property-editor>
                     <property-editor>LayoutPersistence</property-editor>
                     <with>
                         <path>GridDefinition</path>
