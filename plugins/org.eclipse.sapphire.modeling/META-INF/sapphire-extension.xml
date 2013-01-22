@@ -600,16 +600,6 @@
         <impl>org.eclipse.sapphire.modeling.el.SapphireVersionMatchesFunction</impl>
         <description>Determines whether Sapphire version matches a version constraint. A version constraint is a comma-separated list of specific versions, closed ranges (expressed using &quot;[1.2.3-4.5)&quot; syntax and open ranges (expressed using &quot;[1.2.3&quot; or &quot;4.5)&quot; syntax). The square brackets indicate that the range includes the specified version. The parenthesis indicate that the range goes up to, but does not actually include the specified version.</description>
     </function>
-    <type-cast>
-        <source>java.lang.String</source>
-        <target>org.eclipse.sapphire.Version</target>
-        <impl>org.eclipse.sapphire.modeling.el.internal.StringToVersionTypeCast</impl>
-    </type-cast>
-    <type-cast>
-        <source>java.lang.String</source>
-        <target>org.eclipse.sapphire.VersionConstraint</target>
-        <impl>org.eclipse.sapphire.modeling.el.internal.StringToVersionConstraintTypeCast</impl>
-    </type-cast>
     <service>
         <id>Sapphire.VersionCompatibilityTargetService.Declarative</id>
         <type>org.eclipse.sapphire.VersionCompatibilityTargetService</type>

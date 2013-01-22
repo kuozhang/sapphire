@@ -542,14 +542,6 @@
         <context>Sapphire.Diagram.Node</context>
         <condition>org.eclipse.sapphire.ui.diagram.actions.internal.DiagramNodeAddShapeFactoryCondition</condition>        
     </action-handler-factory>
-    
-    
-    <type-cast>
-        <source>java.lang.String</source>
-        <target>org.eclipse.sapphire.modeling.ImageData</target>
-        <impl>org.eclipse.sapphire.ui.def.internal.StringToImageDataCast</impl>
-        <description>Able to convert a string to an image if the requesting function origin is a model element and if that element is contained in ISapphireUiDef or if the element is adaptable to ResourceLocator.</description>
-    </type-cast>
     <presentation-style>
         <id>Sapphire.Actuator.Link</id>
         <part-type>Sapphire.Actuator</part-type>
@@ -570,6 +562,12 @@
         <id>Sapphire.PropertyEditor.PopUpListField.Strict</id>
         <part-type>Sapphire.PropertyEditor</part-type>
     </presentation-style>
+    <service>
+        <context>Sapphire.Element.Instance</context>
+        <description>ConversionService implementation for String to ImageData conversions.</description>
+        <id>Sapphire.ConversionService.StringToImageData</id>
+        <implementation>org.eclipse.sapphire.ui.def.internal.StringToImageDataConversionService</implementation>
+    </service>
     <service>
         <id>Sapphire.ListSelectionService</id>
         <type>org.eclipse.sapphire.ui.ListSelectionService</type>

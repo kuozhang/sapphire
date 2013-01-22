@@ -28,9 +28,7 @@ import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
-import org.eclipse.sapphire.modeling.el.TypeCast;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -63,14 +61,10 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_OPERAND_COUNT = "operand-count";
     private static final String EL_OVERRIDES = "overrides";
     private static final String EL_CONTEXT = "context";
-    private static final String EL_SOURCE = "source";
-    private static final String EL_TARGET = "target";
-    private static final String EL_TYPE_CAST = "type-cast";
 
     private static boolean initialized = false;
     private static List<ServiceFactoryProxy> serviceFactories;
     private static Map<String,List<FunctionFactory>> functionFactories;
-    private static List<TypeCast> typeCasts;
 
     public static List<ServiceFactoryProxy> getServiceFactories()
     {
@@ -110,12 +104,6 @@ public final class SapphireModelingExtensionSystem
         throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
     }
     
-    public static List<TypeCast> getTypeCasts()
-    {
-        initialize();
-        return typeCasts;
-    }
-
     private static synchronized void initialize()
     {
         if( ! initialized )
@@ -123,7 +111,6 @@ public final class SapphireModelingExtensionSystem
             initialized = true;
             serviceFactories = new ArrayList<ServiceFactoryProxy>();
             functionFactories = new HashMap<String,List<FunctionFactory>>();
-            typeCasts = new ArrayList<TypeCast>();
 
             for( final ExtensionsLocator.Handle handle : ExtensionsLocator.instance().find() )
             {
@@ -234,14 +221,6 @@ public final class SapphireModelingExtensionSystem
                                     factories.add( new FunctionFactory( impl, compatibleOperandCounts ) );
                                     
                                     functionFactories.put( name, factories.result() );
-                                }
-                                else if( elname.equals( EL_TYPE_CAST ) )
-                                {
-                                    final Class<?> source = context.findClass( value( el, EL_SOURCE ) );
-                                    final Class<?> target = context.findClass( value( el, EL_TARGET ) );
-                                    final Class<? extends TypeCast> impl = context.findClass( value( el, EL_IMPL ) );
-                                    
-                                    typeCasts.add( new TypeCastProxy( source, target, impl ) );
                                 }
                             }
                             catch( InvalidExtensionException e ) {}
@@ -521,71 +500,6 @@ public final class SapphireModelingExtensionSystem
             }
 
             return function;
-        }
-    }
-    
-    private static final class TypeCastProxy extends TypeCast
-    {
-        private final Class<?> source;
-        private final Class<?> target;
-        private final Class<? extends TypeCast> implClass;
-        private TypeCast implInstance;
-        private boolean implInstantiationFailed;
-        
-        public TypeCastProxy( final Class<?> source,
-                              final Class<?> target,
-                              final Class<? extends TypeCast> implementation )
-        {
-            this.source = source;
-            this.target = target;
-            this.implClass = implementation;
-        }
-        
-        @Override
-        public boolean applicable( final FunctionContext context,
-                                   final Function requestor,
-                                   final Object value,
-                                   final Class<?> target )
-        {
-            if( ! this.implInstantiationFailed )
-            {
-                if( target == this.target && ( value == null || value.getClass() == this.source ) )
-                {
-                    if( this.implInstance == null )
-                    {
-                        try
-                        {
-                            this.implInstance = this.implClass.newInstance();
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                            this.implInstantiationFailed = true;
-                        }
-                    }
-                    
-                    if( ! this.implInstantiationFailed )
-                    {
-                        return this.implInstance.applicable( context, requestor, value, target );
-                    }
-                }
-            }
-            
-            return false;
-        }
-
-        @Override
-        public Object evaluate( final FunctionContext context,
-                                final Function requestor,
-                                final Object value,
-                                final Class<?> target )
-        {
-            if( this.implInstance == null || this.implInstantiationFailed )
-            {
-                throw new IllegalStateException();
-            }
-            
-            return this.implInstance.evaluate( context, requestor, value, target );
         }
     }
     

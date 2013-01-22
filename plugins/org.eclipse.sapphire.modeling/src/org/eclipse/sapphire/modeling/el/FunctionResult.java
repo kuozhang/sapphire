@@ -24,9 +24,11 @@ import java.util.Set;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -567,17 +569,23 @@ public abstract class FunctionResult
                 }
                 else
                 {
-                    for( TypeCast cast : SapphireModelingExtensionSystem.getTypeCasts() )
+                    final MasterConversionService masterConversionService;
+                    final Object origin = this.function.origin();
+                    
+                    if( origin instanceof IModelElement )
                     {
-                        if( cast.applicable( this.context, this.function, obj, type ) )
-                        {
-                            final X result = type.cast( cast.evaluate( this.context, this.function, obj, type ) );
-                            
-                            if( result != null )
-                            {
-                                return result;
-                            }
-                        }
+                        masterConversionService = ( (IModelElement) origin ).service( MasterConversionService.class );
+                    }
+                    else
+                    {
+                        masterConversionService = Sapphire.service( MasterConversionService.class );
+                    }
+
+                    final X result = type.cast( masterConversionService.convert( obj, type ) );
+                    
+                    if( result != null )
+                    {
+                        return result;
                     }
                 }
                 
@@ -594,7 +602,6 @@ public abstract class FunctionResult
                 }
                 catch( FunctionException ex )
                 {
-                    ex.printStackTrace();
                     // Ignore the composite cast failure, since we want the original exception.
                 }
             }

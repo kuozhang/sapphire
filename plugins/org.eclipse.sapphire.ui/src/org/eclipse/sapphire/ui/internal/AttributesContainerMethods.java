@@ -30,22 +30,20 @@ public final class AttributesContainerMethods
             throw new IllegalArgumentException();
         }
         
-        String string = null;
+        Object value = null;
         
         for( Attribute attribute : state.getAttributes() )
         {
             if( name.equalsIgnoreCase( attribute.getName().getContent() ) )
             {
-                string = attribute.getValue().getContent();
+                value = attribute.getValue().getContent();
                 break;
             }
         }
         
-        Object value = null;
-        
-        if( def != null && def != String.class )
+        if( value != null && def != null && def != String.class )
         {
-            value = state.service( MasterConversionService.class ).convert( string, def.getClass() );
+            value = state.service( MasterConversionService.class ).convert( value, def.getClass() );
         }
         
         if( value == null )

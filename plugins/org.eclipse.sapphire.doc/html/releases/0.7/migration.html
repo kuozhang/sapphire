@@ -51,6 +51,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ModelElementType">ModelElementType</a></li>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
+  <li><a href="#TypeCast">TypeCast</a></li>
   <li><a href="#ValueSerializationMasterService">ValueSerializationMasterService</a></li>
   <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
   <li><a href="#XmlResource">XmlResource</a></li>
@@ -379,6 +380,97 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 {</font>
     File getDefaultStateStorageFile( SapphireEditorPagePart part )
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="TypeCast">TypeCast</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> StringToVersionTypeCast <font color="#888888">extends</font> TypeCast
+<font color="#888888">{</font>
+    @Override
+    public boolean applicable( FunctionContext context,
+                               Function requestor,
+                               Object value,
+                               Class&lt;?> target )
+    {
+        return ( target == Version.class && value instanceof String );
+    }
+
+    <font color="#888888">@Override
+    public</font> Object evaluate( FunctionContext context,
+                            Function requestor,
+                            Object value,
+                            Class&lt;?> target )
+    <font color="#888888">{
+        Version result = null;
+		
+        try
+        {
+            result = new Version(</font> (String) value <font color="#888888">);
+        }
+        catch( IllegalArgumentException e )
+        {
+            // Intentionally ignored.
+        }
+		
+        return null;
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class</font> StringToVersionConversionService <font color="#888888">extends</font> ConversionService&lt;String,Version>
+<font color="#888888">{</font>
+    public StringToVersionConversionService()
+    {
+        super( String.class, Version.class );
+    }
+
+    <font color="#888888">@Override
+    public</font> Version convert( String string )
+    <font color="#888888">{
+        Version result = null;
+        
+        try
+        {
+            result = new Version(</font> string <font color="#888888">);
+        }
+        catch( IllegalArgumentException e )
+        {
+            // Intentionally ignored.
+        }
+        
+        return result;
+    }
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;extension></font>
+    &lt;type-cast>
+        &lt;source>java.lang.String&lt;/source>
+        &lt;target>org.eclipse.sapphire.Version&lt;/target>
+        &lt;impl>org.eclipse.sapphire.modeling.el.internal.StringToVersionTypeCast&lt;/impl>
+    &lt;/type-cast>
+<font color="#888888">&lt;/extension></font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">&lt;extension></font>
+    &lt;service>
+        &lt;id>Sapphire.ConversionService.StringToVersion&lt;/id>
+        &lt;implementation>org.eclipse.sapphire.internal.StringToVersionConversionService&lt;/implementation>
+        &lt;context>Sapphire&lt;/context>
+    &lt;/service>
+<font color="#888888">&lt;/extension></font></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="ValueSerializationMasterService">ValueSerializationMasterService</a></h2>

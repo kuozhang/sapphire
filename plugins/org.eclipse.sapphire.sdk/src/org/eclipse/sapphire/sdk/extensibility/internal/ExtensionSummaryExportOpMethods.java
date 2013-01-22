@@ -40,7 +40,6 @@ import org.eclipse.sapphire.sdk.extensibility.ExtensionSummarySectionDef;
 import org.eclipse.sapphire.sdk.extensibility.FunctionDef;
 import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.sdk.extensibility.ServiceDef;
-import org.eclipse.sapphire.sdk.extensibility.TypeCastDef;
 import org.eclipse.sapphire.ui.def.ActionContextRef;
 import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
@@ -103,9 +102,6 @@ public final class ExtensionSummaryExportOpMethods
             def.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.getName() );
 
             def = sections.insert();
-            def.setExtensionType( SapphireExtensionDef.PROP_TYPE_CASTS.getName() );
-
-            def = sections.insert();
             def.setExtensionType( SapphireExtensionDef.PROP_ACTIONS.getName() );
 
             def = sections.insert();
@@ -130,10 +126,6 @@ public final class ExtensionSummaryExportOpMethods
             else if( extensionType.endsWith( SapphireExtensionDef.PROP_FUNCTIONS.getName() ) )
             {
                 sectionWriter = new FunctionsSectionWriter( out, extensions, filter, def );
-            }
-            else if( extensionType.endsWith( SapphireExtensionDef.PROP_TYPE_CASTS.getName() ) )
-            {
-                sectionWriter = new TypeCastsSectionWriter( out, extensions, filter, def );
             }
             else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTIONS.getName() ) )
             {
@@ -251,48 +243,6 @@ public final class ExtensionSummaryExportOpMethods
             columns.add( FunctionDef.PROP_NAME );
             columns.add( FunctionDef.PROP_DESCRIPTION );
             columns.add( FunctionDef.PROP_IMPL_CLASS );
-            return columns;
-        }
-    }
-    
-    private static final class TypeCastsSectionWriter extends SectionWriter
-    {
-        public TypeCastsSectionWriter( final PrintWriter out,
-                                       final List<SapphireExtensionDef> extensions,
-                                       final Filter<IModelElement> filter,
-                                       final ExtensionSummarySectionDef def )
-        {
-            super( out, extensions, filter, def );
-        }
-        
-        @Override
-        protected void sort( final List<IModelElement> extElements )
-        {
-            Collections.sort
-            ( 
-                extElements, 
-                new Comparator<IModelElement>()
-                {
-                    public int compare( final IModelElement a,
-                                        final IModelElement b )
-                    {
-                        final TypeCastDef x = (TypeCastDef) a;
-                        final TypeCastDef y = (TypeCastDef) b;
-                        
-                        return comp( x.getTargetType().getText(), y.getTargetType().getText() );
-                    }
-                }
-            );
-        }
-
-        @Override
-        protected List<ModelProperty> getDefaultColumns()
-        {
-            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
-            columns.add( TypeCastDef.PROP_SOURCE_TYPE );
-            columns.add( TypeCastDef.PROP_TARGET_TYPE );
-            columns.add( TypeCastDef.PROP_DESCRIPTION );
-            columns.add( TypeCastDef.PROP_IMPLEMENTATION );
             return columns;
         }
     }

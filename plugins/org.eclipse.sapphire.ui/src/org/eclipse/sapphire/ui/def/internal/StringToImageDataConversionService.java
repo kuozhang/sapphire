@@ -14,11 +14,9 @@ package org.eclipse.sapphire.ui.def.internal;
 import java.net.URL;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionContext;
-import org.eclipse.sapphire.modeling.el.TypeCast;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
@@ -26,37 +24,22 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StringToImageDataCast extends TypeCast
+public final class StringToImageDataConversionService extends ConversionService<String,ImageData>
 {
-    @Override
-    public boolean applicable( final FunctionContext context,
-                               final Function requestor,
-                               final Object value,
-                               final Class<?> target )
+    public StringToImageDataConversionService()
     {
-        final Object origin = requestor.origin();
-        
-        if( origin instanceof IModelElement )
-        {
-            return ( ( (IModelElement) origin ).adapt( Context.class ) != null );
-        }
-        
-        return false;
+        super( String.class, ImageData.class );
     }
 
     @Override
-    public Object evaluate( final FunctionContext context,
-                            final Function requestor,
-                            final Object value,
-                            final Class<?> target )
+    public ImageData convert( final String string )
     {
-        final IModelElement element = (IModelElement) requestor.origin();
+        final IModelElement element = context( IModelElement.class );
         final Context ctxt = element.adapt( Context.class );
-        final String path = (String) value;
         
         URL url = null;
         
-        if( path != null && ! path.contains( "/" ) )
+        if( string != null && ! string.contains( "/" ) )
         {
             final ISapphireUiDef sdef = element.nearest( ISapphireUiDef.class );
             
@@ -68,7 +51,7 @@ public final class StringToImageDataCast extends TypeCast
                     
                     if( pname != null )
                     {
-                        final String possibleFullPath = pname.replace( '.', '/' ) + "/" + path;
+                        final String possibleFullPath = pname.replace( '.', '/' ) + "/" + string;
                         url = ctxt.findResource( possibleFullPath );
                         
                         if( url != null )
@@ -82,7 +65,7 @@ public final class StringToImageDataCast extends TypeCast
         
         if( url == null )
         {
-            url = ctxt.findResource( path );
+            url = ctxt.findResource( string );
         }
         
         if( url != null )

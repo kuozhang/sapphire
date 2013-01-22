@@ -26,6 +26,7 @@
   <li><a href="#Key">Key Enhancements</a></li>
   <ol type="A">
     <li><a href="#Key-OnDemandElementCompilation">On-Demand Element Compilation</a></li>
+    <li><a href="#Key-ConsolidatedConversions">Consolidated Conversions</a></li>
     <li><a href="#Key-ExtensiblePersistentState">Extensible Persistent State</a></li>
   </ol>
   <li><a href="#Core">Core</a></li>
@@ -52,6 +53,73 @@ the duration of the JVM instance.</p>
 
 <p>The on-demand approach makes it easier to get started with Sapphire as it does not require build
 customization to compile implementation classes.</p>
+
+
+<h2><a name="Key-ConsolidatedConversions">Consolidated Conversions</a></h2>
+
+<p>ValueSerializationService, AdapterService and EL's TypeCast API have been consolidated with
+ConversionService. The result is a single API for implementing conversions. Many of the basic
+conversions are now available in the root service context, opening the door for novel uses.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>Integer number = Sapphire.service( MasterConversionService.class ).convert( "123", Integer.class );</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the generics are used in conjunction with Sapphire's library of conversions
+to implement the pattern where the type of the default value controls the return type. This pattern
+is typically implemented as a less flexible series of overloaded methods for various types.</p>  
+
+<pre class="source-code"><code>public class AttributesContainer
+{
+    private final Map&lt;String,String> attributes = new HashMap&lt;String,String>();
+    
+    public &lt;T> T getAttribute( final String name, final T def )
+    {
+        if( name == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        Object value = this.attributes.get( name );
+        
+        if( value != null && def != null && def != String.class )
+        {
+            value = Sapphire.service( MasterConversionService.class ).convert( value, def.getClass() );
+        }
+        
+        if( value == null )
+        {
+            value = def;
+        }
+        
+        return (T) value;
+    }
+    
+    public String getAttribute( final String name )
+    {
+        return (String) getAttribute( name, null );
+    }
+
+    public void setAttribute( final String name, final Object value )
+    {
+        if( name == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( value == null )
+        {
+            this.attributes.remove( name );
+        }
+        else
+        {
+            final String string = Sapphire.service( MasterConversionService.class ).convert( value, String.class );
+            this.attributes.put( name, string );
+        }
+    }
+}</code></pre>
 
 
 <h2><a name="Key-ExtensiblePersistentState">Extensible Persistent State</a></h2>

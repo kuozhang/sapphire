@@ -55,14 +55,4 @@ public interface SapphireExtensionDef extends ISapphireUiExtensionDef
     
     ModelElementList<FunctionDef> getFunctions();
 
-    // *** TypeCasts ***
-    
-    @Type( base = TypeCastDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "type-cast", type = TypeCastDef.class ) )
-    @Label( standard = "type casts" )
-    
-    ListProperty PROP_TYPE_CASTS = new ListProperty( TYPE, "TypeCasts" );
-    
-    ModelElementList<TypeCastDef> getTypeCasts();
-
 }
