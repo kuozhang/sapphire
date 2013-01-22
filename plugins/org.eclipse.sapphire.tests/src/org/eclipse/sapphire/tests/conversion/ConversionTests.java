@@ -465,16 +465,17 @@ public final class ConversionTests extends SapphireTestCase
 
     public void testDateToString() throws Exception
     {
-        final Date date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" ).parse( "2013-01-15T18:38:24.000-0800" );
+        final SimpleDateFormat fullDateFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" );
+        final Date date = fullDateFormat.parse( "2013-01-15T18:38:24.000-0800" );
         final DateConversionTestElement element = DateConversionTestElement.TYPE.instantiate();
         
         MasterConversionService service;
         
         service = Sapphire.service( MasterConversionService.class );
-        assertEquals( "2013-01-15T18:38:24.000-0800", service.convert( date, String.class ) );
+        assertEquals( fullDateFormat.format( date ), service.convert( date, String.class ) );
 
         service = element.service( DateConversionTestElement.PROP_DATE_1, MasterConversionService.class );
-        assertEquals( "2013-01-15T18:38:24.000-0800", service.convert( date, String.class ) );
+        assertEquals( fullDateFormat.format( date ), service.convert( date, String.class ) );
         
         service = element.service( DateConversionTestElement.PROP_DATE_2, MasterConversionService.class );
         assertEquals( "2013.01.15", service.convert( date, String.class ) );
