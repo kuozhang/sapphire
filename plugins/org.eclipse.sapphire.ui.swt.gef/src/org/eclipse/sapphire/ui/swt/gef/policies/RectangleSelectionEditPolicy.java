@@ -7,16 +7,27 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.policies;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
+import org.eclipse.gef.handles.AbstractHandle;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
+import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.utils.SapphireSurroundingHandle;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class RectangleSelectionEditPolicy extends NonResizableEditPolicy 
@@ -31,6 +42,28 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 		}
 		return null;
 	}
+	
+	@Override
+	protected List<?> createSelectionHandles() 
+	{
+		List<AbstractHandle> list = new ArrayList<AbstractHandle>();
+		GraphicalEditPart owner = (GraphicalEditPart) getHost();
+		ShapeEditPart shapeEditPart = (ShapeEditPart)owner;
+		SelectionPresentation selectionPresentation = shapeEditPart.getShapePresentation().getSelectionPresentation();
+		DiagramResourceCache resourceCache = shapeEditPart.getNodeEditPart().getCastedModel().getDiagramModel().getResourceCache();
+		SapphireSurroundingHandle selectionHandle = new SapphireSurroundingHandle(owner, shapeEditPart.getConfigurationManager(),
+				resourceCache, isDragAllowed());
+		if (selectionPresentation != null)
+		{
+			selectionHandle.setLineInset(selectionPresentation.getInset().getContent());
+			selectionHandle.setLineWidth(selectionPresentation.getWeight().getContent());
+			selectionHandle.setLineStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().getContent()));
+			selectionHandle.setLineColor(selectionPresentation.getColor().getContent());
+		}
+		list.add(selectionHandle);
+		return list;
+	}
+	
 
 	/**
 	 * @see org.eclipse.gef.editpolicies.NonResizableEditPolicy#hideFocus()
@@ -50,6 +83,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 		if (f != null) {
 			f.setSelected(false);
 			f.setFocus(false);
+			removeSelectionHandles();
 		}
 	}
 
@@ -71,6 +105,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 		if (f != null) {
 			f.setSelected(true);
 			f.setFocus(true);
+			addSelectionHandles();
 		}
 	}
 
@@ -82,6 +117,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 		if (f != null) {
 			f.setSelected(true);
 			f.setFocus(false);
+			addSelectionHandles();
 		}
 	}
 

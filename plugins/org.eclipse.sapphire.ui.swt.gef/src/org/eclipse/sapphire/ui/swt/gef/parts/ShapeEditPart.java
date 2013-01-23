@@ -105,6 +105,13 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		return (DiagramNodeEditPart)parent;
 	}
 	
+	public ShapePresentation getShapePresentation()
+	{
+		ShapeModel shapeModel = (ShapeModel)getModel();
+		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
+		return shapePresentation;
+	}
+	
 	protected ContainerShapePresentation getParentContainer(ShapePresentation shapePresentation)
 	{
 		ShapePresentation parentPresentation = shapePresentation.getParent();

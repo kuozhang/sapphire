@@ -13,13 +13,10 @@
 package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackgroundDef;
@@ -29,6 +26,7 @@ import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Path;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -73,18 +71,17 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		BackgroundDef bg = this.rectPresentation.getBackground();
 		if (bg != null)
 		{
-			org.eclipse.draw2d.geometry.Rectangle fillRectangle = 
-					new org.eclipse.draw2d.geometry.Rectangle(getBounds());
-			if (this.rectPresentation.getCornerRadius() > 0)
-			{
-				fillRectangle = fillRectangle.shrink(1, 1);
-				fillRectangle.x++;
-				fillRectangle.y++;
-				fillRectangle.width--;
-				fillRectangle.height--;
-			}
 			final Color foregroundSave = graphics.getForegroundColor();
 			final Color backgroundSave = graphics.getBackgroundColor();
+
+			org.eclipse.draw2d.geometry.Rectangle fillRectangle = 
+					new org.eclipse.draw2d.geometry.Rectangle(getBounds());
+
+			if (this.rectPresentation.getCornerRadius() > 0)
+			{
+				Path path = createPath(fillRectangle, graphics, true, this.rectPresentation.getCornerRadius());
+				graphics.clipPath(path);
+			}
 			
 			if (selected) 
 			{
@@ -132,53 +129,6 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		}
 	}
 	
-	@Override
-	protected void outlineShape(Graphics graphics) 
-	{
-		org.eclipse.draw2d.geometry.Rectangle r = 
-				org.eclipse.draw2d.geometry.Rectangle.SINGLETON.setBounds(getBounds());
-		
-		if (hasFocus || selected) 
-		{
-			// Save existing graphics attributes
-			final int oldLineWidth = graphics.getLineWidth();
-			final Color oldColor = graphics.getForegroundColor();
-			final int oldLineStyle = graphics.getLineStyle();
-			
-			int cornerRadius = this.rectPresentation.getCornerRadius();
-			final Dimension cornerDimension = new Dimension(cornerRadius, cornerRadius); 
-
-			SelectionPresentation selectionPresentation = this.rectPresentation.getSelectionPresentation();
-			org.eclipse.sapphire.ui.Color selectionColor = selectionPresentation != null ? selectionPresentation.getColor().getContent()
-					: new org.eclipse.sapphire.ui.Color(255, 165, 0);
-			LineStyle selectionStyle = selectionPresentation != null ? selectionPresentation.getStyle().getContent() 
-					: LineStyle.DASH;
-			int lineWidth = selectionPresentation != null ? selectionPresentation.getWeight().getContent() : 1;
-			int selectionInset = selectionPresentation != null ? selectionPresentation.getInset().getContent() : 0;
-			graphics.setForegroundColor(resourceCache.getColor(selectionColor));
-			graphics.setLineStyle(FigureUtil.convertLineStyle(selectionStyle));
-			graphics.setLineWidth(lineWidth);
-			
-			int lineInset = Math.max(1, lineWidth + 1 >> 1);			
-			r.x += lineInset;
-			r.y += lineInset;
-			r.width -= lineInset + lineInset;
-			r.height -= lineInset + lineInset;
-			
-			r.shrink(selectionInset, selectionInset);
-			
-			graphics.drawRoundRectangle(r,
-					Math.max(0, cornerDimension.width),
-					Math.max(0, cornerDimension.height));				
-
-			// Restore previous graphics attributes
-			graphics.setLineWidth(oldLineWidth);
-			graphics.setForegroundColor(oldColor);
-			graphics.setLineStyle(oldLineStyle);
-		}
-		
-	}
-	
 	public void setSelected(boolean b) 
 	{
 		selected = b;
@@ -191,4 +141,47 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		repaint();
 	}
 	
+	private Path createPath(org.eclipse.draw2d.geometry.Rectangle outerBounds, Graphics graphics, boolean isFill,
+			int cornerRadius)
+	{
+		Path path = new Path(null);
+		
+		float x = outerBounds.x;
+		float y = outerBounds.y;
+		float height = outerBounds.height;
+		float width = outerBounds.width;
+		float bottom = y + height;
+		float right = x + width;		
+
+		// the half cornersize is the length of the arc,
+		// so two time the half cornersize must not be longer than the side
+		// itself
+		float cornerWidth = cornerRadius;
+		float cornerHeight = cornerRadius;
+		cornerWidth = (cornerWidth > width) ? width : cornerWidth;
+		cornerHeight = (cornerHeight > height) ? height : cornerHeight;
+
+		if (isFill) {
+			// adjust corner for the inner path (formula found by experimenting)
+			cornerHeight = Math.max(1, cornerHeight - (getLineWidth() + cornerHeight / 64));
+			cornerWidth = Math.max(1, cornerWidth - (getLineWidth() + cornerWidth / 64));
+		}
+
+		// workaround: path must be usual rectangle, if corner=0
+		// otherwise the path is not drawn at all (same happens
+		// RoundedRectangles)
+		if (cornerHeight <= 0 || cornerWidth <= 0) {
+			path.addRectangle(x, y, width, height);
+		} else {
+			path.moveTo(x, y);
+			path.addArc(x, y, cornerWidth, cornerHeight, 90, 90);
+			path.addArc(x, bottom - cornerHeight, cornerWidth, cornerHeight, 180, 90);
+			path.addArc(right - cornerWidth, bottom - cornerHeight, cornerWidth, cornerHeight, 270, 90);
+			path.addArc(right - cornerWidth, y, cornerWidth, cornerHeight, 0, 90);
+			path.close();
+		}
+
+		return path;
+		
+	}
 }

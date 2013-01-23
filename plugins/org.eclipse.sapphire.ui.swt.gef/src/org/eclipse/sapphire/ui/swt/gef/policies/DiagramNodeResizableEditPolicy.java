@@ -19,7 +19,6 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.LineBorder;
-import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;

@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 import org.eclipse.draw2d.AbstractBorder;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.diagram.shape.def.BorderComponent;
@@ -54,23 +53,28 @@ public class RectangleBorder extends AbstractBorder
 		tempRect.setBounds(getPaintRectangle(figure, insets));
 		BorderComponent borderDef = this.rectPresentation.getTopBorder();
 		if (this.hasUniformBorders && borderDef.getWeight().getContent() > 0)
-		{
+		{			
 			int w = borderDef.getWeight().getContent();
-			int inset = Math.max(1, w + 1 >> 1);
+			int inset = Math.max(1, w >> 1);
 			tempRect.x += inset;
 			tempRect.y += inset;
 			tempRect.width -= inset + inset;
 			tempRect.height -= inset + inset;
 			
 			int cornerRadius = this.rectPresentation.getCornerRadius();
-			final Dimension cornerDimension = new Dimension(cornerRadius, cornerRadius); 
-			
+			float cornerWidth = cornerRadius;
+			float cornerHeight = cornerRadius;
+			// adjust corner for the inner path (formula found by experimenting)
+			cornerHeight = Math.max(1, cornerHeight - (w + cornerHeight / 64));
+			cornerWidth = Math.max(1, cornerWidth - (w + cornerWidth / 64));
+						
 			graphics.setLineWidth(borderDef.getWeight().getContent());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 			graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
 			graphics.drawRoundRectangle(tempRect,
-					Math.max(0, cornerDimension.width - inset),
-					Math.max(0, cornerDimension.height - inset));
+					Math.max(0, (int)cornerWidth),
+					Math.max(0, (int)cornerHeight));
+			
 		}
 		else
 		{
@@ -80,7 +84,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w + 1 >> 1);
+				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x;
 				int y = tempRect.y + inset;
 				int x2 = tempRect.x + tempRect.width;				
@@ -94,7 +98,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w + 1 >> 1);
+				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x;
 				int y = tempRect.y + tempRect.height - inset;
 				int x2 = tempRect.x + tempRect.width;
@@ -108,7 +112,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w + 1 >> 1);
+				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x + inset;
 				int y = tempRect.y;
 				int y2 = tempRect.y + tempRect.height;				
@@ -122,7 +126,7 @@ public class RectangleBorder extends AbstractBorder
 				graphics.setLineWidth(w);
 				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
 				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
-				int inset = Math.max(1, w + 1 >> 1);
+				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x + tempRect.width - inset;
 				int y = tempRect.y;
 				int y2 = tempRect.y + tempRect.height;				
@@ -162,6 +166,5 @@ public class RectangleBorder extends AbstractBorder
 		}
 		return true;
 	}
-	
-
+		
 }
