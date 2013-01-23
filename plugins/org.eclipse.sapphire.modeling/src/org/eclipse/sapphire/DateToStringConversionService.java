@@ -56,7 +56,7 @@ public class DateToStringConversionService extends ConversionService<Date,String
      * @return the date format supported by this conversion service
      */
     
-    protected DateFormat format()
+    public DateFormat format()
     {
         return this.format;
     }

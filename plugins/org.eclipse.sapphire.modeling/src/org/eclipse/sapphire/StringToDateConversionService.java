@@ -115,7 +115,7 @@ public class StringToDateConversionService extends ConversionService<String,Date
      * @return the list of date formats supported by this conversion service
      */
     
-    protected List<? extends DateFormat> formats()
+    public List<? extends DateFormat> formats()
     {
         return this.formats;
     }

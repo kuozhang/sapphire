@@ -94,7 +94,7 @@ public interface DateConversionTestElement extends IModelElement
         };
 
         @Override
-        protected List<? extends DateFormat> formats()
+        public List<? extends DateFormat> formats()
         {
             return TEST_FORMATS;
         }
@@ -106,7 +106,7 @@ public interface DateConversionTestElement extends IModelElement
         private final static DateFormat TEST_FORMAT = new SimpleDateFormat( "dd.MM.yyyy" );
 
         @Override
-        protected DateFormat format()
+        public DateFormat format()
         {
             return TEST_FORMAT;
         }
