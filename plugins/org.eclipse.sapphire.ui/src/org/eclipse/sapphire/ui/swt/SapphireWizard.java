@@ -110,7 +110,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         
         try
         {
-            getContainer().run( true, false, runnable );
+            getContainer().run( true, true, runnable );
         }
         catch( InvocationTargetException e )
         {
