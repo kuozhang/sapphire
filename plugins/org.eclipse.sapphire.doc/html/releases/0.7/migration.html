@@ -490,7 +490,7 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">String str = </font>(String) <font color="#888888">element.service( prop,</font> ValueSerializationMasterService<font color="#888888">.class ).</font>encode<font color="#888888">( num );</font></code></pre>
+<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> ValueSerializationMasterService<font color="#888888">.class ).</font>encode<font color="#888888">( num );</font></code></pre>
     </td>
     <td>
 <pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( num</font>, String.class <font color="#888888">);</font></code></pre>
@@ -505,6 +505,22 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   <tr>
     <th>Before</th>
     <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">Integer num = </font>(Integer) <font color="#888888">element.service( prop,</font> ValueSerializationService<font color="#888888">.class ).</font>decode<font color="#888888">( str );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">Integer num = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( str</font>, Integer.class <font color="#888888">);</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> ValueSerializationService<font color="#888888">.class ).</font>encode<font color="#888888">( num );</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( num</font>, String.class <font color="#888888">);</font></code></pre>
+    </td>
   </tr>
   <tr>
     <td>
