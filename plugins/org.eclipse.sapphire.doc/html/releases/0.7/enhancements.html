@@ -34,6 +34,7 @@
     <li><a href="#Core-ModelElement">ModelElement</a></li>
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
     <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
+    <li><a href="#Core-NewConversions">New Conversions</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -441,6 +442,19 @@ that references the CatalogItemImage() function.</p>
 &lt;/node-factory></font></code></pre>
 
 
+<h2><a name="Core"><a name="Core-ModelElement">ModelElement</a></a></h2>
+
+<p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
+copy individual properties is also available.</p>
+
+<pre class="source-code"><code><font color="#888888">IModelElement
+{
+    void copy( IModelElement element )</font>
+    void copy( IModelElement element, ModelProperty property )
+    void copy( IModelElement element, String property )
+<font color="#888888">}</font></code></pre>
+
+
 <h2><a name="Core-RootServiceContext">Root Service Context</a></h2>
 
 <p>Certain types of services, such as many ConversionService implementations, are useful across
@@ -482,17 +496,42 @@ service implementation class can be specified directly.</p>
 &lt;/extension></font></code></pre>
 
 
-<h2><a name="Core"><a name="Core-ModelElement">ModelElement</a></a></h2>
+<h2><a name="Core-NewConversions">New Conversions</a></h2>
 
-<p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
-copy individual properties is also available.</p>
+<p>The set of available conversions has been expanded. The new conversions can be used in a variety of contexts that 
+draw upon  <a href="../../services/ConversionService.html">ConversionService</a> implementations, such as when using
+<a href="../../services/MasterConversionService.html">MasterConversionService</a> or ModelElement.adapt() API.</p> 
 
-<pre class="source-code"><code><font color="#888888">IModelElement
-{
-    void copy( IModelElement element )</font>
-    void copy( IModelElement element, ModelProperty property )
-    void copy( IModelElement element, String property )
-<font color="#888888">}</font></code></pre>
+<table>
+  <tr>
+    <th>Source</th>
+    <th>Target</th>
+  </tr>
+  <tr>
+    <td>org.eclipse.sapphire.modeling.ModelElement</td>
+    <td>org.w3c.dom.Document</td>
+  </tr>
+  <tr>
+    <td>org.eclipse.sapphire.modeling.ModelElement</td>
+    <td>org.w3c.dom.Element</td>
+  </tr>
+  <tr>
+    <td>org.eclipse.sapphire.modeling.ModelElement</td>
+    <td>org.eclipse.sapphire.modeling.xml.XmlElement</td>
+  </tr>
+  <tr>
+    <td>org.eclipse.sapphire.modeling.xml.XmlResource</td>
+    <td>org.w3c.dom.Document</td>
+  </tr>
+  <tr>
+    <td>org.eclipse.sapphire.modeling.xml.XmlResource</td>
+    <td>org.w3c.dom.Element</td>
+  </tr>
+  <tr>
+    <td>org.eclipse.sapphire.modeling.xml.XmlResource</td>
+    <td>org.eclipse.sapphire.modeling.xml.XmlElement</td>
+  </tr>
+</table>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>

@@ -15,9 +15,45 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <service>
-        <id>Sapphire.ConversionService.ObjectToRootXmlResourceConversionService</id>
+        <id>Sapphire.ConversionService.ObjectToRootXmlResource</id>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.ObjectToRootXmlResourceConversionService</implementation>
         <description>ConversionService implementation for Object to RootXmlResource conversions. Conversion is only performed if the object can be converted to ByteArrayResourceStore and if the resource store corresponds to a file with &quot;xml&quot; extension or if the context element type has XML binding annotations.</description>
         <context>Sapphire</context>
-        <implementation>org.eclipse.sapphire.modeling.xml.internal.ObjectToRootXmlResourceConversionService</implementation>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.ModelElementToDomDocument</id>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.ModelElementToDomDocumentConversionService</implementation>
+        <description>ConversionService implementation for ModelElement to DOM Document conversions.</description>
+        <context>Sapphire</context>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.ModelElementToDomElement</id>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.ModelElementToDomElementConversionService</implementation>
+        <description>ConversionService implementation for ModelElement to DOM Element conversions.</description>
+        <context>Sapphire</context>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.ModelElementToXmlElement</id>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.ModelElementToXmlElementConversionService</implementation>
+        <description>ConversionService implementation for ModelElement to XmlElement conversions.</description>
+        <context>Sapphire</context>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.XmlResourceToDomDocument</id>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.XmlResourceToDomDocumentConversionService</implementation>
+        <description>ConversionService implementation for XmlResource to DOM Document conversions.</description>
+        <context>Sapphire</context>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.XmlResourceToDomElement</id>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.XmlResourceToDomElementConversionService</implementation>
+        <description>ConversionService implementation for XmlResource to DOM Element conversions.</description>
+        <context>Sapphire</context>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.XmlResourceToXmlElement</id>
+        <implementation>org.eclipse.sapphire.modeling.xml.internal.XmlResourceToXmlElementConversionService</implementation>
+        <description>ConversionService implementation for XmlResource to XmlElement conversions.</description>
+        <context>Sapphire</context>
     </service>
 </extension>

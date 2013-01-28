@@ -34,9 +34,13 @@ import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
+import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Tests MasterConversionService and the various conversions included with Sapphire.
@@ -115,6 +119,14 @@ public final class ConversionTests extends SapphireTestCase
         suite.addTest( new ConversionTests( "testIFileToRootXmlResource" ) );
         suite.addTest( new ConversionTests( "testIFileToXmlResource" ) );
         suite.addTest( new ConversionTests( "testIFileToResource" ) );
+        
+        suite.addTest( new ConversionTests( "testModelElementToDomDocument" ) );
+        suite.addTest( new ConversionTests( "testModelElementToDomElement" ) );
+        suite.addTest( new ConversionTests( "testModelElementToXmlElement" ) );
+
+        suite.addTest( new ConversionTests( "testXmlResourceToDomDocument" ) );
+        suite.addTest( new ConversionTests( "testXmlResourceToDomElement" ) );
+        suite.addTest( new ConversionTests( "testXmlResourceToXmlElement" ) );
         
         return suite;
     }
@@ -734,5 +746,145 @@ public final class ConversionTests extends SapphireTestCase
         final Resource txtFileStore = service.convert( txtFile, Resource.class );
         assertNull( txtFileStore );
     }
+    
+    public void testModelElementToDomDocument() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore();
+        final RootXmlResource xmlResource = new RootXmlResource( xmlResourceStore );
+        final XmlConversionTestElement elementOnXml = XmlConversionTestElement.TYPE.instantiate( xmlResource );
 
+        final Document document = service.convert( elementOnXml, Document.class );
+        
+        assertNotNull( document );
+        assertSame( document, xmlResource.getDomDocument() );
+        assertSame( document, elementOnXml.adapt( Document.class ) );
+        assertSame( document, elementOnXml.getList().insert().adapt( Document.class ) );
+        
+        final XmlConversionTestElement elementNotOnXml = XmlConversionTestElement.TYPE.instantiate();
+        
+        assertNull( service.convert( elementNotOnXml, Document.class ) );
+        assertNull( service.convert( elementNotOnXml.getList().insert(), Document.class ) );
+    }
+
+    public void testModelElementToDomElement() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore();
+        final RootXmlResource xmlResource = new RootXmlResource( xmlResourceStore );
+        final XmlConversionTestElement elementOnXml = XmlConversionTestElement.TYPE.instantiate( xmlResource );
+        
+        xmlResource.save();
+
+        final Element xmlElement = service.convert( elementOnXml, Element.class );
+        
+        assertNotNull( xmlElement );
+        assertSame( xmlElement, xmlResource.getXmlElement().getDomNode() );
+        assertSame( xmlElement, elementOnXml.adapt( Element.class ) );
+        
+        final XmlConversionTestElement.ListEntry childElement = elementOnXml.getList().insert();
+        final Element childXmlElement = service.convert( childElement, Element.class );
+        
+        assertNotNull( childXmlElement );
+        assertSame( childXmlElement, ( (XmlResource) childElement.resource() ).getXmlElement().getDomNode() );
+        assertSame( childXmlElement, childElement.adapt( Element.class ) );
+        assertNotSame( childXmlElement, xmlElement );
+        
+        final XmlConversionTestElement elementNotOnXml = XmlConversionTestElement.TYPE.instantiate();
+        
+        assertNull( service.convert( elementNotOnXml, Element.class ) );
+        assertNull( service.convert( elementNotOnXml.getList().insert(), Element.class ) );
+    }
+    
+    public void testModelElementToXmlElement() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore();
+        final RootXmlResource xmlResource = new RootXmlResource( xmlResourceStore );
+        final XmlConversionTestElement elementOnXml = XmlConversionTestElement.TYPE.instantiate( xmlResource );
+        
+        xmlResource.save();
+
+        final XmlElement xmlElement = service.convert( elementOnXml, XmlElement.class );
+        
+        assertNotNull( xmlElement );
+        assertSame( xmlElement, xmlResource.getXmlElement() );
+        assertSame( xmlElement, elementOnXml.adapt( XmlElement.class ) );
+        
+        final XmlConversionTestElement.ListEntry childElement = elementOnXml.getList().insert();
+        final XmlElement childXmlElement = service.convert( childElement, XmlElement.class );
+        
+        assertNotNull( childXmlElement );
+        assertSame( childXmlElement, ( (XmlResource) childElement.resource() ).getXmlElement() );
+        assertSame( childXmlElement, childElement.adapt( XmlElement.class ) );
+        assertNotSame( childXmlElement, xmlElement );
+        
+        final XmlConversionTestElement elementNotOnXml = XmlConversionTestElement.TYPE.instantiate();
+        
+        assertNull( service.convert( elementNotOnXml, XmlElement.class ) );
+        assertNull( service.convert( elementNotOnXml.getList().insert(), XmlElement.class ) );
+    }
+    
+    public void testXmlResourceToDomDocument() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore();
+        final RootXmlResource xmlResource = new RootXmlResource( xmlResourceStore );
+
+        final Document document = service.convert( xmlResource, Document.class );
+        
+        assertNotNull( document );
+        assertSame( document, xmlResource.getDomDocument() );
+    }
+    
+    public void testXmlResourceToDomElement() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore();
+        final RootXmlResource xmlResource = new RootXmlResource( xmlResourceStore );
+        final XmlConversionTestElement elementOnXml = XmlConversionTestElement.TYPE.instantiate( xmlResource );
+        
+        xmlResource.save();
+
+        final Element xmlElement = service.convert( xmlResource, Element.class );
+        
+        assertNotNull( xmlElement );
+        assertSame( xmlElement, xmlResource.getXmlElement().getDomNode() );
+        
+        final XmlConversionTestElement.ListEntry childElement = elementOnXml.getList().insert();
+        final Element childXmlElement = service.convert( childElement.resource(), Element.class );
+        
+        assertNotNull( childXmlElement );
+        assertSame( childXmlElement, ( (XmlResource) childElement.resource() ).getXmlElement().getDomNode() );
+        assertNotSame( childXmlElement, xmlElement );
+    }
+    
+    public void testXmlResourceToXmlElement() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore();
+        final RootXmlResource xmlResource = new RootXmlResource( xmlResourceStore );
+        final XmlConversionTestElement elementOnXml = XmlConversionTestElement.TYPE.instantiate( xmlResource );
+        
+        xmlResource.save();
+
+        final XmlElement xmlElement = service.convert( xmlResource, XmlElement.class );
+        
+        assertNotNull( xmlElement );
+        assertSame( xmlElement, xmlResource.getXmlElement() );
+        
+        final XmlConversionTestElement.ListEntry childElement = elementOnXml.getList().insert();
+        final XmlElement childXmlElement = service.convert( childElement.resource(), XmlElement.class );
+        
+        assertNotNull( childXmlElement );
+        assertSame( childXmlElement, ( (XmlResource) childElement.resource() ).getXmlElement() );
+        assertNotSame( childXmlElement, xmlElement );
+    }
+    
 }
