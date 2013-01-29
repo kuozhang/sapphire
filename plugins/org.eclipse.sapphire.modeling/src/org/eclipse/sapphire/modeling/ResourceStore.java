@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 
@@ -28,11 +30,14 @@ public abstract class ResourceStore
     
     public <A> A adapt( final Class<A> adapterType )
     {
-        A result = null;
+        A result = Sapphire.service( MasterConversionService.class ).convert( this, adapterType );
         
-        if( adapterType == LocalizationService.class )
+        if( result == null )
         {
-            result = adapterType.cast( getLocalizationService() );
+            if( adapterType == LocalizationService.class )
+            {
+                result = adapterType.cast( getLocalizationService() );
+            }
         }
         
         return result;

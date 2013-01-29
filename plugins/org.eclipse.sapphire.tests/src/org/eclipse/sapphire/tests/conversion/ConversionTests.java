@@ -839,6 +839,7 @@ public final class ConversionTests extends SapphireTestCase
         
         assertNotNull( document );
         assertSame( document, xmlResource.getDomDocument() );
+        assertSame( document, xmlResource.adapt( Document.class ) );
     }
     
     public void testXmlResourceToDomElement() throws Exception
@@ -855,12 +856,15 @@ public final class ConversionTests extends SapphireTestCase
         
         assertNotNull( xmlElement );
         assertSame( xmlElement, xmlResource.getXmlElement().getDomNode() );
+        assertSame( xmlElement, xmlResource.adapt( Element.class ) );
         
         final XmlConversionTestElement.ListEntry childElement = elementOnXml.getList().insert();
         final Element childXmlElement = service.convert( childElement.resource(), Element.class );
+        final XmlResource childXmlResource = (XmlResource) childElement.resource();
         
         assertNotNull( childXmlElement );
-        assertSame( childXmlElement, ( (XmlResource) childElement.resource() ).getXmlElement().getDomNode() );
+        assertSame( childXmlElement, childXmlResource.getXmlElement().getDomNode() );
+        assertSame( childXmlElement, childXmlResource.adapt( Element.class ) );
         assertNotSame( childXmlElement, xmlElement );
     }
     
@@ -878,12 +882,15 @@ public final class ConversionTests extends SapphireTestCase
         
         assertNotNull( xmlElement );
         assertSame( xmlElement, xmlResource.getXmlElement() );
+        assertSame( xmlElement, xmlResource.adapt( XmlElement.class ) );
         
         final XmlConversionTestElement.ListEntry childElement = elementOnXml.getList().insert();
         final XmlElement childXmlElement = service.convert( childElement.resource(), XmlElement.class );
+        final XmlResource childXmlResource = (XmlResource) childElement.resource();
         
         assertNotNull( childXmlElement );
-        assertSame( childXmlElement, ( (XmlResource) childElement.resource() ).getXmlElement() );
+        assertSame( childXmlElement, childXmlResource.getXmlElement() );
+        assertSame( childXmlElement, childXmlResource.adapt( XmlElement.class ) );
         assertNotSame( childXmlElement, xmlElement );
     }
     
