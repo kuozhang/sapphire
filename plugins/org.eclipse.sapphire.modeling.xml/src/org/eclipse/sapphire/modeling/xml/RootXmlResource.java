@@ -227,11 +227,11 @@ public class RootXmlResource extends XmlResource
     @Override
     public <A> A adapt( final Class<A> adapterType )
     {
-        A adapter = this.store.adapt( adapterType );
+        A adapter = super.adapt( adapterType );
         
         if( adapter == null )
         {
-            adapter = super.adapt( adapterType );
+            adapter = this.store.adapt( adapterType );
         }
         
         return adapter;
