@@ -901,36 +901,42 @@ public final class CreateNormalizedXmlSchemaOpMethods
     {
         boolean changed = false;
         
-        String before = element.getAttributeText( "type" );
-        
-        if( before.length() > 0 )
+        if( applyTypeSubstitutions( element, "type", typeSubstitutions ) )
         {
-            final String after = typeSubstitutions.get( before );
-            
-            if( after != null )
-            {
-                element.setAttributeText( "type", after, false );
-                changed = true;
-            }
+            changed = true;
         }
         
-        before = element.getAttributeText( "base" );
-        
-        if( before.length() > 0 )
+        if( applyTypeSubstitutions( element, "base", typeSubstitutions ) )
         {
-            final String after = typeSubstitutions.get( before );
-            
-            if( after != null )
-            {
-                element.setAttributeText( "base", after, false );
-                changed = true;
-            }
+            changed = true;
         }
         
         for( XmlElement child : element.getChildElements() )
         {
             if( applyTypeSubstitutions( child, typeSubstitutions ) )
             {
+                changed = true;
+            }
+        }
+        
+        return changed;
+    }
+    
+    private static boolean applyTypeSubstitutions( final XmlElement element,
+                                                   final String attribute,
+                                                   final Map<String,String> typeSubstitutions )
+    {
+        boolean changed = false;
+        
+        final String before = element.getAttributeText( attribute );
+        
+        if( before.length() > 0 )
+        {
+            final String after = typeSubstitutions.get( before );
+            
+            if( after != null )
+            {
+                element.setAttributeText( attribute, after, false );
                 changed = true;
             }
         }
@@ -1095,19 +1101,28 @@ public final class CreateNormalizedXmlSchemaOpMethods
                 
                 element.getOwnerDocument().renameNode( element, NS_SCHEMA, ( newPrefix == null ? "" : newPrefix + ":" ) + element.getLocalName() );
                 
-                String type = element.getAttribute( "type" );
-                
-                if( type.length() > 0 )
-                {
-                    final int colon = type.indexOf( ':' );
-                    final String typePrefix = ( colon == -1 ? null : type.substring( 0, colon ) );
-                    
-                    if( equal( typePrefix, oldPrefix ) )
-                    {
-                        final String typeWithoutPrefix = ( colon == -1 ? type : type.substring( colon + 1 ) );
-                        element.setAttribute( "type", ( newPrefix == null ? "" : newPrefix + ":" ) + typeWithoutPrefix );
-                    }
-                }
+                changeSchemaNamespacePrefix( element, "type", oldPrefix, newPrefix );
+                changeSchemaNamespacePrefix( element, "base", oldPrefix, newPrefix );
+            }
+        }
+    }
+    
+    private static void changeSchemaNamespacePrefix( final Element element,
+                                                     final String attribute,
+                                                     final String oldPrefix,
+                                                     final String newPrefix )
+    {
+        final String type = element.getAttribute( attribute );
+        
+        if( type.length() > 0 )
+        {
+            final int colon = type.indexOf( ':' );
+            final String typePrefix = ( colon == -1 ? null : type.substring( 0, colon ) );
+            
+            if( equal( typePrefix, oldPrefix ) )
+            {
+                final String typeWithoutPrefix = ( colon == -1 ? type : type.substring( colon + 1 ) );
+                element.setAttribute( attribute, ( newPrefix == null ? "" : newPrefix + ":" ) + typeWithoutPrefix );
             }
         }
     }
