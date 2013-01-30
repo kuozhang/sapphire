@@ -248,6 +248,17 @@ public final class CreateNormalizedXmlSchemaOpMethods
                     }
                 }
                 
+                changeSchemaNamespacePrefix( root.getDomNode().getOwnerDocument(), "xsd" );
+                
+                final Map<String,String> typeSubstitutions = new HashMap<String,String>();
+                
+                for( TypeSubstitution sub : operation.getTypeSubstitutions() )
+                {
+                    typeSubstitutions.put( sub.getBefore().getContent(), sub.getAfter().getContent() );
+                }
+                
+                applyTypeSubstitutions( root, typeSubstitutions );
+                
                 boolean keepInlining = true;
                 
                 while( keepInlining )
@@ -300,17 +311,6 @@ public final class CreateNormalizedXmlSchemaOpMethods
                 }
                 
                 sort( root );
-                
-                changeSchemaNamespacePrefix( root.getDomNode().getOwnerDocument(), "xsd" );
-                
-                final Map<String,String> typeSubstitutions = new HashMap<String,String>();
-                
-                for( TypeSubstitution sub : operation.getTypeSubstitutions() )
-                {
-                    typeSubstitutions.put( sub.getBefore().getContent(), sub.getAfter().getContent() );
-                }
-                
-                applyTypeSubstitutions( root, typeSubstitutions );
                 
                 root.format();
                 
@@ -901,7 +901,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
     {
         boolean changed = false;
         
-        final String before = element.getAttributeText( "type" );
+        String before = element.getAttributeText( "type" );
         
         if( before.length() > 0 )
         {
@@ -910,6 +910,19 @@ public final class CreateNormalizedXmlSchemaOpMethods
             if( after != null )
             {
                 element.setAttributeText( "type", after, false );
+                changed = true;
+            }
+        }
+        
+        before = element.getAttributeText( "base" );
+        
+        if( before.length() > 0 )
+        {
+            final String after = typeSubstitutions.get( before );
+            
+            if( after != null )
+            {
+                element.setAttributeText( "base", after, false );
                 changed = true;
             }
         }
