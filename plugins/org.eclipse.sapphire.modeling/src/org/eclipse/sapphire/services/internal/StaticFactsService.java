@@ -15,7 +15,6 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Fact;
 import org.eclipse.sapphire.modeling.annotations.Facts;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -68,7 +67,7 @@ public final class StaticFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
+            final ModelProperty property = context.find( ModelProperty.class );
             return ( property != null && ( property.hasAnnotation( Fact.class ) || property.hasAnnotation( Facts.class ) ) );
         }
     
