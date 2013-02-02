@@ -45,6 +45,8 @@ import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -97,7 +99,9 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         this.memberProperty = (ValueProperty) this.memberType.properties().get( 0 );
         this.possibleValuesService = part.getLocalModelElement().service( property, PossibleValuesService.class );
         
-        setAddActionDesired( false );
+        final Status.Severity invalidValueSeverity = this.possibleValuesService.getInvalidValueSeverity( null );
+        
+        setAddActionDesired( invalidValueSeverity == Severity.ERROR ? false : true );
     }
 
     public Control createSourceControl( final Composite parent )
