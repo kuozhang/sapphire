@@ -54,6 +54,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.SortedSetFactory;
 import org.eclipse.swt.SWT;
@@ -118,7 +119,9 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         
         this.sourceTableViewer = new TableViewer( innerComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
         this.sourceTable = this.sourceTableViewer.getTable();
-        this.sourceTable.setHeaderVisible( true );
+        
+        final boolean showHeader = getPart().getRenderingHint( PropertyEditorDef.HINT_SHOW_HEADER, true );
+        this.sourceTable.setHeaderVisible( showHeader );
         
         final TableViewerColumn viewerColumn = new TableViewerColumn( this.sourceTableViewer, SWT.NONE );
         final TableColumn column = viewerColumn.getColumn();
