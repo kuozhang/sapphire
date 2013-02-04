@@ -179,12 +179,11 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     @Override
     protected void createContents( final Composite parent )
     {
-        createContents( parent, false, false );
+        createContents( parent, false );
     }
     
     protected Control createContents( final Composite parent,
-                                      final boolean suppressLabel,
-                                      final boolean ignoreLeftMarginHint )
+                                      final boolean embedded )
     {
         final PropertyEditorPart part = getPart();
         final IModelElement element = part.getLocalModelElement();
@@ -222,13 +221,19 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 @Override
                 public boolean getShowLabel()
                 {
-                    return ( suppressLabel ? false : super.getShowLabel() );
+                    return ( embedded ? false : super.getShowLabel() );
                 }
 
                 @Override
                 public int getLeftMargin()
                 {
-                    return ( ignoreLeftMarginHint ? 0 : super.getLeftMargin() );
+                    return ( embedded ? 0 : super.getLeftMargin() );
+                }
+
+                @Override
+                public boolean getSpanBothColumns()
+                {
+                    return ( embedded ? true : super.getSpanBothColumns() );
                 }
             }
         );

@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
 import static org.eclipse.sapphire.ui.PropertyEditorPart.RELATED_CONTROLS;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
@@ -29,7 +28,6 @@ import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -98,7 +96,7 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultL
         decorator.addEditorControl( toolbarComposite );
         decorator.addEditorControl( toolbar );
         
-        final Table mainTable = (Table) super.createContents( tableComposite, true, true );
+        final Table mainTable = (Table) super.createContents( tableComposite, true );
         
         final SapphireActionGroup actions = getActions();
         final SapphireAction moveRightAction = actions.getAction( SapphireActionSystem.ACTION_MOVE_RIGHT );
