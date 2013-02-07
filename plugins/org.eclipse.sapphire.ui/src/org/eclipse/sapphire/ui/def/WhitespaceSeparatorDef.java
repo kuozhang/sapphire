@@ -25,6 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "whitespace separator" )
+@XmlBinding( path = "spacer" )
 
 public interface WhitespaceSeparatorDef extends SeparatorDef
 {

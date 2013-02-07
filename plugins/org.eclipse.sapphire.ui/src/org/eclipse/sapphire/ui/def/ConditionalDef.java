@@ -20,6 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
@@ -28,6 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  */
 
 @Label( standard = "if" )
+@XmlBinding( path = "if" )
 
 public interface ConditionalDef extends FormComponentDef
 {
@@ -72,29 +74,7 @@ public interface ConditionalDef extends FormComponentDef
         }
     )
                       
-    @XmlListBinding
-    ( 
-        path = "then",
-        mappings =
-        {
-            @XmlListBinding.Mapping( element = "property-editor", type = PropertyEditorDef.class ),
-            @XmlListBinding.Mapping( element = "separator", type = LineSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "spacer", type = WhitespaceSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
-            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
-            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
-            @XmlListBinding.Mapping( element = "composite", type = CompositeDef.class ),
-            @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
-            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
-            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = TabGroupDef.class ),
-            @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class ),
-            @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
-            @XmlListBinding.Mapping( element = "form", type = FormDef.class )
-        }
-    )
+    @XmlListBinding( path = "then" )
                              
     ListProperty PROP_THEN_CONTENT = new ListProperty( TYPE, "ThenContent" );
     
@@ -126,29 +106,7 @@ public interface ConditionalDef extends FormComponentDef
         }
     )
                       
-    @XmlListBinding
-    ( 
-        path = "else",
-        mappings =
-        {
-            @XmlListBinding.Mapping( element = "property-editor", type = PropertyEditorDef.class ),
-            @XmlListBinding.Mapping( element = "separator", type = LineSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "spacer", type = WhitespaceSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
-            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
-            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
-            @XmlListBinding.Mapping( element = "composite", type = CompositeDef.class ),
-            @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
-            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
-            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = TabGroupDef.class ),
-            @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class ),
-            @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
-            @XmlListBinding.Mapping( element = "form", type = FormDef.class )
-        }
-    )
+    @XmlListBinding( path = "else" )
                              
     ListProperty PROP_ELSE_CONTENT = new ListProperty( TYPE, "ElseContent" );
     

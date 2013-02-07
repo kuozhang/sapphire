@@ -234,8 +234,8 @@ public final class ManufacturersBinding extends ListBindingImpl
                                                         final ModelProperty property,
                                                         final String[] params )
                     {
-                        this.xmlElementNames = new QName[] { createQualifiedName( "Item", null ) };
-                        this.modelElementTypes = new ModelElementType[] { Item.TYPE };
+                        this.xmlElementNames = new QName[] { createQualifiedName( "Item", null ), createQualifiedName( "MultiVariantItem", null ) };
+                        this.modelElementTypes = new ModelElementType[] { SingleVariantItem.TYPE, MultiVariantItem.TYPE };
                     }
                     
                     @Override

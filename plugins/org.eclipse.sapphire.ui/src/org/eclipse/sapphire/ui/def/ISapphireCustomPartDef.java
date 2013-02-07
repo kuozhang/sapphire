@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "custom part" )
+@XmlBinding( path = "custom" )
 
 public interface ISapphireCustomPartDef extends FormComponentDef
 {

@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.def.EditorPageDef;
  */
 
 @Label( standard = "master details editor page" )
+@XmlBinding( path = "editor-page" )
 
 public interface MasterDetailsEditorPageDef extends EditorPageDef
 {

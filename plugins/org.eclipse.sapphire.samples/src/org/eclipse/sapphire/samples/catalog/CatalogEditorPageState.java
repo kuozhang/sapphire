@@ -37,4 +37,15 @@ public interface CatalogEditorPageState extends MasterDetailsEditorPageState
     void setShowManufacturer( String value );
     void setShowManufacturer( Boolean value );
     
+    // *** ShowPrice ***
+    
+    @Type( base = Boolean.class )
+    @DefaultValue( text = "false" )
+
+    ValueProperty PROP_SHOW_PRICE = new ValueProperty( TYPE, "ShowPrice" );
+    
+    Value<Boolean> getShowPrice();
+    void setShowPrice( String value );
+    void setShowPrice( Boolean value );
+    
 }

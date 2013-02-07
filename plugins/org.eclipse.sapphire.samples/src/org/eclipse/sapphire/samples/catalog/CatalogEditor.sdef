@@ -67,6 +67,20 @@
             <id>Sample.ShowManufacturerColor</id>
             <impl>ShowManufacturerColorActionHandler</impl>
         </action-handler>
+        <action>
+            <id>Sample.ShowPrice</id>
+            <label>show price</label>
+            <image>ShowPrice.png</image>
+            <type>TOGGLE</type>
+            <context>Sapphire.EditorPage</context>
+            <location>after:Sample.ShowManufacturerColor</location>
+            <location>before:Sapphire.Outline.Hide</location>
+        </action>
+        <action-handler>
+            <action>Sample.ShowPrice</action>
+            <id>Sample.ShowPrice</id>
+            <impl>ShowPriceActionHandler</impl>
+        </action-handler>
         <page-name>catalog</page-name>
         <element-type>Catalog</element-type>
         <root-node>
@@ -78,6 +92,12 @@
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>add an item</label>
+                            <action-handler-id>Sapphire.Add.SingleVariantItem</action-handler-id>
+                        </actuator>
+                        <actuator>
+                            <action-id>Sapphire.Add</action-id>
+                            <action-handler-id>Sapphire.Add.MultiVariantItem</action-handler-id>
+                            <label>add a multi-variant item</label>
                         </actuator>
                     </content>
                     <description>Manage all items in the catalog.</description>
@@ -155,18 +175,76 @@
         <id>CatalogItemsNodeFactory</id>
         <property>Items</property>
         <case>
-            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }</label>
             <image>${ CatalogItemImage() }</image>
+            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }${ State().ShowPrice ? Concat( &quot; - $&quot;, Price ) : &quot;&quot; }</label>
+            <section-ref>CatalogItemMainSection</section-ref>
+            <model-element-type>SingleVariantItem</model-element-type>
             <section>
+                <label>pricing</label>
                 <content>
-                    <property-editor>Name</property-editor>
-                    <property-editor>Category</property-editor>
-                    <property-editor>Manufacturer</property-editor>
-                    <property-editor>Description</property-editor>
+                    <property-editor>BasePrice</property-editor>
+                    <property-editor>Discount</property-editor>
+                    <property-editor>Price</property-editor>
                 </content>
-                <label>item</label>
             </section>
         </case>
+        <case>
+            <image>${ CatalogItemImage() }</image>
+            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }${ State().ShowPrice ? Concat( &quot; - &quot;, ( Min( Variants, &quot;Price&quot; ) == Max( Variants, &quot;Price&quot; ) ? Concat( &quot;$&quot;, Scale( Min( Variants, &quot;Price&quot; ), 2 ) ) : Concat( &quot;$&quot;, Scale( Min( Variants, &quot;Price&quot; ), 2 ), &quot; to $&quot;, Scale( Max( Variants, &quot;Price&quot; ), 2 ) ) ) ) : &quot;&quot; }</label>
+            <section-ref>CatalogItemMainSection</section-ref>
+            <section>
+                <content>
+                    <property-editor>
+                        <span>true</span>
+                        <property>Variants</property>
+                        <show-label>false</show-label>
+                        <child-property>Name</child-property>
+                        <child-property>BasePrice</child-property>
+                        <child-property>Discount</child-property>
+                        <child-property>Price</child-property>
+                        <hint>
+                            <name>column.widths</name>
+                            <value>100:5,100:1,100:1,100:1</value>
+                        </hint>
+                    </property-editor>
+                    <separator>
+                        <label>description</label>
+                    </separator>
+                    <switching-panel>
+                        <list-selection-controller>
+                            <property>Variants</property>
+                        </list-selection-controller>
+                        <panel>
+                            <key>ItemVariant</key>
+                            <content>
+                                <property-editor>
+                                    <span>true</span>
+                                    <property>Description</property>
+                                    <show-label>false</show-label>
+                                </property-editor>
+                            </content>
+                        </panel>
+                        <default-panel>
+                            <content>
+                                <label>Select variant above to view or edit the description.</label>
+                            </content>
+                        </default-panel>
+                    </switching-panel>
+                </content>
+                <label>variants</label>
+            </section>
+            <model-element-type>MultiVariantItem</model-element-type>
+        </case>
     </node-factory>
+    <section>
+        <id>CatalogItemMainSection</id>
+        <content>
+            <property-editor>Name</property-editor>
+            <property-editor>Category</property-editor>
+            <property-editor>Manufacturer</property-editor>
+            <property-editor>Description</property-editor>
+        </content>
+        <label>item</label>
+    </section>
     
 </definition>

@@ -42,6 +42,10 @@
     <li><a href="#ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></li>
     <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
   </ol>
+  <li><a href="#Forms">Forms</a></li>
+  <ol type="A">
+    <li><a href="#Forms-SectionReference">Section Reference</a></li>
+  </ol>
 </ol>
 
 <h2><a name="Key"><a name="Key-OnDemandElementCompilation">On-Demand Element Compilation</a></a></h2>
@@ -591,6 +595,43 @@ in the catalog sample should include the manufacturer.</p>
         &lt;label></font>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }<font color="#888888">&lt;/label>
     &lt;/case>
 &lt;/node-factory></font></code></pre>
+
+
+<h2><a name="Forms"><a name="Forms-SectionReference">Section Reference</a></a></h2>
+
+<p>Re-use section definitions across multiple node definitions in a master-details editor page.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;definition></font>
+    &lt;section>
+        &lt;id>CommonSection&lt;/id>
+        &lt;label>common&lt;/label>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/section>
+    <font color="#888888">&lt;node>
+        &lt;id>Node-1&lt;/id>
+        &lt;label>node 1&lt;/label></font>
+        &lt;section-ref>CommonSection&lt;/section-ref>
+        <font color="#888888">&lt;section>
+            &lt;label>another section&lt;/label>
+            &lt;content>
+                ...
+            &lt;/content>
+        &lt;/section>
+    &lt;/node>
+    &lt;node>
+        &lt;id>Node-2&lt;/id>
+        &lt;label>node 2&lt;/label></font>
+        &lt;section-ref>CommonSection&lt;/section-ref>
+        <font color="#888888">&lt;section>
+            &lt;label>another section&lt;/label>
+            &lt;content>
+                ...
+            &lt;/content>
+        &lt;/section>
+    &lt;/node>
+&lt;/definition></font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2013 Oracle<br/>

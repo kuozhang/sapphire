@@ -30,6 +30,7 @@ import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultVal
  */
 
 @Label( standard = "composite" )
+@XmlBinding( path = "composite" )
 
 public interface CompositeDef extends FormDef
 {

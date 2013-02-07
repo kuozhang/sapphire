@@ -23,6 +23,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "line separator" )
+@XmlBinding( path = "separator" )
 
 public interface LineSeparatorDef extends SeparatorDef
 {

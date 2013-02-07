@@ -12,19 +12,19 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.services.ReferenceService;
-import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FormPartIncludeReferenceService extends ReferenceService
+public final class SectionReferenceService extends ReferenceService
 {
     @Override
     public Object resolve( final String reference )
     {
-        return context( ISapphireUiDef.class ).getPartDef( reference, true, FormComponentDef.class );
+        return context( ISapphireUiDef.class ).getPartDef( reference, true, SectionDef.class );
     }
     
 }

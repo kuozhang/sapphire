@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @Label( standard = "dialog" )
 @Image( path = "DialogDef.png" )
+@XmlBinding( path = "dialog" )
 
 public interface DialogDef extends CompositeDef
 {

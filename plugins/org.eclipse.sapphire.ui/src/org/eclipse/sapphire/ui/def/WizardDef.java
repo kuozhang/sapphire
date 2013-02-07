@@ -30,6 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "wizard" )
+@XmlBinding( path = "wizard" )
 
 public interface WizardDef extends PartDef
 {

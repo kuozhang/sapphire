@@ -71,6 +71,7 @@ import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.def.SectionDef;
+import org.eclipse.sapphire.ui.def.SectionRef;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.ui.def.TabGroupDef;
@@ -1135,6 +1136,34 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SectionPart();
         }
+        else if( definition instanceof SectionRef )
+        {
+            final SectionRef ref = (SectionRef) definition;
+            def = ref.getSection().resolve();
+            
+            if( def == null )
+            {
+                final String msg = NLS.bind( Resources.couldNotResolveSection, ref.getSection().getText() );
+                throw new IllegalArgumentException( msg );
+            }
+            else
+            {
+                partParams = new HashMap<String,String>( params );
+                
+                for( ISapphireParam param : ref.getParams() )
+                {
+                    final String paramName = param.getName().getText();
+                    final String paramValue = param.getValue().getText();
+                    
+                    if( paramName != null && paramValue != null )
+                    {
+                        partParams.put( paramName, paramValue );
+                    }
+                }
+                
+                return create( parent, element, def, partParams );
+            }
+        }
         else if( definition instanceof CompositeDef )
         {
             part = new CompositePart();
@@ -1215,6 +1244,7 @@ public abstract class SapphirePart implements ISapphirePart
         public static String failedToInstantiate;
         public static String doesNotExtend;
         public static String couldNotResolveInclude;
+        public static String couldNotResolveSection;
         
         static
         {

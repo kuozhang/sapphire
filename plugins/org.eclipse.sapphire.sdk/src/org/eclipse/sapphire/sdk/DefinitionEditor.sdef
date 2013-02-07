@@ -423,6 +423,68 @@
         </case>
         
         <case>
+            <model-element-type>SectionDef</model-element-type>
+            <label>${ Id == null ? ( Label == null ? &quot;Section&quot; : Label ) : Id }</label>
+            <image>${ Image() }</image>
+            <section>
+                <label>section</label>
+                <content>
+                    <include>PartId</include>
+                    <property-editor>Label</property-editor>
+                    <property-editor>
+                        <height>75</height>
+                        <property>Description</property>
+                    </property-editor>
+                    <property-editor>VisibleWhen</property-editor>
+                </content>
+            </section>
+            <section>
+                <label>presentation</label>
+                <content>
+                    <include>CompositePresentation</include>
+                    <spacer></spacer>
+                    <property-editor>
+                        <property>Collapsible</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                    <property-editor>
+                        <property>CollapsedInitially</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
+                </content>
+            </section>
+            <node>
+                <label>content</label>
+                <node-include>
+                    <part>PartsNodeList</part>
+                    <param>
+                        <name>Property</name>
+                        <value>Content</value>
+                    </param>
+                </node-include>
+            </node>
+            <node-include>DocumentationNode</node-include>
+        </case>
+        
+        <case>
+            <model-element-type>SectionRef</model-element-type>
+            <label>${ Section == null ? &quot;&lt;section-ref&gt;&quot; : Section }</label>
+            <section>
+                <label>section reference</label>
+                <content>
+                    <property-editor>Section</property-editor>
+                    <property-editor>Params</property-editor>
+                </content>
+            </section>
+        </case>
+
+        <case>
             <model-element-type>LineSeparatorDef</model-element-type>
             <label>Line Separator</label>
             <image>${ Image() }</image>
@@ -710,55 +772,6 @@
                 <label>presentation</label>
                 <content>
                     <include>CompositePresentation</include>
-                </content>
-            </section>
-            <node>
-                <label>content</label>
-                <node-include>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>Content</value>
-                    </param>
-                </node-include>
-            </node>
-            <node-include>ServicesNode</node-include>
-            <node-include>DocumentationNode</node-include>
-        </case>
-
-        <case>
-            <model-element-type>SectionDef</model-element-type>
-            <label>${ Id == null ? &quot;Section&quot; : Id }</label>
-            <section>
-                <label>section</label>
-                <content>
-                    <property-editor>Label</property-editor>
-                    <property-editor>
-                        <height>75</height>
-                        <property>Description</property>
-                    </property-editor>
-                    <property-editor>VisibleWhen</property-editor>
-                </content>
-            </section>
-            <section>
-                <label>presentation</label>
-                <content>
-                    <include>CompositePresentation</include>
-                    <spacer></spacer>
-                    <property-editor>
-                        <property>Collapsible</property>
-                        <hint>
-                            <name>checkbox.layout</name>
-                            <value>leading.label</value>
-                        </hint>
-                    </property-editor>
-                    <property-editor>
-                        <property>CollapsedInitially</property>
-                        <hint>
-                            <name>checkbox.layout</name>
-                            <value>leading.label</value>
-                        </hint>
-                    </property-editor>
                 </content>
             </section>
             <node>
@@ -1085,7 +1098,7 @@
             <node-include>ServicesNode</node-include>
             <node-include>DocumentationNode</node-include>
         </case>
-
+        
         <case>
             <model-element-type>MasterDetailsContentNodeDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Content Outline Node" : Label ) : Id }</label>
@@ -1102,57 +1115,13 @@
             </section>
             <node>
                 <label>sections</label>
-                <node-factory>
-                    <property>Sections</property>
-                    <case>
-                        <model-element-type>MasterDetailsSectionDef</model-element-type>
-                        <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
-                        <image>${ Image() }</image>
-                        <section>
-                            <label>section</label>
-                            <content>
-                                <property-editor>Label</property-editor>
-                                <property-editor>
-                                    <height>75</height>
-                                    <property>Description</property>
-                                </property-editor>
-                                <property-editor>VisibleWhen</property-editor>
-                            </content>
-                        </section>
-                        <section>
-                            <label>presentation</label>
-                            <content>
-                                <include>CompositePresentation</include>
-                                <spacer></spacer>
-                                <property-editor>
-                                    <property>Collapsible</property>
-                                    <hint>
-                                        <name>checkbox.layout</name>
-                                        <value>leading.label</value>
-                                    </hint>
-                                </property-editor>
-                                <property-editor>
-                                    <property>CollapsedInitially</property>
-                                    <hint>
-                                        <name>checkbox.layout</name>
-                                        <value>leading.label</value>
-                                    </hint>
-                                </property-editor>
-                            </content>
-                        </section>
-                        <node>
-                            <label>content</label>
-                            <node-include>
-                                <part>PartsNodeList</part>
-                                <param>
-                                    <name>Property</name>
-                                    <value>Content</value>
-                                </param>
-                            </node-include>
-                        </node>
-                        <node-include>DocumentationNode</node-include>
-                    </case>
-                </node-factory>
+                <node-include>
+                    <param>
+                        <name>Property</name>
+                        <value>Sections</value>
+                    </param>
+                    <part>PartsNodeList</part>
+                </node-include>
             </node>
             <node>
                 <label>child nodes</label>
@@ -1185,7 +1154,6 @@
             <node-factory>
                 <property>Cases</property>
                 <case>
-                    <model-element-type>MasterDetailsContentNodeFactoryCaseDef</model-element-type>
                     <label>${ Type == null ? "Default Case" : Type }</label>
                     <section>
                         <label>Case</label>
@@ -1197,57 +1165,13 @@
                     </section>
                     <node>
                         <label>sections</label>
-                        <node-factory>
-                            <property>Sections</property>
-                            <case>
-                                <model-element-type>MasterDetailsSectionDef</model-element-type>
-                                <label>${ Label == null ? "&lt;section&gt;" : Label }</label>
-                                <image>${ Image() }</image>
-                                <section>
-                                    <label>section</label>
-                                    <content>
-                                        <property-editor>Label</property-editor>
-                                        <property-editor>
-                                            <height>75</height>
-                                            <property>Description</property>
-                                        </property-editor>
-                                        <property-editor>VisibleWhen</property-editor>
-                                    </content>
-                                </section>
-                                <section>
-                                    <label>presentation</label>
-                                    <content>
-                                        <include>CompositePresentation</include>
-                                        <spacer></spacer>
-                                        <property-editor>
-                                            <property>Collapsible</property>
-                                            <hint>
-                                                <name>checkbox.layout</name>
-                                                <value>leading.label</value>
-                                            </hint>
-                                        </property-editor>
-                                        <property-editor>
-                                            <property>CollapsedInitially</property>
-                                            <hint>
-                                                <name>checkbox.layout</name>
-                                                <value>leading.label</value>
-                                            </hint>
-                                        </property-editor>
-                                    </content>
-                                </section>
-                                <node>
-                                    <label>content</label>
-                                    <node-include>
-                                        <part>PartsNodeList</part>
-                                        <param>
-                                            <name>Property</name>
-                                            <value>Content</value>
-                                        </param>
-                                    </node-include>
-                                </node>
-                                <node-include>DocumentationNode</node-include>
-                            </case>
-                        </node-factory>
+                        <node-include>
+                            <param>
+                                <name>Property</name>
+                                <value>Sections</value>
+                            </param>
+                            <part>PartsNodeList</part>
+                        </node-include>
                     </node>
                     <node>
                         <label>child nodes</label>

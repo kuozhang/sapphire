@@ -25,6 +25,7 @@ import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
 
@@ -33,6 +34,7 @@ import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
  */
 
 @Label( standard = "include" )
+@XmlBinding( path = "include" )
 
 public interface IFormPartInclude extends FormComponentDef
 {

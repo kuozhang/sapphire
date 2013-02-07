@@ -108,39 +108,12 @@ public interface ISapphireUiDef extends IModelElement
             IDiagramEditorPageDef.class,
             DialogDef.class,
             WizardDef.class,
-            FormEditorPageDef.class
+            FormEditorPageDef.class,
+            SectionDef.class
         }
     )
                       
-    @XmlListBinding
-    ( 
-        mappings =
-        {
-            @XmlListBinding.Mapping( element = "property-editor", type = PropertyEditorDef.class ),
-            @XmlListBinding.Mapping( element = "separator", type = LineSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "spacer", type = WhitespaceSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
-            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
-            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
-            @XmlListBinding.Mapping( element = "composite", type = CompositeDef.class ),
-            @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
-            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
-            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = TabGroupDef.class ),
-            @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class ),
-            @XmlListBinding.Mapping( element = "form", type = FormDef.class ),
-            @XmlListBinding.Mapping( element = "split-form", type = SplitFormDef.class ),
-            @XmlListBinding.Mapping( element = "node", type = MasterDetailsContentNodeDef.class ),
-            @XmlListBinding.Mapping( element = "node-factory", type = MasterDetailsContentNodeFactoryDef.class ),
-            @XmlListBinding.Mapping( element = "editor-page", type = MasterDetailsEditorPageDef.class ),
-            @XmlListBinding.Mapping( element = "diagram-page", type = IDiagramEditorPageDef.class ),
-            @XmlListBinding.Mapping( element = "dialog", type = DialogDef.class ),
-            @XmlListBinding.Mapping( element = "wizard", type = WizardDef.class ),
-            @XmlListBinding.Mapping( element = "form-editor-page", type = FormEditorPageDef.class )
-        }
-    )
+    @XmlListBinding( path = "" )
                              
     ListProperty PROP_PART_DEFS = new ListProperty( TYPE, "PartDefs" );
     

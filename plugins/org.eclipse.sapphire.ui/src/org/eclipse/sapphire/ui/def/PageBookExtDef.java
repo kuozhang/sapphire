@@ -18,6 +18,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.PageBookPartDefControlMethodBinding;
 import org.eclipse.sapphire.ui.def.internal.PageBookPartDefControlPropertyBinding;
 
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.ui.def.internal.PageBookPartDefControlPropertyBindin
  */
 
 @Label( standard = "page book" )
+@XmlBinding( path = "switching-panel" )
 
 public interface PageBookExtDef extends PageBookDef
 {

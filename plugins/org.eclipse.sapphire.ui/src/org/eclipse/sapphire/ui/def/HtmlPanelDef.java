@@ -32,6 +32,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHtmlPanelDefSourceBinding;
  */
 
 @Label( standard = "HTML panel" )
+@XmlBinding( path = "html" )
 
 public interface HtmlPanelDef extends FormComponentDef
 {

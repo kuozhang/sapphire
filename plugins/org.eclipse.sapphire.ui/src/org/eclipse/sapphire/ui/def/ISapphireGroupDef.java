@@ -25,6 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "group" )
+@XmlBinding( path = "group" )
 
 public interface ISapphireGroupDef extends CompositeDef
 {

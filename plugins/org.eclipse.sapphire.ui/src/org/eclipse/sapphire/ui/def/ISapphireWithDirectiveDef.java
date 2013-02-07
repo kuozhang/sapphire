@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "with" )
+@XmlBinding( path = "with" )
 
 public interface ISapphireWithDirectiveDef extends PageBookDef
 {

@@ -16,6 +16,7 @@ import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
@@ -23,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "form editor page" )
+@XmlBinding( path = "form-editor-page" )
 
 public interface FormEditorPageDef extends EditorPageDef
 {
@@ -56,31 +58,7 @@ public interface FormEditorPageDef extends EditorPageDef
         }
     )
                       
-    @XmlListBinding
-    ( 
-        path = "content",
-        mappings =
-        {
-            @XmlListBinding.Mapping( element = "property-editor", type = PropertyEditorDef.class ),
-            @XmlListBinding.Mapping( element = "separator", type = LineSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "spacer", type = WhitespaceSeparatorDef.class ),
-            @XmlListBinding.Mapping( element = "label", type = ISapphireLabelDef.class ),
-            @XmlListBinding.Mapping( element = "group", type = ISapphireGroupDef.class ),
-            @XmlListBinding.Mapping( element = "with", type = ISapphireWithDirectiveDef.class ),
-            @XmlListBinding.Mapping( element = "if", type = ConditionalDef.class ),
-            @XmlListBinding.Mapping( element = "composite", type = CompositeDef.class ),
-            @XmlListBinding.Mapping( element = "actuator", type = ActuatorDef.class ),
-            @XmlListBinding.Mapping( element = "custom", type = ISapphireCustomPartDef.class ),
-            @XmlListBinding.Mapping( element = "read-only-text", type = ISapphireStaticTextFieldDef.class ),
-            @XmlListBinding.Mapping( element = "switching-panel", type = PageBookExtDef.class ),
-            @XmlListBinding.Mapping( element = "tab-group", type = TabGroupDef.class ),
-            @XmlListBinding.Mapping( element = "html", type = HtmlPanelDef.class ),
-            @XmlListBinding.Mapping( element = "include", type = IFormPartInclude.class ),
-            @XmlListBinding.Mapping( element = "form", type = FormDef.class ),
-            @XmlListBinding.Mapping( element = "split-form", type = SplitFormDef.class ),
-            @XmlListBinding.Mapping( element = "section", type = SectionDef.class )
-        }
-    )
+    @XmlListBinding( path = "content" )
                              
     ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content" );
     

@@ -9,44 +9,52 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
+package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal.MasterDetailsContentNodeIncludeMethods;
+import org.eclipse.sapphire.ui.def.internal.SectionReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node include" )
-@XmlBinding( path = "node-include" )
+@Label( standard = "section reference" )
+@XmlBinding( path = "section-ref" )
 
-public interface MasterDetailsContentNodeInclude extends MasterDetailsContentNodeChildDef
+public interface SectionRef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeInclude.class );
+    ModelElementType TYPE = new ModelElementType( SectionRef.class );
     
-    // *** Part ***
-    
-    @Label( standard = "part" )
-    @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "part" )
-    
-    ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
-    
-    Value<String> getPart();
-    void setPart( String value );
+    // *** Section ***
 
+    @Reference( target = SectionDef.class )
+    @Service( impl = SectionReferenceService.class )
+    @Label( standard = "section" )
+    @PossibleValues( property = "/PartDefs[#type=SectionDef]/Id" )
+    @Required
+    @MustExist
+    @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "section" )
+    
+    ValueProperty PROP_SECTION = new ValueProperty( TYPE, "Section" );
+    
+    ReferenceValue<String,SectionDef> getSection();
+    void setSection( String value );
+    
     // *** Params ***
     
     @Label( standard = "params" )
@@ -56,11 +64,5 @@ public interface MasterDetailsContentNodeInclude extends MasterDetailsContentNod
     ListProperty PROP_PARAMS = new ListProperty( TYPE, "Params" );
     
     ModelElementList<ISapphireParam> getParams();
-
-    // *** Method : resolve ***
-    
-    @DelegateImplementation( MasterDetailsContentNodeIncludeMethods.class )
-    
-    MasterDetailsContentNodeChildDef resolve();
 
 }

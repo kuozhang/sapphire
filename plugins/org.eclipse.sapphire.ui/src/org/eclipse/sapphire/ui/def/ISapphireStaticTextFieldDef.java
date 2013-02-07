@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "static text field" )
+@XmlBinding( path = "read-only-text" )
 
 public interface ISapphireStaticTextFieldDef extends FormComponentDef
 {

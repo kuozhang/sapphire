@@ -33,8 +33,16 @@ public interface Catalog extends IModelElement
     
     // *** Items ***
     
-    @Type( base = Item.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "Item", type = Item.class ) )
+    @Type( base = Item.class, possible = { SingleVariantItem.class, MultiVariantItem.class } )
+    
+    @XmlListBinding
+    (
+        mappings = 
+        {
+            @XmlListBinding.Mapping( element = "Item", type = SingleVariantItem.class ),
+            @XmlListBinding.Mapping( element = "MultiVariantItem", type = MultiVariantItem.class )
+        }
+    )
     
     ListProperty PROP_ITEMS = new ListProperty( TYPE, "Items" );
     

@@ -61,8 +61,10 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.SectionPart;
+import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.SectionDef;
+import org.eclipse.sapphire.ui.def.SectionRef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeChildDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryCaseDef;
@@ -209,8 +211,46 @@ public final class MasterDetailsContentNode
         
         final ListFactory<SectionPart> sectionsListFactory = ListFactory.start();
         
-        for( SectionDef secdef : this.definition.getSections() )
+        for( FormComponentDef s : this.definition.getSections() )
         {
+            final SectionDef sectionDefinition;
+            final Map<String,String> sectionParams;
+            
+            if( s instanceof SectionDef )
+            {
+                sectionDefinition = (SectionDef) s;
+                sectionParams = this.params;
+            }
+            else if( s instanceof SectionRef )
+            {
+                final SectionRef sectionReference = (SectionRef) s;
+                
+                sectionDefinition = sectionReference.getSection().resolve();
+                
+                if( sectionDefinition == null )
+                {
+                    final String msg = NLS.bind( Resources.couldNotResolveSection, sectionReference.getSection().getText() );
+                    throw new RuntimeException( msg );
+                }
+                
+                sectionParams = new HashMap<String,String>( this.params );
+                
+                for( ISapphireParam param : sectionReference.getParams() )
+                {
+                    final String paramName = param.getName().getText();
+                    final String paramValue = param.getValue().getText();
+                    
+                    if( paramName != null && paramValue != null )
+                    {
+                        sectionParams.put( paramName, paramValue );
+                    }
+                }
+            }
+            else
+            {
+                throw new IllegalStateException();
+            }
+            
             final SectionPart section = new SectionPart()
             {
                 @Override
@@ -220,7 +260,7 @@ public final class MasterDetailsContentNode
                 }
             };
             
-            section.init( this, this.modelElement, secdef, this.params );
+            section.init( this, this.modelElement, sectionDefinition, sectionParams );
             section.attach( this.childPartListener );
             
             sectionsListFactory.add( section );
@@ -1057,6 +1097,7 @@ public final class MasterDetailsContentNode
     private static final class Resources extends NLS
     {
         public static String couldNotResolveNode;
+        public static String couldNotResolveSection;
         
         static
         {

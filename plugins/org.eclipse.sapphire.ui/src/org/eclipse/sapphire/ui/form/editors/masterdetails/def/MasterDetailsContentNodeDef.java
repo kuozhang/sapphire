@@ -22,13 +22,17 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
+import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
+import org.eclipse.sapphire.ui.def.SectionDef;
+import org.eclipse.sapphire.ui.def.SectionRef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "content outline node" )
+@XmlBinding( path = "node" )
 
 public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChildDef, IPropertiesViewContributorDef
 {
@@ -72,16 +76,17 @@ public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChi
     // *** Sections ***
     
     @Label( standard = "sections" )
-    @Type( base = MasterDetailsSectionDef.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "section", type = MasterDetailsSectionDef.class ) )
+    @Type( base = FormComponentDef.class, possible = { SectionDef.class, SectionRef.class } )
+    @XmlListBinding( path = "" )
     
     ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
     
-    ModelElementList<MasterDetailsSectionDef> getSections();
+    ModelElementList<FormComponentDef> getSections();
     
     // *** ChildNodes ***
     
     @Label( standard = "child nodes" )
+    @XmlListBinding( path = "" )
     
     @Type
     ( 
@@ -92,16 +97,6 @@ public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChi
             MasterDetailsContentNodeFactoryDef.class,
             MasterDetailsContentNodeInclude.class
         } 
-    )
-    
-    @XmlListBinding
-    (
-        mappings = 
-        { 
-            @XmlListBinding.Mapping( element = "node", type = MasterDetailsContentNodeDef.class ),
-            @XmlListBinding.Mapping( element = "node-factory", type = MasterDetailsContentNodeFactoryDef.class ),
-            @XmlListBinding.Mapping( element = "node-include", type = MasterDetailsContentNodeInclude.class )
-        }
     )
     
     ListProperty PROP_CHILD_NODES = new ListProperty( TYPE, "ChildNodes" );

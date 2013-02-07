@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "content outline node factory" )
+@XmlBinding( path = "node-factory" )
 
 public interface MasterDetailsContentNodeFactoryDef extends MasterDetailsContentNodeChildDef
 {

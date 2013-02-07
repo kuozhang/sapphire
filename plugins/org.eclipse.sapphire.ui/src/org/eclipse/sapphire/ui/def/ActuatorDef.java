@@ -33,6 +33,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "actuator" )
+@XmlBinding( path = "actuator" )
 
 @Documentation
 (

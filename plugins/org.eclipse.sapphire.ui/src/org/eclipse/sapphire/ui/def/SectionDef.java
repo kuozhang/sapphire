@@ -18,18 +18,21 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
+import org.eclipse.sapphire.ui.def.internal.SectionDefLabelDefaultValueProvider;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "section" )
+@XmlBinding( path = "section" )
 
 public interface SectionDef extends CompositeDef
 {
@@ -40,6 +43,7 @@ public interface SectionDef extends CompositeDef
     @Type( base = Function.class )
     @Label( standard = "label" )
     @Localizable
+    @Service( impl = SectionDefLabelDefaultValueProvider.class )
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );

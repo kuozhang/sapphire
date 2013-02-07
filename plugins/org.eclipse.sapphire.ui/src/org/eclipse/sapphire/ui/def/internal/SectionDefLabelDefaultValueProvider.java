@@ -9,18 +9,19 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.form.editors.masterdetails.def.internal;
+package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
+import org.eclipse.sapphire.ui.def.SectionDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsSectionDefLabelDefaultValueProvider extends DefaultValueService
+public final class SectionDefLabelDefaultValueProvider extends DefaultValueService
 {
     @Override
     public DefaultValueServiceData data()
@@ -32,8 +33,21 @@ public final class MasterDetailsSectionDefLabelDefaultValueProvider extends Defa
     @Override
     protected DefaultValueServiceData compute()
     {
-        final MasterDetailsContentNodeDef node = (MasterDetailsContentNodeDef) context( IModelElement.class ).parent().parent();
-        return new DefaultValueServiceData( node.getLabel().getText() );
+        String defaultValue = null;
+        
+        final SectionDef section = context( SectionDef.class );
+        
+        if( section.parent() != null )
+        {
+            final IModelElement parent = (IModelElement) section.parent().parent();
+            
+            if( parent instanceof MasterDetailsContentNodeDef )
+            {
+                defaultValue = ( (MasterDetailsContentNodeDef) parent ).getLabel().getText();
+            }
+        }
+        
+        return new DefaultValueServiceData( defaultValue );
     }
     
 }

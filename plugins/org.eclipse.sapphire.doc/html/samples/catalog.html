@@ -33,7 +33,8 @@
   <li>Model</li>
   <ol type="A">
     <li>Value property</li>
-    <li>List property (homogeneous)</li>
+    <li>Derived value property using EL</li>
+    <li>List property (homogeneous and heterogeneous)</li>
     <li>@ReadOnly list property</li>
     <li>@Required</li>
     <li>@LongString</li>
@@ -53,7 +54,7 @@
     <ol type="a">
       <li>Extending persistent state</li>
       <ol type="i">
-        <li>Custom persistent state element type for the "Show Manufacturer" feature</li>
+        <li>Custom persistent state element type for the "Show Manufacturer" and "Show Price" features</li>
         <li>Generic persistent attributes used for the "Color Code Manufacturers" feature</li>
       </ol>
       <li>Custom page-level toggle action</li>
@@ -62,7 +63,7 @@
     <li>Content node factory</li>
     <ol type="a">
       <li>EL used for node label to base label of item nodes on item name and manufacturer</li>
-      <li>EL used for node image to implement the "Color Code Manufacturers" feature.</li>
+      <li>EL used for node image to implement the "Color Code Manufacturers" feature</li>
     </ol>
     <li>Content node include</li>
     <ol type="a">
@@ -72,14 +73,30 @@
     <ol type="a">
       <li>EL used for section description to customize description to context</li>
     </ol>
+    <li>Section Reference</li>
+    <ol type="a">
+      <li>Reuse the same section definition in several places</li>
+    </ol>
     <li>Property editor</li>
+    <ol type="a">
+      <li>Text field</li>
+      <li>Table</li>
+    </ol>
+    <li>Page book</li>
+    <ol type="a">
+      <li>Using list selection for master-details effect</li>
+    </ol>
     <li>Label</li>
     <li>Actuator</li>
+    <li>Line separator with label</li>
   </ol>
   <li>Expression Language</li>
   <ol type="A">
     <li>Ternary operator (conditional expression)</li>
     <li>Concat() function</li>
+    <li>Min() function</li>
+    <li>Max() function</li>
+    <li>Scale() function</li>
     <li>State() function</li>
     <li>Custom function (CatalogItemImage)</li>
   </ol>

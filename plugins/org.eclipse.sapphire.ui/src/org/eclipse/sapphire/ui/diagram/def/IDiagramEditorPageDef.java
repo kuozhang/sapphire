@@ -39,6 +39,7 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
  */
 
 @Label( standard = "diagram editor page" )
+@XmlBinding( path = "diagram-page" )
 
 public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewContributorDef
 {
