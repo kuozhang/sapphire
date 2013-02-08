@@ -11,9 +11,13 @@
 
 package org.eclipse.sapphire.java;
 
+import org.eclipse.sapphire.modeling.annotations.Label;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
+
+@Label( standard = "Java type name" )
 
 public final class JavaTypeName extends JavaQualifiedName
 {

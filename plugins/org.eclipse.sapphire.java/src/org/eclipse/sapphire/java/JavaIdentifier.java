@@ -14,12 +14,16 @@ package org.eclipse.sapphire.java;
 import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 
+import org.eclipse.sapphire.modeling.annotations.Label;
+
 /**
  * A Java identifier is a name of a variable, a field or a method. Identifiers must conform
  * to <nobr>[a-zA-Z_$][a-zA-Z0-9_$]*</nobr> pattern. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
+
+@Label( standard = "Java identifier" )
 
 public final class JavaIdentifier implements Comparable<JavaIdentifier>
 {
