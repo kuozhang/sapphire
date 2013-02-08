@@ -29,6 +29,7 @@ import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionConstraint;
+import org.eclipse.sapphire.java.JavaIdentifier;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Resource;
@@ -127,6 +128,8 @@ public final class ConversionTests extends SapphireTestCase
         suite.addTest( new ConversionTests( "testXmlResourceToDomDocument" ) );
         suite.addTest( new ConversionTests( "testXmlResourceToDomElement" ) );
         suite.addTest( new ConversionTests( "testXmlResourceToXmlElement" ) );
+        
+        suite.addTest( new ConversionTests( "testStringToJavaIdentifier" ) );
         
         return suite;
     }
@@ -892,6 +895,32 @@ public final class ConversionTests extends SapphireTestCase
         assertSame( childXmlElement, childXmlResource.getXmlElement() );
         assertSame( childXmlElement, childXmlResource.adapt( XmlElement.class ) );
         assertNotSame( childXmlElement, xmlElement );
+    }
+
+    public void testStringToJavaIdentifier() throws Exception
+    {
+        final MasterConversionService service = Sapphire.service( MasterConversionService.class );
+        
+        assertEquals( new JavaIdentifier( "_" ), service.convert( "_", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "$" ), service.convert( "$", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "a" ), service.convert( "a", JavaIdentifier.class ) );
+
+        assertEquals( new JavaIdentifier( "_abc" ), service.convert( "_abc", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "$abc" ), service.convert( "$abc", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "aabc" ), service.convert( "aabc", JavaIdentifier.class ) );
+
+        assertEquals( new JavaIdentifier( "AbC_" ), service.convert( "AbC_", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "AbC$" ), service.convert( "AbC$", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "AbCa" ), service.convert( "AbCa", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "AbC1" ), service.convert( "AbC1", JavaIdentifier.class ) );
+        
+        assertEquals( new JavaIdentifier( "abc123" ), service.convert( "abc123", JavaIdentifier.class ) );
+        assertEquals( new JavaIdentifier( "abc$_123" ), service.convert( "abc$_123", JavaIdentifier.class ) );
+
+        assertNull( service.convert( "1", JavaIdentifier.class ) );
+        assertNull( service.convert( "1abc", JavaIdentifier.class ) );
+        assertNull( service.convert( "ab#c", JavaIdentifier.class ) );
+        assertNull( service.convert( "ab.c", JavaIdentifier.class ) );
     }
     
 }

@@ -46,6 +46,10 @@
   <ol type="A">
     <li><a href="#Forms-SectionReference">Section Reference</a></li>
   </ol>
+  <li><a href="#Miscellaneous">Miscellaneous</a></li>
+  <ol type="A">
+    <li><a href="#Miscellaneous-JavaIdentifier">JavaIdentifier</a></li>
+  </ol>
 </ol>
 
 <h2><a name="Key"><a name="Key-OnDemandElementCompilation">On-Demand Element Compilation</a></a></h2>
@@ -535,6 +539,10 @@ draw upon  <a href="../../services/ConversionService.html">ConversionService</a>
     <td>org.eclipse.sapphire.modeling.xml.XmlResource</td>
     <td>org.eclipse.sapphire.modeling.xml.XmlElement</td>
   </tr>
+  <tr>
+    <td>java.lang.String</td>
+    <td>org.eclipse.sapphire.java.JavaIdentifier</td>
+  </tr>
 </table>
 
 
@@ -601,6 +609,8 @@ in the catalog sample should include the manufacturer.</p>
 
 <p>Re-use section definitions across multiple node definitions in a master-details editor page.</p>
 
+<p style="margin-left: 20px;"><b>Example</b></p>
+
 <pre class="source-code"><code><font color="#888888">&lt;definition></font>
     &lt;section>
         &lt;id>CommonSection&lt;/id>
@@ -632,6 +642,25 @@ in the catalog sample should include the manufacturer.</p>
         &lt;/section>
     &lt;/node>
 &lt;/definition></font></code></pre>
+
+
+<h2><a name="Miscellaneous"><a name="Miscellaneous-JavaIdentifier">JavaIdentifier</a></a></h2>
+
+<p>The JavaIdentifier class can be used to represent a legal Java identifier, such as the name of a variable,
+a field or a method. Identifiers must conform to <nobr>[a-zA-Z_$][a-zA-Z0-9_$]*</nobr> pattern.</p>
+
+<p>Verification happens in the constructor, so any instance can be assumed
+to represent a valid identifier. This class can be used by itself or as a type of a value property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base =</font> JavaIdentifier.class <font color="#888888">)
+
+ValueProperty PROP_FIELD_NAME = new ValueProperty( TYPE, "FieldName" );
+
+Value&lt;</font>JavaIdentifier<font color="#888888">> getFieldName();
+void setFieldName( String value );
+void setFieldName(</font> JavaIdentifier <font color="#888888">value );</font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2013 Oracle<br/>

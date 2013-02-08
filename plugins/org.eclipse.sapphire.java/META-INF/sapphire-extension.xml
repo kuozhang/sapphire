@@ -52,4 +52,10 @@
         <implementation>org.eclipse.sapphire.java.internal.StringToJavaPackageNameConversionService</implementation>
         <description>ConversionService implementation for String to JavaPackageName conversions.</description>
     </service>
+    <service>
+        <id>Sapphire.ConversionService.StringToJavaIdentifier</id>
+        <implementation>org.eclipse.sapphire.java.internal.StringToJavaIdentifierConversionService</implementation>
+        <description>ConversionService implementation for String to JavaIdentifier conversions.</description>
+        <context>Sapphire</context>
+    </service>
 </extension>
