@@ -54,7 +54,7 @@ public final class NumericRangeValidationService<T extends Comparable<T>> extend
         
         if( val != null )
         {
-            final ValueProperty property = value.getProperty();
+            final ValueProperty property = value.property();
             
             if( this.min != null && val.compareTo( this.min ) < 0 )
             {

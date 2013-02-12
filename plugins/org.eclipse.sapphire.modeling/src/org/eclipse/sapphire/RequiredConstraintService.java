@@ -9,21 +9,33 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.eclipse.sapphire.services.DataService;
 
 /**
+ * Determines whether a property is required to have content. Most frequently specified
+ * via an @Required annotation. 
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.FIELD )
-
-public @interface Required
+public abstract class RequiredConstraintService extends DataService<Boolean>
 {
-    String value() default "";
+    @Override
+    protected final void initDataService()
+    {
+        initRequiredConstraintService();
+    }
+
+    protected void initRequiredConstraintService()
+    {
+    }
+    
+    public final boolean required()
+    {
+        final Boolean data = data();
+        return ( data == null ? false : data );
+    }
+    
 }

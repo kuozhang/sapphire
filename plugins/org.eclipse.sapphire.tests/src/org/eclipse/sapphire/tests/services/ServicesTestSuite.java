@@ -27,6 +27,7 @@ import org.eclipse.sapphire.tests.services.t0009.TestServices0009;
 import org.eclipse.sapphire.tests.services.t0010.TestServices0010;
 import org.eclipse.sapphire.tests.services.t0011.PreferDefaultValueTests;
 import org.eclipse.sapphire.tests.services.t0012.TestServices0012;
+import org.eclipse.sapphire.tests.services.t0013.RequiredConstraintTests;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -57,6 +58,7 @@ public final class ServicesTestSuite extends TestCase
         suite.addTest( TestServices0010.suite() );
         suite.addTest( PreferDefaultValueTests.suite() );
         suite.addTest( TestServices0012.suite() );
+        suite.addTest( RequiredConstraintTests.suite() );
         
         return suite;
     }

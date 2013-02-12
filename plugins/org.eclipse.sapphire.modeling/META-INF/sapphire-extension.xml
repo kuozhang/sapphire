@@ -91,8 +91,9 @@
     <service>
         <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.RequiredPropertyValidationService$Factory</factory>
-        <id>Sapphire.ValidationService.RequiredProperty</id>
+        <factory>org.eclipse.sapphire.internal.RequiredConstraintValidationService$Factory</factory>
+        <id>Sapphire.ValidationService.Required</id>
+        <description>ValidationService implementation that validates whether the property conforms to semantics specified by RequiredConstraintService.</description>
     </service>
     <service>
         <type>org.eclipse.sapphire.services.ValidationService</type>
@@ -275,10 +276,10 @@
         <id>Sapphire.FactsService.NumericRange</id>
     </service>
     <service>
-        <description>Creates fact statements about property's optionality by using semantical information specified by @Required annotation.</description>
+        <description>FactsService implementation that contributes fact statements based on semantics specified by RequiredConstraintService.</description>
         <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.RequiredPropertyFactsService$Factory</factory>
+        <factory>org.eclipse.sapphire.internal.RequiredConstraintFactsService$Factory</factory>
         <id>Sapphire.FactsService.Required</id>
     </service>
     <service>
@@ -551,6 +552,13 @@
         <context>Sapphire.Property.MetaModel</context>
         <description>Implementation of PossibleTypesService using information specified by @Type annotation.</description>
         <factory>org.eclipse.sapphire.services.internal.StandardPossibleTypesService$Factory</factory>
+    </service>
+    <service>
+        <context>Sapphire.Property.Instance</context>
+        <description>RequiredConstraintService implementation that derives its behavior from @Required annotation.</description>
+        <factory>org.eclipse.sapphire.internal.DeclarativeRequiredConstraintService$Factory</factory>
+        <id>Sapphire.RequiredConstraintService.Declarative</id>
+        <type>org.eclipse.sapphire.RequiredConstraintService</type>
     </service>
     <service>
         <id>Sapphire.ContentProposalService.PossibleValues</id>

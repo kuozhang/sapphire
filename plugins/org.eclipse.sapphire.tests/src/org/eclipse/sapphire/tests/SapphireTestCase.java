@@ -302,6 +302,38 @@ public abstract class SapphireTestCase extends TestCase
         assertTrue( facts.contains( fact ) );
     }
     
+    protected static void assertFact( final Value<?> value,
+                                      final String fact )
+    {
+        assertFact( value.parent(), value.property(), fact );
+    }
+    
+    protected static void assertFact( final ModelElementHandle<?> handle,
+                                      final String fact )
+    {
+        assertFact( handle.parent(), handle.property(), fact );
+    }
+    
+    protected static void assertNoFact( final IModelElement element,
+                                        final ModelProperty property,
+                                        final String fact )
+    {
+        final SortedSet<String> facts = element.service( property, FactsAggregationService.class ).facts();
+        assertFalse( facts.contains( fact ) );
+    }
+    
+    protected static void assertNoFact( final Value<?> value,
+                                        final String fact )
+    {
+        assertNoFact( value.parent(), value.property(), fact );
+    }
+    
+    protected static void assertNoFact( final ModelElementHandle<?> handle,
+                                        final String fact )
+    {
+        assertNoFact( handle.parent(), handle.property(), fact );
+    }
+    
     protected static void assertContainsInstanceOf( final Collection<?> collection,
                                                     final Class<?> type )
     {

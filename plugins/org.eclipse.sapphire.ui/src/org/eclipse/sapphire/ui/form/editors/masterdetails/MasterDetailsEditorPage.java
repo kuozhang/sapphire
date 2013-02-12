@@ -1253,7 +1253,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         {
                             list = (ModelElementList<IModelElement>) precedingElement.parent();
                             
-                            final Set<ModelElementType> possibleListElementTypes = list.getParentProperty().service( PossibleTypesService.class ).types();
+                            final Set<ModelElementType> possibleListElementTypes = list.property().service( PossibleTypesService.class ).types();
                             
                             for( IModelElement droppedElement : droppedElements )
                             {
@@ -1280,7 +1280,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         {
                             list = (ModelElementList<IModelElement>) trailingElement.parent();
                             
-                            final Set<ModelElementType> possibleListElementTypes = list.getParentProperty().service( PossibleTypesService.class ).types();
+                            final Set<ModelElementType> possibleListElementTypes = list.property().service( PossibleTypesService.class ).types();
                             
                             for( IModelElement droppedElement : droppedElements )
                             {

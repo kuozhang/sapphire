@@ -89,7 +89,7 @@ public class ModelElementFunctionContext extends FunctionContext
             
             if( name.equalsIgnoreCase( "Size" ) )
             {
-                final Function f = new ReadPropertyFunction( list.parent(), list.getParentProperty() )
+                final Function f = new ReadPropertyFunction( list.parent(), list.property() )
                 {
                     @Override
                     protected Object evaluate()
@@ -108,7 +108,7 @@ public class ModelElementFunctionContext extends FunctionContext
                 {
                     final int index = Integer.parseInt( name );
                     
-                    final Function f = new ReadPropertyFunction( list.parent(), list.getParentProperty() )
+                    final Function f = new ReadPropertyFunction( list.parent(), list.property() )
                     {
                         @Override
                         protected Object evaluate()

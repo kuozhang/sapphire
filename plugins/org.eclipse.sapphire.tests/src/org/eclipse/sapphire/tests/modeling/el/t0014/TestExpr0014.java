@@ -47,16 +47,16 @@ public final class TestExpr0014 extends TestExpr
     {
         final FunctionContext context = new FunctionContext();
         
-        testForExpectedValue( context, "${ VersionMatches( \"1.2.3\", \"[1.2.3-2.0)\" ) }", Boolean.TRUE );
-        testForExpectedValue( context, "${ VersionMatches( \"3.5\", \"[1.2.3-2.0)\" ) }", Boolean.FALSE );
+        testForExpectedValue( context, "${ VersionMatches( '1.2.3', '[1.2.3-2.0)' ) }", Boolean.TRUE );
+        testForExpectedValue( context, "${ VersionMatches( '3.5', '[1.2.3-2.0)' ) }", Boolean.FALSE );
     }
     
     public void testSapphireVersionMatchesFunction()
     {
         final FunctionContext context = new FunctionContext();
         
-        testForExpectedValue( context, "${ SapphireVersionMatches( \"[0.7-0.7.1)\" ) }", Boolean.TRUE );
-        testForExpectedValue( context, "${ SapphireVersionMatches( \"[0.5-0.6)\" ) }", Boolean.FALSE );
+        testForExpectedValue( context, "${ SapphireVersionMatches( '[0.7-0.7.1)' ) }", Boolean.TRUE );
+        testForExpectedValue( context, "${ SapphireVersionMatches( '[0.5-0.6)' ) }", Boolean.FALSE );
     }
 
 }

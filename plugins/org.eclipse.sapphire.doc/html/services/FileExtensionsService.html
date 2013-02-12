@@ -50,7 +50,7 @@ account values of other properties.</p>
 
 <pre class="source-code"><code>@FileExtensions( expr = "${ Extension }" )</code></pre>
 
-<pre class="source-code"><code>@FileExtensions( expr = "${ LossyFormat ? "jpeg,jpg" : "png,gif" }" )</code></pre>
+<pre class="source-code"><code>@FileExtensions( expr = "${ LossyFormat ? 'jpeg,jpg' : 'png,gif' }" )</code></pre>
 
 <p>If declarative approach is not sufficient, a custom FileExtensionsService implementation can
 be supplied.</p>

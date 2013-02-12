@@ -32,6 +32,8 @@
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-ModelElement">ModelElement</a></li>
+    <li><a href="#Core-ModelElementHandle">ModelElementHandle</a></li>
+    <li><a href="#Core-RequiredConstraintService">RequiredConstraintService</a></li>
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
     <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
     <li><a href="#Core-NewConversions">New Conversions</a></li>
@@ -41,6 +43,7 @@
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
     <li><a href="#ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></li>
     <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
+    <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
   </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
@@ -463,6 +466,57 @@ copy individual properties is also available.</p>
 <font color="#888888">}</font></code></pre>
 
 
+<h2><a name="Core-ModelElementHandle">ModelElementHandle</a></h2>
+
+<p>Among objects returned by property getters (Value, Transient, ModelElementHandle and ModelElementList),
+ModelElementList was the only one that had no API to retrieve the parent property.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElementHandle
+{</font>
+    ElementProperty property()
+<font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Core-RequiredConstraintService">RequiredConstraintService</a></h2>
+
+<p><a href="../../services/RequiredConstraintService.html">RequiredConstraintService</a> determines whether a value or 
+an element property is required to have content. Most frequently specified via an @Required annotation, which
+<a href="#ExpressionLanguage-UseInRequired">now supports EL</a> for specifying custom semantics.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomRequiredConstraintService extends RequiredConstraintService
+{
+    @Override
+    protected void initRequiredConstraintService()
+    {
+        // Optionally register listeners to invoke refresh method when the required constraint
+        // may need to be updated.
+    }
+
+    @Override
+    protected Boolean compute()
+    {
+        ...
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
+    }
+}</code></pre>
+
+<pre class="source-code"><code>@Service( impl = CustomRequiredConstraintService.class )
+
+<font color="#888888">ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
+
+Value&lt;String> getCategory();
+void setCategory( String value );</font></code></pre>
+
+
 <h2><a name="Core-RootServiceContext">Root Service Context</a></h2>
 
 <p>Certain types of services, such as many ConversionService implementations, are useful across
@@ -603,6 +657,22 @@ in the catalog sample should include the manufacturer.</p>
         &lt;label></font>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }<font color="#888888">&lt;/label>
     &lt;/case>
 &lt;/node-factory></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInRequired">Use EL in @Required</a></h2>
+
+<p>Use EL in the @Required annotation to define custom semantics.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the Category property is required only if the Version property is in the given range.</p> 
+
+<pre class="source-code"><code>@Required( "${ VersionMatches( Version, '[1.0-2.1)' ) }" )
+
+<font color="#888888">ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
+
+Value&lt;String> getCategory();
+void setCategory( String value );</font></code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-SectionReference">Section Reference</a></a></h2>

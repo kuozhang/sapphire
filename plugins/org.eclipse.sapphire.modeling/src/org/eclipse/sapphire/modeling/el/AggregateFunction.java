@@ -55,7 +55,7 @@ public abstract class AggregateFunction extends Function
                 if( collection instanceof ModelElementList )
                 {
                     final ModelElementList<?> list = (ModelElementList<?>) collection;
-                    final ListProperty listProperty = list.getParentProperty();
+                    final ListProperty listProperty = list.property();
                     final ModelElementType listEntryType = listProperty.getType();
                     final ValueProperty listEntryProperty;
                     

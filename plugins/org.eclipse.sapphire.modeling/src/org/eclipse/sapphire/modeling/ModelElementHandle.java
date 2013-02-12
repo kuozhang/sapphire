@@ -58,6 +58,11 @@ public final class ModelElementHandle<T extends IModelElement>
         return this.parent;
     }
     
+    public ElementProperty property()
+    {
+        return this.property;
+    }
+    
     public T element()
     {
         return element( false );

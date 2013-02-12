@@ -9,16 +9,17 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.RequiredConstraintService;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -29,18 +30,42 @@ import org.eclipse.sapphire.services.ValidationService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class RequiredPropertyValidationService extends ValidationService
+public abstract class RequiredConstraintValidationService extends ValidationService
 {
+    private ModelProperty property;
+    private RequiredConstraintService requiredConstraintService;
+    private Listener listener;
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        this.property = context( ModelProperty.class );
+        this.requiredConstraintService = context( IModelElement.class ).service( this.property, RequiredConstraintService.class );
+        
+        this.listener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                broadcast();
+            }
+        };
+        
+        this.requiredConstraintService.attach( this.listener );
+    }
+
     @Override
     public final Status validate()
     {
-        if( check() )
+        if( ! this.requiredConstraintService.required() || check() )
         {
             return Status.createOkStatus();
         }
         else
         {
-            final String label = context( ModelProperty.class ).getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
+            final String label = this.property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
             final String message = NLS.bind( Resources.message, label );
             return Status.createErrorStatus( message );
         }
@@ -48,22 +73,26 @@ public abstract class RequiredPropertyValidationService extends ValidationServic
     
     protected abstract boolean check();
 
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.listener != null )
+        {
+            this.requiredConstraintService.detach( this.listener );
+        }
+    }
+
     public static final class Factory extends ServiceFactory
     {
         @Override
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
+            final IModelElement element = context.find( IModelElement.class );
             final ModelProperty property = context.find( ModelProperty.class );
-            
-            return 
-            (
-                property.hasAnnotation( Required.class ) && 
-                (
-                    property instanceof ValueProperty || 
-                    ( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) ) 
-                )
-            );
+            return ( element != null && property != null && element.service( property, RequiredConstraintService.class ) != null );
         }
 
         @Override
@@ -74,7 +103,7 @@ public abstract class RequiredPropertyValidationService extends ValidationServic
             
             if( property instanceof ValueProperty )
             {
-                return new RequiredPropertyValidationService()
+                return new RequiredConstraintValidationService()
                 {
                     @Override
                     protected boolean check()
@@ -85,7 +114,7 @@ public abstract class RequiredPropertyValidationService extends ValidationServic
             }
             else
             {
-                return new RequiredPropertyValidationService()
+                return new RequiredConstraintValidationService()
                 {
                     @Override
                     protected boolean check()
@@ -103,7 +132,7 @@ public abstract class RequiredPropertyValidationService extends ValidationServic
         
         static
         {
-            initializeMessages( RequiredPropertyValidationService.class.getName(), Resources.class );
+            initializeMessages( RequiredConstraintValidationService.class.getName(), Resources.class );
         }
     }
 

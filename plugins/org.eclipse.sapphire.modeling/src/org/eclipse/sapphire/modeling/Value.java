@@ -105,7 +105,7 @@ public class Value<T> extends ModelParticle
         return (IModelElement) super.parent();
     }
     
-    public ValueProperty getProperty()
+    public ValueProperty property()
     {
         return this.property;
     }

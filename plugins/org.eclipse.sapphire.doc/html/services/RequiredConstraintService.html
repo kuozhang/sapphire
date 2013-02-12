@@ -1,0 +1,93 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>RequiredConstraintService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>RequiredConstraintService</h1>
+
+<p>RequiredConstraintService determines whether a value or an element property is required to have content.</p>
+
+<p>Although custom implementations are supported, in most cases the supplied implementation that
+is configured via @Required annotation should be sufficient.</p> 
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>@Required
+
+<font color="#888888">ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
+
+Value&lt;String> getCategory();
+void setCategory( String value );</font></code></pre>
+
+<p>If necessary, an expression can be used to specify the constraint.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the Category property is required only if the Version property is in the given range.</p>
+
+<pre class="source-code"><code>@Required( "${ VersionMatches( Version, '[1.0-2.1)' ) }" )
+
+<font color="#888888">ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
+
+Value&lt;String> getCategory();
+void setCategory( String value );</font></code></pre>
+
+<p>If declarative approach is not sufficient, a custom RequiredConstraintService implementation can
+be supplied.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class CustomRequiredConstraintService extends RequiredConstraintService
+{
+    @Override
+    protected void initRequiredConstraintService()
+    {
+        // Optionally register listeners to invoke refresh method when the required constraint
+        // may need to be updated.
+    }
+
+    @Override
+    protected Boolean compute()
+    {
+        ...
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+
+        // Remove any listeners that were added during initialization.
+    }
+}</code></pre>
+
+<pre class="source-code"><code>@Service( impl = CustomRequiredConstraintService.class )
+
+<font color="#888888">ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
+
+Value&lt;String> getCategory();
+void setCategory( String value );</font></code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

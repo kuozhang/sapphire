@@ -40,7 +40,7 @@ public final class MalformedValueValidationService extends ValidationService
         {
             if( this.valueTypeName == null )
             {
-                final Class<?> type = value.getProperty().getTypeClass();
+                final Class<?> type = value.property().getTypeClass();
                 this.valueTypeName = LocalizationSystem.service( type ).label( type, CapitalizationType.NO_CAPS, false );
             }
             

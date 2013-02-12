@@ -68,7 +68,7 @@ public final class ReferenceValidationService extends ValidationService
         
         if( value.resolve() == null && value.getText() != null )
         {
-            final ValueProperty property = value.getProperty();
+            final ValueProperty property = value.property();
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
             final String str = value.getText();
             final String msg = NLS.bind( Resources.message, label, str );

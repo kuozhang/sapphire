@@ -82,7 +82,7 @@ public final class ModelElementList<T extends IModelElement>
         return (IModelElement) super.parent();
     }
     
-    public ListProperty getParentProperty()
+    public ListProperty property()
     {
         return this.property;
     }

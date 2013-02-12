@@ -34,7 +34,7 @@ public class UniqueValueValidationService extends ValidationService
         
         if( isUniqueValue( value ) == false )
         {
-            final ValueProperty property = value.getProperty();
+            final ValueProperty property = value.property();
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
             final String str = value.getText();
             final String msg = NLS.bind( Resources.message, label, str );
@@ -51,7 +51,7 @@ public class UniqueValueValidationService extends ValidationService
         if( str != null )
         {
             final IModelElement modelElement = value.parent();
-            final ValueProperty property = value.getProperty();
+            final ValueProperty property = value.property();
             final IModelParticle parent = modelElement.parent();
             
             if( parent instanceof ModelElementList<?> )
