@@ -52,6 +52,7 @@
               <corner-radius>8</corner-radius>
               <sequence-layout>
                 <orientation>vertical</orientation>
+                    <spacing>0</spacing>
               </sequence-layout>
               <content>
                 <rectangle>
@@ -61,29 +62,31 @@
                     <expand-cell-horizontally>false</expand-cell-horizontally>
                     <expand-cell-vertically>false</expand-cell-vertically>
                   </sequence-layout-constraint>
-                  <stack-layout/>
+                  <sequence-layout>
+                    <orientation>stacked</orientation>
+                  </sequence-layout>
                   <content>
                     <image>
 	                  <path>Architecture.png</path>
                     </image>
                     <validation-marker>
                      <size>small</size>
-                     <stack-layout-constraint>
+                     <sequence-layout-constraint>
                        <horizontal-alignment>left</horizontal-alignment>
                        <vertical-alignment>bottom</vertical-alignment>
                        <horizontal-margin>5</horizontal-margin>
                        <vertical-margin>12</vertical-margin>
-                     </stack-layout-constraint>
+                     </sequence-layout-constraint>
                     </validation-marker>                    
                     <image>
                       <path>DependsOn-16.png</path>
                       <visible-when>${ Dependencies.Size > 0 }</visible-when>
-                      <stack-layout-constraint>
+                      <sequence-layout-constraint>
                         <horizontal-alignment>right</horizontal-alignment>
                         <vertical-alignment>bottom</vertical-alignment>
                         <horizontal-margin>2</horizontal-margin>
                         <vertical-margin>7</vertical-margin>
-                      </stack-layout-constraint>
+                      </sequence-layout-constraint>
                     </image>
                   </content>
                 </rectangle>    

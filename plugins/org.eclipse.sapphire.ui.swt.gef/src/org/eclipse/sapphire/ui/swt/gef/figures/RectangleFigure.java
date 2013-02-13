@@ -18,9 +18,9 @@ import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackgroundDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -54,13 +54,16 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		
 		if (this.layout instanceof SequenceLayoutDef)
 		{
-			SapphireSequenceLayout sequenceLayout = new SapphireSequenceLayout((SequenceLayoutDef)layout);
-			this.setLayoutManager(sequenceLayout);
-		}
-		else if (this.layout instanceof StackLayoutDef)
-		{
-			SapphireStackLayout sapphireStackLayout = new SapphireStackLayout();
-			this.setLayoutManager(sapphireStackLayout);
+			if (((SequenceLayoutDef)this.layout).getOrientation().getContent() != SequenceLayoutOrientation.STACKED)
+			{
+				SapphireSequenceLayout sequenceLayout = new SapphireSequenceLayout((SequenceLayoutDef)layout);
+				this.setLayoutManager(sequenceLayout);
+			}
+			else 
+			{
+				SapphireStackLayout sapphireStackLayout = new SapphireStackLayout();
+				this.setLayoutManager(sapphireStackLayout);
+			}
 		}
 		setBorder(new RectangleBorder(this.rectPresentation, this.resourceCache));
 	}

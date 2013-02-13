@@ -23,9 +23,8 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
@@ -182,33 +181,35 @@ public class ShapeUtil {
 		Object layoutConstraint = null;
 		if (layoutDef instanceof SequenceLayoutDef)
 		{
-			SequenceLayoutConstraintDef def = (SequenceLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
-			layoutConstraint = new SapphireSequenceLayoutConstraint(def);
-		}
-		else if (layoutDef instanceof StackLayoutDef)
-		{
-			if (childShapePresentation.getLayoutConstraint() != null)
+			if (((SequenceLayoutDef)layoutDef).getOrientation().getContent() != SequenceLayoutOrientation.STACKED)
 			{
-				StackLayoutConstraintDef stackLayoutConstraint = 
-						(StackLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
-				SapphireStackLayoutConstraint constraint = null;
-				if (stackLayoutConstraint != null)
-				{
-					constraint = new SapphireStackLayoutConstraint(
-										stackLayoutConstraint.getHorizontalAlignment().getContent(),
-										stackLayoutConstraint.getVerticalAlignment().getContent(),
-										stackLayoutConstraint.getTopMargin().getContent(),
-										stackLayoutConstraint.getBottomMargin().getContent(),
-										stackLayoutConstraint.getLeftMargin().getContent(),
-										stackLayoutConstraint.getRightMargin().getContent());
-				}
-				else
-				{
-					constraint = new SapphireStackLayoutConstraint();
-				}
-				layoutConstraint = constraint;
+				SequenceLayoutConstraintDef def = (SequenceLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
+				layoutConstraint = new SapphireSequenceLayoutConstraint(def);
 			}
-			
+			else
+			{
+				if (childShapePresentation.getLayoutConstraint() != null)
+				{
+					SequenceLayoutConstraintDef constraintDef = 
+							(SequenceLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
+					SapphireStackLayoutConstraint constraint = null;
+					if (constraintDef != null)
+					{
+						constraint = new SapphireStackLayoutConstraint(
+								constraintDef.getHorizontalAlignment().getContent(),
+								constraintDef.getVerticalAlignment().getContent(),
+								constraintDef.getTopMargin().getContent(),
+								constraintDef.getBottomMargin().getContent(),
+								constraintDef.getLeftMargin().getContent(),
+								constraintDef.getRightMargin().getContent());
+					}
+					else
+					{
+						constraint = new SapphireStackLayoutConstraint();
+					}
+					layoutConstraint = constraint;
+				}				
+			}
 		}
 		return layoutConstraint;
 	}

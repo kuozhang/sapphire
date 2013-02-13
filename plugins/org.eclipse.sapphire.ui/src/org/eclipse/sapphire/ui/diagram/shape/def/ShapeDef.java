@@ -11,13 +11,12 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 
@@ -31,30 +30,15 @@ import org.eclipse.sapphire.ui.def.PartDef;
 public interface ShapeDef extends PartDef, IPropertiesViewContributorDef
 {
 	ModelElementType TYPE = new ModelElementType( ShapeDef.class );
-		
-    // *** LayoutConstraint ***
+		    
+    // *** SequenceLayoutConstraint ***
     
-    @Type
-    ( 
-        base = LayoutConstraintDef.class, 
-        possible = 
-        { 
-            SequenceLayoutConstraintDef.class, 
-            StackLayoutConstraintDef.class
-        }
-    )    
-    @Label( standard = "layout constaint" )
-    @XmlElementBinding
-    ( 
-        mappings = 
-        {
-            @XmlElementBinding.Mapping( element = "sequence-layout-constraint", type = SequenceLayoutConstraintDef.class ),
-            @XmlElementBinding.Mapping( element = "stack-layout-constraint", type = StackLayoutConstraintDef.class )
-        }
-    )
+    @Type( base = SequenceLayoutConstraintDef.class )
+    @Label( standard = "sequence layout constraint" )
+    @XmlBinding( path = "sequence-layout-constraint" )
+
+    ImpliedElementProperty PROP_SEQUENCE_LAYOUT_CONSTRAINT = new ImpliedElementProperty( TYPE, "SequenceLayoutConstraint" );
     
-    ElementProperty PROP_LAYOUT_CONSTRAINT = new ElementProperty( TYPE, "LayoutConstraint" );
-    
-    ModelElementHandle<LayoutConstraintDef> getLayoutConstraint();
+    SequenceLayoutConstraintDef getSequenceLayoutConstraint();
     
 }

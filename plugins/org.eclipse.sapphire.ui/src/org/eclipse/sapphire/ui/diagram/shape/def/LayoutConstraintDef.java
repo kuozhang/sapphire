@@ -15,6 +15,7 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -40,6 +41,7 @@ public interface LayoutConstraintDef extends MarginPresentation
     @Label( standard = "width" )
     @XmlBinding( path = "width" )
     @DefaultValue( text = "-1" )
+    @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width" );
     
@@ -53,6 +55,7 @@ public interface LayoutConstraintDef extends MarginPresentation
     @Label( standard = "height" )
     @XmlBinding( path = "height" )
     @DefaultValue( text = "-1" )
+    @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height" );
     

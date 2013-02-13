@@ -15,11 +15,11 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.Orientation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -33,7 +33,7 @@ public interface SequenceLayoutDef extends ShapeLayoutDef, MarginPresentation
     
 	// *** Orientation ***
     
-    @Type( base = Orientation.class )
+    @Type( base = SequenceLayoutOrientation.class )
     @Label( standard = "orientation" )
     @Localizable
     @XmlBinding( path = "orientation" )
@@ -41,16 +41,17 @@ public interface SequenceLayoutDef extends ShapeLayoutDef, MarginPresentation
     
     ValueProperty PROP_ORIENTATION = new ValueProperty( TYPE, "Orientation" );
     
-    Value<Orientation> getOrientation();
+    Value<SequenceLayoutOrientation> getOrientation();
     void setOrientation( String value );
-    void setOrientation( Orientation value );
+    void setOrientation( SequenceLayoutOrientation value );
     
     // *** Spacing ***
         
     @Type( base = Integer.class )
     @Label( standard = "spacing" )
     @XmlBinding( path = "spacing" )
-    @DefaultValue( text = "0" )
+    @DefaultValue( text = "5" )
+    @Enablement( expr = "${ Orientation == 'horizontal' || Orientation == 'vertical' }" )
     
     ValueProperty PROP_SPACING = new ValueProperty( TYPE, "Spacing" );
     

@@ -17,12 +17,11 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutConstraintDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.StackLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
@@ -81,7 +80,7 @@ public class ContainerShapeFigure extends Shape
 		if (this.layout instanceof SequenceLayoutDef)
 		{
 			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layout;				
-			if (sequenceLayout.getOrientation().getContent() == Orientation.HORIZONTAL)	
+			if (sequenceLayout.getOrientation().getContent() == SequenceLayoutOrientation.HORIZONTAL)	
 			{
 				return true;
 			}
@@ -111,20 +110,21 @@ public class ContainerShapeFigure extends Shape
 				ValidationMarkerFigure newMarkerFigure = 
 						FigureUtil.createValidationMarkerFigure(this.containerShapePresentation.getValidationMarkerSize(), 
 									this.model, nodePart.getImageCache()) ;
-				if (this.layout instanceof StackLayoutDef)
+				if (this.layout instanceof SequenceLayoutDef && 
+						((SequenceLayoutDef)this.layout).getOrientation().getContent() == SequenceLayoutOrientation.STACKED)
 				{
 					ValidationMarkerPresentation markerPresentation = this.containerShapePresentation.getValidationMarkerPresentation();
-					StackLayoutConstraintDef stackLayoutConstraint = (StackLayoutConstraintDef)markerPresentation.getLayoutConstraint();
+					SequenceLayoutConstraintDef layoutConstraint = (SequenceLayoutConstraintDef)markerPresentation.getLayoutConstraint();
 					SapphireStackLayoutConstraint constraint = null;
-					if (stackLayoutConstraint != null)
+					if (layoutConstraint != null)
 					{
 						constraint = new SapphireStackLayoutConstraint(
-								stackLayoutConstraint.getHorizontalAlignment().getContent(),
-								stackLayoutConstraint.getVerticalAlignment().getContent(),
-								stackLayoutConstraint.getTopMargin().getContent(),
-								stackLayoutConstraint.getBottomMargin().getContent(),
-								stackLayoutConstraint.getLeftMargin().getContent(),
-								stackLayoutConstraint.getRightMargin().getContent());
+								layoutConstraint.getHorizontalAlignment().getContent(),
+								layoutConstraint.getVerticalAlignment().getContent(),
+								layoutConstraint.getTopMargin().getContent(),
+								layoutConstraint.getBottomMargin().getContent(),
+								layoutConstraint.getLeftMargin().getContent(),
+								layoutConstraint.getRightMargin().getContent());
 					}
 					else
 					{

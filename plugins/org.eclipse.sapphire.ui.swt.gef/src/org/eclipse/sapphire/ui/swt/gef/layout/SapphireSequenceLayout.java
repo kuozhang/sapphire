@@ -24,8 +24,8 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transposer;
-import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.swt.SWT;
@@ -84,7 +84,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * @since 2.0
 	 */
 	public SapphireSequenceLayout(SequenceLayoutDef def) {
-		setHorizontal(def.getOrientation().getContent() == Orientation.HORIZONTAL);
+		setHorizontal(def.getOrientation().getContent() == SequenceLayoutOrientation.HORIZONTAL);
 		setSpacing(def.getSpacing().getContent());
 		this.marginInsets = LayoutUtil.calculateMargin(def);
 	}

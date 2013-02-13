@@ -21,8 +21,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.localization.Localizable;
+import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -43,7 +44,7 @@ public interface ISapphireLabelDef extends FormComponentDef
     @LongString
     @Localizable
     @Whitespace( collapse = true )
-    @XmlValueBinding( path = "" )
+    @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "text" )
     
     ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
     

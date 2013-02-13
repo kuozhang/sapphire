@@ -61,6 +61,7 @@
               </background>
               <sequence-layout>
                 <orientation>horizontal</orientation>
+                <spacing>0</spacing>
               </sequence-layout>
               <content>
                 <validation-marker/>

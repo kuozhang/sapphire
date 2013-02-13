@@ -51,7 +51,7 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
 
 	public LayoutConstraintDef getLayoutConstraint()
 	{
-		return this.shapeDef.getLayoutConstraint().element();
+		return this.shapeDef.getSequenceLayoutConstraint();
 	}
 	
 	@Override

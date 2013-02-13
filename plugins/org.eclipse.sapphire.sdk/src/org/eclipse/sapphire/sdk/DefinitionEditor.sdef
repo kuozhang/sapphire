@@ -518,6 +518,7 @@
                 <content>
                     <include>PartId</include>
                     <property-editor>Text</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
             <node-include>ServicesNode</node-include>
@@ -1598,19 +1599,43 @@
         <section>
             <content>
                 <with>
-                    <panel>
+                    <default-panel>
                         <content>
-                            <label>A layout cell cannot be smaller than the minimum size of the shape that it contains. The cell can be bigger than the maximum size of the shape that it contains only if the cell is allowed to expand. Explicit minimum and maximum sizing that does not respect these rules will be ignored. All sizes include margins.</label>
+                            <label>
+                                <text>A layout cell cannot be smaller than the minimum size of the shape that it contains. The cell can be bigger than the maximum size of the shape that it contains only if the cell is allowed to expand. Explicit minimum and maximum sizing that does not respect these rules will be ignored. All sizes include margins.</text>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                            </label>
                             <spacer></spacer>
-                            <property-editor>MinWidth</property-editor>
-                            <property-editor>MinHeight</property-editor>
-                            <property-editor>MaxWidth</property-editor>
-                            <property-editor>MaxHeight</property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MinWidth</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MinHeight</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MaxWidth</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MaxHeight</property>
+                            </property-editor>
                             <spacer></spacer>
-                            <label>The initial size of the layout cell, within the range specified by the minimum and maximum sizes.</label>
+                            <label>
+                                <text>The initial size of the layout cell, within the range specified by the minimum and maximum sizes.</text>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                            </label>
                             <spacer></spacer>
-                            <property-editor>Width</property-editor>
-                            <property-editor>Height</property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>Width</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>Height</property>
+                            </property-editor>
                             <spacer></spacer>
                             <label>Margins provide extra space in the layout cell around the contained shape.</label>
                             <spacer></spacer>
@@ -1618,7 +1643,10 @@
                             <spacer>
                                 <size>5</size>
                             </spacer>
-                            <label>By default, the layout cell conforms to the size of the shape that it contains. This behavior can be overridden to allow the cell to expand beyond the size of its contained shape. Note that in certain cases, the cell will expand regardless of these settings. For instance, in a vertical sequence, all cells have to be at least as wide as the minimum width of the widest shape.</label>
+                            <label>
+                                <text>By default, the layout cell conforms to the size of the shape that it contains. This behavior can be overridden to allow the cell to expand beyond the size of its contained shape. Note that in certain cases, the cell will expand regardless of these settings. For instance, in a vertical sequence, all cells have to be at least as wide as the minimum width of the widest shape.</text>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                            </label>
                             <spacer></spacer>
                             <property-editor>
                                 <hint>
@@ -1626,6 +1654,7 @@
                                     <value>leading.label</value>
                                 </hint>
                                 <property>ExpandCellHorizontally</property>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
                             </property-editor>
                             <property-editor>
                                 <hint>
@@ -1633,6 +1662,7 @@
                                     <value>leading.label</value>
                                 </hint>
                                 <property>ExpandCellVertically</property>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
                             </property-editor>
                             <spacer></spacer>
                             <label>If a layout cell is larger than the shape that it contains, the alignment of the shape within the cell can be controlled.</label>
@@ -1644,23 +1674,11 @@
                             <property-editor>
                                 <style>Sapphire.PropertyEditor.PopUpListField</style>
                                 <property>VerticalAlignment</property>
-                            </property-editor>
+                            </property-editor>                        
                         </content>
-                        <key>SequenceLayoutConstraintDef</key>
-                    </panel>
-                    <panel>
-                        <content>
-                            <property-editor>Width</property-editor>
-                            <property-editor>Height</property-editor>
-                            <spacer></spacer>
-                            <property-editor>HorizontalAlignment</property-editor>
-                            <property-editor>VerticalAlignment</property-editor>
-                            <spacer></spacer>
-                            <include>MarginsForm</include>
-                        </content>
-                        <key>StackLayoutConstraintDef</key>
-                    </panel>
-                    <path>LayoutConstraint</path>
+                    </default-panel>
+                    <path>SequenceLayoutConstraint</path>
+                    <label>layout constraint</label>
                 </with>
             </content>
             <label>layout constraint</label>
@@ -1778,23 +1796,19 @@
                     <content>
                         <with>
                             <label>layout</label>
-                            <panel>
+                            <default-panel>
                                 <content>
                                     <property-editor>Orientation</property-editor>
-                                    <property-editor>Spacing</property-editor>
+                                    <property-editor>
+                                        <visible-when>${ Orientation == 'vertical' || Orientation == 'horizontal'}</visible-when>
+                                        <property>Spacing</property>
+                                    </property-editor>
                                     <spacer></spacer>
                                     <label>Margin is the space inside the shape, between the border and the shape's content.</label>
                                     <spacer></spacer>
                                     <include>MarginsForm</include>
                                 </content>
-                                <key>SequenceLayoutDef</key>
-                            </panel>
-                            <panel>
-                                <content>
-                                    <label>Nothing to configure.</label>
-                                </content>
-                                <key>StackLayoutDef</key>
-                            </panel>
+                            </default-panel>
                             <path>Layout</path>
                         </with>
                     </content>

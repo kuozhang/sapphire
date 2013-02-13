@@ -74,6 +74,7 @@
                         <scroll-vertically>true</scroll-vertically>
                         <sequence-layout>
                     		<margin>0</margin>
+                            <spacing>0</spacing>
                         </sequence-layout>
                         <content>
                             <shape-factory>
@@ -84,6 +85,7 @@
                                         <sequence-layout>
                                             <orientation>horizontal</orientation>
                                             <margin>3</margin>
+                                            <spacing>0</spacing>
                                         </sequence-layout>
                                         <content>    
                                             <validation-marker>

@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [329102] excess scroll space in editor sections
+ *    Shenxue Zhou - [400638]  support "visible-when" for label part
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -38,6 +39,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public final class LabelPart extends SapphirePart
@@ -57,6 +59,11 @@ public final class LabelPart extends SapphirePart
     @Override
     public void render( final SapphireRenderingContext context )
     {
+    	if( ! visible() )
+        {
+            return;
+        }
+    	
         final ISapphireLabelDef def = (ISapphireLabelDef) this.definition;
         
         this.text = new SapphireFormText( context.getComposite(), SWT.NONE );

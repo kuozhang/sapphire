@@ -190,7 +190,7 @@ public class ContainerShapePart extends ShapePart
 
 	public ShapeLayoutDef getLayout()
 	{
-		return this.containerShapeDef.getLayout().element();
+		return this.containerShapeDef.getLayout();
 	}
 	
 	public List<ShapePart> getChildren()

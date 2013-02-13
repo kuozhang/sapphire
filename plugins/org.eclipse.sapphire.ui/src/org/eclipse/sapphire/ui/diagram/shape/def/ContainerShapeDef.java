@@ -12,16 +12,15 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
@@ -33,34 +32,19 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ContainerShapeDef extends ShapeDef
 {
-	ModelElementType TYPE = new ModelElementType( ContainerShapeDef.class );
-	
-	// *** Layout ***
-	    
-    @Type
-    ( 
-        base = ShapeLayoutDef.class, 
-        possible = 
-        { 
-            SequenceLayoutDef.class, 
-            StackLayoutDef.class
-        }
-    )    
-    @Label( standard = "layout" )
-    @XmlElementBinding
-    ( 
-        mappings = 
-        {
-            @XmlElementBinding.Mapping( element = "sequence-layout", type = SequenceLayoutDef.class ),
-            @XmlElementBinding.Mapping( element = "stack-layout", type = StackLayoutDef.class )
-        }
-    )
+	ModelElementType TYPE = new ModelElementType( ContainerShapeDef.class );	
+    
+    // *** Layout ***
+    
+    @Type( base = SequenceLayoutDef.class )
+    @Label( standard = "sequence layout" )
+    @XmlBinding( path = "sequence-layout" )
     @Required
+
+    ImpliedElementProperty PROP_LAYOUT = new ImpliedElementProperty( TYPE, "Layout" );
     
-    ElementProperty PROP_LAYOUT = new ElementProperty( TYPE, "Layout" );
-    
-    ModelElementHandle<ShapeLayoutDef> getLayout();
-    
+    SequenceLayoutDef getLayout();
+        
     // *** Content ***
     
 	@Type
