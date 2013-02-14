@@ -118,12 +118,12 @@ public final class SapphireSequenceLayoutConstraint {
 	 */
 	public SapphireSequenceLayoutConstraint(SequenceLayoutConstraintDef def) {
 		if (def != null) {
-			this.widthHint = def.getWidth().getContent();
-			this.heightHint = def.getHeight().getContent();
-			this.maxWidth = def.getMaxWidth().getContent();
-			this.maxHeight = def.getMaxHeight().getContent();
-			this.minWidth = def.getMinWidth().getContent();
-			this.minHeight = def.getMinHeight().getContent();
+			this.widthHint = def.getWidth().getContent() != null ? def.getWidth().getContent() : -1;
+			this.heightHint = def.getHeight().getContent() != null ? def.getHeight().getContent() : -1;
+			this.maxWidth = def.getMaxWidth().getContent() != null ? def.getMaxWidth().getContent() : -1;
+			this.maxHeight = def.getMaxHeight().getContent() != null ? def.getMaxHeight().getContent() : -1;
+			this.minWidth = def.getMinWidth().getContent() != null ? def.getMinWidth().getContent() : -1;
+			this.minHeight = def.getMinHeight().getContent() != null ? def.getMinHeight().getContent() : -1;
 
 			this.horizontalAlignment = getSwtHorizontalAlignment(def.getHorizontalAlignment().getContent());
 			this.verticalAlignment = getSwtVerticalAlignment(def.getVerticalAlignment().getContent());

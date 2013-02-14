@@ -35,7 +35,6 @@ public interface SequenceLayoutConstraintDef extends LayoutConstraintDef
     @Type( base = Integer.class )
     @Label( standard = "minimum width" )
     @XmlBinding( path = "min-width" )
-    @DefaultValue( text = "-1" )
     @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_MIN_WIDTH = new ValueProperty( TYPE, "MinWidth" );
@@ -49,7 +48,6 @@ public interface SequenceLayoutConstraintDef extends LayoutConstraintDef
     @Type( base = Integer.class )
     @Label( standard = "minimum height" )
     @XmlBinding( path = "min-height" )
-    @DefaultValue( text = "-1" )
     @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_MIN_HEIGHT = new ValueProperty( TYPE, "MinHeight" );
@@ -63,7 +61,6 @@ public interface SequenceLayoutConstraintDef extends LayoutConstraintDef
     @Type( base = Integer.class )
     @Label( standard = "maximum width" )
     @XmlBinding( path = "max-width" )
-    @DefaultValue( text = "-1" )
     @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_MAX_WIDTH = new ValueProperty( TYPE, "MaxWidth" );
@@ -77,7 +74,6 @@ public interface SequenceLayoutConstraintDef extends LayoutConstraintDef
     @Type( base = Integer.class )
     @Label( standard = "maximum height" )
     @XmlBinding( path = "max-height" )
-    @DefaultValue( text = "-1" )
     @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_MAX_HEIGHT = new ValueProperty( TYPE, "MaxHeight" );
