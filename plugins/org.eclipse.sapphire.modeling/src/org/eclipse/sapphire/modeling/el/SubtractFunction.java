@@ -16,16 +16,15 @@ import static org.eclipse.sapphire.modeling.el.internal.FunctionUtils.isDecimalS
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Arithmetic subtraction function. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SubtractFunction
-
-    extends Function
-
+public final class SubtractFunction extends Function
 {
     public static SubtractFunction create( final Function a,
                                            final Function b )
@@ -67,8 +66,19 @@ public final class SubtractFunction
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
-                final Object b = operand( 1 ).value();
+                Object a = operand( 0 ).value();
+                
+                if( a instanceof Value<?> )
+                {
+                    a = ( (Value<?>) a ).getContent();
+                }
+                
+                Object b = operand( 1 ).value();
+
+                if( b instanceof Value<?> )
+                {
+                    b = ( (Value<?>) b ).getContent();
+                }
                 
                 if( a == null && b == null )
                 {

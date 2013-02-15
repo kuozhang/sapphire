@@ -498,7 +498,7 @@ Function UnaryExpression() :
                 }
                 case 2:
                 {
-                    res = UnaryMinusFunction.create( res );
+                    res = ArithmeticNegationFunction.create( res );
                     break;
                 }
                 case 3:

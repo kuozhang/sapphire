@@ -16,16 +16,15 @@ import static org.eclipse.sapphire.modeling.el.internal.FunctionUtils.isDecimalS
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Arithmetic modulo function. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ModuloFunction
-
-    extends Function
-
+public final class ModuloFunction extends Function
 {
     public static ModuloFunction create( final Function a,
                                          final Function b )
@@ -67,8 +66,19 @@ public final class ModuloFunction
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
-                final Object b = operand( 1 ).value();
+                Object a = operand( 0 ).value();
+                
+                if( a instanceof Value<?> )
+                {
+                    a = ( (Value<?>) a ).getContent();
+                }
+                
+                Object b = operand( 1 ).value();
+
+                if( b instanceof Value<?> )
+                {
+                    b = ( (Value<?>) b ).getContent();
+                }
                 
                 if( a == null && b == null )
                 {
@@ -91,7 +101,7 @@ public final class ModuloFunction
                 {
                     final Long x = cast( a, Long.class );
                     final Long y = cast( b, Long.class );
-                    return x / y;
+                    return x % y;
                 }
             }
         };

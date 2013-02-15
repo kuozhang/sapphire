@@ -11,16 +11,15 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Equality function. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EqualityFunction
-
-    extends Function
-
+public final class EqualityFunction extends Function
 {
     public static EqualityFunction create( final Function a,
                                            final Function b )
@@ -56,8 +55,19 @@ public final class EqualityFunction
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
-                final Object b = operand( 1 ).value();
+                Object a = operand( 0 ).value();
+                
+                if( a instanceof Value<?> )
+                {
+                    a = ( (Value<?>) a ).getContent();
+                }
+                
+                Object b = operand( 1 ).value();
+
+                if( b instanceof Value<?> )
+                {
+                    b = ( (Value<?>) b ).getContent();
+                }
                 
                 return equal( a, b );
             }

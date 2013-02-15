@@ -1,0 +1,67 @@
+/******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.tests.modeling.el.operators;
+
+import java.math.BigInteger;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+/**
+ * Tests for the modulo operator.
+ * 
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public final class ModuloOperatorTests extends OperatorTests
+{
+    private ModuloOperatorTests( final String name )
+    {
+        super( name );
+    }
+    
+    public static Test suite()
+    {
+        final TestSuite suite = new TestSuite();
+        
+        suite.setName( "ModuloOperatorTests" );
+        
+        for( int i = 1; i <= 4; i++ )
+        {
+            suite.addTest( new ModuloOperatorTests( "testModuloOperator" + String.valueOf( i ) ) );
+        }
+        
+        return suite;
+    }
+    
+    public void testModuloOperator1()
+    {
+        test( "${ 32 % 5 }", new BigInteger( "2" ) );
+    }
+    
+    public void testModuloOperator2()
+    {
+        test( "${ Integer3 % 2 }", new BigInteger( "1" ) );
+    }
+
+    public void testModuloOperator3()
+    {
+        test( "${ 2 % Integer5 }", new BigInteger( "2" ) );
+    }
+    
+    public void testModuloOperator4()
+    {
+        test( "${ Integer3 % Integer5 }", new Long( "3" ) );
+    }
+
+}
+

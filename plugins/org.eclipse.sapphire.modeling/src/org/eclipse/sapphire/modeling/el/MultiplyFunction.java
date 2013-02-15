@@ -16,16 +16,15 @@ import static org.eclipse.sapphire.modeling.el.internal.FunctionUtils.isDecimalS
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.modeling.Value;
+
 /**
  * Arithmetic multiplication function. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MultiplyFunction
-
-    extends Function
-
+public final class MultiplyFunction extends Function
 {
     public static MultiplyFunction create( final Function a,
                                            final Function b )
@@ -67,8 +66,19 @@ public final class MultiplyFunction
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
-                final Object b = operand( 1 ).value();
+                Object a = operand( 0 ).value();
+                
+                if( a instanceof Value<?> )
+                {
+                    a = ( (Value<?>) a ).getContent();
+                }
+                
+                Object b = operand( 1 ).value();
+
+                if( b instanceof Value<?> )
+                {
+                    b = ( (Value<?>) b ).getContent();
+                }
                 
                 if( a == null && b == null )
                 {

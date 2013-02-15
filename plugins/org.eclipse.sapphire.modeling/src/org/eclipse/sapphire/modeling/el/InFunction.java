@@ -19,10 +19,7 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class InFunction
-
-    extends Function
-
+public final class InFunction extends Function
 {
     public static InFunction create( final Function a,
                                      final Function b )

@@ -16,6 +16,7 @@ import static org.eclipse.sapphire.modeling.el.internal.FunctionUtils.isDecimalS
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -24,14 +25,11 @@ import org.eclipse.sapphire.modeling.util.NLS;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class UnaryMinusFunction
-
-    extends Function
-
+public final class ArithmeticNegationFunction extends Function
 {
-    public static UnaryMinusFunction create( final Function operand )
+    public static ArithmeticNegationFunction create( final Function operand )
     {
-        final UnaryMinusFunction function = new UnaryMinusFunction();
+        final ArithmeticNegationFunction function = new ArithmeticNegationFunction();
         function.init( operand );
         return function;
     }
@@ -62,7 +60,12 @@ public final class UnaryMinusFunction
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
+                Object a = operand( 0 ).value();
+                
+                if( a instanceof Value<?> )
+                {
+                    a = ( (Value<?>) a ).getContent();
+                }
                 
                 if( a == null )
                 {
@@ -125,7 +128,7 @@ public final class UnaryMinusFunction
         
         static
         {
-            initializeMessages( UnaryMinusFunction.class.getName(), Resources.class );
+            initializeMessages( ArithmeticNegationFunction.class.getName(), Resources.class );
         }
     }
 
