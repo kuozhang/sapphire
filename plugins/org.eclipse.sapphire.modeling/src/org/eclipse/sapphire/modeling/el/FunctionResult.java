@@ -463,43 +463,6 @@ public abstract class FunctionResult
     
                 throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
             }
-            else if( Enum.class.isAssignableFrom( type ) )
-            {
-                if( obj instanceof Value )
-                {
-                    obj = ( (Value<?>) obj ).getContent();
-                }
-                
-                if( obj == null )
-                {
-                    return null;
-                }
-                else if( type.isInstance( obj ) )
-                {
-                    return type.cast( obj );
-                }
-                else if( obj instanceof String )
-                {
-                    final String str = (String) obj;
-                    
-                    if( str.length() == 0 )
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        for( X x : type.getEnumConstants() )
-                        {
-                            if( x.toString().equals( str ) )
-                            {
-                                return x;
-                            }
-                        }
-                    }
-                }
-    
-                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
-            }
             else if( List.class.isAssignableFrom( type ) )
             {
                 if( obj instanceof Value )
