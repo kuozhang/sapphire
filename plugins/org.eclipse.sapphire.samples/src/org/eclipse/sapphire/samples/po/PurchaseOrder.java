@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.eclipse.sapphire.Since;
+import org.eclipse.sapphire.Validation;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityTarget;
 import org.eclipse.sapphire.modeling.ElementProperty;
@@ -30,6 +31,7 @@ import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -166,6 +168,12 @@ public interface PurchaseOrder extends IModelElement
     @Label( standard = "discount" )
     @DefaultValue( text = "0.00" )
     
+    @Validation
+    (
+        rule = "${ Scale( Discount, 2 ) <= Scale( Subtotal, 2 ) + Scale( Delivery, 2 ) }",
+        message = "Discount must not exceed subtotal plus delivery charge."
+    )
+    
     ValueProperty PROP_DISCOUNT = new ValueProperty( TYPE, "Discount" );
     
     Value<BigDecimal> getDiscount();
@@ -177,6 +185,7 @@ public interface PurchaseOrder extends IModelElement
     @Type( base = BigDecimal.class )
     @Label( standard = "delivery" )
     @DefaultValue( text = "0.00" )
+    @NumericRange( min = "0" )
     
     ValueProperty PROP_DELIVERY = new ValueProperty( TYPE, "Delivery" );
     

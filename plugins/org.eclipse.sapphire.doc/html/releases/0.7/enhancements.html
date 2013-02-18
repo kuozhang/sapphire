@@ -40,10 +40,11 @@
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
+    <li><a href="#ExpressionLanguage-UseForValidation">Use for Validation</a></li>
+    <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
     <li><a href="#ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></li>
     <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
-    <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
   </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
@@ -600,7 +601,44 @@ draw upon  <a href="../../services/ConversionService.html">ConversionService</a>
 </table>
 
 
-<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></a></h2>
+<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-UseForValidation">Use EL for Validation</a></a></h2>
+
+<p>Use EL to specify validation rules.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = BigDecimal.class )</font>
+    
+@Validation
+(
+    rule = "${ Scale( Discount, 2 ) &lt;= Scale( Subtotal, 2 ) + Scale( Delivery, 2 ) }",
+    message = "Discount must not exceed subtotal plus delivery charge."
+)
+
+<font color="#888888">ValueProperty PROP_DISCOUNT = new ValueProperty( TYPE, "Discount" );
+
+Value&lt;BigDecimal> getDiscount();
+void setDiscount( String value );
+void setDiscount( BigDecimal value );</font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseInRequired">Use EL in @Required</a></h2>
+
+<p>Use EL in the @Required annotation to define custom semantics.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the Category property is required only if the Version property is in the given range.</p> 
+
+<pre class="source-code"><code>@Required( "${ VersionMatches( Version, '[1.0-2.1)' ) }" )
+
+<font color="#888888">ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
+
+Value&lt;String> getCategory();
+void setCategory( String value );</font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></h2>
 
 <p>In the context of a property editor, specifying property name when using Enabled() function can be redundant,
 so a zero argument version of the function is now available, but only for the property editor context.</p>
@@ -657,22 +695,6 @@ in the catalog sample should include the manufacturer.</p>
         &lt;label></font>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }<font color="#888888">&lt;/label>
     &lt;/case>
 &lt;/node-factory></font></code></pre>
-
-
-<h2><a name="ExpressionLanguage-UseInRequired">Use EL in @Required</a></h2>
-
-<p>Use EL in the @Required annotation to define custom semantics.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">In this example, the Category property is required only if the Version property is in the given range.</p> 
-
-<pre class="source-code"><code>@Required( "${ VersionMatches( Version, '[1.0-2.1)' ) }" )
-
-<font color="#888888">ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
-
-Value&lt;String> getCategory();
-void setCategory( String value );</font></code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-SectionReference">Section Reference</a></a></h2>

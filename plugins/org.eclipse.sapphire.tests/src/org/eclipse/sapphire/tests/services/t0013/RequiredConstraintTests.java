@@ -35,7 +35,7 @@ public final class RequiredConstraintTests extends SapphireTestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "TestServices0012" );
+        suite.setName( "RequiredConstraintTests" );
 
         suite.addTest( new RequiredConstraintTests( "testRequiredConstraintValueProperty" ) );
         suite.addTest( new RequiredConstraintTests( "testRequiredConstraintElementProperty" ) );

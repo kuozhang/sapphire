@@ -89,6 +89,14 @@
         <id>Sapphire.ValidationService.CountConstraint</id>
     </service>
     <service>
+        <description>ValidationService implementation that derives its behavior from @Validation annotation.</description>
+        <factory>org.eclipse.sapphire.internal.DeclarativeValidationService$Factory</factory>
+        <id>Sapphire.ValidationService.Declarative</id>
+        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <context>Sapphire.Element.Instance</context>
+        <context>Sapphire.Property.Instance</context>
+    </service>
+    <service>
         <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.internal.RequiredConstraintValidationService$Factory</factory>
