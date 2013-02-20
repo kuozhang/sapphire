@@ -38,13 +38,17 @@ public final class ColorBrowseActionHandler extends SapphireBrowseActionHandler
         final IModelElement element = getModelElement();
         final ValueProperty property = getProperty();
         
-        final Shell contextShell = context.getShell();
+        final Shell parent = context.getShell();
+        final Rectangle bounds = parent.getBounds();
         
-        final Rectangle bounds = contextShell.getBounds();
-        final int x = bounds.x + bounds.width / 2 - 120;       // The size of color dialog is not known. The size is hardcodded
-        final int y = bounds.y + bounds.height / 2 - 170;      // based on measuring the dialog on Windows 7. Will need to generalize.
+        // There is no means to compute the size of the color dialog. In the following
+        // computations, measurements of the dialog on Windows 7 are used. Will need to
+        // generalize in the future.
+        
+        final int x = bounds.x + bounds.width / 2 - 120;
+        final int y = bounds.y + bounds.height / 2 - 170;
 
-        final Shell shell = new Shell( contextShell );
+        final Shell shell = new Shell( parent );
         
         try
         {
