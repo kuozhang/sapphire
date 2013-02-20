@@ -35,7 +35,7 @@ public class DiagramResourceCache {
 	private List<Color> colors = new ArrayList<Color>();
 	private List<Font> fonts = new ArrayList<Font>();
 	
-    private static final org.eclipse.sapphire.ui.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
+    private static final org.eclipse.sapphire.Color OUTLINE_FOREGROUND = new org.eclipse.sapphire.Color(0xFF, 0xA5, 0x00);
 
     public DiagramResourceCache() {
 		FontDescriptor descriptor = JFaceResources.getDefaultFontDescriptor();
@@ -71,10 +71,10 @@ public class DiagramResourceCache {
     	return color;
     }
     
-    public Color getColor(org.eclipse.sapphire.ui.Color sapphireColor) {
-    	int red = sapphireColor.getRed();
-    	int green = sapphireColor.getGreen();
-    	int blue = sapphireColor.getBlue();
+    public Color getColor(org.eclipse.sapphire.Color sapphireColor) {
+    	int red = sapphireColor.red();
+    	int green = sapphireColor.green();
+    	int blue = sapphireColor.blue();
     	
 		for (Color existingColor : colors) {
 			if (existingColor.getRed() == red && existingColor.getGreen() == green && existingColor.getBlue() == blue) {

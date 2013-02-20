@@ -137,7 +137,7 @@ public class RectangleBorder extends AbstractBorder
 		
 	private boolean hasUniformBorders()
 	{
-		org.eclipse.sapphire.ui.Color tc, bc, lc, rc;
+		org.eclipse.sapphire.Color tc, bc, lc, rc;
 		tc = this.rectPresentation.getTopBorder().getColor().getContent();
 		bc = this.rectPresentation.getBottomBorder().getColor().getContent();
 		lc = this.rectPresentation.getLeftBorder().getColor().getContent();

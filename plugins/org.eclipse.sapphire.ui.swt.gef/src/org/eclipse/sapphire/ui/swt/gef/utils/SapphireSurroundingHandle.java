@@ -206,7 +206,7 @@ public class SapphireSurroundingHandle extends AbstractHandle
 		this.lineStyle = style;
 	}
 		
-	public void setLineColor(org.eclipse.sapphire.ui.Color color)
+	public void setLineColor(org.eclipse.sapphire.Color color)
 	{
 		this.lineColor = this.resourceCache.getColor(color);
 	}

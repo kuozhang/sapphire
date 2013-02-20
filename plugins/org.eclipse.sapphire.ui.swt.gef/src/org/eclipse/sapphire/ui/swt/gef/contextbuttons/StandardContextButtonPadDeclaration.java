@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 
 import java.awt.Rectangle;
 
-import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.SapphireAction;
 
 /**

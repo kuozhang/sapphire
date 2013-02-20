@@ -49,6 +49,7 @@
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
     <li><a href="#Forms-SectionReference">Section Reference</a></li>
+    <li><a href="#Forms-ColorBrowsing">Color Browsing</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
@@ -734,6 +735,24 @@ in the catalog sample should include the manufacturer.</p>
         &lt;/section>
     &lt;/node>
 &lt;/definition></font></code></pre>
+
+
+<h2><a name="Forms-ColorBrowsing">Color Browsing</a></h2>
+
+<p>Define a color value property using the provided Color type and Sapphire will supply browse support.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base =</font> Color<font color="#888888">.class )
+
+ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
+    
+Value&lt;</font>Color<font color="#888888">> getColor();
+void setColor( String value );
+void setColor(</font> Color <font color="#888888">value );
+</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/ColorBrowsing.png"/></p>
 
 
 <h2><a name="Miscellaneous"><a name="Miscellaneous-JavaIdentifier">JavaIdentifier</a></a></h2>

@@ -16,6 +16,8 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -61,5 +63,15 @@ public interface IValuePropertiesGallery extends IModelElement
     ImpliedElementProperty PROP_POSSIBLE_VALUES_GALLERY = new ImpliedElementProperty( TYPE, "PossibleValuesGallery" );
     
     PossibleValuesGallery getPossibleValuesGallery();
+    
+    // *** Color ***
+    
+    @Type( base = org.eclipse.sapphire.Color.class )
+
+    ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
+    
+    Value<org.eclipse.sapphire.Color> getColor();
+    void setColor( String value );
+    void setColor( org.eclipse.sapphire.Color value );
     
 }

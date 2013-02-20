@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
-import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 

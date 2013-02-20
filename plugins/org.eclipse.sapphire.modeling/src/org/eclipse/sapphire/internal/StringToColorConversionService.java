@@ -10,13 +10,13 @@
  *    Konstantin Komissarchik - adapted from ValueSerializationService
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def.internal;
+package org.eclipse.sapphire.internal;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.ui.Color;
 
 /**
  * ConversionService implementation for String to Color conversions.

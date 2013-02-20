@@ -24,8 +24,8 @@ import org.eclipse.swt.graphics.Color;
 
 public class SapphireDiagramGridLayer extends GridLayer
 {
-	private static final org.eclipse.sapphire.ui.Color DEFAULT_MAJOR_LINE_COLOR = new org.eclipse.sapphire.ui.Color(206, 224, 242);
-	private static final org.eclipse.sapphire.ui.Color DEFAULT_MINOR_LINE_COLOR = new org.eclipse.sapphire.ui.Color(227, 238, 249);
+	private static final org.eclipse.sapphire.Color DEFAULT_MAJOR_LINE_COLOR = new org.eclipse.sapphire.Color(206, 224, 242);
+	private static final org.eclipse.sapphire.Color DEFAULT_MINOR_LINE_COLOR = new org.eclipse.sapphire.Color(227, 238, 249);
 	
 	private DiagramModel diagramModel;
 	private SapphireDiagramEditorPagePart diagramPart;

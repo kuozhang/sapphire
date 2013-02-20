@@ -44,6 +44,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 
 <ol>
   <li><a href="#AdapterService">AdapterService</a></li>
+  <li><a href="#Color">Color</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
@@ -137,6 +138,48 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 <p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
 achieved by migrating to the typed ConversionService API. Conversions implemented in this manner are quicker for
 Sapphire to find.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="Color">Color</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">import</font> org.eclipse.sapphire.ui<font color="#888888">.Color</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">import</font> org.eclipse.sapphire<font color="#888888">.Color</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">color.</font>getRed<font color="#888888">()</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">color.</font>red<font color="#888888">()</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">color.</font>getGreen<font color="#888888">()</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">color.</font>green<font color="#888888">()</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">color.</font>getBlue<font color="#888888">()</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">color.</font>blue<font color="#888888">()</font></code></pre>
     </td>
   </tr>
 </table>

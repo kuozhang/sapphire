@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class SapphireSnapFeedbackPolicy extends GraphicalEditPolicy 
 {
-    private static final org.eclipse.sapphire.ui.Color GUIDES_BACKROUND = new org.eclipse.sapphire.ui.Color(255, 153, 51);
+    private static final org.eclipse.sapphire.Color GUIDES_BACKROUND = new org.eclipse.sapphire.Color(255, 153, 51);
     
     private DiagramResourceCache resourceCache;
     
@@ -96,7 +96,7 @@ public class SapphireSnapFeedbackPolicy extends GraphicalEditPolicy
 			int green = temp.getGreen();
 			int blue = temp.getBlue();
 			temp.dispose();
-			org.eclipse.sapphire.ui.Color sapphireColor = new org.eclipse.sapphire.ui.Color(red, green, blue);
+			org.eclipse.sapphire.Color sapphireColor = new org.eclipse.sapphire.Color(red, green, blue);
 			Color mixColors = resourceCache.getColor(sapphireColor);
 			return mixColors;
 		}

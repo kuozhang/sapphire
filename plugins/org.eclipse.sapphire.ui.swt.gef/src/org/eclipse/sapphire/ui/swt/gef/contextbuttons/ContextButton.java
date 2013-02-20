@@ -326,7 +326,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 */
 	private void preparePaintIndicator(Graphics graphics) {
 		graphics.setLineWidth(1);
-		org.eclipse.sapphire.ui.Color outerLineColor = getPositionedContextButton().getOuterLineColor();
+		org.eclipse.sapphire.Color outerLineColor = getPositionedContextButton().getOuterLineColor();
 		Color adjustedColor = getAdjustedColor(outerLineColor);
 		graphics.setForegroundColor(adjustedColor);
 		graphics.setBackgroundColor(adjustedColor);
@@ -340,14 +340,14 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 *            The IColorConstant for which to return the SWT color.
 	 * @return The adjusted SWT color for the given IColorConstant.
 	 */
-	private Color getAdjustedColor(org.eclipse.sapphire.ui.Color color) {
+	private Color getAdjustedColor(org.eclipse.sapphire.Color color) {
 		SapphireDiagramEditor editor = getContextButtonPad().getEditor();
 		if (!isEnabled()) {
 			int disabledAdjustment = 80;
-			int r = Math.min(255, color.getRed() + disabledAdjustment);
-			int g = Math.min(255, color.getGreen() + disabledAdjustment);
-			int b = Math.min(255, color.getBlue() + disabledAdjustment);
-			color = new org.eclipse.sapphire.ui.Color(r, g, b);
+			int r = Math.min(255, color.red() + disabledAdjustment);
+			int g = Math.min(255, color.green() + disabledAdjustment);
+			int b = Math.min(255, color.blue() + disabledAdjustment);
+			color = new org.eclipse.sapphire.Color(r, g, b);
 		}
 		Color swtColor = editor.getResourceCache().getColor(color);
 		return swtColor;

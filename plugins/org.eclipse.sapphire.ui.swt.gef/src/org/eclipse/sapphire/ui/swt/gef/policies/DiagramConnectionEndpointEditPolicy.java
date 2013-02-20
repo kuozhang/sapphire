@@ -23,7 +23,7 @@ import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
 
 public class DiagramConnectionEndpointEditPolicy extends ConnectionEndpointEditPolicy {
 
-    private static final org.eclipse.sapphire.ui.Color CONNECTION_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0xA5, 0x00);
+    private static final org.eclipse.sapphire.Color CONNECTION_FOREGROUND = new org.eclipse.sapphire.Color(0xFF, 0xA5, 0x00);
     
     private DiagramResourceCache resourceCache;
     

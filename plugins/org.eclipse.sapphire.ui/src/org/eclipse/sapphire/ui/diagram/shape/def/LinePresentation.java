@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
@@ -20,7 +21,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 
 /**

@@ -35,9 +35,9 @@ import org.eclipse.swt.graphics.Path;
 
 public class RectangleFigure extends ContainerShapeFigure implements IShapeFigure
 {	
-	private static final org.eclipse.sapphire.ui.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.ui.Color(0xAC, 0xD2, 0xF4);
-    private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_START = new org.eclipse.sapphire.ui.Color(0xFF, 0xFF, 0xFF);
-    private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_END = new org.eclipse.sapphire.ui.Color(0xD4, 0xE7, 0xF8);
+	private static final org.eclipse.sapphire.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.Color(0xAC, 0xD2, 0xF4);
+    private static final org.eclipse.sapphire.Color DEFAULT_BACKGROUND_START = new org.eclipse.sapphire.Color(0xFF, 0xFF, 0xFF);
+    private static final org.eclipse.sapphire.Color DEFAULT_BACKGROUND_END = new org.eclipse.sapphire.Color(0xD4, 0xE7, 0xF8);
 	
 	private RectanglePresentation rectPresentation;
 	private ShapeLayoutDef layout;
@@ -95,7 +95,7 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			{
 				if (bg instanceof SolidBackgroundDef)
 				{
-					org.eclipse.sapphire.ui.Color color = ((SolidBackgroundDef)bg).getColor().getContent();
+					org.eclipse.sapphire.Color color = ((SolidBackgroundDef)bg).getColor().getContent();
 					if (color != null)
 					{
 						graphics.setBackgroundColor(resourceCache.getColor(color));

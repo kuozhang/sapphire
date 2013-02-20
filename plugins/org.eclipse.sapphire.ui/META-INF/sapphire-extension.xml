@@ -346,6 +346,13 @@
         <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
+        <action>Sapphire.Browse</action>
+        <id>Sapphire.Browse.Color</id>
+        <description>Opens a color browse dialog. Activates if the property is a value property of type Color.</description>
+        <condition>org.eclipse.sapphire.ui.swt.internal.ColorBrowseActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.ui.swt.internal.ColorBrowseActionHandler</impl>
+    </action-handler>
+    <action-handler>
         <action>Sapphire.Help</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.HelpActionHandler</impl>
         <id>Sapphire.Help</id>

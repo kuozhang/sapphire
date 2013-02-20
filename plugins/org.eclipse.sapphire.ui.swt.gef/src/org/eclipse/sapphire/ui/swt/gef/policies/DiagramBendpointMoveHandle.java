@@ -26,10 +26,10 @@ import org.eclipse.swt.graphics.Color;
 
 public class DiagramBendpointMoveHandle extends BendpointMoveHandle {
 	
-	private final static org.eclipse.sapphire.ui.Color FOREGROUND_COLOR_PRIMARY = new org.eclipse.sapphire.ui.Color(0xcc,0x6a,0x01);
-	private final static org.eclipse.sapphire.ui.Color FOREGROUND_COLOR_SECONDARY = new org.eclipse.sapphire.ui.Color(0xcc,0x6a,0x01);
-	private final static org.eclipse.sapphire.ui.Color BACKGROUND_COLOR_PRIMARY = new org.eclipse.sapphire.ui.Color(0xff,0xaa,0x2f);
-	private final static org.eclipse.sapphire.ui.Color BACKGROUND_COLOR_SECONDARY = new org.eclipse.sapphire.ui.Color(0xff,0xff,0xff);
+	private final static org.eclipse.sapphire.Color FOREGROUND_COLOR_PRIMARY = new org.eclipse.sapphire.Color(0xcc,0x6a,0x01);
+	private final static org.eclipse.sapphire.Color FOREGROUND_COLOR_SECONDARY = new org.eclipse.sapphire.Color(0xcc,0x6a,0x01);
+	private final static org.eclipse.sapphire.Color BACKGROUND_COLOR_PRIMARY = new org.eclipse.sapphire.Color(0xff,0xaa,0x2f);
+	private final static org.eclipse.sapphire.Color BACKGROUND_COLOR_SECONDARY = new org.eclipse.sapphire.Color(0xff,0xff,0xff);
 
 	public DiagramBendpointMoveHandle(ConnectionEditPart owner, int index, int locatorIndex) {
 		super(owner, index, locatorIndex);

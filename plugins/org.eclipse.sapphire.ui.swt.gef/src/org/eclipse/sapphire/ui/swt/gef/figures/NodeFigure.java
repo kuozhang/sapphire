@@ -33,14 +33,14 @@ import org.eclipse.swt.graphics.Image;
 
 public class NodeFigure extends RoundedRectangle { 
 	
-	private static final org.eclipse.sapphire.ui.Color DEFAULT_TEXT_FOREGROUND = new org.eclipse.sapphire.ui.Color(51, 51, 153);
-    private static final org.eclipse.sapphire.ui.Color DEFAULT_NODE_FOREGROUND = new org.eclipse.sapphire.ui.Color(51, 51, 153);
+	private static final org.eclipse.sapphire.Color DEFAULT_TEXT_FOREGROUND = new org.eclipse.sapphire.Color(51, 51, 153);
+    private static final org.eclipse.sapphire.Color DEFAULT_NODE_FOREGROUND = new org.eclipse.sapphire.Color(51, 51, 153);
 	//EEF6FD D0E6F9 ACD2F4 81B9EA 9ABFE0
     //F8FBFE EDF5FC DEEDFA D4E7F8 E2E5E9
-    private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_START = new org.eclipse.sapphire.ui.Color(0xFF, 0xFF, 0xFF);
-    private static final org.eclipse.sapphire.ui.Color DEFAULT_BACKGROUND_END = new org.eclipse.sapphire.ui.Color(0xD4, 0xE7, 0xF8);
+    private static final org.eclipse.sapphire.Color DEFAULT_BACKGROUND_START = new org.eclipse.sapphire.Color(0xFF, 0xFF, 0xFF);
+    private static final org.eclipse.sapphire.Color DEFAULT_BACKGROUND_END = new org.eclipse.sapphire.Color(0xD4, 0xE7, 0xF8);
 
-    private static final org.eclipse.sapphire.ui.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.ui.Color(0xAC, 0xD2, 0xF4);
+    private static final org.eclipse.sapphire.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.Color(0xAC, 0xD2, 0xF4);
     
 	// drag/drop select color
     //private static final org.eclipse.sapphire.ui.Color DRAG_DROP_SELECT_BACKGROUND = new org.eclipse.sapphire.ui.Color(0xD0, 0xE6, 0xF9);

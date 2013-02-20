@@ -38,7 +38,7 @@ import org.eclipse.swt.SWT;
 
 public class DiagramNodeEditPolicy extends GraphicalNodeEditPolicy {
 
-    private static final org.eclipse.sapphire.ui.Color DUMMY_CONNECTION_FOREGROUND = new org.eclipse.sapphire.ui.Color(0xFF, 0x99, 0x33);
+    private static final org.eclipse.sapphire.Color DUMMY_CONNECTION_FOREGROUND = new org.eclipse.sapphire.Color(0xFF, 0x99, 0x33);
 
 	Rectangle rec;
 

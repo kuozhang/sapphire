@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
-import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.LinePart;

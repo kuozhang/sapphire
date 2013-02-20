@@ -12,11 +12,11 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
-import org.eclipse.sapphire.ui.Color;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 

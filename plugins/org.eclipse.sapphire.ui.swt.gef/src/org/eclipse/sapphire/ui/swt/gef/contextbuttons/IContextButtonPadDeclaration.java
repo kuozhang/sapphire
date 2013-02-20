@@ -15,7 +15,7 @@ package org.eclipse.sapphire.ui.swt.gef.contextbuttons;
 import java.awt.Rectangle;
 import java.util.List;
 
-import org.eclipse.sapphire.ui.Color;
+import org.eclipse.sapphire.Color;
 
 /**
  * This interface provides the visual definition for the context button pad.

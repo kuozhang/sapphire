@@ -391,6 +391,15 @@
                     </section>
                 </node>
                 <node>
+                    <label>color</label>
+                    <section>
+                        <content>
+                            <property-editor>Color</property-editor>
+                        </content>
+                    </section>
+                    <property>ValuePropertiesGallery</property>
+                </node>
+                <node>
                     <label>custom</label>
                     <property>CustomValueGallery</property>
                     <section>

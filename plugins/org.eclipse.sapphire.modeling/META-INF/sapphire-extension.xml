@@ -555,6 +555,12 @@
         <description>ConversionService implementation for String to VersionConstraint conversions.</description>
     </service>
     <service>
+        <id>Sapphire.ConversionService.StringToColor</id>
+        <implementation>org.eclipse.sapphire.internal.StringToColorConversionService</implementation>
+        <context>Sapphire</context>
+        <description>ConversionService implementation for String to Color conversions.</description>
+    </service>
+    <service>
         <id>Sapphire.PossibleTypesService.Standard</id>
         <type>org.eclipse.sapphire.services.PossibleTypesService</type>
         <context>Sapphire.Property.MetaModel</context>
