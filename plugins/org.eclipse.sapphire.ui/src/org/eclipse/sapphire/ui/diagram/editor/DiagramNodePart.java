@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
@@ -39,7 +38,6 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
-import org.eclipse.sapphire.ui.swt.renderer.SwtUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -210,6 +208,7 @@ public class DiagramNodePart
         {
             this.idFunctionResult.dispose();
         }
+        this.shapePart.dispose();
         
     }
     

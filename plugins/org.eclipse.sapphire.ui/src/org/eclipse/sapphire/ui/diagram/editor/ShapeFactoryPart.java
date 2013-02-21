@@ -159,6 +159,11 @@ public class ShapeFactoryPart extends ShapePart
     {
         super.dispose();
         this.modelElement.detach(this.shapePropertyListener, this.propertyName);
+        List<ShapePart> shapeParts = getChildren();
+        for (ShapePart shapePart : shapeParts)
+        {
+        	shapePart.dispose();
+        }        
     }
     
     private ShapePart getShapePart(IModelElement element)

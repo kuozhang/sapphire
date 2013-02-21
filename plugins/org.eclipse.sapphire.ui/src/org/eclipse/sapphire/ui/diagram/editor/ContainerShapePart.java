@@ -278,6 +278,11 @@ public class ContainerShapePart extends ShapePart
         {
         	this.modelElement.detach(this.elementValidationListener);
         }
+        for (ShapePart child : getChildren())
+        {
+        	child.dispose();
+        }
+        
     }
         
 }
