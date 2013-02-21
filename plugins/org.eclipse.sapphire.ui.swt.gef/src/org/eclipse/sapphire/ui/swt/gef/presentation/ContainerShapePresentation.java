@@ -86,5 +86,15 @@ public class ContainerShapePresentation extends ShapePresentation
 	{
 		return getContainerShapePart().getLayout();
 	}
+	
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		for (ShapePresentation shapePresentation : getChildren())
+		{
+			shapePresentation.dispose();
+		}
+	}
 }
 

@@ -114,6 +114,10 @@ public class ShapePresentation
 		return this.shapePart.getSelectionPresentation();
 	}	
 	
+	public void dispose()
+	{		
+	}
+	
     public static final class ShapePresentationFactory
     {
     	public static ShapePresentation createShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)

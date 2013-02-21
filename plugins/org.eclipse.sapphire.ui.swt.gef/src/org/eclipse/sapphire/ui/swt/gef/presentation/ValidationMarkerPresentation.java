@@ -62,13 +62,13 @@ import org.eclipse.swt.widgets.Display;
 public class ValidationMarkerPresentation extends ShapePresentation 
 {
     private static final ImageDescriptor IMG_ERROR_SMALL
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "error_small.png" );
+			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "error_small.png" );
     private static final ImageDescriptor IMG_ERROR
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "error.gif" );
+			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "error.gif" );
     private static final ImageDescriptor IMG_WARNING_SMALL
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "warning_small.png" );
+			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "warning_small.png" );
     private static final ImageDescriptor IMG_WARNING
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "warning.gif" );
+			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "warning.gif" );
     
     private static final List<Class<? extends PropertyEditorAssistContributor>> SYSTEM_CONTRIBUTORS
     		= new ArrayList<Class<? extends PropertyEditorAssistContributor>>();
@@ -186,6 +186,13 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	public ValidationMarkerSize getSize()
 	{
 		return getValidationMarkerPart().getSize();
+	}
+	
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		this.element.detach(this.elementValidationListener);
 	}
 	
 	private void refresh()

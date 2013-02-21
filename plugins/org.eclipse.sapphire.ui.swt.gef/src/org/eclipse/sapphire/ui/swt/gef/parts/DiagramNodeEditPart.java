@@ -102,7 +102,9 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		if (isActive()) {
 			ContextButtonManager contextButtonManager = getConfigurationManager().getDiagramEditor().getContextButtonManager();
 			contextButtonManager.deRegister(this);
-			getCastedModel().removePropertyChangeListener(this);			
+			getCastedModel().removePropertyChangeListener(this);
+	    	ShapePresentation shapePresentation = getCastedModel().getShapePresentation();
+	    	shapePresentation.dispose();
 			super.deactivate();
 		}
 	}

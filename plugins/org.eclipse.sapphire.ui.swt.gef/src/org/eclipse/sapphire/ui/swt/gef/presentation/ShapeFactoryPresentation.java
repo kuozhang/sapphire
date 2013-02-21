@@ -88,4 +88,14 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	{
 		return this.separatorMap.get(child);
 	}
+	
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		for (ShapePresentation shapePresentation : getChildren())
+		{
+			shapePresentation.dispose();
+		}
+	}	
 }
