@@ -15,6 +15,7 @@ import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.LinePart;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -22,9 +23,9 @@ import org.eclipse.sapphire.ui.diagram.editor.LinePart;
 
 public class LineShapePresentation extends ShapePresentation 
 {
-	public LineShapePresentation(ShapePresentation parent, LinePart linePart)
+	public LineShapePresentation(ShapePresentation parent, LinePart linePart, DiagramConfigurationManager configManager)
 	{
-		super(parent, linePart);
+		super(parent, linePart, configManager);
 	}
 
 	public LinePart getLinePart()

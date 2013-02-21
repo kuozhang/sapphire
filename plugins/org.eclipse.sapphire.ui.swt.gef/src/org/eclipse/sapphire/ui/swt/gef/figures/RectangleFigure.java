@@ -21,6 +21,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SolidBackgroundDef;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -45,9 +46,10 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
     private boolean selected;
 	private boolean hasFocus;
 	
-	public RectangleFigure(RectanglePresentation rectPresentation, DiagramResourceCache resourceCache)
+	public RectangleFigure(RectanglePresentation rectPresentation, DiagramResourceCache resourceCache,
+			DiagramConfigurationManager configManager)
 	{
-		super(rectPresentation, resourceCache);
+		super(rectPresentation, resourceCache, configManager);
 		this.rectPresentation = rectPresentation;
 		this.layout = rectPresentation.getLayout();
 		this.resourceCache = resourceCache;		

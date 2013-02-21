@@ -145,12 +145,6 @@ public final class DiagramNodeTemplate extends SapphirePart
             }
 
         	@Override
-            public void handleShapeValidationEvent(final DiagramShapeEvent event)
-            {
-                notifyShapeValidation(event);
-            }
-
-        	@Override
             public void handleShapeAddEvent(final DiagramShapeEvent event)
             {
                 notifyShapeAdd(event);
@@ -168,11 +162,6 @@ public final class DiagramNodeTemplate extends SapphirePart
                 notifyShapeReorder(event);
             }
 
-        	@Override
-        	public void handleNodeValidationEvent(final DiagramNodeEvent event)
-        	{
-        		notifyNodeValidationEvent(event);
-        	}        	
         	@Override
 	    	public void handleNodeMoveEvent(final DiagramNodeEvent event)
 	       	{

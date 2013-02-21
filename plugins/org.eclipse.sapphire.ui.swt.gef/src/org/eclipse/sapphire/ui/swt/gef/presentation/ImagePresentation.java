@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -20,9 +21,9 @@ import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 
 public class ImagePresentation extends ShapePresentation 
 {
-	public ImagePresentation(ShapePresentation parent, ImagePart imagePart)
+	public ImagePresentation(ShapePresentation parent, ImagePart imagePart, DiagramConfigurationManager configManager)
 	{
-		super(parent, imagePart);
+		super(parent, imagePart, configManager);
 	}
 
 	public ImagePart getImagePart()

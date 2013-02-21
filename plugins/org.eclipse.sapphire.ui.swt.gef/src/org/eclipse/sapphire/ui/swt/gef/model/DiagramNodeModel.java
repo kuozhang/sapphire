@@ -34,7 +34,6 @@ public class DiagramNodeModel extends DiagramModelBase {
     public final static String SOURCE_CONNECTIONS = "SOURCE_CONNECTIONS";
 	public final static String TARGET_CONNECTIONS = "TARGET_CONNECTIONS";
 	public final static String NODE_BOUNDS = "NODE_BOUNDS";
-	public final static String NODE_VALIDATION = "NODE_VALIDATION";
 	public final static String SHAPE_UPDATES = "SHAPE_UPDATES";
 	public final static String CHANGE_TEXT = "CHANGE_TEXT";
 	public final static String SHAPE_VISIBILITY_UPDATES = "SHAPE_VISIBILITY_UPDATES";
@@ -52,7 +51,7 @@ public class DiagramNodeModel extends DiagramModelBase {
 		this.parent = parent;
 		this.part = part;
 		ShapePart shapePart = this.part.getShapePart();
-		this.shapePresentation = ShapePresentationFactory.createShapePresentation(null, shapePart);
+		this.shapePresentation = ShapePresentationFactory.createShapePresentation(null, shapePart, parent.getConfigurationManager());
 		this.shapeModel = ShapeModelFactory.createShapeModel(this, null, this.shapePresentation);
 	}
 	
@@ -93,14 +92,6 @@ public class DiagramNodeModel extends DiagramModelBase {
 		firePropertyChange(NODE_BOUNDS, null, getModelPart().getNodeBounds());
 	}
 	
-	public void handleNodeValidation() {
-		firePropertyChange(NODE_VALIDATION, null, null);
-	}
-
-	public void handleNodeValidation(ShapePart shapePart) {
-		firePropertyChange(NODE_VALIDATION, null, shapePart);
-	}
-
 	public void handleUpdateNodeShape(ShapePart shapePart) {
 		firePropertyChange(SHAPE_UPDATES, null, shapePart);
 	}

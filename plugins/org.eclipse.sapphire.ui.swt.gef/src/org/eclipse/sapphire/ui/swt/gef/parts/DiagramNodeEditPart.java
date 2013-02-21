@@ -41,7 +41,6 @@ import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
-import org.eclipse.sapphire.ui.swt.gef.figures.ContainerShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
@@ -75,7 +74,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
     @Override
 	protected IFigure createFigure() {
     	ShapePresentation shapePresentation = getCastedModel().getShapePresentation();
-    	return ShapeUtil.createFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
+    	return ShapeUtil.createFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache(),
+    			getConfigurationManager());
     	
 	}
 
@@ -245,30 +245,12 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);		
 	}
 	
-	// Called when node is updated which could validation change
-	private void refreshNodeValidation(Object obj)
-	{
-		IFigure figure = null;
-		if (obj == null)
-		{
-			figure = getFigure();
-		}
-		else if (obj instanceof ShapePart)
-		{
-			figure = getPartFigure((ShapePart)obj);
-		}
-		if (figure instanceof ContainerShapeFigure)
-		{
-			ContainerShapeFigure containerShapeFigure = (ContainerShapeFigure)figure;
-			containerShapeFigure.refreshValidationStatus();
-		}
-	}
-	
 	private void updateShape(ShapePart shapePart) 
 	{
 		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
 		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);
-		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());
+		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache(),
+				getConfigurationManager());
 	}
 	
 	private void changeText(TextPart textPart)
@@ -284,7 +266,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	{
 		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
 		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);		
-		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache());		
+		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache(),
+				getConfigurationManager());		
 	}
 	
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
@@ -322,8 +305,6 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			refreshTargetConnections();
 		} else if (DiagramNodeModel.NODE_BOUNDS.equals(prop)) {
 			refreshNodeBounds();
-		} else if (DiagramNodeModel.NODE_VALIDATION.equals(prop)) {
-			refreshNodeValidation(evt.getNewValue());
 		} else if (DiagramNodeModel.SHAPE_UPDATES.equals(prop)) {
 			Object obj = evt.getNewValue();
 			if (obj instanceof ShapePart) {

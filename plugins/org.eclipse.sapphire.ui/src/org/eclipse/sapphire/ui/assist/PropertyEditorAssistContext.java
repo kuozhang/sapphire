@@ -71,7 +71,7 @@ public final class PropertyEditorAssistContext
         }
         else
         {
-            return this.property.isReadOnly();
+            return this.property != null ? this.property.isReadOnly() : false;
         }
     }
     

@@ -23,7 +23,6 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 public class ContainerShapeModel extends ShapeModel 
 {
-	public final static String SHAPE_VALIDATION = "SHAPE_VALIDATION";
 	private List<ShapeModel> children;
 	
 	public ContainerShapeModel(DiagramNodeModel nodeModel, ShapeModel parent, 
@@ -47,9 +46,4 @@ public class ContainerShapeModel extends ShapeModel
 		return this.children;
 	}
 		
-	public void handleShapeValidation() 
-	{
-		firePropertyChange(SHAPE_VALIDATION, null, null);
-	}
-
 }

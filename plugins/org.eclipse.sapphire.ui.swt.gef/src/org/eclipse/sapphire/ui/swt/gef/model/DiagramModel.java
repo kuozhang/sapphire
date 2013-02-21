@@ -76,6 +76,11 @@ public class DiagramModel extends DiagramModelBase {
 		return connections;
 	}
 	
+	public DiagramConfigurationManager getConfigurationManager()
+	{
+		return this.configManager;
+	}
+	
 	public DiagramNodeModel getDiagramNodeModel(DiagramNodePart nodePart) {
 		for (DiagramNodeModel nodeModel : nodes) {
 			if (nodeModel.getModelPart() == nodePart) {

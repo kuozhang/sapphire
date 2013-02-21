@@ -24,7 +24,6 @@ import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.figures.ContainerShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
@@ -36,9 +35,7 @@ import org.eclipse.sapphire.ui.swt.gef.policies.ContainerShapeLabelDirectEditPol
  */
 
 public class ContainerShapeEditPart extends ShapeEditPart 
-{
-	private NodeDirectEditManager manager;
-	
+{	
 	public ContainerShapeEditPart(DiagramConfigurationManager configManager) 
 	{
     	super(configManager);    	
@@ -126,12 +123,7 @@ public class ContainerShapeEditPart extends ShapeEditPart
 	public void propertyChange(PropertyChangeEvent evt) 
 	{
 		String prop = evt.getPropertyName();
-		if (prop.equals(ContainerShapeModel.SHAPE_VALIDATION))
-		{
-			ContainerShapeFigure modelFigure = (ContainerShapeFigure)getFigure();
-			modelFigure.refreshValidationStatus();			
-		}
-		else if (prop.equals(ShapeModel.SHAPE_START_EDITING))
+		if (prop.equals(ShapeModel.SHAPE_START_EDITING))
 		{
 			performDirectEdit();
 		}

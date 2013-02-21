@@ -14,20 +14,12 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Vector;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.LineStyle;
-import org.eclipse.sapphire.ui.SapphireImageCache;
-import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
 
 /**
@@ -35,14 +27,6 @@ import org.eclipse.swt.graphics.Path;
  */
 
 public class FigureUtil {
-    private static final ImageDescriptor IMG_ERROR_SMALL
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "error_small.png" );
-    private static final ImageDescriptor IMG_ERROR
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "error.gif" );
-    private static final ImageDescriptor IMG_WARNING_SMALL
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "warning_small.png" );
-    private static final ImageDescriptor IMG_WARNING
-			= SwtRendererUtil.createImageDescriptor( FigureUtil.class, "warning.gif" );
 
 	public static PointList getAdjustedPointList(PointList points, double zoom, double lw) {
 		Rectangle zoomedBounds = points.getBounds().getCopy().scale(zoom);
@@ -210,45 +194,6 @@ public class FigureUtil {
 			s.x = Math.round(c.x + (float) y * vx);
 			s.y = Math.round(c.y + (float) y * vy);
 		}
-	}
-	
-	public static ValidationMarkerFigure createValidationMarkerFigure(ValidationMarkerSize size, IModelElement model, SapphireImageCache imageCache)
-	{
-		Image image = null;
-				
-		Status status = model.validation();
-		if (status.severity() != Status.Severity.OK) 
-		{
-			if (status.severity() == Status.Severity.WARNING) 
-			{
-				if (size == ValidationMarkerSize.SMALL) 
-				{
-					image = imageCache.getImage(IMG_WARNING_SMALL);
-				} 
-				else 
-				{
-					image = imageCache.getImage(IMG_WARNING);					
-				}
-			} 
-			else if (status.severity() == Status.Severity.ERROR) 
-			{
-				if (size == ValidationMarkerSize.SMALL) 
-				{
-					image = imageCache.getImage(IMG_ERROR_SMALL);
-				} 
-				else 
-				{
-					image = imageCache.getImage(IMG_ERROR);
-				}
-			}
-		}
-		if (image != null)
-		{
-			ValidationMarkerFigure markerFigure = new ValidationMarkerFigure(image);
-			markerFigure.setToolTip(new Label(status.message()));
-			return markerFigure;
-		}
-		return null;
 	}
 	
 	public static int convertLineStyle(LineStyle style)

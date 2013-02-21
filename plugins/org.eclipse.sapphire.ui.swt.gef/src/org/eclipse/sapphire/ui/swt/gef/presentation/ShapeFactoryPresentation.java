@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,20 +31,21 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	private ShapePresentation separator;
 	private Map<ShapePresentation, IFigure> separatorMap;
 	
-	public ShapeFactoryPresentation(ShapePresentation parent, ShapeFactoryPart shapeFactoryPart)
+	public ShapeFactoryPresentation(ShapePresentation parent, ShapeFactoryPart shapeFactoryPart,
+			DiagramConfigurationManager configManager)
 	{
-		super(parent, shapeFactoryPart);
+		super(parent, shapeFactoryPart, configManager);
 		
 		this.children = new ArrayList<ShapePresentation>();
 		ShapePresentation childPresentation = null;
 		for (ShapePart shapePart : shapeFactoryPart.getChildren())
 		{
-			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart);
+			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
 			this.children.add(childPresentation);
 		}
 		if (shapeFactoryPart.getSeparator() != null)
 		{
-			this.separator = ShapePresentationFactory.createShapePresentation(this, shapeFactoryPart.getSeparator());
+			this.separator = ShapePresentationFactory.createShapePresentation(this, shapeFactoryPart.getSeparator(), configManager);
 			this.separatorMap = new HashMap<ShapePresentation, IFigure>();
 		}
 	}
@@ -62,7 +64,7 @@ public class ShapeFactoryPresentation extends ShapePresentation
 		ShapePresentation childPresentation = null;
 		for (ShapePart shapePart : children)
 		{
-			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart);
+			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getConfigurationManager());
 			this.children.add(childPresentation);
 		}		
 	}

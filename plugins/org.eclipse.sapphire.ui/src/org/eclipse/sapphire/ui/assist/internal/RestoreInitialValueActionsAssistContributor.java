@@ -39,7 +39,7 @@ public final class RestoreInitialValueActionsAssistContributor extends PropertyE
         final IModelElement element = context.getModelElement();
         final ModelProperty property = context.getProperty();
         
-        if( property.isReadOnly() )
+        if( property == null || property.isReadOnly() )
         {
             return;
         }

@@ -19,14 +19,13 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
-import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
-import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
@@ -47,10 +46,10 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation
 
 public class ShapeUtil {  
 	
-	public static IFigure createFigureForShape(ShapePresentation shapePresentation, DiagramResourceCache resourceCache)
+	public static IFigure createFigureForShape(ShapePresentation shapePresentation, DiagramResourceCache resourceCache,
+			DiagramConfigurationManager configManager)
 	{
-		IFigure figure = createFigure(shapePresentation, resourceCache);
-		shapePresentation.setFigure(figure);
+		IFigure figure = createFigure(shapePresentation, resourceCache, configManager);
 		
 		if (shapePresentation instanceof ContainerShapePresentation)
 		{
@@ -60,7 +59,7 @@ public class ShapeUtil {
 			{
 				if (!childShapePresentation.getPart().isActive())
 				{
-					IFigure childFigure = createFigureForShape(childShapePresentation, resourceCache);
+					IFigure childFigure = createFigureForShape(childShapePresentation, resourceCache, configManager);
 					if (childFigure != null)
 					{
 						Object layoutConstraint = getLayoutConstraint(childShapePresentation, layoutDef);
@@ -79,7 +78,7 @@ public class ShapeUtil {
 		return figure;
 	}
 	
-	private static IFigure createFigure(ShapePresentation shapePresentation, DiagramResourceCache resourceCache)
+	private static IFigure createFigure(ShapePresentation shapePresentation, DiagramResourceCache resourceCache, DiagramConfigurationManager configManager)
 	{
 		IFigure figure = null;
 		if (shapePresentation instanceof TextPresentation)
@@ -104,9 +103,7 @@ public class ShapeUtil {
 		else if (shapePresentation instanceof ValidationMarkerPresentation)
 		{
 			ValidationMarkerPresentation markerPresentation = (ValidationMarkerPresentation)shapePresentation;
-			ValidationMarkerPart markerPart = markerPresentation.getValidationMarkerPart();
-			DiagramNodePart nodePart = markerPart.nearest(DiagramNodePart.class);
-			figure = FigureUtil.createValidationMarkerFigure(markerPresentation.getSize(), markerPart.getLocalModelElement(), nodePart.getImageCache());
+			figure = markerPresentation.getFigure();
 		}
 		else if (shapePresentation instanceof LineShapePresentation)
 		{
@@ -116,12 +113,13 @@ public class ShapeUtil {
 		else if (shapePresentation instanceof RectanglePresentation)
 		{
 			RectanglePresentation rectPresentation = (RectanglePresentation)shapePresentation;
-			figure = new RectangleFigure(rectPresentation, resourceCache);
+			figure = new RectangleFigure(rectPresentation, resourceCache, configManager);
 		}
+		shapePresentation.setFigure(figure);
 		return figure;
 	}
 	
-	public static boolean updateFigureForShape(ShapePresentation updateShape, DiagramResourceCache resourceCache)
+	public static boolean updateFigureForShape(ShapePresentation updateShape, DiagramResourceCache resourceCache, DiagramConfigurationManager configManager)
 	{
 		IFigure updateFigure = updateShape.getFigure();
 		IFigure containerFigure = updateShape.getParentFigure();
@@ -139,8 +137,7 @@ public class ShapeUtil {
 					containerFigure.remove(updateFigure);
 				}
 				// add it
-				updateFigure = createFigure(updateShape, resourceCache);
-				updateShape.setFigure(updateFigure);
+				updateFigure = createFigure(updateShape, resourceCache, configManager);
 
 				Object layoutConstraint = getLayoutConstraint(updateShape, containerPresentation.getLayout());
 				if (layoutConstraint != null)

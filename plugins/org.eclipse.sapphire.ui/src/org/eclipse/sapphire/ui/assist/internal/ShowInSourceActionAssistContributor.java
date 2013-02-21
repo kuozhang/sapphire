@@ -50,7 +50,11 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
         
         boolean contribute = false;
         
-        if( ! prop.isDerived() )
+        if (prop == null)
+        {
+        	contribute = true;
+        }
+        else if( !prop.isDerived() )
         {
             if( prop instanceof ValueProperty )
             {

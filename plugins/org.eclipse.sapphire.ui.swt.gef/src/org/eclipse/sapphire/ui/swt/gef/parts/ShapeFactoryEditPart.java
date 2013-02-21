@@ -86,7 +86,8 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 		{
 			// Add separator figure to the parent container
 			IFigure separatorFig = ShapeUtil.createFigureForShape(factory.getSeparator(), 
-					getNodeEditPart().getCastedModel().getDiagramModel().getResourceCache());
+					getNodeEditPart().getCastedModel().getDiagramModel().getResourceCache(),
+					getConfigurationManager());
 			Object separatorConstraint = ShapeUtil.getLayoutConstraint(factory.getSeparator(), 
 					parentPresentation.getLayout());
 			parentFigure.add(separatorFig, separatorConstraint, newIndex + 1);

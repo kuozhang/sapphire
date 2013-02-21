@@ -81,7 +81,7 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
 		DiagramNodeEditPart nodeEditPart = getNodeEditPart();
 		IFigure fig = ShapeUtil.createFigureForShape(shapePresentation,  
-					nodeEditPart.getCastedModel().getDiagramModel().getResourceCache());
+					nodeEditPart.getCastedModel().getDiagramModel().getResourceCache(), getConfigurationManager());
 		return fig;
 	}
 

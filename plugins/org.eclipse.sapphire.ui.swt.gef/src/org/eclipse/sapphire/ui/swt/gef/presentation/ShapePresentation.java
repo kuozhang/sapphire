@@ -21,6 +21,7 @@ import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,12 +31,14 @@ public class ShapePresentation
 {
 	private ShapePresentation parent;
 	private ShapePart shapePart;
+	private DiagramConfigurationManager configManager;
 	private IFigure figure;
 	
-	public ShapePresentation(ShapePresentation parent, ShapePart shapePart)
+	public ShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)
 	{
 		this.parent = parent;
 		this.shapePart = shapePart;
+		this.configManager = configManager;
 	}
 	
 	public ShapePresentation getParent()
@@ -46,6 +49,11 @@ public class ShapePresentation
 	public ShapePart getPart()
 	{
 		return this.shapePart;
+	}
+	
+	public DiagramConfigurationManager getConfigurationManager()
+	{
+		return this.configManager;
 	}
 	
 	public void setFigure(IFigure fig)
@@ -108,32 +116,32 @@ public class ShapePresentation
 	
     public static final class ShapePresentationFactory
     {
-    	public static ShapePresentation createShapePresentation(ShapePresentation parent, ShapePart shapePart)
+    	public static ShapePresentation createShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)
     	{
     		ShapePresentation shapePresentation = null;
         	if (shapePart instanceof TextPart)
         	{
-        		shapePresentation = new TextPresentation(parent, (TextPart)shapePart);
+        		shapePresentation = new TextPresentation(parent, (TextPart)shapePart, configManager);
         	}
         	else if (shapePart instanceof ImagePart)
         	{
-        		shapePresentation = new ImagePresentation(parent, (ImagePart)shapePart);
+        		shapePresentation = new ImagePresentation(parent, (ImagePart)shapePart, configManager);
         	}
         	else if (shapePart instanceof ValidationMarkerPart)
         	{
-        		shapePresentation = new ValidationMarkerPresentation(parent, (ValidationMarkerPart)shapePart);
+        		shapePresentation = new ValidationMarkerPresentation(parent, (ValidationMarkerPart)shapePart, configManager);
         	}
         	else if (shapePart instanceof LinePart)
         	{
-        		shapePresentation = new LineShapePresentation(parent, (LinePart)shapePart);
+        		shapePresentation = new LineShapePresentation(parent, (LinePart)shapePart, configManager);
         	}
         	else if (shapePart instanceof RectanglePart)
         	{
-        		shapePresentation = new RectanglePresentation(parent, (RectanglePart)shapePart);        		
+        		shapePresentation = new RectanglePresentation(parent, (RectanglePart)shapePart, configManager);        		
         	}
         	else if (shapePart instanceof ShapeFactoryPart)
         	{
-        		shapePresentation = new ShapeFactoryPresentation(parent, (ShapeFactoryPart)shapePart);        		
+        		shapePresentation = new ShapeFactoryPresentation(parent, (ShapeFactoryPart)shapePart, configManager);        		
         	}
     		return shapePresentation;
     	}

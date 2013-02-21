@@ -18,6 +18,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -28,15 +29,16 @@ public class ContainerShapePresentation extends ShapePresentation
 	private List<ShapePresentation> children;
 	private ValidationMarkerPresentation validationMarker;
 	
-	public ContainerShapePresentation(ShapePresentation parent, ContainerShapePart containerShapePart)
+	public ContainerShapePresentation(ShapePresentation parent, ContainerShapePart containerShapePart,
+			DiagramConfigurationManager configManager)
 	{
-		super(parent, containerShapePart);
+		super(parent, containerShapePart, configManager);
 		
 		this.children = new ArrayList<ShapePresentation>();
 		ShapePresentation childPresentation = null;
 		for (ShapePart shapePart : containerShapePart.getChildren())
 		{
-			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart);
+			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
 			this.children.add(childPresentation);
 			if (childPresentation instanceof ValidationMarkerPresentation)
 			{

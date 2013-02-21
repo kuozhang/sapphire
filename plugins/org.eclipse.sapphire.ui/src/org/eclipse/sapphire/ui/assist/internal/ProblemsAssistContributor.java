@@ -46,22 +46,33 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
         this.element = element;
         this.property = property;
         
-        this.propertyValidationListener = new FilteredListener<PropertyValidationEvent>()
+        if (this.property != null)
         {
-            @Override
-            protected void handleTypedEvent( final PropertyValidationEvent event )
-            {
-                broadcast();
-            }
-        };
-        
-        this.element.attach( this.propertyValidationListener, this.property );
+	        this.propertyValidationListener = new FilteredListener<PropertyValidationEvent>()
+	        {
+	            @Override
+	            protected void handleTypedEvent( final PropertyValidationEvent event )
+	            {
+	                broadcast();
+	            }
+	        };
+	        
+	        this.element.attach( this.propertyValidationListener, this.property );
+        }
     }
 
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final Status validation = this.element.validation( this.property );
+        Status validation;
+        if (this.property != null)
+        {
+        	validation = this.element.validation( this.property );
+        }
+        else
+        {
+        	validation = this.element.validation();        			
+        }
         
         if( validation.children().isEmpty() )
         {

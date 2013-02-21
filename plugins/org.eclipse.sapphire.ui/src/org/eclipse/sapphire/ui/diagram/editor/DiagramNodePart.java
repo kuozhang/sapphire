@@ -61,7 +61,6 @@ public class DiagramNodePart
 	private FunctionResult idFunctionResult;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
-	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
 	private ShapePart shapePart;
@@ -127,17 +126,6 @@ public class DiagramNodePart
         );        
         this.shapePart.attach
         (
-             new FilteredListener<ShapeValidationEvent>()
-             {
-                @Override
-                protected void handleTypedEvent( final ShapeValidationEvent event )
-                {
-                	notifyShapeValidation(event.getPart());
-                }
-             }
-        );        		        
-        this.shapePart.attach
-        (
              new FilteredListener<ShapeReorderEvent>()
              {
                 @Override
@@ -170,15 +158,6 @@ public class DiagramNodePart
              }
         );        		        
         
-        this.elementValidationListener = new FilteredListener<ElementValidationEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final ElementValidationEvent event )
-            {
-                notifyNodeValidation();
-            }
-        };
-        this.modelElement.attach(this.elementValidationListener);        
     }
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
@@ -232,7 +211,6 @@ public class DiagramNodePart
             this.idFunctionResult.dispose();
         }
         
-        this.modelElement.detach(this.elementValidationListener);
     }
     
     public void addShape(ShapePart shapePart)
@@ -278,19 +256,6 @@ public class DiagramNodePart
 		}    	
     }
     
-    private void notifyShapeValidation(ShapePart shapePart)
-    {
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
-				((SapphireDiagramPartListener)listener).handleShapeValidationEvent(nue);
-			}
-		}    	
-    }
-
     private void notifyShapeAdd(ShapePart shapePart)
     {
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -400,30 +365,6 @@ public class DiagramNodePart
 			this.nodeBounds.setDefaultPosition(bounds.isDefaultPosition());
 			notifyNodeMove();
 		}			
-	}
-
-	
-	private void notifyNodeValidation()
-	{
-        SwtUtil.runOnDisplayThread
-        (
-            new Runnable()
-            {
-                public void run()
-                {
-            		Set<SapphirePartListener> listeners = getListeners();
-            		for(SapphirePartListener listener : listeners)
-            		{
-            			if (listener instanceof SapphireDiagramPartListener)
-            			{
-            				DiagramNodeEvent nue = new DiagramNodeEvent(DiagramNodePart.this);
-            				((SapphireDiagramPartListener)listener).handleNodeValidationEvent(nue);
-            			}
-            		}
-                }
-            }
-        );
-		
 	}
 	
 	private void notifyNodeMove()

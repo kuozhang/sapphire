@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -43,7 +46,11 @@ public final class FactsAssistContributor extends PropertyEditorAssistContributo
         
         boolean contribute = false;
         
-        if( ! element.validation( property ).ok() )
+        if ( property == null )
+        {
+        	contribute = ! element.validation().ok();
+        }
+        else if( ! element.validation( property ).ok() )
         {
             contribute = true;
         }
@@ -74,7 +81,17 @@ public final class FactsAssistContributor extends PropertyEditorAssistContributo
         
         if( contribute )
         {
-            for( String fact : element.service( property, FactsAggregationService.class ).facts() )
+        	Set<String> facts;
+        	if (property != null)
+        	{
+        		facts = element.service( property, FactsAggregationService.class ).facts();
+        	}
+        	else
+        	{
+        		FactsAggregationService service = element.service( FactsAggregationService.class );
+        		facts = service != null ? service.facts() : new TreeSet<String>();				
+        	}
+            for( String fact : facts )
             {
                 final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
                 contribution.text( "<p>" + escapeForXml( fact ) + "</p>" );

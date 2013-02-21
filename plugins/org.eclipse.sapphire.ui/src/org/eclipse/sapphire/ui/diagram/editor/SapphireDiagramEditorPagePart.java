@@ -699,18 +699,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return null;
     }
     
-    private void notifyNodeValidation(DiagramNodeEvent event)
-	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleNodeValidationEvent(event);
-			}
-		}		
-	}
-	
     private void notifyShapeUpdate(DiagramShapeEvent event)
 	{
 		Set<SapphirePartListener> listeners = this.getListeners();
@@ -743,18 +731,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 			if (listener instanceof SapphireDiagramPartListener)
 			{
 				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(event);
-			}
-		}		
-	}
-
-    private void notifyShapeValidation(DiagramShapeEvent event)
-	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleShapeValidationEvent(event);
 			}
 		}		
 	}
@@ -1040,12 +1016,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	private class NodeTemplateListener extends DiagramNodeTemplateListener
 	{
         @Override
-        public void handleNodeValidation(final DiagramNodeEvent event)
-        {
-            notifyNodeValidation(event);
-        }
-        
-        @Override
         public void handleNodeAdd(final DiagramNodePart nodePart)
         {
             notifyNodeAdd(nodePart);
@@ -1081,12 +1051,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         	notifyShapeVisibilityUpdate(event);
         }        
         
-        @Override
-        public void handleShapeValidation(final DiagramShapeEvent event)
-        {
-        	notifyShapeValidation(event);
-        }
-       
         @Override
         public void handleShapeAdd(final DiagramShapeEvent event)
         {

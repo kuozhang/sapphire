@@ -245,12 +245,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		    }
 
 			@Override
-		    public void handleShapeValidationEvent(final DiagramShapeEvent event)
-		    {
-		        updateShapeValidation((DiagramNodePart)event.getPart(), event.getShapePart());
-		    }
-
-			@Override
 		    public void handleShapeAddEvent(final DiagramShapeEvent event)
 		    {
 		        addNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
@@ -268,12 +262,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		        reorderShapes((DiagramNodePart)event.getPart(), (ShapeFactoryPart)event.getShapePart());
 		    }
 
-            @Override
-            public void handleNodeValidationEvent(final DiagramNodeEvent event)
-            {
-                updateNodeValidation((DiagramNodePart)event.getPart());
-            }
-            
             @Override
             public void handleNodeAddEvent(final DiagramNodeEvent event)
             {
@@ -629,44 +617,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			return;
 		}
 		
-		diagramModel.handleAddNode(part);
 		DiagramRenderingContext ctx = new DiagramRenderingContext(part, this);
 		getConfigurationManager().getDiagramRenderingContextCache().put(part, ctx);		
+		diagramModel.handleAddNode(part);
 	}
-
 	
-    protected void updateNodeValidation(DiagramNodePart part) {
-    	if (diagramModel == null) {
-    		return;
-    	}
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleNodeValidation();
-		}
-	}
-
-	protected void updateShapeValidation(DiagramNodePart part, ShapePart shapePart) {
-		if (diagramModel == null) {
-			return;
-		}
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null)
-		{
-			if (shapePart.isActive())
-			{
-				ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), shapePart);
-				if (shapeModel instanceof ContainerShapeModel)
-				{
-					((ContainerShapeModel)shapeModel).handleShapeValidation();
-				}
-			}
-			else
-			{
-				nodeModel.handleNodeValidation(shapePart);
-			}
-		}
-	}
-		
 	protected void updateNodeShape(DiagramNodePart part, ShapePart shapePart) {
 		if (diagramModel == null) {
 			return;
@@ -716,12 +671,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			return;
 		}
 		
+		DiagramRenderingContext ctx = new DiagramRenderingContext(shapePart, this);
+		getConfigurationManager().getDiagramRenderingContextCache().put(shapePart, ctx);		
 		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
 		if (nodeModel != null) {
 			nodeModel.handleAddShape(shapePart);
 		}
-		DiagramRenderingContext ctx = new DiagramRenderingContext(shapePart, this);
-		getConfigurationManager().getDiagramRenderingContextCache().put(shapePart, ctx);		
 		
 	}
 	

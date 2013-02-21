@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -21,9 +22,9 @@ import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 
 public class TextPresentation extends ShapePresentation 
 {
-	public TextPresentation(ShapePresentation parent, TextPart textPart)
+	public TextPresentation(ShapePresentation parent, TextPart textPart, DiagramConfigurationManager configManager)
 	{
-		super(parent, textPart);
+		super(parent, textPart, configManager);
 	}
 	
 	public Color getTextColor()
