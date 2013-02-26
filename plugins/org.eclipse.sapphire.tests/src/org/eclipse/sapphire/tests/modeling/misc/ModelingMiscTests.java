@@ -23,13 +23,14 @@ import org.eclipse.sapphire.tests.modeling.misc.t0007.TestModelingMisc0007;
 import org.eclipse.sapphire.tests.modeling.misc.t0008.TestModelingMisc0008;
 import org.eclipse.sapphire.tests.modeling.misc.t0010.TestModelingMisc0010;
 import org.eclipse.sapphire.tests.modeling.misc.t0011.TestModelingMisc0011;
-import org.eclipse.sapphire.tests.modeling.misc.t0012.TestModelingMisc0012;
+import org.eclipse.sapphire.tests.modeling.misc.t0012.ModelElementCopyTests;
 import org.eclipse.sapphire.tests.modeling.misc.t0013.TestModelingMisc0013;
 import org.eclipse.sapphire.tests.modeling.misc.t0014.TestModelingMisc0014;
 import org.eclipse.sapphire.tests.modeling.misc.t0015.TestModelingMisc0015;
 import org.eclipse.sapphire.tests.modeling.misc.t0016.TestModelingMisc0016;
 import org.eclipse.sapphire.tests.modeling.misc.t0017.TestModelingMisc0017;
 import org.eclipse.sapphire.tests.modeling.misc.t0018.TestModelingMisc0018;
+import org.eclipse.sapphire.tests.modeling.misc.t0019.ModelElementClearTests;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -56,13 +57,14 @@ public final class ModelingMiscTests extends TestCase
         suite.addTest( TestModelingMisc0008.suite() );
         suite.addTest( TestModelingMisc0010.suite() );
         suite.addTest( TestModelingMisc0011.suite() );
-        suite.addTest( TestModelingMisc0012.suite() );
+        suite.addTest( ModelElementCopyTests.suite() );
         suite.addTest( TestModelingMisc0013.suite() );
         suite.addTest( TestModelingMisc0014.suite() );
         suite.addTest( TestModelingMisc0015.suite() );
         suite.addTest( TestModelingMisc0016.suite() );
         suite.addTest( TestModelingMisc0017.suite() );
         suite.addTest( TestModelingMisc0018.suite() );
+        suite.addTest( ModelElementClearTests.suite() );
         
         return suite;
     }

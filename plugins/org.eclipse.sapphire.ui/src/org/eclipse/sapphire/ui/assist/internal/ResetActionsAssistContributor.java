@@ -14,10 +14,7 @@ package org.eclipse.sapphire.ui.assist.internal;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.DefaultValueService;
@@ -51,9 +48,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
         
         if( prop instanceof ValueProperty )
         {
-            final Value<?> val = element.read( (ValueProperty) prop );
-
-            if( val.getText( false ) != null )
+            if( element.read( (ValueProperty) prop ).getText( false ) != null )
             {
                 final DefaultValueService defaultValueService = element.service( prop, DefaultValueService.class );
                 final boolean hasDefaultValue = ( defaultValueService == null ? false : defaultValueService.value() != null );
@@ -73,7 +68,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                     {
                         public void run()
                         {
-                            element.write( prop, null );
+                            element.clear( prop );
                         }
                     }
                 );
@@ -84,9 +79,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
         }
         else if( prop instanceof ListProperty )
         {
-            final ModelElementList<?> list = element.read( (ListProperty) prop );
-
-            if( ! list.isEmpty() )
+            if( ! element.read( (ListProperty) prop ).isEmpty() )
             {
                 final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
                 
@@ -99,7 +92,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                     {
                         public void run()
                         {
-                            list.clear();
+                            element.clear( prop );
                         }
                     }
                 );
@@ -110,9 +103,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
         }
         else if( prop instanceof ElementProperty )
         {
-            final ModelElementHandle<?> handle = element.read( (ElementProperty) prop );
-
-            if( handle.element() != null )
+            if( element.read( (ElementProperty) prop ).element() != null )
             {
                 final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
                 
@@ -125,7 +116,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
                     {
                         public void run()
                         {
-                            handle.remove();
+                            element.clear( prop );
                         }
                     }
                 );

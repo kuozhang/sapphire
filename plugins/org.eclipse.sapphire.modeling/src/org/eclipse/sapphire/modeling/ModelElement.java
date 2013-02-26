@@ -748,6 +748,65 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         }
     }
     
+    public final void clear()
+    {
+        assertNotDisposed();
+        
+        for( ModelProperty property : properties() )
+        {
+            clear( property );
+        }
+    }
+
+    public final void clear( final ModelProperty property )
+    {
+        assertNotDisposed();
+    
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        clear( property.getName() );
+    }
+
+    public final void clear( final String property )
+    {
+        assertNotDisposed();
+
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ModelProperty prop = this.type.property( property );
+        
+        if( prop == null )
+        {
+            throw new IllegalArgumentException();
+        }
+
+        if( ! prop.isReadOnly() && this.properties.containsKey( prop ) )
+        {
+            if( prop instanceof ValueProperty || prop instanceof TransientProperty )
+            {
+                write( prop, null );
+            }
+            else if( prop instanceof ImpliedElementProperty )
+            {
+                read( (ImpliedElementProperty) prop ).element().clear();
+            }
+            else if( prop instanceof ElementProperty )
+            {
+                read( (ElementProperty) prop ).remove();
+            }
+            else if( prop instanceof ListProperty )
+            {
+                read( (ListProperty) prop ).clear();
+            }
+        }
+    }
+    
     public final void copy( final IModelElement element )
     {
         assertNotDisposed();

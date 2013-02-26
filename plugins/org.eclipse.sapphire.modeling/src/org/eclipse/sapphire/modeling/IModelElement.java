@@ -168,6 +168,28 @@ public interface IModelElement extends IModelParticle
                   boolean deep );
     
     /**
+     * Clears all properties of this element.
+     */
+    
+    void clear();
+    
+    /**
+     * Clears a property. 
+     * 
+     * @param property the property to clear
+     */
+    
+    void clear( ModelProperty property );
+    
+    /**
+     * Clears a property. 
+     * 
+     * @param property the name of the property to clear
+     */
+    
+    void clear( String property );
+    
+    /**
      * Copies all properties of the provided element to this element.
      * 
      * @param element the element to copy from

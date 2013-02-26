@@ -123,24 +123,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             
             for( PropertyRef pref : selectedProperties )
             {
-                if( pref.property instanceof ValueProperty )
-                {
-                    pref.modelElement.write( pref.property, null );
-                }
-                else if( pref.property instanceof ListProperty )
-                {
-                    final ModelElementList<?> list = pref.modelElement.read( (ListProperty) pref.property );
-                    
-                    for( IModelElement item : list )
-                    {
-                        list.remove( item );
-                    }
-                }
-                else if( pref.property instanceof ElementProperty )
-                {
-                    final ModelElementHandle<?> handle = pref.modelElement.read( (ElementProperty) pref.property );
-                    handle.remove();
-                }
+                pref.modelElement.clear( pref.property );
             }
         }
         

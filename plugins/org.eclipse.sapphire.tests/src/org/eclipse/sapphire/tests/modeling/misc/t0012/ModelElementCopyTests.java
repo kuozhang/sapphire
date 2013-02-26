@@ -17,14 +17,14 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests the IModelElement.copy() method.
+ * Tests the IModelElement.copy() methods.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestModelingMisc0012 extends SapphireTestCase
+public final class ModelElementCopyTests extends SapphireTestCase
 {
-    private TestModelingMisc0012( final String name )
+    private ModelElementCopyTests( final String name )
     {
         super( name );
     }
@@ -33,9 +33,9 @@ public final class TestModelingMisc0012 extends SapphireTestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "TestModelingMisc0012" );
+        suite.setName( "ModelElementCopyTests" );
 
-        suite.addTest( new TestModelingMisc0012( "test" ) );
+        suite.addTest( new ModelElementCopyTests( "test" ) );
         
         return suite;
     }
