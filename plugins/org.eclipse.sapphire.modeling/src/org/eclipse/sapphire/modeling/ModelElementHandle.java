@@ -82,7 +82,7 @@ public final class ModelElementHandle<T extends IModelElement>
             return element( true, possible.first() );
         }
         
-        return element( false, null );
+        return element( false, (ModelElementType) null );
     }
     
     public T element( final boolean createIfNecessary,
@@ -162,6 +162,24 @@ public final class ModelElementHandle<T extends IModelElement>
         }
         
         return this.element;
+    }
+    
+    public <C extends IModelElement> C element( final boolean createIfNecessary,
+                                                final Class<C> cl )
+    {
+        ModelElementType type = null;
+        
+        if( cl != null )
+        {
+            type = ModelElementType.read( cl );
+            
+            if( type == null )
+            {
+                throw new IllegalArgumentException();
+            }
+        }
+        
+        return cl.cast( element( createIfNecessary, type ) );
     }
     
     public Status validation()

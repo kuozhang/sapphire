@@ -471,11 +471,21 @@ copy individual properties is also available.</p>
 <h2><a name="Core-ModelElementHandle">ModelElementHandle</a></h2>
 
 <p>Among objects returned by property getters (Value, Transient, ModelElementHandle and ModelElementList),
-ModelElementList was the only one that had no API to retrieve the parent property.</p>
+ModelElementHandle was the only one that had no API to retrieve the parent property.</p>
 
 <pre class="source-code"><code><font color="#888888">ModelElementHandle
 {</font>
     ElementProperty property()
+<font color="#888888">}</font></code></pre>
+
+<p>For convenience, type can be specified using the type's class to avoid having to cast the result.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElementHandle
+{
+    T element()
+    T element( boolean createIfNecessary )
+    T element( boolean createIfNecessary, ModelElementType type )</font>
+    &lt;C extends IModelElement> C element( boolean createIfNecessary, Class&lt;C> cl )
 <font color="#888888">}</font></code></pre>
 
 
