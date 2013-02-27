@@ -9,16 +9,21 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.swt.gef.figures;
+
+import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ShapeValidationEvent extends ShapeEvent 
+public class SapphireImageFigure extends SmoothImageFigure 
 {
-	public ShapeValidationEvent(ShapePart shapePart)
+	private ImagePresentation imagePresentation;
+	
+	public SapphireImageFigure(ImagePresentation imagePresentation)
 	{
-		super(shapePart);
+		this.imagePresentation = imagePresentation;
 	}
+
 }

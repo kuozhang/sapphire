@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
@@ -40,7 +39,6 @@ public class ContainerShapePart extends ShapePart
 	private List<ShapePart> children;
 	private int validationMarkerIndex = -1;
 	private ValidationMarkerPart validationMarkerPart;
-	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	private List<TextPart> textParts;
 	private List<ShapeFactoryPart> shapeFactoryParts;
 
@@ -128,17 +126,6 @@ public class ContainerShapePart extends ShapePart
                 );
                 childPart.attach
                 (
-                     new FilteredListener<ShapeValidationEvent>()
-                     {
-                        @Override
-                        protected void handleTypedEvent( final ShapeValidationEvent event )
-                        {
-                        	broadcast(event);
-                        }
-                     }
-                );        		
-                childPart.attach
-                (
                      new FilteredListener<ShapeReorderEvent>()
                      {
                         @Override
@@ -173,18 +160,6 @@ public class ContainerShapePart extends ShapePart
                 
         	}
         	index++;
-        }
-        if (this.validationMarkerIndex != -1)
-        {
-	        this.elementValidationListener = new FilteredListener<ElementValidationEvent>()
-	        {
-                @Override
-                protected void handleTypedEvent( final ElementValidationEvent event )
-                {
-                    broadcast(new ShapeValidationEvent(ContainerShapePart.this));
-                }
-	        };
-            this.modelElement.attach(this.elementValidationListener); 
         }
     }
 
@@ -274,10 +249,6 @@ public class ContainerShapePart extends ShapePart
     public void dispose()
     {
         super.dispose();
-        if (this.elementValidationListener != null)
-        {
-        	this.modelElement.detach(this.elementValidationListener);
-        }
         for (ShapePart child : getChildren())
         {
         	child.dispose();

@@ -51,28 +51,46 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 			size.x = 10;
 		}
 		
-		// center the cell editor
-		int offset = 0;
+		// center the cell editor horizontally
+		int horizontalOffet = 0;
 		switch (textFigure.getHorizontalAlignment()) {
 		case SWT.RIGHT:
 			if (size.x < labelRect.width) {
-				offset = labelRect.width - size.x;
+				horizontalOffet = labelRect.width - size.x;
 			}
 			break;
 		case SWT.LEFT:
 			break;
 		default:
 			if (size.x < labelRect.width) {
-				offset = (labelRect.width - size.x + 1) / 2;
+				horizontalOffet = (labelRect.width - size.x + 1) / 2;
 			}
 			break;
 		}
 
+		// center the cell editor vertically
+		int verticalOffet = 0;
+		switch (textFigure.getVerticalAlignment()) {
+		case SWT.BOTTOM:
+			if (size.y < labelRect.height) {
+				verticalOffet = labelRect.height - size.y;
+			}
+			break;
+		case SWT.TOP:
+			break;
+		default:
+			if (size.y < labelRect.height) {
+				verticalOffet = (labelRect.height - size.y + 1) / 2;
+			}
+			break;
+		}
+		
 		size.x = Math.min(size.x, labelRect.width);
+		size.y = Math.min(size.y, labelRect.height);
 		
 		textFigure.translateToAbsolute(labelRect);
 		
-		text.setBounds(labelRect.x + offset, labelRect.y, size.x, size.y);
+		text.setBounds(labelRect.x + horizontalOffet, labelRect.y + verticalOffet, size.x, size.y);
 	}
 	
 	protected TextFigure getLabel() {

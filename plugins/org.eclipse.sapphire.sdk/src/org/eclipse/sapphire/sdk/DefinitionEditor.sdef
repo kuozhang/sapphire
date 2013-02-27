@@ -1653,7 +1653,7 @@
                                     <name>checkbox.layout</name>
                                     <value>leading.label</value>
                                 </hint>
-                                <property>ExpandCellHorizontally</property>
+                                <property>ExpandHorizontally</property>
                                 <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
                             </property-editor>
                             <property-editor>
@@ -1661,7 +1661,7 @@
                                     <name>checkbox.layout</name>
                                     <value>leading.label</value>
                                 </hint>
-                                <property>ExpandCellVertically</property>
+                                <property>ExpandVertically</property>
                                 <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
                             </property-editor>
                             <spacer></spacer>

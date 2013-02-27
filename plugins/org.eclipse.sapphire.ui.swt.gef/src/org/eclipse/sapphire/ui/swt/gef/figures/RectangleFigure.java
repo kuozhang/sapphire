@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
@@ -131,6 +132,20 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			
 			graphics.setForegroundColor(foregroundSave);
 			graphics.setBackgroundColor(backgroundSave);
+		}
+	}
+	
+	@Override
+	public Dimension getMaximumSize()
+	{
+		if (this.getLayoutManager() instanceof SapphireSequenceLayout)
+		{
+			SapphireSequenceLayout sapphireSequenceLayout = (SapphireSequenceLayout)this.getLayoutManager();
+			return sapphireSequenceLayout.calculateMaximumSize(this);
+		}
+		else 
+		{
+			return super.getMaximumSize();
 		}
 	}
 	

@@ -121,6 +121,39 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		return new Dimension(width, height);
 	}
 
+	private Dimension calculateChildrenMaximumSize(List children) {
+		Dimension childSize;
+		IFigure child;
+		int height = 0, width = 0;
+		for (int i = 0; i < children.size(); i++) {
+			child = (IFigure) children.get(i);
+			childSize = transposer.t(getChildMaximumSize(child));
+			if (childSize.width == Integer.MAX_VALUE) {
+				width = Integer.MAX_VALUE;
+			}
+			if (childSize.height == Integer.MAX_VALUE) {
+				height = Integer.MAX_VALUE;
+			}
+			if (width < Integer.MAX_VALUE || height < Integer.MAX_VALUE) {
+				Insets inset = new Insets();
+				SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
+				if (constraint != null) {
+					inset = transposer.t(constraint.getMarginInset());
+				}
+				if (height < Integer.MAX_VALUE) {
+					height += childSize.height + inset.top + inset.bottom;
+				}
+				if (width < Integer.MAX_VALUE) {
+					width = Math.max(width, childSize.width + inset.left + inset.right);
+				}				
+			}
+			else {
+				break;
+			}
+		}
+		return new Dimension(width, height);
+	}
+	
 	/**
 	 * Calculates the minimum size of the container based on the given hints. If
 	 * this is a vertically-oriented Toolbar Layout, then only the widthHint is
@@ -219,6 +252,30 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				.union(getBorderPreferredSize(container));
 	}
 
+	public Dimension calculateMaximumSize(IFigure container) {
+		List children = container.getChildren();
+		Dimension maxSize = calculateChildrenMaximumSize(children);
+		Insets marginInsets = transposer.t(this.marginInsets);
+		if (maxSize.height < Integer.MAX_VALUE) {
+			maxSize.height += Math.max(0, children.size() - 1) * spacing;
+			maxSize.height += marginInsets.top + marginInsets.bottom;
+		}
+		if (maxSize.width < Integer.MAX_VALUE) {
+			maxSize.width += marginInsets.left + marginInsets.right;
+		}
+		maxSize = transposer.t(maxSize);
+		Insets containerInsets = container.getInsets();
+		Dimension borderSize = getBorderPreferredSize(container);
+		if (maxSize.width < Integer.MAX_VALUE) {
+			maxSize.width += containerInsets.getWidth();
+			maxSize.width = Math.max(borderSize.width, maxSize.width);
+		}
+		if (maxSize.height < Integer.MAX_VALUE) {
+			maxSize.height += containerInsets.getHeight();
+			maxSize.height = Math.max(borderSize.height, maxSize.height);
+		}
+		return maxSize;
+	}
 	/**
 	 * @param child
 	 *            the figure whose minimum size is to be determined
@@ -230,7 +287,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * @since 3.3
 	 */
 	protected Dimension getChildMinimumSize(IFigure child, int wHint, int hHint) {
-		Dimension minSize =  child.getMinimumSize(wHint, hHint);
+		Dimension minSize =  child.getMinimumSize(wHint, hHint).getCopy();
 		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
 		if (constraint.minWidth > minSize.width)
 		{
@@ -254,7 +311,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * @since 3.3
 	 */
 	protected Dimension getChildPreferredSize(IFigure child, int wHint,	int hHint) {
-		Dimension dimension = child.getPreferredSize(wHint, hHint);
+		Dimension dimension = child.getPreferredSize(wHint, hHint).getCopy();
 		Dimension minSize = child.getMinimumSize(wHint, hHint);
 		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
 		if (constraint.widthHint > minSize.width ) {
@@ -273,6 +330,18 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			dimension.width = constraint.maxWidth; 
 		}
 		if (constraint.maxHeight > SWT.DEFAULT && dimension.height > constraint.maxHeight) {
+			dimension.height = constraint.maxHeight; 
+		}
+		return dimension;
+	}
+
+	protected Dimension getChildMaximumSize(IFigure child) {
+		Dimension dimension = child.getMaximumSize().getCopy();
+		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
+		if (constraint.maxWidth > SWT.DEFAULT && constraint.maxWidth < Integer.MAX_VALUE ) {
+			dimension.width = constraint.maxWidth; 
+		}
+		if (constraint.maxHeight > SWT.DEFAULT && constraint.maxHeight < Integer.MAX_VALUE ) {
 			dimension.height = constraint.maxHeight; 
 		}
 		return dimension;
@@ -326,6 +395,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 		Dimension prefSizes[] = new Dimension[numChildren];
 		Dimension minSizes[] = new Dimension[numChildren];
+		Dimension maxSizes[] = new Dimension[numChildren];
+		int extraHeights[] = new int[numChildren];
+		
 		SapphireSequenceLayoutConstraint constraints[] = new SapphireSequenceLayoutConstraint[numChildren];
 		Insets marginInsets[] = new Insets[numChildren];
 
@@ -363,6 +435,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 			prefSizes[i] = transposer.t(getChildPreferredSize(child, wHint, hHint));
 			minSizes[i] = transposer.t(getChildMinimumSize(child, wHint, hHint));
+			maxSizes[i] = transposer.t(getChildMaximumSize(child));
 			marginInsets[i] = transposer.t(constraint.getMarginInset());
 			
 			totalHeight += prefSizes[i].height;
@@ -388,12 +461,51 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		
 		if (extraHeight < 0) {
 			extraHeight = 0;
-		} else {
-			if (expandCount > 0) {
-				extraHeight = extraHeight / expandCount;
-			} else {
-				extraHeight = 0;
+		} else if (expandCount > 0) {
+			int averageExtraHeight = extraHeight / expandCount;
+			int limitedExpansionCount = 0;
+			int limitedExpansionHeightTotal = 0;
+			for (int i = 0; i < numChildren; i++) {				
+				int prefHeight = prefSizes[i].height;
+				int maxHeight = maxSizes[i].height;
+				child = (IFigure) children.get(i);
+				SapphireSequenceLayoutConstraint constraint = constraints[i];
+				if (getMajorExpand(constraint) && maxHeight > SWT.DEFAULT && maxHeight < Integer.MAX_VALUE) {
+					// only limited expansion
+					if (maxHeight - prefHeight < averageExtraHeight) {
+						limitedExpansionCount++;
+						limitedExpansionHeightTotal += maxHeight - prefHeight;
+					}
+				}
 			}
+			int unlimitedExpansionAverage = limitedExpansionCount < expandCount ? 
+					(extraHeight - limitedExpansionHeightTotal) / (expandCount - limitedExpansionCount) : 0;
+
+			for (int i = 0; i < numChildren; i++) {				
+				int prefHeight = prefSizes[i].height;
+				int maxHeight = maxSizes[i].height;
+				child = (IFigure) children.get(i);
+				SapphireSequenceLayoutConstraint constraint = constraints[i];
+				if (getMajorExpand(constraint)) {
+					// only limited expansion
+					if (maxHeight > SWT.DEFAULT && maxHeight < Integer.MAX_VALUE && 
+							(maxHeight - prefHeight < averageExtraHeight)) {
+						extraHeights[i] = maxHeight - prefHeight;
+					}
+					else {
+						extraHeights[i] = unlimitedExpansionAverage;
+					}
+				}
+				else {
+					extraHeights[i] = 0;
+				}
+			}
+					
+//			if (expandCount > 0) {
+//				extraHeight = extraHeight / expandCount;
+//			} else {
+//				extraHeight = 0;
+//			}
 		}
 		
 		y += margins.top;
@@ -422,7 +534,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				prefMinSumHeight -= (prefHeight - minHeight);				
 			}			
 			else if (getMajorExpand(constraint)) {
-				height += extraHeight;
+				height += extraHeights[i];
 				if (child instanceof RectangleFigure) {
 					newBounds = new Rectangle(x, y + marginInset.top, prefWidth, height);
 				} else {
@@ -430,11 +542,11 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 					// alignment
 					switch (getMajorAlignment(constraint)) {
 					case SWT.CENTER:
-						offset = extraHeight >> 1;
+						offset = extraHeights[i] >> 1;
 						break;
 					case SWT.RIGHT:
 					case SWT.BOTTOM:
-						offset = extraHeight;
+						offset = extraHeights[i];
 						break;
 					}
 					newBounds = new Rectangle(x, y + marginInset.top + offset, prefWidth, prefHeight);
@@ -444,7 +556,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			}
 			availableBoundHeight = height;
 			
-			int width = Math.min(prefWidth,	transposer.t(child.getMaximumSize()).width);
+			int width = Math.min(prefWidth,	maxSizes[i].width);
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
 
@@ -495,11 +607,26 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	}
 
 	private boolean getMajorExpand(SapphireSequenceLayoutConstraint constraint) {
-		return isHorizontal() ? constraint.expandCellHorizontally : constraint.expandCellVertically;
+		return isHorizontal() ? constraint.expandHorizontally : constraint.expandVertically;
 	}
 
+	private boolean isMajorExpandLimited(SapphireSequenceLayoutConstraint constraint) {
+		boolean limited = false;
+		if (isHorizontal() && constraint.expandHorizontally) {
+			if (constraint.maxWidth != SWT.DEFAULT && constraint.maxWidth < Integer.MAX_VALUE) {
+				limited = true;
+			}
+		}
+		else if (!isHorizontal() && constraint.expandVertically) {
+			if (constraint.maxHeight != SWT.DEFAULT && constraint.maxHeight < Integer.MAX_VALUE) {
+				limited = true;
+			}			
+		}
+		return limited;
+	}
+	
 	private boolean getMinorExpand(SapphireSequenceLayoutConstraint constraint) {
-		return isHorizontal() ? constraint.expandCellVertically : constraint.expandCellHorizontally;
+		return isHorizontal() ? constraint.expandVertically : constraint.expandHorizontally;
 	}
 
 	/**

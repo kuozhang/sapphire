@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
@@ -96,7 +96,11 @@ public class ShapeUtil {
 				final ImageData data = imagePresentation.getImage();
 				if (data != null) 
 				{
-					figure = new DecoratorImageFigure(nodePart.getImageCache().getImage(data));
+					figure = new SmoothImageFigure(nodePart.getImageCache().getImage(data));
+				}
+				else 
+				{
+					figure = new SmoothImageFigure();
 				}
 			}
 		}
@@ -129,11 +133,11 @@ public class ShapeUtil {
 			// find the parent figure
 			if (containerFigure != null) 
 			{
-				int index = -1;
+				int index = containerPresentation.getChildren().indexOf(updateShape);
 				if (updateFigure != null) 
 				{
 					// first delete it
-					index = findIndex(containerFigure, updateFigure);
+					//index = findIndex(containerFigure, updateFigure);
 					containerFigure.remove(updateFigure);
 				}
 				// add it

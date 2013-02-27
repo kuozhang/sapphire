@@ -19,7 +19,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
-import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
+import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 
@@ -33,14 +33,17 @@ public class TextFigure extends Label
 	private TextPresentation textPresentation;
 	private Rectangle availableArea;
 	private int horizontalAlignment;
+	private int verticalAlignment;
 	
 	public TextFigure(DiagramResourceCache resourceCache, TextPresentation textPresentation)
 	{
 		this.resourceCache = resourceCache;
 		this.textPresentation = textPresentation;
 		setForegroundColor(resourceCache.getColor(textPresentation.getTextColor()));
-		this.horizontalAlignment = getSwtTextAlignment();
+		this.horizontalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getHorizontalAlignment().getContent());
 		setLabelAlignment(this.horizontalAlignment);
+		// TODO how to reconcile both horizontal and vertical alignment with draw2d label alignment
+		this.verticalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getVerticalAlignment().getContent());
 		setFont(this.resourceCache.getFont(textPresentation.getFontDef()));
 		setText(textPresentation.getContent());
 	}
@@ -66,8 +69,13 @@ public class TextFigure extends Label
 		return horizontalAlignment;
 	}
 
+	public int getVerticalAlignment() {
+		return this.verticalAlignment;
+	}
+	
 	public void setHorizontalAlignment(int horizontalAlignment) {
 		this.horizontalAlignment = horizontalAlignment;
+		setLabelAlignment(this.horizontalAlignment);
 	}
 	
 	public TextPresentation getTextPresentation()
@@ -102,12 +110,10 @@ public class TextFigure extends Label
 		return minSize;
 	}
 	
-	private int getSwtTextAlignment()
+	private int getSwtTextAlignment(HorizontalAlignment horizontalAlign)
 	{
 		int alignment = PositionConstants.CENTER;
-		LayoutConstraintDef constraint = this.textPresentation.getLayoutConstraint();
-		HorizontalAlignment sapphireAlign = constraint.getHorizontalAlignment().getContent();
-		switch (sapphireAlign) 
+		switch (horizontalAlign) 
 		{
 			case LEFT:
 				alignment = PositionConstants.LEFT;
@@ -121,4 +127,20 @@ public class TextFigure extends Label
 		return alignment;
 	}
 	
+	private int getSwtTextAlignment(VerticalAlignment verticalAlign)
+	{
+		int alignment = PositionConstants.CENTER;
+		switch (verticalAlign) 
+		{
+			case TOP:
+				alignment = PositionConstants.TOP;
+				break;
+			case BOTTOM:
+				alignment = PositionConstants.BOTTOM;
+				break;
+			default:			
+				break;
+		}
+		return alignment;
+	}
 }

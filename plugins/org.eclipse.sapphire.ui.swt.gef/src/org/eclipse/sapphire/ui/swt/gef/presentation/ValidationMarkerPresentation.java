@@ -47,8 +47,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
-import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
+import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -62,13 +61,13 @@ import org.eclipse.swt.widgets.Display;
 public class ValidationMarkerPresentation extends ShapePresentation 
 {
     private static final ImageDescriptor IMG_ERROR_SMALL
-			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "error_small.png" );
+			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "error_small.png" );
     private static final ImageDescriptor IMG_ERROR
-			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "error.gif" );
+			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "error.gif" );
     private static final ImageDescriptor IMG_WARNING_SMALL
-			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "warning_small.png" );
+			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "warning_small.png" );
     private static final ImageDescriptor IMG_WARNING
-			= SwtRendererUtil.createImageDescriptor( DecoratorImageFigure.class, "warning.gif" );
+			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "warning.gif" );
     
     private static final List<Class<? extends PropertyEditorAssistContributor>> SYSTEM_CONTRIBUTORS
     		= new ArrayList<Class<? extends PropertyEditorAssistContributor>>();
@@ -87,7 +86,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	
     private SapphireImageCache imageCache;
     private IModelElement element;
-	private DecoratorImageFigure imageFigure;
+	private SmoothImageFigure imageFigure;
 	private PropertyEditorAssistContext assistContext;
 	private Status problem;
 	private final List<PropertyEditorAssistContributor> contributors;
@@ -100,7 +99,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
 		DiagramNodePart nodePart = validationMarkerPart.nearest(DiagramNodePart.class);
 		this.element = validationMarkerPart.getLocalModelElement();
 		this.imageCache = nodePart.getImageCache();
-		this.imageFigure = new DecoratorImageFigure();
+		this.imageFigure = new SmoothImageFigure();
 		setFigure(this.imageFigure);
 		
 		this.contributors = new ArrayList<PropertyEditorAssistContributor>();

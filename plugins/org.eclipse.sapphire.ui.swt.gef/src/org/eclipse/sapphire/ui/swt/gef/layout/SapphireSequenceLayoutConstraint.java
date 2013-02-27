@@ -92,9 +92,9 @@ public final class SapphireSequenceLayoutConstraint {
 	
 	public int maxHeight = SWT.DEFAULT;
 	
-	public boolean expandCellHorizontally = false;
+	public boolean expandHorizontally = false;
 
-	public boolean expandCellVertically = false;
+	public boolean expandVertically = false;
 	
 	private Insets marginInsets = null;
 
@@ -127,8 +127,8 @@ public final class SapphireSequenceLayoutConstraint {
 
 			this.horizontalAlignment = getSwtHorizontalAlignment(def.getHorizontalAlignment().getContent());
 			this.verticalAlignment = getSwtVerticalAlignment(def.getVerticalAlignment().getContent());
-			this.expandCellHorizontally = def.isExpandCellHorizontally().getContent();
-			this.expandCellVertically = def.isExpandCellVertically().getContent();
+			this.expandHorizontally = def.isExpandHorizontally().getContent();
+			this.expandVertically = def.isExpandVertically().getContent();
 			this.marginInsets = LayoutUtil.calculateMargin(def);
 		} else {
 			this.marginInsets = new Insets(0, 0, 0, 0);
@@ -235,8 +235,8 @@ public final class SapphireSequenceLayoutConstraint {
 			string += "heightHint=" + heightHint + " "; //$NON-NLS-1$ //$NON-NLS-2$
 		if (marginInsets != null)
 			string += "marginInsets=" + marginInsets + " "; //$NON-NLS-1$ //$NON-NLS-2$
-		string += expandCellHorizontally ? "expandCellHorizontally " : "!expandCellHorizontally ";
-		string += expandCellVertically ? "expandCellVertically " : "!expandCellVertically ";
+		string += expandHorizontally ? "expandHorizontally " : "!expandHorizontally ";
+		string += expandVertically ? "expandVertically " : "!expandVertically ";
 		string = string.trim();
 		string += "}"; //$NON-NLS-1$
 		return string;

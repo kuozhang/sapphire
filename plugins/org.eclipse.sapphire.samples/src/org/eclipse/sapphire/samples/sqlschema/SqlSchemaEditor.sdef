@@ -52,8 +52,8 @@
                             <text>
                                 <content>${Name == null ? &quot;&lt;table&gt;&quot; : Name}</content>
                                 <sequence-layout-constraint>
-                                    <expand-cell-horizontally>true</expand-cell-horizontally>
-                                    <expand-cell-vertically>true</expand-cell-vertically>
+                                    <expand-horizontally>true</expand-horizontally>
+                                    <expand-vertically>true</expand-vertically>
                                 </sequence-layout-constraint>
                                 <font>
                                     <bold></bold>
@@ -62,7 +62,7 @@
                             </text>
                         </content>
                         <sequence-layout-constraint>
-                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                            <expand-horizontally>true</expand-horizontally>
                             <margin>0</margin>
                         </sequence-layout-constraint>
                         <background>
@@ -90,11 +90,26 @@
                                         <content>    
                                             <validation-marker>
                                                 <size>small</size>
+                                                <sequence-layout-constraint>
+                                                    <min-width>7</min-width>
+                                                    <min-height>8</min-height>
+                                                    <max-width>7</max-width>
+                                                    <max-height>8</max-height>
+                                                    <width>7</width>
+                                                    <height>8</height>
+                                                    <right-margin>3</right-margin>
+                                                </sequence-layout-constraint>
                                             </validation-marker>
                                             <image>
-                                                <path>${IsPrimaryKey ? &quot;key.gif&quot; : &quot;placeholder-16.png&quot;}</path>
+                                                <path>${IsPrimaryKey ? &quot;key.gif&quot; : null}</path>
                                                 <sequence-layout-constraint>
                                                     <right-margin>8</right-margin>
+                                                    <min-width>16</min-width>
+                                                    <min-height>16</min-height>
+                                                    <max-width>16</max-width>
+                                                    <max-height>16</max-height>
+                                                    <width>16</width>
+                                                    <height>16</height>
                                                 </sequence-layout-constraint>
                                             </image>
                                             <text>
@@ -108,7 +123,7 @@
                                                 <content>${Type == null ? &quot;&lt;type&gt;&quot; : Type}</content>
                                                 <truncatable>false</truncatable>
                                                 <sequence-layout-constraint>
-                            						<expand-cell-horizontally>true</expand-cell-horizontally>
+                            						<expand-horizontally>true</expand-horizontally>
                                                 	<horizontal-alignment>right</horizontal-alignment>
                                                 	<left-margin>10</left-margin>
                                                     <right-margin>10</right-margin>
@@ -117,7 +132,7 @@
                                         </content>
                                         <sequence-layout-constraint>
                                             <horizontal-alignment>left</horizontal-alignment>
-                                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                                            <expand-horizontally>true</expand-horizontally>
                                         </sequence-layout-constraint>
 							            <properties-view>
 							                <page>
@@ -146,7 +161,7 @@
                                         <color>#333399</color>
                                         <style>dot</style>
                                         <sequence-layout-constraint>
-                                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                                            <expand-horizontally>true</expand-horizontally>
                                         </sequence-layout-constraint>
                                         <weight>1</weight>
                                     </line>
@@ -154,7 +169,7 @@
                             </shape-factory>
                         </content>
                         <sequence-layout-constraint>
-                            <expand-cell-horizontally>true</expand-cell-horizontally>
+                            <expand-horizontally>true</expand-horizontally>
                             <horizontal-alignment>left</horizontal-alignment>
                         </sequence-layout-constraint>
                     </rectangle>

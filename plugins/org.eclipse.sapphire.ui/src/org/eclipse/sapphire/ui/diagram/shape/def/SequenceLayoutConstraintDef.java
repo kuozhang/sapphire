@@ -82,32 +82,46 @@ public interface SequenceLayoutConstraintDef extends LayoutConstraintDef
     void setMaxHeight( String value );
     void setMaxHeight( Integer value );
     
-    // *** ExpandCellHorizontally ***
+    // *** Expand ***
     
     @Type( base = Boolean.class )
-    @XmlBinding( path = "expand-cell-horizontally" )
+    @XmlBinding( path = "expand" )
     @DefaultValue( text = "false" )
-    @Label( standard = "expand cell horizontally")
+    @Label( standard = "expand")
     @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
-    ValueProperty PROP_EXPAND_CELL_HORIZONTALLY = new ValueProperty(TYPE, "ExpandCellHorizontally");
+    ValueProperty PROP_EXPAND = new ValueProperty(TYPE, "Expand");
     
-    Value<Boolean> isExpandCellHorizontally();
-    void setExpandCellHorizontally( String value );
-    void setExpandCellHorizontally( Boolean value );
-    
-    // *** ExpandCellVertically ***
+    Value<Boolean> isExpand();
+    void setExpand( String value );
+    void setExpand( Boolean value );
+
+    // *** ExpandHorizontally ***
     
     @Type( base = Boolean.class )
-    @XmlBinding( path = "expand-cell-vertically" )
-    @DefaultValue( text = "false" )
-    @Label( standard = "expand cell vertically")
+    @XmlBinding( path = "expand-horizontally" )
+    @DefaultValue( text = "${ Expand }" )
+    @Label( standard = "expand horizontally")
     @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
-    ValueProperty PROP_EXPAND_CELL_VERTICALLY = new ValueProperty(TYPE, "ExpandCellVertically");
+    ValueProperty PROP_EXPAND_HORIZONTALLY = new ValueProperty(TYPE, "ExpandHorizontally");
     
-    Value<Boolean> isExpandCellVertically();
-    void setExpandCellVertically( String value );
-    void setExpandCellVertically( Boolean value );
+    Value<Boolean> isExpandHorizontally();
+    void setExpandHorizontally( String value );
+    void setExpandHorizontally( Boolean value );
+    
+    // *** ExpandVertically ***
+    
+    @Type( base = Boolean.class )
+    @XmlBinding( path = "expand-vertically" )
+    @DefaultValue( text = "${ Expand }" )
+    @Label( standard = "expand vertically")
+    @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
+    
+    ValueProperty PROP_EXPAND_VERTICALLY = new ValueProperty(TYPE, "ExpandVertically");
+    
+    Value<Boolean> isExpandVertically();
+    void setExpandVertically( String value );
+    void setExpandVertically( Boolean value );
         
 }

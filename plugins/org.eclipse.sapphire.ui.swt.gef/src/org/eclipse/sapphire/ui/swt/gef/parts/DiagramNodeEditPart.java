@@ -241,8 +241,17 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		Bounds nb = getCastedModel().getNodeBounds();
 		
 		Dimension minSize = getFigure().getMinimumSize();
+		Dimension maxSize = getFigure().getMaximumSize();
 		int width = nb.getWidth() != -1 ? Math.max(minSize.width, nb.getWidth()) : -1;
 		int height = nb.getHeight() != -1 ? Math.max(minSize.height, nb.getHeight()) : -1;
+		if (width != -1 && maxSize.width < Integer.MAX_VALUE)
+		{
+			width = Math.min(width, maxSize.width);
+		}
+		if (height != -1 && maxSize.height < Integer.MAX_VALUE)
+		{
+			height = Math.min(height, maxSize.height);
+		}
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), width, height);
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);		
 	}
@@ -266,10 +275,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	
 	private void updateShapeVisibility(ShapePart shapePart) 
 	{
-		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
-		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);		
-		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache(),
-				getConfigurationManager());		
+		updateShape(shapePart);
 	}
 	
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {

@@ -69,7 +69,7 @@
                   <content>${Name == null ? &quot;&lt;location&gt;&quot; : Name}</content>                
                   <sequence-layout-constraint>
                     <horizontal-alignment>center</horizontal-alignment>
-                    <expand-cell-horizontally>true</expand-cell-horizontally>
+                    <expand-horizontally>true</expand-horizontally>
                   </sequence-layout-constraint>
                 </text>
               </content>
@@ -104,6 +104,7 @@
                 <id>Sample.Map.Location.ShowInWikipedia</id>
                 <impl>LocationShowInWikipediaActionHandler</impl>
             </action-handler>
+            <resizable>false</resizable>
         </node>
         <connection-binding>
             <connection-id>highway_routes</connection-id>

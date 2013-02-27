@@ -20,13 +20,13 @@ import org.eclipse.swt.graphics.Image;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DecoratorImageFigure extends ImageFigure {
+public class SmoothImageFigure extends ImageFigure {
 	
-	public DecoratorImageFigure() {
+	public SmoothImageFigure() {
 		super();
 	}
 	
-	public DecoratorImageFigure(Image image) {
+	public SmoothImageFigure(Image image) {
 		super(image);
 	}
 	

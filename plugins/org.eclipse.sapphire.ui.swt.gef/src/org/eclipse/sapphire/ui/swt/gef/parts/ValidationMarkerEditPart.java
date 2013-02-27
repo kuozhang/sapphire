@@ -21,7 +21,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.figures.DecoratorImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ValidationMarkerModel;
 import org.eclipse.swt.graphics.Image;
 
@@ -83,7 +83,7 @@ public class ValidationMarkerEditPart extends ShapeEditPart
 		}
 		if (image != null)
 		{
-			DecoratorImageFigure markerFigure = new DecoratorImageFigure(image);
+			SmoothImageFigure markerFigure = new SmoothImageFigure(image);
 			markerFigure.setToolTip(new Label(status.message()));
 			return markerFigure;
 		}

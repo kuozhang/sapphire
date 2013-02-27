@@ -59,8 +59,6 @@
                   <sequence-layout-constraint>
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>top</vertical-alignment>
-                    <expand-cell-horizontally>false</expand-cell-horizontally>
-                    <expand-cell-vertically>false</expand-cell-vertically>
                   </sequence-layout-constraint>
                   <sequence-layout>
                     <orientation>stacked</orientation>
@@ -95,8 +93,7 @@
                   <sequence-layout-constraint>
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>center</vertical-alignment>
-                    <expand-cell-horizontally>true</expand-cell-horizontally>
-                    <expand-cell-vertically>false</expand-cell-vertically>
+                    <expand-horizontally>true</expand-horizontally>
                   </sequence-layout-constraint>
                 </text>
               </content>

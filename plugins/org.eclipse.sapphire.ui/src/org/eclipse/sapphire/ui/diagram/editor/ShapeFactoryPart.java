@@ -257,17 +257,6 @@ public class ShapeFactoryPart extends ShapePart
             );    		
             shapePart.attach
             (
-                 new FilteredListener<ShapeValidationEvent>()
-                 {
-                    @Override
-                    protected void handleTypedEvent( final ShapeValidationEvent event )
-                    {
-                    	broadcast(event);
-                    }
-                 }
-            );
-            shapePart.attach
-            (
                  new FilteredListener<ShapeAddEvent>()
                  {
                     @Override
