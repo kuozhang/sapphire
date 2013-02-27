@@ -113,7 +113,11 @@ public interface PropertyEditorDef extends FormComponentDef
             ISapphireStaticTextFieldDef.class,
             PageBookExtDef.class,
             TabGroupDef.class,
-            HtmlPanelDef.class
+            HtmlPanelDef.class,
+            IFormPartInclude.class,
+            FormDef.class,
+            SplitFormDef.class,
+            SectionDef.class
         }
     )
                       
