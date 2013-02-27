@@ -13,8 +13,8 @@ package org.eclipse.sapphire.util;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -115,7 +115,7 @@ public final class SetFactory<E>
             }
             else if( this.firstElement != null )
             {
-                this.set = new HashSet<E>();
+                this.set = new LinkedHashSet<E>();
                 this.set.add( this.firstElement );
                 this.set.add( element );
                 this.firstElement = null;
