@@ -41,4 +41,11 @@ public @interface PossibleValues
     String invalidValueMessage() default "";
     Status.Severity invalidValueSeverity() default Status.Severity.ERROR;
     boolean caseSensitive() default true;
+    
+    /**
+     * Determines if the possible values are already ordered as intended. By default, the order
+     * is not treated as significant and possible values are sorted alphabetically when presented.
+     */
+    
+    boolean ordered() default false;
 }

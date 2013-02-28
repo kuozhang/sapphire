@@ -14,7 +14,6 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.SortedSet;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
@@ -47,9 +46,10 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
     public ModelBasedPossibleValuesService( final ModelPath path,
                                             final String invalidValueMessageTemplate,
                                             final Status.Severity invalidValueSeverity,
-                                            final boolean caseSensitive )
+                                            final boolean caseSensitive,
+                                            final boolean ordered )
     {
-        super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive );
+        super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive, ordered );
         
         this.path = path;
         this.values = Collections.emptySet();
@@ -91,7 +91,7 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
     }
 
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         if( ! this.initialized )
         {
@@ -136,7 +136,7 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
                                final Class<? extends Service> service )
         {
             final PossibleValues a = context.find( ValueProperty.class ).getAnnotation( PossibleValues.class );
-            return new ModelBasedPossibleValuesService( new ModelPath( a.property() ), a.invalidValueMessage(), a.invalidValueSeverity(), a.caseSensitive() );
+            return new ModelBasedPossibleValuesService( new ModelPath( a.property() ), a.invalidValueMessage(), a.invalidValueSeverity(), a.caseSensitive(), a.ordered() );
         }
     }
     

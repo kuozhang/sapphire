@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.address.internal;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.address.Address;
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 public final class CityNamePossibleValuesService extends PossibleValuesService
 {
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         final Address address = context( Address.class );
         

@@ -12,7 +12,8 @@
 package org.eclipse.sapphire.services;
 
 import java.util.Comparator;
-import java.util.SortedSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -21,6 +22,7 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.util.Comparators;
 import org.eclipse.sapphire.util.Filters;
+import org.eclipse.sapphire.util.SetFactory;
 import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
@@ -32,10 +34,12 @@ public abstract class PossibleValuesService extends Service
     private final String invalidValueMessageTemplate;
     private final Status.Severity invalidValueSeverity;
     private final boolean caseSensitive;
+    private final boolean ordered;
     
     public PossibleValuesService( final String invalidValueMessageTemplate,
                                   final Status.Severity invalidValueSeverity,
-                                  final boolean caseSensitive )
+                                  final boolean caseSensitive,
+                                  final boolean ordered )
     {
         if( invalidValueMessageTemplate == null || invalidValueMessageTemplate.length() == 0 )
         {
@@ -48,24 +52,32 @@ public abstract class PossibleValuesService extends Service
 
         this.invalidValueSeverity = ( invalidValueSeverity == null ? Status.Severity.ERROR : invalidValueSeverity );
         this.caseSensitive = caseSensitive;
+        this.ordered = ordered;
     }
     
     public PossibleValuesService()
     {
-        this( null, null, true );
+        this( null, null, true, false );
     }
     
-    public final SortedSet<String> values()
+    public final Set<String> values()
     {
-        final Comparator<String> comparator = ( isCaseSensitive() ? null : Comparators.createIgnoreCaseComparator() );
-
-        final TreeSet<String> values = new TreeSet<String>( comparator );
-        fillPossibleValues( values );
-        
-        return SortedSetFactory.start( comparator ).filter( Filters.createNotEmptyFilter() ).add( values ).result();
+        if( ordered() )
+        {
+            final Set<String> values = new LinkedHashSet<String>();
+            fillPossibleValues( values );
+            return SetFactory.<String>start().filter( Filters.createNotEmptyFilter() ).add( values ).result();
+        }
+        else
+        {
+            final Comparator<String> comparator = ( isCaseSensitive() ? null : Comparators.createIgnoreCaseComparator() );
+            final Set<String> values = new TreeSet<String>( comparator );
+            fillPossibleValues( values );
+            return SortedSetFactory.start( comparator ).filter( Filters.createNotEmptyFilter() ).add( values ).result();
+        }
     }
     
-    protected abstract void fillPossibleValues( final SortedSet<String> values );
+    protected abstract void fillPossibleValues( Set<String> values );
     
     public String getInvalidValueMessage( final String invalidValue )
     {
@@ -80,6 +92,18 @@ public abstract class PossibleValuesService extends Service
     public boolean isCaseSensitive()
     {
         return this.caseSensitive;
+    }
+    
+    /**
+     * Determines if the possible values are already ordered as intended. If the possible values
+     * are not ordered, they will sorted alphabetically when presented.
+     * 
+     * @return true if the possible values are already ordered as intended and false otherwise
+     */
+    
+    public boolean ordered()
+    {
+        return this.ordered;
     }
     
     private static final class Resources extends NLS

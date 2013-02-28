@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -58,7 +58,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.util.ListFactory;
-import org.eclipse.sapphire.util.SortedSetFactory;
+import org.eclipse.sapphire.util.SetFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -134,8 +134,6 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         
         final IStructuredContentProvider contentProvider = new IStructuredContentProvider()
         {
-            @SuppressWarnings( "unchecked" )
-            
             public Object[] getElements( final Object inputElement )
             {
                 if( SlushBucketPropertyEditor.this.possibleValuesService == null )
@@ -150,10 +148,8 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                     return new Object[ 0 ];
                 }
 
-                final SortedSet<String> possibleValues = SlushBucketPropertyEditor.this.possibleValuesService.values();
-                
-                final SortedSetFactory<String> unusedPossibleValues 
-                    = SortedSetFactory.start( (Comparator<String>) possibleValues.comparator() ).add( possibleValues );
+                final Set<String> possibleValues = SlushBucketPropertyEditor.this.possibleValuesService.values();
+                final SetFactory<String> unusedPossibleValues = SetFactory.<String>start().add( possibleValues );
                 
                 for( IModelElement member : list )
                 {
@@ -203,7 +199,13 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         
         viewerColumn.setLabelProvider( labelProvider );
         
-        makeTableSortable( this.sourceTableViewer );
+        makeTableSortable
+        (
+            this.sourceTableViewer,
+            Collections.<TableColumn,Comparator<Object>>emptyMap(),
+            this.possibleValuesService.ordered() ? null : column 
+        );
+        
         suppressDashedTableEntryBorder( this.sourceTable );
         
         this.sourceTable.addMouseListener

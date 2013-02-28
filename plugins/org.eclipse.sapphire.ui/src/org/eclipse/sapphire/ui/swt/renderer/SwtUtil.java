@@ -64,13 +64,20 @@ public final class SwtUtil
     public static void makeTableSortable( final TableViewer tableViewer )
     {
         final Map<TableColumn,Comparator<Object>> comparators = Collections.emptyMap();
-        makeTableSortable( tableViewer, comparators, tableViewer.getTable().getColumn( 0 ), SWT.DOWN );
+        makeTableSortable( tableViewer, comparators );
     }
     
     public static void makeTableSortable( final TableViewer tableViewer,
                                           final Map<TableColumn,Comparator<Object>> comparators )
     {
-        makeTableSortable( tableViewer, comparators, tableViewer.getTable().getColumn( 0 ), SWT.DOWN );
+        makeTableSortable( tableViewer, comparators, tableViewer.getTable().getColumn( 0 ) );
+    }
+    
+    public static void makeTableSortable( final TableViewer tableViewer,
+                                          final Map<TableColumn,Comparator<Object>> comparators,
+                                          final TableColumn initialSortColumn )
+    {
+        makeTableSortable( tableViewer, comparators, initialSortColumn, SWT.DOWN );
     }
     
     public static void makeTableSortable( final TableViewer tableViewer,
@@ -80,7 +87,10 @@ public final class SwtUtil
     {
         final Table table = tableViewer.getTable();
         
-        sortByTableColumn( tableViewer, initialSortColumn, initialSortDirection, comparators.get( initialSortColumn ) );
+        if( initialSortColumn != null )
+        {
+            sortByTableColumn( tableViewer, initialSortColumn, initialSortDirection, comparators.get( initialSortColumn ) );
+        }
         
         for( final TableColumn column : table.getColumns() )
         {

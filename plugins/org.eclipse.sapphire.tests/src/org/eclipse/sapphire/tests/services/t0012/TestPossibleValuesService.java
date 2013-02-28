@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.services.t0012;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.services.PossibleValuesService;
 
@@ -22,7 +22,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 public final class TestPossibleValuesService extends PossibleValuesService
 {
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         values.add( "a" );
         values.add( "b" );

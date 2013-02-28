@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.tests.services.t0004;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.services.PossibleValuesService;
 
@@ -23,7 +23,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 public final class ShapePossibleValueService extends PossibleValuesService {
 
     @Override
-    protected void fillPossibleValues(SortedSet<String> values) {
+    protected void fillPossibleValues(Set<String> values) {
         values.add("Circle");
         values.add("Circle1");
         values.add("Circle2");

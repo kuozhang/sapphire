@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.samples.contacts.Contact;
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 public final class ContactCategoryPossibleValueService extends PossibleValuesService
 {
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         values.add( "Personal" );
         

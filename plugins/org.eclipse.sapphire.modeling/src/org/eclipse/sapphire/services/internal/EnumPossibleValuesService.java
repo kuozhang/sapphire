@@ -13,7 +13,7 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.EnumValueType;
@@ -49,7 +49,7 @@ public final class EnumPossibleValuesService extends PossibleValuesService
     }
     
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         values.addAll( this.values );
     }

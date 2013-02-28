@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.internal;
 
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -77,7 +77,7 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
     }
     
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         values.addAll( this.base.values() );
     }

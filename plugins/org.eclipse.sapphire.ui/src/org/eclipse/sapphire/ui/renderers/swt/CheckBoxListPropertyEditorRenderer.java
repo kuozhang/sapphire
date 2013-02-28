@@ -24,9 +24,11 @@ import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdenti
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.layout.TableColumnLayout;
@@ -71,6 +73,7 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.SetFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -192,39 +195,25 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                     this.entries = null;
                 }
                 
-                // To preserve selection in the table, it is important to re-use the entry that has the
-                // current selection, if appropriate. For other entries, it is quicker to re-create.
-                
-                Entry selection = (Entry) ( (IStructuredSelection) CheckBoxListPropertyEditorRenderer.this.tableViewer.getSelection() ).getFirstElement();
-                
-                // First add entries for values listed in the model.
-                
-                this.entries = new ArrayList<Entry>();
-                final Set<String> checked = new HashSet<String>();
+                final Map<String,LinkedList<IModelElement>> valueToElements = new HashMap<String,LinkedList<IModelElement>>();
                 
                 for( IModelElement element : getList() )
                 {
                     final String value = readMemberProperty( element );
-                    final Entry entry;
+                    LinkedList<IModelElement> elements = valueToElements.get( value );
                     
-                    if( selection != null && selection.value.equals( value ) )
+                    if( elements == null )
                     {
-                        entry = selection;
-                        entry.element = element;
-                        selection = null;
-                    }
-                    else
-                    {
-                        entry = new Entry( value, element );
+                        elements = new LinkedList<IModelElement>();
+                        valueToElements.put( value, elements );
                     }
                     
-                    this.entries.add( entry );
-                    checked.add( value );
+                    elements.add( element );
                 }
                 
-                // Then add the rest of possible values.
+                this.entries = new ArrayList<Entry>();
                 
-                Set<String> possibleValues = null;
+                Set<String> possibleValues;
                 
                 try
                 {
@@ -233,35 +222,42 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 catch( Exception e )
                 {
                     SapphireUiFrameworkPlugin.log( e );
+                    possibleValues = SetFactory.empty();
                 }
 
-                if( possibleValues != null )
+                for( String value : possibleValues )
                 {
-                    for( String value : possibleValues )
+                    final Entry entry;
+                    final LinkedList<IModelElement> elements = valueToElements.get( value );
+                    
+                    if( elements == null )
                     {
-                        if( ! checked.contains( value ) )
+                        entry = new Entry( value, null );
+                    }
+                    else
+                    {
+                        final IModelElement element = elements.remove();
+                        
+                        if( elements.isEmpty() )
                         {
-                            final Entry entry;
-                            
-                            if( selection != null && selection.value.equals( value ) )
-                            {
-                                entry = selection;
-                                entry.element = null;
-                                selection = null;
-                            }
-                            else
-                            {
-                                entry = new Entry( value, null );
-                            }
-
-                            this.entries.add( entry );
+                            valueToElements.remove( value );
                         }
+                        
+                        entry = new Entry( value, element );
+                    }
+                    
+                    this.entries.add( entry );
+                }
+                
+                for( Map.Entry<String,LinkedList<IModelElement>> entry : valueToElements.entrySet() )
+                {
+                    final String value = entry.getKey();
+                    
+                    for( IModelElement element : entry.getValue() )
+                    {
+                        this.entries.add( new Entry( value, element ) );
                     }
                 }
-                
-                // Sort in order to not make the above two pass algorithm evident to the user.
-                
-                Collections.sort( this.entries, comparator );
                 
                 return this.entries.toArray();
             }
@@ -326,7 +322,13 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         if( part.getRenderingHint( PropertyEditorDef.HINT_SHOW_HEADER, true ) == true )
         {
             this.table.setHeaderVisible( true );
-            makeTableSortable( this.tableViewer, Collections.<TableColumn,Comparator<Object>>singletonMap( column, comparator ) );
+
+            makeTableSortable
+            (
+                this.tableViewer,
+                Collections.<TableColumn,Comparator<Object>>singletonMap( column, comparator ),
+                possibleValuesService.ordered() ? null : column
+            );
         }
         
         final ListSelectionService selectionService = part.service( ListSelectionService.class );
@@ -497,8 +499,32 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     private void refresh()
     {
         final int oldItemCount = this.table.getItemCount();
+        final Entry oldSelection = (Entry) ( (IStructuredSelection) this.tableViewer.getSelection() ).getFirstElement();
+        
         this.tableViewer.refresh();
+        
         final int newItemCount = this.table.getItemCount();
+        
+        if( oldSelection != null )
+        {
+            final String oldSelectionValue = oldSelection.value;
+            Entry newSelection = null;
+            
+            for( int i = 0; i < newItemCount && newSelection == null; i++ )
+            {
+                final Entry entry = (Entry) this.table.getItem( i ).getData();
+                
+                if( oldSelectionValue.equals( entry.value ) )
+                {
+                    newSelection = entry;
+                }
+            }
+            
+            if( newSelection != null )
+            {
+                this.tableViewer.setSelection( new StructuredSelection( newSelection ) );
+            }
+        }
         
         if( oldItemCount != newItemCount )
         {

@@ -51,6 +51,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
   <li><a href="#ModelElementList">ModelElementList</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
+  <li><a href="#PossibleValuesService">PossibleValuesService</a></li>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#TypeCast">TypeCast</a></li>
@@ -414,6 +415,44 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     String getImplClassName( String elementTypeClassName, GenerateImpl generateImplAnnotation )
     String getImplClassName( String elementTypeClassName, String preferredImplPackageName, String preferredImplClassName )
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="PossibleValuesService">PossibleValuesService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExamplePossibleValuesService extends PossibleValuesService
+{
+    protected void fillPossibleValues(</font> SortedSet<font color="#888888">&lt;String> values )
+    {
+        ...
+    }
+}</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">public class ExamplePossibleValuesService extends PossibleValuesService
+{
+    protected void fillPossibleValues(</font> Set<font color="#888888">&lt;String> values )
+    {
+        ...
+    }
+}</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>SortedSet<font color="#888888">&lt;String> values = possibleValuesService.values();</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Set<font color="#888888">&lt;String> values = possibleValuesService.values();</font></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></h2>

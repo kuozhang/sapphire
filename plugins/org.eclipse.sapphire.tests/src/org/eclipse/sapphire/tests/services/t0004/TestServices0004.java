@@ -13,7 +13,7 @@
 package org.eclipse.sapphire.tests.services.t0004;
 
 import java.util.Collection;
-import java.util.SortedSet;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -57,7 +57,7 @@ public final class TestServices0004 extends SapphireTestCase
         final PossibleValuesService possibleValuesService = element.service( TestElement.PROP_SHAPES, PossibleValuesService.class );
         assertNotNull( possibleValuesService );
 
-        final SortedSet<String> values = possibleValuesService.values();
+        final Set<String> values = possibleValuesService.values();
         assertNotNull( values );
 
         final ContentProposalService contentProposalService = element.service( TestElement.PROP_SHAPES, ContentProposalService.class );

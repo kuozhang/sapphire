@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.services.internal;
 
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -36,15 +36,16 @@ public final class StaticPossibleValuesService extends PossibleValuesService
     public StaticPossibleValuesService( final String[] values,
                                         final String invalidValueMessageTemplate,
                                         final Status.Severity invalidValueSeverity,
-                                        final boolean caseSensitive )
+                                        final boolean caseSensitive,
+                                        final boolean ordered )
     {
-        super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive );
+        super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive, ordered );
         
         this.values = ListFactory.unmodifiable( values );
     }
 
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         values.addAll( this.values );
     }
@@ -64,7 +65,7 @@ public final class StaticPossibleValuesService extends PossibleValuesService
                                final Class<? extends Service> service )
         {
             final PossibleValues a = context.find( ValueProperty.class ).getAnnotation( PossibleValues.class );
-            return new StaticPossibleValuesService( a.values(), a.invalidValueMessage(), a.invalidValueSeverity(), a.caseSensitive() );
+            return new StaticPossibleValuesService( a.values(), a.invalidValueMessage(), a.invalidValueSeverity(), a.caseSensitive(), a.ordered() );
         }
     }
     

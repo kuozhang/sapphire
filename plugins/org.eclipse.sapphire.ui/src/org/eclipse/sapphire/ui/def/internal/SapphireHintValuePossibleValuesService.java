@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 public final class SapphireHintValuePossibleValuesService extends PossibleValuesService
 {
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         final ISapphireHint element = context( ISapphireHint.class );
         final PartDef partdef = element.nearest( PartDef.class );

@@ -37,6 +37,7 @@
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
     <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
     <li><a href="#Core-NewConversions">New Conversions</a></li>
+    <li><a href="#Core-OrderedPossibleValues">Ordered Possible Values</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -619,6 +620,33 @@ draw upon  <a href="../../services/ConversionService.html">ConversionService</a>
     <td>org.eclipse.sapphire.java.JavaIdentifier</td>
   </tr>
 </table>
+
+
+<h2><a name="Core-OrderedPossibleValues">Ordered Possible Values</a></h2>
+
+<p>Typically, possible values have no particular order and it is desirable to present them
+sorted. In some cases, the order is significant. New API allows these cases to be differentiated.</p>
+
+<pre class="source-code"><code><font color="#888888">@PossibleValues
+{</font>
+    boolean ordered() default false
+<font color="#888888">}
+
+PossibleValuesService
+{</font>
+    boolean ordered()
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">An example of ordered possible values is task severity. The severities need to be presented in 
+the severity rank order, not in the alphabetical order.</p>
+
+<pre class="source-code"><code><font color="#888888">@PossibleValues
+{
+    values = { "blocker", "critical", "major", "normal", "minor", "trivial", "enhancement" },</font>
+    ordered = true
+<font color="#888888">}</font></code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-UseForValidation">Use EL for Validation</a></a></h2>

@@ -9,7 +9,7 @@
 
 package org.eclipse.sapphire.ui.diagram.def.internal;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 public class ToolPaletteCompartmentPossibleValuesService extends PossibleValuesService 
 {
 	@Override
-	protected void fillPossibleValues(SortedSet<String> values) 
+	protected void fillPossibleValues(Set<String> values) 
 	{
 		IDiagramEditorPageDef diagramPageDef = context(IDiagramEditorPageDef.class);
 		ModelElementList<IDiagramPaletteCompartmentDef> compartments = diagramPageDef.getPaletteCompartments();
