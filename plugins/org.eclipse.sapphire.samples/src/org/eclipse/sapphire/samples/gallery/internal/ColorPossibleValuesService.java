@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
@@ -44,7 +44,7 @@ public final class ColorPossibleValuesService extends PossibleValuesService
     }
 
     @Override
-    protected void fillPossibleValues( final SortedSet<String> values )
+    protected void fillPossibleValues( final Set<String> values )
     {
         values.add( "Red" );
         values.add( "Orange" );
