@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 @Label( standard = "with" )
 @XmlBinding( path = "with" )
 
-public interface ISapphireWithDirectiveDef extends PageBookDef
+public interface WithDef extends PageBookDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireWithDirectiveDef.class );
+    ModelElementType TYPE = new ModelElementType( WithDef.class );
 
     static final String HINT_VALUE_STYLE_CHECKBOX = "checkbox";
     static final String HINT_VALUE_STYLE_RADIO_BUTTONS = "radio.buttons";

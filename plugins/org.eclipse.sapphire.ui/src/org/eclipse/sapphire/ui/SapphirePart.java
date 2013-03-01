@@ -64,7 +64,7 @@ import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
-import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
+import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.ui.def.LineSeparatorDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
@@ -1097,18 +1097,18 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SapphireGroup();
         }
-        else if( definition instanceof ISapphireWithDirectiveDef )
+        else if( definition instanceof WithDef )
         {
-            final SapphireWithDirectiveHelper.ResolvePathResult resolvePathResult 
-                = SapphireWithDirectiveHelper.resolvePath( element, (ISapphireWithDirectiveDef) definition, partParams );
+            final WithPartHelper.ResolvePathResult resolvePathResult 
+                = WithPartHelper.resolvePath( element, (WithDef) definition, partParams );
             
             if( resolvePathResult.property == null )
             {
-                part = new SapphireWithDirectiveImplied();
+                part = new WithPartImplied();
             }
             else
             {
-                part = new SapphireWithDirective();
+                part = new WithPart();
             }
         }
         else if( definition instanceof PageBookExtDef )

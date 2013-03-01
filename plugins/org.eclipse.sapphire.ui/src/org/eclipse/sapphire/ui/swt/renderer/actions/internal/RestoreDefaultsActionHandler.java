@@ -50,7 +50,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEnumControlledPageBook;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.SapphireWithDirective;
+import org.eclipse.sapphire.ui.WithPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -142,9 +142,9 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
                     collectProperties( child, result );
                 }
             }
-            else if( part instanceof SapphireWithDirective )
+            else if( part instanceof WithPart )
             {
-                final SapphireWithDirective w = ( (SapphireWithDirective) part );
+                final WithPart w = ( (WithPart) part );
                 result.add( new PropertyRef( w.getLocalModelElement(), w.getProperty() ) );
             }
             else if( part instanceof SapphireEnumControlledPageBook )

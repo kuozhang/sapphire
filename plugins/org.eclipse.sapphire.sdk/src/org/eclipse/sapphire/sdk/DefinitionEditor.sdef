@@ -927,13 +927,20 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireWithDirectiveDef</model-element-type>
+            <model-element-type>WithDef</model-element-type>
             <label>With</label>
             <image>${ Image() }</image>
             <section>
                 <content>
                     <property-editor>Path</property-editor>
                     <property-editor>Label</property-editor>
+                    <property-editor>
+                        <property>ScaleVertically</property>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                    </property-editor>
                 </content>
             </section>
             <node-factory>

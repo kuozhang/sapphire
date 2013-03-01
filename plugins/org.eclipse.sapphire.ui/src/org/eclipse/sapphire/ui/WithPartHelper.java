@@ -20,16 +20,16 @@ import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
+import org.eclipse.sapphire.ui.def.WithDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWithDirectiveHelper
+public final class WithPartHelper
 {
     public static ResolvePathResult resolvePath( final IModelElement context,
-                                                 final ISapphireWithDirectiveDef def,
+                                                 final WithDef def,
                                                  final Map<String,String> params )
     {
         final ResolvePathResult result = new ResolvePathResult();
@@ -102,7 +102,7 @@ public final class SapphireWithDirectiveHelper
         
         static
         {
-            initializeMessages( SapphireWithDirectiveHelper.class.getName(), Resources.class );
+            initializeMessages( WithPartHelper.class.getName(), Resources.class );
         }
     }
 

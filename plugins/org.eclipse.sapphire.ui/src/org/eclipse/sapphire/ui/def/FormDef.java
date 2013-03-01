@@ -42,7 +42,7 @@ public interface FormDef extends FormComponentDef
             WhitespaceSeparatorDef.class,
             ISapphireLabelDef.class,
             ISapphireGroupDef.class,
-            ISapphireWithDirectiveDef.class,
+            WithDef.class,
             ConditionalDef.class,
             CompositeDef.class,
             ActuatorDef.class,

@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.resolvePath;
+import static org.eclipse.sapphire.ui.WithPartHelper.resolvePath;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
@@ -45,12 +46,12 @@ import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
+import org.eclipse.sapphire.ui.WithPartHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
+import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.RadioButtonsGroup;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
@@ -72,7 +73,7 @@ import org.eclipse.swt.widgets.Label;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWithDirective extends PageBookPart
+public final class WithPart extends PageBookPart
 {
     private static FormDef defaultPageDef;
     
@@ -85,7 +86,7 @@ public final class SapphireWithDirective extends PageBookPart
     @Override
     protected void init()
     {
-        final ISapphireWithDirectiveDef def = (ISapphireWithDirectiveDef) this.definition;
+        final WithDef def = (WithDef) this.definition;
         final ResolvePathResult resolvePathResult = resolvePath( getModelElement(), def, this.params );
         
         if( resolvePathResult.property == null )
@@ -172,10 +173,10 @@ public final class SapphireWithDirective extends PageBookPart
             return;
         }
         
-        final ISapphireWithDirectiveDef def = (ISapphireWithDirectiveDef) this.definition;
+        final WithDef def = (WithDef) this.definition;
         
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
-        composite.setLayoutData( gdhspan( gdhfill(), 2 ) );
+        composite.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
         composite.setLayout( glayout( 1, 0, 0 ) );
         context.adapt( composite );
         
@@ -223,7 +224,7 @@ public final class SapphireWithDirective extends PageBookPart
                         defaultStyle = Style.DROP_DOWN_LIST;
                     }
                     
-                    Style style = Style.decode( def.getHint( ISapphireWithDirectiveDef.HINT_STYLE ) );
+                    Style style = Style.decode( def.getHint( WithDef.HINT_STYLE ) );
                     
                     if( style == null || ( style == Style.CHECKBOX && allPossibleTypesCount != 1 ) )
                     {
@@ -234,7 +235,7 @@ public final class SapphireWithDirective extends PageBookPart
                     final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
                     final SapphireKeyboardActionPresentation actionPresentationKeyboard = new SapphireKeyboardActionPresentation( actionPresentationManager );
                     
-                    final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( SapphireWithDirective.this, element, property, context, innerTypeSelectorComposite );
+                    final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( WithPart.this, element, property, context, innerTypeSelectorComposite );
                     decorator.control().setLayoutData( gdvalign( gd(), ( style == Style.DROP_DOWN_LIST ? SWT.TOP : SWT.CENTER ) ) );
 
                     if( style == Style.CHECKBOX )
@@ -763,7 +764,7 @@ public final class SapphireWithDirective extends PageBookPart
         
         static
         {
-            initializeMessages( SapphireWithDirective.class.getName(), Resources.class );
+            initializeMessages( WithPart.class.getName(), Resources.class );
         }
     }
 

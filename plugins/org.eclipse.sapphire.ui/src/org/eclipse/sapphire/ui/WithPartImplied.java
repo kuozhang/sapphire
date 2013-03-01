@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.resolvePath;
+import static org.eclipse.sapphire.ui.WithPartHelper.resolvePath;
 
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.ui.SapphireWithDirectiveHelper.ResolvePathResult;
+import org.eclipse.sapphire.ui.WithPartHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.def.FormDef;
-import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
+import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.util.ListFactory;
 
@@ -27,7 +27,7 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireWithDirectiveImplied extends FormPart
+public final class WithPartImplied extends FormPart
 {
     private ModelPath path;
     private IModelElement element;
@@ -36,7 +36,7 @@ public final class SapphireWithDirectiveImplied extends FormPart
     @Override
     protected void init()
     {
-        final ISapphireWithDirectiveDef def = (ISapphireWithDirectiveDef) this.definition;
+        final WithDef def = (WithDef) this.definition;
         final ResolvePathResult resolvePathResult = resolvePath( getModelElement(), def, this.params );
         
         if( resolvePathResult.property != null )

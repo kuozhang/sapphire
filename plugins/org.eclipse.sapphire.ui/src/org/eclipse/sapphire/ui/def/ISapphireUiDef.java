@@ -91,7 +91,7 @@ public interface ISapphireUiDef extends IModelElement
             WhitespaceSeparatorDef.class,
             ISapphireLabelDef.class,
             ISapphireGroupDef.class,
-            ISapphireWithDirectiveDef.class,
+            WithDef.class,
             ConditionalDef.class,
             CompositeDef.class,
             ActuatorDef.class,

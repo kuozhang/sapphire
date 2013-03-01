@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.ISapphireWithDirectiveDef;
+import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 
@@ -46,11 +46,11 @@ public final class SapphireHintValuePossibleValuesService extends PossibleValues
             }
             else if( hint.equals( PartDef.HINT_STYLE ) ) 
             {
-                if( partdef instanceof ISapphireWithDirectiveDef )
+                if( partdef instanceof WithDef )
                 {
-                    values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_CHECKBOX );
-                    values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_RADIO_BUTTONS );
-                    values.add( ISapphireWithDirectiveDef.HINT_VALUE_STYLE_DROP_DOWN_LIST );
+                    values.add( WithDef.HINT_VALUE_STYLE_CHECKBOX );
+                    values.add( WithDef.HINT_VALUE_STYLE_RADIO_BUTTONS );
+                    values.add( WithDef.HINT_VALUE_STYLE_DROP_DOWN_LIST );
                 }
                 else if( partdef instanceof ActionDef )
                 {
