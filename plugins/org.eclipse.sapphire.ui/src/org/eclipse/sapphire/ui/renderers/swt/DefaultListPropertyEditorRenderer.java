@@ -238,8 +238,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
         );
         
-        mainComposite.setLayout( glayout( ( isReadOnly ? 1 : 2 ), 0, 0, 0, 0 ) );
-        
         final Composite tableComposite;
         
         if( this.decorator == null )
@@ -1009,7 +1007,14 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     }
                 );
             }
-            
+        }
+        
+        final boolean toolBarNeeded = toolBarActionsPresentation.hasActions();
+        
+        mainComposite.setLayout( glayout( ( toolBarNeeded ? 2 : 1 ), 0, 0, 0, 0 ) );
+        
+        if( toolBarNeeded )
+        {
             final ToolBar toolbar = new ToolBar( mainComposite, SWT.FLAT | SWT.VERTICAL );
             toolbar.setLayoutData( gdvfill() );
             toolBarActionsPresentation.setToolBar( toolbar );
@@ -1017,7 +1022,10 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             addControl( toolbar );
             this.context.adapt( toolbar );
             this.decorator.addEditorControl( toolbar );
-            
+        }
+        
+        if( menuActionsPresentation.hasActions() )
+        {
             final Menu menu = new Menu( this.table );
             this.table.setMenu( menu );
             menuActionsPresentation.setMenu( menu );
