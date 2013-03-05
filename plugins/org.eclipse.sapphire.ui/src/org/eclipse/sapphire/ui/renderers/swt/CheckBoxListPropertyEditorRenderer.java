@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -113,11 +114,11 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         
         this.memberType = listProperty.getType();
         
-        final List<ModelProperty> allMemberProperties = this.memberType.properties();
+        final SortedSet<ModelProperty> allMemberProperties = this.memberType.properties();
         
         if( allMemberProperties.size() == 1 )
         {
-            final ModelProperty prop = allMemberProperties.get( 0 );
+            final ModelProperty prop = allMemberProperties.first();
             
             if( prop instanceof ValueProperty )
             {
@@ -743,11 +744,11 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             if( property instanceof ListProperty &&
                 element.service( property, PossibleTypesService.class ).types().size() == 1 )
             {
-                final List<ModelProperty> properties = property.getType().properties();
+                final SortedSet<ModelProperty> properties = property.getType().properties();
                 
                 if( properties.size() == 1 )
                 {
-                    final ModelProperty memberProperty = properties.get( 0 );
+                    final ModelProperty memberProperty = properties.first();
                     
                     if( memberProperty instanceof ValueProperty &&
                         memberProperty.hasAnnotation( NoDuplicates.class ) &&

@@ -18,8 +18,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -233,11 +233,11 @@ public final class ExportModelDocumentationOpMethods
                 boolean skip = false;
                 
                 final ModelElementType childType = property.service( PossibleTypesService.class ).types().first();
-                final List<ModelProperty> childTypeProperties = childType.properties();
+                final SortedSet<ModelProperty> childTypeProperties = childType.properties();
                 
                 if( childTypeProperties.size() == 1 )
                 {
-                    final ModelProperty childTypeProperty = childTypeProperties.get( 0 );
+                    final ModelProperty childTypeProperty = childTypeProperties.first();
                     
                     if( childTypeProperty instanceof ValueProperty )
                     {

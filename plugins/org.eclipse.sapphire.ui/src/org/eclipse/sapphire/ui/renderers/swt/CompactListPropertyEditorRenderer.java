@@ -31,6 +31,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.BindingImpl;
@@ -101,11 +102,11 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         // TODO support readonly
         //final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
 
-        final List<ModelProperty> allMemberProperties = property.getType().properties();
+        final SortedSet<ModelProperty> allMemberProperties = property.getType().properties();
         
         if( allMemberProperties.size() == 1 )
         {
-            final ModelProperty prop = allMemberProperties.get( 0 );
+            final ModelProperty prop = allMemberProperties.first();
             
             if( prop instanceof ValueProperty )
             {

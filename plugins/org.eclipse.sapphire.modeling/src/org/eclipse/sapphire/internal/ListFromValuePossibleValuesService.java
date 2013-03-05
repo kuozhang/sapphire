@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.internal;
 
-import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -49,7 +49,7 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
         super.init();
         
         final ListProperty listProperty = context( ListProperty.class );
-        final ValueProperty listMemberValueProperty = (ValueProperty) listProperty.getType().properties().get( 0 );
+        final ValueProperty listMemberValueProperty = (ValueProperty) listProperty.getType().properties().first();
         
         this.base = listMemberValueProperty.service( PossibleValuesService.class );
         
@@ -129,11 +129,11 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
                 if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
                 {
                     final ModelElementType memberType = listProperty.getType();
-                    final List<ModelProperty> properties = memberType.properties();
+                    final SortedSet<ModelProperty> properties = memberType.properties();
                     
                     if( properties.size() == 1 )
                     {
-                        final ModelProperty memberProperty = properties.get( 0 );
+                        final ModelProperty memberProperty = properties.first();
                         
                         if( memberProperty instanceof ValueProperty &&
                             memberProperty.service( PossibleValuesService.class ) != null )

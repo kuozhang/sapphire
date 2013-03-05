@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.internal;
 
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Event;
@@ -125,9 +124,8 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
             if( property != null )
             {
                 final ModelElementType type = property.getModelElementType();
-                final List<ModelProperty> properties = type.properties();
                 
-                if( properties.size() == 1 )
+                if( type.properties().size() == 1 )
                 {
                     final IModelElement element = context.find( IModelElement.class );
                     final ModelProperty parentProperty = element.getParentProperty();

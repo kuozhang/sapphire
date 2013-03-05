@@ -17,13 +17,15 @@ import static org.eclipse.sapphire.modeling.localization.LocalizationUtil.transf
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
+import java.util.SortedSet;
 
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.internal.ElementClassLoaders;
+import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
@@ -34,6 +36,8 @@ import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
 import org.eclipse.sapphire.util.ListFactory;
+import org.eclipse.sapphire.util.MapFactory;
+import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -47,7 +51,8 @@ public final class ModelElementType extends ModelMetadataItem
     private Constructor<?> implClassConstructor = null;
     private boolean implClassLoaded = false;
     private final List<ModelElementType> baseTypes;
-    private final List<ModelProperty> properties;
+    private SortedSet<ModelProperty> properties;
+    private Map<String,ModelProperty> propertiesByName;
     private final LocalizationService localizationService;
     private ImageData image;
     private boolean imageInitialized;
@@ -57,7 +62,6 @@ public final class ModelElementType extends ModelMetadataItem
     public ModelElementType( final Class<?> typeClass )
     {
         this.typeClass = typeClass;
-        this.properties = new ArrayList<ModelProperty>();
         this.localizationService = LocalizationSystem.service( this.typeClass );
         
         final ListFactory<ModelElementType> baseTypesFactory = ListFactory.start();
@@ -218,49 +222,136 @@ public final class ModelElementType extends ModelMetadataItem
         return element;
     }
     
-    public List<ModelProperty> properties()
+    /**
+     * Returns all properties of this type.
+     * 
+     * @return all properties of this type
+     */
+    
+    public synchronized SortedSet<ModelProperty> properties()
     {
-        final TreeMap<String,ModelProperty> properties = new TreeMap<String,ModelProperty>();
-        
-        for( Class<?> cl : this.typeClass.getInterfaces() )
+        if( this.properties == null )
         {
-            final ModelElementType t = read( cl, false );
-            
-            if( t != null )
-            {
-                for( ModelProperty property : t.properties() )
+            final SortedSetFactory<ModelProperty> propertiesSetFactory = SortedSetFactory.start
+            (
+                new Comparator<ModelProperty>()
                 {
-                    properties.put( property.getName(), property );
+                    public int compare( final ModelProperty x, final ModelProperty y )
+                    {
+                        return x.getName().compareToIgnoreCase( y.getName() );
+                    }
+                }
+            );
+            
+            for( Field field : this.typeClass.getDeclaredFields() )
+            {
+                if( field.getName().startsWith( "PROP_" ) )
+                {
+                    Object value = null;
+                    
+                    try
+                    {
+                        value = field.get( null );
+                    }
+                    catch( IllegalAccessException e )
+                    {
+                        LoggingService.log( e );
+                    }
+                    
+                    if( value instanceof ModelProperty )
+                    {
+                        propertiesSetFactory.add( (ModelProperty) value );
+                    }
                 }
             }
+            
+            for( ModelElementType t : this.baseTypes )
+            {
+                propertiesSetFactory.add( t.properties() );
+            }
+            
+            this.properties = propertiesSetFactory.result();
+            
+            final MapFactory<String,ModelProperty> propertiesByNameMapFactory = MapFactory.start();
+            
+            for( ModelProperty property : this.properties )
+            {
+                propertiesByNameMapFactory.add( property.getName().toLowerCase(), property );
+            }
+            
+            this.propertiesByName = propertiesByNameMapFactory.result();
         }
         
-        for( ModelProperty property : this.properties )
-        {
-            properties.put( property.getName(), property );
-        }
-        
-        return new ArrayList<ModelProperty>( properties.values() );
+        return this.properties;
     }
+    
+    /**
+     * Returns the property specified by the given path. Only property name path segments are supported.
+     * Using other segments, such as a parent navigation or a type filter, will result in an exception.
+     * 
+     * @param path the path specifying the property
+     * @return the property or null if not found
+     * @throws IllegalArgumentException if path is null or if path uses unsupported path segments
+     */
+    
+    public <T extends ModelProperty> T property( final String path )
+    {
+        if( path == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return property( new ModelPath( path ) );
+    }
+    
+    /**
+     * Returns the property specified by the given path. Only property name path segments are supported.
+     * Using other segments, such as a parent navigation or a type filter, will result in an exception.
+     * 
+     * @param path the path specifying the property
+     * @return the property or null if not found
+     * @throws IllegalArgumentException if path is null or if path uses unsupported path segments
+     */
     
     @SuppressWarnings( "unchecked" )
     
-    public <T extends ModelProperty> T property( final String name )
+    public <T extends ModelProperty> T property( final ModelPath path )
     {
-        for( ModelProperty property : properties() )
+        if( path == null )
         {
-            if( property.getName().equalsIgnoreCase( name ) )
-            {
-                return (T) property;
-            }
+            throw new IllegalArgumentException();
         }
         
+        properties(); // TODO: Remove when properties are initialized in the constructor.
+        
+        final ModelPath.Segment head = path.head();
+        
+        if( head instanceof PropertySegment )
+        {
+            final String name = ( (PropertySegment) head ).getPropertyName();
+            final T property = (T) this.propertiesByName.get( name.toLowerCase() );
+            
+            if( property != null )
+            {
+                if( path.length() == 1 )
+                {
+                    return property;
+                }
+                else
+                {
+                    if( property instanceof ElementProperty || property instanceof ListProperty )
+                    {
+                        return property.getType().property( path.tail() );
+                    }
+                }
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException( path.toString() );
+        }
+
         return null;
-    }
-    
-    void addProperty( final ModelProperty property )
-    {
-        this.properties.add( property );
     }
     
     @Override

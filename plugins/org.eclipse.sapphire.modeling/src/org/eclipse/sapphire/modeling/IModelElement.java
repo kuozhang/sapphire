@@ -32,7 +32,7 @@ public interface IModelElement extends IModelParticle
     <T extends IModelElement> T initialize();
     
     <T extends ModelProperty> T property( String name );
-    List<ModelProperty> properties();
+    SortedSet<ModelProperty> properties();
     
     Object read( ModelProperty property );
     Object read( String property );

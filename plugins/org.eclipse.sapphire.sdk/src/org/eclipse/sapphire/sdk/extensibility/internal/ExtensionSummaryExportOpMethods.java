@@ -647,7 +647,7 @@ public final class ExtensionSummaryExportOpMethods
             else if( property instanceof ListProperty )
             {
                 final ListProperty listProperty = (ListProperty) property;
-                final ValueProperty entryValueProperty = (ValueProperty) listProperty.getType().properties().get( 0 );
+                final ValueProperty entryValueProperty = (ValueProperty) listProperty.getType().properties().first();
                 final StringBuilder buf = new StringBuilder();
                 
                 for( IModelElement entry : element.read( listProperty ) )

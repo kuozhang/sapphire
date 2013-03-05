@@ -135,7 +135,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         return (T) this;
     }
     
-    public List<ModelProperty> properties()
+    public SortedSet<ModelProperty> properties()
     {
         return this.type.properties();
     }

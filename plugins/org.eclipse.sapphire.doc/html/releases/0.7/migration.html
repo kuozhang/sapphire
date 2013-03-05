@@ -48,6 +48,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
+  <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
   <li><a href="#ModelElementList">ModelElementList</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
@@ -365,6 +366,24 @@ equivalent has been provided. For further guidance, post a question
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
 
 
+<h2><a name="IModelElement">IModelElement</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>List<font color="#888888">&lt;ModelProperty> properties = element.properties()</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>SortedSet<font color="#888888">&lt;ModelProperty> properties = element.properties()</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></h2>
 
 <table>
@@ -415,6 +434,21 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     String getImplClassName( String elementTypeClassName, GenerateImpl generateImplAnnotation )
     String getImplClassName( String elementTypeClassName, String preferredImplPackageName, String preferredImplClassName )
 <font color="#888888">}</font></code></pre>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>List<font color="#888888">&lt;ModelProperty> properties = type.properties()</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>SortedSet<font color="#888888">&lt;ModelProperty> properties = type.properties()</font></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="PossibleValuesService">PossibleValuesService</a></h2>

@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -96,7 +97,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         final ListProperty property = getProperty();
         
         this.memberType = property.getType();
-        this.memberProperty = (ValueProperty) this.memberType.properties().get( 0 );
+        this.memberProperty = (ValueProperty) this.memberType.properties().first();
         this.possibleValuesService = part.getLocalModelElement().service( property, PossibleValuesService.class );
         
         final Status.Severity invalidValueSeverity = this.possibleValuesService.getInvalidValueSeverity( null );
@@ -376,11 +377,11 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                 element.service( property, PossibleValuesService.class ) != null &&
                 element.service( property, PossibleTypesService.class ).types().size() == 1 )
             {
-                final List<ModelProperty> properties = property.getType().properties();
+                final SortedSet<ModelProperty> properties = property.getType().properties();
                 
                 if( properties.size() == 1 )
                 {
-                    final ModelProperty memberProperty = properties.get( 0 );
+                    final ModelProperty memberProperty = properties.first();
                     
                     if( memberProperty instanceof ValueProperty && memberProperty.hasAnnotation( NoDuplicates.class ) )
                     {

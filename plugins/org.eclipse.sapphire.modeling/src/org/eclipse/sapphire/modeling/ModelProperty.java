@@ -92,8 +92,6 @@ public abstract class ModelProperty extends ModelMetadataItem
         {
             this.type = ModelElementType.read( this.typeClass );
         }
-        
-        this.modelElementType.addProperty( this );
     }
     
     public ModelElementType getModelElementType()

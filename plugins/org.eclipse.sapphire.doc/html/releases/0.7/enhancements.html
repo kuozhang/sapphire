@@ -33,6 +33,7 @@
   <ol type="A">
     <li><a href="#Core-ModelElement">ModelElement</a></li>
     <li><a href="#Core-ModelElementHandle">ModelElementHandle</a></li>
+    <li><a href="#Core-ModelElementType">ModelElementType</a></li>
     <li><a href="#Core-RequiredConstraintService">RequiredConstraintService</a></li>
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
     <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
@@ -496,6 +497,17 @@ ModelElementHandle was the only one that had no API to retrieve the parent prope
     T element( boolean createIfNecessary )
     T element( boolean createIfNecessary, ModelElementType type )</font>
     &lt;C extends IModelElement> C element( boolean createIfNecessary, Class&lt;C> cl )
+<font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Core-ModelElementType">ModelElementType</a></h2>
+
+<p>A property can now be looked up by a path. Previously, only lookup by name was available.</p>
+
+<pre class="source-code"><code><font color="#888888">ModelElementType
+{
+    &lt;T extends ModelProperty> T property( String</font> path <font color="#888888">)</font>
+    &lt;T extends ModelProperty> T property( ModelPath path )
 <font color="#888888">}</font></code></pre>
 
 
