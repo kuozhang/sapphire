@@ -328,21 +328,28 @@ public final class ModelElementType extends ModelMetadataItem
     @Override
     protected String getDefaultLabel()
     {
-        String className = this.typeClass.getName();
-        int start = className.lastIndexOf( '.' ) + 1;
+        String label = this.typeClass.getName();
+        int start = label.lastIndexOf( '.' ) + 1;
         final int startPlusOne = start + 1;
         
-        if( className.charAt( start ) == 'I' && startPlusOne < className.length() && Character.isUpperCase( className.charAt( startPlusOne ) ) )
+        if( label.charAt( start ) == 'I' && startPlusOne < label.length() && Character.isUpperCase( label.charAt( startPlusOne ) ) )
         {
             start = startPlusOne;
         }
         
         if( start > 0 )
         {
-            className = className.substring( start );
+            label = label.substring( start );
         }
         
-        return transformCamelCaseToLabel( className );
+        final int lastDollarSign = label.lastIndexOf( '$' );
+        
+        if( lastDollarSign != -1 )
+        {
+            label = label.substring( lastDollarSign + 1 );
+        }
+        
+        return transformCamelCaseToLabel( label );
     }
     
     @Override
