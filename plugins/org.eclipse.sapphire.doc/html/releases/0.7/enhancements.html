@@ -31,9 +31,10 @@
   </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
-    <li><a href="#Core-ModelElement">ModelElement</a></li>
+    <li><a href="#Core-IModelElement">IModelElement</a></li>
     <li><a href="#Core-ModelElementHandle">ModelElementHandle</a></li>
     <li><a href="#Core-ModelElementType">ModelElementType</a></li>
+    <li><a href="#Core-PropertyInstance">PropertyInstance</a></li>
     <li><a href="#Core-RequiredConstraintService">RequiredConstraintService</a></li>
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
     <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
@@ -457,7 +458,7 @@ that references the CatalogItemImage() function.</p>
 &lt;/node-factory></font></code></pre>
 
 
-<h2><a name="Core"><a name="Core-ModelElement">ModelElement</a></a></h2>
+<h2><a name="Core"><a name="Core-IModelElement">IModelElement</a></a></h2>
 
 <p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
 copy individual properties is also available.</p>
@@ -476,6 +477,18 @@ copy individual properties is also available.</p>
     void clear()
     void clear( ModelProperty property )
     void clear( String property )
+<font color="#888888">}</font></code></pre>
+
+<p>A property can now be looked up by a path. Previously, only lookup by name was available. In addition to this, the
+result of the lookup is a <a href="#Core-PropertyInstance">PropertyInstance</a> object that represents an instance of
+a property within an element.</p>
+
+<pre class="source-code"><code><font color="#888888">IModelElement
+{</font>
+    SortedSet&lt;PropertyInstance> <font color="#888888">properties()</font>
+    PropertyInstance <font color="#888888">property( String</font> path <font color="#888888">)</font>
+    PropertyInstance property( ModelPath path )
+    PropertyInstance property( ModelProperty property )
 <font color="#888888">}</font></code></pre>
 
 
@@ -509,6 +522,32 @@ ModelElementHandle was the only one that had no API to retrieve the parent prope
     &lt;T extends ModelProperty> T property( String</font> path <font color="#888888">)</font>
     &lt;T extends ModelProperty> T property( ModelPath path )
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Core"><a name="Core-PropertyInstance">PropertyInstance</a></a></h2>
+
+<p>The new PropertyInstance class represents an instance of a property within an element. Many of the operations
+performed on an element that require a property to be supplied can now be performed on the property instance.
+A property instance can found using methods on <a href="#Core-IModelElement">IModelElement</a>.</p>
+
+<pre class="source-code"><code>PropertyInstance
+{
+    IModelElement element()
+    ModelProperty property()
+    &lt;T> T read()
+    void write( Object content )
+    void clear()
+    boolean empty()
+    boolean enabled()
+    Status validation()
+    void refresh()
+    void refresh( boolean force )
+    void refresh( boolean force, boolean deep )
+    &lt;S extends Service> S service( Class&lt;S> type )
+    &lt;S extends Service> List&lt;S> services( Class&lt;S> type )
+    void attach( Listener listener )
+    void detach( Listener listener )
+}</code></pre>
 
 
 <h2><a name="Core-RequiredConstraintService">RequiredConstraintService</a></h2>

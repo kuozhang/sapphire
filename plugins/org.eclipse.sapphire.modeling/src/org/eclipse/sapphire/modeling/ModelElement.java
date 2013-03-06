@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.modeling;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +26,12 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
+import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
 import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
 import org.eclipse.sapphire.modeling.annotations.Derived;
@@ -47,6 +50,8 @@ import org.eclipse.sapphire.services.ValidationAggregationService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.services.internal.ElementInstanceServiceContext;
 import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
+import org.eclipse.sapphire.util.MapFactory;
+import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -55,9 +60,19 @@ import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;
 
 public abstract class ModelElement extends ModelParticle implements IModelElement
 {
+    private static final Comparator<PropertyInstance> PROPERTY_INSTANCE_COMPARATOR = new Comparator<PropertyInstance>()
+    {
+        public int compare( final PropertyInstance x, final PropertyInstance y )
+        {
+            return x.property().getName().compareToIgnoreCase( y.property().getName() );
+        }
+    };
+
     private final ModelElementType type;
     private final ModelProperty parentProperty;
-    private final Map<ModelProperty,Object> properties;
+    private final Map<ModelProperty,Object> content;
+    private final SortedSet<PropertyInstance> properties;
+    private final Map<String,PropertyInstance> propertiesByName;
     private Status validation;
     private final ListenerContext listeners = new ListenerContext();
     private ElementInstanceServiceContext elementServiceContext;
@@ -73,9 +88,22 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         
         this.type = type;
         this.parentProperty = parentProperty;
-        this.properties = new HashMap<ModelProperty,Object>( this.type.properties().size() );
+        this.content = new HashMap<ModelProperty,Object>( this.type.properties().size() );
         this.validation = null;
         this.propertyServiceContexts = new HashMap<ModelProperty,PropertyInstanceServiceContext>();
+        
+        final SortedSetFactory<PropertyInstance> propertiesSetFactory = SortedSetFactory.start( PROPERTY_INSTANCE_COMPARATOR );
+        final MapFactory<String,PropertyInstance> propertiesByNameMapFactory = MapFactory.start();
+        
+        for( ModelProperty property : this.type.properties() )
+        {
+            final PropertyInstance instance = new PropertyInstance( this, property );
+            propertiesSetFactory.add( instance );
+            propertiesByNameMapFactory.add( property.getName().toLowerCase(), instance );
+        }
+        
+        this.properties = propertiesSetFactory.result();
+        this.propertiesByName = propertiesByNameMapFactory.result();
         
         if( parent != null )
         {
@@ -115,8 +143,10 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     
     public final <T extends IModelElement> T initialize()
     {
-        for( ModelProperty property : properties() ) 
+        for( PropertyInstance instance : properties() ) 
         {
+            final ModelProperty property = instance.property();
+            
             if( property instanceof ValueProperty ) 
             {
                 final InitialValueService initialValueService = service( property, InitialValueService.class );
@@ -135,16 +165,105 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         return (T) this;
     }
     
-    public SortedSet<ModelProperty> properties()
+    public final SortedSet<PropertyInstance> properties()
     {
-        return this.type.properties();
+        return this.properties;
     }
 
-    public <T extends ModelProperty> T property( final String name )
+    public final PropertyInstance property( final String path )
     {
-        return this.type.property( name );
+        if( path == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return property( new ModelPath( path ) );
     }
+    
+    public final PropertyInstance property( final ModelPath path )
+    {
+        assertNotDisposed();
 
+        if( path == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        synchronized( root() )
+        {
+            final ModelPath.Segment head = path.head();
+            
+            if( head instanceof ModelRootSegment )
+            {
+                return ( (IModelElement) root() ).property( path.tail() );
+            }
+            else if( head instanceof ParentElementSegment )
+            {
+                IModelParticle parent = parent();
+                
+                if( parent != null )
+                {
+                    if( parent instanceof ModelElementList<?> )
+                    {
+                        parent = parent.parent();
+                    }
+                    
+                    return ( (IModelElement) parent ).property( path.tail() );
+                }
+                
+                return null;
+            }
+            else if( head instanceof PropertySegment )
+            {
+                final String name = ( (PropertySegment) head ).getPropertyName();
+                final PropertyInstance instance = this.propertiesByName.get( name.toLowerCase() );
+                
+                if( instance != null )
+                {
+                    if( path.length() == 1 )
+                    {
+                        return instance;
+                    }
+                    else
+                    {
+                        if( instance.property() instanceof ElementProperty )
+                        {
+                            final IModelElement element = ( (ModelElementHandle<?>) instance.read() ).element();
+                            
+                            if( element != null )
+                            {
+                                return element.property( path.tail() );
+                            }
+                        }
+                    }
+                }
+                
+                return null;
+            }
+            else
+            {
+                throw new IllegalArgumentException( path.toString() );
+            }
+        }
+    }
+    
+    public final PropertyInstance property( final ModelProperty property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final PropertyInstance instance = property( property.getName() );
+        
+        if( instance == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return instance;
+    }
+    
     public final Object read( final ModelProperty property )
     {
         assertNotDisposed();
@@ -173,14 +292,14 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
 
-        Object data = this.properties.get( prop );
+        Object data = this.content.get( prop );
         
         if( data == null )
         {
             refresh( prop, true );
         }
         
-        data = this.properties.get( prop );
+        data = this.content.get( prop );
         
         return data;
     }
@@ -280,8 +399,9 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             }
             else if( head instanceof AllDescendentsSegment )
             {
-                for( ModelProperty property : properties() )
+                for( PropertyInstance instance : properties() )
                 {
+                    final ModelProperty property = instance.property();
                     final Object obj = read( property );
                     
                     if( obj instanceof Value<?> )
@@ -328,7 +448,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             else
             {
                 final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
-                final ModelProperty property = property( propertyName );
+                final PropertyInstance property = property( propertyName );
 
                 if( property == null )
                 {
@@ -336,7 +456,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     return;
                 }
                 
-                final Object obj = read( property );
+                final Object obj = property.read();
                 
                 if( obj instanceof Value<?> )
                 {
@@ -436,10 +556,10 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             else if( prop instanceof TransientProperty )
             {
                 final TransientProperty p = (TransientProperty) prop;
-                final Transient<?> oldTransient = (Transient<?>) this.properties.get( p );
+                final Transient<?> oldTransient = (Transient<?>) this.content.get( p );
                 
                 Transient<?> t = new Transient<Object>( this, p, content );
-                this.properties.put( p, t );
+                this.content.put( p, t );
                 
                 t.init();
                 
@@ -459,7 +579,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                         if( t.equals( oldTransient ) )
                         {
                             t = oldTransient;
-                            this.properties.put( p, t );
+                            this.content.put( p, t );
                         }
                         else
                         {
@@ -512,7 +632,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
         {
             assertNotDisposed();
             
-            for( ModelProperty property : properties() )
+            for( PropertyInstance property : properties() )
             {
                 // The second disposed check is to catch the case where refreshing one property
                 // triggers a listener that causes this element to be disposed.
@@ -522,7 +642,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     break;
                 }
                 
-                refresh( property, force, deep );
+                property.refresh( force, deep );
             }
         }
     }
@@ -594,7 +714,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             if( prop instanceof ValueProperty )
             {
                 final ValueProperty p = (ValueProperty) prop;
-                Value<?> value = (Value<?>) this.properties.get( p );
+                Value<?> value = (Value<?>) this.content.get( p );
                 
                 if( value != null || force )
                 {
@@ -621,7 +741,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                         value = new Value<Object>( this, p, val );
                     }
                     
-                    this.properties.put( p, value );
+                    this.content.put( p, value );
                     
                     value.init();
                     
@@ -636,7 +756,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                             if( value.equals( oldValue ) )
                             {
                                 value = oldValue;
-                                this.properties.put( p, value );
+                                this.content.put( p, value );
                             }
                             else
                             {
@@ -664,14 +784,14 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             else if( prop instanceof ElementProperty )
             {
                 final ElementProperty p = (ElementProperty) prop;
-                ModelElementHandle<?> handle = (ModelElementHandle<?>) this.properties.get( p );
+                ModelElementHandle<?> handle = (ModelElementHandle<?>) this.content.get( p );
                 
                 if( handle == null )
                 {
                     if( force )
                     {
                         handle = new ModelElementHandle<IModelElement>( this, p );
-                        this.properties.put( p, handle );
+                        this.content.put( p, handle );
                         
                         handle.init();
                         
@@ -686,14 +806,14 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             else if( prop instanceof ListProperty )
             {
                 final ListProperty p = (ListProperty) prop;
-                ModelElementList<?> list = (ModelElementList<?>) this.properties.get( p );
+                ModelElementList<?> list = (ModelElementList<?>) this.content.get( p );
                 
                 if( list == null )
                 {
                     if( force )
                     {
                         list = new ModelElementList<IModelElement>( this, p );
-                        this.properties.put( p, list );
+                        this.content.put( p, list );
                         
                         list.init( resource().binding( p ) );
                         
@@ -707,7 +827,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             }
             else if( prop instanceof TransientProperty )
             {
-                Transient<?> t = (Transient<?>) this.properties.get( prop );
+                Transient<?> t = (Transient<?>) this.content.get( prop );
                 
                 if( t == null )
                 {
@@ -752,9 +872,9 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
     {
         assertNotDisposed();
         
-        for( ModelProperty property : properties() )
+        for( PropertyInstance property : properties() )
         {
-            clear( property );
+            property.clear();
         }
     }
 
@@ -786,7 +906,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
 
-        if( ! prop.isReadOnly() && this.properties.containsKey( prop ) )
+        if( ! prop.isReadOnly() && this.content.containsKey( prop ) )
         {
             if( prop instanceof ValueProperty || prop instanceof TransientProperty )
             {
@@ -816,9 +936,9 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
 
-        for( ModelProperty property : element.properties() )
+        for( PropertyInstance property : element.properties() )
         {
-            copy( element, property );
+            copy( element, property.property() );
         }
     }
 
@@ -1732,7 +1852,7 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                     context.dispose();
                 }
                 
-                for( Object data : this.properties.values() )
+                for( Object data : this.content.values() )
                 {
                     if( data instanceof ModelElementHandle )
                     {

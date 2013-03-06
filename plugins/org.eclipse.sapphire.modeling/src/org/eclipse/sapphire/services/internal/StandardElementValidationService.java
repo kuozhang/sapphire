@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
@@ -56,11 +56,11 @@ public final class StandardElementValidationService extends ValidationService
         final IModelElement element = context( IModelElement.class );
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        for( ModelProperty property : element.properties() )
+        for( PropertyInstance property : element.properties() )
         {
-            if( element.enabled( property ) )
+            if( property.enabled() )
             {
-                factory.merge( element.validation( property ) );
+                factory.merge( property.validation() );
             }
         }
         

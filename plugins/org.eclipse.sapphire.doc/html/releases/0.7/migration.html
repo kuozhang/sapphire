@@ -378,7 +378,15 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <pre class="source-code"><code>List<font color="#888888">&lt;ModelProperty> properties = element.properties()</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>SortedSet<font color="#888888">&lt;ModelProperty> properties = element.properties()</font></code></pre>
+<pre class="source-code"><code>SortedSet<font color="#888888">&lt;ModelProperty> properties = element</font>.type()<font color="#888888">.properties()</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">ModelProperty property = element.property( "Name" )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">ModelProperty property = element</font>.type()<font color="#888888">.property( "Name" )</font></code></pre>
     </td>
   </tr>
 </table>

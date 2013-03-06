@@ -18,6 +18,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImpliedElementProperty;
@@ -107,8 +108,10 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
     {
         out.writeUTF( element.type().getQualifiedName() );
         
-        for( ModelProperty property : element.properties() )
+        for( PropertyInstance instance : element.properties() )
         {
+            final ModelProperty property = instance.property();
+            
             if( ! property.isReadOnly() )
             {
                 if( property instanceof ValueProperty )
@@ -193,37 +196,42 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         while( in.readByte() != 0 )
         {
             final String propertyName = in.readUTF();
-            final ModelProperty property = element.property( propertyName );
+            final PropertyInstance instance = element.property( propertyName );
 
-            if( property instanceof ValueProperty )
+            if( instance != null )
             {
-                final String value = in.readUTF();
-                element.write( property, value );
-            }
-            else if( property instanceof ImpliedElementProperty )
-            {
-                in.readUTF(); // qualified type name
-                final IModelElement child = element.read( (ImpliedElementProperty) property ).element();
-                nativeToJava( in, child );
-            }
-            else if( property instanceof ElementProperty )
-            {
-                final String qualifiedTypeName = in.readUTF();
-                final ModelElementType type = ModelElementType.read( this.classLoader, qualifiedTypeName );
-                final IModelElement child = element.read( (ElementProperty) property ).element( true, type );
-                nativeToJava( in, child );
-            }
-            else if( property instanceof ListProperty )
-            {
-                final ModelElementList<?> list = element.read( (ListProperty) property );
-                final int size = in.readInt();
+                final ModelProperty property = instance.property();
                 
-                for( int i = 0; i < size; i++ )
+                if( property instanceof ValueProperty )
+                {
+                    final String value = in.readUTF();
+                    element.write( property, value );
+                }
+                else if( property instanceof ImpliedElementProperty )
+                {
+                    in.readUTF(); // qualified type name
+                    final IModelElement child = element.read( (ImpliedElementProperty) property ).element();
+                    nativeToJava( in, child );
+                }
+                else if( property instanceof ElementProperty )
                 {
                     final String qualifiedTypeName = in.readUTF();
                     final ModelElementType type = ModelElementType.read( this.classLoader, qualifiedTypeName );
-                    final IModelElement child = list.insert( type );
+                    final IModelElement child = element.read( (ElementProperty) property ).element( true, type );
                     nativeToJava( in, child );
+                }
+                else if( property instanceof ListProperty )
+                {
+                    final ModelElementList<?> list = element.read( (ListProperty) property );
+                    final int size = in.readInt();
+                    
+                    for( int i = 0; i < size; i++ )
+                    {
+                        final String qualifiedTypeName = in.readUTF();
+                        final ModelElementType type = ModelElementType.read( this.classLoader, qualifiedTypeName );
+                        final IModelElement child = list.insert( type );
+                        nativeToJava( in, child );
+                    }
                 }
             }
         }

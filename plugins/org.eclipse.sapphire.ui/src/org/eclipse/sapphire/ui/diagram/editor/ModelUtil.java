@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -86,10 +87,10 @@ public class ModelUtil
             if (head instanceof ModelPath.PropertySegment)
             {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
-                final ModelProperty property = modelElement.property(propertyName);
-                if (property instanceof ListProperty)
+                final PropertyInstance property = modelElement.property(propertyName);
+                if (property != null && property.property() instanceof ListProperty)
                 {
-                    ModelElementType type = ((ListProperty)property).getType();
+                    ModelElementType type = ((ListProperty)property.property()).getType();
                     return resolve(type, path.tail());
                 }
                 else

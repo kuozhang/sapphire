@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.services.Service;
 
 /**
@@ -31,8 +32,45 @@ public interface IModelElement extends IModelParticle
     
     <T extends IModelElement> T initialize();
     
-    <T extends ModelProperty> T property( String name );
-    SortedSet<ModelProperty> properties();
+    /**
+     * Returns all properties of this element.
+     * 
+     * @return all properties of this element
+     */
+    
+    SortedSet<PropertyInstance> properties();
+    
+    /**
+     * Returns the property specified by the given path. Only property name path segments are supported.
+     * Using other segments, such as a parent navigation or a type filter, will result in an exception.
+     * 
+     * @param path the path specifying the property
+     * @return the property or null if not found
+     * @throws IllegalArgumentException if path is null or if path uses unsupported path segments
+     */
+    
+    PropertyInstance property( String path );
+    
+    /**
+     * Returns the property specified by the given path. Only property name path segments are supported.
+     * Using other segments, such as a parent navigation or a type filter, will result in an exception.
+     * 
+     * @param path the path specifying the property
+     * @return the property or null if not found
+     * @throws IllegalArgumentException if path is null or if path uses unsupported path segments
+     */
+    
+    PropertyInstance property( ModelPath path );
+    
+    /**
+     * Returns the property instance for the given property.
+     * 
+     * @param property the property
+     * @return the property instance
+     * @throws IllegalArgumentException if property is null or does not belong to this element's type
+     */
+    
+    PropertyInstance property( ModelProperty property );
     
     Object read( ModelProperty property );
     Object read( String property );

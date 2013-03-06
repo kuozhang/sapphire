@@ -33,15 +33,9 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.ConditionalPart;
 import org.eclipse.sapphire.ui.FormPart;
@@ -77,39 +71,14 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     {
         final SapphirePart part = (SapphirePart) getPart();
 
-        final Set<PropertyRef> properties = new LinkedHashSet<PropertyRef>();
+        final Set<PropertyInstance> properties = new LinkedHashSet<PropertyInstance>();
         collectProperties( part, properties );
 
-        for( Iterator<PropertyRef> itr = properties.iterator(); itr.hasNext(); )
+        for( Iterator<PropertyInstance> itr = properties.iterator(); itr.hasNext(); )
         {
-            final PropertyRef pref = itr.next();
-            
-            if( pref.property instanceof ValueProperty )
+            if( itr.next().empty() )
             {
-                final Value<?> value = pref.modelElement.read( (ValueProperty) pref.property );
-
-                if( value.isDefault() )
-                {
-                    itr.remove();
-                }
-            }
-            else if( pref.property instanceof ListProperty )
-            {
-                final ModelElementList<?> list = pref.modelElement.read( (ListProperty) pref.property );
-                
-                if( list.isEmpty() )
-                {
-                    itr.remove();
-                }
-            }
-            else
-            {
-                final ModelElementHandle<?> child = pref.modelElement.read( (ElementProperty) pref.property );
-                
-                if( ! child.removable() || child.element() == null )
-                {
-                    itr.remove();
-                }
+                itr.remove();
             }
         }
         
@@ -119,11 +88,11 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         }
         else
         {
-            final Set<PropertyRef> selectedProperties = PromptDialog.open( context.getShell(), properties );
+            final Set<PropertyInstance> selectedProperties = PromptDialog.open( context.getShell(), properties );
             
-            for( PropertyRef pref : selectedProperties )
+            for( PropertyInstance property : selectedProperties )
             {
-                pref.modelElement.clear( pref.property );
+                property.clear();
             }
         }
         
@@ -131,7 +100,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     }
     
     public static void collectProperties( final SapphirePart part,
-                                          final Set<PropertyRef> result )
+                                          final Set<PropertyInstance> result )
     {
         if( part.visible() )
         {
@@ -145,7 +114,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             else if( part instanceof WithPart )
             {
                 final WithPart w = ( (WithPart) part );
-                result.add( new PropertyRef( w.getLocalModelElement(), w.getProperty() ) );
+                result.add( w.getLocalModelElement().property( w.getProperty() ) );
             }
             else if( part instanceof SapphireEnumControlledPageBook )
             {
@@ -159,7 +128,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             else if( part instanceof PropertyEditorPart )
             {
                 final PropertyEditorPart editor = (PropertyEditorPart) part;
-                result.add( new PropertyRef( editor.getLocalModelElement(), editor.getProperty() ) );
+                result.add( editor.getLocalModelElement().property( editor.getProperty() ) );
                 
                 for( SapphirePart related : editor.getRelatedContent() )
                 {
@@ -178,47 +147,13 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         }
     }
     
-    public static final class PropertyRef
+    private static final class PromptDialog extends Dialog
     {
-        public final IModelElement modelElement;
-        public final ModelProperty property;
+        private final Set<PropertyInstance> allProperties;
+        private final Set<PropertyInstance> selectedProperties;
         
-        public PropertyRef( final IModelElement modelElement,
-                            final ModelProperty property )
-        {
-            this.modelElement = modelElement;
-            this.property = property;
-        }
-
-        @Override
-        public boolean equals( final Object obj )
-        {
-            if( obj instanceof PropertyRef )
-            {
-                final PropertyRef ref = (PropertyRef) obj;
-                return ( this.modelElement == ref.modelElement && this.property == ref.property );
-            }
-            
-            return false;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return this.modelElement.hashCode() ^ this.property.hashCode();
-        }
-    }
-    
-    private static final class PromptDialog
-    
-        extends Dialog
-        
-    {
-        private final Set<PropertyRef> allProperties;
-        private final Set<PropertyRef> selectedProperties;
-        
-        private static Set<PropertyRef> open( final Shell shell,
-                                              final Set<PropertyRef> properties )
+        private static Set<PropertyInstance> open( final Shell shell,
+                                                   final Set<PropertyInstance> properties )
         {
             final PromptDialog dialog = new PromptDialog( shell, properties );
             
@@ -233,12 +168,12 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         }
         
         private PromptDialog( final Shell shell,
-                              final Set<PropertyRef> properties )
+                              final Set<PropertyInstance> properties )
         {
             super( shell );
             
             this.allProperties = properties;
-            this.selectedProperties = new HashSet<PropertyRef>( this.allProperties );
+            this.selectedProperties = new HashSet<PropertyInstance>( this.allProperties );
         }
         
         @Override
@@ -291,7 +226,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
                     public String getColumnText( final Object element,
                                                  final int columnIndex )
                     {
-                        final ModelProperty property = ( (PropertyRef) element ).property;
+                        final ModelProperty property = ( (PropertyInstance) element ).property();
                         return property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
                     }
 
@@ -343,7 +278,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
                 {
                     public void checkStateChanged( final CheckStateChangedEvent event )
                     {
-                        final PropertyRef property = (PropertyRef) event.getElement();
+                        final PropertyInstance property = (PropertyInstance) event.getElement();
                         
                         if( event.getChecked() == true )
                         {
@@ -363,10 +298,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         }
     }
     
-    private static final class Resources 
-    
-        extends NLS
-        
+    private static final class Resources extends NLS
     {
         public static String dialogTitle;
         public static String dialogMessage;

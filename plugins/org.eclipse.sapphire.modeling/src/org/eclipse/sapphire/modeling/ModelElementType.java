@@ -46,6 +46,14 @@ import org.eclipse.sapphire.util.SortedSetFactory;
 
 public final class ModelElementType extends ModelMetadataItem
 {
+    private static final Comparator<ModelProperty> PROPERTY_COMPARATOR = new Comparator<ModelProperty>()
+    {
+        public int compare( final ModelProperty x, final ModelProperty y )
+        {
+            return x.getName().compareToIgnoreCase( y.getName() );
+        }
+    };
+
     private final Class<?> typeClass;
     private Class<?> implClass = null;
     private Constructor<?> implClassConstructor = null;
@@ -232,16 +240,7 @@ public final class ModelElementType extends ModelMetadataItem
     {
         if( this.properties == null )
         {
-            final SortedSetFactory<ModelProperty> propertiesSetFactory = SortedSetFactory.start
-            (
-                new Comparator<ModelProperty>()
-                {
-                    public int compare( final ModelProperty x, final ModelProperty y )
-                    {
-                        return x.getName().compareToIgnoreCase( y.getName() );
-                    }
-                }
-            );
+            final SortedSetFactory<ModelProperty> propertiesSetFactory = SortedSetFactory.start( PROPERTY_COMPARATOR );
             
             for( Field field : this.typeClass.getDeclaredFields() )
             {
@@ -322,7 +321,7 @@ public final class ModelElementType extends ModelMetadataItem
             throw new IllegalArgumentException();
         }
         
-        properties(); // TODO: Remove when properties are initialized in the constructor.
+        properties(); // Ensure that properties are initialized.
         
         final ModelPath.Segment head = path.head();
         
@@ -345,13 +344,13 @@ public final class ModelElementType extends ModelMetadataItem
                     }
                 }
             }
+            
+            return null;
         }
         else
         {
             throw new IllegalArgumentException( path.toString() );
         }
-
-        return null;
     }
     
     @Override

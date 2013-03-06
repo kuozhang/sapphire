@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
@@ -115,8 +116,10 @@ public final class StringResourcesExtractor
     private static void gather( final IModelElement element,
                                 final Set<String> strings )
     {
-        for( ModelProperty property : element.properties() )
+        for( PropertyInstance instance : element.properties() )
         {
+            final ModelProperty property = instance.property();
+            
             if( property instanceof ValueProperty )
             {
                 if( property.hasAnnotation( Localizable.class ) )
