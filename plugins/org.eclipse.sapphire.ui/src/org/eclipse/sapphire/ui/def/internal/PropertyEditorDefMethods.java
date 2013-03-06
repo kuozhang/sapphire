@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 
 /**
@@ -21,13 +21,11 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 public final class PropertyEditorDefMethods
 {
     public static PropertyEditorDef getChildPropertyEditor( final PropertyEditorDef propertyEditorDef,
-                                                            final ModelProperty property )
+                                                            final ModelPath property )
     {
-        final String propertyName = property.getName();
-        
         for( PropertyEditorDef childPropertyEditorDef : propertyEditorDef.getChildProperties() )
         {
-            if( propertyName.equals( childPropertyEditorDef.getProperty().getText() ) )
+            if( property.equals( new ModelPath( childPropertyEditorDef.getProperty().getText() ) ) )
             {
                 return childPropertyEditorDef;
             }

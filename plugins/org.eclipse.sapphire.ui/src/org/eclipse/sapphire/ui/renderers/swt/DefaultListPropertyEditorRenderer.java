@@ -71,15 +71,17 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.ElementEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.PropertyEvent;
@@ -259,16 +261,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         this.decorator.addEditorControl( mainComposite );
         
-        final List<ValueProperty> columnProperties = new ArrayList<ValueProperty>();
-        
-        for( ModelProperty childProperty : part.getChildProperties() )
-        {
-            if( childProperty instanceof ValueProperty )
-            {
-                columnProperties.add( (ValueProperty) childProperty );
-            }
-        }
-        
         // Setting the whint in the following code is a hacky workaround for the problem
         // tracked by the following JFace bug:
         //
@@ -391,15 +383,16 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         final String columnWidthsHint = part.getRenderingHint( PropertyEditorDef.HINT_COLUMN_WIDTHS, "" );
         final StringTokenizer columnWidthsHintTokenizer = new StringTokenizer( columnWidthsHint, "," );
         
-        for( final ValueProperty memberProperty : columnProperties )
+        for( final ModelPath childPropertyPath : part.getChildProperties() )
         {
-            final TableViewerColumn col2 = new TableViewerColumn( this.tableViewer, SWT.NONE );
-            final PropertyEditorDef childPropertyEditorDef = part.definition().getChildPropertyEditor( memberProperty );
+            final ModelProperty childProperty = property.getType().property( childPropertyPath );
+            final PropertyEditorDef childPropertyEditorDef = part.definition().getChildPropertyEditor( childPropertyPath );
+            final TableViewerColumn tableViewerColumn = new TableViewerColumn( this.tableViewer, SWT.NONE );
             
             if( childPropertyEditorDef == null )
             {
-                final String label = memberProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false );
-                col2.getColumn().setText( label );
+                final String label = childProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false );
+                tableViewerColumn.getColumn().setText( label );
             }
             else
             {
@@ -411,7 +404,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     {
                         String label = (String) labelFunctionResultRef.get().value();
                         label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
-                        col2.getColumn().setText( label );
+                        tableViewerColumn.getColumn().setText( label );
                     }
                 };
                 
@@ -419,7 +412,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 (
                     childPropertyEditorDef.getLabel().getContent(), 
                     String.class,
-                    Literal.create( memberProperty.getLabel( false, CapitalizationType.NO_CAPS, true ) ),
+                    Literal.create( childProperty.getLabel( false, CapitalizationType.NO_CAPS, true ) ),
                     updateLabelOp
                 );
                 
@@ -473,16 +466,16 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 columnWeightData = new ColumnWeightData( 1, 100, true );
             }
             
-            tableColumnLayout.setColumnData( col2.getColumn(), columnWeightData );
+            tableColumnLayout.setColumnData( tableViewerColumn.getColumn(), columnWeightData );
             
-            final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, memberProperty, showImages, childPropertyEditorDef );
+            final ColumnHandler columnHandler = createColumnHandler( this.columnHandlers, childPropertyPath, showImages, childPropertyEditorDef );
             
             showImages = false; // Only the first column should ever show the image.
             
-            col2.setLabelProvider( columnHandler.getLabelProvider() );
-            col2.setEditingSupport( columnHandler.getEditingSupport() );
+            tableViewerColumn.setLabelProvider( columnHandler.getLabelProvider() );
+            tableViewerColumn.setEditingSupport( columnHandler.getEditingSupport() );
             
-            final TableColumn tableColumn = col2.getColumn();
+            final TableColumn tableColumn = tableViewerColumn.getColumn();
             
             tableColumn.addSelectionListener
             (
@@ -1068,8 +1061,8 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                                               final int column )
                 {
                     final IModelElement element = ( (TableRow) item.getData() ).element();
-                    final ValueProperty property = columnProperties.get( column );
-                    final PropertyEditorPart propertyEditor = getPart().getChildPropertyEditor( element, property );
+                    final ModelPath property = part.getChildProperties().get( column );
+                    final PropertyEditorPart propertyEditor = part.getChildPropertyEditor( element, property );
                     final SapphireActionGroup actions = propertyEditor.getActions();
                     return actions.getAction( ACTION_JUMP ).getFirstActiveHandler();
                 }
@@ -1192,9 +1185,9 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     }
     
     @Override
-    protected void handleListElementChangedEvent( final Event event )
+    protected void handleChildPropertyEvent( final PropertyContentEvent event )
     {
-        super.handleListElementChangedEvent( event );
+        super.handleChildPropertyEvent( event );
         
         if( ! this.table.isDisposed() )
         {
@@ -1204,7 +1197,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 {
                     public void run()
                     {
-                        update( event instanceof ElementEvent ? ( (ElementEvent) event ).element() : ( (PropertyEvent) event ).element() );
+                        update( ( (PropertyEvent) event ).element() );
                     }
                 }
             );
@@ -1271,22 +1264,23 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     }
     
     private ColumnHandler createColumnHandler( final List<ColumnHandler> allColumnHandlers,
-                                               final ValueProperty property,
+                                               final ModelPath childPropertyPath,
                                                final boolean showImages,
                                                final PropertyEditorDef childPropertyEditorDef )
     {
+        final ModelProperty childProperty = getProperty().getType().property( childPropertyPath );
         final ColumnHandler columnHandler;
         
-        if( property.isOfType( Boolean.class ) )
+        if( childProperty.isOfType( Boolean.class ) )
         {
             columnHandler = new BooleanPropertyColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                                              allColumnHandlers, property, showImages );
+                                                              allColumnHandlers, childPropertyPath, showImages );
         }
         else
         {
             PopUpListFieldStyle popUpListFieldPresentationStyle = null;
             
-            if( property.isOfType( Enum.class ) )
+            if( childProperty.isOfType( Enum.class ) )
             {
                 popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
             }
@@ -1300,7 +1294,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     {
                         if( style.equals( "Sapphire.PropertyEditor.PopUpListField" ) )
                         {
-                            final PossibleValues possibleValuesAnnotation = property.getAnnotation( PossibleValues.class );
+                            final PossibleValues possibleValuesAnnotation = childProperty.getAnnotation( PossibleValues.class );
                             
                             if( possibleValuesAnnotation != null )
                             {
@@ -1328,12 +1322,12 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             if( popUpListFieldPresentationStyle != null )
             {
                 columnHandler = new PopUpListFieldColumnPresentation( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                                                      allColumnHandlers, property, showImages, popUpListFieldPresentationStyle );
+                                                                      allColumnHandlers, childPropertyPath, showImages, popUpListFieldPresentationStyle );
             }
             else
             {
                 columnHandler = new ColumnHandler( this.context, this.tableViewer, this.selectionProvider, getPart(), 
-                                                   allColumnHandlers, property, showImages );
+                                                   allColumnHandlers, childPropertyPath, showImages );
             }
         }
         
@@ -1359,7 +1353,32 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             throw new IllegalArgumentException();
         }
         
-        final TableRow row = this.rows.get( element );
+        final IModelElement root = getPart().getLocalModelElement();
+        
+        IModelElement el = element;
+        TableRow row = null;
+        
+        while( row == null && el != null && el != root )
+        {
+            row = this.rows.get( el );
+            
+            if( row == null )
+            {
+                final IModelParticle parent = el.parent();
+                
+                if( parent != null )
+                {
+                    if( parent instanceof ModelElementList )
+                    {
+                        el = (IModelElement) parent.parent();
+                    }
+                    else
+                    {
+                        el = (IModelElement) parent;
+                    }
+                }
+            }
+        }
         
         if( row != null )
         {
@@ -1396,26 +1415,25 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     private class DefaultColumnLabelProvider extends ColumnLabelProvider
     {
         private final ColumnHandler columnHandler;
-        private final ValueProperty property;
         
         public DefaultColumnLabelProvider( final ColumnHandler columnHandler )
         {
             this.columnHandler = columnHandler;
-            this.property = columnHandler.getProperty();
         }
     
         @Override
         public String getText( final Object obj )
         {
             final IModelElement element = ( (TableRow) obj ).element();
-            final Value<?> value = this.columnHandler.getPropertyValue( element );
+            final PropertyInstance property = this.columnHandler.property( element );
+            final Value<?> value = property.read();
             
             final String text = value.getText();
             String label = null;
             
             try
             {
-                label = element.service( this.property, ValueLabelService.class ).provide( text );
+                label = property.service( ValueLabelService.class ).provide( text );
             }
             catch( Exception e )
             {
@@ -1459,13 +1477,14 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 if( image == null )
                 {
                     final IModelElement element = row.element();
-                    final Value<?> value = this.columnHandler.getPropertyValue( element );
+                    final PropertyInstance property = this.columnHandler.property( element );
+                    final Value<?> value = property.read();
                     
                     ImageData imageData = null;
                     
                     try
                     {
-                        imageData = element.service( this.property, ValueImageService.class ).provide( value.getText() );
+                        imageData = property.service( ValueImageService.class ).provide( value.getText() );
                     }
                     catch( Exception e )
                     {
@@ -1489,7 +1508,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         @Override
         public Color getForeground( final Object obj )
         {
-            final Value<?> value = ( (TableRow) obj ).element().read( this.columnHandler.getProperty() );
+            final Value<?> value = this.columnHandler.read( ( (TableRow) obj ).element() );
             
             if( value.getText( false ) == null )
             {
@@ -1517,14 +1536,12 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public boolean canEdit( final Object obj )
         {
             final IModelElement element = ( (TableRow) obj ).element();
-            final ValueProperty property = this.columnHandler.getProperty();
             
             boolean canEdit;
             
-            if( element.enabled( property ) )
+            if( this.columnHandler.property( element ).enabled() )
             {
-                final PropertyEditorPart propertyEditor = this.columnHandler.getListPropertyEditor().getChildPropertyEditor( element, property );
-                canEdit = ( ! propertyEditor.isReadOnly() );
+                canEdit = ! this.columnHandler.editor( element ).isReadOnly();
             }
             else
             {
@@ -1547,7 +1564,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         protected final SelectionProvider selectionProvider;
         protected final PropertyEditorPart listPropertyEditor;
         protected final List<ColumnHandler> allColumnHandlers;
-        protected final ValueProperty property;
+        protected final ModelPath property;
         protected final boolean showElementImage;
         protected final Collator collator;
         private CellLabelProvider labelProvider;
@@ -1558,7 +1575,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                               final SelectionProvider selectionProvider,
                               final PropertyEditorPart listPropertyEditor,
                               final List<ColumnHandler> allColumnHandlers,
-                              final ValueProperty property,
+                              final ModelPath property,
                               final boolean showElementImage )
         {
             this.context = context;
@@ -1607,20 +1624,29 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             return this.showElementImage;
         }
         
-        public final ValueProperty getProperty()
+        public final ModelPath property()
         {
             return this.property;
         }
         
-        public final Value<?> getPropertyValue( final IModelElement element )
+        public final PropertyInstance property( final IModelElement element )
         {
-            return element.read( this.property );
+            return element.property( this.property );
         }
         
-        public final void setPropertyValue( final IModelElement element,
-                                            final String value )
+        public final Value<?> read( final IModelElement element )
         {
-            element.write( this.property, value );
+            return property( element ).read();
+        }
+        
+        public final void write( final IModelElement element, final String value )
+        {
+            property( element ).write( value );
+        }
+        
+        public final PropertyEditorPart editor( final IModelElement element )
+        {
+            return getListPropertyEditor().getChildPropertyEditor( element, property() );
         }
         
         public final CellLabelProvider getLabelProvider()
@@ -1640,7 +1666,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         public final AbstractColumnEditingSupport getEditingSupport()
         {
-            if( this.editingSupport == null && ! this.property.isReadOnly() )
+            if( this.editingSupport == null && ! getProperty().getType().property( property() ).isReadOnly() )
             {
                 this.editingSupport = createEditingSupport();
             }
@@ -1662,16 +1688,21 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                         this.cellEditor.dispose();
                     }
                     
-                    final IModelElement element = ( (TableRow) obj ).element();
-                    final ValueProperty property = ColumnHandler.this.property;
-                    final PropertyEditorPart propertyEditor = getListPropertyEditor().getChildPropertyEditor( element, property );
+                    final PropertyEditorPart propertyEditor = editor( ( (TableRow) obj ).element() );
                     final SapphireActionGroup actions = propertyEditor.getActions();
 
                     final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER );
                     
-                    this.cellEditor 
-                        = new SapphireTextCellEditor( getContext(), getTableViewer(), getSelectionProvider(), 
-                                                      element, getProperty(), actions, style );
+                    this.cellEditor = new SapphireTextCellEditor
+                    (
+                        getContext(),
+                        getTableViewer(),
+                        getSelectionProvider(),
+                        propertyEditor.getLocalModelElement(),
+                        (ValueProperty) propertyEditor.getProperty(),
+                        actions,
+                        style
+                    );
 
                     if( isElementImageDesired() )
                     {
@@ -1684,14 +1715,14 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 @Override
                 public Object getValue( final Object obj )
                 {
-                    return getPropertyValue( ( (TableRow) obj ).element() );
+                    return read( ( (TableRow) obj ).element() );
                 }
     
                 @Override
                 public void setValue( final Object obj,
                                       final Object value )
                 {
-                    setPropertyValue( ( (TableRow) obj ).element(), (String) value );
+                    write( ( (TableRow) obj ).element(), (String) value );
                 }
             };
         }
@@ -1706,8 +1737,8 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public int comparePropertyValues( final IModelElement x,
                                           final IModelElement y )
         {
-            final String a = getPropertyValue( x ).getText();
-            final String b = getPropertyValue( y ).getText();
+            final String a = read( x ).getText();
+            final String b = read( y ).getText();
             
             final boolean aEmpty = ( a == null || a.trim().length() == 0 );
             final boolean bEmpty = ( b == null || b.trim().length() == 0 );
@@ -1744,7 +1775,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 
                 for( ColumnHandler handler : this.allColumnHandlers )
                 {
-                    if( handler.getPropertyValue( element ).getText() != null )
+                    if( handler.read( element ).getText() != null )
                     {
                         return false;
                     }
@@ -1766,7 +1797,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                                  final SelectionProvider selectionProvider,
                                                  final PropertyEditorPart listPropertyEditor,
                                                  final List<ColumnHandler> allColumnHandlers,
-                                                 final ValueProperty property,
+                                                 final ModelPath property,
                                                  final boolean showElementImage,
                                                  final PopUpListFieldStyle popUpListFieldStyle )
         {
@@ -1790,8 +1821,17 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                         this.cellEditor.dispose();
                     }
                     
-                    final int style = ( getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER );
-                    this.cellEditor = new PopUpListFieldCellEditorPresentation( getTableViewer(), getSelectionProvider(), ( (TableRow) obj ).element(), getProperty(), PopUpListFieldColumnPresentation.this.popUpListFieldStyle, style );
+                    final PropertyEditorPart propertyEditor = editor( ( (TableRow) obj ).element() );
+                    
+                    this.cellEditor = new PopUpListFieldCellEditorPresentation
+                    (
+                        getTableViewer(),
+                        getSelectionProvider(),
+                        propertyEditor.getLocalModelElement(),
+                        (ValueProperty) propertyEditor.getProperty(),
+                        PopUpListFieldColumnPresentation.this.popUpListFieldStyle,
+                        getTable().getLinesVisible() ? SWT.NONE : SWT.BORDER
+                    );
                     
                     return this.cellEditor;
                 }
@@ -1799,35 +1839,18 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 @Override
                 public Object getValue( final Object obj )
                 {
-                    return getPropertyValue( ( (TableRow) obj ).element() );
+                    return read( ( (TableRow) obj ).element() );
                 }
     
                 @Override
                 public void setValue( final Object obj,
                                       final Object value )
                 {
-                    setPropertyValue( ( (TableRow) obj ).element(), (String) value );
+                    write( ( (TableRow) obj ).element(), (String) value );
                 }
             };
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     private static final ImageDescriptor IMG_CHECKBOX_ON
         = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOn.gif" );
@@ -1845,7 +1868,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                              final SelectionProvider selectionProvider,
                                              final PropertyEditorPart listPropertyEditor,
                                              final List<ColumnHandler> allColumnHandlers,
-                                             final ValueProperty property,
+                                             final ModelPath property,
                                              final boolean showElementImage )
         {
             super( context, tableViewer, selectionProvider, listPropertyEditor, allColumnHandlers, property, showElementImage );
@@ -1876,8 +1899,8 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 {
                     final TableItem item = (TableItem) event.item;
                     final IModelElement element = ( (TableRow) item.getData() ).element();
-                    
-                    if( element.enabled( getProperty() ) )
+
+                    if( property( element ).enabled() )
                     {
                         final boolean value = getPropertyValueAsBoolean( element );
                         
@@ -1916,7 +1939,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 
                 public Object getValue( final Object obj )
                 {
-                    final Value<Boolean> value = (Value<Boolean>) getPropertyValue( ( (TableRow) obj ).element() );
+                    final Value<Boolean> value = (Value<Boolean>) read( ( (TableRow) obj ).element() );
                     final Boolean val = value.getContent();
                     return ( val != null ? val : Boolean.FALSE );
                 }
@@ -1926,7 +1949,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                       final Object value )
                 {
                     final String str = String.valueOf( ( (Boolean) value ).booleanValue() );
-                    setPropertyValue( ( (TableRow) obj ).element(), str );
+                    write( ( (TableRow) obj ).element(), str );
                 }
             };
         }
@@ -1976,7 +1999,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         private boolean getPropertyValueAsBoolean( final IModelElement element )
         {
-            final Value<Boolean> value = (Value<Boolean>) getPropertyValue( element );
+            final Value<Boolean> value = (Value<Boolean>) read( element );
             final Boolean val = value.getContent();
             return ( val != null && val.booleanValue() == true );
         }

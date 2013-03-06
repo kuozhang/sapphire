@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.def;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
@@ -91,7 +91,7 @@ public interface PropertyEditorDef extends FormComponentDef
     
     @DelegateImplementation( PropertyEditorDefMethods.class )
     
-    PropertyEditorDef getChildPropertyEditor( ModelProperty property );
+    PropertyEditorDef getChildPropertyEditor( ModelPath property );
     
     // *** RelatedContent ***
     

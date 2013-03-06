@@ -154,5 +154,14 @@ public interface ListPropertiesGallery extends IModelElement
     ListProperty PROP_MULTI_SELECT_ENUM = new ListProperty( TYPE, "MultiSelectEnum" );
     
     ModelElementList<MultiSelectEnumItem> getMultiSelectEnum();
+    
+    // *** NestedPropertiesInListGallery ***
+    
+    @Type( base = NestedPropertiesInListGallery.class )
+    @Label( standard = "nested properties in list gallery" )
+    
+    ImpliedElementProperty PROP_NESTED_PROPERTIES_IN_LIST_GALLERY = new ImpliedElementProperty( TYPE, "NestedPropertiesInListGallery" );
+    
+    NestedPropertiesInListGallery getNestedPropertiesInListGallery();
 
 }

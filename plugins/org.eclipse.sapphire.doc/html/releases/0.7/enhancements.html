@@ -53,6 +53,7 @@
   <ol type="A">
     <li><a href="#Forms-SectionReference">Section Reference</a></li>
     <li><a href="#Forms-ColorBrowsing">Color Browsing</a></li>
+    <li><a href="#Forms-NestedPropertiesInListPropertyEditor">Nested Properties in List Property Editor</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
@@ -851,6 +852,115 @@ void setColor(</font> Color <font color="#888888">value );
 </font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/ColorBrowsing.png"/></p>
+
+
+<h2><a name="Forms-NestedPropertiesInListPropertyEditor">Nested Properties in List Property Editor</a></h2>
+
+<p>Previously, only directly contained value properties could be edited by the list property editor. Now, nested
+value properties, accessible through one or more implied element property can be edited as well. This reduces the
+need to flatten the model or use workarounds, such as the page book details approach.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>// *** Employees ***
+
+interface Employee extends IModelElement
+{
+    ModelElementType TYPE = new ModelElementType( Employee.class );
+
+    // *** Name ***
+
+    interface Name extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( Name.class );
+
+        // *** First ***
+
+        ValueProperty PROP_FIRST_NAME = new ValueProperty( TYPE, "First" );
+
+        Value&lt;String> getFirst();
+        void setFirst( String value );
+
+        // *** Last ***
+
+        ValueProperty PROP_LAST_NAME = new ValueProperty( TYPE, "Last" );
+
+        Value&lt;String> getLast();
+        void setLast( String value );
+    }
+
+    @Type( base = Name.class )
+
+    ImpliedElementProperty PROP_NAME = new ImpliedElementProperty( TYPE, "Name" );
+
+    Name getName();
+
+    // *** Location ***
+        
+    interface Location extends IModelElement
+    {
+        ModelElementType TYPE = new ModelElementType( Location.class );
+
+        // *** City ***
+
+        ValueProperty PROP_CITY = new ValueProperty( TYPE, "City" );
+
+        Value&lt;String> getCity();
+        void setCity( String value );
+
+        // *** Country ***
+
+        ValueProperty PROP_COUNTRY = new ValueProperty( TYPE, "Country" );
+
+        Value&lt;String> getCountry();
+        void setCountry( String value );
+    }
+
+    @Type( base = Location.class )
+
+    ImpliedElementProperty PROP_LOCATION = new ImpliedElementProperty( TYPE, "Location" );
+
+    Location getLocation();
+
+    // *** Salary ***
+
+    @Type( base = BigDecimal.class )
+
+    ValueProperty PROP_SALARY = new ValueProperty( TYPE, "Salary" );
+
+    Value&lt;BigDecimal> getSalary();
+    void setSalary( String value );
+    void setSalary( BigDecimal value );
+}
+    
+@Type( base = Employee.class )
+
+ListProperty PROP_EMPLOYEES = new ListProperty( TYPE, "Employees" );
+
+ModelElementList&lt;Employee> getEmployees();</code></pre>
+
+<pre class="source-code"><code>&lt;property-editor>
+    &lt;property>Employees&lt;/property>
+    &lt;child-property>Name/First&lt;/child-property>
+    &lt;child-property>Name/Last&lt;/child-property>
+    &lt;child-property>Location/City&lt;/child-property>
+    &lt;child-property>Location/Country&lt;/child-property>
+    &lt;child-property>Salary&lt;/child-property>
+&lt;/property-editor></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/NestedPropertiesInListPropertyEditor.png"/></p>
+
+<pre class="source-code"><code>&lt;Employee>
+    &lt;Name>
+        &lt;First>John&lt;/First>
+        &lt;Last>Smith&lt;/Last>
+    &lt;/Name>
+    &lt;Location>
+        &lt;City>Seattle&lt;/City>
+        &lt;Country>USA&lt;/Country>
+    &lt;/Location>
+    &lt;Salary>100000&lt;/Salary>
+&lt;/Employee></code></pre>
 
 
 <h2><a name="Miscellaneous"><a name="Miscellaneous-JavaIdentifier">JavaIdentifier</a></a></h2>

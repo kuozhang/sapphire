@@ -1132,6 +1132,24 @@
                         </content>
                     </section>
                 </node>
+                <node>
+                    <label>nested properties</label>
+                    <property>NestedPropertiesInListGallery</property>
+                    <section>
+                        <content>
+                            <property-editor>
+                                <span>true</span>
+                                <property>Employees</property>
+                                <show-label>false</show-label>
+                                <child-property>Name/First</child-property>
+                                <child-property>Name/Last</child-property>
+                                <child-property>Location/City</child-property>
+                                <child-property>Location/Country</child-property>
+                                <child-property>Salary</child-property>
+                            </property-editor>
+                        </content>
+                    </section>
+                </node>
             </node>
             <node>
                 <label>enablement</label>

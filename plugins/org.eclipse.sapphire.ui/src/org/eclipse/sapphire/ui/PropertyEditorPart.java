@@ -21,11 +21,12 @@ import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyInstance;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ElementProperty;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementHandle;
 import org.eclipse.sapphire.modeling.ModelElementList;
@@ -92,9 +93,8 @@ public final class PropertyEditorPart extends FormComponentPart
     
     private IModelElement element;
     private ModelProperty property;
-    private List<ModelProperty> childProperties;
-    private List<ModelProperty> childPropertiesReadOnly;
-    private Map<IModelElement,Map<ModelProperty,PropertyEditorPart>> childPropertyEditors;
+    private List<ModelPath> childProperties;
+    private Map<IModelElement,Map<ModelPath,PropertyEditorPart>> childPropertyEditors;
     private Map<String,Object> hints;
     private List<SapphirePart> relatedContentParts;
     private Listener listener;
@@ -109,49 +109,15 @@ public final class PropertyEditorPart extends FormComponentPart
         final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final PropertyEditorDef propertyEditorPartDef = (PropertyEditorDef) this.definition;
         
-        final String pathString = propertyEditorPartDef.getProperty().getContent();
-        final ModelPath path = new ModelPath( pathString );
+        final PropertyInstance instance = getModelElement().property( new ModelPath( propertyEditorPartDef.getProperty().getText() ) );
         
-        this.element = getModelElement();
-        
-        for( int i = 0, n = path.length(); i < n; i++ )
+        if( instance == null )
         {
-            final ModelPath.Segment segment = path.segment( i );
-            
-            if( segment instanceof ModelPath.ModelRootSegment )
-            {
-                this.element = (IModelElement) this.element.root();
-            }
-            else if( segment instanceof ModelPath.ParentElementSegment )
-            {
-                IModelParticle parent = this.element.parent();
-                
-                if( ! ( parent instanceof IModelElement ) )
-                {
-                    parent = parent.parent();
-                }
-                
-                this.element = (IModelElement) parent;
-            }
-            else if( segment instanceof ModelPath.PropertySegment )
-            {
-                this.property = resolve( this.element, ( (ModelPath.PropertySegment) segment ).getPropertyName() );
-                
-                if( i + 1 != n )
-                {
-                    throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
-                }
-            }
-            else
-            {
-                throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
-            }
+            throw new RuntimeException( NLS.bind( Resources.invalidPath, propertyEditorPartDef.getProperty().getText() ) );
         }
         
-        if( this.property == null )
-        {
-            throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
-        }
+        this.element = instance.element();
+        this.property = instance.property();
         
         // Read the property to ensure that initial events are broadcast and avoid being surprised
         // by them later.
@@ -190,10 +156,7 @@ public final class PropertyEditorPart extends FormComponentPart
         
         this.element.attach( this.listener, this.property );
         
-        this.childProperties = new ArrayList<ModelProperty>();
-        this.childPropertiesReadOnly = Collections.unmodifiableList( this.childProperties );
-        this.childPropertyEditors = new HashMap<IModelElement,Map<ModelProperty,PropertyEditorPart>>();
-        
+        final ListFactory<ModelPath> childPropertiesListFactory = ListFactory.start();
         final ModelElementType type = this.property.getType();
         
         if( type != null )
@@ -202,27 +165,80 @@ public final class PropertyEditorPart extends FormComponentPart
             {
                 for( ModelProperty childProperty : type.properties() )
                 {
-                    this.childProperties.add( childProperty );
+                    if( childProperty instanceof ValueProperty )
+                    {
+                        childPropertiesListFactory.add( new ModelPath( childProperty.getName() ) );
+                    }
                 }
             }
             else
             {
                 for( PropertyEditorDef childPropertyEditor : propertyEditorPartDef.getChildProperties() )
                 {
-                    final String childPropertyName = childPropertyEditor.getProperty().getContent();
-                    final ModelProperty childProperty = type.property( childPropertyName );
+                    final ModelPath childPropertyPath = new ModelPath( childPropertyEditor.getProperty().getContent() );
+                    boolean invalid = false;
                     
-                    if( childProperty == null )
+                    if( childPropertyPath.length() == 0 )
                     {
-                        SapphireUiFrameworkPlugin.logError( "Could not resolve property: " + childPropertyName );
+                        invalid = true;
                     }
                     else
                     {
-                        this.childProperties.add( childProperty );
+                        ModelElementType t = type;
+                        
+                        for( int i = 0, n = childPropertyPath.length(); i < n && ! invalid; i++ )
+                        {
+                            final ModelPath.Segment segment = childPropertyPath.segment( i );
+                            
+                            if( segment instanceof ModelPath.PropertySegment )
+                            {
+                                final ModelProperty p = t.property( ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+                                
+                                if( p instanceof ValueProperty )
+                                {
+                                    if( i + 1 != n )
+                                    {
+                                        invalid = true;
+                                    }
+                                }
+                                else if( p instanceof ImpliedElementProperty )
+                                {
+                                    if( i + 1 == n )
+                                    {
+                                        invalid = true;
+                                    }
+                                    else
+                                    {
+                                        t = p.getType();
+                                    }
+                                }
+                                else
+                                {
+                                    invalid = true;
+                                }
+                            }
+                            else
+                            {
+                                invalid = true;
+                            }
+                        }
+                    }
+                    
+                    if( invalid )
+                    {
+                        final String msg = NLS.bind( Resources.invalidChildPropertyPath, this.property.getName(), childPropertyPath.toString() );
+                        SapphireUiFrameworkPlugin.logError( msg );
+                    }
+                    else
+                    {
+                        childPropertiesListFactory.add( childPropertyPath );
                     }
                 }
             }
         }
+        
+        this.childProperties = childPropertiesListFactory.result();
+        this.childPropertyEditors = new HashMap<IModelElement,Map<ModelPath,PropertyEditorPart>>();
         
         this.hints = new HashMap<String,Object>();
         
@@ -329,22 +345,28 @@ public final class PropertyEditorPart extends FormComponentPart
         return this.property;
     }
     
-    public List<ModelProperty> getChildProperties()
+    public List<ModelPath> getChildProperties()
     {
-        return this.childPropertiesReadOnly;
+        return this.childProperties;
     }
     
     public PropertyEditorPart getChildPropertyEditor( final IModelElement element,
                                                       final ModelProperty property )
     {
-        Map<ModelProperty,PropertyEditorPart> propertyEditorsForElement = this.childPropertyEditors.get( element );
+        return getChildPropertyEditor( element, new ModelPath( property.getName() ) );
+    }
+    
+    public PropertyEditorPart getChildPropertyEditor( final IModelElement element,
+                                                      final ModelPath property )
+    {
+        Map<ModelPath,PropertyEditorPart> propertyEditorsForElement = this.childPropertyEditors.get( element );
         
         if( propertyEditorsForElement == null )
         {
-            propertyEditorsForElement = new HashMap<ModelProperty,PropertyEditorPart>();
+            propertyEditorsForElement = new HashMap<ModelPath,PropertyEditorPart>();
             this.childPropertyEditors.put( element, propertyEditorsForElement );
             
-            final Map<ModelProperty,PropertyEditorPart> finalPropertyEditorsForElement = propertyEditorsForElement;
+            final Map<ModelPath,PropertyEditorPart> finalPropertyEditorsForElement = propertyEditorsForElement;
             
             element.attach
             (
@@ -368,13 +390,12 @@ public final class PropertyEditorPart extends FormComponentPart
         
         if( childPropertyEditorPart == null )
         {
-            final String childPropertyName = property.getName();
             PropertyEditorDef childPropertyEditorDef = ( (PropertyEditorDef) this.definition ).getChildPropertyEditor( property );
             
             if( childPropertyEditorDef == null )
             {
                 childPropertyEditorDef = PropertyEditorDef.TYPE.instantiate();
-                childPropertyEditorDef.setProperty( childPropertyName );
+                childPropertyEditorDef.setProperty( property.toString() );
             }
             
             childPropertyEditorPart = new PropertyEditorPart();
@@ -699,7 +720,7 @@ public final class PropertyEditorPart extends FormComponentPart
             this.labelFunctionResult.dispose();
         }
         
-        for( Map<ModelProperty,PropertyEditorPart> propertyEditorsForElement : this.childPropertyEditors.values() )
+        for( Map<ModelPath,PropertyEditorPart> propertyEditorsForElement : this.childPropertyEditors.values() )
         {
             for( PropertyEditorPart propertyEditor : propertyEditorsForElement.values() )
             {
@@ -713,6 +734,7 @@ public final class PropertyEditorPart extends FormComponentPart
     private static final class Resources extends NLS
     {
         public static String invalidPath;
+        public static String invalidChildPropertyPath;
         
         static
         {

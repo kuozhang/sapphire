@@ -33,13 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
@@ -488,9 +488,9 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
     }
     
     @Override
-    protected void handleListElementChangedEvent( final Event event )
+    protected void handleChildPropertyEvent( final PropertyContentEvent event )
     {
-        super.handleListElementChangedEvent( event );
+        super.handleChildPropertyEvent( event );
         this.refreshOperation.run();
     }
     

@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
-import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
+import org.eclipse.sapphire.modeling.ModelPath;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
@@ -34,15 +34,12 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
     {
         super( context, part );
         
-        this.listElementListener = new Listener()
+        this.listElementListener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            public void handle( final Event event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                if( ! ( event instanceof PropertyInitializationEvent || event instanceof ElementDisposeEvent ) )
-                {
-                    handleListElementChangedEvent( event );
-                }
+                handleChildPropertyEvent( event );
             }
         };
         
@@ -62,7 +59,10 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
         
                         for( IModelElement entry : list )
                         {
-                            entry.detach( ListPropertyEditorRenderer.this.listElementListener );
+                            for( ModelPath childPropertyPath : getPart().getChildProperties() )
+                            {
+                                entry.detach( ListPropertyEditorRenderer.this.listElementListener, childPropertyPath );
+                            }
                         }
                     }
                 }
@@ -95,7 +95,7 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
         attachListElementListener();
     }
 
-    protected void handleListElementChangedEvent( final Event event )
+    protected void handleChildPropertyEvent( final PropertyContentEvent event )
     {
     }
     
@@ -107,7 +107,10 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
         {
             for( IModelElement entry : list )
             {
-                entry.attach( this.listElementListener );
+                for( ModelPath childPropertyPath : getPart().getChildProperties() )
+                {
+                    entry.attach( this.listElementListener, childPropertyPath );
+                }
             }
         }
     }
