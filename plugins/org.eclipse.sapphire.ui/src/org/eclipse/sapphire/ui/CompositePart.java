@@ -29,7 +29,6 @@ import org.eclipse.sapphire.ui.def.CompositeDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
-import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -40,7 +39,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -68,41 +66,8 @@ public class CompositePart extends FormPart
             return;
         }
         
-        final SapphireRenderingContext ctxt;
-        Composite parent = context.getComposite();
+        Composite parent = createOuterComposite( context );
         
-        if( getPreferFormStyle() == true )
-        {
-            final FormToolkit toolkit = new FormToolkit( context.getDisplay() );
-            
-            ctxt = new SapphireRenderingContext( this, context, parent )
-            {
-                public void adapt( final Control control )
-                {
-                    super.adapt( control );
-                    
-                    if( control instanceof Composite )
-                    {
-                        toolkit.adapt( (Composite) control );
-                    }
-                    else if( control instanceof Label )
-                    {
-                        toolkit.adapt( control, false, false );
-                    }
-                    else
-                    {
-                        toolkit.adapt( control, true, true );
-                    }
-                }
-            };
-        }
-        else
-        {
-            ctxt = context;
-        }
-        
-        parent = createOuterComposite( ctxt );
-
         final CompositeDef def = (CompositeDef) this.definition;
         final boolean indent = def.getIndent().getContent();
         final boolean scrollVertically = def.getScrollVertically().getContent();
@@ -112,11 +77,10 @@ public class CompositePart extends FormPart
         {
             final Label label = new Label( parent, SWT.NONE );
             label.setLayoutData( gd() );
-            context.adapt( label );
         }
 
         final ScrolledComposite scrolledComposite;
-
+        
         if( scrollVertically || scrollHorizontally )
         {
             final int style
@@ -126,6 +90,12 @@ public class CompositePart extends FormPart
             scrolledComposite = new ScrolledComposite( parent, style );
             scrolledComposite.setExpandHorizontal( true );
             scrolledComposite.setExpandVertical( true );
+            
+            // ScrolledComposite does not seem to inherit background color like other controls, so
+            // we need to set it explicitly.
+            
+            scrolledComposite.setBackground( parent.getBackground() );
+            scrolledComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
             
             parent = scrolledComposite;
         }
@@ -155,8 +125,10 @@ public class CompositePart extends FormPart
             }
         };
         composite.setLayout( glayout( 2, marginLeft, marginRight, marginTop, marginBottom ) );
-        ctxt.adapt( composite );
         
+        composite.setBackground( getSwtResourceCache().color( getBackgroundColor() ) );
+        composite.setBackgroundMode( SWT.INHERIT_DEFAULT );
+
         if( scrolledComposite != null )
         {
             scrolledComposite.setContent( composite );
@@ -188,7 +160,7 @@ public class CompositePart extends FormPart
             }
         }
 
-        final SapphireRenderingContext innerContext = new SapphireRenderingContext( this, ctxt, composite );
+        final SapphireRenderingContext innerContext = new SapphireRenderingContext( this, context, composite );
         
         if( scrolledComposite != null )
         {
@@ -307,11 +279,6 @@ public class CompositePart extends FormPart
     {
         final Integer height = definition().getHeight().getContent();
         return ( height == null || height < 1 ? defaultValue : height );
-    }
-    
-    public boolean getPreferFormStyle()
-    {
-        return this.definition.getHint( PartDef.HINT_PREFER_FORM_STYLE, false );
     }
     
 }

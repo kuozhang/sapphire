@@ -89,7 +89,6 @@ public final class TabGroupPart extends SapphirePart
     
         final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
         tabGroup.setLayoutData( gdhindent( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ), 9 ) );
-        context.adapt( tabGroup );
         
         for( final TabGroupPagePart page : this.pages )
         {

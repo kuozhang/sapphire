@@ -27,7 +27,6 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ElementValidationEvent;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.internal.ActionsSectionAssistContributor;
@@ -45,6 +44,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
@@ -84,7 +84,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	    SYSTEM_CONTRIBUTORS.add( ProblemsAssistContributor.class );
 	}
 	
-    private SapphireImageCache imageCache;
+    private SwtResourceCache imageCache;
     private IModelElement element;
 	private SmoothImageFigure imageFigure;
 	private PropertyEditorAssistContext assistContext;
@@ -98,7 +98,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
 		super(parent, validationMarkerPart, configManager);
 		DiagramNodePart nodePart = validationMarkerPart.nearest(DiagramNodePart.class);
 		this.element = validationMarkerPart.getLocalModelElement();
-		this.imageCache = nodePart.getImageCache();
+		this.imageCache = nodePart.getSwtResourceCache();
 		this.imageFigure = new SmoothImageFigure();
 		setFigure(this.imageFigure);
 		
@@ -208,22 +208,22 @@ public class ValidationMarkerPresentation extends ShapePresentation
 			{
 				if (size == ValidationMarkerSize.SMALL) 
 				{
-					image = imageCache.getImage(IMG_WARNING_SMALL);
+					image = imageCache.image(IMG_WARNING_SMALL);
 				} 
 				else 
 				{
-					image = imageCache.getImage(IMG_WARNING);					
+					image = imageCache.image(IMG_WARNING);					
 				}
 			} 
 			else if (status.severity() == Status.Severity.ERROR) 
 			{
 				if (size == ValidationMarkerSize.SMALL) 
 				{
-					image = imageCache.getImage(IMG_ERROR_SMALL);
+					image = imageCache.image(IMG_ERROR_SMALL);
 				} 
 				else 
 				{
-					image = imageCache.getImage(IMG_ERROR);
+					image = imageCache.image(IMG_ERROR);
 				}
 			}
 		}

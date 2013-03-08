@@ -99,7 +99,6 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
 
         decorator.addEditorControl( combo, true );
         addControl( combo );
-        this.context.adapt( combo );
         this.combo = combo;
         
         if( isActionsToolBarNeeded )
@@ -109,7 +108,6 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             toolBarActionsPresentation.setToolBar( toolbar );
             toolBarActionsPresentation.render();
             addControl( toolbar );
-            this.context.adapt( toolbar );
             decorator.addEditorControl( toolbar );
         }
         

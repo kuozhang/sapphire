@@ -40,7 +40,6 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -49,6 +48,7 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.swt.SWT;
@@ -128,9 +128,9 @@ public abstract class PropertyEditorRenderer
         return this.part.getProperty();
     }
     
-    public SapphireImageCache getImageCache()
+    public SwtResourceCache getImageCache()
     {
-        return this.part.getImageCache();
+        return this.part.getSwtResourceCache();
     }
     
     public final SapphireActionGroup getActions()
@@ -178,7 +178,6 @@ public abstract class PropertyEditorRenderer
                 final Label placeholder = new Label( parent, SWT.NONE );
                 placeholder.setLayoutData( gd() );
                 placeholder.setText( MiscUtil.EMPTY_STRING );
-                this.context.adapt( placeholder );
             }
             
             final int hindent = this.part.getMarginLeft() + 9;
@@ -345,7 +344,6 @@ public abstract class PropertyEditorRenderer
             );
             
             label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), singleLinePart ? SWT.CENTER : SWT.TOP ), spanBothColumns ? 2 : 1 ), leftMargin + 9 ) );
-            this.context.adapt( label );
             
             addControl( label );
         }
@@ -354,7 +352,6 @@ public abstract class PropertyEditorRenderer
             final Label spacer = new Label( parent, SWT.NONE );
             spacer.setLayoutData( gd() );
             spacer.setText( MiscUtil.EMPTY_STRING );
-            this.context.adapt( spacer );
         }
         
         GridData gd;
@@ -378,7 +375,6 @@ public abstract class PropertyEditorRenderer
         
         final Composite composite = new Composite( parent, SWT.NONE );
         composite.setLayoutData( gd );
-        this.context.adapt( composite );
         
         if( count == 0 )
         {
@@ -445,8 +441,6 @@ public abstract class PropertyEditorRenderer
                 }
             );
 
-            this.context.adapt( composite );
-
             for( SapphirePart relatedContentPart : relatedContentParts )
             {
                 relatedContentPart.render( new SapphireRenderingContext( relatedContentPart, this.context, relatedContentComposite ) );
@@ -482,7 +476,6 @@ public abstract class PropertyEditorRenderer
     {
         final Label label = new Label( parent, SWT.NONE );
         label.setText( Resources.deprecatedLabelText );
-        this.context.adapt( label );
         addControl( label );
         label.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
         

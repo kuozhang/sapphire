@@ -158,8 +158,6 @@ public final class EnumPropertyEditorRenderer
             {
                 this.control.setLayoutData( gdhfill() );
             }
-            
-            this.context.adapt( this.control );
         }
         else
         {
@@ -175,7 +173,6 @@ public final class EnumPropertyEditorRenderer
 
                 final RadioButtonsGroup buttonsGroup = new RadioButtonsGroup( this.context, composite, false );
                 buttonsGroup.setLayoutData( gdhfill() );
-                this.context.adapt( buttonsGroup );
                 
                 this.control = buttonsGroup;
             }
@@ -186,7 +183,6 @@ public final class EnumPropertyEditorRenderer
                 final Combo c = new Combo( composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
                 c.setLayoutData( gdhfill() );
                 c.setVisibleItemCount( 10 );
-                this.context.adapt( c );
                 
                 this.control = c;
             }

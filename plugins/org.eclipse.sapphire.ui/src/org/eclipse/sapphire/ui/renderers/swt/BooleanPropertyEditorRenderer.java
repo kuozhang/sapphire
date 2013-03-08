@@ -124,7 +124,6 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
         
         this.checkbox = new Button( composite, SWT.CHECK );
         this.checkbox.setLayoutData( gd() );
-        this.context.adapt( this.checkbox );
         
         if( checkboxLayout != CheckboxLayout.LEADING_LABEL )
         {

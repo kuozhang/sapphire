@@ -62,22 +62,22 @@ public class ValidationMarkerEditPart extends ShapeEditPart
 			{
 				if (size == ValidationMarkerSize.SMALL) 
 				{
-					image = nodePart.getImageCache().getImage(IMG_WARNING_SMALL);
+					image = nodePart.getSwtResourceCache().image(IMG_WARNING_SMALL);
 				} 
 				else 
 				{
-					image = nodePart.getImageCache().getImage(IMG_WARNING);					
+					image = nodePart.getSwtResourceCache().image(IMG_WARNING);					
 				}
 			} 
 			else if (status.severity() == Status.Severity.ERROR) 
 			{
 				if (size == ValidationMarkerSize.SMALL) 
 				{
-					image = nodePart.getImageCache().getImage(IMG_ERROR_SMALL);
+					image = nodePart.getSwtResourceCache().image(IMG_ERROR_SMALL);
 				} 
 				else 
 				{
-					image = nodePart.getImageCache().getImage(IMG_ERROR);
+					image = nodePart.getSwtResourceCache().image(IMG_ERROR);
 				}
 			}
 		}

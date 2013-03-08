@@ -220,7 +220,6 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
 
         this.addText = new SapphireFormText( this.mainComposite, SWT.NONE );
         this.addText.setLayoutData( gdhindent( gdvalign( gdhfill(), SWT.CENTER ), 10 ) );
-        this.context.adapt( this.addText );
         
         addControl(this.addText);
 
@@ -274,7 +273,6 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         toolbar.setLayoutData( gdhindent( gdvfill(), 2) );
         toolBarActionsPresentation.setToolBar( toolbar );
         toolBarActionsPresentation.render();
-        this.context.adapt( toolbar );
         
         addControl(toolbar);
         

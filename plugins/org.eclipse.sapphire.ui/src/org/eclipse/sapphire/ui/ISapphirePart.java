@@ -21,6 +21,7 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -35,7 +36,7 @@ public interface ISapphirePart
     IModelElement getLocalModelElement();
     Status validation();
     IContext getDocumentationContext();
-    SapphireImageCache getImageCache();
+    SwtResourceCache getSwtResourceCache();
     void dispose();
     PartDef definition();
     

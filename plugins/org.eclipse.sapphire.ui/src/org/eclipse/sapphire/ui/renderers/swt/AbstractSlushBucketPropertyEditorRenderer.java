@@ -58,12 +58,10 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultL
 
         final Composite sourceTableComposite = new Composite( mainComposite, SWT.NONE );
         sourceTableComposite.setLayout( glspacing( glayout( 3, 0, 0 ), 0 ) );
-        this.context.adapt( sourceTableComposite );
         
         final Composite decoratorComposite = new Composite( sourceTableComposite, SWT.NONE );
         decoratorComposite.setLayoutData( gdvalign( gd(), SWT.TOP ) );
         decoratorComposite.setLayout( glayout( 1, 0, 2, 0, 0 ) );
-        this.context.adapt( decoratorComposite );
         
         final PropertyEditorAssistDecorator decorator 
             = new PropertyEditorAssistDecorator( part, this.context, decoratorComposite );
@@ -73,21 +71,17 @@ public abstract class AbstractSlushBucketPropertyEditorRenderer extends DefaultL
         
         final Control sourceTable = createSourceControl( sourceTableComposite );
         sourceTable.setLayoutData( gdfill() );
-        this.context.adapt( sourceTable );
         
         final Composite toolbarComposite = new Composite( sourceTableComposite, SWT.NONE );
         toolbarComposite.setLayoutData( gd() );
         toolbarComposite.setLayout( glayout( 1, 5, 5, 0, 0 ) );
-        this.context.adapt( toolbarComposite );
         
         final ToolBar toolbar = new ToolBar( toolbarComposite, SWT.FLAT | SWT.VERTICAL );
         toolbar.setLayoutData( gd() );
         addControl( toolbar );
-        this.context.adapt( toolbar );
         
         final Composite tableComposite = new Composite( mainComposite, SWT.NONE );
         tableComposite.setLayout( glayout( 2, 0, 0 ) );
-        this.context.adapt( tableComposite );
         
         decorator.addEditorControl( mainComposite );
         decorator.addEditorControl( sourceTableComposite );

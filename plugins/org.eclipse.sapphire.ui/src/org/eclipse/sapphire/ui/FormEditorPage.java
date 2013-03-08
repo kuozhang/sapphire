@@ -25,7 +25,6 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarManagerActionPresentation;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
@@ -81,11 +80,10 @@ public final class FormEditorPage extends SapphireEditorFormPage
         final FormEditorPagePart part = getPart();
         final ScrolledForm form = managedForm.getForm();
         
-        final FormToolkit toolkit = managedForm.getToolkit();
-        toolkit.decorateFormHeading( managedForm.getForm().getForm() );
+        managedForm.getToolkit().decorateFormHeading( managedForm.getForm().getForm() );
         managedForm.getForm().getBody().setLayout( glayout( 2, 0, 0 ) );
         
-        final FormEditorRenderingContext context = new FormEditorRenderingContext( getPart(), managedForm );
+        final SapphireRenderingContext context = new SapphireRenderingContext( getPart(), managedForm.getForm().getBody() );
         
         for( SapphirePart child : part.getChildParts() )
         {

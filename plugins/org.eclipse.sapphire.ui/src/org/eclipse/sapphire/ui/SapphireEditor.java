@@ -50,6 +50,7 @@ import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.sapphire.ui.swt.SapphirePropertySheetPage;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
@@ -163,7 +164,7 @@ public abstract class SapphireEditor
     private final String pluginId;
     private IModelElement model;
     private IResourceChangeListener fileChangeListener;
-    private SapphireImageCache imageCache;
+    private SwtResourceCache imageCache;
     private SapphireEditorContentOutline outline;
     private SapphireActionManager actionsManager;
     private SapphirePropertySheetPage propertiesViewPage;
@@ -173,7 +174,7 @@ public abstract class SapphireEditor
     public SapphireEditor()
     {
         this.pluginId = FrameworkUtil.getBundle( getClass() ).getSymbolicName();
-        this.imageCache = new SapphireImageCache();
+        this.imageCache = new SwtResourceCache();
         this.outline = null;
         this.actionsManager = new SapphireActionManager( this, getActionContexts() );
     }
@@ -835,7 +836,7 @@ public abstract class SapphireEditor
         return null;
     }
 
-    public SapphireImageCache getImageCache()
+    public SwtResourceCache getSwtResourceCache()
     {
         return this.imageCache;
     }

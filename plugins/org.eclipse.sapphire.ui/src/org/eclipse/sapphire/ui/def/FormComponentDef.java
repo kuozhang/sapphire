@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -39,5 +40,17 @@ public interface FormComponentDef extends PartDef
     Value<Boolean> getScaleVertically();
     void setScaleVertically( String value );
     void setScaleVertically( Boolean value );
+    
+    // *** BackgroundColor ***
+    
+    @Type( base = Color.class )
+    @Label( standard = "background color" )
+    @XmlBinding( path = "background-color" )
+    
+    ValueProperty PROP_BACKGROUND_COLOR = new ValueProperty( TYPE, "BackgroundColor" );
+    
+    Value<Color> getBackgroundColor();
+    void setBackgroundColor( String value );
+    void setBackgroundColor( Color value );
     
 }

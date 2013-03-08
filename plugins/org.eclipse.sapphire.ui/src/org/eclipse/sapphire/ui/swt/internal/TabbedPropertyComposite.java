@@ -67,6 +67,7 @@ public class TabbedPropertyComposite
     protected void createMainComposite() {
         this.mainComposite = new Composite( this, SWT.NO_FOCUS );
         this.mainComposite.setBackground( this.colorWhite );
+        this.mainComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
         this.mainComposite.setLayout(new FormLayout());
         FormData formData = new FormData();
         formData.left = new FormAttachment(0, 0);
@@ -83,11 +84,11 @@ public class TabbedPropertyComposite
      */
     protected void createMainContents() {
         this.leftComposite = new Composite( this.mainComposite, SWT.NO_FOCUS );
-        this.leftComposite.setBackground( this.colorWhite );
         this.leftComposite.setLayout(new FormLayout());
 
         this.scrolledComposite = new ScrolledComposite(this.mainComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.NO_FOCUS);
         this.scrolledComposite.setBackground( this.colorWhite );
+        this.scrolledComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
 
         FormData formData = new FormData();
         formData.left = new FormAttachment(this.leftComposite, 0);
@@ -104,7 +105,6 @@ public class TabbedPropertyComposite
         this.leftComposite.setLayoutData(formData);
 
         this.tabComposite = new Composite( this.scrolledComposite, SWT.NO_FOCUS );
-        this.tabComposite.setBackground( this.colorWhite );
         this.tabComposite.setLayout(new FormLayout());
 
         this.scrolledComposite.setContent(this.tabComposite);

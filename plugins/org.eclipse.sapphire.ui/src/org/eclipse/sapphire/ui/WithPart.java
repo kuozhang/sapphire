@@ -178,7 +178,6 @@ public final class WithPart extends PageBookPart
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
         composite.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
         composite.setLayout( glayout( 1, 0, 0 ) );
-        context.adapt( composite );
         
         if( this.property != null )
         {
@@ -189,7 +188,6 @@ public final class WithPart extends PageBookPart
             final Composite typeSelectorComposite = new Composite( composite, SWT.NONE );
             typeSelectorComposite.setLayoutData( gdhfill() );
             typeSelectorComposite.setLayout( glayout( 1, 0, 0 ) );
-            context.adapt( typeSelectorComposite );
             
             final Runnable renderTypeSelectorOp = new Runnable()
             {
@@ -203,7 +201,6 @@ public final class WithPart extends PageBookPart
                     final Composite innerTypeSelectorComposite = new Composite( typeSelectorComposite, SWT.NONE );
                     innerTypeSelectorComposite.setLayoutData( gdvalign( gdhfill(), SWT.CENTER ) );
                     innerTypeSelectorComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
-                    context.adapt( innerTypeSelectorComposite );
                     
                     final SortedSet<ModelElementType> allPossibleTypes = possibleTypesService.types();
                     final int allPossibleTypesCount = allPossibleTypes.size();
@@ -252,7 +249,6 @@ public final class WithPart extends PageBookPart
                         final Button masterCheckBox = new Button( innerTypeSelectorComposite, SWT.CHECK );
                         masterCheckBox.setLayoutData( gd() );
                         masterCheckBox.setText( masterCheckBoxText );
-                        context.adapt( masterCheckBox );
                         decorator.addEditorControl( masterCheckBox );
                         actionPresentationKeyboard.attach( masterCheckBox );
                         context.setHelp( masterCheckBox, element, property );
@@ -326,7 +322,6 @@ public final class WithPart extends PageBookPart
                     {
                         final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( context, innerTypeSelectorComposite, false );
                         radioButtonsGroup.setLayoutData( gdhfill() );
-                        context.adapt( radioButtonsGroup );
                         
                         final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneSelection );
                         decorator.addEditorControl( noneButton );
@@ -432,7 +427,6 @@ public final class WithPart extends PageBookPart
                     {
                         final Combo combo = new Combo( innerTypeSelectorComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
                         combo.setLayoutData( gdhfill() );
-                        context.adapt( combo );
                         decorator.addEditorControl( combo );
                         actionPresentationKeyboard.attach( combo );
                         context.setHelp( combo, element, property );
@@ -589,7 +583,6 @@ public final class WithPart extends PageBookPart
             final Composite separatorComposite = new Composite( composite, SWT.NONE );
             separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 9 ) );
             separatorComposite.setLayout( glayout( 1, 0, 5 ) );
-            context.adapt( separatorComposite );
             
             final Label separator = new Label( separatorComposite, SWT.SEPARATOR | SWT.HORIZONTAL );
             separator.setLayoutData( gdhfill() );
@@ -696,7 +689,6 @@ public final class WithPart extends PageBookPart
                 final SapphireFormText text = new SapphireFormText( context.getComposite(), SWT.NONE );
                 text.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
                 text.setText( Resources.noAdditionalPropertiesMessage, false, false );
-                context.adapt( text );
             }
         }
         

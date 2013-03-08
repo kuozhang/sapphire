@@ -80,7 +80,6 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
@@ -98,6 +97,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEdito
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
 import org.eclipse.sapphire.ui.swt.SapphireToolTip;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireMenuActionPresentation;
@@ -385,7 +385,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 final SapphireFormText text = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
                 text.setLayoutData( gdhfill() );
                 text.setText( "<form><li style=\"image\" value=\"error\">" + message + "</li></form>", true, false );
-                text.setImage( "error", ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" ) );
+                text.setImage( "error", ImageData.createFromClassLoader( SwtResourceCache.class, "Error.png" ) );
                 text.setBackground( bgcolor );
 
                 final SapphireFormText showStackTraceLink = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
@@ -803,8 +803,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 buffer.append( "</form>" );
                 
                 text.setText( buffer.toString(), true, false );
-                text.setImage( "error", ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" ) );
-                text.setImage( "warning", ImageData.createFromClassLoader( SapphireImageCache.class, "Warning.png" ) );
+                text.setImage( "error", ImageData.createFromClassLoader( SwtResourceCache.class, "Error.png" ) );
+                text.setImage( "warning", ImageData.createFromClassLoader( SwtResourceCache.class, "Warning.png" ) );
             }
             
             private String numberToString( final int number )
@@ -1929,10 +1929,9 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         }
     }
     
-    private static class DetailsSection implements IDetailsPage
+    private class DetailsSection implements IDetailsPage
     {
         private MasterDetailsContentNode node;
-        private IManagedForm mform;
         private Composite composite;
         private final Listener listener;
         private List<SectionPart> sections;
@@ -1953,14 +1952,15 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         
         public void initialize( final IManagedForm form ) 
         {
-            this.mform = form;
         }
     
         public final void createContents( final Composite parent ) 
         {
             this.composite = parent;
             
-            parent.setLayout( twlayout( 1 ) );
+            this.composite.setLayout( twlayout( 1 ) );
+            this.composite.setBackground( getPart().getSwtResourceCache().color( org.eclipse.sapphire.Color.WHITE ) );
+            this.composite.setBackgroundMode( SWT.INHERIT_DEFAULT );
             
             refreshSections();
         }
@@ -2021,7 +2021,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             {
                 this.sections = this.node.getSections();
                 
-                final FormEditorRenderingContext context = new FormEditorRenderingContext( this.node, this.composite, this.mform.getToolkit() );
+                final SapphireRenderingContext context = new SapphireRenderingContext( this.node, this.composite );
                 
                 for( SectionPart section : this.node.getSections() )
                 {

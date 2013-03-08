@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui;
+package org.eclipse.sapphire.ui.swt;
 
 import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
 
@@ -19,26 +19,31 @@ import java.util.Map;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireImageCache
+public final class SwtResourceCache
 {
     private final Map<ImageDescriptor,ImageHandle> imageDescToImageHandle = new HashMap<ImageDescriptor,ImageHandle>();
     
     private final Map<org.eclipse.sapphire.modeling.ImageData,ImageDescriptor> imageDataToImageDesc 
         = new HashMap<org.eclipse.sapphire.modeling.ImageData,ImageDescriptor>();
     
-    public Image getImage( final ImageDescriptor imageDescriptor )
+    private final Map<org.eclipse.sapphire.Color,Color> colors = new HashMap<org.eclipse.sapphire.Color,Color>();
+    
+    public Image image( final ImageDescriptor imageDescriptor )
     {
-        return getImage( imageDescriptor, Status.Severity.OK );
+        return image( imageDescriptor, Status.Severity.OK );
     }
 
-    public Image getImage( final ImageDescriptor imageDescriptor,
-                           final Status.Severity problemSeverity )
+    public Image image( final ImageDescriptor imageDescriptor,
+                        final Status.Severity problemSeverity )
     {
         ImageHandle imageHandle = this.imageDescToImageHandle.get( imageDescriptor );
         
@@ -51,23 +56,18 @@ public final class SapphireImageCache
         return imageHandle.getImage( problemSeverity );
     }
 
-    public ImageDescriptor getImageDescriptor( final ModelElementType type )
+    public Image image( final ModelElementType type )
     {
-        return toImageDescriptor( type.image() );
+        return image( type.image() );
     }
     
-    public Image getImage( final ModelElementType type )
+    public Image image( final org.eclipse.sapphire.modeling.ImageData imageData )
     {
-        return getImage( type.image() );
+        return image( imageData, Status.Severity.OK );
     }
     
-    public Image getImage( final org.eclipse.sapphire.modeling.ImageData imageData )
-    {
-        return getImage( imageData, Status.Severity.OK );
-    }
-    
-    public Image getImage( final org.eclipse.sapphire.modeling.ImageData imageData,
-                           final Status.Severity severity )
+    public Image image( final org.eclipse.sapphire.modeling.ImageData imageData,
+                        final Status.Severity severity )
     {
         if( imageData != null )
         {
@@ -79,17 +79,48 @@ public final class SapphireImageCache
                 this.imageDataToImageDesc.put( imageData, imageDescriptor );
             }
             
-            return getImage( imageDescriptor, severity );
+            return image( imageDescriptor, severity );
         }
         
         return null;
     }
+    
+    public Color color( final org.eclipse.sapphire.Color color )
+    {
+        return color( color, null );
+    }
 
+    public Color color( final org.eclipse.sapphire.Color color,
+                        final org.eclipse.sapphire.Color def )
+    {
+        final org.eclipse.sapphire.Color sapphireColor = ( color == null ? def : color );
+        
+        if( sapphireColor != null )
+        {
+            Color swtColor = this.colors.get( sapphireColor );
+            
+            if( swtColor == null )
+            {
+                swtColor = new Color( Display.getCurrent(), sapphireColor.red(), sapphireColor.green(), sapphireColor.blue() );
+                this.colors.put( sapphireColor, swtColor );
+            }
+            
+            return swtColor;
+        }
+        
+        return null;
+    }
+    
     public void dispose()
     {
         for( ImageHandle imageHandle : this.imageDescToImageHandle.values() )
         {
             imageHandle.dispose();
+        }
+        
+        for( Color color : this.colors.values() )
+        {
+            color.dispose();
         }
     }
     

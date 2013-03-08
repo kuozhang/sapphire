@@ -33,7 +33,7 @@ public final class FileBugReportHandler3 extends AbstractHandler
         final SapphireWizard<FileBugReportOp> wizard = new SapphireWizard<FileBugReportOp>
         ( 
             FileBugReportOp.TYPE,
-            DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).wizard( "wizard" )
+            DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).wizard( "FileBugReportWizard" )
         );
         
         final WizardDialog dialog = new WizardDialog( window.getShell(), wizard );

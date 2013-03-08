@@ -42,7 +42,6 @@ public interface PartDef extends IModelElement
 {
     ModelElementType TYPE = new ModelElementType( PartDef.class );
     
-    String HINT_PREFER_FORM_STYLE = "prefer.form.style";
     String HINT_STYLE = "style";
     
     // *** Id ***

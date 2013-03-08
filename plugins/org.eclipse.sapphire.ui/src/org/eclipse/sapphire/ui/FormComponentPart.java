@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.def.FormComponentDef;
 
 /**
@@ -24,7 +25,12 @@ public abstract class FormComponentPart extends SapphirePart
     {
         return (FormComponentDef) super.definition();
     }
-
+    
+    public Color getBackgroundColor()
+    {
+        return definition().getBackgroundColor().getContent();
+    }
+    
     public final boolean getScaleVertically()
     {
         return definition().getScaleVertically().getContent();

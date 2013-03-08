@@ -377,7 +377,6 @@ public final class ActuatorPart extends SapphirePart
             final Label spacer = new Label( parent, SWT.NONE );
             spacer.setLayoutData( gd() );
             spacer.setText( EMPTY_STRING );
-            context.adapt( spacer );
         }
         
         if( style().equals( "Sapphire.Actuator.Button" ) )
@@ -398,7 +397,7 @@ public final class ActuatorPart extends SapphirePart
             
             if( image != null )
             {
-                button.setImage( getImageCache().getImage( image ) );
+                button.setImage( getSwtResourceCache().image( image ) );
             }
             
             button.addSelectionListener
@@ -437,7 +436,7 @@ public final class ActuatorPart extends SapphirePart
                     }
                     else if( event instanceof ImageChangedEvent )
                     {
-                        button.setImage( getImageCache().getImage( image( 16 ) ) );
+                        button.setImage( getSwtResourceCache().image( image( 16 ) ) );
                     }
                 }
             };
@@ -463,17 +462,15 @@ public final class ActuatorPart extends SapphirePart
             final Composite composite = new Composite( parent, SWT.NONE );
             composite.setLayoutData( gdhalign( gdhindent( gdhspan( gd(), hSpan ), 8 ), hAlignCode ) );
             composite.setLayout( glayout( ( image == null ? 1 : 2 ), 0, 0 ) );
-            context.adapt(composite);
 
             final Label imageControl;
             
             if( image != null )
             {
                 imageControl = new Label( composite, SWT.NONE );
-                imageControl.setImage( getImageCache().getImage( image ) );
+                imageControl.setImage( getSwtResourceCache().image( image ) );
                 imageControl.setLayoutData( gdvalign( gd(), SWT.CENTER ) );
                 imageControl.setEnabled( enabled() );
-                context.adapt(imageControl);
             }
             else
             {
@@ -483,7 +480,6 @@ public final class ActuatorPart extends SapphirePart
             final SapphireFormText text = new SapphireFormText( composite, SWT.NONE );
             text.setLayoutData( gdvalign( gdhfill(), SWT.CENTER ) );
             
-            context.adapt( text );
             keyboardActionPresentation.attach( text );
             
             String label = label( CapitalizationType.FIRST_WORD_ONLY );
@@ -546,7 +542,7 @@ public final class ActuatorPart extends SapphirePart
                     {
                         if( imageControl != null )
                         {
-                            imageControl.setImage( getImageCache().getImage( image( 16 ) ) );
+                            imageControl.setImage( getSwtResourceCache().image( image( 16 ) ) );
                         }
                     }
                 }

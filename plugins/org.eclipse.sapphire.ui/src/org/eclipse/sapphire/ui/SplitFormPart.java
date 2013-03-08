@@ -77,7 +77,8 @@ public final class SplitFormPart extends FormPart
     {
         final SashForm form = new SashForm( context.getComposite(), ( getOrientation() == Orientation.HORIZONTAL ? SWT.HORIZONTAL : SWT.VERTICAL ) | SWT.SMOOTH );
         form.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
-        context.adapt( form );
+        form.setBackground( getSwtResourceCache().color( getBackgroundColor() ) );
+        form.setBackgroundMode( SWT.INHERIT_DEFAULT );
         
         final List<SplitFormBlockPart> blockParts = getChildParts();
         final int blockPartsCount = blockParts.size();
@@ -87,7 +88,8 @@ public final class SplitFormPart extends FormPart
         {
             final SplitFormBlockPart block = blockParts.get( i );
             final Composite blockComposite = new Composite( form, SWT.NONE );
-            context.adapt( blockComposite );
+            blockComposite.setBackground( getSwtResourceCache().color( block.getBackgroundColor() ) );
+            blockComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
             final SapphireRenderingContext blockContext = new SapphireRenderingContext( this, context, blockComposite );
             
             final int rightMargin = ( i < blockPartsCount - 1 && getOrientation() == Orientation.HORIZONTAL ? 4 : 0 );

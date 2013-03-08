@@ -89,7 +89,7 @@ public final class ValueLabelProvider implements ILabelProvider
         
         if( imageData != null )
         {
-            image = this.part.getImageCache().getImage( imageData );
+            image = this.part.getSwtResourceCache().image( imageData );
         }
         
         return image;

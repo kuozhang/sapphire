@@ -37,7 +37,7 @@ public final class FileBugReportHandler2 extends AbstractHandler
             final SapphireDialog dialog = new SapphireDialog
             (
                 window.getShell(), operation.getBugReport(),
-                DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).dialog( "dialog2" )
+                DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).dialog( "FileBugReportDialogWhite" )
             );
             
             if( dialog.open() == Dialog.OK )

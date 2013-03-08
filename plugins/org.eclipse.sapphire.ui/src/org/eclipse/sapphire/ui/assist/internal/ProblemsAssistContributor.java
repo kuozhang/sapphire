@@ -17,11 +17,11 @@ import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -95,11 +95,11 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
         
         if( valResultSeverity == Status.Severity.ERROR )
         {
-            image = ImageData.createFromClassLoader( SapphireImageCache.class, "Error.png" );
+            image = ImageData.createFromClassLoader( SwtResourceCache.class, "Error.png" );
         }
         else if( valResultSeverity == Status.Severity.WARNING )
         {
-            image = ImageData.createFromClassLoader( SapphireImageCache.class, "Warning.png" );
+            image = ImageData.createFromClassLoader( SwtResourceCache.class, "Warning.png" );
         }
         
         if( image != null )

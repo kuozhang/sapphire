@@ -68,7 +68,6 @@ public final class LabelPart extends SapphirePart
         
         this.text = new SapphireFormText( context.getComposite(), SWT.NONE );
         this.text.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
-        context.adapt( this.text );
         
         final SapphireActionGroup actions = getActions( getMainActionContext() );
         final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );

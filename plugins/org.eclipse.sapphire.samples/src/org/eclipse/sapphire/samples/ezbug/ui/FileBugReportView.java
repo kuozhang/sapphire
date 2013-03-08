@@ -33,6 +33,7 @@ public final class FileBugReportView extends ViewPart
     public void createPartControl( final Composite parent )
     {
         parent.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+        parent.setBackgroundMode( SWT.INHERIT_DEFAULT );
         parent.setLayout( glayout( 1, 0, 0 ) );
         
         this.operation = FileBugReportOp.TYPE.instantiate();
@@ -40,7 +41,7 @@ public final class FileBugReportView extends ViewPart
         final SapphireForm control = new SapphireForm
         (
             parent, this.operation.getBugReport(),
-            DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).form( "bug.report.form.style.scrolled" )
+            DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).form( "BugReportFormScrolled" )
         );
 
         control.setLayoutData( gdfill() );

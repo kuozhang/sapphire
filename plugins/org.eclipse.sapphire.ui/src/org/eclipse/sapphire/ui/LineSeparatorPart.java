@@ -42,7 +42,6 @@ public final class LineSeparatorPart extends SeparatorPart
         final Composite separatorComposite = new Composite( context.getComposite(), SWT.NONE );
         separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
         separatorComposite.setLayout( glayout( 1, 0, 5 ) );
-        context.adapt( separatorComposite );
         
         final String label = def.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
         
@@ -51,12 +50,10 @@ public final class LineSeparatorPart extends SeparatorPart
             final Label l = new Label( separatorComposite, SWT.WRAP );
             l.setLayoutData( gd() );
             l.setText( label );
-            context.adapt( l );
         }
         
         final Label separator = new Label( separatorComposite, SWT.SEPARATOR | SWT.HORIZONTAL );
         separator.setLayoutData( gdhfill() );
-        context.adapt( separator );
     }
     
 }

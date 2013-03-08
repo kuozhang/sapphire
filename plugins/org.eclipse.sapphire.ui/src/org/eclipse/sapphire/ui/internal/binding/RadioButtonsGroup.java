@@ -125,7 +125,6 @@ public class RadioButtonsGroup
         final Button button = new Button( this, SWT.RADIO );
         button.setLayoutData( this.vertical ? gd() : null );
         button.setText( text );
-        this.context.adapt( button );
         this.buttons.add( button );
         
         button.addDisposeListener

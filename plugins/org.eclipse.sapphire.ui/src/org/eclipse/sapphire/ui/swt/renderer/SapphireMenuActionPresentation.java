@@ -179,7 +179,7 @@ public final class SapphireMenuActionPresentation extends SapphireHotSpotsAction
                     {
                         if( ! menuItem.isDisposed() )
                         {
-                            menuItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+                            menuItem.setImage( context.getImageCache().image( action.getImage( 16 ) ) );
                         }
                     }
                 };

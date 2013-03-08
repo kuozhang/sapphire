@@ -842,11 +842,11 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
         {
             if( ( (FileSystemNode) element ).getFile().isDirectory() )
             {
-                return this.context.getImageCache().getImage( IMG_FOLDER );
+                return this.context.getImageCache().image( IMG_FOLDER );
             }
             else
             {
-                return this.context.getImageCache().getImage( IMG_FILE );
+                return this.context.getImageCache().image( IMG_FILE );
             }
         }
     }

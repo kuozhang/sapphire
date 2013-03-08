@@ -40,6 +40,7 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -58,7 +59,6 @@ public class SectionPart extends CompositePart
     private FunctionResult titleFunctionResult;
     private FunctionResult descriptionFunctionResult;
     
-    private SapphireRenderingContext context;
     private Section section;
     private SapphireFormText descriptionFormText;
     private Composite descriptionSpacer;
@@ -85,7 +85,6 @@ public class SectionPart extends CompositePart
     @Override
     protected Composite createOuterComposite( final SapphireRenderingContext context )
     {
-        this.context = context;
         this.section = null;
         this.descriptionFormText = null;
         this.descriptionSpacer = null;
@@ -99,7 +98,6 @@ public class SectionPart extends CompositePart
         final Composite outerComposite = new Composite( context.getComposite(), SWT.NONE );
         outerComposite.setLayoutData( createSectionLayoutData() );
         outerComposite.setLayout( glayout( 1, 10, 10, 10, 20 ) );
-        context.adapt( outerComposite );
         
         final boolean collapsible = def.getCollapsible().getContent();
         final int style = Section.TITLE_BAR | ( collapsible ? Section.TWISTIE : SWT.NONE );
@@ -141,7 +139,10 @@ public class SectionPart extends CompositePart
         
         this.sectionContentOuterComposite = new Composite( this.section, SWT.NONE );
         this.sectionContentOuterComposite.setLayout( glayout( 1, 0, 0 ) );
-        context.adapt( this.sectionContentOuterComposite );
+        
+        final Color bgcolor = getSwtResourceCache().color( getBackgroundColor(), org.eclipse.sapphire.Color.WHITE );
+        this.sectionContentOuterComposite.setBackground( bgcolor );
+        this.sectionContentOuterComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
 
         this.descriptionFunctionResult = initExpression
         (
@@ -162,7 +163,6 @@ public class SectionPart extends CompositePart
         this.sectionContentInnerComposite = new Composite( this.sectionContentOuterComposite, SWT.NONE );
         this.sectionContentInnerComposite.setLayoutData( gdfill() );
         this.sectionContentInnerComposite.setLayout( glayout( 2, 0, 0 ) );
-        context.adapt( this.sectionContentInnerComposite );
         
         final SapphireActionGroup actions = getActions();
         final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
@@ -240,7 +240,6 @@ public class SectionPart extends CompositePart
                 this.descriptionSpacer = new Composite( this.sectionContentOuterComposite, SWT.NONE );
                 this.descriptionSpacer.setLayoutData( gdhhint( gdhfill(), 5 ) );
                 this.descriptionSpacer.setLayout( glayout( 1, 0, 0, 0, 0 ) );
-                this.context.adapt( this.descriptionSpacer );
                 
                 if( this.sectionContentInnerComposite != null )
                 {

@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui;
 
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
@@ -66,9 +67,9 @@ public class SapphireRenderingContext
         return this.part;
     }
     
-    public final SapphireImageCache getImageCache()
+    public final SwtResourceCache getImageCache()
     {
-        return getPart().getImageCache();
+        return getPart().getSwtResourceCache();
     }
     
     public Shell getShell()
@@ -114,14 +115,6 @@ public class SapphireRenderingContext
         else
         {
             this.parent.layout();
-        }
-    }
-    
-    public void adapt( final Control control )
-    {
-        if( this.parent != null )
-        {
-            this.parent.adapt( control );
         }
     }
     

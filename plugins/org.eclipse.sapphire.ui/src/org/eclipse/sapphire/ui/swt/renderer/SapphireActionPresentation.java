@@ -284,7 +284,7 @@ public abstract class SapphireActionPresentation
         
         if( imageData != null )
         {
-            image = getManager().getContext().getImageCache().getImage( imageData );
+            image = getManager().getContext().getImageCache().image( imageData );
         }
         
         menuItem.setImage( image );

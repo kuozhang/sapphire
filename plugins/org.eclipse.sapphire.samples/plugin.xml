@@ -188,7 +188,7 @@
       defaultHandler="org.eclipse.sapphire.samples.ezbug.ui.FileBugReportHandler1"/>
     <command
       id="org.eclipse.sapphire.samples.fileBugReport2"
-      name="File Bug Report (Form Style Dialog)"
+      name="File Bug Report (White Dialog)"
       defaultHandler="org.eclipse.sapphire.samples.ezbug.ui.FileBugReportHandler2"/>
     <command
       id="org.eclipse.sapphire.samples.fileBugReport3"
@@ -210,7 +210,7 @@
             style="push"/>
           <command
             commandId="org.eclipse.sapphire.samples.fileBugReport2"
-            label="File Bug Report (Form Style Dialog)..."
+            label="File Bug Report (White Dialog)..."
             style="push"/>
           <command
             commandId="org.eclipse.sapphire.samples.fileBugReport3"

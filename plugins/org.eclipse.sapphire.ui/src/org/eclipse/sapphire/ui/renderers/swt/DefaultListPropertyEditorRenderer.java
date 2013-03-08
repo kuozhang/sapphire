@@ -107,7 +107,6 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -115,6 +114,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.ModelElementsTransfer;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldCellEditorPresentation;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
 import org.eclipse.sapphire.ui.swt.renderer.HyperlinkTable;
@@ -247,7 +247,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             tableComposite = new Composite( mainComposite, SWT.NULL );
             tableComposite.setLayoutData( gdfill() );
             tableComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
-            this.context.adapt( tableComposite );
             
             this.decorator = createDecorator( tableComposite );
             this.decorator.control().setLayoutData( gdvalign( gd(), SWT.TOP ) );
@@ -274,7 +273,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         this.tableViewer = new TableViewer( tableParentComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
         this.table = this.tableViewer.getTable();
-        this.context.adapt( this.table );
         this.decorator.addEditorControl( this.table );
         
         final List<Control> relatedControls = new ArrayList<Control>();
@@ -1013,7 +1011,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             toolBarActionsPresentation.setToolBar( toolbar );
             toolBarActionsPresentation.render();
             addControl( toolbar );
-            this.context.adapt( toolbar );
             this.decorator.addEditorControl( toolbar );
         }
         
@@ -1493,7 +1490,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     
                     if( imageData != null )
                     {
-                        image = getPart().getImageCache().getImage( imageData, element.validation().severity() );
+                        image = getPart().getSwtResourceCache().image( imageData, element.validation().severity() );
                     }
                 }
                 
@@ -1614,9 +1611,9 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             return this.listPropertyEditor;
         }
         
-        public final SapphireImageCache getImageCache()
+        public final SwtResourceCache getImageCache()
         {
-            return this.listPropertyEditor.getImageCache();
+            return this.listPropertyEditor.getSwtResourceCache();
         }
         
         public final boolean isElementImageDesired()
@@ -1904,7 +1901,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     {
                         final boolean value = getPropertyValueAsBoolean( element );
                         
-                        final Image image = getImageCache().getImage( value ? IMG_CHECKBOX_ON : IMG_CHECKBOX_OFF );
+                        final Image image = getImageCache().image( value ? IMG_CHECKBOX_ON : IMG_CHECKBOX_OFF );
                         final Rectangle cellBounds = item.getBounds( event.index );
                         final Rectangle imageBounds = image.getBounds();
                         final int x = event.x + ( cellBounds.width - imageBounds.width ) / 2;
@@ -2318,7 +2315,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             }
             else
             {
-                return getPart().getImageCache().getImage( this.imageService.image(), this.element.validation().severity() );
+                return getPart().getSwtResourceCache().image( this.imageService.image(), this.element.validation().severity() );
             }
         }
         

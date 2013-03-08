@@ -33,7 +33,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -200,7 +199,7 @@ public final class SapphireStatusDialog extends Dialog
             {
                 if( this.errorImage == null )
                 {
-                    this.errorImage = SwtRendererUtil.createImageDescriptor( SapphireImageCache.class, "Error.png" ).createImage();
+                    this.errorImage = SwtRendererUtil.createImageDescriptor( SwtResourceCache.class, "Error.png" ).createImage();
                 }
                 
                 return this.errorImage;
@@ -210,7 +209,7 @@ public final class SapphireStatusDialog extends Dialog
             {
                 if( this.warningImage == null )
                 {
-                    this.warningImage = SwtRendererUtil.createImageDescriptor( SapphireImageCache.class, "Warning.png" ).createImage();
+                    this.warningImage = SwtRendererUtil.createImageDescriptor( SwtResourceCache.class, "Warning.png" ).createImage();
                 }
                 
                 return this.warningImage;

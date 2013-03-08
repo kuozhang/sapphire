@@ -30,11 +30,7 @@ import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
@@ -172,42 +168,5 @@ public abstract class SapphireEditorFormPage extends FormPage implements EditorP
     }
     
     public abstract String getId();
-    
-    protected static final class FormEditorRenderingContext extends SapphireRenderingContext
-    {
-        private final FormToolkit toolkit;
-        
-        public FormEditorRenderingContext( final ISapphirePart part,
-                                           final IManagedForm managedForm )
-        {
-            this( part, managedForm.getForm().getBody(), managedForm.getToolkit() );
-        }
-    
-        public FormEditorRenderingContext( final ISapphirePart part,
-                                           final Composite composite,
-                                           final FormToolkit toolkit )
-        {
-            super( part, composite );
-            this.toolkit = toolkit;
-        }
-    
-        public void adapt( final Control control )
-        {
-            super.adapt( control );
-            
-            if( control instanceof Composite )
-            {
-                this.toolkit.adapt( (Composite) control );
-            }
-            else if( control instanceof Label )
-            {
-                this.toolkit.adapt( control, false, false );
-            }
-            else
-            {
-                this.toolkit.adapt( control, true, true );
-            }
-        }
-    }
     
 }

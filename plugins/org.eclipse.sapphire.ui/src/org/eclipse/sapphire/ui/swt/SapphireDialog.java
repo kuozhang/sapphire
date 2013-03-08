@@ -33,7 +33,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -106,11 +105,6 @@ public class SapphireDialog extends Dialog
         
         final Composite composite = (Composite) super.createDialogArea( parent );
         
-        if( this.part.getPreferFormStyle() )
-        {
-            composite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
-        }
-        
         final Composite innerComposite = new Composite( composite, SWT.NONE );
         innerComposite.setLayout( glayout( 2, 0, 0 ) );
         innerComposite.setLayoutData( gdfill() );
@@ -133,11 +127,9 @@ public class SapphireDialog extends Dialog
     protected Control createContents( final Composite parent )
     {
         final Composite composite = (Composite) super.createContents( parent );
-        
-        if( this.part.getPreferFormStyle() )
-        {
-            composite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
-        }
+
+        composite.setBackground( this.part.getSwtResourceCache().color( this.part.getBackgroundColor() ) );
+        composite.setBackgroundMode( SWT.INHERIT_DEFAULT );
         
         return composite;
     }
@@ -146,11 +138,6 @@ public class SapphireDialog extends Dialog
     protected Control createButtonBar( final Composite parent )
     {
         final Composite composite = (Composite) super.createButtonBar( parent );
-        
-        if( this.part.getPreferFormStyle() )
-        {
-            composite.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
-        }
         
         this.okButton = getButton( IDialogConstants.OK_ID );
         
@@ -171,22 +158,6 @@ public class SapphireDialog extends Dialog
         return composite;
     }
     
-    @Override
-    protected Button createButton( final Composite parent,
-                                   final int id,
-                                   final String label,
-                                   final boolean defaultButton )
-    {
-        final Button button = super.createButton( parent, id, label, defaultButton );
-        
-        if( this.part.getPreferFormStyle() )
-        {
-            button.setBackground( Display.getCurrent().getSystemColor( SWT.COLOR_WHITE ) );
-        }
-        
-        return button;
-    }
-
     @Override
     protected boolean isResizable()
     {

@@ -61,6 +61,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
   <li><a href="#XmlResource">XmlResource</a></li>
   <li><a href="#Service">@Service</a></li>
+  <li><a href="#SDEF">SDEF</a></li>
 </ol>
 
 
@@ -785,6 +786,27 @@ metamodel context will need an adjustment.</p>
     </td>
     <td>
 <pre class="source-code"><code><font color="#888888">@Service( impl = ExampleService.class</font>, context = Service.Context.METAMODEL <font color="#888888">)</font></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SDEF">SDEF</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;hint>
+    &lt;name>prefer.form.style&lt;/name>
+    &lt;value>true&lt;/value>
+&lt;/hint></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;background-color>white&lt;/background-color></code></pre>
     </td>
   </tr>
 </table>

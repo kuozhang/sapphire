@@ -333,7 +333,7 @@ arranging the properties on the screen. This is done via an XML file.</p>
     &lt;/import>
 
     &lt;composite>
-        &lt;id>bug.report&lt;/id>
+        &lt;id>BugReportForm&lt;/id>
         &lt;documentation>
             &lt;title>EzBug&lt;/title>
             &lt;content>This would be the help content for the EzBug system.&lt;/content>
@@ -363,7 +363,7 @@ arranging the properties on the screen. This is done via an XML file.</p>
                 &lt;indent>true&lt;/indent>
                 &lt;content>
                     &lt;separator>
-                        &lt;label>details&lt;/label>
+                        &lt;label>description&lt;/label>
                     &lt;/separator>
                     &lt;switching-panel>
                         &lt;list-selection-controller>
@@ -376,12 +376,13 @@ arranging the properties on the screen. This is done via an XML file.</p>
                                     &lt;property>Description&lt;/property>
                                     &lt;span>true&lt;/span>
                                     &lt;height>75&lt;/height>
+                                    &lt;show-label>false&lt;/show-label>
                                 &lt;/property-editor>
                             &lt;/content>
                         &lt;/panel>
                         &lt;default-panel>
                             &lt;content>
-                                &lt;label>Select a hardware item above to view or edit additional parameters.&lt;/label>
+                                &lt;label>Select a hardware item above to view or edit description.&lt;/label>
                             &lt;/content>
                         &lt;/default-panel>
                     &lt;/switching-panel>
@@ -394,11 +395,11 @@ arranging the properties on the screen. This is done via an XML file.</p>
     &lt;/composite>
 
     &lt;dialog>
-        &lt;id>bug.report.dialog&lt;/id>
-        &lt;label>create bug report (sapphire sample)&lt;/label>
+        &lt;id>FileBugReportDialog&lt;/id>
+        &lt;label>file bug report (sapphire sample)&lt;/label>
         &lt;initial-focus>Title&lt;/initial-focus>
         &lt;content>
-            &lt;include>bug.report&lt;/include>
+            &lt;include>BugReportForm&lt;/include>
         &lt;/content>
         &lt;scale-vertically>true&lt;/scale-vertically>
     &lt;/dialog>
@@ -420,7 +421,7 @@ try
     SapphireDialog dialog = new SapphireDialog
     (
         shell, operation.getBugReport(),
-        DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug.sdef" ).dialog( "bug.report.dialog" )
+        DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug.sdef" ).dialog( "FileBugReportDialog" )
     );
 
     if( dialog.open() == Dialog.OK )
@@ -434,9 +435,7 @@ finally
 }</code></pre>
 
 <p>Pretty simple, right? We create the model and then use the provided SapphireDialog class to instantiate the UI by
-referencing the model instance and the UI definition. The pseudo-URI that's used to reference the UI definition
-is simply bundle id, followed by the path within that bundle to the file holding the UI definition, followed by
-the id of the definition to use.</p> 
+referencing the model instance and the UI definition.</p> 
 
 <p>Let's run it and see what we get...</p>
 
@@ -485,10 +484,10 @@ hookup.</p>
 <pre class="source-code"><code>&lt;wizard>
     &lt;id>wizard&lt;/id>
     &lt;element-type>FileBugReportOp&lt;/element-type>
-    &lt;label>create bug report (sapphire sample)&lt;/label>
+    &lt;label>file bug report (sapphire sample)&lt;/label>
     &lt;page>
         &lt;id>main.page&lt;/id>
-        &lt;label>create bug report&lt;/label>
+        &lt;label>file bug report&lt;/label>
         &lt;description>Create and submit a bug report.&lt;/description>
         &lt;initial-focus>Title&lt;/initial-focus>
         &lt;content>
@@ -496,7 +495,7 @@ hookup.</p>
                 &lt;path>BugReport&lt;/path>
                 &lt;default-panel>
                     &lt;content>
-                        &lt;include>bug.report&lt;/include>
+                        &lt;include>BugReportForm&lt;/include>
                     &lt;/content>
                 &lt;/default-panel>
             &lt;/with>
@@ -566,7 +565,7 @@ only supports one editor page layout, but it is a very flexible layout that work
 of content on the left and a series of sections on the right that change depending on the selection in the outline.</p>
 
 <pre class="source-code"><code>&lt;editor-page>
-    &lt;id>editor.page&lt;/id>
+    &lt;id>BugRepositoryEditorPage&lt;/id>
     &lt;element-type>BugRepository&lt;/element-type>
     &lt;page-name>bug repository&lt;/page-name>
     &lt;page-header-text>bug repository (sapphire sample)&lt;/page-header-text>
@@ -591,7 +590,7 @@ of content on the left and a series of sections on the right that change dependi
                     &lt;section>
                         &lt;label>bug report&lt;/label>
                         &lt;content>
-                            &lt;include>bug.report&lt;/include>
+                            &lt;include>BugReportForm&lt;/include>
                         &lt;/content>
                     &lt;/section>
                 &lt;/case>

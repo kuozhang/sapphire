@@ -179,7 +179,6 @@ public abstract class PageBookPart extends FormComponentPart
         final Composite composite = new Composite( context.getComposite(), SWT.NONE );
         composite.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
         composite.setLayout( glayout( 2, 0, 0 ) );
-        context.adapt( composite );
         
         final Listener pageChangeListener = new Listener()
         {

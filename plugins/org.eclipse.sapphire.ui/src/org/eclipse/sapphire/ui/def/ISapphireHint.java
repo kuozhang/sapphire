@@ -56,7 +56,6 @@ public interface ISapphireHint extends IModelElement
             PropertyEditorDef.HINT_FACTORY,
             PropertyEditorDef.HINT_LISTENERS,
             PropertyEditorDef.HINT_PREFER_COMBO,
-            PartDef.HINT_PREFER_FORM_STYLE,
             PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS,
             PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS,
             PropertyEditorDef.HINT_READ_ONLY,

@@ -31,7 +31,6 @@ import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -41,6 +40,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -259,7 +259,6 @@ public final class PropertyEditorAssistDecorator
         this.assistAction.addHandler( this.assistActionHandler );
         
         this.control = new Label( parent, SWT.NONE );
-        this.context.adapt( this.control );
         
         this.control.addMouseListener
         (
@@ -453,7 +452,7 @@ public final class PropertyEditorAssistDecorator
             return;
         }
         
-        final SapphireImageCache imageCache = this.part.getImageCache();
+        final SwtResourceCache imageCache = this.part.getSwtResourceCache();
         
         if( this.assistContext != null )
         {
@@ -488,11 +487,11 @@ public final class PropertyEditorAssistDecorator
             {
                 if( this.mouseOverEditorControl )
                 {
-                    this.control.setImage( imageCache.getImage( IMG_ASSIST ) );
+                    this.control.setImage( imageCache.image( IMG_ASSIST ) );
                 }
                 else
                 {
-                    this.control.setImage( imageCache.getImage( IMG_ASSIST_FAINT ) );
+                    this.control.setImage( imageCache.image( IMG_ASSIST_FAINT ) );
                 }
             }
             
@@ -502,7 +501,7 @@ public final class PropertyEditorAssistDecorator
         else
         {
             this.control.setVisible( false );
-            this.control.setImage( imageCache.getImage( IMG_ASSIST_CLEAR ) );
+            this.control.setImage( imageCache.image( IMG_ASSIST_CLEAR ) );
             this.control.setCursor( null );
         }
     }

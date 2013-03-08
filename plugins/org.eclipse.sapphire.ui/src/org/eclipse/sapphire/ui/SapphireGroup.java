@@ -49,7 +49,6 @@ public class SapphireGroup extends CompositePart
         group.setLayoutData( gdhindent( gdvindent( gdhspan( gdhfill(), 2 ), 5 ), 10 ) );
         group.setLayout( glayout( 2, 5, 5, 8, 5 ) );
         group.setText( label );
-        context.adapt( group );
             
         return group;
     }

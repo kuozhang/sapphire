@@ -82,6 +82,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEdito
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -100,7 +101,7 @@ public abstract class SapphirePart implements ISapphirePart
     private Status validation;
     private final ListenerContext listeners = new ListenerContext();
     private Set<SapphirePartListener> listenersDeprecated;
-    private SapphireImageCache imageCache;
+    private SwtResourceCache imageCache;
     private Map<String,SapphireActionGroup> actions;
     private PartServiceContext serviceContext;
     private FunctionResult visibilityFunctionResult;
@@ -482,11 +483,11 @@ public abstract class SapphirePart implements ISapphirePart
         return null;
     }
 
-    public SapphireImageCache getImageCache()
+    public SwtResourceCache getSwtResourceCache()
     {
         if( this.imageCache == null )
         {
-            this.imageCache = ( this.parent == null ? new SapphireImageCache() : this.parent.getImageCache() );
+            this.imageCache = ( this.parent == null ? new SwtResourceCache() : this.parent.getSwtResourceCache() );
         }
         
         return this.imageCache;

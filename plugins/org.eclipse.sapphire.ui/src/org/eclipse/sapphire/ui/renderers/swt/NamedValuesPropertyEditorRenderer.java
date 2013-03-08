@@ -130,7 +130,6 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         final Composite composite = new Composite( this.rootComposite, SWT.NONE );
         composite.setLayoutData( gdhfill() );
         composite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
-        this.context.adapt( composite );
         
         final PropertyEditorAssistDecorator decorator 
             = new PropertyEditorAssistDecorator( part, this.context, composite );
@@ -213,8 +212,6 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         this.rootComposite.setData( PropertyEditorPart.DATA_BINDING, this.binding );
         
         addControl( this.rootComposite );
-        
-        this.context.adapt( this.rootComposite );
     }
     
     private Button createRadioButton( final Composite parent, 

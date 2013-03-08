@@ -333,7 +333,7 @@ public final class SapphireTextCellEditor
                 final Label button = new Label( this.parent, SWT.NONE );
                 button.setLayoutData( gd() );
                 button.setBackground( this.parent.getBackground() );
-                button.setImage( context.getImageCache().getImage( action.getImage( 11 ) ) );
+                button.setImage( context.getImageCache().image( action.getImage( 11 ) ) );
                 button.setCursor( cursor );
                 button.setToolTipText( LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, false ) );
 

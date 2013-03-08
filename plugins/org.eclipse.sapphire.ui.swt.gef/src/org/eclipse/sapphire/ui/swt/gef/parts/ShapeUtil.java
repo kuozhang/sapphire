@@ -96,7 +96,7 @@ public class ShapeUtil {
 				final ImageData data = imagePresentation.getImage();
 				if (data != null) 
 				{
-					figure = new SmoothImageFigure(nodePart.getImageCache().getImage(data));
+					figure = new SmoothImageFigure(nodePart.getSwtResourceCache().image(data));
 				}
 				else 
 				{

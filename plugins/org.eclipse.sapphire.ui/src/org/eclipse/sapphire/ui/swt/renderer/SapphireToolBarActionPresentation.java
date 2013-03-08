@@ -155,7 +155,7 @@ public final class SapphireToolBarActionPresentation extends SapphireHotSpotsAct
             {
             	if (action.getImage( 16 ) != null)
             	{
-            		toolItem.setImage( context.getImageCache().getImage( action.getImage( 16 ) ) );
+            		toolItem.setImage( context.getImageCache().image( action.getImage( 16 ) ) );
             	}
             	else
             	{

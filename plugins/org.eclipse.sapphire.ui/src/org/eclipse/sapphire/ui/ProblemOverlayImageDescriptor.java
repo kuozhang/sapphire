@@ -15,6 +15,7 @@ import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
@@ -28,10 +29,10 @@ public final class ProblemOverlayImageDescriptor
     
 {
     private static final ImageData IMG_ERROR_OVERLAY
-        = SwtRendererUtil.createImageData( SapphireImageCache.class, "ErrorOverlay.gif" );
+        = SwtRendererUtil.createImageData( SwtResourceCache.class, "ErrorOverlay.gif" );
     
     private static final ImageData IMG_WARNING_OVERLAY
-        = SwtRendererUtil.createImageData( SapphireImageCache.class, "WarningOverlay.png" );
+        = SwtRendererUtil.createImageData( SwtResourceCache.class, "WarningOverlay.png" );
 
     private final ImageData base;
     private final ImageData overlay;

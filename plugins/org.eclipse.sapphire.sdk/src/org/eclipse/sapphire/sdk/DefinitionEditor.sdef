@@ -295,6 +295,8 @@
             <property-editor>MarginTop</property-editor>
             <property-editor>MarginBottom</property-editor>
             <spacer />
+            <property-editor>BackgroundColor</property-editor>
+            <spacer />
             <property-editor>
                 <property>Indent</property>
                 <hint>
@@ -893,6 +895,7 @@
             <section>
                 <content>
                     <include>PartId</include>
+                    <property-editor>BackgroundColor</property-editor>
                     <property-editor>Orientation</property-editor>
                     <property-editor>
                         <property>ScaleVertically</property>
@@ -919,6 +922,7 @@
                     <section>
                         <content>
                             <property-editor>Weight</property-editor>
+                            <property-editor>BackgroundColor</property-editor>
                         </content>
                     </section>
                 </case>

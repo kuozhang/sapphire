@@ -22,6 +22,8 @@ import org.eclipse.sapphire.util.HashCodeFactory;
 
 public final class Color 
 {
+    public static final Color WHITE = new Color( 255, 255, 255 );
+    
 	private final int red;
     private final int green;
     private final int blue;

@@ -168,7 +168,6 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
             }
         );
         
-        this.context.adapt( textFieldParent );
         addControl( textFieldParent );
 
         int textFieldParentColumns = 1;
@@ -181,7 +180,6 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         nestedComposite.setLayoutData( isLongString ? gdfill() : gdvalign( gdhfill(), SWT.CENTER ) );
         nestedComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
         
-        this.context.adapt( nestedComposite );
         addControl( nestedComposite );
         
         final PropertyEditorAssistDecorator decorator = createDecorator( nestedComposite ); 
@@ -197,7 +195,6 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         
         this.textField = new Text( nestedComposite, style );
         this.textField.setLayoutData( gdfill() );
-        this.context.adapt( this.textField );
         decorator.addEditorControl( this.textField, true );
 
         final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
@@ -295,7 +292,6 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
             toolBarActionsPresentation.setToolBar( toolbar );
             toolBarActionsPresentation.render();
             addControl( toolbar );
-            this.context.adapt( toolbar );
             decorator.addEditorControl( toolbar );
             relatedControls.add( toolbar );
         }
@@ -459,7 +455,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
                             contentProposalInfo.label(),
                             contentProposalInfo.description(),
                             contentProposalInfo.content().length(),
-                            this.sapphirePart.getImageCache().getImage(
+                            this.sapphirePart.getSwtResourceCache().image(
                                     contentProposalInfo.image()));
                     arrContentProposals[i] = contentProposal;
                 }

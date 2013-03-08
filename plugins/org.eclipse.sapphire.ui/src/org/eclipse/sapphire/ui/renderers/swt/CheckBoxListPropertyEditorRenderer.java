@@ -69,11 +69,11 @@ import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.ui.ListSelectionService;
 import org.eclipse.sapphire.ui.ListSelectionService.ListSelectionChangedEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
-import org.eclipse.sapphire.ui.SapphireImageCache;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.SetFactory;
 import org.eclipse.swt.SWT;
@@ -165,7 +165,6 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         column.setText( this.memberProperty.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
         tableColumnLayout.setColumnData( column, new ColumnWeightData( 1, 100, true ) );
         
-        this.context.adapt( mainComposite );
         decorator.addEditorControl( mainComposite );
         
         suppressDashedTableEntryBorder( this.table );
@@ -624,7 +623,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
 
         public Image image()
         {
-            final SapphireImageCache cache = getPart().getImageCache();
+            final SwtResourceCache cache = getPart().getSwtResourceCache();
             final Image image;
             
             if( this.element == null || this.elementImageService == null )
@@ -645,12 +644,12 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                     imageData = getMemberType().image();
                 }
                 
-                image = cache.getImage( imageData );
+                image = cache.image( imageData );
             }
             else if( this.elementImageService != null )
             {
                 final Status st = this.element.read( getMemberProperty() ).validation();
-                image = cache.getImage( this.elementImageService.image(), st.severity() );
+                image = cache.image( this.elementImageService.image(), st.severity() );
             }
             else
             {

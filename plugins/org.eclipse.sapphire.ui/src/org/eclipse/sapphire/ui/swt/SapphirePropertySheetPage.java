@@ -63,7 +63,6 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
 {
     private PropertiesViewContributionPart part;
     private Composite composite;
-    private Color backgroundColor;
     private Font noPropertiesFont;
     private Color noPropertiesFontColor;
     
@@ -83,10 +82,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
     
     public void createControl( final Composite parent )
     {
-        this.backgroundColor = parent.getDisplay().getSystemColor( SWT.COLOR_WHITE );
-        
         this.composite = new Composite( parent, SWT.NONE );
-        this.composite.setBackground( this.backgroundColor );
         this.composite.setLayout( glayout( 1, 0, 0 ) );
         
         refresh();
@@ -109,22 +105,18 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             final Composite labelComposite = new Composite( this.composite, SWT.NONE );
             labelComposite.setLayoutData( gdfill() );
             labelComposite.setLayout( glayout( 3 ) );
-            labelComposite.setBackground( this.backgroundColor );
             
             final Label spacerLeft = new Label( labelComposite, SWT.NONE );
             spacerLeft.setLayoutData( gdvfill() );
             spacerLeft.setText( "" );
-            spacerLeft.setBackground( this.backgroundColor );
             
             final Label label = new Label( labelComposite, SWT.CENTER );
             label.setLayoutData( gdhalign( gdhfill(), SWT.CENTER ) );
             label.setText( Resources.noProperties );
-            label.setBackground( this.backgroundColor );
             
             final Label spacerRight = new Label( labelComposite, SWT.NONE );
             spacerRight.setLayoutData( gdvfill() );
             spacerRight.setText( "" );
-            spacerRight.setBackground( this.backgroundColor );
             
             if( this.noPropertiesFont == null )
             {
@@ -277,7 +269,6 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                             if( newPageComposite == null )
                             {
                                 newPageComposite = new Composite( tabbedPropertiesComposite.getTabComposite(), SWT.NO_FOCUS );
-                                newPageComposite.setBackground( SapphirePropertySheetPage.this.backgroundColor );
                                 newPageComposite.setVisible( false );
                                 
                                 final FormData data = new FormData();
@@ -289,14 +280,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                                 
                                 newPageComposite.setLayout( glayout( 2, 5, 5, 10, 10 ) );
                                 
-                                final SapphireRenderingContext context = new SapphireRenderingContext( pagePart, newPageComposite )
-                                {
-                                    @Override
-                                    public void adapt( final Control control )
-                                    {
-                                        control.setBackground( SapphirePropertySheetPage.this.backgroundColor );
-                                    }
-                                };
+                                final SapphireRenderingContext context = new SapphireRenderingContext( pagePart, newPageComposite );
                                 
                                 pagePart.render( context );
 
