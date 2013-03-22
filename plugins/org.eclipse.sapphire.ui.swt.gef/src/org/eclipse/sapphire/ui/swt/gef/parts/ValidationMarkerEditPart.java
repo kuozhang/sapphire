@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
@@ -84,7 +83,6 @@ public class ValidationMarkerEditPart extends ShapeEditPart
 		if (image != null)
 		{
 			SmoothImageFigure markerFigure = new SmoothImageFigure(image);
-			markerFigure.setToolTip(new Label(status.message()));
 			return markerFigure;
 		}
 		return null;

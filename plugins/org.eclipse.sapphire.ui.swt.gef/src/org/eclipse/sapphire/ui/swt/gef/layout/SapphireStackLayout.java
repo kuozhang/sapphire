@@ -63,10 +63,12 @@ public class SapphireStackLayout extends AbstractLayout
 		{
 			return;
 		}
+		Dimension clientSize = parent.getClientArea().getSize();
 		Point offset = getOrigin(parent);
 		IFigure base = (IFigure)children.get(0);
 		Dimension baseSize = base.getPreferredSize();
-		Rectangle bounds = new Rectangle(0, 0, baseSize.width, baseSize.height);
+		Point baseOffset = getOffset(clientSize, baseSize, (SapphireStackLayoutConstraint)getConstraint(base));
+		Rectangle bounds = new Rectangle(baseOffset.x, baseOffset.y, baseSize.width, baseSize.height);
 		bounds = bounds.getTranslated(offset);
 		base.setBounds(bounds);
 		
@@ -75,37 +77,9 @@ public class SapphireStackLayout extends AbstractLayout
 			IFigure child = (IFigure)children.get(i);
 			Dimension childSize = child.getPreferredSize();
 			SapphireStackLayoutConstraint constraint = (SapphireStackLayoutConstraint)getConstraint(child);
-			int offsetX = 0; 
-			int offsetY = 0;
-			
-			HorizontalAlignment horizontalAlign = constraint.getHorizontalAlignment();
-			if (horizontalAlign == HorizontalAlignment.LEFT)
-			{
-				offsetX = constraint.getLeftMargin();
-			}
-			else if (horizontalAlign == HorizontalAlignment.RIGHT)
-			{
-				offsetX = baseSize.width - constraint.getRightMargin() - childSize.width;
-			}
-			else if (horizontalAlign == HorizontalAlignment.CENTER)
-			{
-				offsetX = (baseSize.width - childSize.width) >> 1;
-			}
-			
-			VerticalAlignment verticalAlign = constraint.getVerticalAlignment();
-			if (verticalAlign == VerticalAlignment.TOP)
-			{
-				offsetY = constraint.getTopMargin();
-			}
-			else if (verticalAlign == VerticalAlignment.BOTTOM)
-			{
-				offsetY = baseSize.height - constraint.getBottomMargin() - childSize.height;
-			}
-			else if (verticalAlign == VerticalAlignment.CENTER)
-			{
-				offsetY = (baseSize.height - childSize.height) >> 1;
-			}
-			Rectangle childBounds = new Rectangle(offsetX, offsetY, childSize.width, childSize.height);
+			Point childOffset = getOffset(baseSize, childSize, constraint);
+			Rectangle childBounds = new Rectangle(childOffset.x + baseOffset.x, childOffset.y + baseOffset.y, 
+					childSize.width, childSize.height);
 			childBounds = childBounds.getTranslated(offset);
 			child.setBounds(childBounds);
 		}
@@ -142,4 +116,38 @@ public class SapphireStackLayout extends AbstractLayout
 			constraints.put(figure, newConstraint);
 	}
 
+	private Point getOffset(Dimension baseSize, Dimension childSize, SapphireStackLayoutConstraint constraint)
+	{
+		int offsetX = 0; 
+		int offsetY = 0;
+		
+		HorizontalAlignment horizontalAlign = constraint.getHorizontalAlignment();
+		if (horizontalAlign == HorizontalAlignment.LEFT)
+		{
+			offsetX = constraint.getLeftMargin();
+		}
+		else if (horizontalAlign == HorizontalAlignment.RIGHT)
+		{
+			offsetX = baseSize.width - constraint.getRightMargin() - childSize.width;
+		}
+		else if (horizontalAlign == HorizontalAlignment.CENTER)
+		{
+			offsetX = (baseSize.width - childSize.width) >> 1;
+		}
+		
+		VerticalAlignment verticalAlign = constraint.getVerticalAlignment();
+		if (verticalAlign == VerticalAlignment.TOP)
+		{
+			offsetY = constraint.getTopMargin();
+		}
+		else if (verticalAlign == VerticalAlignment.BOTTOM)
+		{
+			offsetY = baseSize.height - constraint.getBottomMargin() - childSize.height;
+		}
+		else if (verticalAlign == VerticalAlignment.CENTER)
+		{
+			offsetY = (baseSize.height - childSize.height) >> 1;
+		}
+		return new Point(offsetX, offsetY);
+	}
 }

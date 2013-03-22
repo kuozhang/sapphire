@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
-import java.util.List;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -25,9 +23,10 @@ import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.SapphireImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
@@ -96,7 +95,7 @@ public class ShapeUtil {
 				final ImageData data = imagePresentation.getImage();
 				if (data != null) 
 				{
-					figure = new SmoothImageFigure(nodePart.getSwtResourceCache().image(data));
+					figure = new SapphireImageFigure(imagePresentation, nodePart.getSwtResourceCache().image(data));
 				}
 				else 
 				{
@@ -163,18 +162,6 @@ public class ShapeUtil {
 			containerFigure.revalidate();
 		}
 		return true;		
-	}
-
-	@SuppressWarnings("rawtypes")
-	private static int findIndex(IFigure parentFigure, IFigure figure) {
-		List list = parentFigure.getChildren();
-		for (int i = 0; i < list.size(); i++) {
-			IFigure childFigure = (IFigure)list.get(i);
-			if (childFigure.equals(figure)) {
-				return i;
-			}
-		}
-		return -1;
 	}
 	
 	public static Object getLayoutConstraint(ShapePresentation childShapePresentation, ShapeLayoutDef layoutDef)

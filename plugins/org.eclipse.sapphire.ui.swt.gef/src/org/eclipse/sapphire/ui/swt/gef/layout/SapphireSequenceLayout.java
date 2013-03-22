@@ -75,13 +75,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	private Insets marginInsets;
 
 	/**
-	 * Constructs a ToolbarLayout with a specified orientation. Default values
-	 * are: child spacing 0 pixels, {@link #setStretchMinorAxis(boolean)}
-	 * <code>false</code>, and {@link #ALIGN_TOPLEFT} alignment.
-	 * 
-	 * @param isHorizontal
-	 *            whether the children are oriented horizontally
-	 * @since 2.0
+	 * Constructs a SapphireSequenceLayout with a specified SequenceLayoutDef
 	 */
 	public SapphireSequenceLayout(SequenceLayoutDef def) {
 		setHorizontal(def.getOrientation().getContent() == SequenceLayoutOrientation.HORIZONTAL);
@@ -156,7 +150,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	
 	/**
 	 * Calculates the minimum size of the container based on the given hints. If
-	 * this is a vertically-oriented Toolbar Layout, then only the widthHint is
+	 * this is a vertically-oriented sequence Layout, then only the widthHint is
 	 * respected (which means that the children can be as tall as they desire).
 	 * In this case, the minimum width is that of the widest child, and the
 	 * minimum height is the sum of the minimum heights of all children, plus
@@ -195,6 +189,11 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		}
 
 		minSize.height += Math.max(0, children.size() - 1) * spacing;
+		
+		Insets inset = transposer.t(this.marginInsets);
+		minSize.width += inset.left + inset.right;
+		minSize.height += inset.top + inset.bottom;
+		
 		return transposer.t(minSize)
 				.expand(insets.getWidth(), insets.getHeight())
 				.union(getBorderPreferredSize(container));
@@ -202,7 +201,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 	/**
 	 * Calculates the preferred size of the container based on the given hints.
-	 * If this is a vertically-oriented Toolbar Layout, then only the widthHint
+	 * If this is a vertically-oriented sequence Layout, then only the widthHint
 	 * is respected (which means that the children can be as tall as they
 	 * desire). In this case, the preferred width is that of the widest child,
 	 * and the preferred height is the sum of the preferred heights of all
@@ -401,8 +400,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		SapphireSequenceLayoutConstraint constraints[] = new SapphireSequenceLayoutConstraint[numChildren];
 		Insets marginInsets[] = new Insets[numChildren];
 
-		// Calculate the width and height hints. If it's a vertical
-		// ToolBarLayout,
+		// Calculate the width and height hints. If it's a vertical sequence layout,
 		// then ignore the height hint (set it to -1); otherwise, ignore the
 		// width hint. These hints will be passed to the children of the parent
 		// figure when getting their preferred size.
@@ -471,7 +469,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				child = (IFigure) children.get(i);
 				SapphireSequenceLayoutConstraint constraint = constraints[i];
 				if (getMajorExpand(constraint) && maxHeight > SWT.DEFAULT && maxHeight < Integer.MAX_VALUE) {
-					// only limited expansion
+					// only limited expansion since the child figure has max size constraint.
 					if (maxHeight - prefHeight < averageExtraHeight) {
 						limitedExpansionCount++;
 						limitedExpansionHeightTotal += maxHeight - prefHeight;
@@ -499,13 +497,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				else {
 					extraHeights[i] = 0;
 				}
-			}
-					
-//			if (expandCount > 0) {
-//				extraHeight = extraHeight / expandCount;
-//			} else {
-//				extraHeight = 0;
-//			}
+			}					
 		}
 		
 		y += margins.top;
@@ -557,21 +549,25 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			availableBoundHeight = height;
 			
 			int width = Math.min(prefWidth,	maxSizes[i].width);
+			if (getMinorExpand(constraint))
+				width = maxSizes[i].width;
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
 
 			availableBounds = new Rectangle(x + marginInset.left, y + marginInset.top, 
 						clientArea.width - marginInset.left - marginInset.right, availableBoundHeight);
-
+			
 			if (getMinorExpand(constraint)) {
 				newBounds.x += marginInset.left;
 				newBounds.width = clientArea.width - marginInset.left - marginInset.right;
 			} else {
 				int adjust = clientArea.width - width - marginInset.left - marginInset.right;
+				if (adjust < 0)
+					adjust = 0;				
 				switch (getMinorAlignment(constraint)) {
 				case SWT.TOP:
 				case SWT.LEFT:
-					adjust = marginInset.left;
+					adjust = 0;
 					break;
 				case SWT.CENTER:
 					adjust /= 2;
@@ -579,8 +575,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				default:
 					break;   
 				}
-				newBounds.x += adjust;
+				newBounds.x += adjust + marginInset.left;
 			}
+
 			child.setBounds(transposer.t(newBounds));
 			
 			if (child instanceof TextFigure) {
@@ -608,21 +605,6 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 	private boolean getMajorExpand(SapphireSequenceLayoutConstraint constraint) {
 		return isHorizontal() ? constraint.expandHorizontally : constraint.expandVertically;
-	}
-
-	private boolean isMajorExpandLimited(SapphireSequenceLayoutConstraint constraint) {
-		boolean limited = false;
-		if (isHorizontal() && constraint.expandHorizontally) {
-			if (constraint.maxWidth != SWT.DEFAULT && constraint.maxWidth < Integer.MAX_VALUE) {
-				limited = true;
-			}
-		}
-		else if (!isHorizontal() && constraint.expandVertically) {
-			if (constraint.maxHeight != SWT.DEFAULT && constraint.maxHeight < Integer.MAX_VALUE) {
-				limited = true;
-			}			
-		}
-		return limited;
 	}
 	
 	private boolean getMinorExpand(SapphireSequenceLayoutConstraint constraint) {
