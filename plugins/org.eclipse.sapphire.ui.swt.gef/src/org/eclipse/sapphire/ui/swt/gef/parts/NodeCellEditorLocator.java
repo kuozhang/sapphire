@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - Height multiple by zoom, text alignment
  ******************************************************************************/
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 final public class NodeCellEditorLocator implements CellEditorLocator {
@@ -42,6 +44,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		labelRect.width = parentRect.width;
 		// zoom
 		labelRect.width = (int) (labelRect.width * zoom);
+		labelRect.height = (int) (labelRect.height * zoom);
 		
 		Text text = (Text) celleditor.getControl();
 		Point size = text.computeSize(-1, -1);
@@ -90,7 +93,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		
 		textFigure.translateToAbsolute(labelRect);
 		
-		text.setBounds(labelRect.x + horizontalOffet, labelRect.y + verticalOffet, size.x, size.y);
+		text.setBounds(Math.max(labelRect.x + horizontalOffet - 3, parentRect.x), labelRect.y + verticalOffet, size.x, size.y);
 	}
 	
 	protected TextFigure getLabel() {

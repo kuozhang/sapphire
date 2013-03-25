@@ -132,7 +132,7 @@ public class SapphireStackLayout extends AbstractLayout
 		}
 		else if (horizontalAlign == HorizontalAlignment.CENTER)
 		{
-			offsetX = (baseSize.width - childSize.width) >> 1;
+			offsetX = (baseSize.width - childSize.width + 1) >> 1;
 		}
 		
 		VerticalAlignment verticalAlign = constraint.getVerticalAlignment();
@@ -146,7 +146,7 @@ public class SapphireStackLayout extends AbstractLayout
 		}
 		else if (verticalAlign == VerticalAlignment.CENTER)
 		{
-			offsetY = (baseSize.height - childSize.height) >> 1;
+			offsetY = (baseSize.height - childSize.height + 1) >> 1;
 		}
 		return new Point(offsetX, offsetY);
 	}

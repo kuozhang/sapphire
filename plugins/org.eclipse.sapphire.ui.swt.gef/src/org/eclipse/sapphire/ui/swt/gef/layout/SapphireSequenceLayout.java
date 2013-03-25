@@ -457,7 +457,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			amntShrinkHeight = 0;
 		}
 		
-		if (extraHeight < 0) {
+		if (extraHeight <= 0) {
 			extraHeight = 0;
 		} else if (expandCount > 0) {
 			int averageExtraHeight = extraHeight / expandCount;
@@ -549,44 +549,48 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			availableBoundHeight = height;
 			
 			int width = Math.min(prefWidth,	maxSizes[i].width);
-			if (getMinorExpand(constraint))
+			if (getMinorExpand(constraint) && (child instanceof RectangleFigure))
 				width = maxSizes[i].width;
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
 
-			availableBounds = new Rectangle(x + marginInset.left, y + marginInset.top, 
-						clientArea.width - marginInset.left - marginInset.right, availableBoundHeight);
+			// Shenxue: include the margins in the available area. Otherwise the direct edit box could be
+			// too narrow for text that doesn't expand. It doesn't have any extra space around the text in 
+			// direct edit mode even when there are margins around the text.
+			availableBounds = new Rectangle(x, y, clientArea.width, 
+					availableBoundHeight + marginInset.top + marginInset.bottom);
 			
 			if (getMinorExpand(constraint)) {
-				newBounds.x += marginInset.left;
-				newBounds.width = clientArea.width - marginInset.left - marginInset.right;
-			} else {
-				int adjust = clientArea.width - width - marginInset.left - marginInset.right;
-				if (adjust < 0)
-					adjust = 0;				
-				switch (getMinorAlignment(constraint)) {
-				case SWT.TOP:
-				case SWT.LEFT:
-					adjust = 0;
-					break;
-				case SWT.CENTER:
-					adjust /= 2;
-					break;
-				default:
-					break;   
+				if (child instanceof RectangleFigure) {
+					newBounds.x += marginInset.left;
+					newBounds.width = clientArea.width - marginInset.left - marginInset.right;
+				} else {
+					int adjust = clientArea.width - width - marginInset.left - marginInset.right;
+					if (adjust <= 0)
+						adjust = 0;
+					else {
+						
+						switch (getMinorAlignment(constraint)) {
+						case SWT.TOP:
+						case SWT.LEFT:
+							adjust = 0;
+							break;
+						case SWT.CENTER:
+							adjust = (adjust + 1) >> 1;
+							break;
+						default:
+							break;   
+						}
+					}
+					newBounds.x += adjust + marginInset.left;
 				}
-				newBounds.x += adjust + marginInset.left;
 			}
-
+			else {
+				newBounds.x += marginInset.left;				
+			}
 			child.setBounds(transposer.t(newBounds));
 			
 			if (child instanceof TextFigure) {
-				if (i > 0) {
-					int extraSpacing = spacing / 2;
-					extraSpacing = Math.max(extraSpacing, 3);
-					availableBounds.y += extraSpacing;
-					availableBounds.height -= extraSpacing;
-				}
 				((TextFigure) child).setAvailableArea(transposer.t(availableBounds));
 				((TextFigure) child).setHorizontalAlignment(constraint.horizontalAlignment);
 			}

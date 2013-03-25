@@ -91,12 +91,9 @@
                                             <validation-marker>
                                                 <size>small</size>
                                                 <sequence-layout-constraint>
-                                                    <min-width>7</min-width>
-                                                    <min-height>8</min-height>
-                                                    <max-width>7</max-width>
-                                                    <max-height>8</max-height>
                                                     <width>7</width>
                                                     <height>8</height>
+                                                    <expand-vertically>true</expand-vertically>
                                                     <right-margin>3</right-margin>
                                                 </sequence-layout-constraint>
                                             </validation-marker>
@@ -104,10 +101,6 @@
                                                 <path>${IsPrimaryKey ? &quot;key.gif&quot; : null}</path>
                                                 <sequence-layout-constraint>
                                                     <right-margin>8</right-margin>
-                                                    <min-width>16</min-width>
-                                                    <min-height>16</min-height>
-                                                    <max-width>16</max-width>
-                                                    <max-height>16</max-height>
                                                     <width>16</width>
                                                     <height>16</height>
                                                 </sequence-layout-constraint>
@@ -116,7 +109,8 @@
                                                 <content>${ Name == null ? &quot;&lt;column&gt;&quot; : Name }:</content>
                                                 <truncatable>true</truncatable>
                                                 <sequence-layout-constraint>                            						
-                                                	<horizontal-alignment>left</horizontal-alignment>                                                    
+                                                	<horizontal-alignment>left</horizontal-alignment>
+                                                	<right-margin>10</right-margin>                                                    
                                                 </sequence-layout-constraint>
                                             </text>
                                             <text>
@@ -124,8 +118,7 @@
                                                 <truncatable>false</truncatable>
                                                 <sequence-layout-constraint>
                             						<expand-horizontally>true</expand-horizontally>
-                                                	<horizontal-alignment>right</horizontal-alignment>
-                                                	<left-margin>10</left-margin>
+                                                	<horizontal-alignment>right</horizontal-alignment>                                                	
                                                     <right-margin>10</right-margin>
                                                 </sequence-layout-constraint>
                                             </text>

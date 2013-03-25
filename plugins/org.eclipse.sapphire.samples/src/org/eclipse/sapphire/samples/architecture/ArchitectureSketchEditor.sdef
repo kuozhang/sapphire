@@ -57,6 +57,7 @@
               <content>
                 <rectangle>
                   <sequence-layout-constraint>
+                    <expand-horizontally>true</expand-horizontally>
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>top</vertical-alignment>
                   </sequence-layout-constraint>
