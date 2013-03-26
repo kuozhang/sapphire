@@ -93,7 +93,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		
 		textFigure.translateToAbsolute(labelRect);
 		
-		text.setBounds(Math.max(labelRect.x + horizontalOffet - 3, parentRect.x), labelRect.y + verticalOffet, size.x, size.y);
+		text.setBounds(labelRect.x + horizontalOffet, labelRect.y + verticalOffet, size.x, size.y);
 	}
 	
 	protected TextFigure getLabel() {
