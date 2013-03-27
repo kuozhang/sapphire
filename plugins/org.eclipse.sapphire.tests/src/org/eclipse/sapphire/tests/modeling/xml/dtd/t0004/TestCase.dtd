@@ -1,0 +1,5 @@
+<!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)">
+
+<!ELEMENT root EMPTY>
+<!ATTLIST root attr1 CDATA "abc"
+               attr2 %boolean; "true">
