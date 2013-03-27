@@ -70,25 +70,23 @@ public class NodeLayoutEditPolicy extends LayoutEditPolicy
 		{
 			ChangeBoundsRequest cbr = (ChangeBoundsRequest)request;
 			List editParts = cbr.getEditParts();
-			boolean moveShapeFactoryPart = true;
+			boolean moveShapeFactoryPart = false;
 			for (Object obj : editParts)
 			{
 				EditPart editPart = (EditPart)obj;
 				if (editPart instanceof ShapeEditPart)
 				{
 					ShapeEditPart shapeEditPart = (ShapeEditPart)editPart;
-					ShapeModel shapeModel = (ShapeModel)shapeEditPart.getModel();
-					ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
-					if (!(shapePart.getParentPart() instanceof ShapeFactoryPart))
+					if (shapeEditPart.getModel() instanceof ShapeModel)
 					{
-						moveShapeFactoryPart = false;
-						break;
+						ShapeModel shapeModel = (ShapeModel)shapeEditPart.getModel();
+						ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
+						if (shapePart.getParentPart() instanceof ShapeFactoryPart)
+						{
+							moveShapeFactoryPart = true;
+							break;
+						}
 					}
-				}
-				else
-				{
-					moveShapeFactoryPart = false;
-					break;
 				}
 			}
 			if (moveShapeFactoryPart)
