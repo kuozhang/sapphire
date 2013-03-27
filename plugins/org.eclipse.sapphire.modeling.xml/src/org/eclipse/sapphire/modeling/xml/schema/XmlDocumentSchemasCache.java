@@ -15,6 +15,7 @@ import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.xml.dtd.DtdParser;
 
 /**
@@ -53,13 +54,21 @@ public final class XmlDocumentSchemasCache
         
         if( schema == null )
         {
-            if( schemaLocation.endsWith( "dtd" ) )
+            try
             {
-                schema = DtdParser.parseFromUrl( baseLocation, schemaLocation );
+                if( schemaLocation.endsWith( "dtd" ) )
+                {
+                    schema = DtdParser.parseFromUrl( baseLocation, schemaLocation );
+                }
+                else
+                {
+                    schema = XmlDocumentSchemaParser.parseFromUrl( schemaLocation, baseLocation );
+                }
             }
-            else
+            catch( Exception e )
             {
-                schema = XmlDocumentSchemaParser.parseFromUrl( schemaLocation, baseLocation );
+                LoggingService.log( e );
+                schema = ( new XmlDocumentSchema.Factory() ).create();
             }
             
             synchronized( XmlDocumentSchemasCache.class )

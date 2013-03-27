@@ -9,24 +9,23 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.xml.dtd;
+package org.eclipse.sapphire.tests.modeling.xml.dtd.t0004;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.tests.modeling.xml.dtd.t0001.TestXmlDtd0001;
-import org.eclipse.sapphire.tests.modeling.xml.dtd.t0002.TestXmlDtd0002;
-import org.eclipse.sapphire.tests.modeling.xml.dtd.t0003.TestXmlDtd0003;
-import org.eclipse.sapphire.tests.modeling.xml.dtd.t0004.TestEntityRefInAttList;
+import org.eclipse.sapphire.modeling.xml.dtd.DtdParser;
+import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
+ * Tests parsing of a DTD with an entity ref in ATTLIST.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlDtdTestSuite extends TestCase
+public final class TestEntityRefInAttList extends SapphireTestCase
 {
-    private XmlDtdTestSuite( final String name )
+    private TestEntityRefInAttList( final String name )
     {
         super( name );
     }
@@ -35,14 +34,16 @@ public final class XmlDtdTestSuite extends TestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "XmlDtdTestSuite" );
+        suite.setName( "TestEntityRefInAttList" );
 
-        suite.addTest( TestXmlDtd0001.suite() );
-        suite.addTest( TestXmlDtd0002.suite() );
-        suite.addTest( TestXmlDtd0003.suite() );
-        suite.addTest( TestEntityRefInAttList.suite() );
+        suite.addTest( new TestEntityRefInAttList( "testEntityRefInAttList" ) );
         
         return suite;
     }
     
+    public void testEntityRefInAttList() throws Exception
+    {
+        DtdParser.parseFromString( loadResource( "TestCase.dtd" ) );
+    }
+
 }

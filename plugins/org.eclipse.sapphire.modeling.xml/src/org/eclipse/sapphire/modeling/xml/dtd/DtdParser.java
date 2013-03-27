@@ -21,8 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.dtd.internal.DtdParserImpl;
 import org.eclipse.sapphire.modeling.xml.schema.UrlResolver;
@@ -66,9 +64,7 @@ public final class DtdParser
         catch( Exception e )
         {
             final String message = NLS.bind( Resources.parseFailed, "##string##" );
-            LoggingService.log( Status.createErrorStatus( message, e ) );
-            
-            return ( new XmlDocumentSchema.Factory() ).create();
+            throw new RuntimeException( message, e );
         }
     }
 
@@ -84,7 +80,7 @@ public final class DtdParser
     public static XmlDocumentSchema parseFromUrl( final String baseLocation,
                                                   final String url )
     {
-        URL dtdLocationUrl = null;
+        final URL dtdLocationUrl;
         
         try
         {
@@ -93,37 +89,32 @@ public final class DtdParser
         catch( MalformedURLException e )
         {
             final String message = NLS.bind( Resources.parseFailed, url );
-            LoggingService.log( Status.createErrorStatus( message, e ) );
+            throw new RuntimeException( message, e );
         }
         
-        if( dtdLocationUrl != null )
+        InputStream in = null;
+        
+        try
         {
-            InputStream in = null;
-            
-            try
+            in = dtdLocationUrl.openStream();
+            return parseFromString( readTextContent( in ) );
+        }
+        catch( Exception e )
+        {
+            final String message = NLS.bind( Resources.parseFailed, url );
+            throw new RuntimeException( message, e );
+        }
+        finally
+        {
+            if( in != null )
             {
-                in = dtdLocationUrl.openStream();
-                return parseFromString( readTextContent( in ) );
-            }
-            catch( Exception e )
-            {
-                final String message = NLS.bind( Resources.parseFailed, url );
-                LoggingService.log( Status.createErrorStatus( message, e ) );
-            }
-            finally
-            {
-                if( in != null )
+                try
                 {
-                    try
-                    {
-                        in.close();
-                    }
-                    catch( IOException e ) {}
+                    in.close();
                 }
+                catch( IOException e ) {}
             }
         }
-        
-        return ( new XmlDocumentSchema.Factory() ).create();
     }
 
     private static final class Resources extends NLS
