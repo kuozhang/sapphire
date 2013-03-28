@@ -802,7 +802,7 @@ public abstract class SapphirePart implements ISapphirePart
         {
             this.modelElement.detach( this.modelElementListener );
         
-            if( this.parent == null )
+            if( this.parent == null && this.imageCache != null )
             {
                 this.imageCache.dispose();
             }
