@@ -189,4 +189,21 @@
     </catalogContribution>
   </extension>
 
+  <!-- TestCatalogResolution -->
+  
+  <extension point="org.eclipse.wst.xml.core.catalogContributions">
+    <catalogContribution>
+      <system
+        systemId="http://www.eclipse.org/sapphire/tests/xml/dtd/0005s.dtd"
+        uri="schemas/xml/dtd/0005s.dtd"/>
+      <public
+        publicId="-//Sapphire//TestCatalogResolution1//EN"
+        webURL="http://www.eclipse.org/sapphire/tests/xml/dtd/0005p.dtd"
+        uri="schemas/xml/dtd/0005p.dtd"/>
+      <public
+        publicId="-//Sapphire//TestCatalogResolution2//EN"
+        uri="schemas/xml/dtd/0005p.dtd"/>
+    </catalogContribution>
+  </extension>
+
 </plugin>

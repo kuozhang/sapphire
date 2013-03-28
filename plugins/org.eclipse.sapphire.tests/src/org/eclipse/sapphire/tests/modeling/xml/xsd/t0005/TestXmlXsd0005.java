@@ -60,7 +60,7 @@ public final class TestXmlXsd0005 extends SapphireTestCase
     
     public void testSchemaParsing() throws Exception
     {
-        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( NAMESPACE, null );
+        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( NAMESPACE );
         
         final XmlElementDefinition workbookElementDef = schema.getElement( "workbook" );
         final XmlSequenceGroup workbookContentModel = (XmlSequenceGroup) workbookElementDef.getContentModel();

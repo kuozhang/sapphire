@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.dtd.internal.DtdParserImpl;
-import org.eclipse.sapphire.modeling.xml.schema.UrlResolver;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 
 /**
@@ -34,7 +33,34 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 
 public final class DtdParser
 {
-    public static XmlDocumentSchema parseFromString( final String dtd )
+    public static XmlDocumentSchema parse( final URL url )
+    {
+        InputStream in = null;
+        
+        try
+        {
+            in = url.openStream();
+            return parse( readTextContent( in ) );
+        }
+        catch( Exception e )
+        {
+            final String message = NLS.bind( Resources.parseFailed, url );
+            throw new RuntimeException( message, e );
+        }
+        finally
+        {
+            if( in != null )
+            {
+                try
+                {
+                    in.close();
+                }
+                catch( IOException e ) {}
+            }
+        }
+    }
+    
+    public static XmlDocumentSchema parse( final String dtd )
     {
         // The DTD parser is invoked twice. If entities are found in the first pass, then string substitution
         // is used to resolve them in the DTD and the DTD is re-parsed.
@@ -77,14 +103,16 @@ public final class DtdParser
         return content;
     }
 
-    public static XmlDocumentSchema parseFromUrl( final String baseLocation,
+    @Deprecated
+    
+    public static XmlDocumentSchema parseFromUrl( final String referer,
                                                   final String url )
     {
         final URL dtdLocationUrl;
         
         try
         {
-            dtdLocationUrl = new URL( UrlResolver.resolve( baseLocation, url ) );
+            dtdLocationUrl = new URL( org.eclipse.sapphire.modeling.xml.schema.UrlResolver.resolve( referer, url ) );
         }
         catch( MalformedURLException e )
         {
@@ -92,29 +120,14 @@ public final class DtdParser
             throw new RuntimeException( message, e );
         }
         
-        InputStream in = null;
-        
-        try
-        {
-            in = dtdLocationUrl.openStream();
-            return parseFromString( readTextContent( in ) );
-        }
-        catch( Exception e )
-        {
-            final String message = NLS.bind( Resources.parseFailed, url );
-            throw new RuntimeException( message, e );
-        }
-        finally
-        {
-            if( in != null )
-            {
-                try
-                {
-                    in.close();
-                }
-                catch( IOException e ) {}
-            }
-        }
+        return parse( dtdLocationUrl );
+    }
+    
+    @Deprecated
+    
+    public static XmlDocumentSchema parseFromString( final String dtd )
+    {
+        return parse( dtd );
     }
 
     private static final class Resources extends NLS

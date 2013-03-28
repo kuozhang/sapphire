@@ -43,7 +43,7 @@ public final class TestEntityRefInAttList extends SapphireTestCase
     
     public void testEntityRefInAttList() throws Exception
     {
-        DtdParser.parseFromString( loadResource( "TestCase.dtd" ) );
+        DtdParser.parse( loadResource( "TestCase.dtd" ) );
     }
 
 }

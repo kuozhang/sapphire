@@ -19,12 +19,13 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@Deprecated
 @SuppressWarnings( "restriction" )
 
 public final class UrlResolver
 {
-    public static final String resolve( final String baseLocation,
-                                         final String url )
+    public static final String resolve( final String referer,
+                                        final String location )
     {
         final URIResolver idResolver = URIResolverPlugin.createResolver();
 
@@ -32,7 +33,7 @@ public final class UrlResolver
         
         try
         {
-            resolvedUrl = idResolver.resolve( baseLocation, null, url );
+            resolvedUrl = idResolver.resolve( referer, null, location );
         }
         catch( Exception e )
         {
@@ -41,7 +42,7 @@ public final class UrlResolver
          
         if( resolvedUrl == null )
         {
-            resolvedUrl = url;
+            resolvedUrl = location;
         }
         
         return resolvedUrl;
