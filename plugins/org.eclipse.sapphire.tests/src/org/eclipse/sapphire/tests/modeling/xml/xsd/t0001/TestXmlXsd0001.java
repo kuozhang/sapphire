@@ -53,7 +53,7 @@ public final class TestXmlXsd0001 extends SapphireTestCase
     
     public void testSchemaParsing() throws Exception
     {
-        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001", null );
+        final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( "http://www.eclipse.org/sapphire/tests/xml/xsd/0001" );
         
         final XmlElementDefinition rootElementDef = schema.getElement( "root" );
         final XmlSequenceGroup rootContentModel = (XmlSequenceGroup) rootElementDef.getContentModel();

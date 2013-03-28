@@ -13,12 +13,10 @@
 
 package org.eclipse.sapphire.modeling.xml.schema;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,20 +48,27 @@ import org.xml.sax.InputSource;
 
 public final class XmlDocumentSchemaParser
 {
-    public static XmlDocumentSchema parseFromUrl( final String schemaLocation,
-                                                  final String baseLocation )
+    public static XmlDocumentSchema parse( final URL url,
+                                           final Resolver resolver )
+    {
+        return parse( url, url.toString(), resolver );
+    }
+    
+    public static XmlDocumentSchema parse( final URL url,
+                                           final String location,
+                                           final Resolver resolver )
     {
         final XmlDocumentSchema.Factory schema = new XmlDocumentSchema.Factory();
-        schema.setSchemaLocation( schemaLocation );
-        parse( schema, schemaLocation, baseLocation );
+        schema.setSchemaLocation( location );
+        parse( schema, url, resolver );
         return schema.create();
     }
     
     private static void parse( final XmlDocumentSchema.Factory schema,
-                               final String schemaLocation,
-                               final String baseLocation )
+                               final URL url,
+                               final Resolver resolver )
     {
-        final Element root = parseSchemaToDom( schemaLocation, baseLocation );
+        final Element root = parseSchemaToDom( url );
         
         if( root != null )
         {
@@ -121,22 +126,23 @@ public final class XmlDocumentSchemaParser
                     
                     if( ! includedSchemaLocation.startsWith( "http://" ) )
                     {
-                        final int lastSlash = schemaLocation.lastIndexOf( '/' );
+                        final String location = url.toString();
+                        final int lastSlash = location.lastIndexOf( '/' );
                         final String baseUrl;
                         
                         if( lastSlash == -1 )
                         {
-                            baseUrl = schemaLocation;
+                            baseUrl = location;
                         }
                         else
                         {
-                            baseUrl = schemaLocation.substring( 0, lastSlash );
+                            baseUrl = location.substring( 0, lastSlash );
                         }
                         
                         includedSchemaLocation = baseUrl + "/" + includedSchemaLocation;
                     }
                     
-                    parse( schema, includedSchemaLocation, baseLocation );
+                    parse( schema, resolver.resolve( includedSchemaLocation ), resolver );
                     
                     if( elname.equals( "redefine" ) )
                     {
@@ -484,8 +490,7 @@ public final class XmlDocumentSchemaParser
         return new QName( refNamespace, refLocalName );
     }
     
-    private static Element parseSchemaToDom( final String schemaLocation,
-                                             final String baseLocation )
+    private static Element parseSchemaToDom( final URL url )
     {
         final DocumentBuilder docbuilder;
         
@@ -518,45 +523,28 @@ public final class XmlDocumentSchemaParser
 
         try
         {
-            URL schemaLocationUrl = null;
+            InputStream in = null;
             
             try
             {
-                schemaLocationUrl = new URL( UrlResolver.resolve( baseLocation, schemaLocation ) );
-            }
-            catch( MalformedURLException e )
-            {
-                if( baseLocation != null )
-                {
-                    schemaLocationUrl = ( new File( new File( baseLocation ).getParentFile(), schemaLocation ) ).toURI().toURL();
-                }
-            }
-            
-            if( schemaLocationUrl != null )
-            {
-                InputStream in = null;
+                in = url.openStream();
+
+                final Document doc = docbuilder.parse( in );
                 
-                try
+                if( doc != null )
                 {
-                    in = schemaLocationUrl.openStream();
-    
-                    final Document doc = docbuilder.parse( in );
-                    
-                    if( doc != null )
-                    {
-                        return doc.getDocumentElement();
-                    }
+                    return doc.getDocumentElement();
                 }
-                finally
+            }
+            finally
+            {
+                if( in != null )
                 {
-                    if( in != null )
+                    try
                     {
-                        try
-                        {
-                            in.close();
-                        }
-                        catch( IOException e ) {}
+                        in.close();
                     }
+                    catch( IOException e ) {}
                 }
             }
         }
@@ -566,7 +554,7 @@ public final class XmlDocumentSchemaParser
         }
         catch( Exception e )
         {
-            final String message = NLS.bind( Resources.parseFailed, schemaLocation );
+            final String message = NLS.bind( Resources.parseFailed, url.toString() );
             LoggingService.log( Status.createErrorStatus( message, e ) );
         }
         
@@ -655,6 +643,11 @@ public final class XmlDocumentSchemaParser
         }
 
         return contentModel;
+    }
+    
+    public static abstract class Resolver
+    {
+        public abstract URL resolve( String location );
     }
 
     private static final class ElementsIterator

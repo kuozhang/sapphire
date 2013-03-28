@@ -44,7 +44,7 @@ public final class TestXmlDtd0001 extends SapphireTestCase
     
     public void test() throws Exception
     {
-        final XmlDocumentSchema schema = DtdParser.parseFromString( loadResource( "input.dtd" ) );
+        final XmlDocumentSchema schema = DtdParser.parse( loadResource( "input.dtd" ) );
         assertEqualsIgnoreNewLineDiffs( loadResource( "output.txt" ), schema.toString() );
     }
 

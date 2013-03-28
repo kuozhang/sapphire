@@ -159,29 +159,31 @@ public final class XmlElement extends XmlNode
             
             if( parent == null )
             {
-                String schemaLocation = getSchemaLocation();
-                String baseLocation = null;
+                String referer = null;
+                String publicId = null;
+                String systemId = getSchemaLocation();
                 
                 final File file = getResourceStore().adapt( File.class );
                 
                 if( file != null )
                 {
-                    baseLocation = file.getAbsolutePath();
+                    referer = file.getAbsolutePath();
                 }
                         
-                if( schemaLocation == null )
+                if( systemId == null )
                 {
                     final DocumentType type = getDomNode().getOwnerDocument().getDoctype();
                     
                     if( type != null )
                     {
-                        schemaLocation = type.getSystemId();
+                        publicId = type.getPublicId();
+                        systemId = type.getSystemId();
                     }
                 }
                 
-                if( schemaLocation != null )
+                if( publicId != null || systemId != null )
                 {
-                    final XmlDocumentSchema xmlDocumentSchema = XmlDocumentSchemasCache.getSchema( schemaLocation, baseLocation );
+                    final XmlDocumentSchema xmlDocumentSchema = XmlDocumentSchemasCache.getSchema( referer, publicId, systemId );
                     
                     if( xmlDocumentSchema != null )
                     {

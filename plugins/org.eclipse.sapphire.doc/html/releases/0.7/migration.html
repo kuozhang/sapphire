@@ -47,6 +47,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#Color">Color</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
+  <li><a href="#DtdParser">DtdParser</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
@@ -56,9 +57,11 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#TypeCast">TypeCast</a></li>
+  <li><a href="#UrlResolver">UrlResolver</a></li>
   <li><a href="#Value">Value</a></li>
   <li><a href="#ValueSerializationMasterService">ValueSerializationMasterService</a></li>
   <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
+  <li><a href="#XmlDocumentSchemasCache">XmlDocumentSchemasCache</a></li>
   <li><a href="#XmlResource">XmlResource</a></li>
   <li><a href="#Service">@Service</a></li>
   <li><a href="#SDEF">SDEF</a></li>
@@ -358,6 +361,32 @@ public class TestDateToStringConversionService extends DateToStringConversionSer
 </table>
 
 
+<h2><a name="DtdParser">DtdParser</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">DtdParser.</font>parseFromString<font color="#888888">( dtd )</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">DtdParser.</font>parse<font color="#888888">( dtd )</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">DtdParser.</font>parseFromUrl( referer, location )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">DtdParser.</font>parse( new URL( location ) )</code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="GenerateImpl">GenerateImpl</a></h2>
 
 <p>With the switch to on-demand element compilation, there is no longer a need to signal to the framework
@@ -618,6 +647,24 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="UrlResolver">UrlResolver</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>UrlResolver.resolve( referer, location )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>URIResolverPlugin.createResolver().resolve( referer, null, location )</code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="Value">Value</a></h2>
 
 <table>
@@ -733,6 +780,24 @@ matches the default implementation of the encode() method.</p>
         ...
     }
 }</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="XmlDocumentSchemasCache">XmlDocumentSchemasCache</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><font color="#888888">XmlDocumentSchemasCache.getSchema</font>( location, referer )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><font color="#888888">XmlDocumentSchemasCache.getSchema</font>( referer, null, location )</code></pre>
     </td>
   </tr>
 </table>
