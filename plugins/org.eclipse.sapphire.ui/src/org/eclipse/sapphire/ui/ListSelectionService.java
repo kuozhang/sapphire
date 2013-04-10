@@ -49,21 +49,12 @@ public final class ListSelectionService extends Service
      * Selects a single element in the list. If selection changes, ListSelectionChangedEvent will
      * be fired.
      * 
-     * @param element the new selection
+     * @param element the new selection or null
      */
     
     public void select( final IModelElement element )
     {
-        final List<IModelElement> elements = Collections.singletonList( element );
-
-        if( ! equalsBasedOnEntryIdentity( elements, this.elements ) )
-        {
-            final List<IModelElement> before = this.elements;
-            
-            this.elements = elements;
-
-            broadcast( new ListSelectionChangedEvent( this, before, this.elements ) );
-        }
+        select( ListFactory.<IModelElement>start().add( element ).result() );
     }
 
     /**
