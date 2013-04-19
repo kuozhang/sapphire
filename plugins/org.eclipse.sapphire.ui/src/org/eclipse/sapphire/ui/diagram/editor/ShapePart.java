@@ -88,6 +88,7 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
         if (isActive())
         {
         	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE);
+        	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_SHAPE_HIDDEN);
         }
         return contextSet;    	
     }

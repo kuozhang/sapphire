@@ -36,6 +36,7 @@ public final class SapphireActionSystem
     public static final String CONTEXT_DIAGRAM_NODE = PREFIX + "Diagram.Node";
     public static final String CONTEXT_DIAGRAM_NODE_HIDDEN = PREFIX + "Diagram.Node.Hidden";
     public static final String CONTEXT_DIAGRAM_NODE_SHAPE = PREFIX + "Diagram.Node.Shape";
+    public static final String CONTEXT_DIAGRAM_SHAPE_HIDDEN = PREFIX + "Diagram.Node.Shape.Hidden";
     public static final String CONTEXT_DIAGRAM_CONNECTION = PREFIX + "Diagram.Connection";
     public static final String CONTEXT_DIAGRAM_CONNECTION_HIDDEN = PREFIX + "Diagram.Connection.Hidden";
     public static final String CONTEXT_DIAGRAM_MULTIPLE_PARTS = PREFIX + "Diagram.MultipleParts";

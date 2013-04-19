@@ -75,6 +75,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 			else if (this.sapphirePart instanceof ShapePart)
 			{
 				this.actionContext = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE;
+				this.hiddenContext = SapphireActionSystem.CONTEXT_DIAGRAM_SHAPE_HIDDEN;
 			}
 			else if (this.sapphirePart instanceof DiagramConnectionPart)
 			{
