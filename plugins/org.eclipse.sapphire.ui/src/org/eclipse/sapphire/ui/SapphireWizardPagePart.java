@@ -34,7 +34,7 @@ public final class SapphireWizardPagePart extends CompositePart
         
         this.imageFunctionResult = initExpression
         (
-            def.getImage().getContent(),
+            def.getImage().content(),
             ImageData.class,
             null,
             new Runnable()
@@ -55,12 +55,12 @@ public final class SapphireWizardPagePart extends CompositePart
     
     public String getLabel()
     {
-        return definition().getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        return definition().getLabel().localized( CapitalizationType.TITLE_STYLE, false );
     }
     
     public String getDescription()
     {
-        return definition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
+        return definition().getDescription().localized( CapitalizationType.NO_CAPS, false );
     }
     
     public ImageData getImage()

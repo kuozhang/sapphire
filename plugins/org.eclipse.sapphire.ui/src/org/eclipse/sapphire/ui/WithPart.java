@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.WithPartHelper.resolvePath;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
@@ -28,25 +27,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.ui.WithPartHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.FormDef;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
@@ -78,26 +76,23 @@ public final class WithPart extends PageBookPart
     private static FormDef defaultPageDef;
     
     private ModelPath path;
-    private IModelElement element;
-    private ElementProperty property;
-    private IModelElement elementForChildParts;
+    private Property property;
+    private Element elementForChildParts;
     private Listener listener;
     
     @Override
     protected void init()
     {
         final WithDef def = (WithDef) this.definition;
-        final ResolvePathResult resolvePathResult = resolvePath( getModelElement(), def, this.params );
         
-        if( resolvePathResult.property == null )
+        this.path = new ModelPath( def.getPath().text() );
+        this.property = getModelElement().property( this.path );
+        
+        if( this.property == null )
         {
             throw new IllegalStateException();
         }
         
-        this.path = resolvePathResult.path;
-        this.element = resolvePathResult.element;
-        this.property = resolvePathResult.property;
-
         super.init();
         
         setExposePageValidationState( true );
@@ -118,7 +113,7 @@ public final class WithPart extends PageBookPart
             }
         };
         
-        this.element.attach( this.listener, this.property );
+        this.property.attach( this.listener );
         
         updateCurrentPage( true );
     }
@@ -129,7 +124,7 @@ public final class WithPart extends PageBookPart
         return AndFunction.create
         (
             super.initVisibleWhenFunction(),
-            createVersionCompatibleFunction( getLocalModelElement(), this.property )
+            createVersionCompatibleFunction( this.property )
         );
     }
     
@@ -155,12 +150,12 @@ public final class WithPart extends PageBookPart
     }
     
     @Override
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
-        return this.element;
+        return this.property.element();
     }
-
-    public ElementProperty getProperty()
+    
+    public Property property()
     {
         return this.property;
     }
@@ -181,9 +176,9 @@ public final class WithPart extends PageBookPart
         
         if( this.property != null )
         {
-            final IModelElement element = getLocalModelElement();
-            final ElementProperty property = getProperty();
-            final PossibleTypesService possibleTypesService = element.service( property, PossibleTypesService.class );
+            final Property property = this.property;
+            
+            final PossibleTypesService possibleTypesService = property.service( PossibleTypesService.class );
 
             final Composite typeSelectorComposite = new Composite( composite, SWT.NONE );
             typeSelectorComposite.setLayoutData( gdhfill() );
@@ -202,9 +197,9 @@ public final class WithPart extends PageBookPart
                     innerTypeSelectorComposite.setLayoutData( gdvalign( gdhfill(), SWT.CENTER ) );
                     innerTypeSelectorComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
                     
-                    final SortedSet<ModelElementType> allPossibleTypes = possibleTypesService.types();
+                    final SortedSet<ElementType> allPossibleTypes = possibleTypesService.types();
                     final int allPossibleTypesCount = allPossibleTypes.size();
-                    final Listener modelPropertyListener;
+                    final Runnable updateUserInterfaceOp;
                     
                     final Style defaultStyle;
                     
@@ -232,14 +227,14 @@ public final class WithPart extends PageBookPart
                     final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( context, actions );
                     final SapphireKeyboardActionPresentation actionPresentationKeyboard = new SapphireKeyboardActionPresentation( actionPresentationManager );
                     
-                    final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( WithPart.this, element, property, context, innerTypeSelectorComposite );
+                    final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( WithPart.this, property, context, innerTypeSelectorComposite );
                     decorator.control().setLayoutData( gdvalign( gd(), ( style == Style.DROP_DOWN_LIST ? SWT.TOP : SWT.CENTER ) ) );
 
                     if( style == Style.CHECKBOX )
                     {
-                        final ModelElementType type = allPossibleTypes.first();
+                        final ElementType type = allPossibleTypes.first();
                         
-                        String masterCheckBoxText = def.getLabel().getLocalizedText( CapitalizationType.FIRST_WORD_ONLY, true );
+                        String masterCheckBoxText = def.getLabel().localized( CapitalizationType.FIRST_WORD_ONLY, true );
                         
                         if( masterCheckBoxText == null )
                         {
@@ -251,36 +246,25 @@ public final class WithPart extends PageBookPart
                         masterCheckBox.setText( masterCheckBoxText );
                         decorator.addEditorControl( masterCheckBox );
                         actionPresentationKeyboard.attach( masterCheckBox );
-                        context.setHelp( masterCheckBox, element, property );
+                        context.setHelp( masterCheckBox, property.element(), property.definition() );
             
-                        modelPropertyListener = new FilteredListener<PropertyEvent>()
+                        updateUserInterfaceOp = new Runnable()
                         {
-                            @Override
-                            protected void handleTypedEvent( final PropertyEvent event )
+                            public void run()
                             {
                                 if( Display.getCurrent() == null )
                                 {
-                                    masterCheckBox.getDisplay().asyncExec
-                                    (
-                                        new Runnable()
-                                        {
-                                            public void run()
-                                            {
-                                                handleTypedEvent( event );
-                                            }
-                                        }
-                                    );
-                                    
+                                    masterCheckBox.getDisplay().asyncExec( this );
                                     return;
                                 }
                                 
-                                final IModelElement subModelElement = element.read( property ).element();
+                                final Element subModelElement = ( (ElementHandle<?>) property ).content();
                                 
                                 masterCheckBox.setSelection( subModelElement != null );
-                                masterCheckBox.setEnabled( element.enabled( property ) );
+                                masterCheckBox.setEnabled( property.enabled() );
                             }
                         };
-                        
+                                
                         masterCheckBox.addSelectionListener
                         (
                             new SelectionAdapter()
@@ -290,15 +274,15 @@ public final class WithPart extends PageBookPart
                                 {
                                     try
                                     {
-                                        final ModelElementHandle<?> handle = element.read( property );
+                                        final ElementHandle<?> handle = (ElementHandle<?>) property;
                                         
                                         if( masterCheckBox.getSelection() == true )
                                         {
-                                            handle.element( true );
+                                            handle.content( true );
                                         }
                                         else
                                         {
-                                            handle.remove();
+                                            handle.clear();
                                         }
                                     }
                                     catch( Exception e )
@@ -326,12 +310,12 @@ public final class WithPart extends PageBookPart
                         final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneSelection );
                         decorator.addEditorControl( noneButton );
                         actionPresentationKeyboard.attach( noneButton );
-                        context.setHelp( noneButton, element, property );
+                        context.setHelp( noneButton, property.element(), property.definition() );
                         
-                        final Map<ModelElementType,Button> typeToButton = new HashMap<ModelElementType,Button>();
-                        final Map<Button,ModelElementType> buttonToType = new HashMap<Button,ModelElementType>();
+                        final Map<ElementType,Button> typeToButton = new HashMap<ElementType,Button>();
+                        final Map<Button,ElementType> buttonToType = new HashMap<Button,ElementType>();
                         
-                        for( ModelElementType type : allPossibleTypes )
+                        for( ElementType type : allPossibleTypes )
                         {
                             final String label = type.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
                             final Button button = radioButtonsGroup.addRadioButton( label );
@@ -339,31 +323,20 @@ public final class WithPart extends PageBookPart
                             buttonToType.put( button, type );
                             decorator.addEditorControl( button );
                             actionPresentationKeyboard.attach( button );
-                            context.setHelp( button, element, property );
+                            context.setHelp( button, property.element(), property.definition() );
                         }
                         
-                        modelPropertyListener = new FilteredListener<PropertyEvent>()
+                        updateUserInterfaceOp = new Runnable()
                         {
-                            @Override
-                            protected void handleTypedEvent( final PropertyEvent event )
+                            public void run()
                             {
                                 if( Display.getCurrent() == null )
                                 {
-                                    radioButtonsGroup.getDisplay().asyncExec
-                                    (
-                                        new Runnable()
-                                        {
-                                            public void run()
-                                            {
-                                                handleTypedEvent( event );
-                                            }
-                                        }
-                                    );
-                                    
+                                    radioButtonsGroup.getDisplay().asyncExec( this );
                                     return;
                                 }
                                 
-                                final IModelElement subModelElement = element.read( property ).element();
+                                final Element subModelElement = ( (ElementHandle<?>) property ).content();
                                 final Button button;
                                 
                                 if( subModelElement == null )
@@ -380,10 +353,10 @@ public final class WithPart extends PageBookPart
                                     radioButtonsGroup.setSelection( button );
                                 }
                                 
-                                radioButtonsGroup.setEnabled( element.enabled( property ) );
+                                radioButtonsGroup.setEnabled( property.enabled() );
                             }
                         };
-                        
+                                
                         radioButtonsGroup.addSelectionListener
                         (
                             new SelectionAdapter()
@@ -393,17 +366,17 @@ public final class WithPart extends PageBookPart
                                 {
                                     try
                                     {
-                                        final ModelElementHandle<?> handle = element.read( property );
+                                        final ElementHandle<?> handle = (ElementHandle<?>) property;
                                         final Button button = radioButtonsGroup.getSelection();
                                         
                                         if( button == noneButton )
                                         {
-                                            handle.remove();
+                                            handle.clear();
                                         }
                                         else
                                         {
-                                            final ModelElementType type = buttonToType.get( button );
-                                            handle.element( true, type );
+                                            final ElementType type = buttonToType.get( button );
+                                            handle.content( true, type );
                                         }
                                     }
                                     catch( Exception e )
@@ -429,16 +402,16 @@ public final class WithPart extends PageBookPart
                         combo.setLayoutData( gdhfill() );
                         decorator.addEditorControl( combo );
                         actionPresentationKeyboard.attach( combo );
-                        context.setHelp( combo, element, property );
+                        context.setHelp( combo, property.element(), property.definition() );
                         
                         combo.add( Resources.noneSelection );
                         
-                        final Map<ModelElementType,Integer> typeToIndex = new HashMap<ModelElementType,Integer>();
-                        final Map<Integer,ModelElementType> indexToType = new HashMap<Integer,ModelElementType>();
+                        final Map<ElementType,Integer> typeToIndex = new HashMap<ElementType,Integer>();
+                        final Map<Integer,ElementType> indexToType = new HashMap<Integer,ElementType>();
                         
                         int index = 1;
                         
-                        for( ModelElementType type : allPossibleTypes )
+                        for( ElementType type : allPossibleTypes )
                         {
                             final String label = type.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
                             combo.add( label );
@@ -448,28 +421,17 @@ public final class WithPart extends PageBookPart
                             index++;
                         }
                         
-                        modelPropertyListener = new FilteredListener<PropertyEvent>()
+                        updateUserInterfaceOp = new Runnable()
                         {
-                            @Override
-                            protected void handleTypedEvent( final PropertyEvent event )
+                            public void run()
                             {
                                 if( Display.getCurrent() == null )
                                 {
-                                    combo.getDisplay().asyncExec
-                                    (
-                                        new Runnable()
-                                        {
-                                            public void run()
-                                            {
-                                                handleTypedEvent( event );
-                                            }
-                                        }
-                                    );
-                                    
+                                    combo.getDisplay().asyncExec( this );
                                     return;
                                 }
                                 
-                                final IModelElement subModelElement = element.read( property ).element();
+                                final Element subModelElement = ( (ElementHandle<?>) property ).content();
                                 final int index;
                                 
                                 if( subModelElement == null )
@@ -486,10 +448,10 @@ public final class WithPart extends PageBookPart
                                     combo.select( index );
                                 }
                                 
-                                combo.setEnabled( element.enabled( property ) );
+                                combo.setEnabled( property.enabled() );
                             }
                         };
-                        
+
                         combo.addSelectionListener
                         (
                             new SelectionAdapter()
@@ -499,17 +461,17 @@ public final class WithPart extends PageBookPart
                                 {
                                     try
                                     {
-                                        final ModelElementHandle<?> handle = element.read( property );
+                                        final ElementHandle<?> handle = (ElementHandle<?>) property;
                                         final int index = combo.getSelectionIndex();
                                         
                                         if( index == 0 )
                                         {
-                                            handle.remove();
+                                            handle.clear();
                                         }
                                         else
                                         {
-                                            final ModelElementType type = indexToType.get( index );
-                                            handle.element( true, type );
+                                            final ElementType type = indexToType.get( index );
+                                            handle.content( true, type );
                                         }
                                     }
                                     catch( Exception e )
@@ -536,8 +498,18 @@ public final class WithPart extends PageBookPart
                     
                     actionPresentationKeyboard.render();
                     
-                    modelPropertyListener.handle( new PropertyContentEvent( element, property ) );
-                    element.attach( modelPropertyListener, property );
+                    updateUserInterfaceOp.run();
+                    
+                    final Listener modelPropertyListener = new FilteredListener<PropertyEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( final PropertyEvent event )
+                        {
+                            updateUserInterfaceOp.run();
+                        }
+                    };
+                    
+                    property.attach( modelPropertyListener );
                     
                     typeSelectorComposite.layout( true, true );
                     
@@ -547,7 +519,7 @@ public final class WithPart extends PageBookPart
                         {
                             public void widgetDisposed( final DisposeEvent event )
                             {
-                                element.detach( modelPropertyListener, property );
+                                property.detach( modelPropertyListener );
                                 actionPresentationManager.dispose();
                                 actionPresentationKeyboard.dispose();
                             }
@@ -600,7 +572,7 @@ public final class WithPart extends PageBookPart
     }
     
     @Override
-    protected FormPart createPagePart( final IModelElement modelElementForPage,
+    protected FormPart createPagePart( final Element modelElementForPage,
                                        final FormDef pageDef )
     {
         final PagePart page = new PagePart();
@@ -616,7 +588,7 @@ public final class WithPart extends PageBookPart
         if( this.property != null )
         {
             final Status.CompositeStatusFactory factory = Status.factoryForComposite();
-            factory.merge( this.element.read( this.property ).validation( false ) );
+            factory.merge( ( (ElementHandle<?>) this.property ).validation() );
             factory.merge( state );
             
             state = factory.create();
@@ -627,7 +599,7 @@ public final class WithPart extends PageBookPart
 
     private void updateCurrentPage( final boolean force )
     {
-        final IModelElement child = this.element.read( this.property ).element();
+        final Element child = ( (ElementHandle<?>) this.property ).content();
         
         if( force == true || this.elementForChildParts != child )
         {
@@ -635,7 +607,7 @@ public final class WithPart extends PageBookPart
 
             if( this.elementForChildParts == null )
             {
-                changePage( this.element, null );
+                changePage( this.property.element(), null );
             }
             else
             {
@@ -651,7 +623,7 @@ public final class WithPart extends PageBookPart
         {
             final ModelPath tail = path.makeRelativeTo( this.path );
             
-            if( this.property == null || ( this.element.enabled( this.property ) && this.element.read( this.property ) != null ) )
+            if( this.property == null || this.property.enabled() )
             {
                 return super.setFocus( tail );
             }
@@ -673,7 +645,7 @@ public final class WithPart extends PageBookPart
         
         if( this.listener != null )
         {
-            this.element.detach( this.listener, this.property );
+            this.property.detach( this.listener );
         }
     }
     

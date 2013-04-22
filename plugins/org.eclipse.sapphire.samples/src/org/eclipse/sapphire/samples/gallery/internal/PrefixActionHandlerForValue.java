@@ -12,11 +12,11 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -38,7 +38,7 @@ public final class PrefixActionHandlerForValue extends SapphirePropertyEditorAct
         
         this.prefix = def.getParam( "prefix" ) + " ";
         
-        final IModelElement element = getModelElement();
+        final Element element = getModelElement();
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -50,7 +50,7 @@ public final class PrefixActionHandlerForValue extends SapphirePropertyEditorAct
             }
         };
         
-        final String path = getProperty().getName();
+        final String path = property().name();
         
         element.attach( listener, path );
         
@@ -71,17 +71,9 @@ public final class PrefixActionHandlerForValue extends SapphirePropertyEditorAct
     }
     
     @Override
-    public ValueProperty getProperty()
-    {
-        return (ValueProperty) super.getProperty();
-    }
-
-    @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
-        final ValueProperty property = getProperty();
-        final String oldValue = element.read( property ).getText();
+        final String oldValue = ( (Value<?>) property() ).text();
         final String newValue;
         
         if( isChecked() )
@@ -107,20 +99,20 @@ public final class PrefixActionHandlerForValue extends SapphirePropertyEditorAct
             }
         }
         
-        element.write( property, newValue );
+        ( (Value<?>) property() ).write( newValue );
         
         return null;
     }
     
     private void refreshEnabledState()
     {
-        final String value = getModelElement().read( getProperty() ).getText();
+        final String value = ( (Value<?>) property() ).text();
         setEnabled( value != null );
     }
 
     private void refreshCheckedState()
     {
-        final String value = getModelElement().read( getProperty() ).getText();
+        final String value = ( (Value<?>) property() ).text();
         setChecked( value != null && value.startsWith( this.prefix ) );
     }
     

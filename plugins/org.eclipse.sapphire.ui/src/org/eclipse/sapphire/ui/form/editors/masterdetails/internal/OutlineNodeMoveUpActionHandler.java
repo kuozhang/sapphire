@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 
@@ -29,14 +29,13 @@ public class OutlineNodeMoveUpActionHandler extends OutlineNodeMoveActionHandler
         setId( ID );
     }
     
-    @SuppressWarnings( "unchecked" )
     @Override
-    
+    @SuppressWarnings( "unchecked" )
     protected Object run( final SapphireRenderingContext context )
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getModelElement();
-        final ModelElementList<IModelElement> list = (ModelElementList<IModelElement>) element.parent();
+        final Element element = node.getModelElement();
+        final ElementList<Element> list = (ElementList<Element>) element.parent();
         
         list.moveUp( element );
         
@@ -50,8 +49,8 @@ public class OutlineNodeMoveUpActionHandler extends OutlineNodeMoveActionHandler
         
         if( enabled )
         {
-            final IModelElement element = getModelElement();
-            final ModelElementList<?> list = (ModelElementList<?>) element.parent();
+            final Element element = getModelElement();
+            final ElementList<?> list = (ElementList<?>) element.parent();
             enabled = ( list.indexOf( element ) > 0 );
         }
         

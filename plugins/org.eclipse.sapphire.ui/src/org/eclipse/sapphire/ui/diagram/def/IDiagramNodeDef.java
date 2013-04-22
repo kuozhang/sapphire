@@ -13,18 +13,18 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -55,7 +55,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 public interface IDiagramNodeDef extends PartDef, IDiagramDimension, IPropertiesViewContributorDef
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramNodeDef.class );
+    ElementType TYPE = new ElementType( IDiagramNodeDef.class );
     
     // *** Id ***
     
@@ -100,7 +100,7 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, IProperties
     
     ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
     
-    ModelElementHandle<ShapeDef> getShape(); 
+    ElementHandle<ShapeDef> getShape(); 
     
     // *** ToolPaletteLabel ***
     
@@ -197,5 +197,5 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, IProperties
 
     ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
-    ModelElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
+    ElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
 }

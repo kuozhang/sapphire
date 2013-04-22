@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.modeling.el;
 
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.Value;
 
 /**
  * Function that ensures that the returned value is of specified type and prevents function
@@ -93,9 +93,9 @@ public class FailSafeFunction extends Function
             @Override
             protected Object evaluate()
             {
-                final Class<?> type = cast( operand( 1 ).value(), Class.class );
+                final Class<?> type = cast( operand( 1 ), Class.class );
                 
-                Object val = operand( 0 ).value();
+                Object val = operand( 0 );
                 
                 if( val instanceof Value )
                 {
@@ -103,17 +103,17 @@ public class FailSafeFunction extends Function
                     
                     if( type == String.class )
                     {
-                        val = value.getText();
+                        val = value.text();
                     }
                     else
                     {
-                        val = value.getContent();
+                        val = value.content();
                     }
                 }
                 
                 if( val == null )
                 {
-                    val = operand( 2 ).value();
+                    val = operand( 2 );
                 }
                 
                 try

@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
@@ -38,7 +38,7 @@ public abstract class XmlResource extends Resource
     }
     
     @Override
-    public void init( final IModelElement modelElement )
+    public void init( final Element modelElement )
     {
         super.init( modelElement );
         
@@ -58,7 +58,7 @@ public abstract class XmlResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final ModelProperty property )
+    protected BindingImpl createBinding( final PropertyDef property )
     {
         BindingImpl binding = null;
         String[] params = null;

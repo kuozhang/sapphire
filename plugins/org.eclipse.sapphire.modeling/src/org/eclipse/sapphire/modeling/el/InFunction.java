@@ -55,8 +55,8 @@ public final class InFunction extends Function
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
-                final List<?> b = cast( operand( 1 ).value(), List.class );
+                final Object a = operand( 0 );
+                final List<?> b = cast( operand( 1 ), List.class );
                 
                 if( b == null )
                 {

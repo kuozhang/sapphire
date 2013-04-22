@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.ui.diagram.state;
 
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.ui.EditorPageState;
@@ -27,7 +27,7 @@ import org.eclipse.sapphire.ui.EditorPageState;
 
 public interface DiagramEditorPageState extends EditorPageState
 {
-    ModelElementType TYPE = new ModelElementType( DiagramEditorPageState.class );    
+    ElementType TYPE = new ElementType( DiagramEditorPageState.class );    
     
     // *** ZoomLevel ***
     

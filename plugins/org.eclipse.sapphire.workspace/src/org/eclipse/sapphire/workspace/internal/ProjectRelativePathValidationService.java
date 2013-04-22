@@ -12,10 +12,10 @@
 package org.eclipse.sapphire.workspace.internal;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,9 +32,9 @@ public final class ProjectRelativePathValidationService extends ValidationServic
     @Override
     public Status validate()
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         
-        if( element.read( context( ValueProperty.class ) ).getText() != null )
+        if( element.property( context( ValueProperty.class ) ).text() != null )
         {
             final IProject project = element.adapt( IProject.class );
             

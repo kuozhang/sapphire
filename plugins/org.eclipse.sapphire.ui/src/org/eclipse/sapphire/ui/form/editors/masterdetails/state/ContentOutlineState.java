@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.state;
 
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.ui.AttributesContainer;
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ui.AttributesContainer;
 
 public interface ContentOutlineState extends AttributesContainer
 {
-    ModelElementType TYPE = new ModelElementType( ContentOutlineState.class );
+    ElementType TYPE = new ElementType( ContentOutlineState.class );
     
     // *** Visible ***
     

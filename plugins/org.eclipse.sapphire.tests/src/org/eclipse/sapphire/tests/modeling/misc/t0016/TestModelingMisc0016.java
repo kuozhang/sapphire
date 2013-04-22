@@ -44,12 +44,12 @@ public final class TestModelingMisc0016 extends SapphireTestCase
     {
         final BaseElement base = BaseElement.TYPE.instantiate();
         
-        assertTrue( base.enabled( BaseElement.PROP_VALUE ) );
+        assertTrue( base.property( BaseElement.PROP_VALUE ).enabled() );
         
         final DerivedElement derived = DerivedElement.TYPE.instantiate();
         
-        assertFalse( derived.enabled( BaseElement.PROP_VALUE ) );
-        assertFalse( derived.enabled( DerivedElement.PROP_VALUE ) );
+        assertFalse( derived.property( BaseElement.PROP_VALUE ).enabled() );
+        assertFalse( derived.property( DerivedElement.PROP_VALUE ).enabled() );
     }
 
 }

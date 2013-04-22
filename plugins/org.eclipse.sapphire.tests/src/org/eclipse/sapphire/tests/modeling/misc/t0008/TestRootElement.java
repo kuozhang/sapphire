@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0008;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @XmlBinding( path = "root" )
 
-public interface TestRootElement extends IModelElement
+public interface TestRootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestRootElement.class );
+    ElementType TYPE = new ElementType( TestRootElement.class );
     
     // *** Children ***
     
@@ -39,7 +39,7 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
     
-    ModelElementList<TestChildElement> getChildren();
+    ElementList<TestChildElement> getChildren();
     
     // *** ChildrenReadOnly ***
     
@@ -49,6 +49,6 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_CHILDREN_READ_ONLY = new ListProperty( TYPE, "ChildrenReadOnly" );
     
-    ModelElementList<TestChildElement> getChildrenReadOnly();
+    ElementList<TestChildElement> getChildrenReadOnly();
     
 }

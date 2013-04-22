@@ -81,16 +81,16 @@ public final class ActuatorPart extends SapphirePart
         
         final ActuatorDef def = definition();
         
-        this.actionId = def.getActionId().getContent();
-        this.actionHandlerId = def.getActionHandlerId().getContent();
+        this.actionId = def.getActionId().content();
+        this.actionHandlerId = def.getActionHandlerId().content();
         
-        this.showLabel = def.getShowLabel().getContent();
+        this.showLabel = def.getShowLabel().content();
         
         if( this.showLabel )
         {
             this.labelFunctionResult = initExpression
             (
-                def.getLabel().getContent(), 
+                def.getLabel().content(), 
                 String.class,
                 null,
                 new Runnable()
@@ -103,7 +103,7 @@ public final class ActuatorPart extends SapphirePart
             );
         }
         
-        this.showImage = def.getShowImage().getContent();
+        this.showImage = def.getShowImage().content();
         
         if( this.showImage )
         {
@@ -113,7 +113,7 @@ public final class ActuatorPart extends SapphirePart
             {
                 final FunctionResult imageFunctionResult = initExpression
                 (
-                    imageReference.getImage().getContent(),
+                    imageReference.getImage().content(),
                     ImageData.class,
                     null,
                     new Runnable()
@@ -131,7 +131,7 @@ public final class ActuatorPart extends SapphirePart
             this.imageFunctionResults = imageFunctionResultsFactory.result();
         }
         
-        this.style = def.getStyle().getContent();
+        this.style = def.getStyle().content();
     }
     
     @Override
@@ -367,10 +367,10 @@ public final class ActuatorPart extends SapphirePart
         final ActuatorDef def = definition();
         final Composite parent = context.getComposite();
         
-        final HorizontalAlignment hAlign = def.getHorizontalAlignment().getContent();
+        final HorizontalAlignment hAlign = def.getHorizontalAlignment().content();
         final int hAlignCode = ( hAlign == HorizontalAlignment.LEFT ? SWT.LEFT : ( hAlign == HorizontalAlignment.RIGHT ? SWT.RIGHT : SWT.CENTER ) );
         
-        final int hSpan = ( def.getSpanBothColumns().getContent() ? 2 : 1 );
+        final int hSpan = ( def.getSpanBothColumns().content() ? 2 : 1 );
         
         if( hSpan == 1 )
         {

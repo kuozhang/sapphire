@@ -16,6 +16,7 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
@@ -47,16 +48,17 @@ public final class TestServices0012 extends SapphireTestCase
     public void test() throws Exception
     {
         final TestElement element = TestElement.TYPE.instantiate();
+        final Property property = element.property( TestElement.PROP_VALUE );
         
-        final List<PossibleValuesService> xl = element.services( TestElement.PROP_VALUE, PossibleValuesService.class );
-        final List<TestPossibleValuesService> yl = element.services( TestElement.PROP_VALUE, TestPossibleValuesService.class );
+        final List<PossibleValuesService> xl = property.services( PossibleValuesService.class );
+        final List<TestPossibleValuesService> yl = property.services( TestPossibleValuesService.class );
         
         assertEquals( 1, xl.size() );
         assertEquals( 1, yl.size() );
         assertSame( xl.get( 0 ), yl.get( 0 ) );
         
-        final PossibleValuesService x = element.service( TestElement.PROP_VALUE, PossibleValuesService.class );
-        final TestPossibleValuesService y = element.service( TestElement.PROP_VALUE, TestPossibleValuesService.class );
+        final PossibleValuesService x = property.service( PossibleValuesService.class );
+        final TestPossibleValuesService y = property.service( TestPossibleValuesService.class );
         
         assertNotNull( x );
         assertSame( x, y );

@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -33,8 +33,8 @@ public abstract class SourceEditorService
      * @return true if locating the specified element and property in the source editor is possible
      */
     
-    public abstract boolean find( IModelElement element,
-                                  ModelProperty property );
+    public abstract boolean find( Element element,
+                                  PropertyDef property );
     
     /**
      * Locates the specified element and property in the source editor. The appropriate
@@ -49,8 +49,8 @@ public abstract class SourceEditorService
      * @param property the property or null
      */
     
-    public abstract void show( IModelElement element,
-                               ModelProperty property );
+    public abstract void show( Element element,
+                               PropertyDef property );
     
     public static final class Range
     {

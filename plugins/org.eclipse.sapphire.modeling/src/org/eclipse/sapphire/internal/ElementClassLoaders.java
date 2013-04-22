@@ -14,7 +14,7 @@ package org.eclipse.sapphire.internal;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,7 +24,7 @@ public final class ElementClassLoaders
 {
     private static final Map<ClassLoader,ElementClassLoader> loaders = new WeakHashMap<ClassLoader,ElementClassLoader>();
     
-    public static Class<?> loadImplementationClass( final ModelElementType type )
+    public static Class<?> loadImplementationClass( final ElementType type )
     {
         final ClassLoader typeInterfaceClassLoader = type.getModelElementClass().getClassLoader();
         

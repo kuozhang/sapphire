@@ -17,14 +17,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
@@ -39,7 +38,7 @@ import org.eclipse.swt.widgets.Display;
 
 public final class SapphireListControlledPageBook extends PageBookPart
 {
-    private IModelElement element;
+    private Element element;
     private ListProperty property;
 
     @Override
@@ -47,7 +46,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
     {
         super.init();
 
-        final String pathString = ( (PageBookExtDef) this.definition ).getControlProperty().getContent();
+        final String pathString = ( (PageBookExtDef) this.definition ).getControlProperty().content();
         final String pathStringSubstituted = substituteParams( pathString, this.params );
         final ModelPath path = new ModelPath( pathStringSubstituted );
         
@@ -59,18 +58,11 @@ public final class SapphireListControlledPageBook extends PageBookPart
 
             if( segment instanceof ModelPath.ModelRootSegment )
             {
-                this.element = (IModelElement) this.element.root();
+                this.element = this.element.root();
             }
             else if( segment instanceof ModelPath.ParentElementSegment )
             {
-                IModelParticle parent = this.element.parent();
-
-                if ( !( parent instanceof IModelElement ) )
-                {
-                    parent = parent.parent();
-                }
-
-                this.element = (IModelElement) parent;
+                this.element = this.element.parent().element();
             }
             else if( segment instanceof ModelPath.PropertySegment )
             {
@@ -122,15 +114,15 @@ public final class SapphireListControlledPageBook extends PageBookPart
         final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( this, this.element, this.property );
         final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
         
-        final MutableReference<IModelElement> selectedModelElementRef = new MutableReference<IModelElement>();
+        final MutableReference<Element> selectedModelElementRef = new MutableReference<Element>();
 
         final Listener listSelectionServiceListener = new Listener()
         {
             @Override
             public void handle( final Event event )
             {
-                final List<IModelElement> selection = listSelectionService.selection();
-                final IModelElement newModelElement;
+                final List<Element> selection = listSelectionService.selection();
+                final Element newModelElement;
                 final ClassBasedKey newPageKey;
                 
                 if( ! selection.isEmpty() )
@@ -190,15 +182,15 @@ public final class SapphireListControlledPageBook extends PageBookPart
     }
 
     private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
-                                                   final IModelElement element,
-                                                   final ModelProperty property )
+                                                   final Element element,
+                                                   final PropertyDef property )
     {
         return findPropertyEditor( part, element, property, new IdentityHashSet<ISapphirePart>() );
     }
 
     private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
-                                                   final IModelElement element,
-                                                   final ModelProperty property,
+                                                   final Element element,
+                                                   final PropertyDef property,
                                                    final Set<ISapphirePart> searchedParts )
     {
         if( searchedParts.contains( part ) )
@@ -210,7 +202,7 @@ public final class SapphireListControlledPageBook extends PageBookPart
         {
             final PropertyEditorPart propertyEditorPart = (PropertyEditorPart) part;
             
-            if( propertyEditorPart.getLocalModelElement() == element && propertyEditorPart.getProperty() == property )
+            if( propertyEditorPart.getLocalModelElement() == element && propertyEditorPart.property().definition() == property )
             {
                 return propertyEditorPart;
             }

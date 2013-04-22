@@ -13,16 +13,15 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
 import java.util.List;
 
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
 import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.samples.calendar.integrated.ICalendar;
@@ -51,14 +50,12 @@ public final class CalendarResource extends Resource
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                if( ! ( event instanceof PropertyInitializationEvent ) )
+                final PropertyDef property = event.property().definition();
+                final ICalendar calendar = (ICalendar) element(); 
+                
+                if( property == org.eclipse.sapphire.samples.calendar.ICalendar.PROP_EVENTS )
                 {
-                    final ModelProperty property = event.property();
-                    
-                    if( property == org.eclipse.sapphire.samples.calendar.ICalendar.PROP_EVENTS )
-                    {
-                        element().refresh( ICalendar.PROP_EVENTS );
-                    }
+                    calendar.getEvents().refresh();
                 }
             }
         };
@@ -96,17 +93,17 @@ public final class CalendarResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final ModelProperty property )
+    protected BindingImpl createBinding( final PropertyDef property )
     {
         if( property == ICalendar.PROP_EVENTS )
         {
             final ListBindingImpl binding = new LayeredListBindingImpl()
             {
-                private final ModelElementList<org.eclipse.sapphire.samples.calendar.IEvent> base
+                private final ElementList<org.eclipse.sapphire.samples.calendar.IEvent> base
                     = CalendarResource.this.base.getEvents();
                 
                 @Override
-                public ModelElementType type( final Resource resource )
+                public ElementType type( final Resource resource )
                 {
                     return IEvent.TYPE;
                 }
@@ -124,7 +121,7 @@ public final class CalendarResource extends Resource
                 }
 
                 @Override
-                protected Object insertUnderlyingObject( final ModelElementType type,
+                protected Object insertUnderlyingObject( final ElementType type,
                                                          final int position )
                 {
                     return this.base.insert( org.eclipse.sapphire.samples.calendar.IEvent.TYPE, position );

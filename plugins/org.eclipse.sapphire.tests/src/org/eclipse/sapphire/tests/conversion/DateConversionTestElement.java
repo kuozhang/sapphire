@@ -19,11 +19,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.sapphire.DateToStringConversionService;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.StringToDateConversionService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -32,9 +32,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface DateConversionTestElement extends IModelElement
+public interface DateConversionTestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( DateConversionTestElement.class );
+    ElementType TYPE = new ElementType( DateConversionTestElement.class );
     
     // *** Date1 ***
     

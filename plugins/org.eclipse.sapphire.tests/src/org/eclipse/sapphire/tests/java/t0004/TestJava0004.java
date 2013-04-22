@@ -14,7 +14,7 @@ package org.eclipse.sapphire.tests.java.t0004;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
@@ -334,15 +334,15 @@ public class TestJava0004
                        final String value,
                        final String expectedErrorMessage )
     {
-        this.element.write( property, value );
+        this.element.property( property ).write( value );
         
         if( expectedErrorMessage == null )
         {
-            assertValidationOk( this.element.read( property ) );
+            assertValidationOk( this.element.property( property ) );
         }
         else
         {
-            assertValidationError( this.element.read( property ), expectedErrorMessage );
+            assertValidationError( this.element.property( property ), expectedErrorMessage );
         }
     }
 

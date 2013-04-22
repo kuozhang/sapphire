@@ -32,7 +32,7 @@ public final class MapMethods
         
         for( Location location : map.getLocations() )
         {
-            if( name.equals( location.getName().getText() ) )
+            if( name.equals( location.getName().text() ) )
             {
                 return location;
             }

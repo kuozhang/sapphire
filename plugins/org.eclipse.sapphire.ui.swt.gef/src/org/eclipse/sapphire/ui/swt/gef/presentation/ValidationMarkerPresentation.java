@@ -21,11 +21,9 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.ElementValidationEvent;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -85,12 +83,11 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	}
 	
     private SwtResourceCache imageCache;
-    private IModelElement element;
+    private Element element;
 	private SmoothImageFigure imageFigure;
 	private PropertyEditorAssistContext assistContext;
 	private Status problem;
 	private final List<PropertyEditorAssistContributor> contributors;
-	private FilteredListener<ElementValidationEvent> elementValidationListener;
 	
 	public ValidationMarkerPresentation(ShapePresentation parent, ValidationMarkerPart validationMarkerPart, 
 			DiagramConfigurationManager configManager)
@@ -139,7 +136,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
         {
             try
             {
-                contributor.init( this.element, null );
+                contributor.init( validationMarkerPart );
             }
             catch( Exception e )
             {
@@ -162,16 +159,6 @@ public class ValidationMarkerPresentation extends ShapePresentation
             }
         );
         		
-        this.elementValidationListener = new FilteredListener<ElementValidationEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final ElementValidationEvent event )
-            {
-                refresh();
-            }
-        };
-        this.element.attach(this.elementValidationListener);        
-        
 		addMouseListener();
 		
 		refresh();
@@ -185,13 +172,6 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	public ValidationMarkerSize getSize()
 	{
 		return getValidationMarkerPart().getSize();
-	}
-	
-	@Override
-	public void dispose()
-	{
-		super.dispose();
-		this.element.detach(this.elementValidationListener);
 	}
 	
 	private void refresh()

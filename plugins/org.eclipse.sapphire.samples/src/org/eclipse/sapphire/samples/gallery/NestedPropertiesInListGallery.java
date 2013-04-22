@@ -13,13 +13,13 @@ package org.eclipse.sapphire.samples.gallery;
 
 import java.math.BigDecimal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -28,21 +28,21 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface NestedPropertiesInListGallery extends IModelElement
+public interface NestedPropertiesInListGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( NestedPropertiesInListGallery.class );
+    ElementType TYPE = new ElementType( NestedPropertiesInListGallery.class );
     
     // *** Employees ***
     
-    interface Employee extends IModelElement
+    interface Employee extends Element
     {
-        ModelElementType TYPE = new ModelElementType( Employee.class );
+        ElementType TYPE = new ElementType( Employee.class );
         
         // *** Name ***
         
-        interface Name extends IModelElement
+        interface Name extends Element
         {
-            ModelElementType TYPE = new ModelElementType( Name.class );
+            ElementType TYPE = new ElementType( Name.class );
             
             // *** First ***
             
@@ -74,9 +74,9 @@ public interface NestedPropertiesInListGallery extends IModelElement
         
         // *** Location ***
         
-        interface Location extends IModelElement
+        interface Location extends Element
         {
-            ModelElementType TYPE = new ModelElementType( Location.class );
+            ElementType TYPE = new ElementType( Location.class );
             
             // *** City ***
             
@@ -124,6 +124,6 @@ public interface NestedPropertiesInListGallery extends IModelElement
     
     ListProperty PROP_EMPLOYEES = new ListProperty( TYPE, "Employees" );
     
-    ModelElementList<Employee> getEmployees();
+    ElementList<Employee> getEmployees();
 
 }

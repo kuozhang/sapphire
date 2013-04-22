@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
@@ -29,7 +29,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface WhitespaceSeparatorDef extends SeparatorDef
 {
-    ModelElementType TYPE = new ModelElementType( WhitespaceSeparatorDef.class );
+    ElementType TYPE = new ElementType( WhitespaceSeparatorDef.class );
  
     // *** Size ***
     

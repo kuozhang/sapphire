@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status.Severity;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -34,9 +34,9 @@ import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface PossibleValuesGallery extends IModelElement
+public interface PossibleValuesGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PossibleValuesGallery.class );
+    ElementType TYPE = new ElementType( PossibleValuesGallery.class );
     
     // *** Color ***
     
@@ -91,6 +91,6 @@ public interface PossibleValuesGallery extends IModelElement
     
     ListProperty PROP_COLORED_SHAPES = new ListProperty( TYPE, "ColoredShapes" );
 
-    ModelElementList<PossibleValuesGalleryListItem> getColoredShapes();
+    ElementList<PossibleValuesGalleryListItem> getColoredShapes();
     
 }

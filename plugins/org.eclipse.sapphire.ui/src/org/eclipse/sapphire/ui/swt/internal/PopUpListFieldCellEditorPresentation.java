@@ -18,9 +18,8 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.swt.SWT;
@@ -39,8 +38,7 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
 {
     private final StructuredViewer viewer;
     private final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider;
-    private final IModelElement element;
-    private final ValueProperty property;
+    private final Property property;
     private List<PossibleValue> possibleValues;
     private boolean isDefaultValue;
     private CCombo combo;
@@ -49,8 +47,7 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
     
     public PopUpListFieldCellEditorPresentation( final StructuredViewer parent,
                                                  final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider,
-                                                 final IModelElement element,
-                                                 final ValueProperty property,
+                                                 final Property property,
                                                  final PopUpListFieldStyle popUpListFieldStyle,
                                                  final int style )
     {
@@ -58,7 +55,6 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
         
         this.viewer = parent;
         this.selectionProvider = selectionProvider;
-        this.element = element;
         this.property = property;
         
         setStyle( style | ( popUpListFieldStyle == PopUpListFieldStyle.STRICT ? SWT.READ_ONLY : SWT.NONE ) );
@@ -89,7 +85,7 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
             }
         );
         
-        this.possibleValues = PossibleValue.factory( element, property ).entries();
+        this.possibleValues = PossibleValue.factory( property ).entries();
         final String[] contentForCombo = new String[ this.possibleValues.size() ];
         
         for( int i = 0, n = this.possibleValues.size(); i < n; i++ )
@@ -113,7 +109,7 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
             
             if( index == -1 )
             {
-                final ValueNormalizationService valueNormalizationService = this.element.service( this.property, ValueNormalizationService.class );
+                final ValueNormalizationService valueNormalizationService = this.property.service( ValueNormalizationService.class );
                 final String value = valueNormalizationService.normalize( this.combo.getText() );
                 
                 if( value.length() > 0 )
@@ -137,9 +133,9 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
     {
         final Value<?> val = (Value<?>) value;
         
-        final ValueNormalizationService valueNormalizationService = this.element.service( this.property, ValueNormalizationService.class );
+        final ValueNormalizationService valueNormalizationService = this.property.service( ValueNormalizationService.class );
         
-        final String text = valueNormalizationService.normalize( val.getText() );
+        final String text = valueNormalizationService.normalize( val.text() );
         int index = -1;
         
         for( int i = 0, n = this.possibleValues.size(); index == -1 && i < n; i++ )
@@ -162,7 +158,7 @@ public final class PopUpListFieldCellEditorPresentation extends ComboBoxCellEdit
             this.combo.select( index );
         }
         
-        if( val.getText( false ) == null && val.getDefaultContent() != null )
+        if( val.text( false ) == null && val.getDefaultContent() != null )
         {
             this.isDefaultValue = true;
         }

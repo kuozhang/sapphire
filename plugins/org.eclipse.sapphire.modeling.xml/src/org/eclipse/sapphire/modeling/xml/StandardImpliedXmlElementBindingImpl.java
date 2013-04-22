@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.ElementBindingImpl;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
@@ -31,13 +31,13 @@ public final class StandardImpliedXmlElementBindingImpl extends ElementBindingIm
     private Resource resource;
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         super.init( element, property, params );
         
-        if( element.service( property, PossibleTypesService.class ).types().size() > 1 )
+        if( element.property( property ).service( PossibleTypesService.class ).types().size() > 1 )
         {
             throw new IllegalStateException();
         }
@@ -65,7 +65,7 @@ public final class StandardImpliedXmlElementBindingImpl extends ElementBindingIm
             }
             else
             {
-                pathString = property.getName();
+                pathString = property.name();
             }
         }
         
@@ -73,7 +73,7 @@ public final class StandardImpliedXmlElementBindingImpl extends ElementBindingIm
     }
     
     @Override
-    public ModelElementType type( final Resource resource )
+    public ElementType type( final Resource resource )
     {
         return property().getType();
     }

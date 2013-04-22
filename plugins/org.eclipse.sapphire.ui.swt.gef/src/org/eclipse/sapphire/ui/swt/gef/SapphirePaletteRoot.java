@@ -28,9 +28,9 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -83,7 +83,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 		
 		List<DiagramPaletteDrawer> drawers = new ArrayList<DiagramPaletteDrawer>();
 		Map<String, List<ToolEntry>> entries = new HashMap<String, List<ToolEntry>>();
-		ModelElementList<IDiagramPaletteCompartmentDef> compartmentDefs = diagramPageDef.getPaletteCompartments();
+		ElementList<IDiagramPaletteCompartmentDef> compartmentDefs = diagramPageDef.getPaletteCompartments();
 		PaletteContainer defaultContainer = null;
 		if (compartmentDefs.size() == 0)
 		{
@@ -102,9 +102,9 @@ public class SapphirePaletteRoot extends PaletteRoot
 		{
 			for (IDiagramPaletteCompartmentDef compartmentDef : compartmentDefs)
 			{
-				String label = LabelTransformer.transform(compartmentDef.getLabel().getContent(), 
+				String label = LabelTransformer.transform(compartmentDef.getLabel().content(), 
 						CapitalizationType.TITLE_STYLE, true);		
-				DiagramPaletteDrawer drawer = new DiagramPaletteDrawer(label, compartmentDef.getId().getContent());
+				DiagramPaletteDrawer drawer = new DiagramPaletteDrawer(label, compartmentDef.getId().content());
 				drawers.add(drawer);
 				
 				if (defaultContainer == null) {
@@ -120,13 +120,13 @@ public class SapphirePaletteRoot extends PaletteRoot
             ImageDescriptor imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
 
             CreationFactory factory = new ConnectionCreationFactory(connDef);
-			String tpLabel = connDef.getToolPaletteLabel().getContent();
+			String tpLabel = connDef.getToolPaletteLabel().content();
 			if (tpLabel != null)
 			{
 				tpLabel = IDiagramConnectionDef.PROP_TOOL_PALETTE_LABEL.getLocalizationService().text(
 								tpLabel, CapitalizationType.TITLE_STYLE, false);
 			}
-			String tpDesc = connDef.getToolPaletteDescription().getContent();
+			String tpDesc = connDef.getToolPaletteDescription().content();
 			if (tpDesc != null)
 			{
 				tpDesc = IDiagramConnectionDef.PROP_TOOL_PALETTE_DESCRIPTION.getLocalizationService().text(
@@ -135,7 +135,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 			if (tpLabel != null) {
 	    		ToolEntry tool = new ConnectionCreationToolEntry(tpLabel, tpDesc, factory, imageDescriptor, imageDescriptor);
 	    		
-	    		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, connDef.getToolPaletteCompartment().getContent());
+	    		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, connDef.getToolPaletteCompartment().content());
 	    		List<ToolEntry> list = entries.get(drawer.getId());
 	    		if (list == null) {
 	    			list = new ArrayList<ToolEntry>();
@@ -158,13 +158,13 @@ public class SapphirePaletteRoot extends PaletteRoot
 
             CreationFactory factory = new NodeCreationFactory(nodeTemplate);
 
-			String tpLabel = nodeDef.getToolPaletteLabel().getContent();
+			String tpLabel = nodeDef.getToolPaletteLabel().content();
 			if (tpLabel != null)
 			{
 				tpLabel = IDiagramNodeDef.PROP_TOOL_PALETTE_LABEL.getLocalizationService().text(
 								tpLabel, CapitalizationType.TITLE_STYLE, false);
 			}
-			String tpDesc = nodeDef.getToolPaletteDescription().getContent();
+			String tpDesc = nodeDef.getToolPaletteDescription().content();
 			if (tpDesc != null)
 			{
 				tpDesc = IDiagramNodeDef.PROP_TOOL_PALETTE_DESCRIPTION.getLocalizationService().text(
@@ -174,7 +174,7 @@ public class SapphirePaletteRoot extends PaletteRoot
     		tool.setToolClass(CreationTool.class);
 
     		// find the right drawer
-    		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, nodeDef.getToolPaletteCompartment().getContent());
+    		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, nodeDef.getToolPaletteCompartment().content());
     		List<ToolEntry> list = entries.get(drawer.getId());
     		if (list == null) {
     			list = new ArrayList<ToolEntry>();

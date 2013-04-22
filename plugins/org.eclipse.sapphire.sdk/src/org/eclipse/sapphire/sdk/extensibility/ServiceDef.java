@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
@@ -42,9 +42,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @Label( standard = "service" )
 
-public interface ServiceDef extends IModelElement
+public interface ServiceDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ServiceDef.class );
+    ElementType TYPE = new ElementType( ServiceDef.class );
     
     // *** Id ***
     
@@ -153,15 +153,15 @@ public interface ServiceDef extends IModelElement
     
     ListProperty PROP_CONTEXTS = new ListProperty(TYPE, "Contexts");
 
-    ModelElementList<ServiceContextRef> getContexts();
+    ElementList<ServiceContextRef> getContexts();
     
     // *** Overrides ***
     
     @Label( standard = "service override" )
 
-    public interface Override extends IModelElement
+    public interface Override extends Element
     {
-        ModelElementType TYPE = new ModelElementType( Override.class );
+        ElementType TYPE = new ElementType( Override.class );
         
         // *** Id ***
         
@@ -187,6 +187,6 @@ public interface ServiceDef extends IModelElement
     
     ListProperty PROP_OVERRIDES = new ListProperty( TYPE, "Overrides" );
     
-    ModelElementList<Override> getOverrides();
+    ElementList<Override> getOverrides();
     
 }

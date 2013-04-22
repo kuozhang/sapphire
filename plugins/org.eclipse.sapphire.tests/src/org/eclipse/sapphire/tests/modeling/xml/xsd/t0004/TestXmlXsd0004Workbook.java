@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0004;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/xsd/0004/workbook" )
 @XmlBinding( path = "workbook" )
 
-public interface TestXmlXsd0004Workbook extends IModelElement
+public interface TestXmlXsd0004Workbook extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlXsd0004Workbook.class );
+    ElementType TYPE = new ElementType( TestXmlXsd0004Workbook.class );
     
     // *** Shapes ***
     
@@ -38,6 +38,6 @@ public interface TestXmlXsd0004Workbook extends IModelElement
     
     ListProperty PROP_SHAPES = new ListProperty( TYPE, "Shapes" );
     
-    ModelElementList<TestXmlXsd0004Shape> getShapes();
+    ElementList<TestXmlXsd0004Shape> getShapes();
     
 }

@@ -104,12 +104,12 @@ public final class PropertyAccessFunction
                 if( operands().size() == 1 )
                 {
                     element = context;
-                    property = cast( operand( 0 ).value(), String.class );
+                    property = cast( operand( 0 ), String.class );
                 }
                 else
                 {
-                    element = operand( 0 ).value();
-                    property = cast( operand( 1 ).value(), String.class );
+                    element = operand( 0 );
+                    property = cast( operand( 1 ), String.class );
                 }
                 
                 if( this.lastPropertyValueResult != null )

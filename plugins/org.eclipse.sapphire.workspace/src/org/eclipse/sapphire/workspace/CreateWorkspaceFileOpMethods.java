@@ -20,10 +20,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.MasterConversionService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Resource;
@@ -41,8 +41,8 @@ public final class CreateWorkspaceFileOpMethods
 {
     public static IFile getFileHandle( final CreateWorkspaceFileOp operation )
     {
-        final Path folderPath = operation.getFolder().getContent();
-        final FileName fileName = operation.getFileName().getContent();
+        final Path folderPath = operation.getFolder().content();
+        final FileName fileName = operation.getFileName().content();
         
         if( folderPath == null || fileName == null )
         {
@@ -94,14 +94,14 @@ public final class CreateWorkspaceFileOpMethods
             
             if( fileTypeAnnotation != null )
             {
-                final ModelElementType type = ModelElementType.read( fileTypeAnnotation.value() );
+                final ElementType type = ElementType.read( fileTypeAnnotation.value() );
                 final Resource resource = type.service( MasterConversionService.class ).convert( newFileHandle, Resource.class );
                 
                 if( resource != null )
                 {
                     try
                     {
-                        final IModelElement element = type.instantiate( resource );
+                        final Element element = type.instantiate( resource );
                         
                         try
                         {

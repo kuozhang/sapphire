@@ -12,12 +12,12 @@
 package org.eclipse.sapphire.java.internal;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.ClassBasedJavaType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -84,7 +84,7 @@ public final class StandardJavaTypeReferenceService extends JavaTypeReferenceSer
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
+            final Element element = context.find( Element.class );
             
             Context ctxt = element.adapt( Context.class );
             

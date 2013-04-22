@@ -12,12 +12,12 @@
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -39,7 +39,7 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
     {
         super.init( action, def );
         
-        final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+        final Element element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -73,7 +73,7 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
     private void refreshVisibility()
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getLocalModelElement();
+        final Element element = node.getLocalModelElement();
         final Resource resource = element.resource();
         
         setVisible( resource instanceof XmlResource && ( (XmlResource) resource ).getXmlElement() != null );
@@ -83,7 +83,7 @@ public final class OutlineNodeShowInSourceActionHandler extends SapphireActionHa
     protected Object run( final SapphireRenderingContext context )
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getLocalModelElement();
+        final Element element = node.getLocalModelElement();
         
         element.adapt( SourceEditorService.class ).show( element, null );
         

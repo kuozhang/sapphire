@@ -16,11 +16,11 @@ import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -71,21 +71,20 @@ public final class OutlineNodeDeleteActionHandler extends SapphireActionHandler
         
         for( MasterDetailsContentNode node : nodesToDelete )
         {
-            final IModelElement element = node.getModelElement();
-            final IModelParticle elementParent = element.parent();
+            final Element element = node.getModelElement();
+            final Property elementParent = element.parent();
             
-            if( elementParent instanceof ModelElementList )
+            if( elementParent.definition() instanceof ListProperty )
             {
-                ( (ModelElementList<?>) elementParent ).remove( element );
+                ( (ElementList<?>) elementParent ).remove( element );
             }
             else
             {
-                final ElementProperty property = (ElementProperty) element.getParentProperty();
-                final ModelElementHandle<?> handle = ( (IModelElement) elementParent ).read( property );
+                final ElementHandle<?> handle = (ElementHandle<?>) elementParent;
                 
-                if( handle.element() == element )
+                if( handle.content() == element )
                 {
-                    handle.remove();
+                    handle.clear();
                 }
             }
         }

@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibility;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.VersionConstraint;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -49,8 +49,8 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
     @Override
     protected void initVersionCompatibilityService()
     {
-        final IModelElement element = context( IModelElement.class );
-        final ModelProperty property = context( ModelProperty.class );
+        final Element element = context( Element.class );
+        final PropertyDef property = context( PropertyDef.class );
         
         this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( element, property );
         
@@ -214,8 +214,8 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = context.find( ModelProperty.class );
+            final Element element = context.find( Element.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             
             return ( property.hasAnnotation( VersionCompatibility.class ) || property.hasAnnotation( Since.class ) ) &&
                    ( VersionCompatibilityTargetService.find( element, property ) != null );

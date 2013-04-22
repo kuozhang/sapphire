@@ -48,7 +48,7 @@ public class DiagramResourceCache {
     public int getLinkStyle(IDiagramConnectionDef def) {
         int linkStyle = SWT.LINE_SOLID;
         if (def != null) {
-            org.eclipse.sapphire.ui.LineStyle style = def.getLineStyle().getContent();
+            org.eclipse.sapphire.ui.LineStyle style = def.getLineStyle().content();
             if (style == org.eclipse.sapphire.ui.LineStyle.DASH ) {
                 linkStyle = SWT.LINE_DASH;
             }
@@ -66,7 +66,7 @@ public class DiagramResourceCache {
     	IDiagramConnectionDef def = connection.getConnectionDef();
     	Color color = ColorConstants.darkBlue;
     	if (def != null) {
-        	return getColor(def.getLineColor().getContent());
+        	return getColor(def.getLineColor().content());
     	}
     	return color;
     }
@@ -102,19 +102,19 @@ public class DiagramResourceCache {
     		throw new IllegalArgumentException();
     	}
 
-		String name = fontDef.getName().getContent();
+		String name = fontDef.getName().content();
 		
 		if( name.equalsIgnoreCase( "System" ) )
 		{
 			name = getDefaultFont().getFontData()[ 0 ].getName();
 		}
 		
-		final int size = fontDef.getSize().getContent();
+		final int size = fontDef.getSize().content();
 		int style = SWT.NORMAL;
-		if (fontDef.isBold().getContent()) {
+		if (fontDef.isBold().content()) {
 			style |= SWT.BOLD;
 		}
-		if (fontDef.isItalic().getContent()) {
+		if (fontDef.isItalic().content()) {
 			style |= SWT.ITALIC;
 		}
     	for (Font existingFont : fonts) {

@@ -13,7 +13,7 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.Collection;
 
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.Value;
 
 /**
  * Function for determining if a value is null or empty. 
@@ -59,7 +59,7 @@ public final class EmptyFunction
             @Override
             protected Object evaluate()
             {
-                final Object a = operand( 0 ).value();
+                final Object a = operand( 0 );
                 
                 if( a == null )
                 {
@@ -77,7 +77,7 @@ public final class EmptyFunction
                 {
                     return true;
                 }
-                else if( a instanceof Value<?> && ( (Value<?>) a ).getContent() == null )
+                else if( a instanceof Value<?> && ( (Value<?>) a ).content() == null )
                 {
                     return true;
                 }

@@ -16,8 +16,8 @@ import java.util.SortedSet;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
@@ -104,17 +104,17 @@ public final class TestJava0005 extends SapphireTestCase
         test( TestRootElement.PROP_COMBO_3, "Must be a concrete class, an abstract class or an interface.", "Must implement or extend java.util.List." );
     }
     
-    private static void test( final ModelProperty property,
+    private static void test( final PropertyDef property,
                               final String... factsExpected )
     {
         test( TestRootElement.TYPE.instantiate(), property, factsExpected );
     }
     
-    private static void test( final IModelElement element,
-                              final ModelProperty property,
+    private static void test( final Element element,
+                              final PropertyDef property,
                               final String... factsExpected )
     {
-        final SortedSet<String> factsActual = element.service( property, FactsAggregationService.class ).facts();
+        final SortedSet<String> factsActual = element.property( property ).service( FactsAggregationService.class ).facts();
         
         assertEquals( set( factsExpected ), factsActual );
     }

@@ -80,6 +80,7 @@ public final class SapphireAntTask
                         final Writer writer = new OutputStreamWriter( out );
                         writer.write( resourceFileContent );
                         writer.flush();
+                        writer.close();
                     }
                     finally
                     {

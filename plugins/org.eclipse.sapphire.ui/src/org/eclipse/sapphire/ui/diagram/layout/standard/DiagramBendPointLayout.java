@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.diagram.layout.standard;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -22,9 +22,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface DiagramBendPointLayout extends IModelElement 
+public interface DiagramBendPointLayout extends Element 
 {
-    ModelElementType TYPE = new ModelElementType( DiagramBendPointLayout.class );
+    ElementType TYPE = new ElementType( DiagramBendPointLayout.class );
     
     // *** X ***
     

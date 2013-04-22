@@ -15,20 +15,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -78,7 +80,6 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         };
         
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getLocalModelElement();
 
         node.executeAfterInitialization
         (
@@ -90,7 +91,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                     {
                         factory.attach( OutlineNodeAddActionHandlerFactory.this.nodeFactoryListener );
                         
-                        final PossibleTypesService possibleTypesService = element.service( factory.property(), PossibleTypesService.class );
+                        final PossibleTypesService possibleTypesService = factory.property().service( PossibleTypesService.class );
                         possibleTypesService.attach( OutlineNodeAddActionHandlerFactory.this.possibleTypesServiceListener );
                     }
                     
@@ -104,34 +105,33 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
     public List<SapphireActionHandler> create()
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getLocalModelElement();
         final List<SapphireActionHandler> handlers = new ArrayList<SapphireActionHandler>();
         
         for( MasterDetailsContentNode.NodeFactory factory : node.factories() )
         {
-            final ModelProperty property = factory.property();
+            final Property property = factory.property();
             
-            if( factory.visible() && ! property.isReadOnly() )
+            if( factory.visible() && ! property.definition().isReadOnly() )
             {
-                final PossibleTypesService possibleTypesService = element.service( property, PossibleTypesService.class );
+                final PossibleTypesService possibleTypesService = property.service( PossibleTypesService.class );
     
-                if( property instanceof ListProperty )
+                if( property instanceof ElementList )
                 {
-                    final ListProperty prop = (ListProperty) property;
+                    final ListProperty pdef = (ListProperty) property.definition();
                     
-                    for( final ModelElementType memberType : possibleTypesService.types() )
+                    for( final ElementType memberType : possibleTypesService.types() )
                     {
-                        final ListPropertyActionHandler handler = new ListPropertyActionHandler( prop, memberType );
+                        final ListPropertyActionHandler handler = new ListPropertyActionHandler( pdef, memberType );
                         handlers.add( handler );
                     }
                 }
-                else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
+                else if( property instanceof ElementHandle && ! ( property.definition() instanceof ImpliedElementProperty ) )
                 {
-                    final ElementProperty prop = (ElementProperty) property;
+                    final ElementProperty pdef = (ElementProperty) property.definition();
                     
-                    for( final ModelElementType memberType : possibleTypesService.types() )
+                    for( final ElementType memberType : possibleTypesService.types() )
                     {
-                        final ElementPropertyActionHandler handler = new ElementPropertyActionHandler( prop, memberType );
+                        final ElementPropertyActionHandler handler = new ElementPropertyActionHandler( pdef, memberType );
                         handlers.add( handler );
                     }
                 }
@@ -151,25 +151,24 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         super.dispose();
         
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getLocalModelElement();
 
         for( MasterDetailsContentNode.NodeFactory factory : node.factories() )
         {
             factory.detach( this.nodeFactoryListener );
             
-            final PossibleTypesService possibleTypesService = element.service( factory.property(), PossibleTypesService.class );
+            final PossibleTypesService possibleTypesService = factory.property().service( PossibleTypesService.class );
             possibleTypesService.detach( this.possibleTypesServiceListener );
         }
     }
 
     private static abstract class AbstractActionHandler extends SapphireActionHandler
     {
-        private final ModelProperty property;
-        private final ModelElementType type;
+        private final PropertyDef property;
+        private final ElementType type;
         private MasterDetailsContentOutline contentTree;
         
-        public AbstractActionHandler( final ModelProperty property,
-                                      final ModelElementType type )
+        public AbstractActionHandler( final PropertyDef property,
+                                      final ElementType type )
         {
             this.property = property;
             this.type = type;
@@ -235,7 +234,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             return ( this.contentTree != null && this.contentTree.getFilterText().length() == 0 );
         }
         
-        public ModelProperty property()
+        public PropertyDef property()
         {
             return this.property;
         }
@@ -244,9 +243,9 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         protected final Object run( final SapphireRenderingContext context )
         {
             final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-            final IModelElement element = node.getLocalModelElement();
+            final Element element = node.getLocalModelElement();
             
-            IModelElement newModelElement = null;
+            Element newModelElement = null;
             
             try
             {
@@ -282,32 +281,32 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             return newModelElement;
         }
         
-        protected abstract IModelElement create( IModelElement element,
-                                                 ModelProperty property,
-                                                 ModelElementType type );
+        protected abstract Element create( Element element,
+                                                 PropertyDef property,
+                                                 ElementType type );
     }
     
     private static final class ListPropertyActionHandler extends AbstractActionHandler
     {
         public ListPropertyActionHandler( final ListProperty property,
-                                          final ModelElementType type )
+                                          final ElementType type )
         {
             super( property, type );
         }
         
         @Override
-        protected IModelElement create( final IModelElement element,
-                                        final ModelProperty property,
-                                        final ModelElementType type )
+        protected Element create( final Element element,
+                                        final PropertyDef property,
+                                        final ElementType type )
         {
-            return element.read( (ListProperty) property ).insert( type );
+            return element.property( (ListProperty) property ).insert( type );
         }
     }
 
     private static final class ElementPropertyActionHandler extends AbstractActionHandler
     {
         public ElementPropertyActionHandler( final ElementProperty property,
-                                             final ModelElementType type )
+                                             final ElementType type )
         {
             super( property, type );
         }
@@ -327,8 +326,9 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                 }
             };
             
-            final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
-            element.attach( listener, property() );
+            final Property property = getPart().getLocalModelElement().property( property() );
+            
+            property.attach( listener );
             
             attach
             (
@@ -339,7 +339,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                     {
                         if( event instanceof DisposeEvent )
                         {
-                            element.detach( listener, property() );
+                            property.detach( listener );
                         }
                     }
                 }
@@ -353,11 +353,11 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         }
         
         @Override
-        protected IModelElement create( final IModelElement element,
-                                        final ModelProperty property,
-                                        final ModelElementType type )
+        protected Element create( final Element element,
+                                        final PropertyDef property,
+                                        final ElementType type )
         {
-            return element.read( (ElementProperty) property ).element( true, type );
+            return element.property( (ElementProperty) property ).content( true, type );
         }
 
         @Override
@@ -367,9 +367,9 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
             
             if( state == true )
             {
-                final IModelElement element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
-                final ModelElementHandle<?> handle = element.read( property() );
-                state = ( handle.element() == null );
+                final Element element = ( (MasterDetailsContentNode) getPart() ).getLocalModelElement();
+                final ElementHandle<?> handle = element.property( property() );
+                state = ( handle.content() == null );
             }
             
             return state;

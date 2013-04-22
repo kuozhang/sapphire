@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @Label( standard = "item" )
 
-public interface IListItemWithJavaType extends IModelElement
+public interface IListItemWithJavaType extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IListItemWithJavaType.class );
+    ElementType TYPE = new ElementType( IListItemWithJavaType.class );
     
     // *** StringValue ***
     

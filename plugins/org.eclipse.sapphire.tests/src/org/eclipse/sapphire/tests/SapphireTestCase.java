@@ -26,19 +26,18 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEnablementEvent;
+import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.ElementValidationEvent;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
-import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
-import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FactsAggregationService;
 
@@ -132,17 +131,17 @@ public abstract class SapphireTestCase extends TestCase
         assertValidationOk( value.validation() );
     }
     
-    protected static final void assertValidationOk( final ModelElementHandle<?> handle )
+    protected static final void assertValidationOk( final ElementHandle<?> handle )
     {
         assertValidationOk( handle.validation() );
     }
     
-    protected static final void assertValidationOk( final ModelElementList<?> list )
+    protected static final void assertValidationOk( final ElementList<?> list )
     {
         assertValidationOk( list.validation() );
     }
     
-    protected static final void assertValidationOk( final IModelElement element )
+    protected static final void assertValidationOk( final Element element )
     {
         assertValidationOk( element.validation() );
     }
@@ -158,19 +157,19 @@ public abstract class SapphireTestCase extends TestCase
         assertValidationWarning( value.validation(), expectedMessage );
     }
 
-    protected static final void assertValidationWarning( final ModelElementHandle<?> handle,
+    protected static final void assertValidationWarning( final ElementHandle<?> handle,
                                                          final String expectedMessage )
     {
         assertValidationWarning( handle.validation(), expectedMessage );
     }
 
-    protected static final void assertValidationWarning( final ModelElementList<?> list,
+    protected static final void assertValidationWarning( final ElementList<?> list,
                                                          final String expectedMessage )
     {
         assertValidationWarning( list.validation(), expectedMessage );
     }
 
-    protected static final void assertValidationWarning( final IModelElement element,
+    protected static final void assertValidationWarning( final Element element,
                                                          final String expectedMessage )
     {
         assertValidationWarning( element.validation(), expectedMessage );
@@ -189,19 +188,19 @@ public abstract class SapphireTestCase extends TestCase
         assertValidationError( value.validation(), expectedMessage );
     }
 
-    protected static final void assertValidationError( final ModelElementHandle<?> handle,
+    protected static final void assertValidationError( final ElementHandle<?> handle,
                                                        final String expectedMessage )
     {
         assertValidationError( handle.validation(), expectedMessage );
     }
 
-    protected static final void assertValidationError( final ModelElementList<?> list,
+    protected static final void assertValidationError( final ElementList<?> list,
                                                        final String expectedMessage )
     {
         assertValidationError( list.validation(), expectedMessage );
     }
 
-    protected static final void assertValidationError( final IModelElement element,
+    protected static final void assertValidationError( final Element element,
                                                        final String expectedMessage )
     {
         assertValidationError( element.validation(), expectedMessage );
@@ -214,22 +213,8 @@ public abstract class SapphireTestCase extends TestCase
         assertEquals( expectedMessage, status.message() );
     }
 
-    protected static void assertElementValidationEvent( final Event event,
-                                                        final IModelElement element,
-                                                        final Status before,
-                                                        final Status after )
-    {
-        assertInstanceOf( event, ElementValidationEvent.class );
-        
-        final ElementValidationEvent evt = (ElementValidationEvent) event;
-        
-        assertSame( element, evt.element() );
-        assertEquals( before, evt.before() );
-        assertEquals( after, evt.after() );
-    }
-    
     protected static void assertElementDisposeEvent( final Event event,
-                                                     final IModelElement element )
+                                                     final Element element )
     {
         assertInstanceOf( event, ElementDisposeEvent.class );
         
@@ -238,33 +223,18 @@ public abstract class SapphireTestCase extends TestCase
         assertSame( element, evt.element() );
     }
 
-    protected static void assertPropertyInitializationEvent( final Event event,
-                                                             final IModelElement element,
-                                                             final ModelProperty property )
-    {
-        assertInstanceOf( event, PropertyInitializationEvent.class );
-        
-        final PropertyInitializationEvent evt = (PropertyInitializationEvent) event;
-        
-        assertSame( element, evt.element() );
-        assertSame( property, evt.property() );
-    }
-    
     protected static void assertPropertyContentEvent( final Event event,
-                                                      final IModelElement element,
-                                                      final ModelProperty property )
+                                                      final Property property )
     {
         assertInstanceOf( event, PropertyContentEvent.class );
         
         final PropertyContentEvent evt = (PropertyContentEvent) event;
         
-        assertSame( element, evt.element() );
         assertSame( property, evt.property() );
     }
     
     protected static void assertPropertyValidationEvent( final Event event,
-                                                         final IModelElement element,
-                                                         final ModelProperty property,
+                                                         final Property property,
                                                          final Status before,
                                                          final Status after )
     {
@@ -272,15 +242,13 @@ public abstract class SapphireTestCase extends TestCase
         
         final PropertyValidationEvent evt = (PropertyValidationEvent) event;
         
-        assertSame( element, evt.element() );
         assertSame( property, evt.property() );
         assertEquals( before, evt.before() );
         assertEquals( after, evt.after() );
     }
 
     protected static void assertPropertyEnablementEvent( final Event event,
-                                                         final IModelElement element,
-                                                         final ModelProperty property,
+                                                         final Property property,
                                                          final boolean before,
                                                          final boolean after )
     {
@@ -288,50 +256,37 @@ public abstract class SapphireTestCase extends TestCase
         
         final PropertyEnablementEvent evt = (PropertyEnablementEvent) event;
         
-        assertSame( element, evt.element() );
         assertSame( property, evt.property() );
         assertEquals( before, evt.before() );
         assertEquals( after, evt.after() );
     }
     
-    protected static void assertFact( final IModelElement element,
-                                      final ModelProperty property,
+    protected static void assertFact( final Property property,
                                       final String fact )
     {
-        final SortedSet<String> facts = element.service( property, FactsAggregationService.class ).facts();
+        final SortedSet<String> facts = property.service( FactsAggregationService.class ).facts();
         assertTrue( facts.contains( fact ) );
     }
     
-    protected static void assertFact( final Value<?> value,
+    protected static void assertFact( final Element element,
+                                      final PropertyDef property,
                                       final String fact )
     {
-        assertFact( value.parent(), value.property(), fact );
+        assertFact( element.property( property ), fact );
     }
     
-    protected static void assertFact( final ModelElementHandle<?> handle,
-                                      final String fact )
-    {
-        assertFact( handle.parent(), handle.property(), fact );
-    }
-    
-    protected static void assertNoFact( final IModelElement element,
-                                        final ModelProperty property,
+    protected static void assertNoFact( final Property property,
                                         final String fact )
     {
-        final SortedSet<String> facts = element.service( property, FactsAggregationService.class ).facts();
+        final SortedSet<String> facts = property.service( FactsAggregationService.class ).facts();
         assertFalse( facts.contains( fact ) );
     }
     
-    protected static void assertNoFact( final Value<?> value,
+    protected static void assertNoFact( final Element element,
+                                        final PropertyDef property,
                                         final String fact )
     {
-        assertNoFact( value.parent(), value.property(), fact );
-    }
-    
-    protected static void assertNoFact( final ModelElementHandle<?> handle,
-                                        final String fact )
-    {
-        assertNoFact( handle.parent(), handle.property(), fact );
+        assertNoFact( element.property( property ), fact );
     }
     
     protected static void assertContainsInstanceOf( final Collection<?> collection,

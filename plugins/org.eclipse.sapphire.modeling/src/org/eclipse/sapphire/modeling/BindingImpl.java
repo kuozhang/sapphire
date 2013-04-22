@@ -11,17 +11,20 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class BindingImpl
 {
-    private IModelElement element;
-    private ModelProperty property;
+    private Element element;
+    private PropertyDef property;
 
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         if( element == null )
@@ -38,12 +41,12 @@ public abstract class BindingImpl
         this.property = property;
     }
     
-    public final IModelElement element()
+    public final Element element()
     {
         return this.element;
     }
     
-    public ModelProperty property()
+    public PropertyDef property()
     {
         return this.property;
     }

@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;

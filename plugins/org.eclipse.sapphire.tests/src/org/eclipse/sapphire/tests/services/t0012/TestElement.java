@@ -11,19 +11,19 @@
 
 package org.eclipse.sapphire.tests.services.t0012;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElement extends IModelElement
+public interface TestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
     // *** Value ***
     

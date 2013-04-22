@@ -30,9 +30,9 @@ public final class SapphireActionHandlerDefMethods
         
         for( ISapphireParam param : def.getParams() )
         {
-            if( name.equals( param.getName().getContent() ) )
+            if( name.equals( param.getName().content() ) )
             {
-                return param.getValue().getContent();
+                return param.getValue().content();
             }
         }
         

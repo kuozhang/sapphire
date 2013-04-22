@@ -18,8 +18,8 @@ import java.util.Collections;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.PartValidationEvent;
@@ -41,13 +41,13 @@ import org.eclipse.swt.widgets.Shell;
 
 public class SapphireDialog extends Dialog
 {
-    private IModelElement element;
+    private Element element;
     private DefinitionLoader.Reference<DialogDef> definition;
     private SapphireDialogPart part;
     private Button okButton;
     
     public SapphireDialog( final Shell shell,
-                           final IModelElement element,
+                           final Element element,
                            final DefinitionLoader.Reference<DialogDef> definition )
     {
         super( shell );
@@ -69,7 +69,7 @@ public class SapphireDialog extends Dialog
         this.part.init( null, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
     }
     
-    public final IModelElement element()
+    public final Element element()
     {
         return this.element;
     }
@@ -113,7 +113,7 @@ public class SapphireDialog extends Dialog
         
         this.part.render( context );
         
-        final String initialFocusProperty = this.part.definition().getInitialFocus().getContent();
+        final String initialFocusProperty = this.part.definition().getInitialFocus().content();
         
         if( initialFocusProperty != null )
         {

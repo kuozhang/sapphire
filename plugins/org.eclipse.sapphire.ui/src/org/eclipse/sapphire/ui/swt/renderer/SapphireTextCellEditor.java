@@ -24,12 +24,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -69,7 +69,7 @@ public final class SapphireTextCellEditor
     private final SapphireRenderingContext context;
     private final StructuredViewer viewer;
     private final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider;
-    private final IModelElement element;
+    private final Element element;
     private final ValueProperty property;
     private final SapphireActionGroup actions;
     private Composite topComposite;
@@ -82,7 +82,7 @@ public final class SapphireTextCellEditor
     public SapphireTextCellEditor( final SapphireRenderingContext context,
                                    final StructuredViewer parent,
                                    final DefaultListPropertyEditorRenderer.SelectionProvider selectionProvider,
-                                   final IModelElement element,
+                                   final Element element,
                                    final ValueProperty property,
                                    final SapphireActionGroup actions,
                                    final int style )
@@ -134,11 +134,11 @@ public final class SapphireTextCellEditor
     protected void doSetValue( final Object value )
     {
         final Value<?> val = (Value<?>) value;
-        final String str = val.getText( true );
+        final String str = val.text( true );
         
         super.doSetValue( str == null ? MiscUtil.EMPTY_STRING : str );
         
-        if( val.getText( false ) == null && val.getDefaultContent() != null )
+        if( val.text( false ) == null && val.getDefaultContent() != null )
         {
             this.isDefaultValue = true;
         }
@@ -233,7 +233,7 @@ public final class SapphireTextCellEditor
         {
             if( ! this.text.isDisposed() )
             {
-                String newTextValue = this.element.read( this.property ).getText( false );
+                String newTextValue = this.element.property( this.property ).text( false );
                 
                 if( newTextValue == null )
                 {

@@ -17,10 +17,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.services.PossibleTypesServiceData;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -36,12 +36,12 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class StandardPossibleTypesService extends PossibleTypesService
 {
-    private Set<ModelElementType> possible;
+    private Set<ElementType> possible;
     
     @Override
     protected void initPossibleTypesService()
     {
-        final ModelProperty property = context( ModelProperty.class );
+        final PropertyDef property = context( PropertyDef.class );
         final List<Class<?>> possible = new ArrayList<Class<?>>();
         
         final Type typeAnnotation = property.getAnnotation( Type.class );
@@ -65,15 +65,15 @@ public final class StandardPossibleTypesService extends PossibleTypesService
         
             if( possible.size() == 1 )
             {
-                this.possible = Collections.singleton( ModelElementType.read( possible.get( 0 ) ) );
+                this.possible = Collections.singleton( ElementType.read( possible.get( 0 ) ) );
             }
             else
             {
-                this.possible = new HashSet<ModelElementType>();
+                this.possible = new HashSet<ElementType>();
                 
                 for( Class<?> cl : possible )
                 {
-                    this.possible.add( ModelElementType.read( cl ) );
+                    this.possible.add( ElementType.read( cl ) );
                 }
             }
         }

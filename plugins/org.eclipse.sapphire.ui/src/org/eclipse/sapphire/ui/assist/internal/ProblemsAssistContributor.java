@@ -12,11 +12,11 @@
 package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.PartValidationEvent;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -29,9 +29,8 @@ import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 
 public final class ProblemsAssistContributor extends PropertyEditorAssistContributor
 {
-    private IModelElement element;
-    private ModelProperty property;
-    private FilteredListener<PropertyValidationEvent> propertyValidationListener;
+    private SapphirePart part;
+    private Listener partValidationListener;
     
     public ProblemsAssistContributor()
     {
@@ -40,39 +39,29 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
     }
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property )
+    public void init( final SapphirePart part )
     {
-        this.element = element;
-        this.property = property;
+        this.part = part;
         
-        if (this.property != null)
+        if( this.part != null )
         {
-	        this.propertyValidationListener = new FilteredListener<PropertyValidationEvent>()
+	        this.partValidationListener = new FilteredListener<PartValidationEvent>()
 	        {
 	            @Override
-	            protected void handleTypedEvent( final PropertyValidationEvent event )
+	            protected void handleTypedEvent( final PartValidationEvent event )
 	            {
 	                broadcast();
 	            }
 	        };
 	        
-	        this.element.attach( this.propertyValidationListener, this.property );
+	        this.part.attach( this.partValidationListener );
         }
     }
 
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        Status validation;
-        if (this.property != null)
-        {
-        	validation = this.element.validation( this.property );
-        }
-        else
-        {
-        	validation = this.element.validation();        			
-        }
+        final Status validation = this.part.validation();
         
         if( validation.children().isEmpty() )
         {
@@ -116,9 +105,9 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
     @Override
     public void dispose()
     {
-        if( this.propertyValidationListener != null )
+        if( this.partValidationListener != null )
         {
-            this.element.detach( this.propertyValidationListener, this.property );
+            this.part.detach( this.partValidationListener );
         }
     }
     

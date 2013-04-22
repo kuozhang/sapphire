@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.WizardDef;
@@ -35,12 +35,12 @@ public final class SapphireWizardPart extends SapphirePart
     {
         super.init();
         
-        final IModelElement element = getModelElement();
+        final Element element = getModelElement();
         final WizardDef def = definition();
         
         this.imageFunctionResult = initExpression
         (
-            def.getImage().getContent(),
+            def.getImage().content(),
             ImageData.class,
             null,
             new Runnable()
@@ -70,12 +70,12 @@ public final class SapphireWizardPart extends SapphirePart
     
     public String getLabel()
     {
-        return definition().getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        return definition().getLabel().localized( CapitalizationType.TITLE_STYLE, false );
     }
     
     public String getDescription()
     {
-        return definition().getDescription().getLocalizedText( CapitalizationType.NO_CAPS, false );
+        return definition().getDescription().localized( CapitalizationType.NO_CAPS, false );
     }
     
     public ImageData getImage()

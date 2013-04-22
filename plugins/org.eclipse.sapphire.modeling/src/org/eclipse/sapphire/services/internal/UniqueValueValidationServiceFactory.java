@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -31,8 +31,8 @@ public final class UniqueValueValidationServiceFactory extends ServiceFactory
                                final Class<? extends Service> service )
     {
         final ValueProperty property = context.find( ValueProperty.class );
-        final IModelElement element = context.find( IModelElement.class );
-        return ( property != null && property.hasAnnotation( NoDuplicates.class ) && element.parent() instanceof ModelElementList );
+        final Element element = context.find( Element.class );
+        return ( property != null && property.hasAnnotation( NoDuplicates.class ) && element.parent().definition() instanceof ListProperty );
     }
 
     @Override

@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.sdk.xml.schema.normalizer;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
@@ -45,7 +45,7 @@ import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
 {
-    ModelElementType TYPE = new ModelElementType( CreateNormalizedXmlSchemaOp.class );
+    ElementType TYPE = new ElementType( CreateNormalizedXmlSchemaOp.class );
     
     // *** Folder ***
     
@@ -79,9 +79,9 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     
     // *** RootElements ***
     
-    interface RootElement extends IModelElement
+    interface RootElement extends Element
     {
-        ModelElementType TYPE = new ModelElementType( RootElement.class );
+        ElementType TYPE = new ElementType( RootElement.class );
         
         // *** Name ***
         
@@ -100,13 +100,13 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     
     ListProperty PROP_ROOT_ELEMENTS = new ListProperty( TYPE, "RootElements" );
     
-    ModelElementList<RootElement> getRootElements();
+    ElementList<RootElement> getRootElements();
     
     // *** Exclusions ***
     
-    interface Exclusion extends IModelElement
+    interface Exclusion extends Element
     {
-        ModelElementType TYPE = new ModelElementType( Exclusion.class );
+        ElementType TYPE = new ElementType( Exclusion.class );
         
         // *** Type ***
         
@@ -142,13 +142,13 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     
     ListProperty PROP_EXCLUSIONS = new ListProperty( TYPE, "Exclusions" );
     
-    ModelElementList<Exclusion> getExclusions();
+    ElementList<Exclusion> getExclusions();
     
     // *** TypeSubstitutions ***
 
-    interface TypeSubstitution extends IModelElement
+    interface TypeSubstitution extends Element
     {
-        ModelElementType TYPE = new ModelElementType( TypeSubstitution.class );
+        ElementType TYPE = new ElementType( TypeSubstitution.class );
         
         // *** Before ***
         
@@ -176,7 +176,7 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     
     ListProperty PROP_TYPE_SUBSTITUTIONS = new ListProperty( TYPE, "TypeSubstitutions" );
     
-    ModelElementList<TypeSubstitution> getTypeSubstitutions();
+    ElementList<TypeSubstitution> getTypeSubstitutions();
     
     // *** SortSequenceContent ***
     

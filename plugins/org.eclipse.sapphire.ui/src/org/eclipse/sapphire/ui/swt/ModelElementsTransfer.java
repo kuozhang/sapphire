@@ -18,15 +18,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.eclipse.sapphire.PropertyInstance;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
@@ -65,7 +63,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
     protected void javaToNative( final Object data, 
                                  final TransferData transferData )
     {
-        final List<IModelElement> elements = (List<IModelElement>) data;
+        final List<Element> elements = (List<Element>) data;
 
         try
         {
@@ -86,7 +84,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         }
     }
     
-    private void javaToNative( final List<IModelElement> elements,
+    private void javaToNative( final List<Element> elements,
                                final DataOutputStream out )
     
         throws IOException
@@ -94,13 +92,13 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
     {
         out.writeInt( elements.size() );
         
-        for( IModelElement element : elements )
+        for( Element element : elements )
         {
             javaToNative( element, out );
         }
     }
     
-    private void javaToNative( final IModelElement element,
+    private void javaToNative( final Element element,
                                final DataOutputStream out )
     
         throws IOException
@@ -108,42 +106,40 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
     {
         out.writeUTF( element.type().getQualifiedName() );
         
-        for( PropertyInstance instance : element.properties() )
+        for( Property property : element.properties() )
         {
-            final ModelProperty property = instance.property();
-            
-            if( ! property.isReadOnly() )
+            if( ! property.definition().isReadOnly() )
             {
-                if( property instanceof ValueProperty )
+                if( property instanceof Value<?> )
                 {
-                    final String value = element.read( (ValueProperty) property ).getText( false );
+                    final String value = ( (Value<?>) property ).text( false );
                     
                     if( value != null )
                     {
                         out.writeByte( 1 );
-                        out.writeUTF( property.getName() );
+                        out.writeUTF( property.name() );
                         out.writeUTF( value );
                     }
                 }
-                else if( property instanceof ElementProperty )
+                else if( property instanceof ElementHandle<?> )
                 {
-                    final IModelElement child = element.read( (ElementProperty) property ).element();
+                    final Element child = ( (ElementHandle<?>) property ).content();
                     
                     if( child != null )
                     {
                         out.writeByte( 1 );
-                        out.writeUTF( property.getName() );
+                        out.writeUTF( property.name() );
                         javaToNative( child, out );
                     }
                 }
-                else if( property instanceof ListProperty )
+                else if( property.definition() instanceof ListProperty )
                 {
-                    final List<IModelElement> list = element.read( (ListProperty) property );
+                    final List<Element> list = element.property( (ListProperty) property.definition() );
                     
                     if( ! list.isEmpty() )
                     {
                         out.writeByte( 1 );
-                        out.writeUTF( property.getName() );
+                        out.writeUTF( property.name() );
                         javaToNative( list, out );
                     }
                 }
@@ -167,14 +163,14 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         
         try
         {
-            final ListFactory<IModelElement> elementsListFactory = ListFactory.start();
+            final ListFactory<Element> elementsListFactory = ListFactory.start();
             final int size = in.readInt();
             
             for( int i = 0; i < size; i++ )
             {
                 final String qualifiedTypeName = in.readUTF();
-                final ModelElementType type = ModelElementType.read( this.classLoader, qualifiedTypeName );
-                final IModelElement element = type.instantiate();
+                final ElementType type = ElementType.read( this.classLoader, qualifiedTypeName );
+                final Element element = type.instantiate();
                 nativeToJava( in, element );
                 elementsListFactory.add( element );
             }
@@ -188,7 +184,7 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
     }
     
     private void nativeToJava( final DataInputStream in,
-                               final IModelElement element )
+                               final Element element )
     
         throws IOException
         
@@ -196,40 +192,32 @@ public final class ModelElementsTransfer extends ByteArrayTransfer
         while( in.readByte() != 0 )
         {
             final String propertyName = in.readUTF();
-            final PropertyInstance instance = element.property( propertyName );
+            final Property property = element.property( propertyName );
 
-            if( instance != null )
+            if( property != null )
             {
-                final ModelProperty property = instance.property();
-                
-                if( property instanceof ValueProperty )
+                if( property instanceof Value )
                 {
                     final String value = in.readUTF();
-                    element.write( property, value );
+                    ( (Value<?>) property ).write( value );
                 }
-                else if( property instanceof ImpliedElementProperty )
-                {
-                    in.readUTF(); // qualified type name
-                    final IModelElement child = element.read( (ImpliedElementProperty) property ).element();
-                    nativeToJava( in, child );
-                }
-                else if( property instanceof ElementProperty )
+                else if( property instanceof ElementHandle )
                 {
                     final String qualifiedTypeName = in.readUTF();
-                    final ModelElementType type = ModelElementType.read( this.classLoader, qualifiedTypeName );
-                    final IModelElement child = element.read( (ElementProperty) property ).element( true, type );
+                    final ElementType type = ElementType.read( this.classLoader, qualifiedTypeName );
+                    final Element child = ( (ElementHandle<?>) property ).content( true, type );
                     nativeToJava( in, child );
                 }
-                else if( property instanceof ListProperty )
+                else if( property instanceof ElementList )
                 {
-                    final ModelElementList<?> list = element.read( (ListProperty) property );
+                    final ElementList<?> list = (ElementList<?>) property;
                     final int size = in.readInt();
                     
                     for( int i = 0; i < size; i++ )
                     {
                         final String qualifiedTypeName = in.readUTF();
-                        final ModelElementType type = ModelElementType.read( this.classLoader, qualifiedTypeName );
-                        final IModelElement child = list.insert( type );
+                        final ElementType type = ElementType.read( this.classLoader, qualifiedTypeName );
+                        final Element child = list.insert( type );
                         nativeToJava( in, child );
                     }
                 }

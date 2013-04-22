@@ -13,12 +13,12 @@ package org.eclipse.sapphire.sdk.extensibility;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
@@ -31,9 +31,9 @@ import org.eclipse.sapphire.util.Filter;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ExtensionSummaryExportOp extends IModelElement
+public interface ExtensionSummaryExportOp extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ExtensionSummaryExportOp.class );
+    ElementType TYPE = new ElementType( ExtensionSummaryExportOp.class );
     
     // *** CreateFinishedDocument ***
     
@@ -88,13 +88,13 @@ public interface ExtensionSummaryExportOp extends IModelElement
     
     ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
     
-    ModelElementList<ExtensionSummarySectionDef> getSections();
+    ElementList<ExtensionSummarySectionDef> getSections();
     
     // *** Method: execute ***
     
     @DelegateImplementation( ExtensionSummaryExportOpMethods.class )
     
     String execute( List<SapphireExtensionDef> extensions,
-                    Filter<IModelElement> filter );
+                    Filter<Element> filter );
     
 }

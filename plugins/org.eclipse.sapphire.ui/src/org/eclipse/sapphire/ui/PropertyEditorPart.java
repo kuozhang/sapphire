@@ -19,27 +19,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.PropertyInstance;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEnablementEvent;
+import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.el.AndFunction;
@@ -66,7 +66,6 @@ import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.swt.internal.PopUpListFieldStyle;
 import org.eclipse.sapphire.util.ListFactory;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -91,13 +90,12 @@ public final class PropertyEditorPart extends FormComponentPart
         FACTORIES.add( new DefaultListPropertyEditorRenderer.Factory() );
     }
     
-    private IModelElement element;
-    private ModelProperty property;
-    private List<ModelPath> childProperties;
-    private Map<IModelElement,Map<ModelPath,PropertyEditorPart>> childPropertyEditors;
+    private Property property;
+    private List<ModelPath> childPropertyPaths;
+    private Map<Element,Map<ModelPath,PropertyEditorPart>> childPropertyEditors;
     private Map<String,Object> hints;
     private List<SapphirePart> relatedContentParts;
-    private Listener listener;
+    private Listener propertyValidationListener;
     private FunctionResult labelFunctionResult;
     private PropertyEditorRenderer presentation;
     
@@ -109,65 +107,32 @@ public final class PropertyEditorPart extends FormComponentPart
         final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final PropertyEditorDef propertyEditorPartDef = (PropertyEditorDef) this.definition;
         
-        final PropertyInstance instance = getModelElement().property( new ModelPath( propertyEditorPartDef.getProperty().getText() ) );
+        this.property = getModelElement().property( new ModelPath( propertyEditorPartDef.getProperty().text() ) );
         
-        if( instance == null )
+        if( this.property == null )
         {
-            throw new RuntimeException( NLS.bind( Resources.invalidPath, propertyEditorPartDef.getProperty().getText() ) );
+            throw new RuntimeException( NLS.bind( Resources.invalidPath, propertyEditorPartDef.getProperty().text() ) );
         }
-        
-        this.element = instance.element();
-        this.property = instance.property();
         
         // Read the property to ensure that initial events are broadcast and avoid being surprised
         // by them later.
         
-        this.element.read( this.property );
+        this.property.empty();
         
-        // Listen for PropertyValidationEvent and update property editor's validation.
-        
-        this.listener = new FilteredListener<PropertyEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final PropertyEvent event )
-            {
-                if( event instanceof PropertyValidationEvent || event instanceof PropertyEnablementEvent )
-                {
-                    if( Display.getCurrent() == null )
-                    {
-                        Display.getDefault().asyncExec
-                        (
-                            new Runnable()
-                            {
-                                public void run()
-                                {
-                                    handleTypedEvent( event );
-                                }
-                            }
-                        );
-                        
-                        return;
-                    }
-                    
-                    refreshValidation();
-                }
-            }
-        };
-        
-        this.element.attach( this.listener, this.property );
+        // Child properties.        
         
         final ListFactory<ModelPath> childPropertiesListFactory = ListFactory.start();
-        final ModelElementType type = this.property.getType();
+        final ElementType type = this.property.definition().getType();
         
         if( type != null )
         {
             if( propertyEditorPartDef.getChildProperties().isEmpty() )
             {
-                for( ModelProperty childProperty : type.properties() )
+                for( PropertyDef childProperty : type.properties() )
                 {
                     if( childProperty instanceof ValueProperty )
                     {
-                        childPropertiesListFactory.add( new ModelPath( childProperty.getName() ) );
+                        childPropertiesListFactory.add( new ModelPath( childProperty.name() ) );
                     }
                 }
             }
@@ -175,7 +140,7 @@ public final class PropertyEditorPart extends FormComponentPart
             {
                 for( PropertyEditorDef childPropertyEditor : propertyEditorPartDef.getChildProperties() )
                 {
-                    final ModelPath childPropertyPath = new ModelPath( childPropertyEditor.getProperty().getContent() );
+                    final ModelPath childPropertyPath = new ModelPath( childPropertyEditor.getProperty().content() );
                     boolean invalid = false;
                     
                     if( childPropertyPath.length() == 0 )
@@ -184,7 +149,7 @@ public final class PropertyEditorPart extends FormComponentPart
                     }
                     else
                     {
-                        ModelElementType t = type;
+                        ElementType t = type;
                         
                         for( int i = 0, n = childPropertyPath.length(); i < n && ! invalid; i++ )
                         {
@@ -192,7 +157,7 @@ public final class PropertyEditorPart extends FormComponentPart
                             
                             if( segment instanceof ModelPath.PropertySegment )
                             {
-                                final ModelProperty p = t.property( ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+                                final PropertyDef p = t.property( ( (ModelPath.PropertySegment) segment ).getPropertyName() );
                                 
                                 if( p instanceof ValueProperty )
                                 {
@@ -226,7 +191,7 @@ public final class PropertyEditorPart extends FormComponentPart
                     
                     if( invalid )
                     {
-                        final String msg = NLS.bind( Resources.invalidChildPropertyPath, this.property.getName(), childPropertyPath.toString() );
+                        final String msg = NLS.bind( Resources.invalidChildPropertyPath, this.property.name(), childPropertyPath.toString() );
                         SapphireUiFrameworkPlugin.logError( msg );
                     }
                     else
@@ -237,15 +202,56 @@ public final class PropertyEditorPart extends FormComponentPart
             }
         }
         
-        this.childProperties = childPropertiesListFactory.result();
-        this.childPropertyEditors = new HashMap<IModelElement,Map<ModelPath,PropertyEditorPart>>();
+        this.childPropertyPaths = childPropertiesListFactory.result();
+        this.childPropertyEditors = new HashMap<Element,Map<ModelPath,PropertyEditorPart>>();
         
+        // Listen for PropertyValidationEvent and update property editor's validation.
+        
+        if( this.property instanceof ElementList )
+        {
+            this.propertyValidationListener = new FilteredListener<PropertyEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyEvent event )
+                {
+                    if( event instanceof PropertyValidationEvent || event instanceof PropertyEnablementEvent ||
+                        ( event instanceof PropertyContentEvent && event.property() == property() ) )
+                    {
+                        refreshValidation();
+                    }
+                }
+            };
+            
+            for( ModelPath childPropertyPath : this.childPropertyPaths )
+            {
+                this.property.attach( this.propertyValidationListener, childPropertyPath );
+            }
+        }
+        else
+        {
+            this.propertyValidationListener = new FilteredListener<PropertyEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyEvent event )
+                {
+                    if( event instanceof PropertyValidationEvent || event instanceof PropertyEnablementEvent )
+                    {
+                        refreshValidation();
+                    }
+                }
+            };
+        }
+
+        this.property.attach( this.propertyValidationListener );
+        
+        // Hints
+
         this.hints = new HashMap<String,Object>();
         
         for( ISapphireHint hint : propertyEditorPartDef.getHints() )
         {
-            final String name = hint.getName().getText();
-            final String valueString = hint.getValue().getText();
+            final String name = hint.getName().text();
+            final String valueString = hint.getValue().text();
             Object parsedValue = valueString;
             
             if( name.equals( PropertyEditorDef.HINT_SHOW_HEADER ) ||
@@ -296,7 +302,7 @@ public final class PropertyEditorPart extends FormComponentPart
 
         for( PartDef relatedContentPartDef : propertyEditorPartDef.getRelatedContent() )
         {
-            final SapphirePart relatedContentPart = create( this, this.element, relatedContentPartDef, this.params );
+            final SapphirePart relatedContentPart = create( this, this.property.element(), relatedContentPartDef, this.params );
             relatedContentPart.attach( relatedContentPartListener );
             relatedContentPartsListFactory.add( relatedContentPart );
         }
@@ -305,9 +311,9 @@ public final class PropertyEditorPart extends FormComponentPart
         
         this.labelFunctionResult = initExpression
         (
-            propertyEditorPartDef.getLabel().getContent(), 
+            propertyEditorPartDef.getLabel().content(), 
             String.class,
-            Literal.create( this.property.getLabel( false, CapitalizationType.NO_CAPS, true ) ),
+            Literal.create( this.property.definition().getLabel( false, CapitalizationType.NO_CAPS, true ) ),
             new Runnable()
             {
                 public void run()
@@ -324,7 +330,7 @@ public final class PropertyEditorPart extends FormComponentPart
         return AndFunction.create
         (
             super.initVisibleWhenFunction(),
-            createVersionCompatibleFunction( getLocalModelElement(), this.property )
+            createVersionCompatibleFunction( property() )
         );
     }
     
@@ -335,28 +341,28 @@ public final class PropertyEditorPart extends FormComponentPart
     }
     
     @Override
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
-        return this.element;
+        return this.property.element();
     }
     
-    public ModelProperty getProperty()
+    public Property property()
     {
         return this.property;
     }
     
     public List<ModelPath> getChildProperties()
     {
-        return this.childProperties;
+        return this.childPropertyPaths;
     }
     
-    public PropertyEditorPart getChildPropertyEditor( final IModelElement element,
-                                                      final ModelProperty property )
+    public PropertyEditorPart getChildPropertyEditor( final Element element,
+                                                      final PropertyDef property )
     {
-        return getChildPropertyEditor( element, new ModelPath( property.getName() ) );
+        return getChildPropertyEditor( element, new ModelPath( property.name() ) );
     }
     
-    public PropertyEditorPart getChildPropertyEditor( final IModelElement element,
+    public PropertyEditorPart getChildPropertyEditor( final Element element,
                                                       final ModelPath property )
     {
         Map<ModelPath,PropertyEditorPart> propertyEditorsForElement = this.childPropertyEditors.get( element );
@@ -416,29 +422,29 @@ public final class PropertyEditorPart extends FormComponentPart
     
     public boolean getShowLabel()
     {
-        return definition().getShowLabel().getContent();
+        return definition().getShowLabel().content();
     }
     
     public boolean getSpanBothColumns()
     {
-        return definition().getSpanBothColumns().getContent();
+        return definition().getSpanBothColumns().content();
     }
     
     public int getWidth( final int defaultValue )
     {
-        final Integer width = definition().getWidth().getContent();
+        final Integer width = definition().getWidth().content();
         return ( width == null || width < 1 ? defaultValue : width );
     }
     
     public int getHeight( final int defaultValue )
     {
-        final Integer height = definition().getHeight().getContent();
+        final Integer height = definition().getHeight().content();
         return ( height == null || height < 1 ? defaultValue : height );
     }
     
     public int getMarginLeft()
     {
-        int marginLeft = definition().getMarginLeft().getContent();
+        int marginLeft = definition().getMarginLeft().content();
         
         if( marginLeft < 0 )
         {
@@ -475,7 +481,7 @@ public final class PropertyEditorPart extends FormComponentPart
         
         if( relatedContentWidth.validation().ok() )
         {
-            return relatedContentWidth.getContent();
+            return relatedContentWidth.content();
         }
         else
         {
@@ -497,7 +503,7 @@ public final class PropertyEditorPart extends FormComponentPart
             return;
         }
         
-        final String style = definition().getStyle().getText();
+        final String style = definition().getStyle().text();
         
         if( style == null )
         {
@@ -539,19 +545,19 @@ public final class PropertyEditorPart extends FormComponentPart
         {
             if( style.startsWith( "Sapphire.PropertyEditor.PopUpListField" ) )
             {
-                if( this.property instanceof ValueProperty && this.element.service( this.property, PossibleValuesService.class ) != null )
+                if( this.property.definition() instanceof ValueProperty && this.property.service( PossibleValuesService.class ) != null )
                 {
                     PopUpListFieldStyle popUpListFieldPresentationStyle = null;
                     
                     if( style.equals( "Sapphire.PropertyEditor.PopUpListField" ) )
                     {
-                        if( Enum.class.isAssignableFrom( this.property.getTypeClass() ) )
+                        if( Enum.class.isAssignableFrom( this.property.definition().getTypeClass() ) )
                         {
                             popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
                         }
                         else
                         {
-                            final PossibleValues possibleValuesAnnotation = this.property.getAnnotation( PossibleValues.class );
+                            final PossibleValues possibleValuesAnnotation = this.property.definition().getAnnotation( PossibleValues.class );
                             
                             if( possibleValuesAnnotation != null )
                             {
@@ -598,21 +604,19 @@ public final class PropertyEditorPart extends FormComponentPart
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        if( this.element.enabled( this.property ) )
+        if( property().enabled() )
         {
-            final Object particle = this.element.read( this.property );
+            factory.merge( this.property.validation() );
             
-            if( particle instanceof Value<?> )
+            if( this.property instanceof ElementList )
             {
-                factory.merge( ( (Value<?>) particle ).validation() );
-            }
-            else if( particle instanceof ModelElementList<?> )
-            {
-                factory.merge( ( (ModelElementList<?>) particle ).validation() );
-            }
-            else if( particle instanceof ModelElementHandle<?> )
-            {
-                factory.merge( ( (ModelElementHandle<?>) particle ).validation() );
+                for( Element child : (ElementList<?>) this.property )
+                {
+                    for( ModelPath childPropertyPath : this.childPropertyPaths )
+                    {
+                        factory.merge( child.property( childPropertyPath ).validation() );
+                    }
+                }
             }
         }
         
@@ -628,7 +632,7 @@ public final class PropertyEditorPart extends FormComponentPart
     
     public boolean setFocus()
     {
-        if( this.element.enabled( this.property ) )
+        if( property().enabled() )
         {
             broadcast( new FocusReceivedEvent( this ) );
             return true;
@@ -647,7 +651,7 @@ public final class PropertyEditorPart extends FormComponentPart
         {
             final String propertyName = ( (ModelPath.PropertySegment) head ).getPropertyName();
             
-            if( propertyName.equals( this.property.getName() ) )
+            if( propertyName.equals( this.property.name() ) )
             {
                 return setFocus();
             }
@@ -660,15 +664,15 @@ public final class PropertyEditorPart extends FormComponentPart
     {
         final String context;
         
-        if( this.property instanceof ValueProperty )
+        if( this.property.definition() instanceof ValueProperty )
         {
             context = SapphireActionSystem.CONTEXT_VALUE_PROPERTY_EDITOR;
         }
-        else if( this.property instanceof ElementProperty )
+        else if( this.property.definition() instanceof ElementProperty )
         {
             context = SapphireActionSystem.CONTEXT_ELEMENT_PROPERTY_EDITOR;
         }
-        else if( this.property instanceof ListProperty )
+        else if( this.property.definition() instanceof ListProperty )
         {
             context = SapphireActionSystem.CONTEXT_LIST_PROPERTY_EDITOR;
         }
@@ -689,7 +693,7 @@ public final class PropertyEditorPart extends FormComponentPart
     @Override
     public boolean isSingleLinePart()
     {
-        if( this.property instanceof ValueProperty && ! this.property.hasAnnotation( LongString.class ) )
+        if( this.property.definition() instanceof ValueProperty && ! this.property.definition().hasAnnotation( LongString.class ) )
         {
             return true;
         }
@@ -699,7 +703,7 @@ public final class PropertyEditorPart extends FormComponentPart
     
     public boolean isReadOnly()
     {
-        return ( this.property.isReadOnly() || getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );        
+        return ( this.property.definition().isReadOnly() || getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );        
     }
 
     @Override
@@ -710,9 +714,17 @@ public final class PropertyEditorPart extends FormComponentPart
             this.presentation.dispose();
         }
         
-        if( this.listener != null )
+        if( this.propertyValidationListener != null )
         {
-            this.element.detach( this.listener, this.property );
+            this.property.detach( this.propertyValidationListener );
+            
+            if( this.property instanceof ElementList )
+            {
+                for( ModelPath childPropertyPath : this.childPropertyPaths )
+                {
+                    this.property.detach( this.propertyValidationListener, childPropertyPath );
+                }
+            }
         }
         
         if( this.labelFunctionResult != null )

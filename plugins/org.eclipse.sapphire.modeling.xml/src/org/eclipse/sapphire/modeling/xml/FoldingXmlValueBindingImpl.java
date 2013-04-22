@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.xml.XmlNode.Event;
 import org.eclipse.sapphire.modeling.xml.XmlNode.EventType;
 
@@ -29,8 +29,8 @@ public final class FoldingXmlValueBindingImpl
     private XmlElement.Listener listener;
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         super.init( element, property, params );

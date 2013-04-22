@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.sdk;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PreferDefaultValue;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Services;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.workspace.WorkspaceFileType;
 
 public interface CreateExtensionManifestOp extends CreateWorkspaceFileOp
 {
-    ModelElementType TYPE = new ModelElementType( CreateExtensionManifestOp.class );
+    ElementType TYPE = new ElementType( CreateExtensionManifestOp.class );
     
     // *** Folder ***
     

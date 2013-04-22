@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.catalog;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
@@ -42,13 +42,13 @@ public final class ShowPriceActionHandler extends SapphireActionHandler
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                setChecked( ShowPriceActionHandler.this.state.getShowPrice().getContent() );
+                setChecked( ShowPriceActionHandler.this.state.getShowPrice().content() );
             }
         };
         
-        this.state.attach( listener, CatalogEditorPageState.PROP_SHOW_PRICE );
+        this.state.property( CatalogEditorPageState.PROP_SHOW_PRICE ).attach( listener );
         
-        setChecked( this.state.getShowPrice().getContent() );
+        setChecked( this.state.getShowPrice().content() );
         
         attach
         (
@@ -57,7 +57,7 @@ public final class ShowPriceActionHandler extends SapphireActionHandler
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    ShowPriceActionHandler.this.state.detach( listener, CatalogEditorPageState.PROP_SHOW_PRICE );
+                    ShowPriceActionHandler.this.state.property( CatalogEditorPageState.PROP_SHOW_PRICE ).detach( listener );
                 }
             }
         );
@@ -66,7 +66,7 @@ public final class ShowPriceActionHandler extends SapphireActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        this.state.setShowPrice( ! this.state.getShowPrice().getContent() );
+        this.state.setShowPrice( ! this.state.getShowPrice().content() );
         
         return null;
     }

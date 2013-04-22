@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
@@ -26,7 +26,7 @@ public final class PartFunctionContext extends ModelElementFunctionContext
     private final SapphirePart part;
     
     public PartFunctionContext( final SapphirePart part,
-                                final IModelElement element )
+                                final Element element )
     {
         super( element, part.definition().adapt( LocalizationService.class ) );
         

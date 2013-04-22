@@ -14,7 +14,7 @@ package org.eclipse.sapphire.modeling.el;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -61,18 +61,18 @@ public final class LessThanFunction extends Function
             
             protected Object evaluate()
             {
-                Object a = operand( 0 ).value();
+                Object a = operand( 0 );
                 
                 if( a instanceof Value<?> )
                 {
-                    a = ( (Value<?>) a ).getContent();
+                    a = ( (Value<?>) a ).content();
                 }
                 
-                Object b = operand( 1 ).value();
+                Object b = operand( 1 );
 
                 if( b instanceof Value<?> )
                 {
-                    b = ( (Value<?>) b ).getContent();
+                    b = ( (Value<?>) b ).content();
                 }
                 
                 if( a == b )

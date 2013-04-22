@@ -17,9 +17,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.osgi.BundleBasedContext;
@@ -37,12 +37,12 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class SapphireEditorForXml extends SapphireEditor implements IExecutableExtension
 {
-    private ModelElementType type;
+    private ElementType type;
     private DefinitionLoader.Reference<EditorPageDef> definition;
     private StructuredTextEditor sourcePage;
     private MasterDetailsEditorPage formPage;
     
-    public SapphireEditorForXml( final ModelElementType type,
+    public SapphireEditorForXml( final ElementType type,
                                  final DefinitionLoader.Reference<EditorPageDef> definition )
     {
         if( type == null )
@@ -80,7 +80,7 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
             this.definition = DefinitionLoader.context( context ).sdef( sdef ).page();
             
             final JavaType elementJavaType = this.definition.resolve().getElementType().resolve();
-            this.type = ModelElementType.read( elementJavaType.artifact(), true );
+            this.type = ElementType.read( elementJavaType.artifact(), true );
         }
     }
     
@@ -89,7 +89,7 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
         return this.sourcePage;
     }
     
-    protected IModelElement createModel()
+    protected Element createModel()
     {
         final XmlEditorResourceStore store = createResourceStore( this.sourcePage );
         return this.type.instantiate( new RootXmlResource( store ) );

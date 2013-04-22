@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0011g;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -19,6 +19,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 
 public interface TestModelElementB1 extends TestModelElementB
 {
-    ModelElementType TYPE = new ModelElementType( TestModelElementB1.class );
+    ElementType TYPE = new ElementType( TestModelElementB1.class );
 
 }

@@ -15,9 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -33,7 +33,7 @@ public final class ProjectRelativePathService extends RelativePathService
     @Override
     public List<Path> roots()
     {
-        final IProject project = context( IModelElement.class ).adapt( IProject.class );
+        final IProject project = context( Element.class ).adapt( IProject.class );
         
         if( project == null )
         {

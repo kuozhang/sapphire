@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEdi
 
 public interface CatalogEditorPageState extends MasterDetailsEditorPageState
 {
-    ModelElementType TYPE = new ModelElementType( CatalogEditorPageState.class );
+    ElementType TYPE = new ElementType( CatalogEditorPageState.class );
     
     // *** ShowManufacturer ***
     

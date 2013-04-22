@@ -23,8 +23,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
@@ -52,7 +52,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     private DefinitionLoader.Reference<WizardDef> definition;
     private SapphireWizardPart part;
     
-    public SapphireWizard( final ModelElementType type,
+    public SapphireWizard( final ElementType type,
                            final DefinitionLoader.Reference<WizardDef> definition )
     {
         init( type, definition );
@@ -68,7 +68,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
     {
     }
     
-    protected void init( final ModelElementType type,
+    protected void init( final ElementType type,
                          final DefinitionLoader.Reference<WizardDef> definition )
     {
         if( type == null )

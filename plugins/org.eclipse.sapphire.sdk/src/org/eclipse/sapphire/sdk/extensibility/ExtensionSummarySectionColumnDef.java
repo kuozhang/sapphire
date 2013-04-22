@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 
@@ -22,9 +22,9 @@ import org.eclipse.sapphire.modeling.annotations.Required;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ExtensionSummarySectionColumnDef extends IModelElement
+public interface ExtensionSummarySectionColumnDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ExtensionSummarySectionColumnDef.class );
+    ElementType TYPE = new ElementType( ExtensionSummarySectionColumnDef.class );
     
     // *** Name ***
     

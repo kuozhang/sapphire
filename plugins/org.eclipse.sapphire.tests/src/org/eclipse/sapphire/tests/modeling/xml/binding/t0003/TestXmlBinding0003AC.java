@@ -11,14 +11,14 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0003;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
@@ -31,9 +31,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/w", prefix = "w" )
 
-public interface TestXmlBinding0003AC extends IModelElement
+public interface TestXmlBinding0003AC extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlBinding0003AC.class );
+    ElementType TYPE = new ElementType( TestXmlBinding0003AC.class );
     
     // *** Aca ***
     
@@ -60,7 +60,7 @@ public interface TestXmlBinding0003AC extends IModelElement
     
     ElementProperty PROP_ACC = new ElementProperty( TYPE, "Acc" );
     
-    ModelElementHandle<TestXmlBinding0003ACC> getAcc();
+    ElementHandle<TestXmlBinding0003ACC> getAcc();
 
     // *** Acd ***
 
@@ -69,6 +69,6 @@ public interface TestXmlBinding0003AC extends IModelElement
     
     ListProperty PROP_ACD = new ListProperty( TYPE, "Acd" );
     
-    ModelElementList<TestXmlBinding0003ACD> getAcd();
+    ElementList<TestXmlBinding0003ACD> getAcd();
     
 }

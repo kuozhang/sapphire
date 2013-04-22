@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.state;
 
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.ui.EditorPageState;
 
@@ -22,7 +22,7 @@ import org.eclipse.sapphire.ui.EditorPageState;
 
 public interface MasterDetailsEditorPageState extends EditorPageState
 {
-    ModelElementType TYPE = new ModelElementType( MasterDetailsEditorPageState.class );
+    ElementType TYPE = new ElementType( MasterDetailsEditorPageState.class );
     
     // *** ContentOutlineState ***
     

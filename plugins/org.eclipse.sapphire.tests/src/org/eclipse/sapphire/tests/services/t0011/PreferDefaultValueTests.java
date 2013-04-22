@@ -62,7 +62,7 @@ public final class PreferDefaultValueTests extends SapphireTestCase
         assertEquals
         (
             set( "Default value is \"123\".", "Recommended value is \"123\"." ),
-            element.service( TestElement.PROP_VALUE, FactsAggregationService.class ).facts()
+            element.property( TestElement.PROP_VALUE ).service( FactsAggregationService.class ).facts()
         );        
     }
 

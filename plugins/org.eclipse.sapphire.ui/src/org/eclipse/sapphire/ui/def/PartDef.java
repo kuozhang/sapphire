@@ -12,17 +12,17 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -38,9 +38,9 @@ import org.eclipse.sapphire.ui.def.internal.SapphirePartDefMethods;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface PartDef extends IModelElement
+public interface PartDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PartDef.class );
+    ElementType TYPE = new ElementType( PartDef.class );
     
     String HINT_STYLE = "style";
     
@@ -103,7 +103,7 @@ public interface PartDef extends IModelElement
     
     ElementProperty PROP_DOCUMENTATION = new ElementProperty( TYPE, "Documentation" );
     
-    ModelElementHandle<ISapphireDocumentation> getDocumentation();
+    ElementHandle<ISapphireDocumentation> getDocumentation();
 
     // *** Hints ***
     
@@ -113,7 +113,7 @@ public interface PartDef extends IModelElement
     
     ListProperty PROP_HINTS = new ListProperty( TYPE, "Hints" );
     
-    ModelElementList<ISapphireHint> getHints();
+    ElementList<ISapphireHint> getHints();
     
     // *** Method : getHint ***
     
@@ -160,7 +160,7 @@ public interface PartDef extends IModelElement
     
     ListProperty PROP_LISTENERS = new ListProperty( TYPE, "Listeners" );
     
-    ModelElementList<ISapphirePartListenerDef> getListeners();
+    ElementList<ISapphirePartListenerDef> getListeners();
     
     // *** Actions ***
     
@@ -170,7 +170,7 @@ public interface PartDef extends IModelElement
     
     ListProperty PROP_ACTIONS = new ListProperty( TYPE, "Actions" );
     
-    ModelElementList<ActionDef> getActions();
+    ElementList<ActionDef> getActions();
     
     // *** ActionHandlers ***
     
@@ -180,7 +180,7 @@ public interface PartDef extends IModelElement
     
     ListProperty PROP_ACTION_HANDLERS = new ListProperty( TYPE, "ActionHandlers" );
     
-    ModelElementList<ActionHandlerDef> getActionHandlers();
+    ElementList<ActionHandlerDef> getActionHandlers();
     
     // *** ActionHandlerFactories ***
     
@@ -190,7 +190,7 @@ public interface PartDef extends IModelElement
     
     ListProperty PROP_ACTION_HANDLER_FACTORIES = new ListProperty( TYPE, "ActionHandlerFactories" );
     
-    ModelElementList<ActionHandlerFactoryDef> getActionHandlerFactories();
+    ElementList<ActionHandlerFactoryDef> getActionHandlerFactories();
     
     // *** ActionHandlerFilters ***
     
@@ -200,7 +200,7 @@ public interface PartDef extends IModelElement
     
     ListProperty PROP_ACTION_HANDLER_FILTERS = new ListProperty( TYPE, "ActionHandlerFilters" );
     
-    ModelElementList<ActionHandlerFilterDef> getActionHandlerFilters();
+    ElementList<ActionHandlerFilterDef> getActionHandlerFilters();
     
     // *** Services ***
     
@@ -210,6 +210,6 @@ public interface PartDef extends IModelElement
     
     ListProperty PROP_SERVICES = new ListProperty( TYPE, "Services" );
     
-    ModelElementList<ServiceDef> getServices();
+    ElementList<ServiceDef> getServices();
     
 }

@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.tests.services.t0010;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,7 +31,7 @@ public final class TestVersionCompatibilityService extends VersionCompatibilityS
     
     protected void initVersionCompatibilityService()
     {
-        this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( context( IModelElement.class ), context( ModelProperty.class ) );
+        this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( context( Element.class ), context( PropertyDef.class ) );
         
         this.versionCompatibilityTargetServiceListener = new Listener()
         {

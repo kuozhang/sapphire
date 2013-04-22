@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -73,7 +73,7 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
         return this.action.getContext();
     }
     
-    public IModelElement getModelElement()
+    public Element getModelElement()
     {
         return getPart().getModelElement();
     }

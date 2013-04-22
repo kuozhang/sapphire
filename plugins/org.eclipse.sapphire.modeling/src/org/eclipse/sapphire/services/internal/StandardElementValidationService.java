@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.PropertyInstance;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.PropertyValidationEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEnablementEvent;
+import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,7 +32,7 @@ public final class StandardElementValidationService extends ValidationService
     @Override
     protected void init()
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         
         element.attach
         (
@@ -53,10 +53,10 @@ public final class StandardElementValidationService extends ValidationService
     @Override
     public Status validate()
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        for( PropertyInstance property : element.properties() )
+        for( Property property : element.properties() )
         {
             if( property.enabled() )
             {

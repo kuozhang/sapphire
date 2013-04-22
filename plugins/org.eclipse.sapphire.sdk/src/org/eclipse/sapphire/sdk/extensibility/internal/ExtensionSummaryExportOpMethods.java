@@ -25,14 +25,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummarySectionColumnDef;
@@ -58,21 +58,21 @@ public final class ExtensionSummaryExportOpMethods
     
     public static String execute( final ExtensionSummaryExportOp op,
                                   final List<SapphireExtensionDef> extensions,
-                                  final Filter<IModelElement> filter )
+                                  final Filter<Element> filter )
     {
         // Write the summary document.
         
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter out = new PrintWriter( stringWriter );
         
-        if( op.getCreateFinishedDocument().getContent() )
+        if( op.getCreateFinishedDocument().content() )
         {
             out.println( "<html>" );
             out.println();
             out.println( "<head>" );
-            out.println( "  <title>" + op.getDocumentTitle().getContent() + "</title>" );
+            out.println( "  <title>" + op.getDocumentTitle().content() + "</title>" );
             
-            if( op.getEmbedDefaultStyle().getContent() )
+            if( op.getEmbedDefaultStyle().content() )
             {
                 out.println( style() );
             }
@@ -81,7 +81,7 @@ public final class ExtensionSummaryExportOpMethods
             out.println();
             out.println( "<body>" );
             
-            final String documentBodyTitle = op.getDocumentBodyTitle().getContent();
+            final String documentBodyTitle = op.getDocumentBodyTitle().content();
             
             if( documentBodyTitle != null )
             {
@@ -89,57 +89,57 @@ public final class ExtensionSummaryExportOpMethods
             }
         }
         
-        final ModelElementList<ExtensionSummarySectionDef> sections = op.getSections();
+        final ElementList<ExtensionSummarySectionDef> sections = op.getSections();
         
         if( sections.isEmpty() )
         {
             ExtensionSummarySectionDef def;
             
             def = sections.insert();
-            def.setExtensionType( SapphireExtensionDef.PROP_SERVICES.getName() );
+            def.setExtensionType( SapphireExtensionDef.PROP_SERVICES.name() );
             
             def = sections.insert();
-            def.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.getName() );
+            def.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.name() );
 
             def = sections.insert();
-            def.setExtensionType( SapphireExtensionDef.PROP_ACTIONS.getName() );
+            def.setExtensionType( SapphireExtensionDef.PROP_ACTIONS.name() );
 
             def = sections.insert();
-            def.setExtensionType( SapphireExtensionDef.PROP_ACTION_HANDLERS.getName() );
+            def.setExtensionType( SapphireExtensionDef.PROP_ACTION_HANDLERS.name() );
 
             def = sections.insert();
-            def.setExtensionType( SapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.getName() );
+            def.setExtensionType( SapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.name() );
 
             def = sections.insert();
-            def.setExtensionType( SapphireExtensionDef.PROP_PRESENTATION_STYLES.getName() );
+            def.setExtensionType( SapphireExtensionDef.PROP_PRESENTATION_STYLES.name() );
         }
         
         for( ExtensionSummarySectionDef def : sections )
         {
-            final String extensionType = def.getExtensionType().getText();
+            final String extensionType = def.getExtensionType().text();
             final SectionWriter sectionWriter;
             
-            if( extensionType.equals( SapphireExtensionDef.PROP_SERVICES.getName() ) )
+            if( extensionType.equals( SapphireExtensionDef.PROP_SERVICES.name() ) )
             {
                 sectionWriter = new ServicesSectionWriter( out, extensions, filter, def );
             }
-            else if( extensionType.endsWith( SapphireExtensionDef.PROP_FUNCTIONS.getName() ) )
+            else if( extensionType.endsWith( SapphireExtensionDef.PROP_FUNCTIONS.name() ) )
             {
                 sectionWriter = new FunctionsSectionWriter( out, extensions, filter, def );
             }
-            else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTIONS.getName() ) )
+            else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTIONS.name() ) )
             {
                 sectionWriter = new ActionsSectionWriter( out, extensions, filter, def );
             }
-            else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTION_HANDLERS.getName() ) )
+            else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTION_HANDLERS.name() ) )
             {
                 sectionWriter = new ActionHandlersSectionWriter( out, extensions, filter, def );
             }
-            else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.getName() ) )
+            else if( extensionType.endsWith( SapphireExtensionDef.PROP_ACTION_HANDLER_FACTORIES.name() ) )
             {
                 sectionWriter = new ActionHandlerFactoriesSectionWriter( out, extensions, filter, def );
             }
-            else if( extensionType.endsWith( SapphireExtensionDef.PROP_PRESENTATION_STYLES.getName() ) )
+            else if( extensionType.endsWith( SapphireExtensionDef.PROP_PRESENTATION_STYLES.name() ) )
             {
                 sectionWriter = new PresentationStylesSectionWriter( out, extensions, filter, def );
             }
@@ -151,7 +151,7 @@ public final class ExtensionSummaryExportOpMethods
             sectionWriter.write();
         }
         
-        if( op.getCreateFinishedDocument().getContent() )
+        if( op.getCreateFinishedDocument().content() )
         {
             out.println( "<br/><br/>" );
             out.println();
@@ -169,36 +169,36 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ServicesSectionWriter( final PrintWriter out,
                                       final List<SapphireExtensionDef> extensions,
-                                      final Filter<IModelElement> filter,
+                                      final Filter<Element> filter,
                                       final ExtensionSummarySectionDef def )
         {
             super( out, extensions, filter, def );
         }
         
         @Override
-        protected void sort( final List<IModelElement> extElements )
+        protected void sort( final List<Element> extElements )
         {
             Collections.sort
             ( 
                 extElements, 
-                new Comparator<IModelElement>()
+                new Comparator<Element>()
                 {
-                    public int compare( final IModelElement a,
-                                        final IModelElement b )
+                    public int compare( final Element a,
+                                        final Element b )
                     {
                         final ServiceDef x = (ServiceDef) a;
                         final ServiceDef y = (ServiceDef) b;
                         
-                        return comp( x.getId().getContent(), y.getId().getContent() );
+                        return comp( x.getId().content(), y.getId().content() );
                     }
                 }
             );
         }
 
         @Override
-        protected List<ModelProperty> getDefaultColumns()
+        protected List<PropertyDef> getDefaultColumns()
         {
-            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            final List<PropertyDef> columns = new ArrayList<PropertyDef>();
             columns.add( ServiceDef.PROP_ID );
             columns.add( ServiceDef.PROP_DESCRIPTION );
             columns.add( ServiceDef.PROP_CONTEXTS );
@@ -210,36 +210,36 @@ public final class ExtensionSummaryExportOpMethods
     {
         public FunctionsSectionWriter( final PrintWriter out,
                                        final List<SapphireExtensionDef> extensions,
-                                       final Filter<IModelElement> filter,
+                                       final Filter<Element> filter,
                                        final ExtensionSummarySectionDef def )
         {
             super( out, extensions, filter, def );
         }
         
         @Override
-        protected void sort( final List<IModelElement> extElements )
+        protected void sort( final List<Element> extElements )
         {
             Collections.sort
             ( 
                 extElements, 
-                new Comparator<IModelElement>()
+                new Comparator<Element>()
                 {
-                    public int compare( final IModelElement a,
-                                        final IModelElement b )
+                    public int compare( final Element a,
+                                        final Element b )
                     {
                         final FunctionDef x = (FunctionDef) a;
                         final FunctionDef y = (FunctionDef) b;
                         
-                        return comp( x.getName().getContent(), y.getName().getContent() );
+                        return comp( x.getName().content(), y.getName().content() );
                     }
                 }
             );
         }
 
         @Override
-        protected List<ModelProperty> getDefaultColumns()
+        protected List<PropertyDef> getDefaultColumns()
         {
-            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            final List<PropertyDef> columns = new ArrayList<PropertyDef>();
             columns.add( FunctionDef.PROP_NAME );
             columns.add( FunctionDef.PROP_DESCRIPTION );
             columns.add( FunctionDef.PROP_IMPL_CLASS );
@@ -251,36 +251,36 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ActionsSectionWriter( final PrintWriter out,
                                      final List<SapphireExtensionDef> extensions,
-                                     final Filter<IModelElement> filter,
+                                     final Filter<Element> filter,
                                      final ExtensionSummarySectionDef def )
         {
             super( out, extensions, filter, def );
         }
         
         @Override
-        protected void sort( final List<IModelElement> extElements )
+        protected void sort( final List<Element> extElements )
         {
             Collections.sort
             ( 
                 extElements, 
-                new Comparator<IModelElement>()
+                new Comparator<Element>()
                 {
-                    public int compare( final IModelElement a,
-                                        final IModelElement b )
+                    public int compare( final Element a,
+                                        final Element b )
                     {
                         final ActionDef x = (ActionDef) a;
                         final ActionDef y = (ActionDef) b;
                         
-                        return comp( x.getId().getContent(), y.getId().getContent() );
+                        return comp( x.getId().content(), y.getId().content() );
                     }
                 }
             );
         }
 
         @Override
-        protected List<ModelProperty> getDefaultColumns()
+        protected List<PropertyDef> getDefaultColumns()
         {
-            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            final List<PropertyDef> columns = new ArrayList<PropertyDef>();
             columns.add( ActionDef.PROP_ID );
             columns.add( ActionDef.PROP_DESCRIPTION );
             columns.add( ActionDef.PROP_KEY_BINDING );
@@ -289,8 +289,8 @@ public final class ExtensionSummaryExportOpMethods
         }
 
         @Override
-        protected String getCellText( final IModelElement element,
-                                      final ModelProperty property )
+        protected String getCellText( final Element element,
+                                      final PropertyDef property )
         {
             if( property == ActionDef.PROP_CONTEXTS )
             {
@@ -303,7 +303,7 @@ public final class ExtensionSummaryExportOpMethods
                         contexts.append( "<br/>" );
                     }
                     
-                    contexts.append( normalize( context.getContext().getText() ) );
+                    contexts.append( normalize( context.getContext().text() ) );
                 }
                 
                 return contexts.toString();
@@ -317,31 +317,31 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ActionHandlersSectionWriter( final PrintWriter out,
                                             final List<SapphireExtensionDef> extensions,
-                                            final Filter<IModelElement> filter,
+                                            final Filter<Element> filter,
                                             final ExtensionSummarySectionDef def )
         {
             super( out, extensions, filter, def );
         }
         
         @Override
-        protected void sort( final List<IModelElement> extElements )
+        protected void sort( final List<Element> extElements )
         {
             Collections.sort
             ( 
                 extElements, 
-                new Comparator<IModelElement>()
+                new Comparator<Element>()
                 {
-                    public int compare( final IModelElement a,
-                                        final IModelElement b )
+                    public int compare( final Element a,
+                                        final Element b )
                     {
                         final ActionHandlerDef x = (ActionHandlerDef) a;
                         final ActionHandlerDef y = (ActionHandlerDef) b;
                         
-                        int res = comp( x.getAction().getContent(), y.getAction().getContent() );
+                        int res = comp( x.getAction().content(), y.getAction().content() );
                         
                         if( res == 0 )
                         {
-                            res = comp( x.getId().getContent(), y.getId().getContent() );
+                            res = comp( x.getId().content(), y.getId().content() );
                         }
                         
                         return res;
@@ -351,9 +351,9 @@ public final class ExtensionSummaryExportOpMethods
         }
 
         @Override
-        protected List<ModelProperty> getDefaultColumns()
+        protected List<PropertyDef> getDefaultColumns()
         {
-            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            final List<PropertyDef> columns = new ArrayList<PropertyDef>();
             columns.add( ActionHandlerDef.PROP_ACTION );
             columns.add( ActionHandlerDef.PROP_ID );
             columns.add( ActionHandlerDef.PROP_DESCRIPTION );
@@ -365,31 +365,31 @@ public final class ExtensionSummaryExportOpMethods
     {
         public ActionHandlerFactoriesSectionWriter( final PrintWriter out,
                                                     final List<SapphireExtensionDef> extensions,
-                                                    final Filter<IModelElement> filter,
+                                                    final Filter<Element> filter,
                                                     final ExtensionSummarySectionDef def )
         {
             super( out, extensions, filter, def );
         }
         
         @Override
-        protected void sort( final List<IModelElement> extElements )
+        protected void sort( final List<Element> extElements )
         {
             Collections.sort
             ( 
                 extElements, 
-                new Comparator<IModelElement>()
+                new Comparator<Element>()
                 {
-                    public int compare( final IModelElement a,
-                                        final IModelElement b )
+                    public int compare( final Element a,
+                                        final Element b )
                     {
                         final ActionHandlerFactoryDef x = (ActionHandlerFactoryDef) a;
                         final ActionHandlerFactoryDef y = (ActionHandlerFactoryDef) b;
                         
-                        int res = comp( x.getAction().getContent(), y.getAction().getContent() );
+                        int res = comp( x.getAction().content(), y.getAction().content() );
                         
                         if( res == 0 )
                         {
-                            res = comp( x.getImplClass().getText(), y.getImplClass().getText() );
+                            res = comp( x.getImplClass().text(), y.getImplClass().text() );
                         }
                         
                         return res;
@@ -399,9 +399,9 @@ public final class ExtensionSummaryExportOpMethods
         }
 
         @Override
-        protected List<ModelProperty> getDefaultColumns()
+        protected List<PropertyDef> getDefaultColumns()
         {
-            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            final List<PropertyDef> columns = new ArrayList<PropertyDef>();
             columns.add( ActionHandlerFactoryDef.PROP_ACTION );
             columns.add( ActionHandlerFactoryDef.PROP_DESCRIPTION );
             return columns;
@@ -412,36 +412,36 @@ public final class ExtensionSummaryExportOpMethods
     {
         public PresentationStylesSectionWriter( final PrintWriter out,
                                                 final List<SapphireExtensionDef> extensions,
-                                                final Filter<IModelElement> filter,
+                                                final Filter<Element> filter,
                                                 final ExtensionSummarySectionDef def )
         {
             super( out, extensions, filter, def );
         }
         
         @Override
-        protected void sort( final List<IModelElement> extElements )
+        protected void sort( final List<Element> extElements )
         {
             Collections.sort
             ( 
                 extElements, 
-                new Comparator<IModelElement>()
+                new Comparator<Element>()
                 {
-                    public int compare( final IModelElement a,
-                                        final IModelElement b )
+                    public int compare( final Element a,
+                                        final Element b )
                     {
                         final PresentationStyleDef x = (PresentationStyleDef) a;
                         final PresentationStyleDef y = (PresentationStyleDef) b;
                         
-                        return comp( x.getId().getContent(), y.getId().getContent() );
+                        return comp( x.getId().content(), y.getId().content() );
                     }
                 }
             );
         }
 
         @Override
-        protected List<ModelProperty> getDefaultColumns()
+        protected List<PropertyDef> getDefaultColumns()
         {
-            final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+            final List<PropertyDef> columns = new ArrayList<PropertyDef>();
             columns.add( PresentationStyleDef.PROP_ID );
             columns.add( PresentationStyleDef.PROP_PART_TYPE );
             columns.add( PresentationStyleDef.PROP_DESCRIPTION );
@@ -453,12 +453,12 @@ public final class ExtensionSummaryExportOpMethods
     {
         private final PrintWriter out;
         private final List<SapphireExtensionDef> extensions;
-        private final Filter<IModelElement> filter;
+        private final Filter<Element> filter;
         private final ExtensionSummarySectionDef def;
         
         public SectionWriter( final PrintWriter out,
                               final List<SapphireExtensionDef> extensions,
-                              final Filter<IModelElement> filter,
+                              final Filter<Element> filter,
                               final ExtensionSummarySectionDef def )
         {
             this.out = out;
@@ -469,23 +469,23 @@ public final class ExtensionSummaryExportOpMethods
         
         public final void write()
         {
-            final ListProperty extTypeListProperty = (ListProperty) SapphireExtensionDef.TYPE.property( this.def.getExtensionType().getText() );
-            final ModelElementType extType = extTypeListProperty.getType();
+            final ListProperty extTypeListProperty = (ListProperty) SapphireExtensionDef.TYPE.property( this.def.getExtensionType().text() );
+            final ElementType extType = extTypeListProperty.getType();
             
-            final List<IModelElement> extElements = new ArrayList<IModelElement>();
+            final List<Element> extElements = new ArrayList<Element>();
             
             if( this.filter == null )
             {
                 for( SapphireExtensionDef extension : this.extensions )
                 {
-                    extElements.addAll( extension.read( extTypeListProperty ) );
+                    extElements.addAll( extension.property( extTypeListProperty ) );
                 }
             }
             else
             {
                 for( SapphireExtensionDef extension : this.extensions )
                 {
-                    for( IModelElement extElement : extension.read( extTypeListProperty ) )
+                    for( Element extElement : extension.property( extTypeListProperty ) )
                     {
                         if( this.filter.allows( extElement ) )
                         {
@@ -503,16 +503,16 @@ public final class ExtensionSummaryExportOpMethods
                 
                 // Write section header.
                 
-                if( this.def.getIncludeSectionHeader().getContent() )
+                if( this.def.getIncludeSectionHeader().content() )
                 {
                     final ExtensionSummaryExportOp op = this.def.nearest( ExtensionSummaryExportOp.class );
                     
                     final String sectionHeaderLevel 
-                        = ( ( op.getCreateFinishedDocument().getContent() == false || op.getDocumentBodyTitle().getContent() == null ) ? "h1" : "h2" );
+                        = ( ( op.getCreateFinishedDocument().content() == false || op.getDocumentBodyTitle().content() == null ) ? "h1" : "h2" );
                     
                     this.out.println();
                     this.out.print( "<a name=\"" );
-                    this.out.print( extTypeListProperty.getName() );
+                    this.out.print( extTypeListProperty.name() );
                     this.out.print( "\"><" );
                     this.out.print( sectionHeaderLevel );
                     this.out.print( '>' );
@@ -525,11 +525,11 @@ public final class ExtensionSummaryExportOpMethods
                 
                 // Determine columns.
                 
-                final List<ModelProperty> columns = new ArrayList<ModelProperty>();
+                final List<PropertyDef> columns = new ArrayList<PropertyDef>();
                 
                 for( ExtensionSummarySectionColumnDef cdef : this.def.getColumns() )
                 {
-                    final ModelProperty cprop = extType.property( cdef.getName().getText() );
+                    final PropertyDef cprop = extType.property( cdef.getName().text() );
                     
                     if( cprop != null )
                     {
@@ -542,18 +542,18 @@ public final class ExtensionSummaryExportOpMethods
                     columns.addAll( getDefaultColumns() );
                 }
                 
-                for( Iterator<ModelProperty> itr = columns.iterator(); itr.hasNext(); )
+                for( Iterator<PropertyDef> itr = columns.iterator(); itr.hasNext(); )
                 {
-                    final ModelProperty cprop = itr.next();
+                    final PropertyDef cprop = itr.next();
                     boolean empty = true;
                     
                     if( cprop instanceof ValueProperty )
                     {
                         final ValueProperty cvprop = (ValueProperty) cprop;
                         
-                        for( IModelElement element : extElements )
+                        for( Element element : extElements )
                         {
-                            if( element.read( cvprop ).getText() != null )
+                            if( element.property( cvprop ).text() != null )
                             {
                                 empty = false;
                                 break;
@@ -564,9 +564,9 @@ public final class ExtensionSummaryExportOpMethods
                     {
                         final ListProperty clprop = (ListProperty) cprop;
                         
-                        for( IModelElement element : extElements )
+                        for( Element element : extElements )
                         {
-                            if( ! element.read( clprop ).isEmpty() )
+                            if( ! element.property( clprop ).empty() )
                             {
                                 empty = false;
                                 break;
@@ -590,7 +590,7 @@ public final class ExtensionSummaryExportOpMethods
                 this.out.println( "<table>" );
                 this.out.println( "  <tr>" );
                 
-                for( ModelProperty column : columns )
+                for( PropertyDef column : columns )
                 {
                     this.out.print( "    <th>" );
                     this.out.print( column.getLabel( true, CapitalizationType.TITLE_STYLE, true ) );
@@ -600,11 +600,11 @@ public final class ExtensionSummaryExportOpMethods
                 
                 this.out.println( "  </tr>" );
                 
-                for( IModelElement extElement : extElements )
+                for( Element extElement : extElements )
                 {
                     this.out.println( "  <tr>" );
                     
-                    for( ModelProperty column : columns )
+                    for( PropertyDef column : columns )
                     {
                         final String text = getCellText( extElement, column );
                         
@@ -621,21 +621,21 @@ public final class ExtensionSummaryExportOpMethods
             }
         }
         
-        protected void sort( final List<IModelElement> extElements )
+        protected void sort( final List<Element> extElements )
         {
             // Do nothing by default.
         }
         
-        protected abstract List<ModelProperty> getDefaultColumns();
+        protected abstract List<PropertyDef> getDefaultColumns();
         
-        protected String getCellText( final IModelElement element, 
-                                      final ModelProperty property )
+        protected String getCellText( final Element element, 
+                                      final PropertyDef property )
         {
             String text = null;
             
             if( property instanceof ValueProperty )
             {
-                text = element.read( (ValueProperty) property ).getText();
+                text = element.property( (ValueProperty) property ).text();
                 
                 final Reference ref = property.getAnnotation( Reference.class );
                 
@@ -650,9 +650,9 @@ public final class ExtensionSummaryExportOpMethods
                 final ValueProperty entryValueProperty = (ValueProperty) listProperty.getType().properties().first();
                 final StringBuilder buf = new StringBuilder();
                 
-                for( IModelElement entry : element.read( listProperty ) )
+                for( Element entry : element.property( listProperty ) )
                 {
-                    final String entryValuePropertyText = entry.read( entryValueProperty ).getText();
+                    final String entryValuePropertyText = entry.property( entryValueProperty ).text();
                     
                     if( entryValuePropertyText != null )
                     {

@@ -13,11 +13,11 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -73,21 +73,20 @@ public final class EnabledFunction extends Function
     {
         return new FunctionResult( this, context )
         {
-            private IModelElement lastElement;
-            private ModelProperty lastProperty;
+            private Property lastProperty;
             private Listener listener;
             
             @Override
             protected Object evaluate()
             {
-                IModelElement element = null;
-                ModelProperty property = null;
+                Property property = null;
                 
                 try
                 {
-                    final int count = operands().size();
-                    
+                    Element element = null;
                     String propertyName = null;
+                    
+                    final int count = operands().size();
                     
                     if( count == 1 )
                     {
@@ -100,12 +99,12 @@ public final class EnabledFunction extends Function
                             throw new FunctionException( Resources.contextElementNotFound );
                         }
                         
-                        propertyName = cast( operand( 0 ).value(), String.class );
+                        propertyName = cast( operand( 0 ), String.class );
                     }
                     else if( count == 2 )
                     {
-                        element = cast( operand( 0 ).value(), IModelElement.class );
-                        propertyName = cast( operand( 1 ).value(), String.class );
+                        element = cast( operand( 0 ), Element.class );
+                        propertyName = cast( operand( 1 ), String.class );
                     }
                     else
                     {
@@ -115,11 +114,11 @@ public final class EnabledFunction extends Function
                     
                     if( element != null && propertyName.length() > 0 )
                     {
-                        property = element.type().property( propertyName );
+                        property = element.property( propertyName );
                         
                         if( property != null )
                         {
-                            return element.enabled( property );
+                            return property.enabled();
                         }
                     }
                     
@@ -127,14 +126,14 @@ public final class EnabledFunction extends Function
                 }
                 finally
                 {
-                    if( this.lastElement != element || this.lastProperty != property )
+                    if( this.lastProperty != property )
                     {
-                        if( this.lastElement != null && this.lastProperty != null )
+                        if( this.lastProperty != null )
                         {
-                            this.lastElement.detach( this.listener, this.lastProperty );
+                            this.lastProperty.detach( this.listener );
                         }
                         
-                        if( element != null && property != null )
+                        if( property != null )
                         {
                             if( this.listener == null )
                             {
@@ -148,10 +147,9 @@ public final class EnabledFunction extends Function
                                 };
                             }
                             
-                            element.attach( this.listener, property );
+                            property.attach( this.listener );
                         }
                         
-                        this.lastElement = element;
                         this.lastProperty = property;
                     }
                 }

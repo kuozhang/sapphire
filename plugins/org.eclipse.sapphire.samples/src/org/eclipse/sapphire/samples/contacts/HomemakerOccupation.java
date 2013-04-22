@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
@@ -22,6 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public interface HomemakerOccupation extends Occupation
 {
-    ModelElementType TYPE = new ModelElementType( HomemakerOccupation.class );
+    ElementType TYPE = new ElementType( HomemakerOccupation.class );
     
 }

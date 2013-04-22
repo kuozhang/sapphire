@@ -33,21 +33,21 @@ public class LinePart extends ShapePart
 	
 	public Orientation getOrientation()
 	{
-		return this.lineDef.getOrientation().getContent();
+		return this.lineDef.getOrientation().content();
 	}
 	
 	public int getWeight()
 	{
-		return this.lineDef.getPresentation().getWeight().getContent();
+		return this.lineDef.getPresentation().getWeight().content();
 	}
 	
 	public Color getColor()
 	{
-		return this.lineDef.getPresentation().getColor().getContent();
+		return this.lineDef.getPresentation().getColor().content();
 	}
 	
 	public LineStyle getStyle()
 	{
-		return this.lineDef.getPresentation().getStyle().getContent();
+		return this.lineDef.getPresentation().getStyle().content();
 	}
 }

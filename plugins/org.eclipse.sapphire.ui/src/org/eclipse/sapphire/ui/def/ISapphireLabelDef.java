@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -34,7 +34,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireLabelDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireLabelDef.class );
+    ElementType TYPE = new ElementType( ISapphireLabelDef.class );
  
     // *** Text ***
     

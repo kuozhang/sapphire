@@ -11,16 +11,16 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -40,7 +40,7 @@ import org.eclipse.sapphire.ui.def.internal.SapphireActionHandlerDefMethods;
 
 public interface ActionHandlerDef extends ActionSystemPartDef
 {
-    ModelElementType TYPE = new ModelElementType( ActionHandlerDef.class );
+    ElementType TYPE = new ElementType( ActionHandlerDef.class );
     
     // *** Action ***
     
@@ -144,7 +144,7 @@ public interface ActionHandlerDef extends ActionSystemPartDef
     
     ListProperty PROP_PARAMS = new ListProperty( TYPE, "Params" );
     
-    ModelElementList<ISapphireParam> getParams();
+    ElementList<ISapphireParam> getParams();
     
     // *** Method: getParam ***
     

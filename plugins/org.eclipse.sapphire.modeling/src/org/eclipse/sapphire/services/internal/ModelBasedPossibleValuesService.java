@@ -15,19 +15,22 @@ package org.eclipse.sapphire.services.internal;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyVisitor;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..
@@ -60,7 +63,7 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -103,15 +106,31 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
     
     private void refresh()
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         
         if( ! element.disposed() )
         {
-            final Set<String> newValues = context( IModelElement.class ).read( this.path );
+            final SetFactory<String> newValuesFactory = SetFactory.start();
+            
+            context( Element.class ).visit
+            (
+                this.path,
+                new PropertyVisitor()
+                {
+                    @Override
+                    public boolean visit( final Value<?> property )
+                    {
+                        newValuesFactory.add( property.text() );
+                        return true;
+                    }
+                }
+            );
+            
+            final Set<String> newValues = newValuesFactory.result();
             
             if( ! this.values.equals( newValues ) )
             {
-                this.values = Collections.unmodifiableSet( newValues );
+                this.values = newValues;
                 
                 if( this.initialized || this.readPriorToInit )
                 {

@@ -12,8 +12,8 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Documentation.Topic;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public interface IExtendedHelpGallery extends IHelpGallery
 {
-    ModelElementType TYPE = new ModelElementType( IExtendedHelpGallery.class );
+    ElementType TYPE = new ElementType( IExtendedHelpGallery.class );
 
     // *** Simple ***
 

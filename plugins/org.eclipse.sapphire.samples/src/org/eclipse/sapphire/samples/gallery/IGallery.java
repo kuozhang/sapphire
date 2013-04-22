@@ -12,11 +12,11 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @XmlBinding( path = "gallery" )
 
-public interface IGallery extends IModelElement
+public interface IGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IGallery.class );
+    ElementType TYPE = new ElementType( IGallery.class );
     
     // *** CustomColors ***
     
@@ -38,7 +38,7 @@ public interface IGallery extends IModelElement
     
     ListProperty PROP_CUSTOM_COLORS = new ListProperty( TYPE, "CustomColors" );
     
-    ModelElementList<CustomColor> getCustomColors();
+    ElementList<CustomColor> getCustomColors();
     
     // *** IntegerValueGallery ***
     

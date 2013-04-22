@@ -12,10 +12,9 @@
 package org.eclipse.sapphire.ui.internal.binding;
 
 import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -51,13 +50,12 @@ public final class RadioButtonsGroupBinding extends AbstractEnumBinding
         
         this.buttonsGroup = (RadioButtonsGroup) control;
         
-        final IModelElement element = getModelElement();
-        final ValueProperty property = getProperty();
+        final Property property = editor.property();
         final EnumValueType enumValueType = new EnumValueType( this.enumValues[ 0 ].getDeclaringClass() );
 
         for( Enum<?> enumItem : this.enumValues )
         {
-            final String enumItemStr = element.service( property, MasterConversionService.class ).convert( enumItem, String.class );
+            final String enumItemStr = property.service( MasterConversionService.class ).convert( enumItem, String.class );
             final String auxText = editor.getRenderingHint( PropertyEditorDef.HINT_AUX_TEXT + "." + enumItemStr, null );
             final Button button = this.buttonsGroup.addRadioButton( enumValueType.getLabel( enumItem, false, CapitalizationType.FIRST_WORD_ONLY, true ), auxText );
             button.setData( enumItem );

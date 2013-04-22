@@ -15,12 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
 /**
@@ -49,7 +48,7 @@ public abstract class SapphireJumpActionHandler extends SapphirePropertyEditorAc
             }
         };
         
-        final IModelElement element = getModelElement();
+        final Element element = getModelElement();
         
         for( String dependency : this.dependencies )
         {
@@ -67,7 +66,7 @@ public abstract class SapphireJumpActionHandler extends SapphirePropertyEditorAc
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        final IModelElement element = getModelElement();
+                        final Element element = getModelElement();
                         
                         for( String dependency : SapphireJumpActionHandler.this.dependencies )
                         {
@@ -81,13 +80,7 @@ public abstract class SapphireJumpActionHandler extends SapphirePropertyEditorAc
 
     protected void initDependencies( final List<String> dependencies )
     {
-        this.dependencies.add( getProperty().getName() );
-    }
-    
-    @Override
-    public final ValueProperty getProperty()
-    {
-        return (ValueProperty) super.getProperty();
+        this.dependencies.add( property().name() );
     }
    
 }

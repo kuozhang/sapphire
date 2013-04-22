@@ -13,8 +13,7 @@ package org.eclipse.sapphire.services;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
@@ -33,7 +32,7 @@ public final class FactsAggregationService extends Service
     {
         final SortedSetFactory<String> facts = SortedSetFactory.start();
         
-        for( FactsService fs : context( IModelElement.class ).services( context( ModelProperty.class ), FactsService.class ) )
+        for( FactsService fs : context( Property.class ).services( FactsService.class ) )
         {
             facts.add( fs.facts() );
         }

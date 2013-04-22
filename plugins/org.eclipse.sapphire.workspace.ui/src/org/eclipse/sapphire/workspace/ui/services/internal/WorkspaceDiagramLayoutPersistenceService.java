@@ -87,7 +87,7 @@ public class WorkspaceDiagramLayoutPersistenceService extends
         	{
         		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
         		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
-        		if (pageDef.getLayoutPersistence().getContent() == LayoutPersistence.WORKSPACE)
+        		if (pageDef.getLayoutPersistence().content() == LayoutPersistence.WORKSPACE)
         		{
         			return true;
         		}

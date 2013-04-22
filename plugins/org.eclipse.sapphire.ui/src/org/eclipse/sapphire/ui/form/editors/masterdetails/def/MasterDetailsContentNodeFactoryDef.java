@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface MasterDetailsContentNodeFactoryDef extends MasterDetailsContentNodeChildDef
 {
-    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeFactoryDef.class );
+    ElementType TYPE = new ElementType( MasterDetailsContentNodeFactoryDef.class );
     
     // *** Property ***
     
@@ -50,6 +50,6 @@ public interface MasterDetailsContentNodeFactoryDef extends MasterDetailsContent
     
     ListProperty PROP_CASES = new ListProperty( TYPE, "Cases" );
     
-    ModelElementList<MasterDetailsContentNodeFactoryCaseDef> getCases();
+    ElementList<MasterDetailsContentNodeFactoryCaseDef> getCases();
 
 }

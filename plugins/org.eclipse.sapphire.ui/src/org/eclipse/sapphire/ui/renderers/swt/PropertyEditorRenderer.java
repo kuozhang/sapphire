@@ -30,12 +30,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -91,7 +91,7 @@ public abstract class PropertyEditorRenderer
         this.controls = new HashSet<Control>();
         this.actions = part.getActions( part.getActionContext() );
         this.actionPresentationManager = new SapphireActionPresentationManager( this.context, this.actions );
-        this.actionPresentationManager.setLabel( NLS.bind( Resources.actionsContextLabel, this.part.getProperty().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+        this.actionPresentationManager.setLabel( NLS.bind( Resources.actionsContextLabel, property().definition().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
         this.actionPresentationKeyboard = new SapphireKeyboardActionPresentation( this.actionPresentationManager );
         
         this.part.attach
@@ -118,14 +118,14 @@ public abstract class PropertyEditorRenderer
         return this.part;
     }
     
-    public IModelElement getModelElement()
+    public Element getModelElement()
     {
         return this.part.getLocalModelElement();
     }
-    
-    public ModelProperty getProperty()
+
+    public Property property()
     {
-        return this.part.getProperty();
+        return this.part.property();
     }
     
     public SwtResourceCache getImageCache()
@@ -196,10 +196,6 @@ public abstract class PropertyEditorRenderer
             }
         }
         
-        final PropertyEditorPart part = getPart();
-        final IModelElement modelElement = getModelElement();
-        final ModelProperty property = getProperty();
-        
         final Listener propertyChangeListener = new FilteredListener<PropertyEvent>()
         {
             @Override
@@ -218,7 +214,7 @@ public abstract class PropertyEditorRenderer
             }
         };
 
-        modelElement.attach( propertyChangeListener, property );
+        property().attach( propertyChangeListener );
         
         handlePropertyChangedEvent();
 
@@ -234,7 +230,7 @@ public abstract class PropertyEditorRenderer
             }
         };
         
-        part.attach( partListener );
+        getPart().attach( partListener );
         
         this.actionPresentationKeyboard.render();
         
@@ -244,8 +240,8 @@ public abstract class PropertyEditorRenderer
             {
                 public void run()
                 {
-                    part.detach( partListener );
-                    modelElement.detach( propertyChangeListener, property );
+                    getPart().detach( partListener );
+                    property().detach( propertyChangeListener );
                 }
             }
         );
@@ -484,12 +480,11 @@ public abstract class PropertyEditorRenderer
     
     protected final void addControl( final Control control )
     {
-        final IModelElement element = getModelElement();
-        final ModelProperty property = getProperty();
+        final Property property = property();
         
         this.controls.add( control );
         
-        control.setEnabled( element.enabled( property ) );
+        control.setEnabled( property.enabled() );
         
         control.addDisposeListener
         (
@@ -527,12 +522,12 @@ public abstract class PropertyEditorRenderer
         
         this.actionPresentationKeyboard.attach( control );
         
-        this.context.setHelp( control, element, property );
+        this.context.setHelp( control, property.element(), property.definition() );
     }
     
     protected void handlePropertyChangedEvent()
     {
-        final boolean enabled = getModelElement().enabled( getProperty() );
+        final boolean enabled = property().enabled();
         
         for( Control control : this.controls )
         {
@@ -544,7 +539,7 @@ public abstract class PropertyEditorRenderer
 
         if( this.auxTextProvider != null )
         {
-            final String auxText = this.auxTextProvider.getAuxText( getModelElement(), getProperty() );
+            final String auxText = this.auxTextProvider.getAuxText( getModelElement(), property().definition() );
             this.auxTextControl.setText( "(" + auxText + ")" );
         }
     }

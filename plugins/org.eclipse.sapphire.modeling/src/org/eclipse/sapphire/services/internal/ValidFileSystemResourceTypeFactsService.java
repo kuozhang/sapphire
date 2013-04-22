@@ -13,8 +13,8 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -35,7 +35,7 @@ public final class ValidFileSystemResourceTypeFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final ValidFileSystemResourceType a = context( ModelProperty.class ).getAnnotation( ValidFileSystemResourceType.class );
+        final ValidFileSystemResourceType a = context( PropertyDef.class ).getAnnotation( ValidFileSystemResourceType.class );
         final FileSystemResourceType type = a.value();
         
         if( type == FileSystemResourceType.FILE )

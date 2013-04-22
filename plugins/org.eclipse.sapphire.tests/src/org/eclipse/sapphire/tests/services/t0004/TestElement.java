@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.tests.services.t0004;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
@@ -23,8 +23,8 @@ import org.eclipse.sapphire.modeling.annotations.Service;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-public interface TestElement extends IModelElement {
-    ModelElementType TYPE = new ModelElementType(TestElement.class);
+public interface TestElement extends Element {
+    ElementType TYPE = new ElementType(TestElement.class);
 
     // *** Colors ***
 

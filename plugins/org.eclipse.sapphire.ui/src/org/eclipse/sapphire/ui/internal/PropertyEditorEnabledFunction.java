@@ -13,9 +13,8 @@ package org.eclipse.sapphire.ui.internal;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
@@ -50,8 +49,7 @@ public final class PropertyEditorEnabledFunction extends Function
             
             if( part instanceof PropertyEditorPart )
             {
-                final IModelElement element = part.getLocalModelElement();
-                final ModelProperty property = ( (PropertyEditorPart) part ).getProperty();
+                final Property property = ( (PropertyEditorPart) part ).property();
                 
                 return new FunctionResult( this, fc )
                 {
@@ -69,13 +67,13 @@ public final class PropertyEditorEnabledFunction extends Function
                             }
                         };
                         
-                        element.attach( this.listener, property );
+                        property.attach( this.listener );
                     }
 
                     @Override
                     protected Object evaluate()
                     {
-                        return element.enabled( property );
+                        return property.enabled();
                     }
                     
                     @Override
@@ -83,7 +81,7 @@ public final class PropertyEditorEnabledFunction extends Function
                     {
                         super.dispose();
                         
-                        element.detach( this.listener, property );
+                        property.detach( this.listener );
                         this.listener = null;
                     }
                 };

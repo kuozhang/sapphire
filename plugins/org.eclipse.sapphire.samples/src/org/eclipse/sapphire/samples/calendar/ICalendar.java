@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.samples.calendar;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -31,9 +31,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
 @XmlSchema( namespace = "http://www.eclipse.org/sapphire/samples/calendar", location = "http://www.eclipse.org/sapphire/samples/calendar/1.0" )
 @XmlBinding( path = "cal:calendar" )
 
-public interface ICalendar extends IModelElement
+public interface ICalendar extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ICalendar.class );
+    ElementType TYPE = new ElementType( ICalendar.class );
     
     // *** Events ***
 
@@ -42,6 +42,6 @@ public interface ICalendar extends IModelElement
     
     ListProperty PROP_EVENTS = new ListProperty( TYPE, "Events" );
     
-    ModelElementList<IEvent> getEvents();
+    ElementList<IEvent> getEvents();
     
 }

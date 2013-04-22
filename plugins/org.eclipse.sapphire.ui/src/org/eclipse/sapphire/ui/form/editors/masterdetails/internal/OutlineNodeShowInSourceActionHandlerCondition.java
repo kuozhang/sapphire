@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SourceEditorService;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
@@ -26,7 +26,7 @@ public final class OutlineNodeShowInSourceActionHandlerCondition extends Sapphir
     protected boolean evaluate()
     {
         final MasterDetailsContentNode node = (MasterDetailsContentNode) getPart();
-        final IModelElement element = node.getLocalModelElement();
+        final Element element = node.getLocalModelElement();
         
         if( element.adapt( SourceEditorService.class ) != null )
         {

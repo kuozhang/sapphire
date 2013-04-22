@@ -13,9 +13,9 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
@@ -42,7 +42,7 @@ public final class ConditionalPart extends SapphirePart
         
         this.conditionFunctionResult = initExpression
         (
-            this.def.getCondition().getContent(), 
+            this.def.getCondition().content(), 
             Boolean.class,
             Literal.FALSE,
             new Runnable()
@@ -71,7 +71,7 @@ public final class ConditionalPart extends SapphirePart
             part.dispose();
         }
         
-        final IModelElement element = getLocalModelElement();
+        final Element element = getLocalModelElement();
         final boolean newConditionState = (Boolean) this.conditionFunctionResult.value();
         final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         

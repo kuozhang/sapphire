@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.sdk.xml.schema.normalizer.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp.Exclusion;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaO
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface PersistedState extends IModelElement
+public interface PersistedState extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PersistedState.class );
+    ElementType TYPE = new ElementType( PersistedState.class );
     
     // *** RootElements ***
     
@@ -37,7 +37,7 @@ public interface PersistedState extends IModelElement
     
     ListProperty PROP_ROOT_ELEMENTS = new ListProperty( TYPE, "RootElements" );
     
-    ModelElementList<RootElement> getRootElements();
+    ElementList<RootElement> getRootElements();
     
     // *** Exclusions ***
     
@@ -45,7 +45,7 @@ public interface PersistedState extends IModelElement
     
     ListProperty PROP_EXCLUSIONS = new ListProperty( TYPE, "Exclusions" );
     
-    ModelElementList<Exclusion> getExclusions();
+    ElementList<Exclusion> getExclusions();
     
     // *** TypeSubstitutions ***
 
@@ -53,7 +53,7 @@ public interface PersistedState extends IModelElement
     
     ListProperty PROP_TYPE_SUBSTITUTIONS = new ListProperty( TYPE, "TypeSubstitutions" );
     
-    ModelElementList<TypeSubstitution> getTypeSubstitutions();
+    ElementList<TypeSubstitution> getTypeSubstitutions();
     
     // *** SortSequenceContent ***
     

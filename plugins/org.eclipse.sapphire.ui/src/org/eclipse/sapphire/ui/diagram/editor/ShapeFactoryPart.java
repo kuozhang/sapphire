@@ -15,14 +15,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
@@ -39,7 +38,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 public class ShapeFactoryPart extends ShapePart 
 {
 	private ShapeFactoryDef shapeFactoryDef;
-	private IModelElement modelElement;	
+	private Element modelElement;	
 	private ListProperty modelProperty;
 	private String propertyName;
 	private List<ShapePart> children;
@@ -62,10 +61,10 @@ public class ShapeFactoryPart extends ShapePart
         	this.javaTypes.add(shapeCase.getType().resolve());
         }
         
-        this.propertyName = this.shapeFactoryDef.getProperty().getContent();
+        this.propertyName = this.shapeFactoryDef.getProperty().content();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
-        ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-        for( IModelElement listEntryModelElement : list )
+        ElementList<?> list = this.modelElement.property(this.modelProperty);
+        for( Element listEntryModelElement : list )
         {
         	ShapeFactoryCaseDef shapeFactoryCase = getShapeFactoryCase(listEntryModelElement);
         	ShapePart childShapePart = createShapePart(shapeFactoryCase, listEntryModelElement);
@@ -76,9 +75,9 @@ public class ShapeFactoryPart extends ShapePart
         }
         
         // Separator
-        if (this.shapeFactoryDef.getSeparator().element() != null)
+        if (this.shapeFactoryDef.getSeparator().content() != null)
         {
-        	this.separator = createShapePart(this.shapeFactoryDef.getSeparator().element(), this.modelElement);
+        	this.separator = createShapePart(this.shapeFactoryDef.getSeparator().content(), this.modelElement);
         }
         
         // Add listeners
@@ -117,21 +116,21 @@ public class ShapeFactoryPart extends ShapePart
 	    
     public ShapePart newShape(JavaType javaType)
     {
-    	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+    	ElementList<?> list = this.modelElement.property(this.modelProperty);
     	final Class cl = javaType.artifact();
-    	IModelElement element = list.insert(cl);
+    	Element element = list.insert(cl);
     	return getShapePart(element);
     }
 	
-    public ModelElementList<IModelElement> getModelElementList()
+    public ElementList<Element> getModelElementList()
     {
-    	ModelElementList<IModelElement> list = this.modelElement.read(this.modelProperty);
+    	ElementList<Element> list = this.modelElement.property(this.modelProperty);
     	return list;
     }
     
     public void moveChild(ShapePart childPart, int newIndex)
     {
-    	ModelElementList<IModelElement> list = this.modelElement.read(this.modelProperty);
+    	ElementList<Element> list = this.modelElement.property(this.modelProperty);
     	int oldIndex = list.indexOf(childPart.getLocalModelElement());
     	this.modelElement.detach(this.shapePropertyListener, this.propertyName);
     	if (oldIndex < newIndex)
@@ -166,7 +165,7 @@ public class ShapeFactoryPart extends ShapePart
         }        
     }
     
-    private ShapePart getShapePart(IModelElement element)
+    private ShapePart getShapePart(Element element)
     {
         List<ShapePart> shapeParts = getChildren();
         for (ShapePart shapePart : shapeParts)
@@ -179,7 +178,7 @@ public class ShapeFactoryPart extends ShapePart
         return null;
     }
 
-    private ShapeFactoryCaseDef getShapeFactoryCase(IModelElement listEntryModelElement)
+    private ShapeFactoryCaseDef getShapeFactoryCase(Element listEntryModelElement)
 	{
         for (ShapeFactoryCaseDef shapeFactoryCase : this.shapeFactoryDef.getCases())
         {
@@ -194,7 +193,7 @@ public class ShapeFactoryPart extends ShapePart
 		return null;
 	}
 	
-    private ShapePart createShapePart(ShapeDef shapeDef, IModelElement modelElement)
+    private ShapePart createShapePart(ShapeDef shapeDef, Element modelElement)
     {
     	ShapePart shapePart = null;
     	if (shapeDef instanceof TextDef)
@@ -293,9 +292,9 @@ public class ShapeFactoryPart extends ShapePart
     	return shapePart;
     }
     
-    private ShapePart createShapePart(ShapeFactoryCaseDef shapeFactoryCase, IModelElement modelElement)
+    private ShapePart createShapePart(ShapeFactoryCaseDef shapeFactoryCase, Element modelElement)
     {
-    	ShapeDef shapeDef = shapeFactoryCase.getShape().element();
+    	ShapeDef shapeDef = shapeFactoryCase.getShape().content();
     	ShapePart shapePart = createShapePart(shapeDef, modelElement);
     	if (shapeFactoryCase.getSelectionPresentation() != null)
     	{
@@ -306,24 +305,22 @@ public class ShapeFactoryPart extends ShapePart
     
     private void handleModelPropertyChange(final PropertyEvent event)
     {
-    	final IModelElement element = event.element();
-    	final ModelProperty property = event.property();
-    	ModelElementList<IModelElement> newList = (ModelElementList<IModelElement>)element.read(property);
+    	ElementList<?> newList = (ElementList<?>) event.property();
     	
     	List<ShapePart> children = getChildren();
-		List<IModelElement> oldList = new ArrayList<IModelElement>(children.size());
+		List<Element> oldList = new ArrayList<Element>(children.size());
 		for (ShapePart shapePart : children)
 		{
 			oldList.add(shapePart.getLocalModelElement());
 		}
     	
-    	List<IModelElement> deletedShapes = ListUtil.ListDiff(oldList, newList);
-    	List<IModelElement> newShapes = ListUtil.ListDiff(newList, oldList);
+    	List<Element> deletedShapes = ListUtil.ListDiff(oldList, newList);
+    	List<Element> newShapes = ListUtil.ListDiff(newList, oldList);
     	if (deletedShapes.isEmpty() && newShapes.isEmpty() && ListUtil.ListDiffers(oldList, newList))
     	{
     		// List has been re-ordered
     		List<ShapePart> newChildren = new ArrayList<ShapePart>();
-    		for (IModelElement listEle : newList)
+    		for (Element listEle : newList)
     		{
     			ShapePart shapePart = getShapePart(listEle);
     			newChildren.add(shapePart);
@@ -334,7 +331,7 @@ public class ShapeFactoryPart extends ShapePart
     	}
     	else
     	{
-			for (IModelElement deletedShape : deletedShapes)
+			for (Element deletedShape : deletedShapes)
 			{
 				ShapePart shapePart = getShapePart(deletedShape);
 				if (shapePart != null)
@@ -344,7 +341,7 @@ public class ShapeFactoryPart extends ShapePart
 					broadcast(new ShapeDeleteEvent(shapePart));
 				}
 			}    	    	
-			for (IModelElement newShape : newShapes)
+			for (Element newShape : newShapes)
 			{
 	        	ShapeFactoryCaseDef shapeFactoryCase = getShapeFactoryCase(newShape);
 				

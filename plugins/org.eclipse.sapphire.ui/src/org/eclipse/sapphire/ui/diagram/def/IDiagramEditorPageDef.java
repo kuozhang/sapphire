@@ -15,14 +15,14 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -43,7 +43,7 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewContributorDef
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramEditorPageDef.class);
+    ElementType TYPE = new ElementType( IDiagramEditorPageDef.class);
     
     // *** GridDefinition ***
     
@@ -92,7 +92,7 @@ public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewCon
                              
     ListProperty PROP_PALETTE_COMPARTMENTS = new ListProperty( TYPE, "PaletteCompartments" );
     
-    ModelElementList<IDiagramPaletteCompartmentDef> getPaletteCompartments();
+    ElementList<IDiagramPaletteCompartmentDef> getPaletteCompartments();
     
     // *** Property ***
     
@@ -111,7 +111,7 @@ public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewCon
                              
     ListProperty PROP_DIAGRAM_NODE_DEFS = new ListProperty( TYPE, "DiagramNodeDefs" );
     
-    ModelElementList<IDiagramNodeDef> getDiagramNodeDefs();
+    ElementList<IDiagramNodeDef> getDiagramNodeDefs();
     
     // *** DiagramConnectionDefs ***
     
@@ -120,7 +120,7 @@ public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewCon
                              
     ListProperty PROP_DIAGRAM_CONNECTION_DEFS = new ListProperty( TYPE, "DiagramConnectionDefs" );
     
-    ModelElementList<IDiagramConnectionDef> getDiagramConnectionDefs();
+    ElementList<IDiagramConnectionDef> getDiagramConnectionDefs();
     
     // *** DiagramConnectionBindingDefs ***
     
@@ -129,7 +129,7 @@ public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewCon
                              
     ListProperty PROP_DIAGRAM_CONNECTION_BINDING_DEFS = new ListProperty( TYPE, "DiagramConnectionBindingDefs" );
     
-    ModelElementList<IDiagramExplicitConnectionBindingDef> getDiagramConnectionBindingDefs();
+    ElementList<IDiagramExplicitConnectionBindingDef> getDiagramConnectionBindingDefs();
     
     // *** ImplicitConnectionBindingDefs ***
     
@@ -138,6 +138,6 @@ public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewCon
                              
     ListProperty PROP_IMPLICIT_CONNECTION_BINDING_DEFS = new ListProperty( TYPE, "ImplicitConnectionBindingDefs" );
     
-    ModelElementList<IDiagramImplicitConnectionBindingDef> getImplicitConnectionBindingDefs();
+    ElementList<IDiagramImplicitConnectionBindingDef> getImplicitConnectionBindingDefs();
     
 }

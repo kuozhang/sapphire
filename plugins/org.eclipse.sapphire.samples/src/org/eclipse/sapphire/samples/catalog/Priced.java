@@ -13,10 +13,10 @@ package org.eclipse.sapphire.samples.catalog;
 
 import java.math.BigDecimal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Priced extends IModelElement
+public interface Priced extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Priced.class );
+    ElementType TYPE = new ElementType( Priced.class );
     
     // *** BasePrice ***
     

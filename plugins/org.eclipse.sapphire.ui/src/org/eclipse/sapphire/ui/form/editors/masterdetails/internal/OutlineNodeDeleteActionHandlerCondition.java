@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
 
@@ -26,17 +26,17 @@ public final class OutlineNodeDeleteActionHandlerCondition extends OutlineNodeLi
     @Override
     protected boolean check( final MasterDetailsContentNode node )
     {
-        final IModelElement element = node.getModelElement();
-        final ModelProperty property = element.getParentProperty();
+        final Element element = node.getModelElement();
+        final Property property = element.parent();
 
-        if( property != null && ! property.isReadOnly() )
+        if( property != null && ! property.definition().isReadOnly() )
         {
             if( super.check( node ) )
             {
                 return true;
             }
             
-            if( property instanceof ElementProperty )
+            if( property instanceof ElementHandle )
             {
                 final ISapphirePart parentPart = node.getParentPart();
                 

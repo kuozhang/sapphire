@@ -19,17 +19,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.InitialValueService;
@@ -50,8 +50,8 @@ public final class CreateWorkspaceFileOpServices
         @Override
         public Status validate()
         {
-            final Value<Path> target = context( IModelElement.class ).read( context( ValueProperty.class ) );
-            final Path path = target.getContent();
+            final Value<Path> target = context( Element.class ).property( context( ValueProperty.class ) );
+            final Path path = target.content();
             
             if( path != null && path.segmentCount() > 0 )
             {
@@ -85,7 +85,7 @@ public final class CreateWorkspaceFileOpServices
                 }
             };
             
-            context( CreateWorkspaceFileOp.class ).attach( this.listener, CreateWorkspaceFileOp.PROP_CONTEXT );
+            context( CreateWorkspaceFileOp.class ).property( CreateWorkspaceFileOp.PROP_CONTEXT ).attach( this.listener );
         }
     
         @Override
@@ -110,7 +110,7 @@ public final class CreateWorkspaceFileOpServices
             
             if( this.listener != null )
             {
-                context( CreateWorkspaceFileOp.class ).detach( this.listener, CreateWorkspaceFileOp.PROP_CONTEXT );
+                context( CreateWorkspaceFileOp.class ).property( CreateWorkspaceFileOp.PROP_CONTEXT ).detach( this.listener );
             }
         }
     }
@@ -124,10 +124,9 @@ public final class CreateWorkspaceFileOpServices
         {
             super.init();
             
-            final IModelElement element = context( IModelElement.class );
-            final ModelProperty property = context( ModelProperty.class );
+            final Property property = context( Property.class );
             
-            this.fileExtensionsService = element.service( property, FileExtensionsService.class );
+            this.fileExtensionsService = property.service( FileExtensionsService.class );
             
             if( this.fileExtensionsService != null )
             {
@@ -138,7 +137,7 @@ public final class CreateWorkspaceFileOpServices
                         @Override
                         public void handle( final Event event )
                         {
-                            element.refresh( property );
+                            property.refresh();
                         }
                     }
                 );
@@ -148,8 +147,8 @@ public final class CreateWorkspaceFileOpServices
         @Override
         public Status validate()
         {
-            final Value<FileName> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
-            final FileName fileName = value.getContent();
+            final Value<?> value = context( Value.class );
+            final FileName fileName = (FileName) value.content();
             
             if( fileName != null )
             {
@@ -210,11 +209,11 @@ public final class CreateWorkspaceFileOpServices
                     }
                 }
                 
-                final CreateWorkspaceFileOp operation = value.nearest( CreateWorkspaceFileOp.class );
+                final CreateWorkspaceFileOp operation = value.element().nearest( CreateWorkspaceFileOp.class );
                 final IFile fileHandle = operation.getFileHandle();
                 
                 if( fileHandle != null && fileHandle.exists() && 
-                    operation.getOverwriteExistingFile().getContent() == false )
+                    operation.getOverwriteExistingFile().content() == false )
                 {
                     final String msg = NLS.bind( Resources.fileExists, fileName );
                     return Status.factoryForLeaf().severity( Status.Severity.ERROR ).type( PROBLEM_FILE_EXISTS ).message( msg ).create();

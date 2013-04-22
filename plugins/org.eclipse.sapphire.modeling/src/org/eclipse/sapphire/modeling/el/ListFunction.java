@@ -21,10 +21,7 @@ import java.util.List;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ListFunction
-
-    extends Function
-
+public final class ListFunction extends Function
 {
     @Override
     public String name()
@@ -48,7 +45,7 @@ public final class ListFunction
                 }
                 else if( size == 1 )
                 {
-                    return Collections.singletonList( operand( 0 ).value() );
+                    return Collections.singletonList( operand( 0 ) );
                 }
                 else
                 {
@@ -56,7 +53,7 @@ public final class ListFunction
                     
                     for( int i = 0; i < size; i++ )
                     {
-                        list.add( operand( i ).value() );
+                        list.add( operand( i ) );
                     }
                     
                     return list;

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.layout;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -79,7 +79,7 @@ public class ConnectionHashKey
 		String nodeId = null;
 		if (connPart instanceof DiagramEmbeddedConnectionPart)
 		{
-			IModelElement srcElement = connPart.getEndpoint1();
+			Element srcElement = connPart.getEndpoint1();
 			DiagramNodePart nodePart = diagramPart.getDiagramNodePart(srcElement);
 			nodeId = IdUtil.computeNodeId(nodePart);
 		}

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -32,8 +32,8 @@ public interface ISapphirePart
 {
     ISapphirePart getParentPart();
     <T> T nearest( final Class<T> partType );
-    IModelElement getModelElement();
-    IModelElement getLocalModelElement();
+    Element getModelElement();
+    Element getLocalModelElement();
     Status validation();
     IContext getDocumentationContext();
     SwtResourceCache getSwtResourceCache();

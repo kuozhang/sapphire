@@ -12,17 +12,17 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -39,9 +39,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 @Label( standard = "shape factory case" )
 @Image( path = "ShapeFactoryCaseDef.png" )
 
-public interface ShapeFactoryCaseDef extends IModelElement 
+public interface ShapeFactoryCaseDef extends Element 
 {
-	ModelElementType TYPE = new ModelElementType( ShapeFactoryCaseDef.class );
+	ElementType TYPE = new ElementType( ShapeFactoryCaseDef.class );
 	
     // *** Type ***
     
@@ -91,7 +91,7 @@ public interface ShapeFactoryCaseDef extends IModelElement
 	
     ElementProperty PROP_SHAPE = new ElementProperty( TYPE, "Shape" );
     
-    ModelElementHandle<ShapeDef> getShape();
+    ElementHandle<ShapeDef> getShape();
     
     // *** SelectionPresentation ***
     

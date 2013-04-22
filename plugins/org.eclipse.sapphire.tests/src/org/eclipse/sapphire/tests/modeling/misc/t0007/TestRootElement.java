@@ -11,19 +11,19 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0007;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestRootElement extends IModelElement
+public interface TestRootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestRootElement.class );
+    ElementType TYPE = new ElementType( TestRootElement.class );
     
     // *** Children ***
     
@@ -31,6 +31,6 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
     
-    ModelElementList<TestChildElement> getChildren();
+    ElementList<TestChildElement> getChildren();
     
 }

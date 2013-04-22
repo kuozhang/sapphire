@@ -12,12 +12,12 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -35,7 +35,7 @@ import org.eclipse.sapphire.ui.def.EditorPageDef;
 
 public interface MasterDetailsEditorPageDef extends EditorPageDef
 {
-    ModelElementType TYPE = new ModelElementType( MasterDetailsEditorPageDef.class );
+    ElementType TYPE = new ElementType( MasterDetailsEditorPageDef.class );
     
     // *** OutlineHeaderText ***
     

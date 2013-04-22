@@ -54,12 +54,12 @@ public class RectanglePart extends ContainerShapePart
 	
 	public BackgroundDef getBackground()
 	{
-		return this.rectangleDef.getBackground().element();
+		return this.rectangleDef.getBackground().content();
 	}
 	
 	public int getCornerRadius()
 	{
-		return this.rectangleDef.getCornerRadius().getContent();
+		return this.rectangleDef.getCornerRadius().content();
 	}
 	
 }

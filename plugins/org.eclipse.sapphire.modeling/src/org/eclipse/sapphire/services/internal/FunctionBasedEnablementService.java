@@ -14,11 +14,11 @@ package org.eclipse.sapphire.services.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -43,7 +43,7 @@ public final class FunctionBasedEnablementService extends EnablementService
     @Override
     protected void initEnablementService()
     {
-        final ModelElementFunctionContext fnContext = new ModelElementFunctionContext( context( IModelElement.class ) );
+        final ModelElementFunctionContext fnContext = new ModelElementFunctionContext( context( Element.class ) );
         
         final Listener functionResultListener = new Listener()
         {
@@ -54,7 +54,7 @@ public final class FunctionBasedEnablementService extends EnablementService
             }
         };
         
-        for( Enablement annotation : context( ModelProperty.class ).getAnnotations( Enablement.class ) )
+        for( Enablement annotation : context( PropertyDef.class ).getAnnotations( Enablement.class ) )
         {
             Function function = null;
             
@@ -117,7 +117,7 @@ public final class FunctionBasedEnablementService extends EnablementService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return context.find( ModelProperty.class ).hasAnnotation( Enablement.class );
+            return context.find( PropertyDef.class ).hasAnnotation( Enablement.class );
         }
 
         @Override

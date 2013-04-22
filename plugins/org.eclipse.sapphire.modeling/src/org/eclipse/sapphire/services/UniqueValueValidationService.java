@@ -11,14 +11,14 @@
 
 package org.eclipse.sapphire.services;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -30,13 +30,13 @@ public class UniqueValueValidationService extends ValidationService
     @Override
     public Status validate()
     {
-        final Value<?> value = (Value<?>) context( IModelElement.class ).read( context( ModelProperty.class ) );
+        final Value<?> value = context( Value.class );
         
         if( isUniqueValue( value ) == false )
         {
-            final ValueProperty property = value.property();
+            final ValueProperty property = value.definition();
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
-            final String str = value.getText();
+            final String str = value.text();
             final String msg = NLS.bind( Resources.message, label, str );
             return Status.createErrorStatus( msg );
         }
@@ -46,25 +46,25 @@ public class UniqueValueValidationService extends ValidationService
     
     protected boolean isUniqueValue( final Value<?> value )
     {
-        final String str = value.getText();
+        final String str = value.text();
         
         if( str != null )
         {
-            final IModelElement modelElement = value.parent();
-            final ValueProperty property = value.property();
-            final IModelParticle parent = modelElement.parent();
+            final Element element = value.element();
+            final ValueProperty property = value.definition();
+            final Property valueElementParent = element.parent();
             
-            if( parent instanceof ModelElementList<?> )
+            if( valueElementParent != null && valueElementParent.definition() instanceof ListProperty )
             {
-                final ModelElementList<?> list = (ModelElementList<?>) parent;
+                final ElementList<?> list = (ElementList<?>) valueElementParent;
                 
-                for( IModelElement x : list )
+                for( Element x : list )
                 {
-                    if( x != modelElement )
+                    if( x != element )
                     {
-                        final Value<?> xval = x.read( property );
+                        final Value<?> xval = x.property( property );
                         
-                        if( str.equals( xval.getText() ) )
+                        if( str.equals( xval.text() ) )
                         {
                             return false;
                         }

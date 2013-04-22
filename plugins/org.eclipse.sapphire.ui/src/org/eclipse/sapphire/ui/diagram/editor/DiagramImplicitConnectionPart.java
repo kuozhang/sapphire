@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 
@@ -21,11 +21,11 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 
 public class DiagramImplicitConnectionPart extends DiagramConnectionPart 
 {
-    private IModelElement srcNodeModel;
-    private IModelElement targetNodeModel;
+    private Element srcNodeModel;
+    private Element targetNodeModel;
     private DiagramImplicitConnectionTemplate connectionTemplate;
     
-    public DiagramImplicitConnectionPart(IModelElement srcNodeModel, IModelElement targetNodeModel)
+    public DiagramImplicitConnectionPart(Element srcNodeModel, Element targetNodeModel)
     {
         this.srcNodeModel = srcNodeModel;
         this.targetNodeModel = targetNodeModel;
@@ -41,13 +41,13 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     }
     
     @Override
-    public IModelElement getEndpoint1()
+    public Element getEndpoint1()
     {
         return this.srcNodeModel;
     }
     
     @Override
-    public IModelElement getEndpoint2()
+    public Element getEndpoint2()
     {
         return this.targetNodeModel;
     }

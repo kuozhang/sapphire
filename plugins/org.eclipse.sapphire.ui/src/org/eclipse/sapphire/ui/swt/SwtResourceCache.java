@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
 import org.eclipse.swt.graphics.Color;
@@ -56,7 +56,7 @@ public final class SwtResourceCache
         return imageHandle.getImage( problemSeverity );
     }
 
-    public Image image( final ModelElementType type )
+    public Image image( final ElementType type )
     {
         return image( type.image() );
     }

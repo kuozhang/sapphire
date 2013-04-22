@@ -15,6 +15,9 @@ import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+
 /**
  * <p>Facility for managing shared model instances. Note that no exclusivity of access guarantees are made, so this
  * cache should only be used by code needing read-only access to a model. Code that needs to modify the model
@@ -37,15 +40,15 @@ import java.util.Map;
 
 public final class SharedModelsCache
 {
-    private static final Map<Object,SoftReference<IModelElement>> cache = new HashMap<Object,SoftReference<IModelElement>>();
+    private static final Map<Object,SoftReference<Element>> cache = new HashMap<Object,SoftReference<Element>>();
     
-    public static synchronized IModelElement retrieve( final Object key )
+    public static synchronized Element retrieve( final Object key )
     {
-        final SoftReference<IModelElement> cachedModelRef = cache.get( key );
+        final SoftReference<Element> cachedModelRef = cache.get( key );
         
         if( cachedModelRef != null )
         {
-            final IModelElement model = cachedModelRef.get();
+            final Element model = cachedModelRef.get();
             
             if( model != null )
             {
@@ -64,18 +67,18 @@ public final class SharedModelsCache
     }
     
     public static synchronized void store( final Object key,
-                                           final IModelElement modelElement )
+                                           final Element modelElement )
     {
-        cache.put( key, new SoftReference<IModelElement>( modelElement ) );
+        cache.put( key, new SoftReference<Element>( modelElement ) );
     }
     
     public static final class StandardKey
     {
         private final ResourceStore resourceStore;
-        private final ModelElementType modelElementType;
+        private final ElementType modelElementType;
         
         public StandardKey( final ResourceStore resourceStore,
-                            final ModelElementType modelElementType )
+                            final ElementType modelElementType )
         {
             this.resourceStore = resourceStore;
             this.modelElementType = modelElementType;

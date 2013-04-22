@@ -21,9 +21,9 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvindent;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -44,10 +44,7 @@ import org.eclipse.swt.widgets.Label;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EnumPropertyEditorRenderer
-
-    extends ValuePropertyEditorRenderer
-    
+public final class EnumPropertyEditorRenderer extends ValuePropertyEditorRenderer
 {
     private Control control;
 
@@ -61,7 +58,7 @@ public final class EnumPropertyEditorRenderer
     protected void createContents( final Composite parent )
     {
         final PropertyEditorPart part = getPart();
-        final ValueProperty property = (ValueProperty) part.getProperty();
+        final ValueProperty property = property().definition();
         
         final boolean showLabel = part.getShowLabel();
         final int leftMargin = part.getMarginLeft();
@@ -209,15 +206,12 @@ public final class EnumPropertyEditorRenderer
         this.control.setFocus();
     }
 
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
-            final ModelProperty property = propertyEditorDefinition.getProperty();
+            final PropertyDef property = propertyEditorPart.property().definition();
             return ( property instanceof ValueProperty && property.isOfType( Enum.class ) );
         }
         

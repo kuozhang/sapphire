@@ -13,9 +13,9 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.services.ImageService;
 
 /**
@@ -51,7 +51,7 @@ public final class ImageFunction extends Function
             protected void init()
             {
                 final List<FunctionResult> operands = operands();
-                final IModelElement element;
+                final Element element;
                 
                 if( operands.isEmpty() )
                 {
@@ -59,7 +59,7 @@ public final class ImageFunction extends Function
                 }
                 else
                 {
-                    element = cast( operand( 0 ).value(), IModelElement.class );
+                    element = cast( operand( 0 ), Element.class );
                 }
                 
                 this.imageService = element.service( ImageService.class );

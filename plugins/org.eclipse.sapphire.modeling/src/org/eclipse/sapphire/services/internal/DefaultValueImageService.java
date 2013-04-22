@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;

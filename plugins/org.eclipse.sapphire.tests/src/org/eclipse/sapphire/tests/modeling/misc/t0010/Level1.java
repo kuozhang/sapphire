@@ -11,24 +11,24 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0010;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Level1 extends IModelElement
+public interface Level1 extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Level1.class );
+    ElementType TYPE = new ElementType( Level1.class );
 
     public interface Level2 extends Level1
     {
-        ModelElementType TYPE = new ModelElementType( Level2.class );
+        ElementType TYPE = new ElementType( Level2.class );
 
         public interface Level3 extends Level2
         {
-            ModelElementType TYPE = new ModelElementType( Level3.class );
+            ElementType TYPE = new ElementType( Level3.class );
         }
     }
 

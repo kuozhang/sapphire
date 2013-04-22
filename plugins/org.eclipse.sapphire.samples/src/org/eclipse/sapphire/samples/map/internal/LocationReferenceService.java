@@ -31,7 +31,7 @@ public class LocationReferenceService extends ReferenceService
             Map map = context( Map.class );
             for (Location location : map.getLocations())
             {
-                if (reference.equals(location.getName().getContent()))
+                if (reference.equals(location.getName().content()))
                 {
                     return location;
                 }

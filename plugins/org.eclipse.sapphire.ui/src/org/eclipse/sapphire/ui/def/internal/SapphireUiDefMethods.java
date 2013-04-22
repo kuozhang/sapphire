@@ -15,7 +15,7 @@ package org.eclipse.sapphire.ui.def.internal;
 import java.lang.reflect.Field;
 
 import org.eclipse.sapphire.Context;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IPackageReference;
@@ -39,7 +39,7 @@ public final class SapphireUiDefMethods
         {
             for( PartDef def : rootdef.getPartDefs() )
             {
-                if( id.equals( def.getId().getText() ) )
+                if( id.equals( def.getId().text() ) )
                 {
                     if( expectedType != null && ! expectedType.isAssignableFrom( def.getClass() ) )
                     {
@@ -79,7 +79,7 @@ public final class SapphireUiDefMethods
                                                             final boolean searchImportedDefinitions) {
         if (id != null) {
             for (ISapphireDocumentationDef def : rootdef.getDocumentationDefs()) {
-                if (id.equals(def.getId().getText())) {
+                if (id.equals(def.getId().text())) {
                     return def;
                 }
             }
@@ -113,7 +113,7 @@ public final class SapphireUiDefMethods
         
         for( IPackageReference packageRef : def.getImportedPackages() )
         {
-            final String packageName = packageRef.getName().getText();
+            final String packageName = packageRef.getName().text();
             
             if( packageName != null )
             {
@@ -130,10 +130,10 @@ public final class SapphireUiDefMethods
         return null;
     }
     
-    public static ModelProperty resolveProperty( final ISapphireUiDef def,
+    public static PropertyDef resolveProperty( final ISapphireUiDef def,
                                                  final String qualifiedPropertyName )
     {
-        ModelProperty property = null;
+        PropertyDef property = null;
         
         if( qualifiedPropertyName != null )
         {
@@ -150,7 +150,7 @@ public final class SapphireUiDefMethods
             try
             {
                 final Field field = cl.getField( propertyName );
-                property = (ModelProperty) field.get( null ); 
+                property = (PropertyDef) field.get( null ); 
             }
             catch( Throwable e )
             {

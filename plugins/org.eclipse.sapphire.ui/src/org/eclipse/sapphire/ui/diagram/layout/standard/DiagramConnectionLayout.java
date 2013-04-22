@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.ui.diagram.layout.standard;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface DiagramConnectionLayout extends IModelElement 
+public interface DiagramConnectionLayout extends Element 
 {
-    ModelElementType TYPE = new ModelElementType( DiagramConnectionLayout.class );
+    ElementType TYPE = new ElementType( DiagramConnectionLayout.class );
     
     // *** ConnectionId ***
     
@@ -72,6 +72,6 @@ public interface DiagramConnectionLayout extends IModelElement
     
     ListProperty PROP_CONNECTION_BENDPOINTS = new ListProperty( TYPE, "ConnectionBendPoints" );
     
-    ModelElementList<DiagramBendPointLayout> getConnectionBendpoints();
+    ElementList<DiagramBendPointLayout> getConnectionBendpoints();
     	
 }

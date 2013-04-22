@@ -13,12 +13,10 @@ package org.eclipse.sapphire.services.internal;
 
 import java.io.File;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.services.PathValidationService;
@@ -35,8 +33,8 @@ public final class AbsolutePathValidationService extends PathValidationService
     @Override
     public Status validate()
     {
-        final Value<?> value = (Value<?>) context( IModelElement.class ).read( context( ModelProperty.class ) );
-        final Path path = (Path) value.getContent( false );
+        final Value<?> value = context( Value.class );
+        final Path path = (Path) value.content( false );
         
         if( path != null )
         {

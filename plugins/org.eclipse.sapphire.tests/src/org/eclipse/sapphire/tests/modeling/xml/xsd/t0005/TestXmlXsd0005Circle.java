@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0005;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface TestXmlXsd0005Circle extends TestXmlXsd0005Shape
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlXsd0005Circle.class );
+    ElementType TYPE = new ElementType( TestXmlXsd0005Circle.class );
     
     // *** Radius ***
     

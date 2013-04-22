@@ -13,12 +13,12 @@ package org.eclipse.sapphire.ui.internal.binding;
 
 import java.util.Collection;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -54,7 +54,7 @@ public abstract class AbstractBinding
             }
         };
 
-        getModelElement().attach( this.propertyChangeListener, this.editor.getProperty() );
+        this.editor.property().attach( this.propertyChangeListener );
         
         this.control.addDisposeListener
         (
@@ -71,19 +71,14 @@ public abstract class AbstractBinding
         updateTarget();
     }
     
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return this.editor.getLocalModelElement();
     }
     
-    public ModelProperty getProperty()
+    public Property property()
     {
-        return this.editor.getProperty();
-    }
-    
-    public Object getPropertyValue()
-    {
-        return getModelElement().read( getProperty() );
+        return this.editor.property();
     }
     
     public final SapphireRenderingContext getContext()
@@ -165,7 +160,7 @@ public abstract class AbstractBinding
     {
         if( ! this.control.isDisposed() ) 
         {
-            final boolean enabled = getModelElement().enabled( getProperty() );
+            final boolean enabled = this.editor.property().enabled();
             this.control.setEnabled( enabled );
             
             final Object relatedControls = this.control.getData( PropertyEditorPart.RELATED_CONTROLS );
@@ -192,7 +187,7 @@ public abstract class AbstractBinding
     
     public void dispose()
     {
-        getModelElement().detach( this.propertyChangeListener, getProperty() );            
+        this.editor.property().detach( this.propertyChangeListener );            
     }
     
     protected void initialize( PropertyEditorPart editor,

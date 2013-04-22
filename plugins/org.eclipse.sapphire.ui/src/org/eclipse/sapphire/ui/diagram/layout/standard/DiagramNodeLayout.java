@@ -10,12 +10,12 @@
  ******************************************************************************/
 package org.eclipse.sapphire.ui.diagram.layout.standard;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface DiagramNodeLayout extends IModelElement
+public interface DiagramNodeLayout extends Element
 {
-    ModelElementType TYPE = new ModelElementType( DiagramNodeLayout.class );
+    ElementType TYPE = new ElementType( DiagramNodeLayout.class );
     
     // *** NodeId ***
     
@@ -96,6 +96,6 @@ public interface DiagramNodeLayout extends IModelElement
     
     ListProperty PROP_EMBEDDED_CONNECTIONS_LAYOUT = new ListProperty( TYPE, "EmbeddedConnectionsLayout" );
     
-    ModelElementList<DiagramConnectionLayout> getEmbeddedConnectionsLayout();    
+    ElementList<DiagramConnectionLayout> getEmbeddedConnectionsLayout();    
     
 }

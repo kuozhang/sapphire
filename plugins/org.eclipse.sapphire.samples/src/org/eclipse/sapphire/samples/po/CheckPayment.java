@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.po;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 
 public interface CheckPayment extends Payment
 {
-    ModelElementType TYPE = new ModelElementType( CheckPayment.class );
+    ElementType TYPE = new ElementType( CheckPayment.class );
     
     // *** Number ***
     

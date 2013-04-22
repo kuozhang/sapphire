@@ -49,7 +49,7 @@ public final class TestServices0008 extends SapphireTestCase
     {
         final DerivedElement element = DerivedElement.TYPE.instantiate();
         
-        final List<ValidationService> services = element.services( DerivedElement.PROP_TEST_PROPERTY, ValidationService.class );
+        final List<ValidationService> services = element.property( DerivedElement.PROP_TEST_PROPERTY ).services( ValidationService.class );
         
         assertContainsInstanceOf( services, BaseValidationService.class );
         assertContainsInstanceOf( services, DerivedValidationService.class );

@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -33,8 +33,8 @@ public final class StandardXmlValueBindingImpl
     private boolean removeNodeOnSetIfNull;
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         super.init( element, property, params );
@@ -113,13 +113,13 @@ public final class StandardXmlValueBindingImpl
                 }
                 else
                 {
-                    this.path = new XmlPath( property.getName(), xmlNamespaceResolver );
+                    this.path = new XmlPath( property.name(), xmlNamespaceResolver );
                 }
             }
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.getName(), e.getMessage() );
+            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.name(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }

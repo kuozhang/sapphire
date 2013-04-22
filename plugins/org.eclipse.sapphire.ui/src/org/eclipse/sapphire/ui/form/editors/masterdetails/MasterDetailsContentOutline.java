@@ -17,10 +17,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.state.ContentOutlineNodeState;
@@ -35,7 +35,7 @@ public final class MasterDetailsContentOutline
 {
     private final MasterDetailsEditorPagePart editorPagePart;
     private final MasterDetailsEditorPageDef editorPageDef;
-    private final IModelElement rootModelElement;
+    private final Element rootModelElement;
     private MasterDetailsContentNode root;
     private List<MasterDetailsContentNode> selection;
     private final ListenerContext listeners;
@@ -320,7 +320,7 @@ public final class MasterDetailsContentOutline
         {
             MasterDetailsContentNode node = this.root;
             
-            final String defaultInitialNodePath = this.editorPageDef.getInitialSelectionPath().getText();
+            final String defaultInitialNodePath = this.editorPageDef.getInitialSelectionPath().text();
             
             if( defaultInitialNodePath != null )
             {
@@ -354,11 +354,11 @@ public final class MasterDetailsContentOutline
         
         for( ContentOutlineNodeState childNodeState : parentNodeState.getChildren() )
         {
-            if( nodeLabel.equals( childNodeState.getLabel().getText() ) )
+            if( nodeLabel.equals( childNodeState.getLabel().text() ) )
             {
-                node.setExpanded( childNodeState.getExpanded().getContent() );
+                node.setExpanded( childNodeState.getExpanded().content() );
                 
-                if( childNodeState.getSelected().getContent() )
+                if( childNodeState.getSelected().content() )
                 {
                     selection.add( node );
                 }

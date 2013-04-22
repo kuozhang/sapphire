@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.samples.address.Address;
@@ -25,7 +25,7 @@ import org.eclipse.sapphire.samples.address.Address;
 
 public interface ContactAddress extends Address
 {
-    ModelElementType TYPE = new ModelElementType( ContactAddress.class );
+    ElementType TYPE = new ElementType( ContactAddress.class );
     
     // *** Street ***
 

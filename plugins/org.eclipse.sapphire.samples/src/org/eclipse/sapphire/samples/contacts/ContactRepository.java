@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -34,9 +34,9 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactRepositoryImageServ
 @XmlBinding( path = "c:contacts" )
 @Service( impl = ContactRepositoryImageService.class )
 
-public interface ContactRepository extends IModelElement
+public interface ContactRepository extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ContactRepository.class );
+    ElementType TYPE = new ElementType( ContactRepository.class );
     
     // *** Contacts ***
 
@@ -45,5 +45,5 @@ public interface ContactRepository extends IModelElement
     
     ListProperty PROP_CONTACTS = new ListProperty( TYPE, "Contacts" );
     
-    ModelElementList<Contact> getContacts();
+    ElementList<Contact> getContacts();
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
@@ -33,7 +33,7 @@ public class ContainerShapeFigure extends Shape
 	private ContainerShapePresentation containerShapePresentation;
 	private DiagramResourceCache resourceCache;
 	private DiagramConfigurationManager configManager;
-	private IModelElement model;
+	private Element model;
 	private int validationMarkerIndex;
 	private ShapeLayoutDef layout;
 	
@@ -78,7 +78,7 @@ public class ContainerShapeFigure extends Shape
 		if (this.layout instanceof SequenceLayoutDef)
 		{
 			SequenceLayoutDef sequenceLayout = (SequenceLayoutDef)layout;				
-			if (sequenceLayout.getOrientation().getContent() == SequenceLayoutOrientation.HORIZONTAL)	
+			if (sequenceLayout.getOrientation().content() == SequenceLayoutOrientation.HORIZONTAL)	
 			{
 				return true;
 			}

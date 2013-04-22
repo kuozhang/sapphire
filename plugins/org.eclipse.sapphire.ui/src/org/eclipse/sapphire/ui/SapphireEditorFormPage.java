@@ -17,10 +17,10 @@ import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescr
 
 import java.util.Collections;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderImageEvent;
@@ -40,12 +40,12 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 public abstract class SapphireEditorFormPage extends FormPage implements EditorPagePresentation
 {
     private final SapphireEditor editor;
-    private IModelElement element;
+    private Element element;
     private DefinitionLoader.Reference<EditorPageDef> definition;
     private SapphireEditorPagePart part;
     
     public SapphireEditorFormPage( final SapphireEditor editor,
-                                   final IModelElement element,
+                                   final Element element,
                                    final DefinitionLoader.Reference<EditorPageDef> definition ) 
     {
         super( editor, null, null );
@@ -95,7 +95,7 @@ public abstract class SapphireEditorFormPage extends FormPage implements EditorP
         return this.part;
     }
     
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return this.part.getModelElement();
     }

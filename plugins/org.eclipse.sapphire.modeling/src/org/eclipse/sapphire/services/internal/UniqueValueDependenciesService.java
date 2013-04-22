@@ -11,14 +11,15 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.services.DependenciesServiceData;
 import org.eclipse.sapphire.services.DependenciesService;
+import org.eclipse.sapphire.services.DependenciesServiceData;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -34,7 +35,7 @@ public final class UniqueValueDependenciesService extends DependenciesService
     @Override
     protected DependenciesServiceData compute()
     {
-        return new DependenciesServiceData( new ModelPath( "*/" + context( ModelProperty.class ).getName() ) );
+        return new DependenciesServiceData( new ModelPath( "#/" + context( PropertyDef.class ).name() ) );
     }
 
     public static final class Factory extends ServiceFactory
@@ -44,7 +45,19 @@ public final class UniqueValueDependenciesService extends DependenciesService
                                    final Class<? extends Service> service )
         {
             final ValueProperty property = context.find( ValueProperty.class );
-            return ( property != null && property.hasAnnotation( NoDuplicates.class ) && context.find( IModelElement.class ).parent() instanceof ModelElementList );
+            final Element element = context.find( Element.class );
+            
+            if( property != null && property.hasAnnotation( NoDuplicates.class ) )
+            {
+                final Property parent = element.parent();
+                
+                if( parent != null && parent.definition() instanceof ListProperty )
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         @Override

@@ -24,10 +24,7 @@ import org.eclipse.sapphire.ui.def.HtmlPanelDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireHtmlPanelDefSourceBinding
-
-    extends XmlValueBindingImpl
-    
+public final class SapphireHtmlPanelDefSourceBinding extends XmlValueBindingImpl
 {
     private static final StandardXmlNamespaceResolver NAMESPACE_RESOLVER = new StandardXmlNamespaceResolver( HtmlPanelDef.TYPE );
     private static final XmlPath PATH_URL = new XmlPath( "url", NAMESPACE_RESOLVER );
@@ -48,14 +45,14 @@ public final class SapphireHtmlPanelDefSourceBinding
             type = HtmlContentSourceType.EMBEDDED;
         }
         
-        return element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, MasterConversionService.class ).convert( type, String.class );
+        return element().property( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE ).service( MasterConversionService.class ).convert( type, String.class );
     }
 
     @Override
     public void write( final String value )
     {
         final XmlElement element = xml();
-        final HtmlContentSourceType type = element().service( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE, MasterConversionService.class ).convert( value, HtmlContentSourceType.class );
+        final HtmlContentSourceType type = element().property( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE ).service( MasterConversionService.class ).convert( value, HtmlContentSourceType.class );
         
         if( value == null )
         {

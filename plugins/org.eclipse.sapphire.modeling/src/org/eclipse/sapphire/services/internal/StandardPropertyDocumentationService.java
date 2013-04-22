@@ -14,9 +14,9 @@ package org.eclipse.sapphire.services.internal;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -35,12 +35,11 @@ public final class StandardPropertyDocumentationService extends StandardDocument
     protected void initStandardDocumentationService( final StringBuilder content,
                                                      final List<Topic> topics )
     {
-        final IModelElement element = context( IModelElement.class );
-        final ModelProperty property = context( ModelProperty.class );
+        final Property property = context( Property.class );
         
-        init( property, content, topics );
+        init( property.definition(), content, topics );
         
-        final SortedSet<String> facts = element.service( property, FactsAggregationService.class ).facts();
+        final SortedSet<String> facts = property.service( FactsAggregationService.class ).facts();
         
         if( ! facts.isEmpty() )
         {
@@ -67,7 +66,7 @@ public final class StandardPropertyDocumentationService extends StandardDocument
         }
     }
     
-    private static void init( final ModelProperty property,
+    private static void init( final PropertyDef property,
                               final StringBuilder content,
                               final List<Topic> topics )
     {
@@ -129,10 +128,9 @@ public final class StandardPropertyDocumentationService extends StandardDocument
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = context.find( ModelProperty.class );
+            final Property property = context.find( Property.class );
             
-            for( ModelProperty p = property; p != null ; p = p.getBase() )
+            for( PropertyDef p = property.definition(); p != null ; p = p.getBase() )
             {
                 if( p.hasAnnotation( Documentation.class ) )
                 {
@@ -140,7 +138,7 @@ public final class StandardPropertyDocumentationService extends StandardDocument
                 }
             }
             
-            if( ! element.service( property, FactsAggregationService.class ).facts().isEmpty() )
+            if( ! property.service( FactsAggregationService.class ).facts().isEmpty() )
             {
                 return true;
             }

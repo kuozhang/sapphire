@@ -13,8 +13,8 @@ package org.eclipse.sapphire.samples.calendar.integrated;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.calendar.ICalendar;
@@ -70,7 +70,7 @@ public final class CalendarEditor extends SapphireEditor
     }
     
     @Override
-    protected IModelElement createModel()
+    protected Element createModel()
     {
         this.modelCalendar = ICalendar.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.calendarSourceEditor ) ) );
         this.modelContacts = ContactRepository.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.contactsSourceEditor ) ) );
@@ -80,7 +80,7 @@ public final class CalendarEditor extends SapphireEditor
     }
     
     @Override
-    protected void adaptModel( final IModelElement model )
+    protected void adaptModel( final Element model )
     {
         final CorruptedResourceExceptionInterceptor interceptor 
             = new CorruptedResourceExceptionInterceptorImpl( getEditorSite().getShell() );

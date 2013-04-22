@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
@@ -24,9 +24,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Manufacturer extends IModelElement
+public interface Manufacturer extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Manufacturer.class );
+    ElementType TYPE = new ElementType( Manufacturer.class );
     
     // *** Name ***
     
@@ -42,6 +42,6 @@ public interface Manufacturer extends IModelElement
     
     ListProperty PROP_ITEMS = new ListProperty( TYPE, "Items" );
     
-    ModelElementList<Item> getItems();
+    ElementList<Item> getItems();
     
 }

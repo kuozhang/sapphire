@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface FormEditorPageDef extends EditorPageDef
 {
-    ModelElementType TYPE = new ModelElementType(FormEditorPageDef.class);
+    ElementType TYPE = new ElementType(FormEditorPageDef.class);
 
     // *** Content ***
     
@@ -62,6 +62,6 @@ public interface FormEditorPageDef extends EditorPageDef
                              
     ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content" );
     
-    ModelElementList<FormComponentDef> getContent();
+    ElementList<FormComponentDef> getContent();
 
 }

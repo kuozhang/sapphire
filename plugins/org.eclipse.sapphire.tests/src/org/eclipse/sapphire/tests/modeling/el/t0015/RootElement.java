@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0015;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface RootElement extends IModelElement
+public interface RootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( RootElement.class );
+    ElementType TYPE = new ElementType( RootElement.class );
     
     // *** EnableValue ***
     

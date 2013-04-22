@@ -43,7 +43,7 @@ public final class LineSeparatorPart extends SeparatorPart
         separatorComposite.setLayoutData( gdhindent( gdhspan( gdhfill(), 2 ), 10 ) );
         separatorComposite.setLayout( glayout( 1, 0, 5 ) );
         
-        final String label = def.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        final String label = def.getLabel().localized( CapitalizationType.TITLE_STYLE, false );
         
         if( label != null )
         {

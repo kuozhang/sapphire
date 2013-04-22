@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
@@ -57,7 +57,7 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		
 		if (this.layout instanceof SequenceLayoutDef)
 		{
-			if (((SequenceLayoutDef)this.layout).getOrientation().getContent() != SequenceLayoutOrientation.STACKED)
+			if (((SequenceLayoutDef)this.layout).getOrientation().content() != SequenceLayoutOrientation.STACKED)
 			{
 				SapphireSequenceLayout sequenceLayout = new SapphireSequenceLayout((SequenceLayoutDef)layout);
 				this.setLayoutManager(sequenceLayout);
@@ -98,7 +98,7 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			{
 				if (bg instanceof SolidBackgroundDef)
 				{
-					org.eclipse.sapphire.Color color = ((SolidBackgroundDef)bg).getColor().getContent();
+					org.eclipse.sapphire.Color color = ((SolidBackgroundDef)bg).getColor().content();
 					if (color != null)
 					{
 						graphics.setBackgroundColor(resourceCache.getColor(color));
@@ -111,8 +111,8 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 				}
 				else if (bg instanceof GradientBackgroundDef)
 				{
-					boolean isVertical = ((GradientBackgroundDef)bg).isVertical().getContent();
-					ModelElementList<GradientSegmentDef> segments = ((GradientBackgroundDef)bg).getGradientSegments();
+					boolean isVertical = ((GradientBackgroundDef)bg).isVertical().content();
+					ElementList<GradientSegmentDef> segments = ((GradientBackgroundDef)bg).getGradientSegments();
 					if (segments.size() == 0)
 					{
 						graphics.setForegroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
@@ -122,8 +122,8 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 					{
 						GradientSegmentDef segment0 = segments.get(0);
 						GradientSegmentDef segment1 = segments.get(1);
-						graphics.setForegroundColor(resourceCache.getColor(segment0.getColor().getContent()));
-						graphics.setBackgroundColor(resourceCache.getColor(segment1.getColor().getContent()));
+						graphics.setForegroundColor(resourceCache.getColor(segment0.getColor().content()));
+						graphics.setBackgroundColor(resourceCache.getColor(segment1.getColor().content()));
 					}
 					
 					graphics.fillGradient(fillRectangle.x, fillRectangle.y, fillRectangle.width, fillRectangle.height, isVertical);

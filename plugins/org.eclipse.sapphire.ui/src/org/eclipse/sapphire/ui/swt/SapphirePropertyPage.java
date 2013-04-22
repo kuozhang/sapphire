@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.ui.swt;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -31,17 +31,17 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 public class SapphirePropertyPage extends PropertyPage
 {
-    private IModelElement element;
+    private Element element;
     private boolean elementInstantiatedLocally;
     private DefinitionLoader.Reference<FormComponentDef> definition;
     
-    public SapphirePropertyPage( final ModelElementType type,
+    public SapphirePropertyPage( final ElementType type,
                                  final DefinitionLoader.Reference<FormComponentDef> definition )
     {
         init( type, definition );
     }
 
-    public SapphirePropertyPage( final IModelElement element,
+    public SapphirePropertyPage( final Element element,
                                  final DefinitionLoader.Reference<FormComponentDef> definition )
     {
         init( element, definition );
@@ -51,7 +51,7 @@ public class SapphirePropertyPage extends PropertyPage
     {
     }
     
-    protected void init( final ModelElementType type,
+    protected void init( final ElementType type,
                          final DefinitionLoader.Reference<FormComponentDef> definition )
     {
         if( type == null )
@@ -69,7 +69,7 @@ public class SapphirePropertyPage extends PropertyPage
         init( type.instantiate(), definition );
     }
     
-    protected void init( final IModelElement element,
+    protected void init( final Element element,
                          final DefinitionLoader.Reference<FormComponentDef> definition )
     {
         if( element == null )
@@ -86,7 +86,7 @@ public class SapphirePropertyPage extends PropertyPage
         this.definition = definition;
     }
     
-    public final IModelElement element()
+    public final Element element()
     {
         return this.element;
     }

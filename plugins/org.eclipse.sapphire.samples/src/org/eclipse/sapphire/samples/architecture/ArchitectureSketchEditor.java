@@ -14,7 +14,7 @@
 package org.eclipse.sapphire.samples.architecture;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -46,7 +46,7 @@ public final class ArchitectureSketchEditor extends SapphireEditor
     }
 
     @Override
-    protected IModelElement createModel() 
+    protected Element createModel() 
     {
         this.architectureModel = ArchitectureSketch.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.pageSource ) ) );
         return this.architectureModel;

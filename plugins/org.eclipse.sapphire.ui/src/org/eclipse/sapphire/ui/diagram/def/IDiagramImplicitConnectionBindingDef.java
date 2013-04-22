@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IDiagramImplicitConnectionBindingDef extends IDiagramConnectionBindingDef 
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramImplicitConnectionBindingDef.class );
+    ElementType TYPE = new ElementType( IDiagramImplicitConnectionBindingDef.class );
     
     // *** ModelElementTypes ***
     
@@ -40,7 +40,7 @@ public interface IDiagramImplicitConnectionBindingDef extends IDiagramConnection
                              
     ListProperty PROP_MODEL_ELEMENT_TYPES = new ListProperty( TYPE, "ModelElementTypes" );
     
-    ModelElementList<IModelElementTypeDef> getModelElementTypes();
+    ElementList<IModelElementTypeDef> getModelElementTypes();
     
     // *** Condition ***
     

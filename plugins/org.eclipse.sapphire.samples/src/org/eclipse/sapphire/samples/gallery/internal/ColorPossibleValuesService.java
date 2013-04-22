@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.gallery.CustomColor;
 import org.eclipse.sapphire.samples.gallery.IGallery;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -57,7 +57,7 @@ public final class ColorPossibleValuesService extends PossibleValuesService
         
         for( CustomColor color : gallery.getCustomColors() )
         {
-            final String name = color.getName().getText();
+            final String name = color.getName().text();
             
             if( name != null )
             {

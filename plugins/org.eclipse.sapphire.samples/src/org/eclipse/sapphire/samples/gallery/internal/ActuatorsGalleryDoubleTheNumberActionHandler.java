@@ -25,7 +25,7 @@ public final class ActuatorsGalleryDoubleTheNumberActionHandler extends Sapphire
     protected Object run( final SapphireRenderingContext context )
     {
         final ActuatorsGallery element = (ActuatorsGallery) context.getPart().getModelElement();
-        final int original = element.getNumber().getContent();
+        final int original = element.getNumber().content();
         final int doubled = original * 2;
         element.setNumber( doubled );
         

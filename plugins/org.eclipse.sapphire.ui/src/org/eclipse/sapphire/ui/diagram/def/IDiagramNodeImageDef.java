@@ -12,9 +12,9 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramNodeImageDef extends IDiagramDimension 
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramNodeImageDef.class );
+    ElementType TYPE = new ElementType( IDiagramNodeImageDef.class );
 
     // *** ImagePath ***
     

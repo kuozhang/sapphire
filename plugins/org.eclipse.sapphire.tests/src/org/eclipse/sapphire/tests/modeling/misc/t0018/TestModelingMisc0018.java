@@ -17,8 +17,8 @@ import java.util.Map;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
@@ -52,13 +52,13 @@ public final class TestModelingMisc0018 extends SapphireTestCase
         try
         {
             element.setStringValue( "abc" );
-            assertEquals( "abc", element.getStringValue().getContent() );
+            assertEquals( "abc", element.getStringValue().content() );
             
             element.setIntegerValue( 1 );
-            assertEquals( Integer.valueOf( 1 ), element.getIntegerValue().getContent() );
+            assertEquals( Integer.valueOf( 1 ), element.getIntegerValue().content() );
             
             element.setIntegerValue( "2" );
-            assertEquals( Integer.valueOf( 2 ), element.getIntegerValue().getContent() );
+            assertEquals( Integer.valueOf( 2 ), element.getIntegerValue().content() );
             
             element.setJavaTypeReferenceValue( List.class.getName() );
             assertSame( List.class, element.getJavaTypeReferenceValue().resolve().artifact() );
@@ -69,19 +69,19 @@ public final class TestModelingMisc0018 extends SapphireTestCase
             element.setTransient( System.out );
             assertSame( System.out, element.getTransient().content() );
             
-            final ModelElementList<TestChildElement> list = element.getList();
+            final ElementList<TestChildElement> list = element.getList();
             
             list.insert().setStringValue( "foo" );
             list.insert().setStringValue( "bar" );
             assertEquals( 2, list.size() );
-            assertEquals( "foo", list.get( 0 ).getStringValue().getContent() );
-            assertEquals( "bar", list.get( 1 ).getStringValue().getContent() );
+            assertEquals( "foo", list.get( 0 ).getStringValue().content() );
+            assertEquals( "bar", list.get( 1 ).getStringValue().content() );
             
-            element.getElement().element( true ).setStringValue( "foo" );
-            assertEquals( "foo", element.getElement().element().getStringValue().getContent() );
+            element.getElement().content( true ).setStringValue( "foo" );
+            assertEquals( "foo", element.getElement().content().getStringValue().content() );
             
             element.getImpliedElement().setStringValue( "bar" );
-            assertEquals( "bar", element.getImpliedElement().getStringValue().getContent() );
+            assertEquals( "bar", element.getImpliedElement().getStringValue().content() );
             
             element.method1();
             assertEquals( 2, element.method2( 1, "abc", new String[] { "foo", "bar" }, null ).length );

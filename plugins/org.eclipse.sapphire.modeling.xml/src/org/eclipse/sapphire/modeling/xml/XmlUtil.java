@@ -15,7 +15,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
@@ -323,7 +323,7 @@ public final class XmlUtil
         return new QName( namespace, localName );
     }
     
-    public static QName createDefaultElementName( final ModelElementType type )
+    public static QName createDefaultElementName( final ElementType type )
     {
         QName name = null;
         

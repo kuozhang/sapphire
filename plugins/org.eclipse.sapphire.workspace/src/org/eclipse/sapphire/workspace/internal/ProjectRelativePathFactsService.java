@@ -13,7 +13,7 @@ package org.eclipse.sapphire.workspace.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.Service;

@@ -31,21 +31,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.ValidateEditException;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlNode;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
@@ -80,8 +80,8 @@ public class XmlEditorResourceStore extends XmlResourceStore
 {
     private SapphireEditor sapphireEditor;
     private StructuredTextEditor sourceEditor;
-    private IModelElement rootModelElement;
-    private final Map<Node,List<IModelElement>> nodeToModelElementsMap;
+    private Element rootModelElement;
+    private final Map<Node,List<Element>> nodeToModelElementsMap;
     private final Scrubber scrubber;
     private final Listener modelElementDisposeListener;
     private final XmlSourceEditorService sourceEditorService;
@@ -95,7 +95,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
         this.sapphireEditor = sapphireEditor;
         this.sourceEditor = sourceEditor;
         this.rootModelElement = null;
-        this.nodeToModelElementsMap = new HashMap<Node,List<IModelElement>>();
+        this.nodeToModelElementsMap = new HashMap<Node,List<Element>>();
         this.scrubber = new Scrubber();
         this.scrubber.start();
         this.sourceEditorService = new XmlSourceEditorService();
@@ -291,22 +291,22 @@ public class XmlEditorResourceStore extends XmlResourceStore
     }
 
     @Override
-    public void registerRootModelElement( final IModelElement rootModelElement )
+    public void registerRootModelElement( final Element rootModelElement )
     {
         this.rootModelElement = rootModelElement;
     }
 
     @Override
     public void registerModelElement( final Node xmlNode,
-                                      final IModelElement element )
+                                      final Element element )
     {
         synchronized( this.nodeToModelElementsMap )
         {
-            List<IModelElement> elements = this.nodeToModelElementsMap.get( xmlNode );
+            List<Element> elements = this.nodeToModelElementsMap.get( xmlNode );
             
             if( elements == null )
             {
-                elements = new CopyOnWriteArrayList<IModelElement>();
+                elements = new CopyOnWriteArrayList<Element>();
                 this.nodeToModelElementsMap.put( xmlNode, elements );
             }
             
@@ -317,11 +317,11 @@ public class XmlEditorResourceStore extends XmlResourceStore
     
     @Override
     public void unregisterModelElement( final Node xmlNode,
-                                        final IModelElement element )
+                                        final Element element )
     {
         synchronized( this.nodeToModelElementsMap )
         {
-            List<IModelElement> elements = this.nodeToModelElementsMap.get( xmlNode );
+            List<Element> elements = this.nodeToModelElementsMap.get( xmlNode );
             
             if( elements != null )
             {
@@ -343,7 +343,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
         this.scrubber.dispose();
     }
 
-    private void handleElementDisposed( final IModelElement element )
+    private void handleElementDisposed( final Element element )
     {
         final Resource resource = element.resource();
         
@@ -356,7 +356,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
                 synchronized( this.nodeToModelElementsMap )
                 {
                     final Node xmlNode = xmlElement.getDomNode();
-                    final List<IModelElement> elements = this.nodeToModelElementsMap.get( xmlNode );
+                    final List<Element> elements = this.nodeToModelElementsMap.get( xmlNode );
                     
                     if( elements != null )
                     {
@@ -372,12 +372,12 @@ public class XmlEditorResourceStore extends XmlResourceStore
         }
     }
 
-    public final List<IModelElement> getModelElements( final Node xmlNode )
+    public final List<Element> getModelElements( final Node xmlNode )
     {
         synchronized( this.nodeToModelElementsMap )
         {
             Node node = xmlNode;
-            List<IModelElement> elements = this.nodeToModelElementsMap.get( node );
+            List<Element> elements = this.nodeToModelElementsMap.get( node );
             
             while( elements == null && node != null && ! ( node instanceof Document ) )
             {
@@ -404,9 +404,9 @@ public class XmlEditorResourceStore extends XmlResourceStore
     }
     
     protected void handleXmlNodeChange( final Node xmlNode,
-                                        final List<IModelElement> nearestMatchModelElements )
+                                        final List<Element> nearestMatchModelElements )
     {
-        DelayedTasksExecutor.schedule( new RefreshElementTask( nearestMatchModelElements ) );
+        DelayedTasksExecutor.schedule( new RefreshElementsTask( nearestMatchModelElements ) );
     }
     
     private void attachXmlNodeListener()
@@ -443,11 +443,11 @@ public class XmlEditorResourceStore extends XmlResourceStore
         }
     }
     
-    protected static final class RefreshElementTask extends DelayedTasksExecutor.Task
+    protected static final class RefreshElementsTask extends DelayedTasksExecutor.Task
     {
-        private final List<IModelElement> elements;
+        private final List<Element> elements;
         
-        public RefreshElementTask( final List<IModelElement> elements )
+        public RefreshElementsTask( final List<Element> elements )
         {
             this.elements = elements;
         }
@@ -455,9 +455,9 @@ public class XmlEditorResourceStore extends XmlResourceStore
         @Override
         public boolean equals( final Object obj )
         {
-            if( obj != null && obj instanceof RefreshElementTask )
+            if( obj != null && obj instanceof RefreshElementsTask )
             {
-                return ( this.elements.equals( ( (RefreshElementTask) obj ).elements ) );
+                return ( this.elements.equals( ( (RefreshElementsTask) obj ).elements ) );
             }
             
             return false;
@@ -471,49 +471,13 @@ public class XmlEditorResourceStore extends XmlResourceStore
         
         public void run()
         {
-            for( final IModelElement element : this.elements )
+            for( final Element element : this.elements )
             {
                 if( ! element.disposed() )
                 {
-                    element.refresh( false, true );
+                    element.refresh();
                 }
             }
-        }
-    }
-
-    protected static final class RefreshPropertyTask extends DelayedTasksExecutor.Task
-    {
-        private final IModelElement element;
-        private final ModelProperty property;
-        
-        public RefreshPropertyTask( final IModelElement element,
-                                    final ModelProperty property )
-        {
-            this.element = element;
-            this.property = property;
-        }
-        
-        @Override
-        public boolean equals( final Object obj )
-        {
-            if( obj != null && obj instanceof RefreshPropertyTask )
-            {
-                final RefreshPropertyTask task = (RefreshPropertyTask) obj;
-                return this.element == task.element && this.property == task.property;
-            }
-            
-            return false;
-        }
-        
-        @Override
-        public int hashCode()
-        {
-            return this.element.hashCode() + this.property.hashCode();
-        }
-        
-        public void run()
-        {
-            this.element.refresh( this.property, false, true );
         }
     }
 
@@ -523,7 +487,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
         
         public void run()
         {
-            final Map<Node,List<IModelElement>> nodeToModelElementsMap = XmlEditorResourceStore.this.nodeToModelElementsMap;
+            final Map<Node,List<Element>> nodeToModelElementsMap = XmlEditorResourceStore.this.nodeToModelElementsMap;
             
             while( true )
             {
@@ -543,10 +507,10 @@ public class XmlEditorResourceStore extends XmlResourceStore
                 
                 synchronized( nodeToModelElementsMap )
                 {
-                    for( Iterator<Map.Entry<Node,List<IModelElement>>> itr = nodeToModelElementsMap.entrySet().iterator();
+                    for( Iterator<Map.Entry<Node,List<Element>>> itr = nodeToModelElementsMap.entrySet().iterator();
                          itr.hasNext(); )
                     {
-                        final Map.Entry<Node,List<IModelElement>> entry = itr.next();
+                        final Map.Entry<Node,List<Element>> entry = itr.next();
                         
                         if( entry.getKey().getParentNode() == null )
                         {
@@ -575,15 +539,15 @@ public class XmlEditorResourceStore extends XmlResourceStore
     private final class XmlSourceEditorService extends SourceEditorService
     {
         @Override
-        public boolean find( final IModelElement element,
-                             final ModelProperty property )
+        public boolean find( final Element element,
+                             final PropertyDef property )
         {
             return ( element.resource() instanceof XmlResource );
         }
         
         @Override
-        public void show( final IModelElement element,
-                          final ModelProperty property )
+        public void show( final Element element,
+                          final PropertyDef property )
         {
             final ITextEditor sourceView = getXmlEditor();
             final Range range = new Range();
@@ -635,7 +599,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
             
             if( ! range.initialized() )
             {
-                IModelElement modElement = element;
+                Element modElement = element;
                 Resource resource = modElement.resource();
                 XmlElement xmlElement = null;
                 
@@ -646,19 +610,15 @@ public class XmlEditorResourceStore extends XmlResourceStore
                 
                 while( xmlElement == null && modElement != null )
                 {
-                    final IModelParticle parent = modElement.parent();
+                    final Property parent = modElement.parent();
                     
-                    if( parent instanceof ModelElementList )
+                    if( parent == null )
                     {
-                        modElement = (IModelElement) parent.parent();
+                        modElement = null;
                     }
                     else
                     {
-                        modElement = (IModelElement) parent;
-                    }
-                    
-                    if( modElement != null )
-                    {
+                        modElement = parent.element();
                         resource = modElement.resource();
                         
                         if( resource != null )
@@ -683,15 +643,15 @@ public class XmlEditorResourceStore extends XmlResourceStore
             getEditor().showPage( sourceView );
         }
         
-        private List<XmlNode> getXmlNodes( final IModelElement element,
-                                           final ModelProperty property )
+        private List<XmlNode> getXmlNodes( final Element element,
+                                           final PropertyDef property )
         {
             if( property instanceof ListProperty )
             {
-                final ModelElementList<?> list = element.read( (ListProperty) property );
+                final ElementList<?> list = element.property( (ListProperty) property );
                 final List<XmlNode> xmlNodes = new ArrayList<XmlNode>( list.size() );
                 
-                for( IModelElement entry : list )
+                for( Element entry : list )
                 {
                     final Resource resource = entry.resource();
                     
@@ -710,7 +670,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
             }
             else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
             {
-                final IModelElement child = element.read( (ElementProperty) property ).element();
+                final Element child = element.property( (ElementProperty) property ).content();
                 
                 if( child != null )
                 {

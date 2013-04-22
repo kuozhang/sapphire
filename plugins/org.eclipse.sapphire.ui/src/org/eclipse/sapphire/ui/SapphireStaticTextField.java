@@ -38,11 +38,11 @@ public final class SapphireStaticTextField
         
         final Label l = new Label( parent, SWT.NONE );
         l.setLayoutData( gd() );
-        l.setText( def.getLabel().getLocalizedText() );
+        l.setText( def.getLabel().localized() );
         
         final Text t = new Text( parent, SWT.READ_ONLY | SWT.BORDER );
         t.setLayoutData( gdhindent( gdhfill(), 10 ) );
-        t.setText( def.getText().getText() );
+        t.setText( def.getText().text() );
     }
     
 }

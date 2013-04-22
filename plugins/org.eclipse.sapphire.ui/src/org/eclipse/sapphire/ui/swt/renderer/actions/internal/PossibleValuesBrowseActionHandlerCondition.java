@@ -24,7 +24,7 @@ public final class PossibleValuesBrowseActionHandlerCondition extends SapphirePr
     @Override
     protected boolean evaluate( final PropertyEditorPart part )
     {
-        return ( part.getLocalModelElement().service( part.getProperty(), PossibleValuesService.class ) != null );
+        return ( part.property().service( PossibleValuesService.class ) != null );
     }
 
 }

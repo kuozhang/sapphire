@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.samples.gallery.internal.ElementPropertyCustomGaller
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ElementPropertyCustomGallery extends IModelElement
+public interface ElementPropertyCustomGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ElementPropertyCustomGallery.class );
+    ElementType TYPE = new ElementType( ElementPropertyCustomGallery.class );
     
     // *** AllowChildElementWithInteger ***
     
@@ -77,6 +77,6 @@ public interface ElementPropertyCustomGallery extends IModelElement
     
     ElementProperty PROP_ELEMENT = new ElementProperty( TYPE, "Element" );
     
-    ModelElementHandle<IChildElement> getElement();
+    ElementHandle<IChildElement> getElement();
 
 }

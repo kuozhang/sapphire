@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -19,6 +19,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 
 public interface EditorPageState extends AttributesContainer
 {
-    ModelElementType TYPE = new ModelElementType( EditorPageState.class );
+    ElementType TYPE = new ElementType( EditorPageState.class );
     
 }

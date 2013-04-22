@@ -15,8 +15,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 
@@ -27,8 +32,8 @@ import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationServ
 public abstract class Resource
 {
     private final Resource parent;
-    private IModelElement element;
-    private final Map<ModelProperty,BindingImpl> bindings = new HashMap<ModelProperty,BindingImpl>();
+    private Element element;
+    private final Map<PropertyDef,BindingImpl> bindings = new HashMap<PropertyDef,BindingImpl>();
     private CorruptedResourceExceptionInterceptor corruptedResourceExceptionInterceptor;
     private final Map<Locale,LocalizationService> localizationServices = new HashMap<Locale,LocalizationService>();
     
@@ -37,7 +42,7 @@ public abstract class Resource
         this.parent = parent;
     }
     
-    public void init( final IModelElement element )
+    public void init( final Element element )
     {
         if( this.element != null )
         {
@@ -64,27 +69,27 @@ public abstract class Resource
         }
     }
     
-    public final IModelElement element()
+    public final Element element()
     {
         return this.element;
     }
     
     public final ValueBindingImpl binding( final ValueProperty property )
     {
-        return (ValueBindingImpl) binding( (ModelProperty) property );
+        return (ValueBindingImpl) binding( (PropertyDef) property );
     }
     
     public final ElementBindingImpl binding( final ElementProperty property )
     {
-        return (ElementBindingImpl) binding( (ModelProperty) property );
+        return (ElementBindingImpl) binding( (PropertyDef) property );
     }
     
     public final ListBindingImpl binding( final ListProperty property )
     {
-        return (ListBindingImpl) binding( (ModelProperty) property );
+        return (ListBindingImpl) binding( (PropertyDef) property );
     }
     
-    public final BindingImpl binding( final ModelProperty property )
+    public final BindingImpl binding( final PropertyDef property )
     {
         BindingImpl binding = this.bindings.get( property );
         
@@ -103,7 +108,7 @@ public abstract class Resource
         return binding;
     }
     
-    protected abstract BindingImpl createBinding( final ModelProperty property );
+    protected abstract BindingImpl createBinding( final PropertyDef property );
     
     /**
      * @throws ResourceStoreException  

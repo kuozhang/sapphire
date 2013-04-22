@@ -13,11 +13,11 @@ package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -41,10 +41,9 @@ public final class ReferenceValidationService extends ValidationService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
+        final Property property = context( Property.class );
         
-        this.referenceService = element.service( property, ReferenceService.class );
+        this.referenceService = property.service( ReferenceService.class );
         
         if( this.referenceService != null )
         {
@@ -64,13 +63,13 @@ public final class ReferenceValidationService extends ValidationService
     @Override
     public Status validate()
     {
-        final ReferenceValue<?,?> value = (ReferenceValue<?,?>) context( IModelElement.class ).read( context( ValueProperty.class ) );
+        final ReferenceValue<?,?> value = context( ReferenceValue.class );
         
-        if( value.resolve() == null && value.getText() != null )
+        if( value.resolve() == null && value.text() != null )
         {
-            final ValueProperty property = value.property();
+            final ValueProperty property = value.definition();
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
-            final String str = value.getText();
+            final String str = value.text();
             final String msg = NLS.bind( Resources.message, label, str );
             return Status.createErrorStatus( msg );
         }

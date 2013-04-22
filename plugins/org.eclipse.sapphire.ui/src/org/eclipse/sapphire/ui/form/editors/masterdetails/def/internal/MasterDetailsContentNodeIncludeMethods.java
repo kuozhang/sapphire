@@ -24,7 +24,7 @@ public final class MasterDetailsContentNodeIncludeMethods
     public static MasterDetailsContentNodeChildDef resolve( final MasterDetailsContentNodeInclude ref )
     {
         final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return (MasterDetailsContentNodeChildDef) rootdef.getPartDef( ref.getPart().getText(), true, MasterDetailsContentNodeChildDef.class );
+        return (MasterDetailsContentNodeChildDef) rootdef.getPartDef( ref.getPart().text(), true, MasterDetailsContentNodeChildDef.class );
     }
     
 }

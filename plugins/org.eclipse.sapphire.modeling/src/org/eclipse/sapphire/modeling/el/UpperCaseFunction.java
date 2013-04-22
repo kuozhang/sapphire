@@ -34,7 +34,7 @@ public final class UpperCaseFunction extends Function
             @Override
             protected Object evaluate()
             {
-                return cast( operand( 0 ).value(), String.class ).toUpperCase();
+                return cast( operand( 0 ), String.class ).toUpperCase();
             }
         };
     }

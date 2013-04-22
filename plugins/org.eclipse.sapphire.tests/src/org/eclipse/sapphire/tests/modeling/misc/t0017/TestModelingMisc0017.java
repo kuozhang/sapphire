@@ -50,7 +50,7 @@ public final class TestModelingMisc0017 extends SapphireTestCase
     public void testAccessToEnablementDuringValidation2() throws Exception
     {
         final TestElement element = TestElement.TYPE.instantiate();
-        element.enabled( TestElement.PROP_VALUE );
+        element.property( TestElement.PROP_VALUE ).enabled();
     }
 
 }

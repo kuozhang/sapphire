@@ -14,15 +14,15 @@ package org.eclipse.sapphire.workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.sapphire.FileName;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Transient;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Transient;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
@@ -43,7 +43,7 @@ import org.eclipse.sapphire.workspace.internal.CreateWorkspaceFileOpServices.Fol
 
 public interface CreateWorkspaceFileOp extends IExecutableModelElement
 {
-    ModelElementType TYPE = new ModelElementType( CreateWorkspaceFileOp.class );
+    ElementType TYPE = new ElementType( CreateWorkspaceFileOp.class );
     
     static final String PROBLEM_FILE_EXISTS = "Sapphire.Workspace.CreateFileOp.FileExists";
     

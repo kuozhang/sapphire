@@ -58,10 +58,10 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Bounds;
@@ -152,7 +152,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette implements ISapphireEditorActionContributor, EditorPagePresentation
 {
     private final SapphireEditor editor;
-    private IModelElement element;
+    private Element element;
     private DefinitionLoader.Reference<EditorPageDef> definition;
     private SapphireDiagramEditorPagePart part;
     
@@ -187,7 +187,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	private boolean isSelectionFromPagePart = false;
 	
 	public SapphireDiagramEditor( final SapphireEditor editor,
-                                  final IModelElement element,
+                                  final Element element,
                                   final DefinitionLoader.Reference<EditorPageDef> definition )
 	{
         if( editor == null )
@@ -212,7 +212,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         this.part = new SapphireDiagramEditorPagePart();
 		this.part.init( editor, this.element, this.definition.resolve(), Collections.<String, String> emptyMap() );
         
-        final String partName = this.definition.resolve().getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        final String partName = this.definition.resolve().getPageName().localized( CapitalizationType.TITLE_STYLE, false );
         setPartName( partName );
 
 		// Initialize layout persistence service
@@ -463,7 +463,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         return this.part;
     }
     
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return this.part.getModelElement();
     }
@@ -514,8 +514,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		if (diagramModel == null) {
 			return;
 		}
-		IModelElement endpoint1 = connPart.getEndpoint1();
-		IModelElement endpoint2 = connPart.getEndpoint2();
+		Element endpoint1 = connPart.getEndpoint1();
+		Element endpoint2 = connPart.getEndpoint2();
 		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
 		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
 		GraphicalEditPart node1 = getGraphicalEditPart(nodePart1);
@@ -540,8 +540,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	{
 		// Check whether the end points have truely changed		
 				
-		IModelElement endpoint1 = connPart.getEndpoint1();
-		IModelElement endpoint2 = connPart.getEndpoint2();
+		Element endpoint1 = connPart.getEndpoint1();
+		Element endpoint2 = connPart.getEndpoint2();
 		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
 		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
 		GraphicalEditPart newSrcNode = getGraphicalEditPart(nodePart1);
@@ -1025,7 +1025,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		// context button manager
 		contextButtonManager = new ContextButtonManager(this);
 		
-		final int zoomLevel = getPart().state().getZoomLevel().getContent();
+		final int zoomLevel = getPart().state().getZoomLevel().content();
 		final double zoom = (double) zoomLevel / 100;
         
         getZoomManager().setZoom( zoom );

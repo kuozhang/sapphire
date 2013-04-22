@@ -15,10 +15,10 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ModelRelativePath;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -33,7 +33,7 @@ public final class ModelRelativePathService extends RelativePathService
     @Override
     public List<Path> roots()
     {
-        final File file = context( IModelElement.class ).adapt( File.class );
+        final File file = context( Element.class ).adapt( File.class );
         
         if( file == null )
         {

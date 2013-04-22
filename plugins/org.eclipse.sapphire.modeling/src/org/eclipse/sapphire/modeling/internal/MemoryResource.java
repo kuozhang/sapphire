@@ -14,17 +14,17 @@ package org.eclipse.sapphire.modeling.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.ElementBindingImpl;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
-import org.eclipse.sapphire.modeling.ValueProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -37,21 +37,21 @@ public final class MemoryResource
 {
     private static final String[] EMPTY_PARAMS = new String[ 0 ];
     
-    private final ModelElementType type;
+    private final ElementType type;
     
-    public MemoryResource( final ModelElementType type )
+    public MemoryResource( final ElementType type )
     {
         this( type, null );
     }
     
-    public MemoryResource( final ModelElementType type,
+    public MemoryResource( final ElementType type,
                            final MemoryResource parent )
     {
         super( parent );
         this.type = type;
     }
     
-    public ModelElementType type()
+    public ElementType type()
     {
         return this.type;
     }
@@ -69,7 +69,7 @@ public final class MemoryResource
     }
     
     @Override
-    protected BindingImpl createBinding( final ModelProperty property )
+    protected BindingImpl createBinding( final PropertyDef property )
     {
         BindingImpl binding = null;
         
@@ -99,7 +99,7 @@ public final class MemoryResource
                 private final MemoryResource element = new MemoryResource( property.getType(), MemoryResource.this );
                 
                 @Override
-                public ModelElementType type( final Resource resource )
+                public ElementType type( final Resource resource )
                 {
                     return ( (MemoryResource) resource ).type();
                 }
@@ -118,7 +118,7 @@ public final class MemoryResource
                 private MemoryResource element;
                 
                 @Override
-                public ModelElementType type( final Resource resource )
+                public ElementType type( final Resource resource )
                 {
                     return ( (MemoryResource) resource ).type();
                 }
@@ -130,7 +130,7 @@ public final class MemoryResource
                 }
 
                 @Override
-                public Resource create( ModelElementType type )
+                public Resource create( ElementType type )
                 {
                     this.element = new MemoryResource( type, MemoryResource.this );
                     return this.element;
@@ -141,12 +141,6 @@ public final class MemoryResource
                 {
                     this.element = null;
                 }
-
-                @Override
-                public boolean removable()
-                {
-                    return true;
-                }
             };
         }
         else if( property instanceof ListProperty )
@@ -156,7 +150,7 @@ public final class MemoryResource
                 private final List<Resource> list = new ArrayList<Resource>();
                 
                 @Override
-                public ModelElementType type( final Resource resource )
+                public ElementType type( final Resource resource )
                 {
                     return ( (MemoryResource) resource ).type();
                 }
@@ -168,7 +162,7 @@ public final class MemoryResource
                 }
 
                 @Override
-                public Resource insert( final ModelElementType type,
+                public Resource insert( final ElementType type,
                                         final int position )
                 {
                     final MemoryResource resource = new MemoryResource( type, MemoryResource.this );

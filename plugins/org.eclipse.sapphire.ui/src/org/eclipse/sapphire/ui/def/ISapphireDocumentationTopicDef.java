@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @Label( standard = "related topic" )
 
-public interface ISapphireDocumentationTopicDef extends IModelElement
+public interface ISapphireDocumentationTopicDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireDocumentationTopicDef.class );
+    ElementType TYPE = new ElementType( ISapphireDocumentationTopicDef.class );
  
     // *** Label ***
     

@@ -23,13 +23,13 @@ import java.util.SortedSet;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -48,16 +48,16 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
     private Listener possibleTypesServiceListener;
     protected XmlPath path;
     protected QName[] xmlElementNames;
-    protected ModelElementType[] modelElementTypes;
+    protected ElementType[] modelElementTypes;
 
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         super.init( element, property, params );
         
-        this.possibleTypesService = element.service( property, PossibleTypesService.class );
+        this.possibleTypesService = element.property( property ).service( PossibleTypesService.class );
         
         this.possibleTypesServiceListener = new Listener()
         {
@@ -70,7 +70,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
                 }
                 catch( Exception e )
                 {
-                    final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.getName(), e.getMessage() );
+                    final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.name(), e.getMessage() );
                     LoggingService.log( Status.createErrorStatus( msg ) );
                 }
             }
@@ -84,24 +84,24 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.getName(), e.getMessage() );
+            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.name(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }
     
-    protected void initBindingMetadata( final IModelElement element,
-                                        final ModelProperty property,
+    protected void initBindingMetadata( final Element element,
+                                        final PropertyDef property,
                                         final String[] params )
     {
         final XmlListBinding annotation = property.getAnnotation( XmlListBinding.class );
         final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
         
-        final SortedSet<ModelElementType> possible = this.possibleTypesService.types();
-        this.modelElementTypes = possible.toArray( new ModelElementType[ possible.size() ] );
+        final SortedSet<ElementType> possible = this.possibleTypesService.types();
+        this.modelElementTypes = possible.toArray( new ElementType[ possible.size() ] );
 
         if( annotation == null )
         {
-            this.path = new XmlPath( property.getName(), xmlNamespaceResolver );
+            this.path = new XmlPath( property.name(), xmlNamespaceResolver );
             
             this.xmlElementNames = new QName[ this.modelElementTypes.length ];
             
@@ -122,7 +122,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
             
             for( int i = 0; i < this.modelElementTypes.length; i++ )
             {
-                final ModelElementType type = this.modelElementTypes[ i ];
+                final ElementType type = this.modelElementTypes[ i ];
                         
                 for( XmlListBinding.Mapping mapping : mappings )
                 {
@@ -158,14 +158,14 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
      * @return the qualified XML element name for the given model element type
      */
     
-    protected QName createDefaultElementName( final ModelElementType type, 
+    protected QName createDefaultElementName( final ElementType type, 
                                               final XmlNamespaceResolver xmlNamespaceResolver )
     {
         return XmlUtil.createDefaultElementName( type );
     }
 
     @Override
-    public ModelElementType type( final Resource resource )
+    public ElementType type( final Resource resource )
     {
         final XmlElement xmlElement = ( (XmlResource) resource ).getXmlElement();
         final QName xmlElementName = createQualifiedName( xmlElement.getDomNode() );
@@ -219,7 +219,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
     }
 
     @Override
-    protected Object insertUnderlyingObject( final ModelElementType type,
+    protected Object insertUnderlyingObject( final ElementType type,
                                              final int position )
     {
         final XmlElement parent = getXmlElement( true );

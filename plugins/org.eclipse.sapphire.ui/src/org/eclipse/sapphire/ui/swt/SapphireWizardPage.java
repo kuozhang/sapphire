@@ -47,7 +47,7 @@ public class SapphireWizardPage extends WizardPage
     
     public SapphireWizardPage( final SapphireWizardPagePart part )
     {
-        super( part.definition().getId().getContent() );
+        super( part.definition().getId().content() );
         
         this.part = part;
         
@@ -137,7 +137,7 @@ public class SapphireWizardPage extends WizardPage
             }
         );
         
-        final ISapphireDocumentation doc = this.part.definition().getDocumentation().element();
+        final ISapphireDocumentation doc = this.part.definition().getDocumentation().content();
         
         if( doc != null )
         {
@@ -180,7 +180,7 @@ public class SapphireWizardPage extends WizardPage
         
         if( visible )
         {
-            final String initialFocusProperty = this.part.definition().getInitialFocus().getContent();
+            final String initialFocusProperty = this.part.definition().getInitialFocus().content();
             
             if( initialFocusProperty != null )
             {

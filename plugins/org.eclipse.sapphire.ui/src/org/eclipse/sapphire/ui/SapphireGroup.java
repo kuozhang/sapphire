@@ -38,7 +38,7 @@ public class SapphireGroup extends CompositePart
     {
         final ISapphireGroupDef def = (ISapphireGroupDef) this.definition;
         
-        String label = MiscUtil.normalizeToEmptyString( def.getLabel().getLocalizedText() );
+        String label = MiscUtil.normalizeToEmptyString( def.getLabel().localized() );
         
         if( label.length() != 0 ) 
         {

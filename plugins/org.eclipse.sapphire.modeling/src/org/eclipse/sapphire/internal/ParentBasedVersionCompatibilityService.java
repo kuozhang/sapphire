@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.VersionCompatibilityService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -36,21 +36,9 @@ public final class ParentBasedVersionCompatibilityService extends VersionCompati
     @Override
     protected void initVersionCompatibilityService()
     {
-        final IModelElement element = context( IModelElement.class );
-        final IModelParticle parentModelParticle = element.parent();
+        final Property parent = context( Element.class ).parent();
         
-        final IModelElement parentModelElement;
-        
-        if( parentModelParticle instanceof IModelElement )
-        {
-            parentModelElement = (IModelElement) parentModelParticle;
-        }
-        else
-        {
-            parentModelElement = (IModelElement) parentModelParticle.parent();
-        }
-        
-        this.parentVersionCompatibilityService = parentModelElement.service( element.getParentProperty(), MasterVersionCompatibilityService.class );
+        this.parentVersionCompatibilityService = parent.service( MasterVersionCompatibilityService.class );
         
         this.parentVersionCompatibilityServiceListener = new Listener()
         {
@@ -87,7 +75,7 @@ public final class ParentBasedVersionCompatibilityService extends VersionCompati
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return ( context.find( IModelElement.class ).parent() != null );
+            return ( context.find( Element.class ).parent() != null );
         }
 
         @Override

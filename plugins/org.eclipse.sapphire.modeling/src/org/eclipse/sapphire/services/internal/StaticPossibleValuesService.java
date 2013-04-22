@@ -14,8 +14,8 @@ package org.eclipse.sapphire.services.internal;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;

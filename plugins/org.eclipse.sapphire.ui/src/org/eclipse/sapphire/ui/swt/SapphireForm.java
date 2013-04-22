@@ -15,7 +15,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.Collections;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.FormComponentPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -32,13 +32,13 @@ import org.eclipse.swt.widgets.Composite;
 
 public final class SapphireForm extends Composite
 {
-    private IModelElement element;
+    private Element element;
     private DefinitionLoader.Reference<FormComponentDef> definition;
     private FormComponentPart part;
     private SapphireRenderingContext context;
     
     public SapphireForm( final Composite parent,
-                         final IModelElement element,
+                         final Element element,
                          final DefinitionLoader.Reference<FormComponentDef> definition )
     {
         super( parent, SWT.NONE );
@@ -83,7 +83,7 @@ public final class SapphireForm extends Composite
         );
     }
     
-    public IModelElement element()
+    public Element element()
     {
         return this.element;
     }

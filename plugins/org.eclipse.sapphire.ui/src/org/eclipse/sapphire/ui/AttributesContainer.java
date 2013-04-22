@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -26,15 +26,15 @@ import org.eclipse.sapphire.ui.internal.AttributesContainerMethods;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface AttributesContainer extends IModelElement
+public interface AttributesContainer extends Element
 {
-    ModelElementType TYPE = new ModelElementType( AttributesContainer.class );
+    ElementType TYPE = new ElementType( AttributesContainer.class );
     
     // *** Attributes ***
     
-    interface Attribute extends IModelElement
+    interface Attribute extends Element
     {
-        ModelElementType TYPE = new ModelElementType( AttributesContainer.Attribute.class );
+        ElementType TYPE = new ElementType( AttributesContainer.Attribute.class );
         
         // *** Name ***
         
@@ -59,7 +59,7 @@ public interface AttributesContainer extends IModelElement
 
     ListProperty PROP_ATTRIBUTES = new ListProperty( TYPE, "Attributes" );
     
-    ModelElementList<Attribute> getAttributes();
+    ElementList<Attribute> getAttributes();
     
     // *** Method: getAttribute ***
     

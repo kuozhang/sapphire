@@ -35,9 +35,10 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.sapphire.PropertyVisitor;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.FileResourceStore;
-import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
@@ -54,6 +55,7 @@ import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaO
 import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp.Exclusion;
 import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp.Exclusion.ExclusionType;
 import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp.TypeSubstitution;
+import org.eclipse.sapphire.util.SetFactory;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -82,7 +84,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
         
         try
         {
-            final Path sourceSchemaFilePath = operation.getSourceFile().getContent();
+            final Path sourceSchemaFilePath = operation.getSourceFile().content();
             
             final PersistedState state = PersistedStateManager.load( sourceSchemaFilePath );
             
@@ -90,10 +92,10 @@ public final class CreateNormalizedXmlSchemaOpMethods
             {
                 try
                 {
-                    state.copy( operation, CreateNormalizedXmlSchemaOp.PROP_ROOT_ELEMENTS );
-                    state.copy( operation, CreateNormalizedXmlSchemaOp.PROP_EXCLUSIONS );
-                    state.copy( operation, CreateNormalizedXmlSchemaOp.PROP_TYPE_SUBSTITUTIONS );
-                    state.copy( operation, CreateNormalizedXmlSchemaOp.PROP_SORT_SEQUENCE_CONTENT );
+                    state.property( PersistedState.PROP_ROOT_ELEMENTS ).copy( operation );
+                    state.property( PersistedState.PROP_EXCLUSIONS ).copy( operation );
+                    state.property( PersistedState.PROP_TYPE_SUBSTITUTIONS ).copy( operation );
+                    state.property( PersistedState.PROP_SORT_SEQUENCE_CONTENT ).copy( operation );
                     state.resource().save();
                 }
                 catch( ResourceStoreException e )
@@ -254,7 +256,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
                 
                 for( TypeSubstitution sub : operation.getTypeSubstitutions() )
                 {
-                    typeSubstitutions.put( sub.getBefore().getContent(), sub.getAfter().getContent() );
+                    typeSubstitutions.put( sub.getBefore().content(), sub.getAfter().content() );
                 }
                 
                 applyTypeSubstitutions( root, typeSubstitutions );
@@ -286,11 +288,26 @@ public final class CreateNormalizedXmlSchemaOpMethods
                 
                 // If root elements are specified, remove all other top-level elements.
                 
-                final Set<String> roots = new HashSet<String>();
-                operation.read( new ModelPath( "RootElements/Name" ), roots );
-
-                if( ! roots.isEmpty() )
+                if( ! operation.getRootElements().empty() )
                 {
+                    final SetFactory<String> rootsFactory = SetFactory.start();
+                    
+                    operation.visit
+                    (
+                        "RootElements/Name",
+                        new PropertyVisitor()
+                        {
+                            @Override
+                            public boolean visit( final Value<?> property )
+                            {
+                                rootsFactory.add( property.text() );
+                                return true;
+                            }
+                        }
+                    );
+                    
+                    final Set<String> roots = rootsFactory.result();
+                            
                     for( XmlElement element : root.getChildElements() )
                     {
                         final String elname = element.getLocalName();
@@ -305,7 +322,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
                 sortChoiceContent( root );
                 sortElementContent( root );
                 
-                if( operation.getSortSequenceContent().getContent() )
+                if( operation.getSortSequenceContent().content() )
                 {
                     sortSequenceContent( root );
                 }
@@ -449,13 +466,13 @@ public final class CreateNormalizedXmlSchemaOpMethods
     private static void exclude( final XmlElement element,
                                  final Exclusion exclusion )
     {
-        if( exclusion.getType().getContent() == ExclusionType.ATTRIBUTE )
+        if( exclusion.getType().content() == ExclusionType.ATTRIBUTE )
         {
-            excludeAttributes( element, exclusion.getName().getContent() );
+            excludeAttributes( element, exclusion.getName().content() );
         }
         else
         {
-            excludeElements( element, exclusion.getName().getContent() );
+            excludeElements( element, exclusion.getName().content() );
         }
     }
 

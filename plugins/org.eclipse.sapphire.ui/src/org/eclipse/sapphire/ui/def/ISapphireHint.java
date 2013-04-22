@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -32,9 +32,9 @@ import org.eclipse.sapphire.ui.def.internal.SapphireHintValuePossibleValuesServi
 
 @Label( standard = "hint" )
 
-public interface ISapphireHint extends IModelElement
+public interface ISapphireHint extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireHint.class );
+    ElementType TYPE = new ElementType( ISapphireHint.class );
     
     // *** Name ***
     

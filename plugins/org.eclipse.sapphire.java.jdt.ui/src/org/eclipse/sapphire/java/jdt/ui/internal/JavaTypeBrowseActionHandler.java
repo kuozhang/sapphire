@@ -19,11 +19,10 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
@@ -58,8 +57,7 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
     @Override
     public String browse( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
-        final ModelProperty property = getProperty();
+        final Property property = property();
         
         final EnumSet<JavaTypeKind> kinds = EnumSet.noneOf( JavaTypeKind.class );
         
@@ -98,7 +96,7 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
         }
         else
         {
-            final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
+            final JavaTypeConstraintService javaTypeConstraintService = property.service( JavaTypeConstraintService.class );
             
             if( javaTypeConstraintService != null )
             {
@@ -138,14 +136,14 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
             }
         }
 
-        final IProject project = element.adapt( IProject.class );
+        final IProject project = property.element().adapt( IProject.class );
         
         try 
         {
             final SelectionDialog dlg 
                 = JavaUI.createTypeDialog( context.getShell(), null, project, browseDialogStyle, false );
             
-            final String title = property.getLabel( true, CapitalizationType.TITLE_STYLE, false );
+            final String title = property.definition().getLabel( true, CapitalizationType.TITLE_STYLE, false );
             dlg.setTitle(Resources.select + title);
             
             if (dlg.open() == SelectionDialog.OK) {

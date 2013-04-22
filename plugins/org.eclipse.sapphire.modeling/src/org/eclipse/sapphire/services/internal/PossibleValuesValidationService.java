@@ -11,12 +11,13 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.Service;
@@ -38,10 +39,7 @@ public final class PossibleValuesValidationService extends ValidationService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
-        
-        this.possibleValuesService = element.service( property, PossibleValuesService.class );
+        this.possibleValuesService = context( Property.class ).service( PossibleValuesService.class );
         
         if( this.possibleValuesService != null )
         {
@@ -61,10 +59,10 @@ public final class PossibleValuesValidationService extends ValidationService
     @Override
     public Status validate()
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         final ValueProperty property = context( ValueProperty.class );
-        final Value<?> value = element.read( property );
-        final String valueString = value.getText( true );
+        final Value<?> value = element.property( property );
+        final String valueString = value.text( true );
         
         if( valueString != null && this.possibleValuesService != null )
         {
@@ -100,19 +98,8 @@ public final class PossibleValuesValidationService extends ValidationService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            
-            if( property != null )
-            {
-                final IModelElement element = context.find( IModelElement.class );
-                
-                if( element.service( property, PossibleValuesService.class ) != null && element.service( property, ReferenceService.class ) == null )
-                {
-                    return true;
-                }
-            }
-            
-            return false;
+            final Property property = context.find( Property.class );
+            return ( property != null && property.definition() instanceof ValueProperty && property.service( PossibleValuesService.class ) != null && property.service( ReferenceService.class ) == null );
         }
 
         @Override

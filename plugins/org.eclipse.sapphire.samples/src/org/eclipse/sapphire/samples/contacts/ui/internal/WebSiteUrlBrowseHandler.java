@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.contacts.ui.internal;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.SWT;
@@ -31,15 +31,12 @@ import org.eclipse.swt.widgets.Text;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class WebSiteUrlBrowseHandler
-
-    extends SapphireBrowseActionHandler
-    
+public final class WebSiteUrlBrowseHandler extends SapphireBrowseActionHandler
 {
     @Override
     public String browse( final SapphireRenderingContext context )
     {
-        String val = getModelElement().read( (ValueProperty) getProperty() ).getText( true );
+        String val = ( (Value<?>) property() ).text( true );
         val = ( val == null ? "" : val );
         
         final WebSiteUrlDialog dialog = new WebSiteUrlDialog( context.getShell(), val );

@@ -123,7 +123,7 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
         	{
         		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
         		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
-        		if (pageDef.getLayoutPersistence().getContent() == LayoutPersistence.PROJECT)
+        		if (pageDef.getLayoutPersistence().content() == LayoutPersistence.PROJECT)
         		{
         			return true;
         		}

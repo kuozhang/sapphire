@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.tests.workspace.t0002;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.workspace.ProjectRelativePath;
 import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
@@ -24,9 +24,9 @@ import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestRootElement extends IModelElement
+public interface TestRootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestRootElement.class );
+    ElementType TYPE = new ElementType( TestRootElement.class );
     
     // *** ProjectRelativePath ***
     

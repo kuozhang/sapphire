@@ -16,7 +16,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,5 +27,5 @@ import org.eclipse.sapphire.modeling.IModelElement;
 
 public @interface WorkspaceFileType
 {
-    Class<? extends IModelElement> value();
+    Class<? extends Element> value();
 }

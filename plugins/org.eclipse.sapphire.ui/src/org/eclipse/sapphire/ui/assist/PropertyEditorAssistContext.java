@@ -15,10 +15,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,15 +29,15 @@ import org.eclipse.swt.widgets.Shell;
 public final class PropertyEditorAssistContext
 {
     private final SapphirePart part;
-    private final IModelElement element;
-    private final ModelProperty property;
+    private final Element element;
+    private final Property property;
     private final SapphireRenderingContext context;
     private final LinkedHashMap<String,PropertyEditorAssistSection> sections; 
     private final Map<String,PropertyEditorAssistSection> sectionsReadOnly; 
     
     public PropertyEditorAssistContext( final SapphirePart part,
-                                        final IModelElement element,
-                                        final ModelProperty property,
+                                        final Element element,
+                                        final Property property,
                                         final SapphireRenderingContext context )
     {
         this.part = part;
@@ -53,12 +53,12 @@ public final class PropertyEditorAssistContext
         return this.part;
     }
     
-    public IModelElement getModelElement()
+    public Element element()
     {
         return this.element;
     }
     
-    public ModelProperty getProperty()
+    public Property property()
     {
         return this.property;
     }
@@ -71,7 +71,7 @@ public final class PropertyEditorAssistContext
         }
         else
         {
-            return this.property != null ? this.property.isReadOnly() : false;
+            return this.property != null ? this.property.definition().isReadOnly() : false;
         }
     }
     

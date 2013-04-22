@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -35,9 +35,9 @@ import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ListPropertiesGallery extends IModelElement
+public interface ListPropertiesGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ListPropertiesGallery.class );
+    ElementType TYPE = new ElementType( ListPropertiesGallery.class );
     
     // *** Enabled ***
 
@@ -59,7 +59,7 @@ public interface ListPropertiesGallery extends IModelElement
     
     ListProperty PROP_HOMOGENEOUS = new ListProperty( TYPE, "Homogeneous" );
     
-    ModelElementList<IChildElement> getHomogeneous();
+    ElementList<IChildElement> getHomogeneous();
     
     // *** HomogeneousWithJavaType ***
     
@@ -70,7 +70,7 @@ public interface ListPropertiesGallery extends IModelElement
     
     ListProperty PROP_HOMOGENEOUS_WITH_JAVA_TYPE = new ListProperty( TYPE, "HomogeneousWithJavaType" );
     
-    ModelElementList<IListItemWithJavaType> getHomogeneousWithJavaType();
+    ElementList<IListItemWithJavaType> getHomogeneousWithJavaType();
 
     // *** Heterogeneous ***
     
@@ -90,7 +90,7 @@ public interface ListPropertiesGallery extends IModelElement
     
     ListProperty PROP_HETEROGENEOUS = new ListProperty( TYPE, "Heterogeneous" );
     
-    ModelElementList<IChildElement> getHeterogeneous();
+    ElementList<IChildElement> getHeterogeneous();
     
     // *** CustomPossibleTypes ***
     
@@ -103,9 +103,9 @@ public interface ListPropertiesGallery extends IModelElement
     
     // *** MultiSelectString ***
     
-    interface MultiSelectStringItem extends IModelElement
+    interface MultiSelectStringItem extends Element
     {
-        ModelElementType TYPE = new ModelElementType( MultiSelectStringItem.class );
+        ElementType TYPE = new ElementType( MultiSelectStringItem.class );
         
         // *** Item ***
         
@@ -126,13 +126,13 @@ public interface ListPropertiesGallery extends IModelElement
     
     ListProperty PROP_MULTI_SELECT_STRING = new ListProperty( TYPE, "MultiSelectString" );
     
-    ModelElementList<MultiSelectStringItem> getMultiSelectString();
+    ElementList<MultiSelectStringItem> getMultiSelectString();
     
     // *** MultiSelectEnum ***
     
-    interface MultiSelectEnumItem extends IModelElement
+    interface MultiSelectEnumItem extends Element
     {
-        ModelElementType TYPE = new ModelElementType( MultiSelectEnumItem.class );
+        ElementType TYPE = new ElementType( MultiSelectEnumItem.class );
         
         // *** Item ***
         
@@ -153,7 +153,7 @@ public interface ListPropertiesGallery extends IModelElement
     
     ListProperty PROP_MULTI_SELECT_ENUM = new ListProperty( TYPE, "MultiSelectEnum" );
     
-    ModelElementList<MultiSelectEnumItem> getMultiSelectEnum();
+    ElementList<MultiSelectEnumItem> getMultiSelectEnum();
     
     // *** NestedPropertiesInListGallery ***
     

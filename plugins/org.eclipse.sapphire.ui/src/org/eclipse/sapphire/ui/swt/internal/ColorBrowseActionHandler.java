@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.ui.swt.internal;
 
 import org.eclipse.sapphire.Color;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
@@ -35,8 +35,7 @@ public final class ColorBrowseActionHandler extends SapphireBrowseActionHandler
     @Override
     protected String browse( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
-        final ValueProperty property = getProperty();
+        final Property property = property();
         
         final Shell parent = context.getShell();
         final Rectangle bounds = parent.getBounds();
@@ -56,8 +55,8 @@ public final class ColorBrowseActionHandler extends SapphireBrowseActionHandler
             
             final ColorDialog dialog = new ColorDialog( shell );
             
-            dialog.setText( property.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
-            dialog.setRGB( convert( (Color) element.read( property ).getContent() ) );
+            dialog.setText( property.definition().getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
+            dialog.setRGB( convert( (Color) ( (Value<?>) property ).content() ) );
             
             final RGB pickedColor = dialog.open();
             
@@ -89,7 +88,7 @@ public final class ColorBrowseActionHandler extends SapphireBrowseActionHandler
         @Override
         protected boolean evaluate( final PropertyEditorPart part )
         {
-            return ( part.getProperty().getTypeClass() == Color.class );
+            return ( part.property().definition().getTypeClass() == Color.class );
         }
     }
     

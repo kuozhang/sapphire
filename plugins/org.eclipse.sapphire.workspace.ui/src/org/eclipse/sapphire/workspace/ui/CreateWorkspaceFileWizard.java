@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.osgi.BundleBasedContext;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.WizardDef;
@@ -41,7 +41,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
 {
     private String editor;
     
-    public CreateWorkspaceFileWizard( final ModelElementType type,
+    public CreateWorkspaceFileWizard( final ElementType type,
                                       final DefinitionLoader.Reference<WizardDef> definition )
     {
         super( type, definition );
@@ -59,7 +59,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
     }
     
     @Override
-    protected void init( final ModelElementType type,
+    protected void init( final ElementType type,
                          final DefinitionLoader.Reference<WizardDef> definition )
     {
         if( type == null )
@@ -115,7 +115,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
             final DefinitionLoader.Reference<WizardDef> definition = DefinitionLoader.context( context ).sdef( sdef ).wizard();
             
             final JavaType operationJavaType = definition.resolve().getElementType().resolve();
-            final ModelElementType operationElementType = ModelElementType.read( operationJavaType.artifact(), true );
+            final ElementType operationElementType = ElementType.read( operationJavaType.artifact(), true );
     
             init( operationElementType, definition );
             

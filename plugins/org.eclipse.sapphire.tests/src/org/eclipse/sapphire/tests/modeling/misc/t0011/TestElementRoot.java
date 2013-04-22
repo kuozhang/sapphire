@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0011;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @XmlBinding( path = "root" )
 
-public interface TestElementRoot extends IModelElement
+public interface TestElementRoot extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElementRoot.class );
+    ElementType TYPE = new ElementType( TestElementRoot.class );
     
     // *** Children ***
     
@@ -37,6 +37,6 @@ public interface TestElementRoot extends IModelElement
 
     ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
     
-    ModelElementList<TestElementChild> getChildren();
+    ElementList<TestElementChild> getChildren();
 
 }

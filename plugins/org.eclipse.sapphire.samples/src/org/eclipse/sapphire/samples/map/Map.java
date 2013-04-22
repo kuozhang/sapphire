@@ -13,10 +13,10 @@
 
 package org.eclipse.sapphire.samples.map;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -31,9 +31,9 @@ import org.eclipse.sapphire.samples.map.internal.MapMethods;
 
 @XmlBinding( path = "map")
 
-public interface Map extends IModelElement
+public interface Map extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Map.class );
+    ElementType TYPE = new ElementType( Map.class );
     
     // *** Locations ***
 
@@ -42,7 +42,7 @@ public interface Map extends IModelElement
     
     ListProperty PROP_LOCATIONS = new ListProperty( TYPE, "Locations" );
     
-    ModelElementList<Location> getLocations();
+    ElementList<Location> getLocations();
     
     // ** Method: findLocation
     
@@ -63,6 +63,6 @@ public interface Map extends IModelElement
     
     ListProperty PROP_ROUTES = new ListProperty( TYPE, "Routes" );
     
-    ModelElementList<Route> getRoutes();
+    ElementList<Route> getRoutes();
     
 }

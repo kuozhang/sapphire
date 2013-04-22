@@ -169,7 +169,7 @@ public class ShapeUtil {
 		Object layoutConstraint = null;
 		if (layoutDef instanceof SequenceLayoutDef)
 		{
-			if (((SequenceLayoutDef)layoutDef).getOrientation().getContent() != SequenceLayoutOrientation.STACKED)
+			if (((SequenceLayoutDef)layoutDef).getOrientation().content() != SequenceLayoutOrientation.STACKED)
 			{
 				SequenceLayoutConstraintDef def = (SequenceLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
 				layoutConstraint = new SapphireSequenceLayoutConstraint(def);
@@ -184,12 +184,12 @@ public class ShapeUtil {
 					if (constraintDef != null)
 					{
 						constraint = new SapphireStackLayoutConstraint(
-								constraintDef.getHorizontalAlignment().getContent(),
-								constraintDef.getVerticalAlignment().getContent(),
-								constraintDef.getTopMargin().getContent(),
-								constraintDef.getBottomMargin().getContent(),
-								constraintDef.getLeftMargin().getContent(),
-								constraintDef.getRightMargin().getContent());
+								constraintDef.getHorizontalAlignment().content(),
+								constraintDef.getVerticalAlignment().content(),
+								constraintDef.getTopMargin().content(),
+								constraintDef.getBottomMargin().content(),
+								constraintDef.getLeftMargin().content(),
+								constraintDef.getRightMargin().content());
 					}
 					else
 					{
@@ -205,7 +205,7 @@ public class ShapeUtil {
 	public static int getTextAlignment(LayoutConstraintDef constraint)
 	{
 		int alignment = PositionConstants.CENTER;
-		HorizontalAlignment sapphireAlign = constraint.getHorizontalAlignment().getContent();
+		HorizontalAlignment sapphireAlign = constraint.getHorizontalAlignment().content();
 		switch (sapphireAlign) 
 		{
 			case LEFT:

@@ -14,19 +14,19 @@ package org.eclipse.sapphire.samples.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Validation;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityTarget;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Derived;
@@ -43,9 +43,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 @Service( impl = PurchaseOrderResourceConversionService.class )
 @VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
 
-public interface PurchaseOrder extends IModelElement
+public interface PurchaseOrder extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );
+    ElementType TYPE = new ElementType( PurchaseOrder.class );
     
     // *** Version ***
     
@@ -140,7 +140,7 @@ public interface PurchaseOrder extends IModelElement
     
     ElementProperty PROP_PAYMENT = new ElementProperty( TYPE, "Payment" );
     
-    ModelElementHandle<Payment> getPayment();
+    ElementHandle<Payment> getPayment();
     
     // *** Entries ***
     
@@ -150,7 +150,7 @@ public interface PurchaseOrder extends IModelElement
     
     ListProperty PROP_ENTRIES = new ListProperty( TYPE, "Entries" );
     
-    ModelElementList<PurchaseOrderEntry> getEntries();
+    ElementList<PurchaseOrderEntry> getEntries();
     
     // *** Subtotal ***
     

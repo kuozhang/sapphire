@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.tests.services.t0008;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.Service;
 
 public interface DerivedElement extends BaseElement
 {
-    ModelElementType TYPE = new ModelElementType( DerivedElement.class );
+    ElementType TYPE = new ElementType( DerivedElement.class );
     
     // *** TestProperty ***
     

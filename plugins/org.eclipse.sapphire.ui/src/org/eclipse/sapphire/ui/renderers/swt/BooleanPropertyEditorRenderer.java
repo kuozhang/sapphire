@@ -18,10 +18,10 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdvalign;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -56,7 +56,6 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
     protected void createContents( final Composite parent )
     {
         final PropertyEditorPart part = getPart();
-        final ValueProperty property = (ValueProperty) part.getProperty();
         
         final CheckboxLayout checkboxLayout;
         final String checkboxLayoutHint = part.definition().getHint( PropertyEditorDef.HINT_CHECKBOX_LAYOUT );
@@ -115,7 +114,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
             }
         );
         
-        final boolean isDeprecated = property.hasAnnotation( Deprecated.class );
+        final boolean isDeprecated = property().definition().hasAnnotation( Deprecated.class );
         
         composite.setLayout( glspacing( glayout( ( isDeprecated ? 3 : 2 ), 0, 0 ), 2 ) );
 
@@ -176,7 +175,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
                 @Override
                 public void getName( final AccessibleEvent event )
                 {
-                    event.result = property.getLabel( true, CapitalizationType.NO_CAPS, true );
+                    event.result = property().definition().getLabel( true, CapitalizationType.NO_CAPS, true );
                 }
             }
         );
@@ -205,20 +204,20 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
         
         if( ! this.checkbox.isDisposed() )
         {
-            final Value<Boolean> value = getPropertyValue();
+            final Value<Boolean> value = value();
             
             if( value != null )
             {
                 final boolean existingValue = this.checkbox.getSelection();
                 final boolean newSimpleValue;
                 
-                if( value.getText( false ) != null && value.getContent( false ) == null )
+                if( value.text( false ) != null && value.content( false ) == null )
                 {
                     newSimpleValue = false;
                 }
                 else
                 {
-                    final Boolean newValue = value.getContent( true );
+                    final Boolean newValue = value.content( true );
                     newSimpleValue = ( newValue != null ? newValue.booleanValue() : false );
                 }
                 
@@ -245,7 +244,7 @@ public final class BooleanPropertyEditorRenderer extends ValuePropertyEditorRend
         @Override
         public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
         {
-            final ModelProperty property = propertyEditorDefinition.getProperty();
+            final PropertyDef property = propertyEditorDefinition.property().definition();
             return ( property instanceof ValueProperty && property.isOfType( Boolean.class ) );
         }
         

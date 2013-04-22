@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0009;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.ValueProperty;
 
 public interface TestChildElementB extends TestChildElement
 {
-    ModelElementType TYPE = new ModelElementType( TestChildElementB.class );
+    ElementType TYPE = new ElementType( TestChildElementB.class );
 
     // *** ValuePropertyB ***
     

@@ -16,12 +16,12 @@ import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.get
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PreferDefaultValue;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -50,24 +50,22 @@ public final class PreferDefaultValueValidationService extends ValidationService
             }
         };
         
-        context( IModelElement.class ).attach( this.listener, context( ValueProperty.class ) );
+        context( Property.class ).attach( this.listener );
     }
 
     @Override
     public Status validate()
     {
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
-        final Value<?> value = element.read( property );
+        final Value<?> value = context( Value.class );
         
-        if( ! value.isDefault() )
+        if( ! value.empty() )
         {
-            final String text = value.getText();
-            final String def = getDefaultValueLabel( element, property );
+            final String text = value.text();
+            final String def = getDefaultValueLabel( value );
             
             if( def != null && ! def.equals( text ) )
             {
-                final String message = NLS.bind( Resources.message, property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ), def );
+                final String message = NLS.bind( Resources.message, value.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ), def );
                 return Status.createWarningStatus( message );
             }
         }
@@ -82,7 +80,7 @@ public final class PreferDefaultValueValidationService extends ValidationService
         
         if( this.listener != null )
         {
-            context( IModelElement.class ).detach( this.listener, context( ValueProperty.class ) );
+            context( Property.class ).detach( this.listener );
         }
     }
     

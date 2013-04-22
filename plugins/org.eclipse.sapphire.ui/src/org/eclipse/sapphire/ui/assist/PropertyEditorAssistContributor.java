@@ -14,8 +14,7 @@ package org.eclipse.sapphire.ui.assist;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.ui.SapphirePart;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -50,7 +49,7 @@ public abstract class PropertyEditorAssistContributor
     
     private final ListenerContext listeners = new ListenerContext();
     
-    public void init( final IModelElement element, final ModelProperty property )
+    public void init( final SapphirePart part )
     {
         // Nothing to do by default.
     }

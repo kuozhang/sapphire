@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.tests.services.t0013;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -26,13 +26,13 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElement extends IModelElement
+public interface TestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
-    interface Child extends IModelElement
+    interface Child extends Element
     {
-        ModelElementType TYPE = new ModelElementType( Child.class );
+        ElementType TYPE = new ElementType( Child.class );
     }
     
     // *** Required ***
@@ -82,7 +82,7 @@ public interface TestElement extends IModelElement
     
     ElementProperty PROP_ELEMENT = new ElementProperty( TYPE, "Element" );
     
-    ModelElementHandle<Child> getElement();
+    ElementHandle<Child> getElement();
     
     // *** ElementRequired ***
     
@@ -92,7 +92,7 @@ public interface TestElement extends IModelElement
     
     ElementProperty PROP_ELEMENT_REQUIRED = new ElementProperty( TYPE, "ElementRequired" );
     
-    ModelElementHandle<Child> getElementRequired();
+    ElementHandle<Child> getElementRequired();
     
     // *** ElementRequiredExpr ***
     
@@ -102,6 +102,6 @@ public interface TestElement extends IModelElement
 
     ElementProperty PROP_ELEMENT_REQUIRED_EXPR = new ElementProperty( TYPE, "ElementRequiredExpr" );
     
-    ModelElementHandle<Child> getElementRequiredExpr();
+    ElementHandle<Child> getElementRequiredExpr();
     
 }

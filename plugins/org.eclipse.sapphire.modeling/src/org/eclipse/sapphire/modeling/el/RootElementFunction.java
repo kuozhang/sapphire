@@ -13,7 +13,7 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 
 /**
  * A function that returns the root of the model. 
@@ -48,7 +48,7 @@ public final class RootElementFunction
             protected Object evaluate()
             {
                 final List<FunctionResult> operands = operands();
-                final IModelElement element;
+                final Element element;
                 
                 if( operands.isEmpty() )
                 {
@@ -56,7 +56,7 @@ public final class RootElementFunction
                 }
                 else
                 {
-                    element = cast( operand( 0 ).value(), IModelElement.class );
+                    element = cast( operand( 0 ), Element.class );
                 }
                 
                 return element.root();

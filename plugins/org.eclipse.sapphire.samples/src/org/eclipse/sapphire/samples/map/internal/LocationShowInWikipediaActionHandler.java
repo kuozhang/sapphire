@@ -38,7 +38,7 @@ public final class LocationShowInWikipediaActionHandler extends SapphireActionHa
     {
         final DiagramNodePart part = (DiagramNodePart) context.getPart();
         final Location location = (Location) part.getModelElement();
-        final String locationName = location.getName().getText();
+        final String locationName = location.getName().text();
 
         if( locationName != null )
         {

@@ -33,14 +33,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
@@ -97,16 +98,16 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
     @Override
     protected void createContents( final Composite parent )
     {
-        final PropertyEditorPart part = getPart();
-        final ListProperty property = (ListProperty) part.getProperty();
+        final Property property = property();
+        
         // TODO support readonly
         //final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( HINT_READ_ONLY, false ) );
 
-        final SortedSet<ModelProperty> allMemberProperties = property.getType().properties();
+        final SortedSet<PropertyDef> allMemberProperties = property.definition().getType().properties();
         
         if( allMemberProperties.size() == 1 )
         {
-            final ModelProperty prop = allMemberProperties.first();
+            final PropertyDef prop = allMemberProperties.first();
             
             if( prop instanceof ValueProperty )
             {
@@ -198,7 +199,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         // add back text controls and add link
         for (int i = 0; i < count; i++) {
             final ProxyResource resource = new ProxyResource();
-            final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getList(), getPart().getProperty(), resource); 
+            final Element proxyElement = this.memberProperty.getModelElementType().instantiate(getList(), resource); 
             resource.init(proxyElement, this.memberProperty);
             final PropertyEditorPart editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
             
@@ -226,7 +227,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         final StringBuilder buf = new StringBuilder();
         buf.append( "<form><p vspace=\"false\"><a href=\"action\" nowrap=\"true\">" );
         buf.append( "Add " );
-        final ListProperty listProperty = (ListProperty) getPart().getProperty();
+        final ListProperty listProperty = (ListProperty) property().definition();
         buf.append( listProperty.getType().getLabel(false, CapitalizationType.NO_CAPS, false/*includeMnemonic*/) );
         buf.append( "</a></p></form>" );
         
@@ -313,8 +314,8 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
                 public String getDefaultText()
                 {
                     ProxyResource resource = binding.getResource();
-                    IModelElement element = resource.getModelElement();
-                    return element == null ? null : element.read( resource.getValueProperty() ).getDefaultText();
+                    Element element = resource.getModelElement();
+                    return element == null ? null : element.property( resource.getValueProperty() ).getDefaultText();
                 }
             };
         }
@@ -326,8 +327,8 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
                 public String getDefaultText()
                 {
                     ProxyResource resource = binding.getResource();
-                    IModelElement element = resource.getModelElement();
-                    return element == null ? null : element.read( resource.getValueProperty() ).getDefaultText();
+                    Element element = resource.getModelElement();
+                    return element == null ? null : element.property( resource.getValueProperty() ).getDefaultText();
                 }
             };
         }
@@ -344,7 +345,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
     
     private void addActivated() {
         ProxyResource resource = new ProxyResource();
-        final IModelElement proxyElement = this.memberProperty.getModelElementType().instantiate(getList(), getPart().getProperty(), resource); 
+        final Element proxyElement = this.memberProperty.getModelElementType().instantiate(getList(), resource); 
         resource.init(proxyElement, this.memberProperty);
         PropertyEditorPart editor = this.getPart().getChildPropertyEditor( proxyElement, this.memberProperty );
 
@@ -373,7 +374,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
             return;
         }
         
-        ModelElementList<IModelElement> list = this.getList();
+        ElementList<?> list = this.getList();
 
         if (list.size() != this.textBindings.size()) {
             this.addControls(Math.max(1, list.size()));
@@ -381,7 +382,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         }
 
         for (int i = 0; i < list.size(); i++) {
-            IModelElement elem = list.get(i);
+            Element elem = list.get(i);
             this.textBindings.get(i).refreshModelElement(elem);
         }
         if (list.size() == 0) {
@@ -413,7 +414,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
     }
     
     void deleteBinding(TextBinding binding) {
-        IModelElement elem = binding.getModelElement();
+        Element elem = binding.getModelElement();
         Text text = binding.getText();
         ToolBar toolbar = binding.getToolbar();
         PropertyEditorAssistDecorator decorator = binding.getDecorator();
@@ -449,7 +450,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
                 return;
             }
             if (b.getModelElement() == null) {
-                final IModelElement newElement = getList().insert();
+                final Element newElement = getList().insert();
                 b.setModelElement(newElement);
             }
         }
@@ -519,8 +520,8 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
     
     private final class ProxyResource extends XmlResource 
     {
-        private IModelElement proxyElement;
-        private IModelElement actualElement;
+        private Element proxyElement;
+        private Element actualElement;
         private ValueProperty actualProperty;
         
         private String value;
@@ -529,27 +530,27 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
             super(getPart().getModelElement().resource());
         }
 
-        public void init(IModelElement proxyElement, ValueProperty actualProperty) {
+        public void init(Element proxyElement, ValueProperty actualProperty) {
             this.proxyElement = proxyElement;
             this.actualProperty = actualProperty;
         }
         
 
         @Override
-        protected BindingImpl createBinding(ModelProperty property) {
+        protected BindingImpl createBinding(PropertyDef property) {
             if (property instanceof ValueProperty) {
                 return new ProxyBinding();
             }
             return null;
         }
         
-        public void setModelElement(IModelElement element) {
+        public void setModelElement(Element element) {
             this.actualElement = element;
-            this.value = element != null ? element.read(this.actualProperty).getText() : null;
+            this.value = element != null ? element.property(this.actualProperty).text() : null;
             this.proxyElement.refresh();
         }
 
-        public IModelElement getModelElement() {
+        public Element getModelElement() {
             return this.actualElement;
         }
         
@@ -557,9 +558,9 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
             return this.actualProperty;
         }
         
-        private IModelElement getActualElement(boolean create) {
+        private Element getActualElement(boolean create) {
             if (create && this.actualElement == null) {
-                final IModelElement element = getList().insert();
+                final Element element = getList().insert();
                 setModelElement(element);
             }
             return this.actualElement;
@@ -576,15 +577,15 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
             public void write(String value) {
                 ProxyResource.this.value = value;
                 
-                final IModelElement element = getActualElement(true/*create*/);
+                final Element element = getActualElement(true/*create*/);
                 final ValueProperty property = getValueProperty();
-                element.write(property, value);
+                element.property( property ).write( value );
             }
         }
 
         @Override
         public XmlElement getXmlElement(boolean createIfNecessary) {
-            final IModelElement element = getActualElement(true);
+            final Element element = getActualElement(true);
             if (element != null) {
                 return ((XmlResource)element.resource()).getXmlElement();
             }
@@ -622,20 +623,20 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
             return this.resource;
         }
         
-        public void refreshModelElement(IModelElement element) {
+        public void refreshModelElement(Element element) {
             setModelElement(element);
-            String value = element != null ? element.read(this.resource.getValueProperty()).getText() : null;
+            String value = element != null ? element.property(this.resource.getValueProperty()).text() : null;
             value = value == null ? "" : value;
             if (!CompactListPropertyEditorRenderer.equals(value, this.text.getText())) {
                 this.text.setText(value);
             }
         }
         
-        public void setModelElement(IModelElement element) {
+        public void setModelElement(Element element) {
             this.resource.setModelElement(element);
         }
         
-        public IModelElement getModelElement() {
+        public Element getModelElement() {
             return this.resource.getModelElement();
         }
         
@@ -681,7 +682,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         public void modifyText(ModifyEvent e) {
             if( ! this.text.isDisposed() && ( this.text.getStyle() & SWT.READ_ONLY ) == 0 ) 
             {
-                IModelElement element = this.resource.getModelElement();
+                Element element = this.resource.getModelElement();
                 final String value = this.text.getText();
                 if (value.length() == 0 && e.getSource().equals(this.text) && element == null) {
                     // do nothing..
@@ -693,11 +694,11 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
                         // new element may not be the last one - insert empty strings 
                         insertEmpty(this);
                         
-                        final IModelElement newElement = getList().insert();
+                        final Element newElement = getList().insert();
                         setModelElement(newElement);
                         createNew = true;
                     }
-                    this.resource.element().write( this.resource.getValueProperty(), value );
+                    this.resource.element().property( this.resource.getValueProperty() ).write( value );
                     if (createNew) {
                         this.text.setSelection(value.length(), value.length());
                     }
@@ -708,15 +709,12 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         }
     }
     
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
-            return ( propertyEditorDefinition.getProperty() instanceof ListProperty );
+            return ( propertyEditorPart.property().definition() instanceof ListProperty );
         }
         
         @Override

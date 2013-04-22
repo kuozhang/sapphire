@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
@@ -22,5 +22,5 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public interface SeparatorDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( SeparatorDef.class );
+    ElementType TYPE = new ElementType( SeparatorDef.class );
 }

@@ -17,13 +17,13 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.java.jdt.JdtJavaType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -67,7 +67,7 @@ public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceS
             {
                 for( IPackageReference packageRef : context( ISapphireUiDef.class ).getImportedPackages() )
                 {
-                    final String packageName = packageRef.getName().getText();
+                    final String packageName = packageRef.getName().text();
                     
                     if( packageName != null )
                     {
@@ -135,7 +135,7 @@ public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceS
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            final IProject project = context.find( IModelElement.class ).adapt( IProject.class );
+            final IProject project = context.find( Element.class ).adapt( IProject.class );
             return new SdkJavaTypeReferenceServiceForSdef( project );
         }
     }

@@ -34,7 +34,7 @@ public final class SapphireHintValuePossibleValuesService extends PossibleValues
     {
         final ISapphireHint element = context( ISapphireHint.class );
         final PartDef partdef = element.nearest( PartDef.class );
-        final String hint = element.getName().getText();
+        final String hint = element.getName().text();
         
         if( hint != null )
         {

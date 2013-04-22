@@ -38,18 +38,19 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -82,7 +83,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 public final class SlushBucketPropertyEditor extends AbstractSlushBucketPropertyEditorRenderer
 {
-    private ModelElementType memberType;
+    private ElementType memberType;
     private ValueProperty memberProperty;
     private PossibleValuesService possibleValuesService;
     private Listener possibleValuesServiceListener;
@@ -95,11 +96,11 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
     {
         super( context, part );
         
-        final ListProperty property = getProperty();
+        final Property property = part.property();
         
-        this.memberType = property.getType();
+        this.memberType = property.definition().getType();
         this.memberProperty = (ValueProperty) this.memberType.properties().first();
-        this.possibleValuesService = part.getLocalModelElement().service( property, PossibleValuesService.class );
+        this.possibleValuesService = property.service( PossibleValuesService.class );
         
         final Status.Severity invalidValueSeverity = this.possibleValuesService.getInvalidValueSeverity( null );
         
@@ -143,7 +144,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                     return new Object[ 0 ];
                 }
                 
-                final ModelElementList<IModelElement> list = getList();
+                final ElementList<?> list = getList();
                 
                 if( list == null )
                 {
@@ -153,9 +154,9 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
                 final Set<String> possibleValues = SlushBucketPropertyEditor.this.possibleValuesService.values();
                 final SetFactory<String> unusedPossibleValues = SetFactory.<String>start().add( possibleValues );
                 
-                for( IModelElement member : list )
+                for( Element member : list )
                 {
-                    unusedPossibleValues.remove( member.read( SlushBucketPropertyEditor.this.memberProperty ).getText() );
+                    unusedPossibleValues.remove( member.property( SlushBucketPropertyEditor.this.memberProperty ).text() );
                 }
                 
                 return unusedPossibleValues.result().toArray();
@@ -349,7 +350,7 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
     
     private void handleSourceTableFocusGainedEvent()
     {
-        setSelectedElements( Collections.<IModelElement>emptyList() );
+        setSelectedElements( Collections.<Element>emptyList() );
         
         if( this.sourceTableViewer.getSelection().isEmpty() && this.sourceTable.getItemCount() > 0 )
         {
@@ -371,18 +372,17 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         @Override
         public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
-            final IModelElement element = propertyEditorPart.getLocalModelElement();
-            final ModelProperty property = propertyEditorPart.getProperty();
+            final Property property = propertyEditorPart.property();
             
-            if( property instanceof ListProperty &&
-                element.service( property, PossibleValuesService.class ) != null &&
-                element.service( property, PossibleTypesService.class ).types().size() == 1 )
+            if( property.definition() instanceof ListProperty &&
+                property.service( PossibleValuesService.class ) != null &&
+                property.service( PossibleTypesService.class ).types().size() == 1 )
             {
-                final SortedSet<ModelProperty> properties = property.getType().properties();
+                final SortedSet<PropertyDef> properties = property.definition().getType().properties();
                 
                 if( properties.size() == 1 )
                 {
-                    final ModelProperty memberProperty = properties.first();
+                    final PropertyDef memberProperty = properties.first();
                     
                     if( memberProperty instanceof ValueProperty && memberProperty.hasAnnotation( NoDuplicates.class ) )
                     {
@@ -423,16 +423,16 @@ public final class SlushBucketPropertyEditor extends AbstractSlushBucketProperty
         @Override
         protected Object run( final SapphireRenderingContext context )
         {
-            final ModelElementList<IModelElement> list = getList();
+            final ElementList<?> list = getList();
             
             if( list != null )
             {
-                final ListFactory<IModelElement> elements = ListFactory.start();
+                final ListFactory<Element> elements = ListFactory.start();
                 
                 for( String str : this.input )
                 {
-                    final IModelElement element = list.insert();
-                    element.write( SlushBucketPropertyEditor.this.memberProperty, str );
+                    final Element element = list.insert();
+                    element.property( SlushBucketPropertyEditor.this.memberProperty ).write( str );
                     elements.add( element );
                 }
                 

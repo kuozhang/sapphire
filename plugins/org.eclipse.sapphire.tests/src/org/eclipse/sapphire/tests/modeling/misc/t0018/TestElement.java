@@ -15,20 +15,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Transient;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Transient;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -37,9 +37,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElement extends IModelElement
+public interface TestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
     // *** StringValue ***
     
@@ -84,7 +84,7 @@ public interface TestElement extends IModelElement
     
     ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
     
-    ModelElementList<TestChildElement> getList();
+    ElementList<TestChildElement> getList();
     
     // *** Element ***
     
@@ -92,7 +92,7 @@ public interface TestElement extends IModelElement
     
     ElementProperty PROP_ELEMENT = new ElementProperty( TYPE, "Element" );
     
-    ModelElementHandle<TestChildElement> getElement();
+    ElementHandle<TestChildElement> getElement();
     
     // *** ImpliedElement ***
     

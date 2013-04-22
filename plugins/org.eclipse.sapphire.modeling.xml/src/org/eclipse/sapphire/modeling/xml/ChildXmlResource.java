@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Resource;
 
 /**
@@ -31,7 +31,7 @@ public class ChildXmlResource extends XmlResource
     }
     
     @Override
-    public void init( final IModelElement modelElement )
+    public void init( final Element modelElement )
     {
         super.init( modelElement );
         

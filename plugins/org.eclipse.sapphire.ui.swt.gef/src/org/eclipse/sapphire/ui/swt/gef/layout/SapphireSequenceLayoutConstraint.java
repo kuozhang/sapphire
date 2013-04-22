@@ -118,17 +118,17 @@ public final class SapphireSequenceLayoutConstraint {
 	 */
 	public SapphireSequenceLayoutConstraint(SequenceLayoutConstraintDef def) {
 		if (def != null) {
-			this.widthHint = def.getWidth().getContent() != null ? def.getWidth().getContent() : -1;
-			this.heightHint = def.getHeight().getContent() != null ? def.getHeight().getContent() : -1;
-			this.maxWidth = def.getMaxWidth().getContent() != null ? def.getMaxWidth().getContent() : -1;
-			this.maxHeight = def.getMaxHeight().getContent() != null ? def.getMaxHeight().getContent() : -1;
-			this.minWidth = def.getMinWidth().getContent() != null ? def.getMinWidth().getContent() : -1;
-			this.minHeight = def.getMinHeight().getContent() != null ? def.getMinHeight().getContent() : -1;
+			this.widthHint = def.getWidth().content() != null ? def.getWidth().content() : -1;
+			this.heightHint = def.getHeight().content() != null ? def.getHeight().content() : -1;
+			this.maxWidth = def.getMaxWidth().content() != null ? def.getMaxWidth().content() : -1;
+			this.maxHeight = def.getMaxHeight().content() != null ? def.getMaxHeight().content() : -1;
+			this.minWidth = def.getMinWidth().content() != null ? def.getMinWidth().content() : -1;
+			this.minHeight = def.getMinHeight().content() != null ? def.getMinHeight().content() : -1;
 
-			this.horizontalAlignment = getSwtHorizontalAlignment(def.getHorizontalAlignment().getContent());
-			this.verticalAlignment = getSwtVerticalAlignment(def.getVerticalAlignment().getContent());
-			this.expandHorizontally = def.isExpandHorizontally().getContent();
-			this.expandVertically = def.isExpandVertically().getContent();
+			this.horizontalAlignment = getSwtHorizontalAlignment(def.getHorizontalAlignment().content());
+			this.verticalAlignment = getSwtVerticalAlignment(def.getVerticalAlignment().content());
+			this.expandHorizontally = def.isExpandHorizontally().content();
+			this.expandVertically = def.isExpandVertically().content();
 			this.marginInsets = LayoutUtil.calculateMargin(def);
 		} else {
 			this.marginInsets = new Insets(0, 0, 0, 0);

@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.TabGroupDef;
 import org.eclipse.sapphire.ui.def.TabGroupPageDef;
@@ -53,7 +53,7 @@ public final class TabGroupPart extends SapphirePart
     {
         super.init();
         
-        final IModelElement element = getModelElement();
+        final Element element = getModelElement();
         final ListFactory<TabGroupPagePart> pagesListFactory = ListFactory.start();
 
         final Listener tabPartListener = new FilteredListener<PartValidationEvent>()
@@ -85,7 +85,7 @@ public final class TabGroupPart extends SapphirePart
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final boolean scaleVertically = definition().getScaleVertically().getContent();
+        final boolean scaleVertically = definition().getScaleVertically().content();
     
         final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
         tabGroup.setLayoutData( gdhindent( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ), 9 ) );

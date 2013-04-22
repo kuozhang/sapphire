@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0012;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 
@@ -22,9 +22,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElement extends IModelElement
+public interface TestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
     // *** List ***
     
@@ -33,6 +33,6 @@ public interface TestElement extends IModelElement
 
     ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
     
-    ModelElementList<TestListEntry> getList();
+    ElementList<TestListEntry> getList();
 
 }

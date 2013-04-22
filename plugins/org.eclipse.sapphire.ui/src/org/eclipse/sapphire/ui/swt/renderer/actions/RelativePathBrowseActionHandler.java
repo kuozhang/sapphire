@@ -37,12 +37,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -92,8 +91,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
         setLabel( Resources.label );
         addImage( IMG_FILE );
         
-        final IModelElement element = getModelElement();
-        final ValueProperty property = getProperty();
+        final Property property = property();
         
         this.type = null;
         
@@ -113,7 +111,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
         else
         {
             final ValidFileSystemResourceType validFileSystemResourceTypeAnnotation
-                = property.getAnnotation( ValidFileSystemResourceType.class );
+                = property.definition().getAnnotation( ValidFileSystemResourceType.class );
         
             if( validFileSystemResourceTypeAnnotation != null )
             {
@@ -125,7 +123,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
         
         if( staticFileExtensions == null )
         {
-            this.fileExtensionService = element.service( property, FileExtensionsService.class );
+            this.fileExtensionService = property.service( FileExtensionsService.class );
             
             if( this.fileExtensionService == null )
             {
@@ -162,7 +160,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     @Override
     protected String browse( final SapphireRenderingContext context )
     {
-        final ValueProperty property = getProperty();
+        final Property property = property();
         final List<Path> roots = getBasePaths();
         String selectedAbsolutePath = null;
         
@@ -224,14 +222,14 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
             final ElementTreeSelectionDialog dialog
                 = new ElementTreeSelectionDialog( context.getShell(), labelProvider, contentProvider );
             
-            dialog.setTitle( property.getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
-            dialog.setMessage( createBrowseDialogMessage( property.getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+            dialog.setTitle( property.definition().getLabel( false, CapitalizationType.TITLE_STYLE, false ) );
+            dialog.setMessage( createBrowseDialogMessage( property.definition().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
             dialog.setAllowMultiple( false );
             dialog.setHelpAvailable( false );
             dialog.setInput( input );
             dialog.setComparator( viewerComparator );
             
-            final Path currentPathAbsolute = convertToAbsolute( getModelElement().<Path>read( property ).getContent() );
+            final Path currentPathAbsolute = convertToAbsolute( (Path) ( (Value<?>) property ).content() );
             
             if( currentPathAbsolute != null )
             {
@@ -311,11 +309,11 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
         else if( this.type == FileSystemResourceType.FOLDER )
         {
             final DirectoryDialog dialog = new DirectoryDialog( context.getShell() );
-            dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
-            dialog.setMessage( createBrowseDialogMessage( property.getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+            dialog.setText( property.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
+            dialog.setMessage( createBrowseDialogMessage( property.definition().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
             
-            final Value<Path> value = getModelElement().read( property );
-            final Path path = value.getContent();
+            final Value<?> value = (Value<?>) property;
+            final Path path = (Path) value.content();
             
             if( path != null )
             {
@@ -331,10 +329,10 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
         else
         {
             final FileDialog dialog = new FileDialog( context.getShell() );
-            dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
+            dialog.setText( property.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
             
-            final Value<Path> value = getModelElement().read( property );
-            final Path path = value.getContent();
+            final Value<?> value = (Value<?>) property;
+            final Path path = (Path) value.content();
             
             if( path != null && path.segmentCount() > 1 )
             {
@@ -389,12 +387,12 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     
     protected List<Path> getBasePaths()
     {
-        return getModelElement().service( getProperty(), RelativePathService.class ).roots();
+        return property().service( RelativePathService.class ).roots();
     }
     
     protected boolean enclosed()
     {
-        final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
+        final RelativePathService service = property().service( RelativePathService.class );
         
         if( service == null )
         {
@@ -410,7 +408,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     {
         if( path != null )
         {
-            final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
+            final RelativePathService service = property().service( RelativePathService.class );
             
             if( service == null )
             {
@@ -450,7 +448,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     {
         if( path != null )
         {
-            final RelativePathService service = getModelElement().service( getProperty(), RelativePathService.class );
+            final RelativePathService service = property().service( RelativePathService.class );
             
             if( service == null )
             {

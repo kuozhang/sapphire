@@ -19,12 +19,14 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.java.jdt.JdtJavaType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -54,8 +56,7 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
+        final Value<?> value = context( Value.class );
         
         this.listener = new IElementChangedListener()
         {
@@ -77,9 +78,9 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
                         @Override
                         public void run()
                         {
-                            if( ! element.disposed() && ! ( (IModelElement) element.root() ).disposed() )
+                            if( ! value.disposed() && ! value.root().disposed() )
                             {
-                                element.refresh( property );
+                                value.refresh();
                             }
                         }
                     };
@@ -132,29 +133,32 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ValueProperty property = context.find( ValueProperty.class );
-            final Reference referenceAnnotation = property.getAnnotation( Reference.class );
-
-            if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
+            final Property property = context.find( Property.class );
+            
+            if( property.definition() instanceof ValueProperty )
             {
-                final IProject project = element.adapt( IProject.class );
-                
-                if( project != null )
+                final Reference referenceAnnotation = property.definition().getAnnotation( Reference.class );
+    
+                if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
                 {
-                    try
+                    final IProject project = property.element().adapt( IProject.class );
+                    
+                    if( project != null )
                     {
-                        for( String nature : project.getDescription().getNatureIds() )
+                        try
                         {
-                            if( nature.equals( JavaCore.NATURE_ID ) )
+                            for( String nature : project.getDescription().getNatureIds() )
                             {
-                                return true;
+                                if( nature.equals( JavaCore.NATURE_ID ) )
+                                {
+                                    return true;
+                                }
                             }
                         }
-                    }
-                    catch( CoreException e )
-                    {
-                        LoggingService.log( e );
+                        catch( CoreException e )
+                        {
+                            LoggingService.log( e );
+                        }
                     }
                 }
             }
@@ -166,7 +170,7 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            final IProject project = context.find( IModelElement.class ).adapt( IProject.class );
+            final IProject project = context.find( Element.class ).adapt( IProject.class );
             return new JdtJavaTypeReferenceService( project );
         }
     }

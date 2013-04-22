@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ISapphireCustomPartDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireCustomPartDef.class );
+    ElementType TYPE = new ElementType( ISapphireCustomPartDef.class );
  
     // *** ImplClass ***
     

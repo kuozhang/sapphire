@@ -14,10 +14,9 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
 
@@ -27,19 +26,17 @@ import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
 
 public class FunctionUtil 
 {
-    public static ValueProperty getFunctionProperty(IModelElement modelElement, FunctionResult functionResult)
+    public static Value<?> getFunctionProperty(Element element, FunctionResult functionResult)
     {
         if (functionResult.function() instanceof PropertyAccessFunction)
         {
-            if (functionResult.operand(0).value() instanceof String)
+            if (functionResult.operand(0) instanceof String)
             {
-                String propName = (String)functionResult.operand(0).value();
-                final ModelElementType type = modelElement.type();
-                final ModelProperty property = type.property(propName);
+                final Property property = element.property( (String)functionResult.operand(0) );
                 
-                if( isWritableValueProperty( property ) )
+                if( property != null && property instanceof Value && ! property.definition().isReadOnly() )
                 {
-                    return (ValueProperty)property;
+                    return (Value<?>)property;
                 }
             }
         }
@@ -48,20 +45,15 @@ public class FunctionUtil
             List<FunctionResult> subFuncs = functionResult.operands();
             for (FunctionResult subFunc : subFuncs)
             {
-                ValueProperty property = getFunctionProperty(modelElement, subFunc);
+                Value<?> property = getFunctionProperty(element, subFunc);
                 
-                if( isWritableValueProperty( property ) )
+                if( property != null )
                 {
                     return property;
                 }
             }
         }
         return null;
-    }
-    
-    private static boolean isWritableValueProperty( final ModelProperty property )
-    {
-        return ( property != null && property instanceof ValueProperty && ! property.isReadOnly() );
     }
 
 }

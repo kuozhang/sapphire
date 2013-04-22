@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IRelatedContentGallery extends IModelElement
+public interface IRelatedContentGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IRelatedContentGallery.class );
+    ElementType TYPE = new ElementType( IRelatedContentGallery.class );
     
     // *** Measurement ***
     

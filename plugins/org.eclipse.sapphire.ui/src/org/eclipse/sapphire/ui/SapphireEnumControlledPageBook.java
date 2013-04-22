@@ -14,14 +14,13 @@ package org.eclipse.sapphire.ui;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
@@ -33,18 +32,17 @@ import org.eclipse.sapphire.ui.def.PageBookExtDef;
 
 public final class SapphireEnumControlledPageBook extends PageBookPart
 {
-    private IModelElement element;
-    private ValueProperty property;
+    private Property property;
     private Listener listener;
     
     @Override
     protected void init()
     {
-        final String pathString = ( (PageBookExtDef) this.definition ).getControlProperty().getContent();
+        final String pathString = ( (PageBookExtDef) this.definition ).getControlProperty().content();
         final String pathStringSubstituted = substituteParams( pathString, this.params );
         final ModelPath path = new ModelPath( pathStringSubstituted );
         
-        this.element = getLocalModelElement();
+        Element element = getLocalModelElement();
 
         for( int i = 0, n = path.length(); i < n; i++ )
         {
@@ -52,24 +50,17 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
 
             if( segment instanceof ModelPath.ModelRootSegment )
             {
-                this.element = (IModelElement) this.element.root();
+                element = element.root();
             }
             else if( segment instanceof ModelPath.ParentElementSegment )
             {
-                IModelParticle parent = this.element.parent();
-
-                if ( ! ( parent instanceof IModelElement ) )
-                {
-                    parent = parent.parent();
-                }
-
-                this.element = (IModelElement) parent;
+                element = element.parent().element();
             }
             else if( segment instanceof ModelPath.PropertySegment )
             {
-                this.property = (ValueProperty) resolve( this.element, ( (ModelPath.PropertySegment) segment ).getPropertyName() );
-
-                if ( i + 1 != n )
+                this.property = element.property( ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+                
+                if( this.property == null || i + 1 != n )
                 {
                     throw new RuntimeException( NLS.bind( Resources.invalidPathMsg, pathStringSubstituted ) );
                 }
@@ -89,7 +80,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
             }
         };
         
-        this.element.attach( this.listener, this.property );
+        this.property.attach( this.listener );
         
         super.init();
         
@@ -100,7 +91,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
     @Override
     protected Object parsePageKey( final String panelKeyString )
     {
-        final Class<?> enumType = this.property.getTypeClass();
+        final Class<?> enumType = this.property.definition().getTypeClass();
         final int lastDot = panelKeyString.lastIndexOf( '.' );
         final String enumItemName;
         
@@ -155,10 +146,10 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
     
     private void updateCurrentPage()
     {
-        final Value<?> newEnumItemValue = this.element.read( this.property );
-        final Enum<?> newEnumItem = (Enum<?>) newEnumItemValue.getContent( true );
+        final Value<?> newEnumItemValue = (Value<?>) this.property;
+        final Enum<?> newEnumItem = (Enum<?>) newEnumItemValue.content( true );
 
-        changePage( this.element, newEnumItem );
+        changePage( this.property.element(), newEnumItem );
     }
     
     @Override
@@ -168,7 +159,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
         
         if( this.listener != null )
         {
-            this.element.detach( this.listener, this.property );
+            this.property.detach( this.listener );
         }
     }
 

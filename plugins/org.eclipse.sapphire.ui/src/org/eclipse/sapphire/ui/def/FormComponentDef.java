@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.Color;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface FormComponentDef extends PartDef
 {
-    ModelElementType TYPE = new ModelElementType( FormComponentDef.class );
+    ElementType TYPE = new ElementType( FormComponentDef.class );
     
     // *** ScaleVertically ***
     

@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0009;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ITestChildElement extends IModelElement
+public interface ITestChildElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ITestChildElement.class );
+    ElementType TYPE = new ElementType( ITestChildElement.class );
     
 }

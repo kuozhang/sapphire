@@ -16,13 +16,13 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeConstraintServiceData;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -39,7 +39,7 @@ public final class StandardJavaTypeConstraintService extends JavaTypeConstraintS
     @Override
     protected void initJavaTypeConstraintService()
     {
-        final ModelProperty property = context().find( ModelProperty.class );
+        final PropertyDef property = context().find( PropertyDef.class );
         final JavaTypeConstraint javaTypeConstraintAnnotation = property.getAnnotation( JavaTypeConstraint.class );
         
         final Set<JavaTypeKind> kind = EnumSet.noneOf( JavaTypeKind.class );

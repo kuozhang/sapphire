@@ -12,14 +12,14 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0003;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
@@ -44,9 +44,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
 
 @XmlBinding( path = "a" )
 
-public interface TestXmlBinding0003A extends IModelElement
+public interface TestXmlBinding0003A extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlBinding0003A.class );
+    ElementType TYPE = new ElementType( TestXmlBinding0003A.class );
     
     // *** Aa ***
     
@@ -64,7 +64,7 @@ public interface TestXmlBinding0003A extends IModelElement
     
     ElementProperty PROP_AB = new ElementProperty( TYPE, "Ab" );
     
-    ModelElementHandle<TestXmlBinding0003AB> getAb();
+    ElementHandle<TestXmlBinding0003AB> getAb();
     
     // *** Ac ***
 
@@ -73,6 +73,6 @@ public interface TestXmlBinding0003A extends IModelElement
     
     ListProperty PROP_AC = new ListProperty( TYPE, "Ac" );
     
-    ModelElementList<TestXmlBinding0003AC> getAc();
+    ElementList<TestXmlBinding0003AC> getAc();
     
 }

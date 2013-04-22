@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -24,7 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ItemVariant extends Priced
 {
-    ModelElementType TYPE = new ModelElementType( ItemVariant.class );
+    ElementType TYPE = new ElementType( ItemVariant.class );
     
     // *** Name ***
     

@@ -29,10 +29,8 @@ import java.util.List;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -77,8 +75,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
     protected void createContents( final Composite parent )
     {
         final PropertyEditorPart part = getPart();
-        final IModelElement element = part.getLocalModelElement();
-        final ValueProperty property = (ValueProperty) part.getProperty();
+        final Value<?> property = (Value<?>) part.property();
         
         final SapphireToolBarActionPresentation toolBarActionsPresentation = new SapphireToolBarActionPresentation( getActionPresentationManager() );
         toolBarActionsPresentation.addFilter( createFilterByActionId( ACTION_ASSIST ) );
@@ -111,8 +108,8 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             decorator.addEditorControl( toolbar );
         }
         
-        final PossibleValuesService possibleValuesService = element.service( property, PossibleValuesService.class );
-        final ValueNormalizationService valueNormalizationService = element.service( property, ValueNormalizationService.class );
+        final PossibleValuesService possibleValuesService = property.service( PossibleValuesService.class );
+        final ValueNormalizationService valueNormalizationService = property.service( ValueNormalizationService.class );
         
         final MutableReference<List<PossibleValue>> possibleValuesRef = new MutableReference<List<PossibleValue>>();
         final MutableReference<Boolean> updatingComboSelection = new MutableReference<Boolean>( false );
@@ -121,14 +118,13 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         {
             public void run()
             {
-                final Value<?> value = element.read( property );
-                final String text = valueNormalizationService.normalize( value.getText() );
+                final String text = valueNormalizationService.normalize( property.text() );
                 
                 try
                 {
                     updatingComboSelection.set( true );
 
-                    combo.setData( DATA_DEFAULT_VALUE, value.isDefault() );
+                    combo.setData( DATA_DEFAULT_VALUE, property.empty() );
                     
                     if( text == null )
                     {
@@ -202,7 +198,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
 
         final Runnable updateComboContentOp = new Runnable()
         {
-            private final PossibleValue.Factory factory = PossibleValue.factory( element, property );
+            private final PossibleValue.Factory factory = PossibleValue.factory( property );
             
             public void run()
             {
@@ -244,7 +240,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             }
         };
         
-        element.attach( propertyListener, property );
+        property.attach( propertyListener );
         
         combo.addModifyListener
         (
@@ -282,13 +278,13 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                         {
                             value = null;
                         }
-                        else if( ( (Boolean) combo.getData( DATA_DEFAULT_VALUE ) ) == true && value.equals( element.read( property ).getDefaultText() ) )
+                        else if( ( (Boolean) combo.getData( DATA_DEFAULT_VALUE ) ) == true && value.equals( property.getDefaultText() ) )
                         {
                             value = null;
                         }
                     }
 
-                    element.write( property, value );
+                    property.write( value );
                     
                     // If an editable pop-up list was presenting the default value and user clears it, there is
                     // no change in the model, but we need to restore the display of the default value in the UI.
@@ -305,7 +301,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                 public void run()
                 {
                     possibleValuesService.detach( possibleValuesServiceListener );
-                    element.detach( propertyListener, property );
+                    property.detach( propertyListener );
                 }
             }
         );

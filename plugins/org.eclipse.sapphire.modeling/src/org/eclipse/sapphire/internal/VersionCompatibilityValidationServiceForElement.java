@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.internal;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -29,15 +29,9 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class VersionCompatibilityValidationServiceForElement extends VersionCompatibilityValidationService
 {
     @Override
-    protected IModelElement element()
+    protected Property property()
     {
-        return context( IModelElement.class ).parent().nearest( IModelElement.class );
-    }
-
-    @Override
-    protected ModelProperty property()
-    {
-        return context( IModelElement.class ).getParentProperty();
+        return context( Element.class ).parent();
     }
     
     public static final class Factory extends ServiceFactory
@@ -46,10 +40,8 @@ public final class VersionCompatibilityValidationServiceForElement extends Versi
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = element.getParentProperty();
-            
-            return ( property instanceof ElementProperty || property instanceof ListProperty );
+            final Property parent = context.find( Element.class ).parent();
+            return parent != null && ( parent.definition() instanceof ElementProperty || parent.definition() instanceof ListProperty );
         }
 
         @Override

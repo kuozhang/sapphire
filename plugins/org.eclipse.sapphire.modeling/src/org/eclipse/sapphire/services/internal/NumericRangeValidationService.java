@@ -14,13 +14,13 @@ package org.eclipse.sapphire.services.internal;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueKeyword;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
@@ -49,12 +49,12 @@ public final class NumericRangeValidationService<T extends Comparable<T>> extend
     
     public Status validate()
     {
-        final Value<?> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
-        final T val = (T) value.getContent( true );
+        final Value<?> value = context( Element.class ).property( context( ValueProperty.class ) );
+        final T val = (T) value.content( true );
         
         if( val != null )
         {
-            final ValueProperty property = value.property();
+            final ValueProperty property = value.definition();
             
             if( this.min != null && val.compareTo( this.min ) < 0 )
             {
@@ -101,7 +101,7 @@ public final class NumericRangeValidationService<T extends Comparable<T>> extend
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             final Class<?> type = property.getTypeClass();
             final NumericRange rangeConstraintAnnotation = property.getAnnotation( NumericRange.class );
             final String minStr = rangeConstraintAnnotation.min();

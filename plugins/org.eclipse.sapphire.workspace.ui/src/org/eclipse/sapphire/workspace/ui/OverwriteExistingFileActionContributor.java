@@ -29,7 +29,7 @@ public final class OverwriteExistingFileActionContributor extends PropertyEditor
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final CreateWorkspaceFileOp op = (CreateWorkspaceFileOp) context.getModelElement();
+        final CreateWorkspaceFileOp op = (CreateWorkspaceFileOp) context.element();
         
         if( op.getFileName().validation().contains( PROBLEM_FILE_EXISTS ) )
         {

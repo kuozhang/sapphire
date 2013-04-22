@@ -111,7 +111,7 @@ public class CreateConnectionCommand extends Command {
     {
         DiagramEmbeddedConnectionTemplate embeddedConn = srcNode.getModelPart().getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
         if (embeddedConn != null && 
-                embeddedConn.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
+                embeddedConn.getConnectionId().equalsIgnoreCase(this.connDef.getId().content()))
         {
             return embeddedConn;
         }
@@ -120,7 +120,7 @@ public class CreateConnectionCommand extends Command {
         List<DiagramConnectionTemplate> connTemplates = this.diagramPart.getConnectionTemplates();
         for (DiagramConnectionTemplate connTemplate : connTemplates)
         {
-            if (connTemplate.getConnectionId().equalsIgnoreCase(this.connDef.getId().getContent()))
+            if (connTemplate.getConnectionId().equalsIgnoreCase(this.connDef.getId().content()))
             {
                 return connTemplate;
             }

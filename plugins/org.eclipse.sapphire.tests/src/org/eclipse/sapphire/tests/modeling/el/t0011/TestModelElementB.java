@@ -11,21 +11,21 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0011;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestModelElementB extends IModelElement
+public interface TestModelElementB extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModelElementB.class );
+    ElementType TYPE = new ElementType( TestModelElementB.class );
     
     // *** Element1 ***
     
@@ -33,7 +33,7 @@ public interface TestModelElementB extends IModelElement
     
     ElementProperty PROP_ELEMENT_1 = new ElementProperty( TYPE, "Element1" );
     
-    ModelElementHandle<TestModelElementB> getElement1();
+    ElementHandle<TestModelElementB> getElement1();
     
     // *** List1 ***
     
@@ -41,6 +41,6 @@ public interface TestModelElementB extends IModelElement
     
     ListProperty PROP_LIST_1 = new ListProperty( TYPE, "List1" );
     
-    ModelElementList<TestModelElementB> getList1();
+    ElementList<TestModelElementB> getList1();
     
 }

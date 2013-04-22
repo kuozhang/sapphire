@@ -11,9 +11,10 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Property;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,36 +22,43 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 
 public final class PropertyInstanceServiceContext extends PropertyServiceContext
 {
-    private final IModelElement element;
+    private final Property property;
     
-    public PropertyInstanceServiceContext( final IModelElement element,
-                                           final ModelProperty property )
+    public PropertyInstanceServiceContext( final Property instance,
+                                           final ListenerContext listenerContextForCoordination )
     {
-        super( ID_PROPERTY_INSTANCE, property.services(), property );
+        super( ID_PROPERTY_INSTANCE, instance.definition().services(), instance.definition() );
         
-        this.element = element;
+        this.property = instance;
+        
+        if( listenerContextForCoordination != null )
+        {
+            coordinate( listenerContextForCoordination );
+        }
     }
     
     @Override
-    @SuppressWarnings( "unchecked" )
-    
     public <T> T find( final Class<T> type )
     {
         T obj = super.find( type );
         
         if( obj == null )
         {
-            if( type == ModelElementType.class )
+            if( type.isInstance( this.property ) )
             {
-                obj = (T) this.element.type();
+                obj = type.cast( this.property );
             }
-            else if( type == IModelElement.class )
+            else if( type == ElementType.class )
             {
-                obj = (T) this.element;
+                obj = type.cast( this.property.element().type() );
+            }
+            else if( type == Element.class )
+            {
+                obj = type.cast( this.property.element() );
             }
             else
             {
-                obj = this.element.nearest( type );
+                obj = this.property.element().nearest( type );
             }
         }
         

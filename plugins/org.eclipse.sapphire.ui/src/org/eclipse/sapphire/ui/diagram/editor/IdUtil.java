@@ -16,7 +16,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -54,7 +54,7 @@ public class IdUtil
             buffer.append(connPart.getInstanceId());
             buffer.append(CONNECTION_ID_SEPARATOR);
         }
-        IModelElement srcNodeElement = null;
+        Element srcNodeElement = null;
         if (connPart instanceof DiagramEmbeddedConnectionPart)
         {
             DiagramEmbeddedConnectionPart embeddedConn = (DiagramEmbeddedConnectionPart)connPart;

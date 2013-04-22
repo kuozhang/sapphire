@@ -12,11 +12,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -37,7 +37,7 @@ import org.eclipse.sapphire.ui.def.internal.LocationHintsBinding;
 
 public interface ActionSystemPartDef extends ISapphireConditionHostDef, ActionContextsHostDef
 {
-    ModelElementType TYPE = new ModelElementType( ActionSystemPartDef.class );
+    ElementType TYPE = new ElementType( ActionSystemPartDef.class );
     
     // *** Id ***
     
@@ -84,7 +84,7 @@ public interface ActionSystemPartDef extends ISapphireConditionHostDef, ActionCo
     
     ListProperty PROP_IMAGES = new ListProperty( TYPE, "Images" );
     
-    ModelElementList<ImageReference> getImages();
+    ElementList<ImageReference> getImages();
     
     // *** Description ***
     
@@ -107,6 +107,6 @@ public interface ActionSystemPartDef extends ISapphireConditionHostDef, ActionCo
     
     ListProperty PROP_LOCATION_HINTS = new ListProperty( TYPE, "LocationHints" );
     
-    ModelElementList<ActionLocationHint> getLocationHints();
+    ElementList<ActionLocationHint> getLocationHints();
     
 }

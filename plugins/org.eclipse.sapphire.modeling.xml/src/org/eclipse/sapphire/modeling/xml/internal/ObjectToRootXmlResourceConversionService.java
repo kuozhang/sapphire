@@ -15,8 +15,8 @@ import java.io.File;
 
 import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
@@ -61,7 +61,7 @@ public final class ObjectToRootXmlResourceConversionService extends ConversionSe
                 return true;
             }
             
-            final ModelElementType type = context( ModelElementType.class );
+            final ElementType type = context( ElementType.class );
             
             if( type != null && ( type.hasAnnotation( XmlBinding.class ) || type.hasAnnotation( CustomXmlRootBinding.class ) ) )
             {

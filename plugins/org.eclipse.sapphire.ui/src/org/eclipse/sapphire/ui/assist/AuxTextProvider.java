@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.assist;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 
 public abstract class AuxTextProvider
 {
-    public abstract String getAuxText( final IModelElement modelElement,
-                                       final ModelProperty property );
+    public abstract String getAuxText( final Element modelElement,
+                                       final PropertyDef property );
     
 }

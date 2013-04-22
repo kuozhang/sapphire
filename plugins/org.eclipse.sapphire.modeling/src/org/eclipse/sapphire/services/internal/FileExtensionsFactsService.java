@@ -14,9 +14,7 @@ package org.eclipse.sapphire.services.internal;
 import java.util.List;
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.FileExtensionsService;
@@ -36,7 +34,7 @@ public final class FileExtensionsFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final FileExtensionsService service = context( IModelElement.class ).service( context( ModelProperty.class ), FileExtensionsService.class );
+        final FileExtensionsService service = context( Property.class ).service( FileExtensionsService.class );
         final List<String> extensions = service.extensions();
         final int count = extensions.size();
         
@@ -81,8 +79,8 @@ public final class FileExtensionsFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            return ( property != null && context.find( IModelElement.class ).service( property, FileExtensionsService.class ) != null );
+            final Property property = context.find( Property.class );
+            return ( property != null && property.service( FileExtensionsService.class ) != null );
         }
     
         @Override

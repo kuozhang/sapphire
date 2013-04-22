@@ -11,26 +11,26 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0003;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Transient;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Transient;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Misc0003TestRootElement extends IModelElement
+public interface Misc0003TestRootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Misc0003TestRootElement.class );
+    ElementType TYPE = new ElementType( Misc0003TestRootElement.class );
     
     // *** ValueProperty1 ***
 
@@ -64,7 +64,7 @@ public interface Misc0003TestRootElement extends IModelElement
     
     ElementProperty PROP_ELEMENT_PROPERTY = new ElementProperty(TYPE, "ElementProperty");
 
-    ModelElementHandle<Misc0003TestChildElement> gEtElEmEnTpRoPeRtY();
+    ElementHandle<Misc0003TestChildElement> gEtElEmEnTpRoPeRtY();
     
     // *** ImpliedElementProperty ***
 
@@ -80,6 +80,6 @@ public interface Misc0003TestRootElement extends IModelElement
     
     ListProperty PROP_LIST_PROPERTY = new ListProperty(TYPE, "ListProperty");
 
-    ModelElementList<Misc0003TestChildElement> gEtLiStPrOpErTy();
+    ElementList<Misc0003TestChildElement> gEtLiStPrOpErTy();
 
 }

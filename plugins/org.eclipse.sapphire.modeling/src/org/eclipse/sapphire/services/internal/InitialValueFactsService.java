@@ -15,8 +15,7 @@ import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.get
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.InitialValueService;
@@ -36,15 +35,14 @@ public final class InitialValueFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
-        final InitialValueService initialValueService = element.service( property, InitialValueService.class );
+        final Property property = context( Property.class );
+        final InitialValueService initialValueService = property.service( InitialValueService.class );
         
         final String value = initialValueService.value();
         
         if( value != null && value.trim().length() > 0 )
         {
-            final String valueLabel = getValueLabel( element, property, value );
+            final String valueLabel = getValueLabel( property, value );
             facts.add( NLS.bind( Resources.statement, valueLabel ) );
         }
     }
@@ -55,19 +53,8 @@ public final class InitialValueFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            
-            if( property != null )
-            {
-                final IModelElement element = context.find( IModelElement.class );
-                
-                if( element.service( property, InitialValueService.class ) != null )
-                {
-                    return true;
-                }
-            }
-            
-            return false;
+            final Property property = context.find( Property.class );
+            return ( property != null && property.service( InitialValueService.class ) != null );
         }
     
         @Override

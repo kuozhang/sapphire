@@ -36,7 +36,7 @@ public abstract class SeparatorPart extends FormComponentPart
         {
             final FormPart form = (FormPart) parent;
             
-            if( ! ( this instanceof LineSeparatorPart && ( (LineSeparatorDef) definition() ).getLabel().getText() != null ) )
+            if( ! ( this instanceof LineSeparatorPart && ( (LineSeparatorDef) definition() ).getLabel().text() != null ) )
             {
                 /*
                  * A separator is considered not necessary if

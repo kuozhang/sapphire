@@ -12,13 +12,12 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -40,7 +39,7 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
         
         this.prefix = def.getParam( "prefix" ) + " ";
         
-        final IModelElement element = getModelElement();
+        final Element element = getModelElement();
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -52,7 +51,7 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
             }
         };
         
-        final String path = getProperty().getName() + "/*";
+        final String path = property().name() + "/*";
         
         element.attach( listener, path );
         
@@ -73,21 +72,15 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
     }
     
     @Override
-    public ListProperty getProperty()
-    {
-        return (ListProperty) super.getProperty();
-    }
-
-    @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final ModelElementList<IModelElement> list = getModelElement().read( getProperty() );
+        final ElementList<?> list = (ElementList<?>) property();
         
         if( ! list.isEmpty() )
         {
-            final IModelElement element = list.get( 0 );
-            final ValueProperty property = (ValueProperty) element.properties().first().property();
-            final String oldValue = element.read( property ).getText();
+            final Element element = list.get( 0 );
+            final ValueProperty property = (ValueProperty) element.properties().first().definition();
+            final String oldValue = element.property( property ).text();
             final String newValue;
             
             if( isChecked() )
@@ -113,7 +106,7 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
                 }
             }
             
-            element.write( property, newValue );
+            element.property( property ).write( newValue );
         }
         
         return null;
@@ -121,20 +114,20 @@ public final class PrefixActionHandlerForList extends SapphirePropertyEditorActi
     
     private void refreshEnabledState()
     {
-        setEnabled( ! getModelElement().read( getProperty() ).isEmpty() );
+        setEnabled( ! property().empty() );
     }
 
     private void refreshCheckedState()
     {
         boolean checked = false;
         
-        final ModelElementList<IModelElement> list = getModelElement().read( getProperty() );
+        final ElementList<?> list = (ElementList<?>) property();
         
         if( ! list.isEmpty() )
         {
-            final IModelElement element = list.get( 0 );
-            final ValueProperty property = (ValueProperty) element.properties().first().property();
-            final String value = element.read( property ).getText();
+            final Element element = list.get( 0 );
+            final ValueProperty property = (ValueProperty) element.properties().first().definition();
+            final String value = element.property( property ).text();
             checked = ( value != null && value.startsWith( this.prefix ) );
         }
         

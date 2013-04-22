@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
@@ -43,7 +43,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ActuatorDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( ActuatorDef.class );
+    ElementType TYPE = new ElementType( ActuatorDef.class );
  
     // *** ActionId ***
     
@@ -139,7 +139,7 @@ public interface ActuatorDef extends FormComponentDef
     
     ListProperty PROP_IMAGES = new ListProperty( TYPE, "Images" );
     
-    ModelElementList<ImageReference> getImages();
+    ElementList<ImageReference> getImages();
     
     // *** Style ***
 

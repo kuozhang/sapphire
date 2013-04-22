@@ -32,9 +32,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.FileResourceStore;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ResourceStore;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -246,19 +246,19 @@ public class XmlResourceStore extends ResourceStore
         return this.base.getLocalizationService( locale );
     }
 
-    public void registerRootModelElement( final IModelElement rootModelElement )
+    public void registerRootModelElement( final Element rootModelElement )
     {
         // The default implementation doesn't do anything.
     }
 
     public void registerModelElement( final Node xmlNode,
-                                      final IModelElement modelElement )
+                                      final Element modelElement )
     {
         // The default implementation doesn't do anything.
     }
 
     public void unregisterModelElement( final Node xmlNode,
-                                        final IModelElement modelElement )
+                                        final Element modelElement )
     {
         // The default implementation doesn't do anything.
     }

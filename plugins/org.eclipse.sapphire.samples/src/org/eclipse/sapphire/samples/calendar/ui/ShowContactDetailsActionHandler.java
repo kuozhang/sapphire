@@ -12,10 +12,10 @@
 package org.eclipse.sapphire.samples.calendar.ui;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.ui.ISapphirePart;
@@ -36,7 +36,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
     {
         super.init( action, def );
         
-        final IModelElement element = getModelElement();
+        final Element element = getModelElement();
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -47,7 +47,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
             }
         };
         
-        element.attach( listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
+        element.property( IAttendee.PROP_IN_CONTACT_REPOSITORY ).attach( listener );
         
         refreshEnablementState();
         
@@ -58,7 +58,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    element.detach( listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
+                    element.property( IAttendee.PROP_IN_CONTACT_REPOSITORY ).detach( listener );
                 }
             }
         );
@@ -66,7 +66,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
     
     protected void refreshEnablementState()
     {
-        setEnabled( ( (IAttendee) getModelElement() ).isInContactRepository().getContent() );
+        setEnabled( ( (IAttendee) getModelElement() ).isInContactRepository().content() );
     }
 
     @Override
@@ -74,7 +74,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
     {
         final ISapphirePart part = getPart();
         final CalendarEditor editor = part.nearest( CalendarEditor.class );
-        final IModelElement modelElement = part.getModelElement();
+        final Element modelElement = part.getModelElement();
         
         ContactDetailsJumpHandler.jump( editor, modelElement );
         

@@ -11,19 +11,19 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0003;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public interface TestXmlXsd0003Circle extends IModelElement
+public interface TestXmlXsd0003Circle extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlXsd0003Circle.class );
+    ElementType TYPE = new ElementType( TestXmlXsd0003Circle.class );
     
     // *** circle1 ***
     

@@ -12,11 +12,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -32,7 +32,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ISapphireDocumentationDef extends ISapphireDocumentation
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireDocumentationDef.class );
+    ElementType TYPE = new ElementType( ISapphireDocumentationDef.class );
  
     // *** Id ***
     
@@ -74,6 +74,6 @@ public interface ISapphireDocumentationDef extends ISapphireDocumentation
                              
     ListProperty PROP_TOPICS = new ListProperty( TYPE, "Topics" );
     
-    ModelElementList<ISapphireDocumentationTopicDef> getTopics();
+    ElementList<ISapphireDocumentationTopicDef> getTopics();
 
 }

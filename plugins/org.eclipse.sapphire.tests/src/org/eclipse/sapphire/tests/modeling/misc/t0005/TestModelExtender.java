@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0005;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 
 public interface TestModelExtender extends TestModelBase
 {
-    ModelElementType TYPE = new ModelElementType( TestModelExtender.class );
+    ElementType TYPE = new ElementType( TestModelExtender.class );
     
     // *** Method : test ***
 

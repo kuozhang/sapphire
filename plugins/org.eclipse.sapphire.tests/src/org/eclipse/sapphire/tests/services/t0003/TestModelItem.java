@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.services.t0003;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Service;
@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.annotations.Service;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestModelItem extends IModelElement
+public interface TestModelItem extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModelItem.class );
+    ElementType TYPE = new ElementType( TestModelItem.class );
     
     // *** Name ***
     

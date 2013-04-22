@@ -53,7 +53,7 @@ public final class TestXmlBinding0005
         
         try
         {
-            element.getTestProperty().element( true );
+            element.getTestProperty().content( true );
             fail( "Did not catch the expected exception." );
         }
         catch( Exception e )
@@ -69,7 +69,7 @@ public final class TestXmlBinding0005
         
         try
         {
-            element.getTestProperty().element( true );
+            element.getTestProperty().content( true );
             fail( "Did not catch the expected exception." );
         }
         catch( Exception e )

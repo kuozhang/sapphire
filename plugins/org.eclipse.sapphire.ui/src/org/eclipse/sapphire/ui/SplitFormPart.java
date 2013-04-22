@@ -19,9 +19,9 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
@@ -42,7 +42,7 @@ public final class SplitFormPart extends FormPart
     @Override
     protected List<SapphirePart> initChildParts()
     {
-        final IModelElement element = getLocalModelElement();
+        final Element element = getLocalModelElement();
         final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         
         for( SplitFormBlockDef splitFormBlockDef : definition().getBlocks() )
@@ -61,7 +61,7 @@ public final class SplitFormPart extends FormPart
     
     public Orientation getOrientation()
     {
-        return definition().getOrientation().getContent();
+        return definition().getOrientation().content();
     }
     
     @Override

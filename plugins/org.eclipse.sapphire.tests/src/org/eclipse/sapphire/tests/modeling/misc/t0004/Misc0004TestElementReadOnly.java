@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0004;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 
 public interface Misc0004TestElementReadOnly extends Misc0004TestElementWritable
 {
-    ModelElementType TYPE = new ModelElementType( Misc0004TestElementReadOnly.class );
+    ElementType TYPE = new ElementType( Misc0004TestElementReadOnly.class );
     
     // *** Text ***
 

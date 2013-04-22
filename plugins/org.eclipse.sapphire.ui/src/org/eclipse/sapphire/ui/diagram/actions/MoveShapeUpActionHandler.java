@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui.diagram.actions;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -75,8 +75,8 @@ public class MoveShapeUpActionHandler extends SapphireActionHandler
 	{
         final ISapphirePart part = getPart();
     	ShapeFactoryPart shapeFactory = (ShapeFactoryPart)part.getParentPart();
-    	IModelElement element = part.getLocalModelElement();
-    	ModelElementList<IModelElement> list = shapeFactory.getModelElementList();
+    	Element element = part.getLocalModelElement();
+    	ElementList<Element> list = shapeFactory.getModelElementList();
 		list.moveUp(element);
 		SapphireDiagramEditorPagePart editorPart = part.nearest(SapphireDiagramEditorPagePart.class);
 		editorPart.setSelections(Collections.singletonList(part));

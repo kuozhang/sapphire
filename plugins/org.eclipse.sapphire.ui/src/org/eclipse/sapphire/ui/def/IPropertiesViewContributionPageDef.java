@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IPropertiesViewContributionPageDef extends FormDef
 {
-    ModelElementType TYPE = new ModelElementType( IPropertiesViewContributionPageDef.class );
+    ElementType TYPE = new ElementType( IPropertiesViewContributionPageDef.class );
 
     // *** Label ***
     

@@ -11,19 +11,19 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0003;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestXmlBinding0003AB extends IModelElement
+public interface TestXmlBinding0003AB extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlBinding0003AB.class );
+    ElementType TYPE = new ElementType( TestXmlBinding0003AB.class );
     
     // *** Aba ***
     

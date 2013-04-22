@@ -12,8 +12,8 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.events.HelpEvent;
@@ -119,8 +119,8 @@ public class SapphireRenderingContext
     }
     
     public final void setHelp( final Control control,
-                               final IModelElement modelElement,
-                               final ModelProperty property )
+                               final Element modelElement,
+                               final PropertyDef property )
     {
         final SapphireHelpContext context = new SapphireHelpContext(modelElement, property);
         if (context.getText() != null || (context.getRelatedTopics() != null && context.getRelatedTopics().length > 0)) 

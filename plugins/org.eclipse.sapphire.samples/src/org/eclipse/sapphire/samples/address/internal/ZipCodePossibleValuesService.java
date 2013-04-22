@@ -29,8 +29,8 @@ public final class ZipCodePossibleValuesService extends PossibleValuesService
     {
         final Address address = context( Address.class );
         
-        final String state = address.getState().getText();
-        final String city = address.getCity().getText();
+        final String state = address.getState().text();
+        final String city = address.getCity().text();
         
         values.addAll( ZipCodeRepository.getZipCodes( state, city ) );
     }

@@ -31,7 +31,7 @@ public class TableReferenceService extends ReferenceService
             
             for( Table table : schema.getTables() )
             {
-                if( reference.equals( table.getName().getText() ) )
+                if( reference.equals( table.getName().text() ) )
                 {
                     return table;
                 }

@@ -27,21 +27,22 @@ import java.util.Set;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementImpl;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -64,7 +65,6 @@ import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
 import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
-import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.ui.def.LineSeparatorDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
@@ -76,6 +76,7 @@ import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
 import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.ui.def.TabGroupDef;
 import org.eclipse.sapphire.ui.def.WhitespaceSeparatorDef;
+import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.ui.def.WizardPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
@@ -94,10 +95,9 @@ import org.eclipse.swt.widgets.Display;
 public abstract class SapphirePart implements ISapphirePart
 {
     private ISapphirePart parent;
-    private IModelElement modelElement;
+    private Element modelElement;
     protected PartDef definition;
     protected Map<String,String> params;
-    private Listener modelElementListener;
     private Status validation;
     private final ListenerContext listeners = new ListenerContext();
     private Set<SapphirePartListener> listenersDeprecated;
@@ -115,7 +115,7 @@ public abstract class SapphirePart implements ISapphirePart
     }
     
     public final void init( final ISapphirePart parent,
-                            final IModelElement modelElement,
+                            final Element modelElement,
                             final PartDef definition,
                             final Map<String,String> params )
     {
@@ -130,18 +130,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         this.modelElement = modelElement;
         
-        this.modelElementListener = new Listener()
-        {
-            @Override
-            public void handle( final Event event )
-            {
-                handleModelElementChange( event );
-            }
-        };
-        
-        this.modelElement.attach( this.modelElementListener );
-        
-        this.listeners.coordinate( ( (ModelElement) this.modelElement ).listeners() );
+        this.listeners.coordinate( ( (ElementImpl) this.modelElement ).listeners() );
         
         for( ISapphirePartListenerDef listenerDefinition : this.definition.getListeners() )
         {
@@ -222,7 +211,7 @@ public abstract class SapphirePart implements ISapphirePart
         return initExpression( getLocalModelElement(), function, expectedType, defaultValue, refreshOp );
     }
     
-    public final FunctionResult initExpression( final IModelElement element,
+    public final FunctionResult initExpression( final Element element,
                                                 final Function function,
                                                 final Class<?> expectedType,
                                                 final Function defaultValue )
@@ -230,7 +219,7 @@ public abstract class SapphirePart implements ISapphirePart
         return initExpression( function, expectedType, defaultValue, null );
     }
     
-    public final FunctionResult initExpression( final IModelElement element,
+    public final FunctionResult initExpression( final Element element,
                                                 final Function function,
                                                 final Class<?> expectedType,
                                                 final Function defaultValue,
@@ -272,20 +261,14 @@ public abstract class SapphirePart implements ISapphirePart
     
     protected Function initVisibleWhenFunction()
     {
-        return this.definition.getVisibleWhen().getContent();
+        return this.definition.getVisibleWhen().content();
     }
     
-    protected static final Function createVersionCompatibleFunction( final IModelElement element,
-                                                                     final ModelProperty property )
+    protected static final Function createVersionCompatibleFunction( final Property property )
     {
-        if( element == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
         if( property != null )
         {
-            final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
+            final MasterVersionCompatibilityService service = property.service( MasterVersionCompatibilityService.class );
             
             final Function function = new Function()
             {
@@ -326,20 +309,20 @@ public abstract class SapphirePart implements ISapphirePart
                                 }
                             };
                             
-                            if( property instanceof ImpliedElementProperty )
+                            if( property.definition() instanceof ImpliedElementProperty )
                             {
-                                element.attach( this.propertyListener, property.getName() + "/*" );
+                                property.element().attach( this.propertyListener, property.name() + "/*" );
                             }
                             else
                             {
-                                element.attach( this.propertyListener, property.getName() );
+                                property.element().attach( this.propertyListener, property.name() );
                             }
                         }
 
                         @Override
                         protected Object evaluate()
                         {
-                            return service.compatible() || ! element.empty( property );
+                            return service.compatible() || ! property.empty();
                         }
                         
                         @Override
@@ -349,13 +332,13 @@ public abstract class SapphirePart implements ISapphirePart
                             
                             service.detach( this.serviceListener );
 
-                            if( property instanceof ImpliedElementProperty )
+                            if( property.definition() instanceof ImpliedElementProperty )
                             {
-                                element.detach( this.propertyListener, property.getName() + "/*" );
+                                property.element().detach( this.propertyListener, property.name() + "/*" );
                             }
                             else
                             {
-                                element.detach( this.propertyListener, property.getName() );
+                                property.element().detach( this.propertyListener, property.name() );
                             }
                         }
                     };
@@ -402,12 +385,12 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
     
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return this.modelElement;
     }
     
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
         return this.modelElement;
     }
@@ -434,6 +417,22 @@ public abstract class SapphirePart implements ISapphirePart
     
     protected final void refreshValidation()
     {
+        if( Display.getCurrent() == null )
+        {
+            Display.getDefault().asyncExec
+            (
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        refreshValidation();
+                    }
+                }
+            );
+            
+            return;
+        }
+        
         final Status newValidationState = computeValidation();
         
         if( newValidationState == null )
@@ -491,11 +490,6 @@ public abstract class SapphirePart implements ISapphirePart
         }
         
         return this.imageCache;
-    }
-    
-    protected void handleModelElementChange( final Event event )
-    {
-        // The default implement doesn't do anything.
     }
     
     public final boolean attach( final Listener listener )
@@ -560,18 +554,18 @@ public abstract class SapphirePart implements ISapphirePart
         }
     }
     
-    public final ModelProperty resolve( final String propertyName )
+    public final PropertyDef resolve( final String propertyName )
     {
         return resolve( this.modelElement, propertyName );
     }
 
-    public final ModelProperty resolve( final IModelElement modelElement,
+    public final PropertyDef resolve( final Element modelElement,
                                         String propertyName )
     {
         return resolve( modelElement, propertyName, this.params );
     }
     
-    public static final ModelProperty resolve( final IModelElement modelElement,
+    public static final PropertyDef resolve( final Element modelElement,
                                                String propertyName,
                                                final Map<String,String> params )
     {
@@ -579,8 +573,8 @@ public abstract class SapphirePart implements ISapphirePart
         {
             propertyName = substituteParams( propertyName.trim(), params );
             
-            final ModelElementType type = modelElement.type();
-            final ModelProperty property = type.property( propertyName );
+            final ElementType type = modelElement.type();
+            final PropertyDef property = type.property( propertyName );
             
             if( property == null )
             {
@@ -702,7 +696,7 @@ public abstract class SapphirePart implements ISapphirePart
 
         if( result == null )
         {
-            final IModelElement element = getLocalModelElement();
+            final Element element = getLocalModelElement();
             
             if( element != null )
             {
@@ -809,8 +803,6 @@ public abstract class SapphirePart implements ISapphirePart
         
         if( performOnDisposeTasks )
         {
-            this.modelElement.detach( this.modelElementListener );
-        
             if( this.parent == null && this.imageCache != null )
             {
                 this.imageCache.dispose();
@@ -1000,7 +992,7 @@ public abstract class SapphirePart implements ISapphirePart
         {
             super.fillTracingInfo( info );
             
-            final IModelElement element = this.part.getLocalModelElement();
+            final Element element = this.part.getLocalModelElement();
             info.put( "part", this.part.getClass().getName() + '(' + System.identityHashCode( this.part ) + ')' );
             info.put( "element", element.type().getQualifiedName() + '(' + System.identityHashCode( element ) + ')' );
             
@@ -1041,7 +1033,7 @@ public abstract class SapphirePart implements ISapphirePart
     }
     
     public static final SapphirePart create( final ISapphirePart parent,
-                                             final IModelElement element,
+                                             final Element element,
                                              final PartDef definition,
                                              final Map<String,String> params )
     {
@@ -1100,10 +1092,9 @@ public abstract class SapphirePart implements ISapphirePart
         }
         else if( definition instanceof WithDef )
         {
-            final WithPartHelper.ResolvePathResult resolvePathResult 
-                = WithPartHelper.resolvePath( element, (WithDef) definition, partParams );
-            
-            if( resolvePathResult.property == null )
+            final Property property = element.property( ( (WithDef) definition ).getPath().content() );
+
+            if( property.definition() instanceof ImpliedElementProperty )
             {
                 part = new WithPartImplied();
             }
@@ -1116,7 +1107,7 @@ public abstract class SapphirePart implements ISapphirePart
         {
             final PageBookExtDef pageBookPartDef = (PageBookExtDef) definition;
             
-            if( pageBookPartDef.getControlMethod().getContent() == PageBookPartControlMethod.ENUM_VALUE )
+            if( pageBookPartDef.getControlMethod().content() == PageBookPartControlMethod.ENUM_VALUE )
             {
                 part = new SapphireEnumControlledPageBook();
             }
@@ -1144,7 +1135,7 @@ public abstract class SapphirePart implements ISapphirePart
             
             if( def == null )
             {
-                final String msg = NLS.bind( Resources.couldNotResolveSection, ref.getSection().getText() );
+                final String msg = NLS.bind( Resources.couldNotResolveSection, ref.getSection().text() );
                 throw new IllegalArgumentException( msg );
             }
             else
@@ -1153,8 +1144,8 @@ public abstract class SapphirePart implements ISapphirePart
                 
                 for( ISapphireParam param : ref.getParams() )
                 {
-                    final String paramName = param.getName().getText();
-                    final String paramValue = param.getValue().getText();
+                    final String paramName = param.getName().text();
+                    final String paramValue = param.getValue().text();
                     
                     if( paramName != null && paramValue != null )
                     {
@@ -1176,7 +1167,7 @@ public abstract class SapphirePart implements ISapphirePart
             
             if( def == null )
             {
-                final String msg = NLS.bind( Resources.couldNotResolveInclude, inc.getPart().getText() );
+                final String msg = NLS.bind( Resources.couldNotResolveInclude, inc.getPart().text() );
                 throw new IllegalArgumentException( msg );
             }
             else
@@ -1185,8 +1176,8 @@ public abstract class SapphirePart implements ISapphirePart
                 
                 for( ISapphireParam param : inc.getParams() )
                 {
-                    final String paramName = param.getName().getText();
-                    final String paramValue = param.getValue().getText();
+                    final String paramName = param.getName().text();
+                    final String paramValue = param.getValue().text();
                     
                     if( paramName != null && paramValue != null )
                     {

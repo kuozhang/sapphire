@@ -15,7 +15,7 @@ import java.net.URL;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
@@ -34,7 +34,7 @@ public final class StringToImageDataConversionService extends ConversionService<
     @Override
     public ImageData convert( final String string )
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         final Context ctxt = element.adapt( Context.class );
         
         URL url = null;
@@ -47,7 +47,7 @@ public final class StringToImageDataConversionService extends ConversionService<
             {
                 for( IPackageReference p : sdef.getImportedPackages() )
                 {
-                    final String pname = p.getName().getContent();
+                    final String pname = p.getName().content();
                     
                     if( pname != null )
                     {

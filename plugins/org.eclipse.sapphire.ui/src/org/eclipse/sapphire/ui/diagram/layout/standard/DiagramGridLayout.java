@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.ui.diagram.layout.standard;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public interface DiagramGridLayout extends IModelElement 
+public interface DiagramGridLayout extends Element 
 {
-	ModelElementType TYPE = new ModelElementType( DiagramGridLayout.class);
+	ElementType TYPE = new ElementType( DiagramGridLayout.class);
 
 	// *** Visible ***
 	

@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.tests.services.t0002;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestModel extends IModelElement
+public interface TestModel extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModel.class );
+    ElementType TYPE = new ElementType( TestModel.class );
     
     // *** FilePath1 ***
     

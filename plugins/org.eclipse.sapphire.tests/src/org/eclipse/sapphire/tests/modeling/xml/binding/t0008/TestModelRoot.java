@@ -12,9 +12,9 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0008;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -25,9 +25,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @XmlBinding( path = "root" )
 
-public interface TestModelRoot extends IModelElement
+public interface TestModelRoot extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModelRoot.class );
+    ElementType TYPE = new ElementType( TestModelRoot.class );
     
     // *** Child ***
     

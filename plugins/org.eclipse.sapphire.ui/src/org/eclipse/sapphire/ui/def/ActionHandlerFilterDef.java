@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
@@ -32,7 +32,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface ActionHandlerFilterDef extends ActionContextsHostDef
 {
-    ModelElementType TYPE = new ModelElementType( ActionHandlerFilterDef.class );
+    ElementType TYPE = new ElementType( ActionHandlerFilterDef.class );
     
     // *** ImplClass ***
     

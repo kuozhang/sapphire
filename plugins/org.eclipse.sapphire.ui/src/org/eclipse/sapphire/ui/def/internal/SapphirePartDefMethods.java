@@ -27,9 +27,9 @@ public final class SapphirePartDefMethods
         
         for( ISapphireHint hint : def.getHints() )
         {
-            if( hintName.equals( hint.getName().getText() ) )
+            if( hintName.equals( hint.getName().text() ) )
             {
-                hintValue = hint.getValue().getText();
+                hintValue = hint.getValue().text();
                 break;
             }
         }

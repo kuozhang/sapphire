@@ -39,11 +39,11 @@ public class DiagramNodeDefaultActionPart extends SapphirePart
         super.init();
         
         this.definition = (IDiagramNodeDefaultActionDef)super.definition;
-        final String actionId = this.definition.getActionId().getContent();
-        final String actionHandlerId = this.definition.getActionHandlerId().getContent();
+        final String actionId = this.definition.getActionId().content();
+        final String actionHandlerId = this.definition.getActionHandlerId().content();
         final SapphireAction action = getAction( actionId );
-        this.label = this.definition.getLabel().getLocalizedText( CapitalizationType.FIRST_WORD_ONLY, false );
-        this.description = this.definition.getLabel().getLocalizedText( CapitalizationType.NO_CAPS, false );
+        this.label = this.definition.getLabel().localized( CapitalizationType.FIRST_WORD_ONLY, false );
+        this.description = this.definition.getLabel().localized( CapitalizationType.NO_CAPS, false );
         
         if( actionHandlerId == null )
         {

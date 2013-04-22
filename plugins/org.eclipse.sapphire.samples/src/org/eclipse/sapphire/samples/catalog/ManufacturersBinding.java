@@ -21,14 +21,14 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.ChildXmlResource;
@@ -48,8 +48,8 @@ public final class ManufacturersBinding extends ListBindingImpl
     private Listener listener;
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         super.init( element, property, params );
@@ -59,11 +59,11 @@ public final class ManufacturersBinding extends ListBindingImpl
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                element.refresh( property );
+                element.property( property ).refresh();
                 
                 for( Manufacturer manufacturer : ( (Catalog) element ).getManufacturers() )
                 {
-                    manufacturer.refresh( Manufacturer.PROP_ITEMS );
+                    manufacturer.getItems().refresh();
                 }
             }
         };
@@ -81,7 +81,7 @@ public final class ManufacturersBinding extends ListBindingImpl
         
         for( Item item : ( (Catalog) element() ).getItems() )
         {
-            manufacturers.add( item.getManufacturer().getText() );
+            manufacturers.add( item.getManufacturer().text() );
         }
         
         // Compute the list of manufacturer resources, reusing existing resources when possible.
@@ -130,7 +130,7 @@ public final class ManufacturersBinding extends ListBindingImpl
     }
 
     @Override
-    public ModelElementType type( final Resource resource )
+    public ElementType type( final Resource resource )
     {
         return Manufacturer.TYPE;
     }
@@ -204,7 +204,7 @@ public final class ManufacturersBinding extends ListBindingImpl
         }
 
         @Override
-        protected BindingImpl createBinding( final ModelProperty property )
+        protected BindingImpl createBinding( final PropertyDef property )
         {
             BindingImpl binding = null;
             
@@ -230,12 +230,12 @@ public final class ManufacturersBinding extends ListBindingImpl
                 binding = new StandardXmlListBindingImpl()
                 {
                     @Override
-                    protected void initBindingMetadata( final IModelElement element,
-                                                        final ModelProperty property,
+                    protected void initBindingMetadata( final Element element,
+                                                        final PropertyDef property,
                                                         final String[] params )
                     {
                         this.xmlElementNames = new QName[] { createQualifiedName( "Item", null ), createQualifiedName( "MultiVariantItem", null ) };
-                        this.modelElementTypes = new ModelElementType[] { SingleVariantItem.TYPE, MultiVariantItem.TYPE };
+                        this.modelElementTypes = new ElementType[] { SingleVariantItem.TYPE, MultiVariantItem.TYPE };
                     }
                     
                     @Override
@@ -258,7 +258,7 @@ public final class ManufacturersBinding extends ListBindingImpl
                         return filtered.result();
                     }
                     
-                    protected Object insertUnderlyingObject( final ModelElementType type,
+                    protected Object insertUnderlyingObject( final ElementType type,
                                                              final int position )
                     {
                         final XmlElement element = (XmlElement) super.insertUnderlyingObject( type, position );

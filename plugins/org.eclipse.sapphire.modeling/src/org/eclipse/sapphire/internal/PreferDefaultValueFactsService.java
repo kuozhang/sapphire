@@ -16,8 +16,8 @@ import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.get
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.PreferDefaultValue;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.Service;
@@ -36,10 +36,8 @@ public final class PreferDefaultValueFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
-        
-        final String defaultValue = getDefaultValueLabel( element, property );
+        final Value<?> property = context( Value.class );
+        final String defaultValue = getDefaultValueLabel( property );
         
         if( defaultValue != null )
         {

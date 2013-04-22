@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface SplitFormGallery extends IModelElement
+public interface SplitFormGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( SplitFormGallery.class );
+    ElementType TYPE = new ElementType( SplitFormGallery.class );
     
     // *** List1 ***
     
@@ -38,7 +38,7 @@ public interface SplitFormGallery extends IModelElement
     
     ListProperty PROP_LIST_1 = new ListProperty( TYPE, "List1" );
     
-    ModelElementList<SplitFormGalleryListEntry> getList1();
+    ElementList<SplitFormGalleryListEntry> getList1();
     
     // *** List2 ***
     
@@ -48,7 +48,7 @@ public interface SplitFormGallery extends IModelElement
     
     ListProperty PROP_LIST_2 = new ListProperty( TYPE, "List2" );
     
-    ModelElementList<SplitFormGalleryListEntry> getList2();
+    ElementList<SplitFormGalleryListEntry> getList2();
 
     // *** List3 ***
     
@@ -58,7 +58,7 @@ public interface SplitFormGallery extends IModelElement
     
     ListProperty PROP_LIST_3 = new ListProperty( TYPE, "List3" );
     
-    ModelElementList<SplitFormGalleryListEntry> getList3();
+    ElementList<SplitFormGalleryListEntry> getList3();
 
     // *** List4 ***
     
@@ -68,7 +68,7 @@ public interface SplitFormGallery extends IModelElement
     
     ListProperty PROP_LIST_4 = new ListProperty( TYPE, "List4" );
     
-    ModelElementList<SplitFormGalleryListEntry> getList4();
+    ElementList<SplitFormGalleryListEntry> getList4();
 
     // *** String1 ***
     

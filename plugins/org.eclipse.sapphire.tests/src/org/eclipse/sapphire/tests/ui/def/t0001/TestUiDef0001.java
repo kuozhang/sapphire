@@ -14,8 +14,8 @@ package org.eclipse.sapphire.tests.ui.def.t0001;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -55,7 +55,7 @@ public final class TestUiDef0001 extends SapphireTestCase
             final MasterDetailsEditorPageDef page = (MasterDetailsEditorPageDef) handle.resolve();
             assertNotNull( page );
             
-            final ModelElementList<ActionHandlerDef> handlers = page.getActionHandlers();
+            final ElementList<ActionHandlerDef> handlers = page.getActionHandlers();
             assertNotNull( handlers );
             assertEquals( 1, handlers.size() );
             

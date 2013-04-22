@@ -22,13 +22,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -55,7 +55,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     
     private IDiagramImplicitConnectionBindingDef bindingDef;
     private IDiagramConnectionDef connectionDef;
-    protected IModelElement modelElement;
+    protected Element modelElement;
     private SapphireDiagramEditorPagePart diagramEditor;
     private String propertyName;
     private ModelPath allDescendentsPath;
@@ -64,7 +64,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     private List<DiagramImplicitConnectionPart> implicitConnections;
     private Listener modelPropertyListener;
     private Set<DiagramImplicitConnectionTemplateListener> templateListeners;
-    private Map<IModelElement, FunctionResult> listEntryFunctionMap;
+    private Map<Element, FunctionResult> listEntryFunctionMap;
     private DiagramNodeTemplate nodeTemplate;
     private NodeTemplateListener nodeTemplateListener;
         
@@ -77,14 +77,14 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     public void init()
     {
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
-        this.listEntryFunctionMap = new IdentityHashMap<IModelElement, FunctionResult>();
+        this.listEntryFunctionMap = new IdentityHashMap<Element, FunctionResult>();
         this.modelElement = getModelElement();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
-        this.propertyName = this.bindingDef.getProperty().getContent();
+        this.propertyName = this.bindingDef.getProperty().content();
         this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
         
         this.modelElementTypes = new ArrayList<Class<?>>();
-        ModelElementList<IModelElementTypeDef> types = this.bindingDef.getModelElementTypes();
+        ElementList<IModelElementTypeDef> types = this.bindingDef.getModelElementTypes();
         for (IModelElementTypeDef typeDef : types)
         {
             this.modelElementTypes.add(typeDef.getType().resolve().artifact());
@@ -142,7 +142,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     
     public void refreshImplicitConnections()
     {
-        List<IModelElement> newFilteredList = getFilteredModelElementList();
+        List<Element> newFilteredList = getFilteredModelElementList();
         
         for (DiagramImplicitConnectionPart connPart : this.implicitConnections)
         {
@@ -171,7 +171,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     
     private void initImplicitConnectionParts()
     {
-    	List<IModelElement> newFilteredList = getFilteredModelElementList();
+    	List<Element> newFilteredList = getFilteredModelElementList();
         
         this.implicitConnections = new ArrayList<DiagramImplicitConnectionPart>();
         for (int i = 0; i < newFilteredList.size() - 1; i++)
@@ -183,11 +183,11 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         
     }
     
-    private List<IModelElement> getFilteredModelElementList()
+    private List<Element> getFilteredModelElementList()
     {
-        ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-        List<IModelElement> filteredList = new ArrayList<IModelElement>();
-        for( IModelElement listEntryModelElement : list )
+        ElementList<?> list = this.modelElement.property(this.modelProperty);
+        List<Element> filteredList = new ArrayList<Element>();
+        for( Element listEntryModelElement : list )
         {
             if (isRightEntry(listEntryModelElement))
             {
@@ -197,14 +197,14 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         return filteredList;
     }
         
-    private DiagramImplicitConnectionPart createNewImplicitConnectionPart(IModelElement srcNodeModel, IModelElement targetNodeModel)
+    private DiagramImplicitConnectionPart createNewImplicitConnectionPart(Element srcNodeModel, Element targetNodeModel)
     {
         DiagramImplicitConnectionPart connPart = new DiagramImplicitConnectionPart(srcNodeModel, targetNodeModel);
         connPart.init(this, srcNodeModel, this.connectionDef, Collections.<String,String>emptyMap());
         return connPart;
     }
     
-    private boolean isRightEntry(IModelElement entryModelElement)
+    private boolean isRightEntry(Element entryModelElement)
     {
         boolean isRightType = true;
         if (this.modelElementTypes.size() > 0)
@@ -229,7 +229,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
 	            fr = initExpression
 	            ( 
 	                entryModelElement,
-	                this.bindingDef.getCondition().getContent(), 
+	                this.bindingDef.getCondition().content(), 
 	                String.class,
 	                null,
 	                new Runnable()

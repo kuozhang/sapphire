@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueLabelService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
@@ -33,12 +32,11 @@ public final class PossibleValue
         private final ValueNormalizationService valueNormalizationService;
         private final ValueLabelService valueLabelService;
         
-        private Factory( final IModelElement element,
-                         final ValueProperty property )
+        private Factory( final Property property )
         {
-            this.possibleValuesService = element.service( property, PossibleValuesService.class );
-            this.valueNormalizationService = element.service( property, ValueNormalizationService.class );
-            this.valueLabelService = element.service( property, ValueLabelService.class );
+            this.possibleValuesService = property.service( PossibleValuesService.class );
+            this.valueNormalizationService = property.service( ValueNormalizationService.class );
+            this.valueLabelService = property.service( ValueLabelService.class );
         }
         
         public List<PossibleValue> entries()
@@ -62,10 +60,9 @@ public final class PossibleValue
         }
     }
     
-    public static Factory factory( final IModelElement element,
-                                   final ValueProperty property )
+    public static Factory factory( final Property property )
     {
-        return new Factory( element, property );
+        return new Factory( property );
     }
     
     private final String value;

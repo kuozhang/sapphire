@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -38,7 +38,7 @@ import org.eclipse.sapphire.ui.def.internal.FormPartIncludeReferenceService;
 
 public interface IFormPartInclude extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( IFormPartInclude.class );
+    ElementType TYPE = new ElementType( IFormPartInclude.class );
     
     // *** Part ***
 
@@ -63,6 +63,6 @@ public interface IFormPartInclude extends FormComponentDef
     
     ListProperty PROP_PARAMS = new ListProperty( TYPE, "Params" );
     
-    ModelElementList<ISapphireParam> getParams();
+    ElementList<ISapphireParam> getParams();
 
 }

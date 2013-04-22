@@ -51,14 +51,14 @@ public final class TestXmlBinding0003 extends SapphireTestCase
         final TestXmlBinding0003A a = TestXmlBinding0003A.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         a.setAa( "aa" );
         
-        final TestXmlBinding0003AB ab = a.getAb().element( true );
+        final TestXmlBinding0003AB ab = a.getAb().content( true );
         ab.setAba( "aba" );
         
         final TestXmlBinding0003AC ac = a.getAc().insert();
         ac.setAca( "aca" );
         ac.setAcb( "acb" );
         
-        final TestXmlBinding0003ACC acc = ac.getAcc().element( true );
+        final TestXmlBinding0003ACC acc = ac.getAcc().content( true );
         acc.setAcca( "acca" );
         
         final TestXmlBinding0003ACD acd = ac.getAcd().insert();

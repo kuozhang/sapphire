@@ -23,27 +23,24 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ElementValidationEvent;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -91,9 +88,8 @@ public final class MasterDetailsContentNode
 
     private MasterDetailsContentOutline contentTree;
     private MasterDetailsContentNodeDef definition;
-    private IModelElement modelElement;
-    private ImpliedElementProperty modelElementProperty;
-    private Listener modelElementListener;
+    private Element modelElement;
+    private ElementHandle<?> modelElementProperty;
     private MasterDetailsContentNode parentNode;
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
@@ -135,22 +131,12 @@ public final class MasterDetailsContentNode
         this.contentTree = nearest( MasterDetailsEditorPagePart.class ).outline();
         this.definition = (MasterDetailsContentNodeDef) super.definition;
         
-        this.modelElementProperty = (ImpliedElementProperty) resolve( this.definition.getProperty().getContent() );
+        final ImpliedElementProperty modelElementProperty = (ImpliedElementProperty) resolve( this.definition.getProperty().content() );
         
-        if( this.modelElementProperty != null )
+        if( modelElementProperty != null )
         {
-            this.modelElement = getModelElement().read( this.modelElementProperty ).element();
-            
-            this.modelElementListener = new FilteredListener<PropertyEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( final PropertyEvent event )
-                {
-                    handleModelElementChange( event );
-                }
-            };
-            
-            this.modelElement.attach( this.modelElementListener );
+            this.modelElementProperty = getModelElement().property( modelElementProperty );
+            this.modelElement = this.modelElementProperty.content();
         }
         else
         {
@@ -158,17 +144,6 @@ public final class MasterDetailsContentNode
         }
         
         this.expanded = false;
-        
-        final Listener elementValidationListener = new FilteredListener<ElementValidationEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final ElementValidationEvent event )
-            {
-                refreshValidation();
-            }
-        };
-        
-        this.modelElement.attach( elementValidationListener );
         
         this.childPartListener = new Listener()
         {
@@ -186,7 +161,7 @@ public final class MasterDetailsContentNode
         
         this.labelFunctionResult = initExpression
         ( 
-            this.definition.getLabel().getContent(),
+            this.definition.getLabel().content(),
             String.class,
             null,
             new Runnable()
@@ -201,7 +176,7 @@ public final class MasterDetailsContentNode
         // Image
         
         final Literal defaultImageLiteral = Literal.create( ( this.definition.getChildNodes().isEmpty() ? IMG_LEAF_NODE : IMG_CONTAINER_NODE ) );
-        final Function imageFunction = this.definition.getImage().getContent();
+        final Function imageFunction = this.definition.getImage().content();
         
         this.imageManager = new ImageManager( imageFunction, defaultImageLiteral );
         
@@ -229,7 +204,7 @@ public final class MasterDetailsContentNode
                 
                 if( sectionDefinition == null )
                 {
-                    final String msg = NLS.bind( Resources.couldNotResolveSection, sectionReference.getSection().getText() );
+                    final String msg = NLS.bind( Resources.couldNotResolveSection, sectionReference.getSection().text() );
                     throw new RuntimeException( msg );
                 }
                 
@@ -237,8 +212,8 @@ public final class MasterDetailsContentNode
                 
                 for( ISapphireParam param : sectionReference.getParams() )
                 {
-                    final String paramName = param.getName().getText();
-                    final String paramValue = param.getValue().getText();
+                    final String paramName = param.getName().text();
+                    final String paramValue = param.getValue().text();
                     
                     if( paramName != null && paramValue != null )
                     {
@@ -285,8 +260,8 @@ public final class MasterDetailsContentNode
 
                 for( ISapphireParam param : inc.getParams() )
                 {
-                    final String paramName = param.getName().getText();
-                    final String paramValue = param.getValue().getText();
+                    final String paramName = param.getName().text();
+                    final String paramValue = param.getValue().text();
                     
                     if( paramName != null && paramValue != null )
                     {
@@ -329,10 +304,6 @@ public final class MasterDetailsContentNode
                     {
                         getContentTree().refreshSelection();
                     }
-                    else if( event instanceof DisposeEvent )
-                    {
-                        getModelElement().detach( elementValidationListener );
-                    }
                 }
             }
         );
@@ -344,7 +315,7 @@ public final class MasterDetailsContentNode
         return AndFunction.create
         (
             super.initVisibleWhenFunction(),
-            createVersionCompatibleFunction( getModelElement(), this.modelElementProperty ),
+            createVersionCompatibleFunction( this.modelElementProperty ),
             (
                 this.nodeFactoryVisibleFunction != null ?
                 this.nodeFactoryVisibleFunction :
@@ -464,7 +435,7 @@ public final class MasterDetailsContentNode
     }
 
     @Override
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
         return this.modelElement;
     }
@@ -586,9 +557,9 @@ public final class MasterDetailsContentNode
         return this.sections;
     }
     
-    public List<ModelProperty> getChildNodeFactoryProperties()
+    public List<PropertyDef> getChildNodeFactoryProperties()
     {
-        final ArrayList<ModelProperty> properties = new ArrayList<ModelProperty>();
+        final ArrayList<PropertyDef> properties = new ArrayList<PropertyDef>();
         
         for( Object object : this.rawChildren )
         {
@@ -598,33 +569,12 @@ public final class MasterDetailsContentNode
                 
                 if( factory.visible() )
                 {
-                    properties.add( factory.property() );
+                    properties.add( factory.property().definition() );
                 }
             }
         }
         
         return properties;
-    }
-    
-    public boolean isChildNodeFactoryProperty( final ModelProperty property )
-    {
-        if( this.rawChildren != null )
-        {
-            for( Object object : this.rawChildren )
-            {
-                if( object instanceof NodeFactory )
-                {
-                    final NodeFactory factory = (NodeFactory) object;
-                    
-                    if( factory.visible() && factory.property() == property )
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        
-        return false;
     }
     
     public List<NodeFactory> factories()
@@ -665,7 +615,7 @@ public final class MasterDetailsContentNode
         return null;
     }
     
-    public MasterDetailsContentNode findNode( final IModelElement element )
+    public MasterDetailsContentNode findNode( final Element element )
     {
         if( getModelElement() == element )
         {
@@ -716,6 +666,8 @@ public final class MasterDetailsContentNode
             this.nodes = nodes;
             broadcast( new NodeListEvent( this ) );
         }
+        
+        refreshValidation();
     }
     
     public PropertiesViewContributionPart getPropertiesViewContribution()
@@ -739,11 +691,6 @@ public final class MasterDetailsContentNode
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         
-        if( basis() )
-        {
-            factory.merge( getModelElement().validation() );
-        }
-        
         for( SapphirePart section : this.sections )
         {
             if( section.visible() )
@@ -763,61 +710,10 @@ public final class MasterDetailsContentNode
         return factory.create();
     }
     
-    private boolean basis()
-    {
-        final IModelElement element = getModelElement();
-        
-        if( element.parent() instanceof ModelElementList<?> )
-        {
-            final ISapphirePart parentPart = getParentPart();
-            
-            if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
-            {
-                final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
-                
-                return ( element != parentNode.getLocalModelElement() );
-            }
-        }
-        
-        return false;
-    }
-    
-    @Override
-    protected void handleModelElementChange( final Event event )
-    {
-        super.handleModelElementChange( event );
-        
-        if( event instanceof PropertyEvent && isChildNodeFactoryProperty( ( (PropertyEvent) event ).property() ) )
-        {
-            if( event instanceof PropertyContentEvent )
-            {
-                refreshNodes();
-            }
-            else if( event instanceof PropertyValidationEvent )
-            {
-                runOnDisplayThread
-                (
-                    new Runnable()
-                    {
-                        public void run()
-                        {
-                            refreshValidation();
-                        }
-                    }
-                );
-            }
-        }
-    }
-
     @Override
     public void dispose()
     {
         super.dispose();
-        
-        if( this.modelElementListener != null )
-        {
-            this.modelElement.detach( this.modelElementListener );
-        }
         
         for( SapphirePart section : this.sections )
         {
@@ -854,7 +750,7 @@ public final class MasterDetailsContentNode
         throw new UnsupportedOperationException();
     }
     
-    public boolean controls( final IModelElement element )
+    public boolean controls( final Element element )
     {
         if( element == getModelElement() )
         {
@@ -873,34 +769,65 @@ public final class MasterDetailsContentNode
     
     public final class NodeFactory
     {
-        private final ModelProperty property;
+        private final Property property;
+        private final Listener propertyListener;
         private final MasterDetailsContentNodeFactoryDef definition;
         private final Map<String,String> params;
         private final FunctionResult visibleWhenFunctionResult;
         private final Function visibleWhenFunctionForNodes;
-        private final Map<IModelElement,MasterDetailsContentNode> nodesCache = new IdentityHashMap<IModelElement,MasterDetailsContentNode>();
+        private final Map<Element,MasterDetailsContentNode> nodesCache = new IdentityHashMap<Element,MasterDetailsContentNode>();
         private final ListenerContext listeners = new ListenerContext();
         
         public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
         {
-            final IModelElement element = getLocalModelElement();
+            final Element element = getLocalModelElement();
             
-            this.property = resolve( element, definition.getProperty().getContent(), params );
-            this.definition = definition;
-            this.params = params;
+            final PropertyDef pdef = resolve( element, definition.getProperty().content(), params );
             
-            if( this.property instanceof ValueProperty || this.property instanceof ImpliedElementProperty || this.property instanceof TransientProperty )
+            if( pdef instanceof ValueProperty || pdef instanceof ImpliedElementProperty || pdef instanceof TransientProperty )
             {
                 throw new IllegalArgumentException();
             }
+            
+            this.property = element.property( pdef );
+            
+            this.propertyListener = new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    if( event instanceof PropertyContentEvent )
+                    {
+                        refreshNodes();
+                    }
+                    else if( event instanceof PropertyValidationEvent )
+                    {
+                        runOnDisplayThread
+                        (
+                            new Runnable()
+                            {
+                                public void run()
+                                {
+                                    refreshValidation();
+                                }
+                            }
+                        );
+                    }
+                }
+            };
+            
+            this.property.attach( this.propertyListener );
+
+            this.definition = definition;
+            this.params = params;
             
             this.visibleWhenFunctionResult = initExpression
             (
                 AndFunction.create
                 (
-                    definition.getVisibleWhen().getContent(),
-                    createVersionCompatibleFunction( element, this.property )
+                    definition.getVisibleWhen().content(),
+                    createVersionCompatibleFunction( this.property )
                 ),
                 Boolean.class,
                 Literal.TRUE,
@@ -968,23 +895,25 @@ public final class MasterDetailsContentNode
             return (Boolean) this.visibleWhenFunctionResult.value();
         }
         
-        public ModelProperty property()
+        public Property property()
         {
             return this.property;
         }
         
-        protected List<IModelElement> elements()
+        protected List<Element> elements()
         {
-            final IModelElement element = getLocalModelElement();
-            final ListFactory<IModelElement> elementsListFactory = ListFactory.start();
+            final ListFactory<Element> elementsListFactory = ListFactory.start();
             
-            if( this.property instanceof ListProperty )
+            if( this.property instanceof ElementList )
             {
-                elementsListFactory.add( element.read( (ListProperty) this.property ) );
+                for( Element element : (ElementList<?>) this.property )
+                {
+                    elementsListFactory.add( element );
+                }
             }
             else
             {
-                elementsListFactory.add( element.read( (ElementProperty) this.property ).element() );
+                elementsListFactory.add( ( (ElementHandle<?>) this.property ).content() );
             }
             
             return elementsListFactory.result();
@@ -992,10 +921,10 @@ public final class MasterDetailsContentNode
         
         public final List<MasterDetailsContentNode> nodes()
         {
-            final Map<IModelElement,MasterDetailsContentNode> oldCache = MapFactory.unmodifiable( this.nodesCache );
+            final Map<Element,MasterDetailsContentNode> oldCache = MapFactory.unmodifiable( this.nodesCache );
             final ListFactory<MasterDetailsContentNode> nodes = ListFactory.start();
             
-            for( IModelElement element : elements() )
+            for( Element element : elements() )
             {
                 MasterDetailsContentNode node = this.nodesCache.get( element );
                 
@@ -1045,7 +974,7 @@ public final class MasterDetailsContentNode
                 nodes.add( node );
             }
             
-            for( Map.Entry<IModelElement,MasterDetailsContentNode> entry : oldCache.entrySet() )
+            for( Map.Entry<Element,MasterDetailsContentNode> entry : oldCache.entrySet() )
             {
                 if( ! this.nodesCache.containsKey( entry.getKey() ) )
                 {
@@ -1073,6 +1002,8 @@ public final class MasterDetailsContentNode
         
         public void dispose()
         {
+            this.property.detach( this.propertyListener );
+            
             if( this.visibleWhenFunctionResult != null )
             {
                 this.visibleWhenFunctionResult.dispose();

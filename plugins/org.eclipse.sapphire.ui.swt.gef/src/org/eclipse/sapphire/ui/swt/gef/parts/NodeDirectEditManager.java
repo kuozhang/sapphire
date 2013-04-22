@@ -24,7 +24,7 @@ import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
@@ -110,9 +110,9 @@ public class NodeDirectEditManager extends DirectEditManager {
 
 	protected void initCellEditor() {
 		// update text
-		ValueProperty prop = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
+		Value<?> prop = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
 							this.textPart.getContentFunction());
-		String initValue = this.textPart.getLocalModelElement().read(prop).getText();
+		String initValue = prop.text();
 		if (initValue == null)
 		{
 			initValue = this.textPart.getContent();

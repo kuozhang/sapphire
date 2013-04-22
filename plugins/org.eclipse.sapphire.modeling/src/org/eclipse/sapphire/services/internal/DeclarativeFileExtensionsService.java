@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -47,7 +47,7 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
     @Override
     protected void initFileExtensionsService()
     {
-        final FileExtensions fileExtensionsAnnotation = context( ModelProperty.class ).getAnnotation( FileExtensions.class );
+        final FileExtensions fileExtensionsAnnotation = context( PropertyDef.class ).getAnnotation( FileExtensions.class );
         
         Function function = null;
         
@@ -65,7 +65,7 @@ public final class DeclarativeFileExtensionsService extends FileExtensionsServic
         {
             function = FailSafeFunction.create( function, Literal.create( List.class ), Literal.create( Collections.emptyList() ) );
             
-            this.functionResult = function.evaluate( new ModelElementFunctionContext( context( IModelElement.class ) ) );
+            this.functionResult = function.evaluate( new ModelElementFunctionContext( context( Element.class ) ) );
             
             this.functionResult.attach
             (

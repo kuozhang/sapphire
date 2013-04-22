@@ -11,11 +11,10 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -38,92 +37,82 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final IModelElement element = context.getModelElement();
-        final ModelProperty prop = context.getProperty();
+        final Property property = context.property();
         
-        if( context.isPropertyEditorReadOnly() )
+        if( context.isPropertyEditorReadOnly() || property.empty() )
         {
             return;
         }
         
-        if( prop instanceof ValueProperty )
+        if( property instanceof Value<?> )
         {
-            if( element.read( (ValueProperty) prop ).getText( false ) != null )
-            {
-                final DefaultValueService defaultValueService = element.service( prop, DefaultValueService.class );
-                final boolean hasDefaultValue = ( defaultValueService == null ? false : defaultValueService.value() != null );
-                final boolean isBooleanType = prop.getTypeClass().equals( Boolean.class );
-                
-                final String actionText
-                    = ( hasDefaultValue || isBooleanType ? Resources.restoreDefaultValue : Resources.clear );
-                
-                final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
-                
-                contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( actionText ) + "</a></p>" );
-                
-                contribution.link
-                (
-                    "action",
-                    new Runnable()
+            final DefaultValueService defaultValueService = property.service( DefaultValueService.class );
+            final boolean hasDefaultValue = ( defaultValueService == null ? false : defaultValueService.value() != null );
+            final boolean isBooleanType = property.definition().getTypeClass().equals( Boolean.class );
+            
+            final String actionText
+                = ( hasDefaultValue || isBooleanType ? Resources.restoreDefaultValue : Resources.clear );
+            
+            final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
+            
+            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( actionText ) + "</a></p>" );
+            
+            contribution.link
+            (
+                "action",
+                new Runnable()
+                {
+                    public void run()
                     {
-                        public void run()
-                        {
-                            element.clear( prop );
-                        }
+                        property.clear();
                     }
-                );
-                
-                final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-                section.addContribution( contribution.create() );
-            }
+                }
+            );
+            
+            final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
+            section.addContribution( contribution.create() );
         }
-        else if( prop instanceof ListProperty )
+        else if( property.definition() instanceof ListProperty )
         {
-            if( ! element.read( (ListProperty) prop ).isEmpty() )
-            {
-                final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
-                
-                contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
-                
-                contribution.link
-                (
-                    "action",
-                    new Runnable()
+            final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
+            
+            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+            
+            contribution.link
+            (
+                "action",
+                new Runnable()
+                {
+                    public void run()
                     {
-                        public void run()
-                        {
-                            element.clear( prop );
-                        }
+                        property.clear();
                     }
-                );
-                
-                final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-                section.addContribution( contribution.create() );
-            }
+                }
+            );
+            
+            final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
+            section.addContribution( contribution.create() );
         }
-        else if( prop instanceof ElementProperty )
+        else if( property instanceof ElementHandle<?> )
         {
-            if( element.read( (ElementProperty) prop ).element() != null )
-            {
-                final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
-                
-                contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
-                
-                contribution.link
-                (
-                    "action",
-                    new Runnable()
+            final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
+            
+            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+            
+            contribution.link
+            (
+                "action",
+                new Runnable()
+                {
+                    public void run()
                     {
-                        public void run()
-                        {
-                            element.clear( prop );
-                        }
+                        property.clear();
                     }
-                );
-                
-                final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-                section.addContribution( contribution.create() );
-            }
+                }
+            );
+            
+            final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
+            section.addContribution( contribution.create() );
         }
     }
     

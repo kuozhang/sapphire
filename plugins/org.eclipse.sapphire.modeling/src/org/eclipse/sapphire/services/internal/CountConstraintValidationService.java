@@ -11,11 +11,10 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -37,13 +36,13 @@ public final class CountConstraintValidationService extends ValidationService
     {
         super.init();
         
-        this.constraint = context( ModelProperty.class ).getAnnotation( CountConstraint.class );
+        this.constraint = context( PropertyDef.class ).getAnnotation( CountConstraint.class );
     }
 
     @Override
     public Status validate()
     {
-        final ModelElementList<?> list = (ModelElementList<?>) context( IModelElement.class ).read( context( ModelProperty.class ) );
+        final ElementList<?> list = context( ElementList.class );
         final int count = list.size();
         String message = null;
         
@@ -52,19 +51,19 @@ public final class CountConstraintValidationService extends ValidationService
             if( this.constraint.min() == 1 )
             {
                 message = Resources.bind( Resources.countConstraintTooFewAtLeastOne, 
-                                          context( ModelProperty.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ) );
+                                          context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ) );
             }
             else
             {
                 message = Resources.bind( Resources.countConstraintTooFew, 
-                                          context( ModelProperty.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
+                                          context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
                                           String.valueOf( this.constraint.min() ) );
             }
         }
         else if( count > this.constraint.max() )
         {
             message = Resources.bind( Resources.countConstraintTooMany,
-                                      context( ModelProperty.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
+                                      context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
                                       String.valueOf( this.constraint.max() ) );
         }
         

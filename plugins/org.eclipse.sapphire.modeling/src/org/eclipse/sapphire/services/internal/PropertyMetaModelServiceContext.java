@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Sapphire;
-import org.eclipse.sapphire.modeling.ModelProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,7 +20,7 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 
 public final class PropertyMetaModelServiceContext extends PropertyServiceContext
 {
-    public PropertyMetaModelServiceContext( final ModelProperty property )
+    public PropertyMetaModelServiceContext( final PropertyDef property )
     {
         super( ID_PROPERTY_METAMODEL, Sapphire.services(), property );
     }

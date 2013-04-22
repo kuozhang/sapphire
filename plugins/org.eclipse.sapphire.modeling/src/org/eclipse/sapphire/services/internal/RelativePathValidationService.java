@@ -13,12 +13,10 @@ package org.eclipse.sapphire.services.internal;
 
 import java.io.File;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PathValidationService;
@@ -36,12 +34,12 @@ public final class RelativePathValidationService extends PathValidationService
     @Override
     public Status validate()
     {
-        final Value<Path> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
-        final Path path = value.getContent();
+        final Value<?> value = context( Value.class );
+        final Path path = (Path) value.content();
         
         if( path != null )
         {
-            final Path absolutePath = context( IModelElement.class ).service( context( ModelProperty.class ), RelativePathService.class ).convertToAbsolute( path );
+            final Path absolutePath = value.service( RelativePathService.class ).convertToAbsolute( path );
             
             if( absolutePath == null )
             {
@@ -108,9 +106,8 @@ public final class RelativePathValidationService extends PathValidationService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            final IModelElement element = context.find( IModelElement.class );
-            return ( property != null && Path.class.isAssignableFrom( property.getTypeClass() ) && element.service( property, RelativePathService.class ) != null );
+            final Property property = context.find( Property.class );
+            return ( property != null && Path.class.isAssignableFrom( property.definition().getTypeClass() ) && property.service( RelativePathService.class ) != null );
         }
 
         @Override

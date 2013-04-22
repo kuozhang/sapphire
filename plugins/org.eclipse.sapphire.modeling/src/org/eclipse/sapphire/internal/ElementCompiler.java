@@ -35,22 +35,23 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ReferenceValue;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementImpl;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Observable;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Transient;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.Transient;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
@@ -65,13 +66,13 @@ import org.objectweb.asm.Type;
 
 public final class ElementCompiler
 {
-    private final ModelElementType type;
+    private final ElementType type;
     private final Class<?> typeInterfaceClass;
     private final String typeInterfaceClassInternalName;
     private final String typeImplClassInternalName;
     private final Set<Method> implementedMethods;
     
-    public ElementCompiler( final ModelElementType type )
+    public ElementCompiler( final ElementType type )
     {
         this.type = type;
         this.typeInterfaceClass = this.type.getModelElementClass();
@@ -84,11 +85,11 @@ public final class ElementCompiler
     {
         ClassWriter cw = new ClassWriter( COMPUTE_MAXS );
 
-        cw.visit( V1_5, ACC_PUBLIC + ACC_FINAL + ACC_SUPER, this.typeImplClassInternalName, null, Type.getInternalName( ModelElement.class ), new String[] { this.typeInterfaceClassInternalName } );
+        cw.visit( V1_5, ACC_PUBLIC + ACC_FINAL + ACC_SUPER, this.typeImplClassInternalName, null, Type.getInternalName( ElementImpl.class ), new String[] { this.typeInterfaceClassInternalName } );
         
         processConstructor( cw );
         
-        for( ModelProperty property : this.type.properties() )
+        for( PropertyDef property : this.type.properties() )
         {
             if( property instanceof ValueProperty )
             {
@@ -128,7 +129,7 @@ public final class ElementCompiler
         (
             ACC_PUBLIC, 
             "<init>", 
-            Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( IModelParticle.class ), Type.getType( ModelProperty.class ), Type.getType( Resource.class ) } ),
+            Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( Property.class ), Type.getType( Resource.class ) } ),
             null,
             null
         );
@@ -142,19 +143,18 @@ public final class ElementCompiler
             GETSTATIC, 
             this.typeInterfaceClassInternalName, 
             "TYPE",
-            Type.getDescriptor( ModelElementType.class )
+            Type.getDescriptor( ElementType.class )
         );
         
         mv.visitVarInsn( ALOAD, 1 );
         mv.visitVarInsn( ALOAD, 2 );
-        mv.visitVarInsn( ALOAD, 3 );
         
         mv.visitMethodInsn
         (
             INVOKESPECIAL, 
-            Type.getInternalName( ModelElement.class ), 
+            Type.getInternalName( ElementImpl.class ), 
             "<init>", 
-            Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( ModelElementType.class ), Type.getType( IModelParticle.class ), Type.getType( ModelProperty.class ), Type.getType( Resource.class ) } )
+            Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( ElementType.class ), Type.getType( Property.class ), Type.getType( Resource.class ) } )
         );
         
         mv.visitInsn( RETURN );
@@ -168,11 +168,11 @@ public final class ElementCompiler
     {
         final String propertyFieldName = findPropertyField( property ).getName();
         
-        Method getter = findMethod( "get" + property.getName() );
+        Method getter = findMethod( "get" + property.name() );
         
         if( getter == null )
         {
-            getter = findMethod( "is" + property.getName() );
+            getter = findMethod( "is" + property.name() );
         }
         
         if( getter != null )
@@ -206,7 +206,7 @@ public final class ElementCompiler
             (
                 INVOKEVIRTUAL, 
                 this.typeImplClassInternalName,
-                "read",
+                "property",
                 Type.getMethodDescriptor( Type.getType( Value.class ), new Type[] { Type.getType( ValueProperty.class ) } )
             );
             
@@ -223,7 +223,7 @@ public final class ElementCompiler
         
         if( ! property.hasAnnotation( Derived.class ) && ! property.hasAnnotation( ReadOnly.class ) )
         {
-            Method setter = findMethod( "set" + property.getName(), String.class );
+            Method setter = findMethod( "set" + property.name(), String.class );
             
             if( setter != null )
             {
@@ -250,14 +250,22 @@ public final class ElementCompiler
                     Type.getDescriptor( ValueProperty.class )
                 );
                 
+                mv.visitMethodInsn
+                (
+                    INVOKEVIRTUAL,
+                    this.typeImplClassInternalName,
+                    "property",
+                    Type.getMethodDescriptor( Type.getType( Value.class ), new Type[] { Type.getType( ValueProperty.class ) } )
+                );
+                
                 mv.visitVarInsn( ALOAD, 1 );
                 
                 mv.visitMethodInsn
                 (
                     INVOKEVIRTUAL,
-                    this.typeImplClassInternalName,
+                    Type.getInternalName( Value.class ),
                     "write",
-                    Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( ModelProperty.class ), Type.getType( Object.class ) } )
+                    Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( Object.class ) } )
                 );
                 
                 mv.visitInsn( RETURN );
@@ -270,7 +278,7 @@ public final class ElementCompiler
             
             if( propertyTypeClass != String.class )
             {
-                Method typedSetter = findMethod( "set" + property.getName(), propertyTypeClass );
+                Method typedSetter = findMethod( "set" + property.name(), propertyTypeClass );
                 
                 if( typedSetter != null )
                 {
@@ -297,14 +305,22 @@ public final class ElementCompiler
                         Type.getDescriptor( ValueProperty.class )
                     );
                     
+                    mv.visitMethodInsn
+                    (
+                        INVOKEVIRTUAL,
+                        this.typeImplClassInternalName,
+                        "property",
+                        Type.getMethodDescriptor( Type.getType( Value.class ), new Type[] { Type.getType( ValueProperty.class ) } )
+                    );
+                    
                     mv.visitVarInsn( ALOAD, 1 );
                     
                     mv.visitMethodInsn
                     (
                         INVOKEVIRTUAL,
-                        this.typeImplClassInternalName,
+                        Type.getInternalName( Value.class ),
                         "write",
-                        Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( ModelProperty.class ), Type.getType( Object.class ) } )
+                        Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( Object.class ) } )
                     );
                     
                     mv.visitInsn( RETURN );
@@ -322,7 +338,7 @@ public final class ElementCompiler
         final String propertyFieldName = findPropertyField( property ).getName();
         final Class<?> propertyTypeClass = property.getTypeClass();
         
-        final Method getter = findMethod( "get" + property.getName() );
+        final Method getter = findMethod( "get" + property.name() );
         
         if( getter != null )
         {
@@ -353,7 +369,7 @@ public final class ElementCompiler
             (
                 INVOKEVIRTUAL, 
                 this.typeImplClassInternalName,
-                "read",
+                "property",
                 Type.getMethodDescriptor( Type.getType( Transient.class ), new Type[] { Type.getType( TransientProperty.class ) } )
             );
             
@@ -363,7 +379,7 @@ public final class ElementCompiler
             mv.visitEnd();
         }
         
-        final Method setter = findMethod( "set" + property.getName(), propertyTypeClass );
+        final Method setter = findMethod( "set" + property.name(), propertyTypeClass );
         
         if( setter != null )
         {
@@ -390,14 +406,22 @@ public final class ElementCompiler
                 Type.getDescriptor( TransientProperty.class )
             );
             
+            mv.visitMethodInsn
+            (
+                INVOKEVIRTUAL,
+                this.typeImplClassInternalName,
+                "property",
+                Type.getMethodDescriptor( Type.getType( Transient.class ), new Type[] { Type.getType( TransientProperty.class ) } )
+            );
+            
             mv.visitVarInsn( ALOAD, 1 );
             
             mv.visitMethodInsn
             (
                 INVOKEVIRTUAL,
-                this.typeImplClassInternalName,
+                Type.getInternalName( Transient.class ),
                 "write",
-                Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( ModelProperty.class ), Type.getType( Object.class ) } )
+                Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( Object.class ) } )
             );
             
             mv.visitInsn( RETURN );
@@ -412,7 +436,7 @@ public final class ElementCompiler
     {
         final String propertyFieldName = findPropertyField( property ).getName();
         
-        final Method getter = findMethod( "get" + property.getName() );
+        final Method getter = findMethod( "get" + property.name() );
         
         if( getter != null )
         {
@@ -422,7 +446,7 @@ public final class ElementCompiler
             (
                 ACC_PUBLIC,
                 getter.getName(),
-                Type.getMethodDescriptor( Type.getType( ModelElementList.class ), new Type[ 0 ] ),
+                Type.getMethodDescriptor( Type.getType( ElementList.class ), new Type[ 0 ] ),
                 null,
                 null
             );
@@ -443,8 +467,8 @@ public final class ElementCompiler
             (
                 INVOKEVIRTUAL, 
                 this.typeImplClassInternalName,
-                "read",
-                Type.getMethodDescriptor( Type.getType( ModelElementList.class ), new Type[] { Type.getType( ListProperty.class ) } )
+                "property",
+                Type.getMethodDescriptor( Type.getType( ElementList.class ), new Type[] { Type.getType( ListProperty.class ) } )
             );
             
             mv.visitInsn( ARETURN );
@@ -459,7 +483,7 @@ public final class ElementCompiler
     {
         final String propertyFieldName = findPropertyField( property ).getName();
         
-        final Method getter = findMethod( "get" + property.getName() );
+        final Method getter = findMethod( "get" + property.name() );
         
         if( getter != null )
         {
@@ -469,7 +493,7 @@ public final class ElementCompiler
             (
                 ACC_PUBLIC,
                 getter.getName(),
-                Type.getMethodDescriptor( Type.getType( ModelElementHandle.class ), new Type[ 0 ] ),
+                Type.getMethodDescriptor( Type.getType( ElementHandle.class ), new Type[ 0 ] ),
                 null,
                 null
             );
@@ -490,8 +514,8 @@ public final class ElementCompiler
             (
                 INVOKEVIRTUAL, 
                 this.typeImplClassInternalName,
-                "read",
-                Type.getMethodDescriptor( Type.getType( ModelElementHandle.class ), new Type[] { Type.getType( ElementProperty.class ) } )
+                "property",
+                Type.getMethodDescriptor( Type.getType( ElementHandle.class ), new Type[] { Type.getType( ElementProperty.class ) } )
             );
             
             mv.visitInsn( ARETURN );
@@ -507,7 +531,7 @@ public final class ElementCompiler
         final String propertyFieldName = findPropertyField( property ).getName();
         final Class<?> propertyTypeClass = property.getTypeClass();
         
-        final Method getter = findMethod( "get" + property.getName() );
+        final Method getter = findMethod( "get" + property.name() );
         
         if( getter != null )
         {
@@ -538,16 +562,16 @@ public final class ElementCompiler
             (
                 INVOKEVIRTUAL, 
                 this.typeImplClassInternalName,
-                "read",
-                Type.getMethodDescriptor( Type.getType( ModelElementHandle.class ), new Type[] { Type.getType( ElementProperty.class ) } )
+                "property",
+                Type.getMethodDescriptor( Type.getType( ElementHandle.class ), new Type[] { Type.getType( ElementProperty.class ) } )
             );
             
             mv.visitMethodInsn
             (
                 INVOKEVIRTUAL,
-                Type.getInternalName( ModelElementHandle.class ),
-                "element",
-                Type.getMethodDescriptor( Type.getType( IModelElement.class ), new Type[ 0 ] )
+                Type.getInternalName( ElementHandle.class ),
+                "content",
+                Type.getMethodDescriptor( Type.getType( Element.class ), new Type[ 0 ] )
             );
             
             mv.visitTypeInsn( CHECKCAST, Type.getInternalName( propertyTypeClass ) );
@@ -633,7 +657,7 @@ public final class ElementCompiler
         {
             final Class<?> cl = method.getDeclaringClass();
                     
-            if( ! this.implementedMethods.contains( method ) && cl != Object.class && cl != IModelElement.class && cl != IModelParticle.class )
+            if( ! this.implementedMethods.contains( method ) && cl != Element.class && cl != Observable.class && cl != Object.class )
             {
                 final MethodVisitor mv = cw.visitMethod
                 (
@@ -690,7 +714,7 @@ public final class ElementCompiler
         return null;
     }
     
-    private Field findPropertyField( final ModelProperty property )
+    private Field findPropertyField( final PropertyDef property )
     {
         for( Field field : this.typeInterfaceClass.getFields() )
         {

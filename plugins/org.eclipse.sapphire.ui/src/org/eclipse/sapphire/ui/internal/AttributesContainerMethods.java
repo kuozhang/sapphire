@@ -34,9 +34,9 @@ public final class AttributesContainerMethods
         
         for( Attribute attribute : state.getAttributes() )
         {
-            if( name.equalsIgnoreCase( attribute.getName().getContent() ) )
+            if( name.equalsIgnoreCase( attribute.getName().content() ) )
             {
-                value = attribute.getValue().getContent();
+                value = attribute.getValue().content();
                 break;
             }
         }
@@ -73,7 +73,7 @@ public final class AttributesContainerMethods
         
         for( Attribute attr : state.getAttributes() )
         {
-            if( name.equalsIgnoreCase( attr.getName().getContent() ) )
+            if( name.equalsIgnoreCase( attr.getName().content() ) )
             {
                 attribute = attr;
                 break;

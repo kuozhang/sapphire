@@ -20,15 +20,12 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class UrlJumpActionHandlerCondition 
-
-    extends SapphirePropertyEditorCondition
-    
+public final class UrlJumpActionHandlerCondition extends SapphirePropertyEditorCondition
 {
     @Override
     protected boolean evaluate( final PropertyEditorPart part )
     {
-        return part.getProperty().isOfType( URL.class );
+        return part.property().definition().isOfType( URL.class );
     }
     
 }

@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.gallery.ElementPropertyCustomGallery;
 import org.eclipse.sapphire.samples.gallery.IChildElement;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithEnum;
@@ -48,24 +48,24 @@ public final class ElementPropertyCustomGalleryServices
             };
             
             final ElementPropertyCustomGallery gallery = context( ElementPropertyCustomGallery.class );
-            gallery.attach( listener, ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_INTEGER );
-            gallery.attach( listener, ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_ENUM );
+            gallery.property( ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_INTEGER ).attach( listener );
+            gallery.property( ElementPropertyCustomGallery.PROP_ALLOW_CHILD_ELEMENT_WITH_ENUM ).attach( listener );
         }
         
         @Override
         protected PossibleTypesServiceData compute()
         {
             final ElementPropertyCustomGallery gallery = context( ElementPropertyCustomGallery.class );
-            final List<ModelElementType> types = new ArrayList<ModelElementType>();
+            final List<ElementType> types = new ArrayList<ElementType>();
             
             types.add( IChildElement.TYPE );
             
-            if( gallery.getAllowChildElementWithInteger().getContent() )
+            if( gallery.getAllowChildElementWithInteger().content() )
             {
                 types.add( IChildElementWithInteger.TYPE );
             }
             
-            if( gallery.getAllowChildElementWithEnum().getContent() )
+            if( gallery.getAllowChildElementWithEnum().content() )
             {
                 types.add( IChildElementWithEnum.TYPE );
             }

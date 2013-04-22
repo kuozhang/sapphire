@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.sqlschema;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -29,10 +29,10 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @XmlBinding( path = "schema")
 
-public interface Schema extends IModelElement 
+public interface Schema extends Element 
 {
 
-    ModelElementType TYPE = new ModelElementType( Schema.class );
+    ElementType TYPE = new ElementType( Schema.class );
     
     // *** Name ***
     
@@ -52,6 +52,6 @@ public interface Schema extends IModelElement
     
     ListProperty PROP_TABLES = new ListProperty( TYPE, "Tables" );
     
-    ModelElementList<Table> getTables();
+    ElementList<Table> getTables();
 	
 }

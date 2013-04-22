@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.ValueProperty;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

@@ -14,9 +14,8 @@ package org.eclipse.sapphire.internal;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Version;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ValidationService;
@@ -38,7 +37,7 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
     {
         super.init();
         
-        this.versionCompatibilityService = element().service( property(), MasterVersionCompatibilityService.class );
+        this.versionCompatibilityService = property().service( MasterVersionCompatibilityService.class );
         
         this.versionCompatibilityServiceListener = new Listener()
         {
@@ -52,9 +51,7 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
         this.versionCompatibilityService.attach( this.versionCompatibilityServiceListener );
     }
     
-    protected abstract IModelElement element();
-    
-    protected abstract ModelProperty property();
+    protected abstract Property property();
     
     protected boolean problem()
     {

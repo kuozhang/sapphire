@@ -38,7 +38,7 @@ public final class ContactCategoryPossibleValueService extends PossibleValuesSer
             {
                 if( contact != c )
                 {
-                    values.add( contact.getCategory().getText( true ) );
+                    values.add( contact.getCategory().text( true ) );
                 }
             }
         }

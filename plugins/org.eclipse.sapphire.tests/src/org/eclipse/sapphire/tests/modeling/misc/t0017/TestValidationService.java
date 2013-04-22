@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0017;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.ValidationService;
 
@@ -24,7 +24,7 @@ public final class TestValidationService extends ValidationService
     @Override
     public Status validate()
     {
-        context( IModelElement.class ).enabled( TestElement.PROP_VALUE );
+        context( Element.class ).property( TestElement.PROP_VALUE ).enabled();
         
         return Status.createOkStatus();
     }

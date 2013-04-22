@@ -31,7 +31,7 @@ public final class TestDefaultValueService extends DefaultValueService
     protected DefaultValueServiceData compute()
     {
         final TestChildElement element = context( TestChildElement.class );
-        return new DefaultValueServiceData( element.getDefaultIntegerValue().getText() );
+        return new DefaultValueServiceData( element.getDefaultIntegerValue().text() );
     }
 
 }

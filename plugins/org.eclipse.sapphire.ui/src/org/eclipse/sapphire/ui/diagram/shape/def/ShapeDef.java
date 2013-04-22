@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -29,7 +29,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
 
 public interface ShapeDef extends PartDef, IPropertiesViewContributorDef
 {
-	ModelElementType TYPE = new ModelElementType( ShapeDef.class );
+	ElementType TYPE = new ElementType( ShapeDef.class );
 		    
     // *** SequenceLayoutConstraint ***
     

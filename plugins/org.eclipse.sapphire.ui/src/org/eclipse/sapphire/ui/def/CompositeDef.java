@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
@@ -34,7 +34,7 @@ import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultVal
 
 public interface CompositeDef extends FormDef
 {
-    ModelElementType TYPE = new ModelElementType( CompositeDef.class );
+    ElementType TYPE = new ElementType( CompositeDef.class );
     
     // *** Indent ***
     

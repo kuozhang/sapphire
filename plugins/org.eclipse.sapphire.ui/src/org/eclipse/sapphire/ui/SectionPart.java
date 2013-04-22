@@ -73,7 +73,7 @@ public class SectionPart extends CompositePart
         
         final SectionDef def = definition();
         
-        this.expanded = ! def.getCollapsedInitially().getContent();
+        this.expanded = ! def.getCollapsedInitially().content();
     }
     
     @Override
@@ -99,7 +99,7 @@ public class SectionPart extends CompositePart
         outerComposite.setLayoutData( createSectionLayoutData() );
         outerComposite.setLayout( glayout( 1, 10, 10, 10, 20 ) );
         
-        final boolean collapsible = def.getCollapsible().getContent();
+        final boolean collapsible = def.getCollapsible().content();
         final int style = Section.TITLE_BAR | ( collapsible ? Section.TWISTIE : SWT.NONE );
         
         this.section = toolkit.createSection( outerComposite, style );
@@ -123,7 +123,7 @@ public class SectionPart extends CompositePart
         
         this.titleFunctionResult = initExpression
         (
-            def.getLabel().getContent(), 
+            def.getLabel().content(), 
             String.class,
             null,
             new Runnable()
@@ -146,7 +146,7 @@ public class SectionPart extends CompositePart
 
         this.descriptionFunctionResult = initExpression
         (
-            def.getDescription().getContent(), 
+            def.getDescription().content(), 
             String.class,
             null,
             new Runnable()
@@ -270,7 +270,7 @@ public class SectionPart extends CompositePart
     @Override
     public IContext getDocumentationContext()
     {
-        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
+        final ISapphireDocumentation doc = this.definition.getDocumentation().content();
         
         if( doc != null )
         {

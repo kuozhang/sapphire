@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
@@ -35,7 +35,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
 public class ContainerShapePart extends ShapePart 
 {
 	private ContainerShapeDef containerShapeDef;
-	private IModelElement modelElement;	
+	private Element modelElement;	
 	private List<ShapePart> children;
 	private int validationMarkerIndex = -1;
 	private ValidationMarkerPart validationMarkerPart;

@@ -13,9 +13,9 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
@@ -117,7 +117,7 @@ public class FormPart extends FormComponentPart
     
     protected List<SapphirePart> initChildParts()
     {
-        final IModelElement element = getLocalModelElement();
+        final Element element = getLocalModelElement();
         final FormDef def = (FormDef) this.definition;
         final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         

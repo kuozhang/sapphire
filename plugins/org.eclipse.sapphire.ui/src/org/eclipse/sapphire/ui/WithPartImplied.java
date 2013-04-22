@@ -11,16 +11,15 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.WithPartHelper.resolvePath;
-
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.ui.WithPartHelper.ResolvePathResult;
 import org.eclipse.sapphire.ui.def.FormDef;
-import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.ui.def.WithDef;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -30,22 +29,24 @@ import org.eclipse.sapphire.util.ListFactory;
 public final class WithPartImplied extends FormPart
 {
     private ModelPath path;
-    private IModelElement element;
+    private Element element;
     private FormDef formdef;
     
     @Override
     protected void init()
     {
         final WithDef def = (WithDef) this.definition;
-        final ResolvePathResult resolvePathResult = resolvePath( getModelElement(), def, this.params );
         
-        if( resolvePathResult.property != null )
+        this.path = new ModelPath( def.getPath().text() );
+        
+        final Property property = getModelElement().property( this.path );
+        
+        if( property == null )
         {
             throw new IllegalStateException();
         }
         
-        this.path = resolvePathResult.path;
-        this.element = resolvePathResult.element;
+        this.element = ( (ElementHandle<?>) property ).content();
         
         if( def.getDefaultPage().getContent().size() > 0 )
         {
@@ -62,7 +63,7 @@ public final class WithPartImplied extends FormPart
     @Override
     protected List<SapphirePart> initChildParts()
     {
-        final IModelElement element = getLocalModelElement();
+        final Element element = getLocalModelElement();
         final ListFactory<SapphirePart> partsListFactory = ListFactory.start();
         
         for( PartDef childPartDef : this.formdef.getContent() )
@@ -79,7 +80,7 @@ public final class WithPartImplied extends FormPart
     }
     
     @Override
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
         return this.element;
     }

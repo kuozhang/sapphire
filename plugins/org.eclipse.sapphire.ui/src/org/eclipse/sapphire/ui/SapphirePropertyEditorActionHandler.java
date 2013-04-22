@@ -14,11 +14,11 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.runOnDisplayThread;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
 /**
@@ -44,7 +44,7 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
             }
         };
         
-        getModelElement().attach( this.listener, getProperty() );
+        property().attach( this.listener );
         
         refreshEnablementState();
         
@@ -55,21 +55,21 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    getModelElement().detach( SapphirePropertyEditorActionHandler.this.listener, getProperty() );
+                    property().detach( SapphirePropertyEditorActionHandler.this.listener );
                 }
             }
         );
     }
     
     @Override
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return ( (PropertyEditorPart) getPart() ).getLocalModelElement();
     }
 
-    public ModelProperty getProperty()
+    public Property property()
     {
-        return ( (PropertyEditorPart) getPart() ).getProperty();
+        return ( (PropertyEditorPart) getPart() ).property();
     }
     
     public final void refreshEnablementState()
@@ -87,7 +87,7 @@ public abstract class SapphirePropertyEditorActionHandler extends SapphireAction
     
     protected boolean computeEnablementState()
     {
-        return getModelElement().enabled( getProperty() );
+        return property().enabled();
     }
     
 }

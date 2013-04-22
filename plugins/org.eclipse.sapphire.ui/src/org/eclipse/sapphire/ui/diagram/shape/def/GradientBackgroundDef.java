@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface GradientBackgroundDef extends BackgroundDef 
 {
-	ModelElementType TYPE = new ModelElementType( GradientBackgroundDef.class );
+	ElementType TYPE = new ElementType( GradientBackgroundDef.class );
 	
 	// *** GradientSegments ***
 	
@@ -39,7 +39,7 @@ public interface GradientBackgroundDef extends BackgroundDef
                              
     ListProperty PROP_GRADIENT_SEGMENTS = new ListProperty( TYPE, "GradientSegments" );
     
-    ModelElementList<GradientSegmentDef> getGradientSegments();
+    ElementList<GradientSegmentDef> getGradientSegments();
     
     // ** Vertical ***
     

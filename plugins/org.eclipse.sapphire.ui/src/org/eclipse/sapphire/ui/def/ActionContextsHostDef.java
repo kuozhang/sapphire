@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ActionContextsHostDef extends IModelElement
+public interface ActionContextsHostDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ActionContextsHostDef.class );
+    ElementType TYPE = new ElementType( ActionContextsHostDef.class );
     
     // *** Contexts ***
     
@@ -35,6 +35,6 @@ public interface ActionContextsHostDef extends IModelElement
     
     ListProperty PROP_CONTEXTS = new ListProperty( TYPE, "Contexts" );
     
-    ModelElementList<ActionContextRef> getContexts();
+    ElementList<ActionContextRef> getContexts();
     
 }

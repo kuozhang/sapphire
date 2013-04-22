@@ -11,13 +11,11 @@
 
 package org.eclipse.sapphire.tests.services.t0001;
 
-import java.util.SortedSet;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
@@ -166,7 +164,7 @@ public final class TestServices0001 extends SapphireTestCase
         final TestRootElement root = TestRootElement.TYPE.instantiate();
         final TestNoDuplicatesChildElement child = root.getNoDuplicates().insert();
                 
-        test( child, TestNoDuplicatesChildElement.PROP_NO_DUPLICATES, "Must be unique." );
+        test( child.property( TestNoDuplicatesChildElement.PROP_NO_DUPLICATES ), "Must be unique." );
     }
 
     public void testFileExtensionsOne() throws Exception
@@ -211,19 +209,16 @@ public final class TestServices0001 extends SapphireTestCase
         test( TestRootElement.PROP_STATIC_FACT, "First static fact.", "Second static fact.", "Third static fact." );
     }
 
-    private static void test( final ModelProperty property,
+    private static void test( final PropertyDef property,
                               final String... factsExpected )
     {
-        test( TestRootElement.TYPE.instantiate(), property, factsExpected );
+        test( TestRootElement.TYPE.instantiate().property( property ), factsExpected );
     }
     
-    private static void test( final IModelElement element,
-                              final ModelProperty property,
+    private static void test( final Property property,
                               final String... factsExpected )
     {
-        final SortedSet<String> factsActual = element.service( property, FactsAggregationService.class ).facts();
-        
-        assertEquals( set( factsExpected ), factsActual );
+        assertEquals( set( factsExpected ), property.service( FactsAggregationService.class ).facts() );
     }
 
 }

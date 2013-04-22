@@ -11,18 +11,18 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0003;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Misc0003TestChildElement extends IModelElement
+public interface Misc0003TestChildElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Misc0003TestChildElement.class );
+    ElementType TYPE = new ElementType( Misc0003TestChildElement.class );
     
     // *** Text ***
     

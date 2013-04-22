@@ -21,14 +21,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Sapphire;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -40,7 +41,9 @@ public abstract class FunctionResult
     private final Function function;
     private final FunctionContext context;
     private final List<FunctionResult> operands;
+    private List<Property> properties;
     private final ListenerContext listeners;
+    private final Listener listener;
     private Object value;
     private Status status;
     
@@ -52,9 +55,13 @@ public abstract class FunctionResult
         this.listeners = new ListenerContext();
         this.operands = Collections.unmodifiableList( initOperands() );
 
-        if( ! this.operands.isEmpty() )
+        if( this.operands.isEmpty() )
         {
-            final Listener listener = new Listener()
+            this.listener = null;
+        }
+        else
+        {
+            this.listener = new Listener()
             {
                 @Override
                 public void handle( final Event event )
@@ -65,7 +72,7 @@ public abstract class FunctionResult
             
             for( FunctionResult operand : this.operands )
             {
-                operand.attach( listener );
+                operand.attach( this.listener );
             }
         }
         
@@ -117,11 +124,27 @@ public abstract class FunctionResult
         return this.operands;
     }
     
-    public final FunctionResult operand( final int position )
+    public final Object operand( final int position )
     {
         if( position < this.operands.size() )
         {
-            return this.operands.get( position );
+            final Object operand = this.operands.get( position ).value();
+            
+            if( operand instanceof Property )
+            {
+                final Property property = (Property) operand;
+                
+                property.attach( this.listener );
+                
+                if( this.properties == null )
+                {
+                    this.properties = new ArrayList<Property>( 1 );
+                }
+                
+                this.properties.add( property );
+            }
+            
+            return operand;
         }
         else
         {
@@ -139,10 +162,7 @@ public abstract class FunctionResult
      *   status first
      */
     
-    public final Object value() 
-    
-        throws FunctionException
-        
+    public final Object value() throws FunctionException
     {
         if( this.status.severity() == Status.Severity.ERROR )
         {
@@ -173,6 +193,14 @@ public abstract class FunctionResult
     {
         Object newValue = null;
         Status newStatus = Status.createOkStatus();
+        
+        if( this.properties != null )
+        {
+            for( Property property : this.properties )
+            {
+                property.detach( this.listener );
+            }
+        }
         
         try
         {
@@ -244,7 +272,7 @@ public abstract class FunctionResult
                 }
                 else if( obj instanceof Value )
                 {
-                    String res = ( (Value<?>) obj ).getText();
+                    String res = ( (Value<?>) obj ).text();
                     res = ( res == null ? "" : res );
                     return type.cast( res );
                 }
@@ -304,7 +332,7 @@ public abstract class FunctionResult
             {
                 if( obj instanceof Value )
                 {
-                    obj = ( (Value<?>) obj ).getContent();
+                    obj = ( (Value<?>) obj ).content();
                 }
                 
                 if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
@@ -415,7 +443,7 @@ public abstract class FunctionResult
             {
                 if( obj instanceof Value )
                 {
-                    obj = ( (Value<?>) obj ).getContent();
+                    obj = ( (Value<?>) obj ).content();
                 }
                 
                 if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
@@ -445,7 +473,7 @@ public abstract class FunctionResult
             {
                 if( obj instanceof Value )
                 {
-                    obj = ( (Value<?>) obj ).getContent();
+                    obj = ( (Value<?>) obj ).content();
                 }
                 
                 if( obj == null || ( obj instanceof String && ( (String) obj ).length() == 0 ) )
@@ -467,7 +495,7 @@ public abstract class FunctionResult
             {
                 if( obj instanceof Value )
                 {
-                    obj = ( (Value<?>) obj ).getContent();
+                    obj = ( (Value<?>) obj ).content();
                 }
                 
                 if( obj == null )
@@ -515,7 +543,7 @@ public abstract class FunctionResult
             {
                 if( obj instanceof Value )
                 {
-                    obj = ( (Value<?>) obj ).getContent();
+                    obj = ( (Value<?>) obj ).content();
                 }
                 
                 if( obj == null )
@@ -535,9 +563,9 @@ public abstract class FunctionResult
                     final MasterConversionService masterConversionService;
                     final Object origin = this.function.origin();
                     
-                    if( origin instanceof IModelElement )
+                    if( origin instanceof Element )
                     {
-                        masterConversionService = ( (IModelElement) origin ).service( MasterConversionService.class );
+                        masterConversionService = ( (Element) origin ).service( MasterConversionService.class );
                     }
                     else
                     {
@@ -573,29 +601,24 @@ public abstract class FunctionResult
         }
     }
     
-    protected final boolean equal( final Object a,
-                                   final Object b )
+    protected final boolean equal( Object a, Object b )
     {
+        if( a instanceof Value<?> )
+        {
+            a = ( (Value<?>) a ).text();
+        }
+        
+        if( b instanceof Value<?> )
+        {
+            b = ( (Value<?>) b ).text();
+        }
+        
         if( a == b )
         {
             return true;
         }
-        else if( a == null )
+        else if( a == null || b == null )
         {
-            if( b instanceof Value<?> )
-            {
-                return ( ( (Value<?>) b ).getText() == null );
-            }
-            
-            return false;
-        }
-        else if( b == null )
-        {
-            if( a instanceof Value<?> )
-            {
-                return ( ( (Value<?>) a ).getText() == null );
-            }
-            
             return false;
         }
         else if( a instanceof BigDecimal || b instanceof BigDecimal )

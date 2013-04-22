@@ -11,13 +11,15 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.Element;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public interface IExecutableModelElement
 
-    extends IModelElement
+    extends Element
     
 {
     Status execute( ProgressMonitor monitor );

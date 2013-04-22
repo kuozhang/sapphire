@@ -33,7 +33,7 @@ public final class PropertiesViewContributionPagePart extends FormPart
         
         this.labelFunctionResult = initExpression
         (
-            def.getLabel().getContent(), 
+            def.getLabel().content(), 
             String.class,
             null,
             new Runnable()
@@ -45,7 +45,7 @@ public final class PropertiesViewContributionPagePart extends FormPart
             }
         );
         
-        this.imageManager = new ImageManager( def.getImage().getContent() );
+        this.imageManager = new ImageManager( def.getImage().content() );
     }
 
     @Override

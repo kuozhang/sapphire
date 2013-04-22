@@ -35,7 +35,7 @@ public final class SendContactToPossibleValuesService extends PossibleValuesServ
         {
             for( Contact c : contact.nearest( ContactRepository.class ).getContacts() )
             {
-                final String email = c.getEMail().getText();
+                final String email = c.getEMail().text();
                 
                 if( email != null )
                 {

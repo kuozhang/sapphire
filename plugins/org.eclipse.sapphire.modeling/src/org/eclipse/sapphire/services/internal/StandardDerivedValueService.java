@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -40,7 +40,7 @@ public final class StandardDerivedValueService extends DerivedValueService
     @Override
     protected void initDerivedValueService()
     {
-        final Derived annotation = context( ModelProperty.class ).getAnnotation( Derived.class );
+        final Derived annotation = context( PropertyDef.class ).getAnnotation( Derived.class );
         
         if( annotation != null )
         {
@@ -64,7 +64,7 @@ public final class StandardDerivedValueService extends DerivedValueService
                 {
                     function = FailSafeFunction.create( function, Literal.create( String.class ) );
                     
-                    final ModelElementFunctionContext context = new ModelElementFunctionContext( context( IModelElement.class ) );
+                    final ModelElementFunctionContext context = new ModelElementFunctionContext( context( Element.class ) );
                     
                     this.functionResult = function.evaluate( context );
                     
@@ -120,7 +120,7 @@ public final class StandardDerivedValueService extends DerivedValueService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             
             if( property != null )
             {

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
@@ -22,6 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public interface SingleVariantItem extends Item, Priced
 {
-    ModelElementType TYPE = new ModelElementType( SingleVariantItem.class );
+    ElementType TYPE = new ElementType( SingleVariantItem.class );
     
 }

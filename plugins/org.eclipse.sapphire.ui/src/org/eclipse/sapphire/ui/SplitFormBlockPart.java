@@ -28,7 +28,7 @@ public final class SplitFormBlockPart extends FormPart
     
     public int getWeight()
     {
-        int weight = definition().getWeight().getContent();
+        int weight = definition().getWeight().content();
         
         if( weight < 1 )
         {

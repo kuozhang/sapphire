@@ -14,9 +14,9 @@ package org.eclipse.sapphire.samples.contacts.internal;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
 public final class CreateContactActionHandler extends SapphireActionHandler
 {
-    private ValueProperty property;
+    private Property property;
     
     @Override
     public void init( final SapphireAction action,
@@ -39,7 +39,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
     {
         super.init( action, def );
         
-        this.property = (ValueProperty) ( (PropertyEditorPart) action.getPart() ).getProperty();
+        this.property = ( (PropertyEditorPart) getPart() ).property();
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -50,10 +50,8 @@ public final class CreateContactActionHandler extends SapphireActionHandler
             }
         };
         
-        final IModelElement element = getModelElement();
-        
-        element.nearest( ContactRepository.class ).attach( listener, "Contacts/Name" );
-        element.attach( listener, this.property );
+        this.property.element().nearest( ContactRepository.class ).attach( listener, "Contacts/Name" );
+        this.property.attach( listener );
         
         refreshEnablementState();
         
@@ -64,8 +62,8 @@ public final class CreateContactActionHandler extends SapphireActionHandler
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    element.nearest( ContactRepository.class ).detach( listener, "Contacts/Name" );
-                    element.detach( listener, CreateContactActionHandler.this.property );
+                    CreateContactActionHandler.this.property.element().nearest( ContactRepository.class ).detach( listener, "Contacts/Name" );
+                    CreateContactActionHandler.this.property.detach( listener );
                 }
             }
         );
@@ -73,9 +71,8 @@ public final class CreateContactActionHandler extends SapphireActionHandler
     
     private void refreshEnablementState()
     {
-        final IModelElement element = getModelElement();
-        final String name = element.read( this.property ).getText();
-        final ContactRepository cdb = element.nearest( ContactRepository.class );
+        final String name = ( (Value<?>) this.property ).text();
+        final ContactRepository cdb = this.property.element().nearest( ContactRepository.class );
         
         boolean enabled;
         
@@ -89,7 +86,7 @@ public final class CreateContactActionHandler extends SapphireActionHandler
             
             for( Contact contact : cdb.getContacts() )
             {
-                if( name.equals( contact.getName().getText() ) )
+                if( name.equals( contact.getName().text() ) )
                 {
                     enabled = false;
                     break;
@@ -103,9 +100,8 @@ public final class CreateContactActionHandler extends SapphireActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
-        final String name = element.read( this.property ).getText();
-        final ContactRepository cdb = element.nearest( ContactRepository.class );
+        final String name = ( (Value<?>) this.property ).text();
+        final ContactRepository cdb = this.property.element().nearest( ContactRepository.class );
         
         final Contact newContact = cdb.getContacts().insert();
         newContact.setName( name );

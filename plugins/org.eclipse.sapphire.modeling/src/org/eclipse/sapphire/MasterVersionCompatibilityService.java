@@ -14,8 +14,6 @@ package org.eclipse.sapphire;
 import java.util.List;
 
 import org.eclipse.sapphire.VersionCompatibilityService.Data;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.services.DataService;
 
 /**
@@ -36,7 +34,7 @@ public final class MasterVersionCompatibilityService extends DataService<Data>
     @Override
     protected final void initDataService()
     {
-        this.services = context( IModelElement.class ).services( context( ModelProperty.class ), VersionCompatibilityService.class );
+        this.services = context( Property.class ).services( VersionCompatibilityService.class );
         
         this.listener = new Listener()
         {

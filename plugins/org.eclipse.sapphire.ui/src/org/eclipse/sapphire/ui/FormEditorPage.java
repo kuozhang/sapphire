@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.FormEditorPageDef;
@@ -34,14 +34,14 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 public final class FormEditorPage extends SapphireEditorFormPage
 {
     public FormEditorPage( final SapphireEditor editor,
-                           final IModelElement element,
+                           final Element element,
                            final DefinitionLoader.Reference<EditorPageDef> definition ) 
     {
         this( editor, element, definition, null );
     }
 
     public FormEditorPage( final SapphireEditor editor,
-                           final IModelElement element,
+                           final Element element,
                            final DefinitionLoader.Reference<EditorPageDef> definition,
                            final String pageName ) 
     {
@@ -51,7 +51,7 @@ public final class FormEditorPage extends SapphireEditorFormPage
         
         if( partName == null )
         {
-            partName = getDefinition().getPageName().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+            partName = getDefinition().getPageName().localized( CapitalizationType.TITLE_STYLE, false );
         }
         
         setPartName( partName );
@@ -90,7 +90,7 @@ public final class FormEditorPage extends SapphireEditorFormPage
             child.render( context );
         }
 
-        final ISapphireDocumentation doc = part.definition().getDocumentation().element();
+        final ISapphireDocumentation doc = part.definition().getDocumentation().content();
         
         if( doc != null )
         {

@@ -13,9 +13,9 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.FormEditorPageDef;
@@ -41,7 +41,7 @@ public final class FormEditorPagePart extends SapphireEditorPagePart
     {
         super.init();
 
-        final IModelElement element = getLocalModelElement();
+        final Element element = getLocalModelElement();
         final ListFactory<SapphirePart> childPartsListFactory = ListFactory.start();
         
         final Listener childPartListener = new FilteredListener<PartValidationEvent>()

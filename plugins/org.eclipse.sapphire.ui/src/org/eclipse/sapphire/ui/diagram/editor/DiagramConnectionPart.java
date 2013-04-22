@@ -19,19 +19,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.Point;
@@ -60,20 +59,20 @@ public class DiagramConnectionPart
 	protected DiagramConnectionTemplate connectionTemplate;
 	protected IDiagramExplicitConnectionBindingDef bindingDef;
 	protected IDiagramConnectionDef definition;
-	protected IModelElement modelElement;
+	protected Element modelElement;
 	private ModelPath endpoint1Path;
 	private ModelPath endpoint2Path;
 	private IDiagramConnectionEndpointBindingDef endpoint1Def;
 	private IDiagramConnectionEndpointBindingDef endpoint2Def;
-	private IModelElement srcNodeModel;
-	private IModelElement targetNodeModel;
+	private Element srcNodeModel;
+	private Element targetNodeModel;
 	private Listener endpointModelListener;
 	private FunctionResult endpoint1FunctionResult;
 	private FunctionResult endpoint2FunctionResult;
-	private ModelProperty endpoint1Property;
-	private ModelProperty endpoint2Property;
+	private PropertyDef endpoint1Property;
+	private PropertyDef endpoint2Property;
 	protected FunctionResult labelFunctionResult;
-	protected ValueProperty labelProperty;
+	protected Value<?> labelProperty;
 	protected FunctionResult idFunctionResult;
 	protected Listener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager;
@@ -96,12 +95,12 @@ public class DiagramConnectionPart
         this.definition = (IDiagramConnectionDef)super.definition;
         this.modelElement = getModelElement();
         
-        final IDiagramLabelDef labelDef = this.bindingDef.getLabel().element();
+        final IDiagramLabelDef labelDef = this.bindingDef.getLabel().content();
         if (labelDef != null)
         {
             this.labelFunctionResult = initExpression
             ( 
-                labelDef.getText().getContent(), 
+                labelDef.getText().content(), 
                 String.class,
                 null,
                 new Runnable()
@@ -113,13 +112,12 @@ public class DiagramConnectionPart
                 }
             );
         
-            this.labelProperty = FunctionUtil.getFunctionProperty(this.modelElement, 
-                    this.labelFunctionResult);
+            this.labelProperty = FunctionUtil.getFunctionProperty( this.modelElement, this.labelFunctionResult );
         }
         
         this.idFunctionResult = initExpression
         ( 
-            this.bindingDef.getInstanceId().getContent(), 
+            this.bindingDef.getInstanceId().content(), 
             String.class,
             null,
             new Runnable()
@@ -146,14 +144,14 @@ public class DiagramConnectionPart
             }
         };
         
-        this.endpoint1Def = this.bindingDef.getEndpoint1().element();        
+        this.endpoint1Def = this.bindingDef.getEndpoint1().content();        
         this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
         if (this.srcNodeModel != null)
         {
             this.endpoint1FunctionResult = initExpression
             (
                 this.srcNodeModel, 
-                this.endpoint1Def.getValue().getContent(),
+                this.endpoint1Def.getValue().content(),
                 String.class,
                 null,
                 new Runnable()
@@ -165,14 +163,14 @@ public class DiagramConnectionPart
             );            
         }
         
-        this.endpoint2Def = this.bindingDef.getEndpoint2().element();
+        this.endpoint2Def = this.bindingDef.getEndpoint2().content();
         this.targetNodeModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
         if (this.targetNodeModel != null)
         {
             this.endpoint2FunctionResult = initExpression
             (
                 this.targetNodeModel, 
-                this.endpoint2Def.getValue().getContent(),
+                this.endpoint2Def.getValue().content(),
                 String.class,
                 null,
                 new Runnable()
@@ -205,17 +203,17 @@ public class DiagramConnectionPart
     }
     
     @Override
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
         return this.modelElement;
     }    
     
-    public IModelElement getEndpoint1()
+    public Element getEndpoint1()
     {
         return this.srcNodeModel;
     }
     
-    public IModelElement getEndpoint2()
+    public Element getEndpoint2()
     {
         return this.targetNodeModel;
     }
@@ -241,7 +239,7 @@ public class DiagramConnectionPart
     {
         if (this.labelProperty != null)
         {
-            this.modelElement.write(this.labelProperty, newValue);
+            this.labelProperty.write( newValue );
         }        
     }
     
@@ -257,7 +255,7 @@ public class DiagramConnectionPart
     
     public String getConnectionTypeId()
     {
-        return this.definition.getId().getContent();
+        return this.definition.getId().content();
     }
     
     public String getInstanceId()
@@ -360,18 +358,18 @@ public class DiagramConnectionPart
     	this.connectionTemplate.setSerializedEndpoint2(this.modelElement, endpoint2Value);
     }
 
-    protected IModelElement resolveEndpoint(IModelElement modelElement, ModelPath endpointPath)
+    protected Element resolveEndpoint(Element modelElement, ModelPath endpointPath)
     {
         if (endpointPath.length() == 1)
         {
             String propertyName = ((ModelPath.PropertySegment)endpointPath.head()).getPropertyName();
-            ModelProperty modelProperty = resolve(modelElement, propertyName);
+            PropertyDef modelProperty = resolve(modelElement, propertyName);
             if (!(modelProperty instanceof ValueProperty))
             {
                 throw new RuntimeException( "Property " + propertyName + " not a ValueProperty");
             }
             ValueProperty property = (ValueProperty)modelProperty;
-            Value<?> valObj = modelElement.read(property);
+            Value<?> valObj = modelElement.property(property);
             if (!(valObj instanceof ReferenceValue))
             {
                 throw new RuntimeException( "Property " + propertyName + " value not a reference");
@@ -380,36 +378,29 @@ public class DiagramConnectionPart
             Object targetObj = refVal.resolve();
             if (targetObj == null)
             {
-                if (refVal.getText() != null)
+                if (refVal.text() != null)
                 {
                     SapphireDiagramEditorPagePart diagramEditorPart = this.getDiagramConnectionTemplate().getDiagramEditor();
-                    DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, refVal.getText());
+                    DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, refVal.text());
                     if (targetNode != null)
                     {
                         targetObj = targetNode.getLocalModelElement();
                     }
                 }
             }
-            return (IModelElement)targetObj;
+            return (Element)targetObj;
         }
         else
         {
             ModelPath.Segment head = endpointPath.head();
             if( head instanceof ParentElementSegment )
             {
-                IModelParticle parent = modelElement.parent();                
+                final Property parent = modelElement.parent();                
                 if( parent == null )
                 {
                     throw new RuntimeException("Invalid model path: " + endpointPath);
                 }
-                else
-                {
-                    if( parent instanceof ModelElementList<?> )
-                    {
-                        parent = parent.parent();
-                    }
-                }
-                return resolveEndpoint((IModelElement)parent, endpointPath.tail());                
+                return resolveEndpoint(parent.element(), endpointPath.tail());                
             }
             else
             {
@@ -418,13 +409,13 @@ public class DiagramConnectionPart
         }
     }
     
-    protected void setModelProperty(final IModelElement modelElement, 
+    protected void setModelProperty(final Element modelElement, 
             String propertyName, Object value)
     {
         if (propertyName != null)
         {
-            final ModelElementType type = modelElement.type();
-            final ModelProperty property = type.property( propertyName );
+            final ElementType type = modelElement.type();
+            final PropertyDef property = type.property( propertyName );
             if( property == null )
             {
                 throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );
@@ -434,11 +425,11 @@ public class DiagramConnectionPart
                 throw new RuntimeException( "Property " + propertyName + " not a ValueProperty");
             }
         
-            modelElement.write(property, value);
+            modelElement.property( (ValueProperty) property ).write( value );
         }        
     }
     
-    protected void setModelProperty(IModelElement modelElement, ModelPath propertyPath, Object value)
+    protected void setModelProperty(Element modelElement, ModelPath propertyPath, Object value)
     {
         if (propertyPath.length() == 1)
         {
@@ -449,12 +440,8 @@ public class DiagramConnectionPart
         {
             if (propertyPath.head() instanceof ModelPath.ParentElementSegment)
             {
-                IModelParticle parent = modelElement.parent();
-                if (parent instanceof ModelElementList<?>)
-                {
-                    parent = parent.parent();
-                }
-                setModelProperty((IModelElement)parent, propertyPath.tail(), value);
+                final Property parent = modelElement.parent();
+                setModelProperty(parent.element(), propertyPath.tail(), value);
             }
         }
     }
@@ -491,18 +478,18 @@ public class DiagramConnectionPart
     {
     	boolean endpointChanged = false;
     	boolean sourceChange = false;
-    	if (this.srcNodeModel == null || event.element() == this.srcNodeModel)
+    	if (this.srcNodeModel == null || event.property().element() == this.srcNodeModel)
     	{
-    		IModelElement newSrcModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
+    		Element newSrcModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
     		if (newSrcModel != this.srcNodeModel)
     		{
     			endpointChanged = true;
     			sourceChange = true;
     		}
     	}
-    	else if (this.targetNodeModel == null || event.element() == this.targetNodeModel)
+    	else if (this.targetNodeModel == null || event.property().element() == this.targetNodeModel)
     	{
-    		IModelElement newTargetModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
+    		Element newTargetModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
     		if (newTargetModel != this.targetNodeModel)
     		{
     			endpointChanged = true;
@@ -517,12 +504,12 @@ public class DiagramConnectionPart
     
     protected void handleModelPropertyChange(final PropertyEvent event)
     {
-        final ModelProperty property = event.property();
+        final PropertyDef property = event.property().definition();
                 
-        if (property.getName().equals(this.endpoint1Property.getName()) || 
-                property.getName().equals(this.endpoint2Property.getName()))
+        if (property.name().equals(this.endpoint1Property.name()) || 
+                property.name().equals(this.endpoint2Property.name()))
         {
-            boolean sourceChange = property.getName().equals(this.endpoint1Property.getName()) ? true : false;
+            boolean sourceChange = property.name().equals(this.endpoint1Property.name()) ? true : false;
             handleEndpointChange(sourceChange);
             notifyConnectionEndpointUpdate();
         }
@@ -543,7 +530,7 @@ public class DiagramConnectionPart
                 this.endpoint1FunctionResult = initExpression
                 (
                     this.srcNodeModel, 
-                    this.endpoint1Def.getValue().getContent(), 
+                    this.endpoint1Def.getValue().content(), 
                     String.class,
                     null,
                     new Runnable()
@@ -568,7 +555,7 @@ public class DiagramConnectionPart
                 this.endpoint2FunctionResult = initExpression
                 (
                     this.targetNodeModel, 
-                    this.endpoint2Def.getValue().getContent(),
+                    this.endpoint2Def.getValue().content(),
                     String.class,
                     null,
                     new Runnable()

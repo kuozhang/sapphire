@@ -32,7 +32,7 @@ public class ValidationMarkerPart extends ShapePart
 	
     public ValidationMarkerSize getSize()
     {
-    	return this.markerDef.getSize().getContent();
+    	return this.markerDef.getSize().content();
     }
         
 

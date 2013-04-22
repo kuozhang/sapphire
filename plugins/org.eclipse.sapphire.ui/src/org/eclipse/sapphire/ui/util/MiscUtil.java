@@ -28,8 +28,7 @@ public final class MiscUtil
     {
     }
     
-    public static <T> T findSelectionPostDelete( final Collection<T> items,
-                                                 final Collection<T> toBeDeletedItems )
+    public static <T> T findSelectionPostDelete( final Collection<? extends T> items, final Collection<? extends T> toBeDeletedItems )
     {
         T selectionPostDelete = null;
         

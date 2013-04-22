@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -24,9 +24,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElement extends IModelElement
+public interface TestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
     // *** Integer3 ***
     
@@ -66,15 +66,15 @@ public interface TestElement extends IModelElement
     
     // *** EmptyList ***
     
-    interface Entry extends IModelElement
+    interface Entry extends Element
     {
-        ModelElementType TYPE = new ModelElementType( Entry.class );
+        ElementType TYPE = new ElementType( Entry.class );
     }
     
     @Type( base = Entry.class )
 
     ListProperty PROP_EMPTY_LIST = new ListProperty( TYPE, "EmptyList" );
     
-    ModelElementList<Entry> getEmptyList();
+    ElementList<Entry> getEmptyList();
 
 }

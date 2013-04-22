@@ -21,10 +21,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FactorialFunction
-
-    extends Function
-    
+public final class FactorialFunction extends Function
 {
     private static final BigInteger ZERO = BigInteger.valueOf( 0 );
     private static final BigInteger ONE = BigInteger.valueOf( 1 );
@@ -43,7 +40,7 @@ public final class FactorialFunction
             @Override
             protected Object evaluate()
             {
-                final BigInteger x = cast( operand( 0 ).value(), BigInteger.class );
+                final BigInteger x = cast( operand( 0 ), BigInteger.class );
                 
                 if( x.intValue() == 0 )
                 {

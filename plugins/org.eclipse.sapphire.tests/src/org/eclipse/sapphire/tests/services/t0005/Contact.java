@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.services.t0005;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
 /**
@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.annotations.Service;
 
 @Service( impl = ContactEqualityService.class )
 
-public interface Contact extends IModelElement
+public interface Contact extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Contact.class );
+    ElementType TYPE = new ElementType( Contact.class );
     
     // *** FirstName ***
     

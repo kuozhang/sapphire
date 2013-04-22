@@ -26,8 +26,8 @@ public class SapphireImageFigure extends SmoothImageFigure
 	public SapphireImageFigure(ImagePresentation imagePresentation, Image image)
 	{
 		super(image);
-		HorizontalAlignment horizontalAlign = imagePresentation.getLayoutConstraint().getHorizontalAlignment().getContent();		
-		VerticalAlignment verticalAlign = imagePresentation.getLayoutConstraint().getVerticalAlignment().getContent();
+		HorizontalAlignment horizontalAlign = imagePresentation.getLayoutConstraint().getHorizontalAlignment().content();		
+		VerticalAlignment verticalAlign = imagePresentation.getLayoutConstraint().getVerticalAlignment().content();
 		int alignment = getDraw2dImageAlignment(horizontalAlign);
 		alignment |= getDraw2dImageAlignment(verticalAlign);
 		setAlignment(alignment);

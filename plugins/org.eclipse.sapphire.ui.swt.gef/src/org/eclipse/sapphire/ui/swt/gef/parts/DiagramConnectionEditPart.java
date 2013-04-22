@@ -102,7 +102,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
 		IDiagramConnectionDef def = connectionPart.getConnectionDef();
 		connection.setLineStyle(resourceCache.getLinkStyle(def));
-		connection.setLineWidth(def.getLineWidth().getContent());
+		connection.setLineWidth(def.getLineWidth().content());
 		connection.setForegroundColor(resourceCache.getLineColor(connectionPart));
 	}
 	

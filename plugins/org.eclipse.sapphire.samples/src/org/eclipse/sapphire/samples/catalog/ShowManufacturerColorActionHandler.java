@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.catalog;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
@@ -48,7 +48,7 @@ public final class ShowManufacturerColorActionHandler extends SapphireActionHand
             }
         };
         
-        this.state.attach( listener, CatalogEditorPageState.PROP_ATTRIBUTES.getName() + "/*" );
+        this.state.attach( listener, CatalogEditorPageState.PROP_ATTRIBUTES.name() + "/*" );
         
         setChecked( this.state.getAttribute( ATTRIBUTE, false ) );
         
@@ -59,7 +59,7 @@ public final class ShowManufacturerColorActionHandler extends SapphireActionHand
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    ShowManufacturerColorActionHandler.this.state.detach( listener, CatalogEditorPageState.PROP_ATTRIBUTES.getName() + "/*" );
+                    ShowManufacturerColorActionHandler.this.state.detach( listener, CatalogEditorPageState.PROP_ATTRIBUTES.name() + "/*" );
                 }
             }
         );

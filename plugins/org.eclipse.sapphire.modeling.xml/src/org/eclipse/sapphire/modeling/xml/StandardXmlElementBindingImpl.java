@@ -21,12 +21,12 @@ import java.util.SortedSet;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.LayeredElementBindingImpl;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -43,16 +43,16 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     private Listener possibleTypesServiceListener;
     private XmlPath path;
     private QName[] xmlElementNames;
-    private ModelElementType[] modelElementTypes;
+    private ElementType[] modelElementTypes;
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         super.init( element, property, params );
         
-        this.possibleTypesService = element.service( property, PossibleTypesService.class );
+        this.possibleTypesService = element.property( property ).service( PossibleTypesService.class );
         
         this.possibleTypesServiceListener = new Listener()
         {
@@ -70,16 +70,16 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     
     private void initBindingMetadata()
     {
-        final IModelElement element = element();
-        final ModelProperty property = property();
+        final Element element = element();
+        final PropertyDef property = property();
         
         try
         {
             final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
             final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
             
-            final SortedSet<ModelElementType> possible = this.possibleTypesService.types();
-            this.modelElementTypes = possible.toArray( new ModelElementType[ possible.size() ] );
+            final SortedSet<ElementType> possible = this.possibleTypesService.types();
+            this.modelElementTypes = possible.toArray( new ElementType[ possible.size() ] );
 
             if( xmlElementBindingAnnotation == null )
             {
@@ -103,7 +103,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
                 
                 if( this.xmlElementNames == null )
                 {
-                    this.path = new XmlPath( property.getName(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+                    this.path = new XmlPath( property.name(), ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
                     
                     this.xmlElementNames = new QName[ this.modelElementTypes.length ];
                     
@@ -125,7 +125,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
                 
                 for( int i = 0; i < this.modelElementTypes.length; i++ )
                 {
-                    final ModelElementType type = this.modelElementTypes[ i ];
+                    final ElementType type = this.modelElementTypes[ i ];
                             
                     for( XmlElementBinding.Mapping mapping : mappings )
                     {
@@ -153,7 +153,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.getName(), e.getMessage() );
+            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.name(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }
@@ -167,14 +167,14 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
      * @return the qualified XML element name for the given model element type
      */
     
-    protected QName createDefaultElementName( final ModelElementType type, 
+    protected QName createDefaultElementName( final ElementType type, 
                                               final XmlNamespaceResolver xmlNamespaceResolver )
     {
         return XmlUtil.createDefaultElementName( type );
     }
     
     @Override
-    public ModelElementType type( final Resource resource )
+    public ElementType type( final Resource resource )
     {
         final XmlElement xmlElement = ( (XmlResource) resource ).getXmlElement();
         final QName xmlElementName = createQualifiedName( xmlElement.getDomNode() );
@@ -213,7 +213,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     }
 
     @Override
-    protected Object createUnderlyingObject( final ModelElementType type )
+    protected Object createUnderlyingObject( final ElementType type )
     {
         final XmlElement base = base( false );
         if( base != null )
@@ -283,12 +283,6 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
         }
     }
 
-    @Override
-    public boolean removable()
-    {
-        return true;
-    }
-    
     protected XmlElement parent( final boolean createIfNecessary )
     {
         XmlElement parent = base( createIfNecessary );

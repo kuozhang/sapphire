@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
@@ -23,7 +23,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 @Label( standard = "shape layout" )
 @Image( path = "ShapeLayoutDef.png" )
 
-public interface ShapeLayoutDef extends IModelElement 
+public interface ShapeLayoutDef extends Element 
 {
-	ModelElementType TYPE = new ModelElementType( ShapeLayoutDef.class );
+	ElementType TYPE = new ElementType( ShapeLayoutDef.class );
 }

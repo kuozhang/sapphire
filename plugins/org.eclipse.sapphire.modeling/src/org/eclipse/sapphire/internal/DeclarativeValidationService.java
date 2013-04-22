@@ -13,14 +13,14 @@ package org.eclipse.sapphire.internal;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Validation;
 import org.eclipse.sapphire.Validations;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.CompositeStatusFactory;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
@@ -49,14 +49,14 @@ public final class DeclarativeValidationService extends ValidationService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
-        final ModelProperty property = context( ModelProperty.class );
+        final Element element = context( Element.class );
+        final PropertyDef property = context( PropertyDef.class );
         
         final ListFactory<Validation> annotations = ListFactory.start();
         
         if( property == null )
         {
-            final ModelElementType type = element.type();
+            final ElementType type = element.type();
             
             annotations.add( type.getAnnotations( Validation.class ) );
             
@@ -183,11 +183,11 @@ public final class DeclarativeValidationService extends ValidationService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             
             if( property == null )
             {
-                final ModelElementType type = context.find( IModelElement.class ).type();
+                final ElementType type = context.find( Element.class ).type();
                 return ( type.hasAnnotation( Validation.class ) || type.hasAnnotation( Validations.class ) );
             }
             else

@@ -11,19 +11,19 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0012;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestModelRoot extends IModelElement
+public interface TestModelRoot extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModelRoot.class );
+    ElementType TYPE = new ElementType( TestModelRoot.class );
 
     // *** List1 ***
     
@@ -31,7 +31,7 @@ public interface TestModelRoot extends IModelElement
 
     ListProperty PROP_LIST_1 = new ListProperty( TYPE, "List1" );
     
-    ModelElementList<TestModelElementA> getList1();
+    ElementList<TestModelElementA> getList1();
      
     // *** List2 ***
     
@@ -39,6 +39,6 @@ public interface TestModelRoot extends IModelElement
 
     ListProperty PROP_LIST_2 = new ListProperty( TYPE, "List2" );
     
-    ModelElementList<TestModelElementB> getList2();
+    ElementList<TestModelElementB> getList2();
      
 }

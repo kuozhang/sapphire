@@ -16,7 +16,7 @@ import static org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefau
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.sapphire.PropertyInstance;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SectionPart;
@@ -33,7 +33,7 @@ public final class RestoreDefaultsActionHandlerCondition extends SapphireConditi
         
         if( part instanceof SectionPart )
         {
-            final Set<PropertyInstance> properties = new HashSet<PropertyInstance>();
+            final Set<Property> properties = new HashSet<Property>();
             collectProperties( (SectionPart) part, properties );        
             return ! properties.isEmpty();
         }

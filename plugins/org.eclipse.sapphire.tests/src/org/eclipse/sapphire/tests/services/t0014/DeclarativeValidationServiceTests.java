@@ -35,15 +35,14 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
         
         suite.setName( "DeclarativeValidationServiceTests" );
 
-        suite.addTest( new DeclarativeValidationServiceTests( "testDeclarativeValidationServiceAtPropertyLevel" ) );
-        suite.addTest( new DeclarativeValidationServiceTests( "testDeclarativeValidationServiceAtElementLevel" ) );
+        suite.addTest( new DeclarativeValidationServiceTests( "testDeclarativeValidationService" ) );
         
         return suite;
     }
     
-    public void testDeclarativeValidationServiceAtPropertyLevel() throws Exception
+    public void testDeclarativeValidationService() throws Exception
     {
-        final TestElementForProperty element = TestElementForProperty.TYPE.instantiate();
+        final TestElement element = TestElement.TYPE.instantiate();
      
         try
         {
@@ -65,33 +64,6 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
             
             assertValidationOk( element.getMin() );
             assertValidationOk( element.getMax() );
-        }
-        finally
-        {
-            element.dispose();
-        }
-    }
-
-    public void testDeclarativeValidationServiceAtElementLevel() throws Exception
-    {
-        final TestElementForElement element = TestElementForElement.TYPE.instantiate();
-     
-        try
-        {
-            assertValidationOk( element );
-            
-            element.setMin( 30 );
-            element.setMax( 20 );
-            
-            assertValidationError( element, "Max must not be smaller than min." );
-            
-            element.setMax( 200 );
-            
-            assertValidationWarning( element, "Max must be less than or equal to 100." );
-            
-            element.setMax( 50 );
-            
-            assertValidationOk( element );
         }
         finally
         {

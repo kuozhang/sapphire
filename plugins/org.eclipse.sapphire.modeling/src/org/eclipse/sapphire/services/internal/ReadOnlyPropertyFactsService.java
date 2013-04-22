@@ -13,7 +13,7 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
@@ -42,7 +42,7 @@ public final class ReadOnlyPropertyFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return context.find( ModelProperty.class ).hasAnnotation( ReadOnly.class );
+            return context.find( PropertyDef.class ).hasAnnotation( ReadOnly.class );
         }
     
         @Override

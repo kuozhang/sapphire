@@ -11,18 +11,18 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0012;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestListEntry extends IModelElement
+public interface TestListEntry extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestListEntry.class );
+    ElementType TYPE = new ElementType( TestListEntry.class );
     
     // *** Value ***
     

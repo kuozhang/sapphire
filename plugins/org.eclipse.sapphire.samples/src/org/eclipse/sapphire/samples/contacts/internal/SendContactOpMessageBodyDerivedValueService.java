@@ -36,7 +36,7 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
         if( contact != null )
         {
             buf.append( "<b>" );
-            buf.append( contact.getName().getText() );
+            buf.append( contact.getName().text() );
             buf.append( "</b>\n" );
             buf.append( "<br/><hr/>\n" );
             
@@ -47,11 +47,11 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
                 for( PhoneNumber phone : contact.getPhoneNumbers() )
                 {
                     buf.append( "<tr><td><i>" );
-                    buf.append( phone.getType().getText() );
+                    buf.append( phone.getType().text() );
                     buf.append( "</i></td><td>" );
                     
-                    final String areaCode = phone.getAreaCode().getText();
-                    final String localNumber = phone.getLocalNumber().getText();
+                    final String areaCode = phone.getAreaCode().text();
+                    final String localNumber = phone.getLocalNumber().text();
                     
                     if( areaCode != null )
                     {
@@ -70,16 +70,16 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
             
             final ContactAddress address = contact.getAddress();
             
-            if( address != null && address.getStreet().getContent() != null )
+            if( address != null && address.getStreet().content() != null )
             {
                 buf.append( "<p>" );
-                buf.append( address.getStreet().getText() );
+                buf.append( address.getStreet().text() );
                 buf.append( "<br/>" );
-                buf.append( address.getCity().getText() );
+                buf.append( address.getCity().text() );
                 buf.append( ", " );
-                buf.append( address.getState().getText() );
+                buf.append( address.getState().text() );
                 buf.append( ' ' );
-                buf.append( address.getZipCode().getText() );
+                buf.append( address.getZipCode().text() );
                 buf.append( "</p>\n" );
             }
         }

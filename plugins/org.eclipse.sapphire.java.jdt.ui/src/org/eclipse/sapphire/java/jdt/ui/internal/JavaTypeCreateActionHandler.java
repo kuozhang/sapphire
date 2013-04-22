@@ -51,18 +51,17 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -94,8 +93,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
     {
         super.init( action, def );
 
-        final IModelElement element = getModelElement();
-        final ValueProperty property = (ValueProperty) getProperty();
+        final Property property = property();
         
         final Listener listener = new FilteredListener<PropertyEvent>()
         {
@@ -106,7 +104,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
             }
         };
         
-        element.attach( listener, property );
+        property.attach( listener );
         
         attach
         (
@@ -117,7 +115,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        element.detach( listener, property );
+                        property.detach( listener );
                     }
                 }
             }
@@ -129,17 +127,14 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
 
     protected Object run( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
-        final ModelProperty property = getProperty();
+        final Value<?> javaTypeNameValue = (Value<?>) property();
         
-        final Value<JavaTypeName> javaTypeNameValue = element.read( (ValueProperty) property );
-        
-        if( javaTypeNameValue.isMalformed() )
+        if( javaTypeNameValue.malformed() )
         {
             return null;
         }
         
-        final JavaTypeName javaTypeName = javaTypeNameValue.getContent();
+        final JavaTypeName javaTypeName = (JavaTypeName) javaTypeNameValue.content();
         
         if( javaTypeName.pkg() == null )
         {
@@ -157,9 +152,9 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
             }
         }
         
-        final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
+        final JavaTypeConstraintService javaTypeConstraintService = javaTypeNameValue.service( JavaTypeConstraintService.class );
         
-        final IProject proj = element.adapt( IProject.class );
+        final IProject proj = javaTypeNameValue.element().adapt( IProject.class );
         final IJavaProject jproj = JavaCore.create( proj );
 
         JavaTypeName expectedBaseClassTemp = null;
@@ -296,7 +291,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
                 
                 monitor.worked( 1 );
                 
-                final IProject proj = element.adapt( IProject.class );
+                final IProject proj = javaTypeNameValue.element().adapt( IProject.class );
                 final IJavaProject jproj = JavaCore.create( proj );
                 
                 try
@@ -394,13 +389,13 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         if( enabled )
         {
-            final ReferenceValue<?,?> ref = (ReferenceValue<?,?>) getModelElement().read( getProperty() );
+            final ReferenceValue<?,?> ref = (ReferenceValue<?,?>) property();
             
             enabled = false;
             
-            if( ! ref.isMalformed() )
+            if( ! ref.malformed() )
             {
-                final String typeName = ref.getText();
+                final String typeName = ref.text();
                 
                 if( typeName != null && typeName.indexOf( '$' ) == -1 && ref.resolve() == null )
                 {
@@ -455,16 +450,15 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         @Override
         protected final boolean evaluate( final PropertyEditorPart part )
         {
-            final ModelProperty property = part.getProperty();
-            final IModelElement element = part.getModelElement();
+            final Property property = part.property();
             
-            if( property instanceof ValueProperty && element != null && property.isOfType( JavaTypeName.class ) )
+            if( property.definition() instanceof ValueProperty && property.definition().isOfType( JavaTypeName.class ) )
             {
-                final Reference referenceAnnotation = property.getAnnotation( Reference.class );
+                final Reference referenceAnnotation = property.definition().getAnnotation( Reference.class );
                 
                 if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
                 {
-                    return evaluate( element.service( property, JavaTypeConstraintService.class ) );
+                    return evaluate( property.service( JavaTypeConstraintService.class ) );
                 }
             }
             

@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0005;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestModelBase extends IModelElement
+public interface TestModelBase extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModelBase.class );
+    ElementType TYPE = new ElementType( TestModelBase.class );
     
     // *** Method : test ***
 

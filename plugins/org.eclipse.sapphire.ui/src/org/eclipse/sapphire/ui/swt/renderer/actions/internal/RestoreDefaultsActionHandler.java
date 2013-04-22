@@ -33,9 +33,9 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.sapphire.PropertyInstance;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.ConditionalPart;
 import org.eclipse.sapphire.ui.FormPart;
@@ -71,10 +71,10 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     {
         final SapphirePart part = (SapphirePart) getPart();
 
-        final Set<PropertyInstance> properties = new LinkedHashSet<PropertyInstance>();
+        final Set<Property> properties = new LinkedHashSet<Property>();
         collectProperties( part, properties );
 
-        for( Iterator<PropertyInstance> itr = properties.iterator(); itr.hasNext(); )
+        for( Iterator<Property> itr = properties.iterator(); itr.hasNext(); )
         {
             if( itr.next().empty() )
             {
@@ -88,9 +88,9 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         }
         else
         {
-            final Set<PropertyInstance> selectedProperties = PromptDialog.open( context.getShell(), properties );
+            final Set<Property> selectedProperties = PromptDialog.open( context.getShell(), properties );
             
-            for( PropertyInstance property : selectedProperties )
+            for( Property property : selectedProperties )
             {
                 property.clear();
             }
@@ -100,7 +100,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     }
     
     public static void collectProperties( final SapphirePart part,
-                                          final Set<PropertyInstance> result )
+                                          final Set<Property> result )
     {
         if( part.visible() )
         {
@@ -114,7 +114,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             else if( part instanceof WithPart )
             {
                 final WithPart w = ( (WithPart) part );
-                result.add( w.getLocalModelElement().property( w.getProperty() ) );
+                result.add( w.property() );
             }
             else if( part instanceof SapphireEnumControlledPageBook )
             {
@@ -128,7 +128,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             else if( part instanceof PropertyEditorPart )
             {
                 final PropertyEditorPart editor = (PropertyEditorPart) part;
-                result.add( editor.getLocalModelElement().property( editor.getProperty() ) );
+                result.add( editor.property() );
                 
                 for( SapphirePart related : editor.getRelatedContent() )
                 {
@@ -149,11 +149,11 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     
     private static final class PromptDialog extends Dialog
     {
-        private final Set<PropertyInstance> allProperties;
-        private final Set<PropertyInstance> selectedProperties;
+        private final Set<Property> allProperties;
+        private final Set<Property> selectedProperties;
         
-        private static Set<PropertyInstance> open( final Shell shell,
-                                                   final Set<PropertyInstance> properties )
+        private static Set<Property> open( final Shell shell,
+                                                   final Set<Property> properties )
         {
             final PromptDialog dialog = new PromptDialog( shell, properties );
             
@@ -168,12 +168,12 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         }
         
         private PromptDialog( final Shell shell,
-                              final Set<PropertyInstance> properties )
+                              final Set<Property> properties )
         {
             super( shell );
             
             this.allProperties = properties;
-            this.selectedProperties = new HashSet<PropertyInstance>( this.allProperties );
+            this.selectedProperties = new HashSet<Property>( this.allProperties );
         }
         
         @Override
@@ -226,7 +226,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
                     public String getColumnText( final Object element,
                                                  final int columnIndex )
                     {
-                        final ModelProperty property = ( (PropertyInstance) element ).property();
+                        final PropertyDef property = ( (Property) element ).definition();
                         return property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
                     }
 
@@ -278,7 +278,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
                 {
                     public void checkStateChanged( final CheckStateChangedEvent event )
                     {
-                        final PropertyInstance property = (PropertyInstance) event.getElement();
+                        final Property property = (Property) event.getElement();
                         
                         if( event.getChecked() == true )
                         {

@@ -40,7 +40,7 @@ public final class TabGroupPagePart extends FormPart
         
         this.labelFunctionResult = initExpression
         (
-            def.getLabel().getContent(), 
+            def.getLabel().content(), 
             String.class,
             Literal.create( "tab" ),
             new Runnable()
@@ -52,7 +52,7 @@ public final class TabGroupPagePart extends FormPart
             }
         );
         
-        this.imageManager = new ImageManager( def.getImage().getContent(), Literal.create( IMG_TAB_GROUP_PAGE ) );
+        this.imageManager = new ImageManager( def.getImage().content(), Literal.create( IMG_TAB_GROUP_PAGE ) );
     }
 
     @Override

@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.services.DataService;
 import org.eclipse.sapphire.util.EqualsFactory;
 import org.eclipse.sapphire.util.HashCodeFactory;
@@ -53,10 +50,10 @@ public abstract class VersionCompatibilityTargetService extends DataService<Vers
         return ( data == null ? null : data.versioned() );
     }
     
-    public static VersionCompatibilityTargetService find( final IModelElement element,
-                                                          final ModelProperty property )
+    public static VersionCompatibilityTargetService find( final Element element,
+                                                          final PropertyDef property )
     {
-        VersionCompatibilityTargetService service = element.service( property, VersionCompatibilityTargetService.class );
+        VersionCompatibilityTargetService service = element.property( property ).service( VersionCompatibilityTargetService.class );
         
         if( service == null )
         {
@@ -64,22 +61,11 @@ public abstract class VersionCompatibilityTargetService extends DataService<Vers
             
             if( service == null )
             {
-                final IModelParticle parentModelParticle = element.parent();
+                final Property parent = element.parent();
                 
-                if( parentModelParticle != null )
+                if( parent != null )
                 {
-                    final IModelElement parentModelElement;
-                    
-                    if( parentModelParticle instanceof IModelElement )
-                    {
-                        parentModelElement = (IModelElement) parentModelParticle;
-                    }
-                    else
-                    {
-                        parentModelElement = (IModelElement) parentModelParticle.parent();
-                    }
-                    
-                    service = find( parentModelElement, element.getParentProperty() );
+                    service = find( parent.element(), parent.definition() );
                 }
             }
         }

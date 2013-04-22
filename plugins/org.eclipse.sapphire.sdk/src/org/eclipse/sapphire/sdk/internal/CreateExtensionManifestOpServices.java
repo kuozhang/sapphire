@@ -18,14 +18,14 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.sdk.CreateExtensionManifestOp;
 import org.eclipse.sapphire.services.InitialValueService;
@@ -45,8 +45,8 @@ public final class CreateExtensionManifestOpServices
         @Override
         public Status validate()
         {
-            final Value<Path> target = context( IModelElement.class ).read( context( ValueProperty.class ) );
-            final Path path = target.getContent();
+            final Value<Path> target = context( Element.class ).property( context( ValueProperty.class ) );
+            final Path path = target.content();
             
             if( path != null )
             {
@@ -103,7 +103,7 @@ public final class CreateExtensionManifestOpServices
                 }
             };
             
-            context( CreateExtensionManifestOp.class ).attach( this.listener, CreateExtensionManifestOp.PROP_CONTEXT );
+            context( CreateExtensionManifestOp.class ).property( CreateExtensionManifestOp.PROP_CONTEXT ).attach( this.listener );
         }
     
         @Override
@@ -133,7 +133,7 @@ public final class CreateExtensionManifestOpServices
             
             if( this.listener != null )
             {
-                context( CreateExtensionManifestOp.class ).detach( this.listener, CreateExtensionManifestOp.PROP_CONTEXT );
+                context( CreateExtensionManifestOp.class ).property( CreateExtensionManifestOp.PROP_CONTEXT ).detach( this.listener );
             }
         }
     }

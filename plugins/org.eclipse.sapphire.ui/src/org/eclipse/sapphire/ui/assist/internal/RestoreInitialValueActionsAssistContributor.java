@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -36,25 +35,24 @@ public final class RestoreInitialValueActionsAssistContributor extends PropertyE
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final IModelElement element = context.getModelElement();
-        final ModelProperty property = context.getProperty();
+        final Property property = context.property();
         
-        if( property == null || property.isReadOnly() )
+        if( property == null || property.definition().isReadOnly() )
         {
             return;
         }
         
-        if( property instanceof ValueProperty )
+        if( property instanceof Value<?> )
         {
-            final ValueProperty prop = (ValueProperty) property; 
-            final InitialValueService initialValueService = element.service( prop, InitialValueService.class );
+            final Value<?> value = (Value<?>) property;
+            final InitialValueService initialValueService = value.service( InitialValueService.class );
             
             if( initialValueService != null )
             {
-                final String initialValue = initialValueService.value();
-                final String currentValue = element.read( prop ).getText( false );
+                final String initialText = initialValueService.value();
+                final String currentText = value.text( false );
                 
-                if( initialValue != null && ! initialValue.equals( currentValue ) )
+                if( initialText != null && ! initialText.equals( currentText ) )
                 {
                     final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
                     
@@ -67,7 +65,7 @@ public final class RestoreInitialValueActionsAssistContributor extends PropertyE
                         {
                             public void run()
                             {
-                                element.write( prop, initialValue );
+                                value.write( initialText );
                             }
                         }
                     );

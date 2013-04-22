@@ -49,9 +49,9 @@ public final class RequiredConstraintTests extends SapphireTestCase
      
         try
         {
-            assertNotNull( element.service( TestElement.PROP_VALUE, RequiredConstraintService.class ) );
-            assertNotNull( element.service( TestElement.PROP_VALUE_REQUIRED, RequiredConstraintService.class ) );
-            assertNotNull( element.service( TestElement.PROP_VALUE_REQUIRED_EXPR, RequiredConstraintService.class ) );
+            assertNotNull( element.property( TestElement.PROP_VALUE ).service( RequiredConstraintService.class ) );
+            assertNotNull( element.property( TestElement.PROP_VALUE_REQUIRED ).service( RequiredConstraintService.class ) );
+            assertNotNull( element.property( TestElement.PROP_VALUE_REQUIRED_EXPR ).service( RequiredConstraintService.class ) );
             
             assertValidationOk( element.getValue() );
             assertValidationError( element.getValueRequired(), "Value must be specified." );
@@ -95,9 +95,9 @@ public final class RequiredConstraintTests extends SapphireTestCase
         
         try
         {
-            assertNotNull( element.service( TestElement.PROP_ELEMENT, RequiredConstraintService.class ) );
-            assertNotNull( element.service( TestElement.PROP_ELEMENT_REQUIRED, RequiredConstraintService.class ) );
-            assertNotNull( element.service( TestElement.PROP_ELEMENT_REQUIRED_EXPR, RequiredConstraintService.class ) );
+            assertNotNull( element.property( TestElement.PROP_ELEMENT ).service( RequiredConstraintService.class ) );
+            assertNotNull( element.property( TestElement.PROP_ELEMENT_REQUIRED ).service( RequiredConstraintService.class ) );
+            assertNotNull( element.property( TestElement.PROP_ELEMENT_REQUIRED_EXPR ).service( RequiredConstraintService.class ) );
             
             assertValidationOk( element.getElement() );
             assertValidationError( element.getElementRequired(), "Element must be specified." );
@@ -117,9 +117,9 @@ public final class RequiredConstraintTests extends SapphireTestCase
             assertFact( element.getElementRequired(), "Must be specified." );
             assertFact( element.getElementRequiredExpr(), "Must be specified." );
             
-            element.getElement().element( true );
-            element.getElementRequired().element( true );
-            element.getElementRequiredExpr().element( true );
+            element.getElement().content( true );
+            element.getElementRequired().content( true );
+            element.getElementRequiredExpr().content( true );
             
             assertValidationOk( element.getElement() );
             assertValidationOk( element.getElementRequired() );

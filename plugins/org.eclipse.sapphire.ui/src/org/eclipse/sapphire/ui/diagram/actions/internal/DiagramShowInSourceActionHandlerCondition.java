@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.actions.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SourceEditorService;
@@ -28,7 +28,7 @@ public final class DiagramShowInSourceActionHandlerCondition
     @Override
     protected boolean evaluate()
     {
-        final IModelElement element = getPart().getModelElement();
+        final Element element = getPart().getModelElement();
         final SourceEditorService service = element.adapt( SourceEditorService.class );
         
         if( service != null )

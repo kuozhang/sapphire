@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.samples.gallery.IGallery;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -27,7 +27,7 @@ public class OpenSplitFormDialogActionHandler extends SapphireActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IModelElement element = context.getPart().getLocalModelElement();
+        final Element element = context.getPart().getLocalModelElement();
         
         final SapphireDialog dialog = new SapphireDialog
         (

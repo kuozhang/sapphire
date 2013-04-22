@@ -105,22 +105,22 @@ public final class XmlBindingTests
         );
         
         model.setValuePropertyA( "aaaa" );
-        assertEquals( "aaaa", model.getValuePropertyA().getText() );
+        assertEquals( "aaaa", model.getValuePropertyA().text() );
         
         model.setValuePropertyB( "bbbb" );
-        assertEquals( "bbbb", model.getValuePropertyB().getText() );
+        assertEquals( "bbbb", model.getValuePropertyB().text() );
         
         model.setValuePropertyC( "cccc" );
-        assertEquals( "cccc", model.getValuePropertyC().getText() );
+        assertEquals( "cccc", model.getValuePropertyC().text() );
         
         model.setValuePropertyD( "dddd" );
-        assertEquals( "dddd", model.getValuePropertyD().getText() );
+        assertEquals( "dddd", model.getValuePropertyD().text() );
         
         model.setValuePropertyE( "eeee" );
-        assertEquals( "eeee", model.getValuePropertyE().getText() );
+        assertEquals( "eeee", model.getValuePropertyE().text() );
         
         model.setValuePropertyF( "ffff" );
-        assertEquals( "ffff", model.getValuePropertyF().getText() );
+        assertEquals( "ffff", model.getValuePropertyF().text() );
         
         model.resource().save();
         

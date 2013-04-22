@@ -15,8 +15,7 @@ import java.util.List;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
@@ -39,15 +38,14 @@ public abstract class PathValidationService extends ValidationService
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
-        final ModelProperty property = context( ModelProperty.class );
+        final Property property = context( Property.class );
         
-        this.resourceMustExist = property.hasAnnotation( MustExist.class );
+        this.resourceMustExist = property.definition().hasAnnotation( MustExist.class );
         
-        final ValidFileSystemResourceType validResourceTypeAnnotation = property.getAnnotation( ValidFileSystemResourceType.class );
+        final ValidFileSystemResourceType validResourceTypeAnnotation = property.definition().getAnnotation( ValidFileSystemResourceType.class );
         this.validResourceType = ( validResourceTypeAnnotation != null ? validResourceTypeAnnotation.value() : null );
         
-        this.fileExtensionsService = element.service( property, FileExtensionsService.class );
+        this.fileExtensionsService = property.service( FileExtensionsService.class );
         
         if( this.fileExtensionsService != null )
         {
@@ -58,7 +56,7 @@ public abstract class PathValidationService extends ValidationService
                     @Override
                     public void handle( final Event event )
                     {
-                        element.refresh( property );
+                        property.refresh();
                     }
                 }
             );

@@ -13,13 +13,13 @@
 
 package org.eclipse.sapphire.samples.architecture;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.Version;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -35,9 +35,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @XmlBinding( path = "architecture" )
 
-public interface ArchitectureSketch extends IModelElement
+public interface ArchitectureSketch extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ArchitectureSketch.class );
+    ElementType TYPE = new ElementType( ArchitectureSketch.class );
     
     // *** Version ***
     
@@ -69,7 +69,7 @@ public interface ArchitectureSketch extends IModelElement
     
     ListProperty PROP_COMPONENTS = new ListProperty( TYPE, "Components" );
     
-    ModelElementList<Component> getComponents();
+    ElementList<Component> getComponents();
     
     // *** DetailLevel ***
     

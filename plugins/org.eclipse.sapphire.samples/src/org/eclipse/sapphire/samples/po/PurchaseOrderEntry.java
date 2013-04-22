@@ -13,10 +13,10 @@ package org.eclipse.sapphire.samples.po;
 
 import java.math.BigDecimal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface PurchaseOrderEntry extends IModelElement
+public interface PurchaseOrderEntry extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PurchaseOrderEntry.class );
+    ElementType TYPE = new ElementType( PurchaseOrderEntry.class );
     
     // *** Item ***
     

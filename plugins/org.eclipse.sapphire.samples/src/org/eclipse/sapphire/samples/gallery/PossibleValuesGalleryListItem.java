@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status.Severity;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -30,9 +30,9 @@ import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface PossibleValuesGalleryListItem extends IModelElement
+public interface PossibleValuesGalleryListItem extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PossibleValuesGalleryListItem.class );
+    ElementType TYPE = new ElementType( PossibleValuesGalleryListItem.class );
     
     // *** Color ***
     

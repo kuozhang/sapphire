@@ -12,13 +12,13 @@
 
 package org.eclipse.sapphire.samples.architecture;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -31,9 +31,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Component extends IModelElement
+public interface Component extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Component.class );
+    ElementType TYPE = new ElementType( Component.class );
     
     // *** Name ***
     
@@ -62,7 +62,7 @@ public interface Component extends IModelElement
 
     ListProperty PROP_DEPENDENCIES = new ListProperty( TYPE, "Dependencies" );
     
-    ModelElementList<ComponentDependency> getDependencies();
+    ElementList<ComponentDependency> getDependencies();
     
     // *** Provider ***
     

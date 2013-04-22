@@ -57,11 +57,11 @@ public final class HtmlPanelPart extends FormComponentPart
         
         this.def = (HtmlPanelDef) this.definition;
 
-        if( this.def.getContentSourceType().getContent() == HtmlContentSourceType.EMBEDDED )
+        if( this.def.getContentSourceType().content() == HtmlContentSourceType.EMBEDDED )
         {
-            Function contentFunction = this.def.getContent().getContent();
+            Function contentFunction = this.def.getContent().content();
             
-            if( this.def.getFragment().getContent() == true )
+            if( this.def.getFragment().content() == true )
             {
                 contentFunction = ConcatFunction.create( FRAGMENT_HEADER, contentFunction );
                 contentFunction = ConcatFunction.create( contentFunction, FRAGMENT_FOOTER );
@@ -85,7 +85,7 @@ public final class HtmlPanelPart extends FormComponentPart
         {
             this.urlFunctionResult = initExpression
             (
-                this.def.getContentUrl().getContent(), 
+                this.def.getContentUrl().content(), 
                 String.class,
                 null,
                 new Runnable()
@@ -121,7 +121,7 @@ public final class HtmlPanelPart extends FormComponentPart
     
     public boolean getShowBorder()
     {
-        return this.def.getShowBorder().getContent();
+        return this.def.getShowBorder().content();
     }
 
     @Override
@@ -156,7 +156,7 @@ public final class HtmlPanelPart extends FormComponentPart
         
         if( ! scaleVertically )
         {
-            gd = gdhhint( gd, this.def.getHeight().getContent() );
+            gd = gdhhint( gd, this.def.getHeight().content() );
         }
         
         final int style = ( getShowBorder() == true ? SWT.BORDER : SWT.NONE );
@@ -168,7 +168,7 @@ public final class HtmlPanelPart extends FormComponentPart
             
             final Listener listener;
             
-            if( this.def.getContentSourceType().getContent() == HtmlContentSourceType.EMBEDDED )
+            if( this.def.getContentSourceType().content() == HtmlContentSourceType.EMBEDDED )
             {
                 browser.setText( getContent() );
                 

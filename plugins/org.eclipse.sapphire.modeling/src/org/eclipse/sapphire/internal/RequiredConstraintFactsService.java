@@ -15,11 +15,9 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.RequiredConstraintService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.Service;
@@ -35,8 +33,7 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class RequiredConstraintFactsService extends FactsService
 {
-    private IModelElement element;
-    private ModelProperty property;
+    private Property property;
     private RequiredConstraintService requiredConstraintService;
     private Listener listener;
     
@@ -45,9 +42,8 @@ public final class RequiredConstraintFactsService extends FactsService
     {
         super.init();
         
-        this.element = context( IModelElement.class );
-        this.property = context( ModelProperty.class );
-        this.requiredConstraintService = this.element.service( this.property, RequiredConstraintService.class );
+        this.property = context( Property.class );
+        this.requiredConstraintService = this.property.service( RequiredConstraintService.class );
         
         this.listener = new Listener()
         {
@@ -68,9 +64,9 @@ public final class RequiredConstraintFactsService extends FactsService
         {
             boolean applicable = true;
             
-            if( this.property instanceof ValueProperty )
+            if( this.property instanceof Value )
             {
-                final Value<?> value = this.element.read( (ValueProperty) this.property );
+                final Value<?> value = (Value<?>) this.property;
                 
                 if( value.getDefaultText() != null )
                 {
@@ -102,9 +98,8 @@ public final class RequiredConstraintFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = context.find( ModelProperty.class );
-            return ( element != null && property != null && element.service( property, RequiredConstraintService.class ) != null );
+            final Property property = context.find( Property.class );
+            return ( property != null && property.service( RequiredConstraintService.class ) != null );
         }
     
         @Override

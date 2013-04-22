@@ -14,6 +14,11 @@ package org.eclipse.sapphire.modeling;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -23,15 +28,15 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
     private ListEntryResource head;
     
     @Override
-    public void init( final IModelElement element,
-                      final ModelProperty property,
+    public void init( final Element element,
+                      final PropertyDef property,
                       final String[] params )
     {
         super.init( element, property, params );
     }
     
     @Override
-    public ModelElementType type( final Resource resource )
+    public ElementType type( final Resource resource )
     {
         return property().getType();
     }
@@ -98,7 +103,7 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
     }
     
     @Override
-    public final Resource insert( final ModelElementType type,
+    public final Resource insert( final ElementType type,
                                   final int position )
     {
         ListEntryResource entry;
@@ -360,9 +365,9 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
         
         public DefaultListEntryResource()
         {
-            final ModelElementType listEntryType = property().getType();
+            final ElementType listEntryType = property().getType();
             
-            for( ModelProperty prop : listEntryType.properties() )
+            for( PropertyDef prop : listEntryType.properties() )
             {
                 if( this.listEntryProperty != null )
                 {
@@ -386,7 +391,7 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
         }
         
         @Override
-        protected BindingImpl createBinding( final ModelProperty property )
+        protected BindingImpl createBinding( final PropertyDef property )
         {
             if( property == this.listEntryProperty )
             {

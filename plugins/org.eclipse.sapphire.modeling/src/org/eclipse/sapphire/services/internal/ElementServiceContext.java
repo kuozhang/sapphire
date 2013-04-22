@@ -14,7 +14,7 @@ package org.eclipse.sapphire.services.internal;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
@@ -23,11 +23,11 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public abstract class ElementServiceContext extends AnnotationsAwareServiceContext
 {
-    private final ModelElementType elementMetaModel;
+    private final ElementType elementMetaModel;
     
     public ElementServiceContext( final String contextType,
                                   final ServiceContext parent,
-                                  final ModelElementType elementMetaModel )
+                                  final ElementType elementMetaModel )
     {
         super( contextType, parent );
         
@@ -43,7 +43,7 @@ public abstract class ElementServiceContext extends AnnotationsAwareServiceConte
         
         if( obj == null )
         {
-            if( type == ModelElementType.class )
+            if( type == ElementType.class )
             {
                 obj = (T) this.elementMetaModel;
             }

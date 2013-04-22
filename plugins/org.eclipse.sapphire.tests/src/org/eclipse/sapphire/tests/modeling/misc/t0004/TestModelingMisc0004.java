@@ -50,13 +50,13 @@ public final class TestModelingMisc0004
         final Misc0004TestElementWritable element = Misc0004TestElementWritable.TYPE.instantiate();
         
         element.setText( "abc" );
-        assertEquals( "abc", element.getText().getContent() );
+        assertEquals( "abc", element.getText().content() );
         
         element.setInteger( "1" );
-        assertEquals( Integer.valueOf( 1 ), element.getInteger().getContent() );
+        assertEquals( Integer.valueOf( 1 ), element.getInteger().content() );
 
         element.setInteger( 2 );
-        assertEquals( Integer.valueOf( 2 ), element.getInteger().getContent() );
+        assertEquals( Integer.valueOf( 2 ), element.getInteger().content() );
     }
 
     public void testReadOnly() throws Exception

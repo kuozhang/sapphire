@@ -12,13 +12,13 @@
 package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
@@ -64,8 +64,8 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
             }
         };
         
-        final IModelElement parent = ( (MasterDetailsContentNode) getPart().getParentPart() ).getLocalModelElement();
-        final ListProperty property = getList().property();
+        final Element parent = ( (MasterDetailsContentNode) getPart().getParentPart() ).getLocalModelElement();
+        final Property property = parent.property( getList().definition() );
         
         final Listener listPropertyListener = new FilteredListener<PropertyContentEvent>()
         {
@@ -76,7 +76,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
             }
         };
         
-        parent.attach( listPropertyListener, property );
+        property.attach( listPropertyListener );
         
         refreshEnabledState();
         
@@ -89,7 +89,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        parent.detach( listPropertyListener, property );
+                        property.detach( listPropertyListener );
                         OutlineNodeMoveActionHandler.this.contentTree.detach( contentTreeListener );
                     }
                 }
@@ -97,9 +97,9 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
         );
     }
     
-    protected final ModelElementList<?> getList()
+    protected final ElementList<?> getList()
     {
-        return (ModelElementList<?>) getModelElement().parent();
+        return (ElementList<?>) getModelElement().parent();
     }
     
     private void refreshEnabledState()

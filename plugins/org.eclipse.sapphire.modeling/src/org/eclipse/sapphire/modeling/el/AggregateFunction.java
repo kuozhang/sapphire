@@ -15,15 +15,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -34,7 +34,7 @@ public abstract class AggregateFunction extends Function
 {
     protected static abstract class AggregateFunctionResult extends FunctionResult
     {
-        private IModelElement lastListParentElement;
+        private Element lastListParentElement;
         private String lastListenerModelPath;
         private Listener listener;
         
@@ -47,23 +47,23 @@ public abstract class AggregateFunction extends Function
         @Override
         protected final Object evaluate()
         {
-            final Object collection = operand( 0 ).value();
+            final Object collection = operand( 0 );
             final List<Object> items = new ArrayList<Object>();
             
             if( collection != null )
             {
-                if( collection instanceof ModelElementList )
+                if( collection instanceof ElementList )
                 {
-                    final ModelElementList<?> list = (ModelElementList<?>) collection;
-                    final ListProperty listProperty = list.property();
-                    final ModelElementType listEntryType = listProperty.getType();
+                    final ElementList<?> list = (ElementList<?>) collection;
+                    final ListProperty listProperty = list.definition();
+                    final ElementType listEntryType = listProperty.getType();
                     final ValueProperty listEntryProperty;
                     
                     if( operands().size() > 1 )
                     {
-                        final String listEntryPropertyName = cast( operand( 1 ).value(), String.class );
+                        final String listEntryPropertyName = cast( operand( 1 ), String.class );
                     
-                        final ModelProperty prop = listEntryType.property( listEntryPropertyName );
+                        final PropertyDef prop = listEntryType.property( listEntryPropertyName );
                         
                         if( prop == null )
                         {
@@ -81,7 +81,7 @@ public abstract class AggregateFunction extends Function
                     {
                         ValueProperty prop = null;
                         
-                        for( ModelProperty p : listEntryType.properties() )
+                        for( PropertyDef p : listEntryType.properties() )
                         {
                             if( p instanceof ValueProperty )
                             {
@@ -98,13 +98,13 @@ public abstract class AggregateFunction extends Function
                         listEntryProperty = prop;
                     }
                     
-                    for( IModelElement item : list )
+                    for( Element item : list )
                     {
-                        items.add( item.read( listEntryProperty ).getContent() );
+                        items.add( item.property( listEntryProperty ).content() );
                     }
                     
-                    final IModelElement listParentElement = list.parent();
-                    final String listenerModelPath = listProperty.getName() + "/" + listEntryProperty.getName();
+                    final Element listParentElement = list.element();
+                    final String listenerModelPath = listProperty.name() + "/" + listEntryProperty.name();
                     
                     if( this.lastListParentElement != listParentElement || ! this.lastListenerModelPath.equals( listenerModelPath ) )
                     {

@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -32,7 +32,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ContainerShapeDef extends ShapeDef
 {
-	ModelElementType TYPE = new ModelElementType( ContainerShapeDef.class );	
+	ElementType TYPE = new ElementType( ContainerShapeDef.class );	
     
     // *** Layout ***
     
@@ -80,6 +80,6 @@ public interface ContainerShapeDef extends ShapeDef
 	
 	ListProperty PROP_CONTENT = new ListProperty( TYPE, "Content");
 	
-	ModelElementList<ShapeDef> getContent();    
+	ElementList<ShapeDef> getContent();    
 	
 }

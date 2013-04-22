@@ -13,14 +13,14 @@ package org.eclipse.sapphire.internal;
 
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -46,11 +46,9 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
-        final ListProperty parentProperty = (ListProperty) element.getParentProperty();
-        final IModelElement parentElement = (IModelElement) element.parent().parent();
+        final Property parent = context( Element.class ).parent();
         
-        this.base = parentElement.service( parentProperty, PossibleValuesService.class );
+        this.base = parent.service( PossibleValuesService.class );
         
         this.listener = new Listener()
         {
@@ -123,21 +121,15 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
             
             if( property != null )
             {
-                final ModelElementType type = property.getModelElementType();
+                final ElementType type = property.getModelElementType();
                 
                 if( type.properties().size() == 1 )
                 {
-                    final IModelElement element = context.find( IModelElement.class );
-                    final ModelProperty parentProperty = element.getParentProperty();
+                    final Property parent = context.find( Element.class ).parent();
                     
-                    if( parentProperty instanceof ListProperty )
+                    if( parent != null && parent.definition() instanceof ListProperty && parent.service( PossibleValuesService.class ) != null )
                     {
-                        final IModelElement parentElement = (IModelElement) element.parent().parent();
-
-                        if( parentElement.service( parentProperty, PossibleValuesService.class ) != null )
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }

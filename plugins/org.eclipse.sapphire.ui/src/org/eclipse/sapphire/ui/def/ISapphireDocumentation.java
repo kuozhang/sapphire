@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,9 +20,9 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 
 public interface ISapphireDocumentation
 
-    extends IModelElement
+    extends Element
     
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireDocumentation.class );
+    ElementType TYPE = new ElementType( ISapphireDocumentation.class );
 
 }

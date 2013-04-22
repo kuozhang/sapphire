@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
@@ -34,17 +34,17 @@ public final class MalformedValueValidationService extends ValidationService
     @Override
     public Status validate()
     {
-        final Value<?> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
+        final Value<?> value = context( Element.class ).property( context( ValueProperty.class ) );
         
-        if( value.isMalformed() )
+        if( value.malformed() )
         {
             if( this.valueTypeName == null )
             {
-                final Class<?> type = value.property().getTypeClass();
+                final Class<?> type = value.definition().getTypeClass();
                 this.valueTypeName = LocalizationSystem.service( type ).label( type, CapitalizationType.NO_CAPS, false );
             }
             
-            final String msg = NLS.bind( Resources.cannotParseValueMessage, this.valueTypeName, value.getText() );
+            final String msg = NLS.bind( Resources.cannotParseValueMessage, this.valueTypeName, value.text() );
             return Status.createErrorStatus( msg );
         }
         else

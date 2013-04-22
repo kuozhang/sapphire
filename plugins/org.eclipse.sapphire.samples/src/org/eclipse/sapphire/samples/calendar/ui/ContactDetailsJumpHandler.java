@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.calendar.ui;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.Contact;
@@ -33,7 +33,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
     protected void initDependencies( final List<String> dependencies )
     {
         super.initDependencies( dependencies );
-        dependencies.add( IAttendee.PROP_IN_CONTACT_REPOSITORY.getName() );
+        dependencies.add( IAttendee.PROP_IN_CONTACT_REPOSITORY.name() );
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
         if( super.computeEnablementState() == true )
         {
             final IAttendee attendee = (IAttendee) getModelElement();
-            return attendee.isInContactRepository().getContent();
+            return attendee.isInContactRepository().content();
         }
         
         return false;
@@ -57,10 +57,10 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
     }
 
     public static void jump( final CalendarEditor editor,
-                             final IModelElement modelElement )
+                             final Element modelElement )
     {
         final IAttendee attendee = (IAttendee) modelElement;
-        final String name = attendee.getName().getText();
+        final String name = attendee.getName().text();
         
         if( name != null )
         {
@@ -68,7 +68,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
             
             for( Contact c : editor.getContactRepository().getContacts() )
             {
-                if( name.equals( c.getName().getText() ) )
+                if( name.equals( c.getName().text() ) )
                 {
                     contact = c;
                     break;

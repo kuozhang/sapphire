@@ -13,10 +13,10 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -32,9 +32,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/xmlns/extension" )
 @XmlBinding( path = "extension" )
 
-public interface ISapphireUiExtensionDef extends IModelElement
+public interface ISapphireUiExtensionDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireUiExtensionDef.class );
+    ElementType TYPE = new ElementType( ISapphireUiExtensionDef.class );
     
     // *** Actions ***
     
@@ -45,7 +45,7 @@ public interface ISapphireUiExtensionDef extends IModelElement
     
     ListProperty PROP_ACTIONS = new ListProperty( TYPE, "Actions" );
     
-    ModelElementList<ActionDef> getActions();
+    ElementList<ActionDef> getActions();
     
     // *** ActionHandlers ***
     
@@ -56,7 +56,7 @@ public interface ISapphireUiExtensionDef extends IModelElement
     
     ListProperty PROP_ACTION_HANDLERS = new ListProperty( TYPE, "ActionHandlers" );
     
-    ModelElementList<ActionHandlerDef> getActionHandlers();
+    ElementList<ActionHandlerDef> getActionHandlers();
     
     // *** ActionHandlerFactories ***
     
@@ -66,7 +66,7 @@ public interface ISapphireUiExtensionDef extends IModelElement
     
     ListProperty PROP_ACTION_HANDLER_FACTORIES = new ListProperty( TYPE, "ActionHandlerFactories" );
     
-    ModelElementList<ActionHandlerFactoryDef> getActionHandlerFactories();
+    ElementList<ActionHandlerFactoryDef> getActionHandlerFactories();
     
     // *** PresentationStyles ***
 
@@ -76,6 +76,6 @@ public interface ISapphireUiExtensionDef extends IModelElement
     
     ListProperty PROP_PRESENTATION_STYLES = new ListProperty(TYPE, "PresentationStyles");
 
-    ModelElementList<PresentationStyleDef> getPresentationStyles();
+    ElementList<PresentationStyleDef> getPresentationStyles();
     
 }

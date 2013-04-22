@@ -13,11 +13,11 @@ package org.eclipse.sapphire.ui.swt.renderer.actions;
 
 import java.io.File;
 
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
@@ -47,14 +47,14 @@ public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionH
     @Override
     protected String browse( final SapphireRenderingContext context )
     {
-        final ValueProperty property = getProperty();
+        final Property property = property();
         
         final DirectoryDialog dialog = new DirectoryDialog( context.getShell() );
-        dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
-        dialog.setMessage( createBrowseDialogMessage( property.getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+        dialog.setText( property.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
+        dialog.setMessage( createBrowseDialogMessage( property.definition().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
         
-        final Value<Path> value = getModelElement().read( property );
-        final Path path = value.getContent();
+        final Value<?> value = (Value<?>) property;
+        final Path path = (Path) value.content();
         
         if( path != null )
         {

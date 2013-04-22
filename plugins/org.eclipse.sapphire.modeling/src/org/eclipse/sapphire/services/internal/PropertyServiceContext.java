@@ -14,12 +14,12 @@ package org.eclipse.sapphire.services.internal;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
@@ -28,11 +28,11 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public abstract class PropertyServiceContext extends AnnotationsAwareServiceContext
 {
-    private final ModelProperty property;
+    private final PropertyDef property;
     
     public PropertyServiceContext( final String type,
                                    final ServiceContext parent,
-                                   final ModelProperty property )
+                                   final PropertyDef property )
     {
         super( type, parent );
         
@@ -48,7 +48,7 @@ public abstract class PropertyServiceContext extends AnnotationsAwareServiceCont
         
         if( obj == null )
         {
-            if( type == ModelProperty.class )
+            if( type == PropertyDef.class )
             {
                 obj = (T) this.property;
             }

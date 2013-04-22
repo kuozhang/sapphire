@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0012;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Transient;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Transient;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElementRoot extends IModelElement
+public interface TestElementRoot extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElementRoot.class );
+    ElementType TYPE = new ElementType( TestElementRoot.class );
     
     // *** ValueProperty1 ***
     
@@ -83,7 +83,7 @@ public interface TestElementRoot extends IModelElement
     
     ElementProperty PROP_ELEMENT_PROPERTY_1 = new ElementProperty( TYPE, "ElementProperty1" );
     
-    ModelElementHandle<TestElementChild> getElementProperty1();
+    ElementHandle<TestElementChild> getElementProperty1();
     
     // *** ElementProperty2 ***
     
@@ -91,7 +91,7 @@ public interface TestElementRoot extends IModelElement
     
     ElementProperty PROP_ELEMENT_PROPERTY_2 = new ElementProperty( TYPE, "ElementProperty2" );
     
-    ModelElementHandle<TestElementChild> getElementProperty2();
+    ElementHandle<TestElementChild> getElementProperty2();
     
     // *** ListProperty1 ***
     
@@ -99,7 +99,7 @@ public interface TestElementRoot extends IModelElement
     
     ListProperty PROP_LIST_PROPERTY_1 = new ListProperty( TYPE, "ListProperty1" );
     
-    ModelElementList<TestElementChild> getListProperty1();
+    ElementList<TestElementChild> getListProperty1();
     
     // *** ListProperty2 ***
     
@@ -107,7 +107,7 @@ public interface TestElementRoot extends IModelElement
     
     ListProperty PROP_LIST_PROPERTY_2 = new ListProperty( TYPE, "ListProperty2" );
     
-    ModelElementList<TestElementChild> getListProperty2();
+    ElementList<TestElementChild> getListProperty2();
     
     // *** TransientProperty ***
     

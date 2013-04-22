@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0013;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestChildElement extends IModelElement
+public interface TestChildElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestChildElement.class );
+    ElementType TYPE = new ElementType( TestChildElement.class );
     
     // *** DefaultIntegerValue ***
     

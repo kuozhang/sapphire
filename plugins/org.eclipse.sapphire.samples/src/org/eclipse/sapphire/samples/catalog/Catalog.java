@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @XmlBinding( path = "Catalog" )
 
-public interface Catalog extends IModelElement
+public interface Catalog extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Catalog.class );
+    ElementType TYPE = new ElementType( Catalog.class );
     
     // *** Items ***
     
@@ -46,7 +46,7 @@ public interface Catalog extends IModelElement
     
     ListProperty PROP_ITEMS = new ListProperty( TYPE, "Items" );
     
-    ModelElementList<Item> getItems();
+    ElementList<Item> getItems();
     
     // *** Categories ***
     
@@ -56,7 +56,7 @@ public interface Catalog extends IModelElement
     
     ListProperty PROP_CATEGORIES = new ListProperty( TYPE, "Categories" );
     
-    ModelElementList<Category> getCategories();
+    ElementList<Category> getCategories();
     
     // *** Manufacturers ***
     
@@ -66,6 +66,6 @@ public interface Catalog extends IModelElement
     
     ListProperty PROP_MANUFACTURERS = new ListProperty( TYPE, "Manufacturers" );
     
-    ModelElementList<Manufacturer> getManufacturers();
+    ElementList<Manufacturer> getManufacturers();
     
 }

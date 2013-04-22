@@ -14,7 +14,7 @@ package org.eclipse.sapphire.tests.modeling.misc.t0007;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
@@ -45,7 +45,7 @@ public final class TestModelingMisc0007 extends SapphireTestCase
     public void test() throws Exception
     {
         final TestRootElement root = TestRootElement.TYPE.instantiate();
-        final ModelElementList<TestChildElement> children = root.getChildren();
+        final ElementList<TestChildElement> children = root.getChildren();
         
         final TestChildElement x = children.insert();
         x.setId( "123" );

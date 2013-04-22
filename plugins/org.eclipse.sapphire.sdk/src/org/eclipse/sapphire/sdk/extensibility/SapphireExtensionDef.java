@@ -12,9 +12,9 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.ui.def.ISapphireUiExtensionDef;
 
 public interface SapphireExtensionDef extends ISapphireUiExtensionDef
 {
-    ModelElementType TYPE = new ModelElementType( SapphireExtensionDef.class );
+    ElementType TYPE = new ElementType( SapphireExtensionDef.class );
     
     String FILE_NAME = "sapphire-extension.xml";
 
@@ -43,7 +43,7 @@ public interface SapphireExtensionDef extends ISapphireUiExtensionDef
     
     ListProperty PROP_SERVICES = new ListProperty( TYPE, "Services" );
     
-    ModelElementList<ServiceDef> getServices();
+    ElementList<ServiceDef> getServices();
     
     // *** Functions ***
     
@@ -53,6 +53,6 @@ public interface SapphireExtensionDef extends ISapphireUiExtensionDef
     
     ListProperty PROP_FUNCTIONS = new ListProperty( TYPE, "Functions" );
     
-    ModelElementList<FunctionDef> getFunctions();
+    ElementList<FunctionDef> getFunctions();
 
 }

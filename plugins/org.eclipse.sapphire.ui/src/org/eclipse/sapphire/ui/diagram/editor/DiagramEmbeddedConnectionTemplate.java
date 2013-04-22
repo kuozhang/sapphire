@@ -20,17 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
@@ -44,7 +44,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 {
     private DiagramNodeTemplate nodeTemplate;
-    private Map<IModelElement, List<DiagramConnectionPart>> diagramConnectionMap;
+    private Map<Element, List<DiagramConnectionPart>> diagramConnectionMap;
     private Listener modelElementListener;
     private ModelPath endpointPath;
         
@@ -61,10 +61,10 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         this.modelElement = getModelElement();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         
-        this.diagramConnectionMap = new HashMap<IModelElement, List<DiagramConnectionPart>>();
+        this.diagramConnectionMap = new HashMap<Element, List<DiagramConnectionPart>>();
         
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
-        this.propertyName = this.bindingDef.getProperty().getContent();
+        this.propertyName = this.bindingDef.getProperty().content();
         this.connListProperty = (ListProperty)nodeProperty.getType().property(this.propertyName);
         
         this.connPartListener = new ConnectionPartListener();
@@ -89,18 +89,18 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             }
         };
         
-        String endpointPropStr = this.bindingDef.getEndpoint2().element().getProperty().getContent();
+        String endpointPropStr = this.bindingDef.getEndpoint2().content().getProperty().content();
         this.endpointPath = new ModelPath(endpointPropStr);
         
-        ModelElementList<IModelElement> srcNodeList = this.modelElement.read(nodeProperty);
-        for (IModelElement srcNodeModel : srcNodeList)
+        ElementList<Element> srcNodeList = this.modelElement.property(nodeProperty);
+        for (Element srcNodeModel : srcNodeList)
         {
-            ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
+            PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
             if (connProp instanceof ListProperty)
             {
                 ListProperty connListProperty = (ListProperty)connProp;
-                ModelElementList<?> connList = srcNodeModel.read(connListProperty);
-                for (IModelElement endpointModel : connList)
+                ElementList<?> connList = srcNodeModel.property(connListProperty);
+                for (Element endpointModel : connList)
                 {
                 	createNewConnectionPart(endpointModel, srcNodeModel);                	
                 }                
@@ -109,19 +109,19 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         }                
     }
     
-    public void refreshConnections(IModelElement srcNodeModel)
+    public void refreshConnections(Element srcNodeModel)
     {
-    	ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
+    	PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
     	handleConnectionListChange(srcNodeModel, (ListProperty)connProp);
     }
     
     @Override
     public boolean canStartNewConnection(DiagramNodePart srcNode)
     {
-        IModelElement srcNodeModel = srcNode.getLocalModelElement();
+        Element srcNodeModel = srcNode.getLocalModelElement();
         // check the source node type
-        ModelElementType srcNodeType = srcNodeModel.type();
-        ModelElementType desiredsrcNodeType = this.nodeTemplate.getNodeType();
+        ElementType srcNodeType = srcNodeModel.type();
+        ElementType desiredsrcNodeType = this.nodeTemplate.getNodeType();
         
         if (!srcNodeType.equals(desiredsrcNodeType))
         {
@@ -137,14 +137,14 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         {
             return false;
         }
-        IModelElement srcNodeModel = srcNode.getLocalModelElement();
+        Element srcNodeModel = srcNode.getLocalModelElement();
         // check the target node type
-        ModelElementType targetType = targetNode.getLocalModelElement().type();
+        ElementType targetType = targetNode.getLocalModelElement().type();
         
-        ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);        
-        ModelElementType connType = connProp.getType();
-        ModelProperty endpointProp = 
-            connType.property(this.bindingDef.getEndpoint2().element().getProperty().getContent());
+        PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);        
+        ElementType connType = connProp.getType();
+        PropertyDef endpointProp = 
+            connType.property(this.bindingDef.getEndpoint2().content().getProperty().content());
         if (endpointProp.getType() == null && endpointProp.hasAnnotation(Reference.class))
         {
             return endpointProp.getAnnotation(Reference.class).target().isAssignableFrom(targetType.getModelElementClass());
@@ -153,10 +153,10 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     }
         
     @Override
-    public void setSerializedEndpoint2(IModelElement connModelElement, String endpoint2Value)
+    public void setSerializedEndpoint2(Element connModelElement, String endpoint2Value)
     {
-        IDiagramConnectionEndpointBindingDef endpointDef = this.bindingDef.getEndpoint2().element();
-        String endpointProperty = endpointDef.getProperty().getContent();
+        IDiagramConnectionEndpointBindingDef endpointDef = this.bindingDef.getEndpoint2().content();
+        String endpointProperty = endpointDef.getProperty().content();
 
         setModelProperty(connModelElement, endpointProperty, endpoint2Value);
     }
@@ -165,14 +165,14 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public DiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 
             DiagramNodePart targetNode)
     {
-        IModelElement srcNodeModel = srcNode.getLocalModelElement();
-        ModelProperty modelProperty = this.nodeTemplate.getModelProperty();
+        Element srcNodeModel = srcNode.getLocalModelElement();
+        PropertyDef modelProperty = this.nodeTemplate.getModelProperty();
         boolean found = false;
         if (modelProperty instanceof ListProperty)
         {
             ListProperty listProperty = (ListProperty)modelProperty;
-            ModelElementList<?> list = this.modelElement.read(listProperty);
-            for (IModelElement listEntryModelElement : list)
+            ElementList<?> list = this.modelElement.property(listProperty);
+            for (Element listEntryModelElement : list)
             {
                 if (listEntryModelElement == srcNodeModel)
                 {
@@ -184,9 +184,9 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         else if (modelProperty instanceof ElementProperty)
         {
             ElementProperty elementProperty = (ElementProperty)modelProperty;
-            if (this.modelElement.read(elementProperty) != null)
+            if (this.modelElement.property(elementProperty) != null)
             {
-                IModelElement localModelElement = this.modelElement.read(elementProperty).element();
+                Element localModelElement = this.modelElement.property(elementProperty).content();
                 if (localModelElement == srcNodeModel)
                 {
                     found = true;
@@ -198,12 +198,12 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             throw new RuntimeException( "Cannot locate the source node element");
         }
         
-        ModelProperty connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
-        IModelElement newEndpoint = null;
+        PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
+        Element newEndpoint = null;
         if (connProp instanceof ListProperty)
         {
             ListProperty listProperty = (ListProperty)connProp;
-            ModelElementList<?> list = srcNodeModel.read(listProperty);
+            ElementList<?> list = srcNodeModel.property(listProperty);
             newEndpoint = list.insert();            
         }
         
@@ -222,7 +222,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     }
     
     @Override
-    public DiagramConnectionPart createNewConnectionPart(IModelElement connElement, IModelElement srcNodeElement)
+    public DiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
     {
         DiagramEmbeddedConnectionPart connPart = 
             new DiagramEmbeddedConnectionPart(this.bindingDef, srcNodeElement, this.endpointPath);
@@ -232,13 +232,13 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         return connPart;
     }
         
-    public void addModelListener(IModelElement srcNodeModel)
+    public void addModelListener(Element srcNodeModel)
     {
         srcNodeModel.attach(this.modelPropertyListener, this.propertyName);
         srcNodeModel.attach(this.modelElementListener);
     }
     
-    public void removeModelListener(IModelElement srcNodeModel)
+    public void removeModelListener(Element srcNodeModel)
     {
         srcNodeModel.detach(this.modelPropertyListener, this.propertyName);
         srcNodeModel.detach(this.modelElementListener);
@@ -248,8 +248,8 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public void addModelListener()
     {
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
-        ModelElementList<IModelElement> srcNodeList = this.modelElement.read(nodeProperty);
-        for (IModelElement srcNodeModel : srcNodeList)
+        ElementList<Element> srcNodeList = this.modelElement.property(nodeProperty);
+        for (Element srcNodeModel : srcNodeList)
         {
             addModelListener(srcNodeModel);
         }        
@@ -259,15 +259,15 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public void removeModelListener()
     {
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
-        ModelElementList<IModelElement> srcNodeList = this.modelElement.read(nodeProperty);
-        for (IModelElement srcNodeModel : srcNodeList)
+        ElementList<Element> srcNodeList = this.modelElement.property(nodeProperty);
+        for (Element srcNodeModel : srcNodeList)
         {
             removeModelListener(srcNodeModel);
         }
     }
     
     @Override
-    public List<DiagramConnectionPart> getDiagramConnections(IModelElement srcNodeModel)
+    public List<DiagramConnectionPart> getDiagramConnections(Element srcNodeModel)
     {
         List<DiagramConnectionPart> allConnParts = new ArrayList<DiagramConnectionPart>();
         if (srcNodeModel != null)
@@ -290,7 +290,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     }
 
     @Override
-    public void addConnectionPart(IModelElement srcNodeModel, DiagramConnectionPart connPart)
+    public void addConnectionPart(Element srcNodeModel, DiagramConnectionPart connPart)
     {
         List<DiagramConnectionPart> connParts = this.diagramConnectionMap.get(srcNodeModel);
         if (connParts == null)
@@ -316,7 +316,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	}
     }
     
-    public void removeConnectionParts(IModelElement srcNodeModel)
+    public void removeConnectionParts(Element srcNodeModel)
     {
     	List<DiagramConnectionPart> connParts = new ArrayList<DiagramConnectionPart>();
     	connParts.addAll(this.getDiagramConnections(srcNodeModel));
@@ -329,7 +329,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     
     private void handleModelElementDispose(final ElementDisposeEvent event)
     {
-        IModelElement element = event.element();
+        Element element = event.element();
         List<DiagramConnectionPart> connParts = getDiagramConnections(null);
         
         for (DiagramConnectionPart connPart : connParts)

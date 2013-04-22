@@ -69,20 +69,6 @@
         <description>Implementation of PossibleValuesService for value properties based on PossibleValuesService implementation of the containing list property. This service implementation will only activate if the value property is the sole property in its type, and the element is contained by a list property, and the list property has a PossibleValueService implementation in the property instance context.</description>
     </service>
     <service>
-        <context>Sapphire.Element.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.ElementValidationAggregationService$Factory</factory>
-        <id>Sapphire.ValidationAggregationService.Element</id>
-        <type>org.eclipse.sapphire.services.ValidationAggregationService</type>
-        <description>Implementation of ValidationAggregationService for element instance context.</description>
-    </service>
-    <service>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.PropertyValidationAggregationService$Factory</factory>
-        <id>Sapphire.ValidationAggregationService.Property</id>
-        <type>org.eclipse.sapphire.services.ValidationAggregationService</type>
-        <description>Implementation of ValidationAggregationService for property instance context.</description>
-    </service>
-    <service>
         <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.CountConstraintValidationService$Factory</factory>
@@ -93,7 +79,6 @@
         <factory>org.eclipse.sapphire.internal.DeclarativeValidationService$Factory</factory>
         <id>Sapphire.ValidationService.Declarative</id>
         <type>org.eclipse.sapphire.services.ValidationService</type>
-        <context>Sapphire.Element.Instance</context>
         <context>Sapphire.Property.Instance</context>
     </service>
     <service>
@@ -380,13 +365,6 @@
         <context>Sapphire.Property.Instance</context>
         <factory>org.eclipse.sapphire.services.internal.UniqueValueDependenciesService$Factory</factory>
         <id>Sapphire.DependenciesService.UniqueValue</id>
-    </service>
-    <service>
-        <description>Aggregates the data from all applicable dependencies services in order to produce a single set of dependencies. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
-        <type>org.eclipse.sapphire.services.DependenciesAggregationService</type>
-        <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.DependenciesAggregationServiceFactory</factory>
-        <id>Sapphire.DependenciesAggregationService</id>
     </service>
     <service>
         <id>Sapphire.ConversionService.ObjectToString</id>

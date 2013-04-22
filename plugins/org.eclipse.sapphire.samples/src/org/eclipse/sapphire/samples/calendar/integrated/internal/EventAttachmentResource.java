@@ -13,11 +13,9 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IEventAttachment;
@@ -42,19 +40,16 @@ public final class EventAttachmentResource extends Resource
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                if( ! ( event instanceof PropertyInitializationEvent ) )
+                final PropertyDef property = event.property().definition();
+                final IEventAttachment attachment = (IEventAttachment) element();
+                
+                if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_LOCAL_COPY_LOCATION )
                 {
-                    final ModelProperty property = event.property();
-                    final IModelElement element = element();
-                    
-                    if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_LOCAL_COPY_LOCATION )
-                    {
-                        element.refresh( IEventAttachment.PROP_LOCAL_COPY_LOCATION );
-                    }
-                    else if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_PUBLIC_COPY_LOCATION )
-                    {
-                        element.refresh( IEventAttachment.PROP_PUBLIC_COPY_LOCATION );
-                    }
+                    attachment.getLocalCopyLocation().refresh();
+                }
+                else if( property == org.eclipse.sapphire.samples.calendar.IEventAttachment.PROP_PUBLIC_COPY_LOCATION )
+                {
+                    attachment.getPublicCopyLocation().refresh();
                 }
             }
         };
@@ -68,7 +63,7 @@ public final class EventAttachmentResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final ModelProperty property )
+    protected BindingImpl createBinding( final PropertyDef property )
     {
         if( property == IEventAttachment.PROP_LOCAL_COPY_LOCATION )
         {
@@ -77,7 +72,7 @@ public final class EventAttachmentResource extends Resource
                 @Override
                 public String read()
                 {
-                    return getBase().getLocalCopyLocation().getText( false );
+                    return getBase().getLocalCopyLocation().text( false );
                 }
                 
                 @Override
@@ -94,7 +89,7 @@ public final class EventAttachmentResource extends Resource
                 @Override
                 public String read()
                 {
-                    return getBase().getPublicCopyLocation().getText( false );
+                    return getBase().getPublicCopyLocation().text( false );
                 }
                 
                 @Override

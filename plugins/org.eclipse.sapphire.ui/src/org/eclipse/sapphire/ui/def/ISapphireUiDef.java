@@ -14,11 +14,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -39,9 +39,9 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEdito
 
 @XmlBinding( path = "definition" )
 
-public interface ISapphireUiDef extends IModelElement
+public interface ISapphireUiDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ISapphireUiDef.class );
+    ElementType TYPE = new ElementType( ISapphireUiDef.class );
     
     // *** ImportedPackages ***
     
@@ -51,7 +51,7 @@ public interface ISapphireUiDef extends IModelElement
     
     ListProperty PROP_IMPORTED_PACKAGES = new ListProperty( TYPE, "ImportedPackages" );
     
-    ModelElementList<IPackageReference> getImportedPackages();
+    ElementList<IPackageReference> getImportedPackages();
     
     // *** ImportedDefinitions ***
     
@@ -61,7 +61,7 @@ public interface ISapphireUiDef extends IModelElement
     
     ListProperty PROP_IMPORTED_DEFINITIONS = new ListProperty( TYPE, "ImportedDefinitions" );
     
-    ModelElementList<IDefinitionReference> getImportedDefinitions();
+    ElementList<IDefinitionReference> getImportedDefinitions();
     
     // *** DocumentationDefs ***
     
@@ -70,7 +70,7 @@ public interface ISapphireUiDef extends IModelElement
                              
     ListProperty PROP_DOCUMENTATION_DEFS = new ListProperty( TYPE, "DocumentationDefs" );
     
-    ModelElementList<ISapphireDocumentationDef> getDocumentationDefs();
+    ElementList<ISapphireDocumentationDef> getDocumentationDefs();
     
     // *** Method : getDocumentationDef ***
     
@@ -117,7 +117,7 @@ public interface ISapphireUiDef extends IModelElement
                              
     ListProperty PROP_PART_DEFS = new ListProperty( TYPE, "PartDefs" );
     
-    ModelElementList<PartDef> getPartDefs();
+    ElementList<PartDef> getPartDefs();
     
     // *** Method : getPartDef ***
     
@@ -137,6 +137,6 @@ public interface ISapphireUiDef extends IModelElement
     
     @DelegateImplementation( SapphireUiDefMethods.class )
     
-    ModelProperty resolveProperty( String qualifiedPropertyName );
+    PropertyDef resolveProperty( String qualifiedPropertyName );
     
 }

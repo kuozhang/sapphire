@@ -132,7 +132,7 @@ public class SideBySideDiagramLayoutPersistenceService extends StandardDiagramLa
         	{
         		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
         		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
-        		if (pageDef.getLayoutPersistence().getContent() == LayoutPersistence.SIDE_BY_SIDE)
+        		if (pageDef.getLayoutPersistence().content() == LayoutPersistence.SIDE_BY_SIDE)
         		{
         			return true;
         		}

@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 
 @Label( standard = "action location hint" )
 
-public interface ActionLocationHint extends IModelElement
+public interface ActionLocationHint extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ActionLocationHint.class );
+    ElementType TYPE = new ElementType( ActionLocationHint.class );
     
     // *** ReferenceEntityId ***
     

@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ExtensionSummarySectionDef extends IModelElement
+public interface ExtensionSummarySectionDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ExtensionSummarySectionDef.class );
+    ElementType TYPE = new ElementType( ExtensionSummarySectionDef.class );
     
     // *** ExtensionType ***
     
@@ -59,6 +59,6 @@ public interface ExtensionSummarySectionDef extends IModelElement
     
     ListProperty PROP_COLUMNS = new ListProperty( TYPE, "Columns" );
     
-    ModelElementList<ExtensionSummarySectionColumnDef> getColumns();
+    ElementList<ExtensionSummarySectionColumnDef> getColumns();
     
 }

@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Documentation.Topic;
@@ -31,9 +31,9 @@ import org.eclipse.sapphire.samples.gallery.internal.PositiveIntegerDocumentatio
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public interface IHelpGallery extends IModelElement
+public interface IHelpGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IHelpGallery.class );
+    ElementType TYPE = new ElementType( IHelpGallery.class );
 
     // *** Simple ***
 

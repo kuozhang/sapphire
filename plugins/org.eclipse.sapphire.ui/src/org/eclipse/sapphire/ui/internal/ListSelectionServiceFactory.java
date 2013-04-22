@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.ui.internal;
 
-import org.eclipse.sapphire.modeling.ListProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -32,7 +32,7 @@ public final class ListSelectionServiceFactory extends ServiceFactory
     {
         final PropertyEditorPart propertyEditorPart = context.find( PropertyEditorPart.class );
 
-        return ( propertyEditorPart != null && propertyEditorPart.getProperty() instanceof ListProperty );
+        return ( propertyEditorPart != null && propertyEditorPart.property().definition() instanceof ListProperty );
     }
 
     @Override

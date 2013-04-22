@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0007;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
@@ -35,9 +35,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
 
 @XmlBinding( path = "y:root" )
 
-public interface TestElement extends IModelElement
+public interface TestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
     // *** TestProperty ***
     

@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -35,9 +35,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
               "presentation styles."
 )
 
-public interface PresentationStyleDef extends IModelElement
+public interface PresentationStyleDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PresentationStyleDef.class );
+    ElementType TYPE = new ElementType( PresentationStyleDef.class );
     
     // *** Id ***
 

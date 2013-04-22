@@ -11,19 +11,19 @@
 
 package org.eclipse.sapphire.tests.services.t0010;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Since;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibility;
 import org.eclipse.sapphire.VersionCompatibilityTarget;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -34,9 +34,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 
 @VersionCompatibilityTarget( version = "${ Version }", versioned = "Test Versioned System" )
 
-public interface RootElement extends IModelElement
+public interface RootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( RootElement.class );
+    ElementType TYPE = new ElementType( RootElement.class );
     
     // *** Version ***
     
@@ -118,7 +118,7 @@ public interface RootElement extends IModelElement
 
     ElementProperty PROP_CHILD = new ElementProperty( TYPE, "Child" );
     
-    ModelElementHandle<ChildElement> getChild();
+    ElementHandle<ChildElement> getChild();
     
     // *** ChildImplied ***
     
@@ -136,6 +136,6 @@ public interface RootElement extends IModelElement
     
     ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
     
-    ModelElementList<ChildElement> getChildren();
+    ElementList<ChildElement> getChildren();
     
 }

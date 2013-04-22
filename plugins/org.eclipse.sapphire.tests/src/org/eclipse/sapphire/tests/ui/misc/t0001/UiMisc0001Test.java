@@ -33,10 +33,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class UiMisc0001Test
-
-    extends SapphireTestCase
-    
+public final class UiMisc0001Test extends SapphireTestCase
 {
     private UiMisc0001Test( final String name )
     {

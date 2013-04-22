@@ -44,7 +44,7 @@ public final class SapphireVersionMatchesFunction extends Function
                 boolean result = false;
                 
                 final Version version = Sapphire.version();
-                final VersionConstraint constraint = cast( operand( 0 ).value(), VersionConstraint.class );
+                final VersionConstraint constraint = cast( operand( 0 ), VersionConstraint.class );
                 
                 if( constraint != null )
                 {

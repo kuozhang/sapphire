@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface MultiVariantItem extends Item
 {
-    ModelElementType TYPE = new ModelElementType( MultiVariantItem.class );
+    ElementType TYPE = new ElementType( MultiVariantItem.class );
     
     // *** Variants ***
     
@@ -37,6 +37,6 @@ public interface MultiVariantItem extends Item
     
     ListProperty PROP_VARIANTS = new ListProperty( TYPE, "Variants" );
     
-    ModelElementList<ItemVariant> getVariants();
+    ElementList<ItemVariant> getVariants();
     
 }

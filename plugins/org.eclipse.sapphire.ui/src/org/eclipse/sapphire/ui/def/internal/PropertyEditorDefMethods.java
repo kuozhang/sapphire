@@ -25,7 +25,7 @@ public final class PropertyEditorDefMethods
     {
         for( PropertyEditorDef childPropertyEditorDef : propertyEditorDef.getChildProperties() )
         {
-            if( property.equals( new ModelPath( childPropertyEditorDef.getProperty().getText() ) ) )
+            if( property.equals( new ModelPath( childPropertyEditorDef.getProperty().text() ) ) )
             {
                 return childPropertyEditorDef;
             }

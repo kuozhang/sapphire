@@ -13,10 +13,10 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 
 /**
@@ -49,7 +49,7 @@ public abstract class SapphireActionHandlerFactory
         return this.action.getContext();
     }
     
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return getPart().getModelElement();
     }

@@ -33,7 +33,7 @@ public class CompositeMarginWidthHeightDefaultValueProvider extends DefaultValue
     {
         final CompositeDef def = context( CompositeDef.class );
         
-        if( def.getScrollHorizontally().getContent() == true || def.getScrollVertically().getContent() == true )
+        if( def.getScrollHorizontally().content() == true || def.getScrollVertically().content() == true )
         {
             return new DefaultValueServiceData( "10" );
         }

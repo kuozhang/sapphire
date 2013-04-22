@@ -23,18 +23,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -89,7 +89,7 @@ public final class DiagramNodeTemplate extends SapphirePart
     
 	private SapphireDiagramEditorPagePart diagramEditor;
 	private IDiagramNodeDef definition;
-	private IModelElement modelElement;	
+	private Element modelElement;	
 	private String propertyName;
 	private ListProperty modelProperty;
 	private JavaType modelElementType;
@@ -109,18 +109,18 @@ public final class DiagramNodeTemplate extends SapphirePart
         this.modelElement = getModelElement();
         this.definition = (IDiagramNodeDef)super.definition;
         
-        if (this.definition.getToolPaletteLabel().getContent() != null)
+        if (this.definition.getToolPaletteLabel().content() != null)
         {
             ValueProperty tpLabelProperty = IDiagramNodeDef.PROP_TOOL_PALETTE_LABEL;
             this.toolPaletteLabel = tpLabelProperty.getLocalizationService().text(
-                            this.definition.getToolPaletteLabel().getContent(), CapitalizationType.TITLE_STYLE, false);
+                            this.definition.getToolPaletteLabel().content(), CapitalizationType.TITLE_STYLE, false);
         }        
-        this.toolPaletteDesc = this.definition.getToolPaletteDescription().getContent();
+        this.toolPaletteDesc = this.definition.getToolPaletteDescription().content();
         
         this.diagramNodes = new ArrayList<DiagramNodePart>();
         this.listeners = new CopyOnWriteArraySet<DiagramNodeTemplateListener>();
         
-        this.propertyName = this.definition.getProperty().getContent();
+        this.propertyName = this.definition.getProperty().content();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
         this.modelElementType = this.definition.getElementType().resolve();
         
@@ -169,8 +169,8 @@ public final class DiagramNodeTemplate extends SapphirePart
 	       	}        	
 		};
 		
-    	ModelElementList<?> list = this.modelElement.read(this.modelProperty);
-        for( IModelElement listEntryModelElement : list )
+    	ElementList<?> list = this.modelElement.property(this.modelProperty);
+        for( Element listEntryModelElement : list )
         {
             if (this.modelElementType == null)
             {
@@ -188,7 +188,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 
         this.toolPaletteImageFunctionResult = initExpression
         (
-            this.definition.getToolPaletteImage().getContent(),
+            this.definition.getToolPaletteImage().content(),
             ImageData.class,
             null,
             new Runnable()
@@ -224,7 +224,7 @@ public final class DiagramNodeTemplate extends SapphirePart
             IDiagramExplicitConnectionBindingDef embeddedConnDef = 
                         this.definition.getEmbeddedConnections().get( 0 );
             this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(embeddedConnDef);
-            IDiagramConnectionDef connDef = this.diagramEditor.getDiagramConnectionDef(embeddedConnDef.getConnectionId().getContent());
+            IDiagramConnectionDef connDef = this.diagramEditor.getDiagramConnectionDef(embeddedConnDef.getConnectionId().content());
             this.embeddedConnTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
         }
     }
@@ -256,7 +256,7 @@ public final class DiagramNodeTemplate extends SapphirePart
     
     public String getNodeTypeId()
     {
-        return this.definition.getId().getContent();
+        return this.definition.getId().content();
     }
     
     @Override
@@ -270,8 +270,8 @@ public final class DiagramNodeTemplate extends SapphirePart
     
     public DiagramNodePart createNewDiagramNode()
     {
-    	IModelElement newElement = null;
-		ModelElementList<?> list = this.modelElement.read(this.modelProperty);
+    	Element newElement = null;
+		ElementList<?> list = this.modelElement.property(this.modelProperty);
 		if (this.modelElementType == null)
 		{
 			newElement = list.insert();
@@ -292,12 +292,12 @@ public final class DiagramNodeTemplate extends SapphirePart
     	return newNodePart;
     }
     
-    public ModelProperty getModelProperty()
+    public PropertyDef getModelProperty()
     {
         return this.modelProperty;
     }
     
-    public ModelElementType getNodeType()
+    public ElementType getNodeType()
     {
         if (this.modelElementType == null)
         {
@@ -306,7 +306,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         else 
         {
             final Class<?> cl = this.modelElementType.artifact();
-            return ModelElementType.read(cl);
+            return ElementType.read(cl);
         }
     }
     
@@ -343,14 +343,12 @@ public final class DiagramNodeTemplate extends SapphirePart
     
     private void handleModelPropertyChange(final PropertyEvent event)
     {
-    	final IModelElement element = event.element();
-    	final ModelProperty property = event.property();
-    	ModelElementList<?> tempList = (ModelElementList<?>)element.read(property);
+    	ElementList<?> tempList = (ElementList<?>) event.property();
     	
     	// filter the list property with specified element type
-    	List<IModelElement> newList = new ArrayList<IModelElement>();
-		newList = new ArrayList<IModelElement>();    	
-    	for (IModelElement ele : tempList)
+    	List<Element> newList = new ArrayList<Element>();
+		newList = new ArrayList<Element>();    	
+    	for (Element ele : tempList)
     	{
     		if (this.modelElementType == null)
     		{
@@ -366,15 +364,15 @@ public final class DiagramNodeTemplate extends SapphirePart
     		}
     	}
     	List<DiagramNodePart> nodeParts = getDiagramNodes();
-		List<IModelElement> oldList = new ArrayList<IModelElement>(nodeParts.size());
+		List<Element> oldList = new ArrayList<Element>(nodeParts.size());
 		for (DiagramNodePart nodePart : nodeParts)
 		{
 			oldList.add(nodePart.getLocalModelElement());
 		}
     	
-    	List<IModelElement> deletedNodes = ListUtil.ListDiff(oldList, newList);
-    	List<IModelElement> newNodes = ListUtil.ListDiff(newList, oldList);
-		for (IModelElement deletedNode : deletedNodes)
+    	List<Element> deletedNodes = ListUtil.ListDiff(oldList, newList);
+    	List<Element> newNodes = ListUtil.ListDiff(newList, oldList);
+		for (Element deletedNode : deletedNodes)
 		{
 			DiagramNodePart nodePart = getNodePart(deletedNode);
 			if (nodePart != null)
@@ -389,7 +387,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 				}
 			}
 		}    	    	
-		for (IModelElement newNode : newNodes)
+		for (Element newNode : newNodes)
 		{
 	    	DiagramNodePart nodePart = createNewNodePart(newNode);
 	    	if (visible())
@@ -407,7 +405,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 		}
     }
     
-    public DiagramNodePart getNodePart(IModelElement element)
+    public DiagramNodePart getNodePart(Element element)
     {
         List<DiagramNodePart> nodeParts = getDiagramNodes();
         for (DiagramNodePart nodePart : nodeParts)
@@ -420,7 +418,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         return null;
     }
     
-    public DiagramNodePart createNewNodePart(IModelElement element)
+    public DiagramNodePart createNewNodePart(Element element)
     {
         DiagramNodePart newNode = new DiagramNodePart();
         newNode.init(this, element, this.definition, 

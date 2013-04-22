@@ -19,10 +19,10 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -63,7 +63,7 @@ public abstract class PageBookPart extends FormComponentPart
         
         for( PageBookKeyMapping page : def.getPages() )
         {
-            final Object key = parsePageKey( page.getKey().getText() );
+            final Object key = parsePageKey( page.getKey().text() );
             this.pageDefs.put( key, page );
         }
         
@@ -226,7 +226,7 @@ public abstract class PageBookPart extends FormComponentPart
         return this.currentPage;
     }
 
-    protected final void changePage( final IModelElement modelElementForPage,
+    protected final void changePage( final Element modelElementForPage,
                                      final Object pageKey )
     {
         FormDef pageDef = this.defaultPageDef;
@@ -246,7 +246,7 @@ public abstract class PageBookPart extends FormComponentPart
         changePage( modelElementForPage, pageDef );
     }
 
-    private void changePage( final IModelElement modelElementForPage,
+    private void changePage( final Element modelElementForPage,
                              final FormDef pageDef )
     {
         if( modelElementForPage == null )
@@ -280,7 +280,7 @@ public abstract class PageBookPart extends FormComponentPart
     
     protected abstract Object parsePageKey( final String pageKeyString );
     
-    protected FormPart createPagePart( final IModelElement modelElementForPage,
+    protected FormPart createPagePart( final Element modelElementForPage,
                                        final FormDef pageDef )
     {
         return (FormPart) create( this, modelElementForPage, pageDef, this.params );

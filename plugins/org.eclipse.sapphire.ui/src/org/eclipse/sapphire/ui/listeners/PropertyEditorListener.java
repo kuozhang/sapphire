@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.listeners;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
@@ -22,24 +22,24 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 public abstract class PropertyEditorListener
 {
     private SapphireRenderingContext context = null;
-    private IModelElement element = null;
-    private ModelProperty property = null;
+    private Element element = null;
+    private PropertyDef property = null;
     
     public final void initialize( final SapphireRenderingContext context,
-                                  final IModelElement element,
-                                  final ModelProperty property )
+                                  final Element element,
+                                  final PropertyDef property )
     {
         this.context = context;
         this.element = element;
         this.property = property;
     }
     
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return this.element;
     }
     
-    public final ModelProperty getProperty()
+    public final PropertyDef getProperty()
     {
         return this.property;
     }

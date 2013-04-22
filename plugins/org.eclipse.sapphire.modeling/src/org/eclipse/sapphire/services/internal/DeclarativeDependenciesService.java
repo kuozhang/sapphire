@@ -14,9 +14,9 @@ package org.eclipse.sapphire.services.internal;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.services.DependenciesServiceData;
 import org.eclipse.sapphire.services.DependenciesService;
@@ -37,7 +37,7 @@ public final class DeclarativeDependenciesService extends DependenciesService
     {
         final Set<String> dependenciesAsStrings = new HashSet<String>();
         
-        final DependsOn dependsOnAnnotation = context( ModelProperty.class ).getAnnotation( DependsOn.class );
+        final DependsOn dependsOnAnnotation = context( PropertyDef.class ).getAnnotation( DependsOn.class );
         
         if( dependsOnAnnotation != null )
         {
@@ -74,7 +74,7 @@ public final class DeclarativeDependenciesService extends DependenciesService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return context.find( ModelProperty.class ).hasAnnotation( DependsOn.class );
+            return context.find( PropertyDef.class ).hasAnnotation( DependsOn.class );
         }
 
         @Override

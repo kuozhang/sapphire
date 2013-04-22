@@ -24,7 +24,7 @@ public final class DocumentationRefMethods
     public static ISapphireDocumentationDef resolve( final ISapphireDocumentationRef ref )
     {
         final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return rootdef.getDocumentationDef( ref.getId().getText(), true );
+        return rootdef.getDocumentationDef( ref.getId().text(), true );
     }
     
 }

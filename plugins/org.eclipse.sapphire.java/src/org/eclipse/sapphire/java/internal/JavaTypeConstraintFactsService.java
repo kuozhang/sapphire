@@ -16,14 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ReferenceService;
@@ -44,10 +43,9 @@ public final class JavaTypeConstraintFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
+        final Property property = context( Property.class );
         
-        final JavaTypeConstraintService service = element.service( property, JavaTypeConstraintService.class );
+        final JavaTypeConstraintService service = property.service( JavaTypeConstraintService.class );
 
         final List<JavaTypeKind> kinds = new ArrayList<JavaTypeKind>( service.kinds() );
         
@@ -80,7 +78,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
                 final String typeName = types.get( 0 );
                 String verb = Resources.verbImplementOrExtend;
                 
-                final ReferenceService referenceService = element.service( property, ReferenceService.class );
+                final ReferenceService referenceService = property.service( ReferenceService.class );
                 
                 if( referenceService != null && referenceService instanceof JavaTypeReferenceService )
                 {
@@ -185,10 +183,8 @@ public final class JavaTypeConstraintFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            final IModelElement element = context.find( IModelElement.class );
-
-            return ( property != null && element != null && element.service( property, JavaTypeConstraintService.class ) != null );
+            final Property property = context.find( Property.class );
+            return ( property != null && property.service( JavaTypeConstraintService.class ) != null );
         }
     
         @Override

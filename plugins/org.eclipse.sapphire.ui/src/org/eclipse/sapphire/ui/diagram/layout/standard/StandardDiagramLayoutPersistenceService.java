@@ -25,7 +25,7 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -109,8 +109,8 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 			return;
 		}
         
-		Boolean gridVisible = this.layoutModel.getGridLayout().isVisible().getContent();
-		Boolean showGuides = this.layoutModel.getGuidesLayout().isVisible().getContent();
+		Boolean gridVisible = this.layoutModel.getGridLayout().isVisible().content();
+		Boolean showGuides = this.layoutModel.getGuidesLayout().isVisible().content();
         
         // only set these if the layout file explicitly sets it.  
 		// If absent then fallback to diagram-editor-def setting
@@ -125,39 +125,39 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
             context( SapphireDiagramEditorPagePart.class ).setShowGuides(showGuides);
         }
 		
-		ModelElementList<DiagramNodeLayout> nodes = this.layoutModel.getDiagramNodesLayout();
+		ElementList<DiagramNodeLayout> nodes = this.layoutModel.getDiagramNodesLayout();
 		
 		for (DiagramNodeLayout node : nodes)
 		{
-			String nodeId = node.getNodeId().getContent();
+			String nodeId = node.getNodeId().content();
 			DiagramNodePart nodePart = IdUtil.getNodePart(context( SapphireDiagramEditorPagePart.class ), nodeId);
-			int x = node.getX().getContent();
-			int y = node.getY().getContent();
-			int width = node.getWidth().getContent();
-			int height = node.getHeight().getContent();
+			int x = node.getX().content();
+			int y = node.getY().content();
+			int width = node.getWidth().content();
+			int height = node.getHeight().content();
 			
 			if (nodePart != null)
 			{
 				nodePart.setNodeBounds(new DiagramNodeBounds(x, y, width, height, false, false));
 			}
 			
-			ModelElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionsLayout();
+			ElementList<DiagramConnectionLayout> connList = node.getEmbeddedConnectionsLayout();
 			for (DiagramConnectionLayout connLayout : connList)
 			{
-				String connId = connLayout.getConnectionId().getContent();
-				ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
+				String connId = connLayout.getConnectionId().content();
+				ElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 				DiagramConnectionPart connPart = IdUtil.getConnectionPart(nodePart, connId);
 				if (connPart != null)
 				{					
 					int index = 0;
 					for (DiagramBendPointLayout pt : bps)
 					{
-						connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
+						connPart.addBendpoint(index++, pt.getX().content(), pt.getY().content());
 					}
 					
-					if (connLayout.getLabelX().getContent(false) != null && connLayout.getLabelY().getContent(false) != null)
+					if (connLayout.getLabelX().content(false) != null && connLayout.getLabelY().content(false) != null)
 					{
-						Point labelPos = new Point(connLayout.getLabelX().getContent(), connLayout.getLabelY().getContent());
+						Point labelPos = new Point(connLayout.getLabelX().content(), connLayout.getLabelY().content());
 						connPart.setLabelPosition(labelPos);
 					}
 				}
@@ -165,27 +165,27 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				
 		}
 		
-		ModelElementList<DiagramConnectionLayout> connList = this.layoutModel.getDiagramConnectionsLayout();
+		ElementList<DiagramConnectionLayout> connList = this.layoutModel.getDiagramConnectionsLayout();
 		for (DiagramConnectionLayout connLayout : connList)
 		{
-			String connId = connLayout.getConnectionId().getContent();
+			String connId = connLayout.getConnectionId().content();
 			DiagramConnectionPart connPart = IdUtil.getConnectionPart(context( SapphireDiagramEditorPagePart.class ), connId);
-			ModelElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
+			ElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 			if (connPart != null)
 			{
 				int index = 0;
 				for (DiagramBendPointLayout pt : bps)
 				{
-					connPart.addBendpoint(index++, pt.getX().getContent(), pt.getY().getContent());
+					connPart.addBendpoint(index++, pt.getX().content(), pt.getY().content());
 				}
 				List<Point> bendPoints = new ArrayList<Point>();
 				bendPoints.addAll(connPart.getConnectionBendpoints().getBendPoints());
 				
-				if (connLayout.getLabelX().getContent(false) != null && 
-						connLayout.getLabelY().getContent(false) != null)
+				if (connLayout.getLabelX().content(false) != null && 
+						connLayout.getLabelY().content(false) != null)
 				{
-					Point labelPos = new Point(connLayout.getLabelX().getContent(), 
-							connLayout.getLabelY().getContent());
+					Point labelPos = new Point(connLayout.getLabelX().content(), 
+							connLayout.getLabelY().content());
 					connPart.setLabelPosition(labelPos);
 				}
 			}
@@ -317,14 +317,14 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 				{
 					IDiagramNodeDef nodeDef = (IDiagramNodeDef)nodePart.definition();
 					if (bounds.getHeight() != -1 &&
-							((nodeDef.getHeight().getContent() != null && nodeDef.getHeight().getContent() != bounds.getHeight()) ||
-									nodeDef.getHeight().getContent() == null))
+							((nodeDef.getHeight().content() != null && nodeDef.getHeight().content() != bounds.getHeight()) ||
+									nodeDef.getHeight().content() == null))
 					{
 						diagramNode.setHeight(bounds.getHeight());
 					}
 					if (bounds.getWidth() != -1 && 
-							((nodeDef.getWidth().getContent() != null && nodeDef.getWidth().getContent() != bounds.getWidth()) ||
-									nodeDef.getWidth().getContent() == null))
+							((nodeDef.getWidth().content() != null && nodeDef.getWidth().content() != bounds.getWidth()) ||
+									nodeDef.getWidth().content() == null))
 					{
 						diagramNode.setWidth(bounds.getWidth());
 					}

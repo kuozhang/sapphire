@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -55,7 +55,7 @@ public abstract class TestExpr extends SapphireTestCase
         }
     }
     
-    protected static void testForExpectedValue( final IModelElement element,
+    protected static void testForExpectedValue( final Element element,
                                                 final String expr,
                                                 final Object expected )
     {

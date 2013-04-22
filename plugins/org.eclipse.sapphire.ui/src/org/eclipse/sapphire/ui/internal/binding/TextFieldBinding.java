@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.internal.binding;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.EMPTY_STRING;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -29,10 +29,7 @@ import org.eclipse.swt.widgets.Text;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class TextFieldBinding 
-
-    extends AbstractBinding
-    
+public class TextFieldBinding extends AbstractBinding
 {
     private Text text;
     private String textContent;
@@ -80,7 +77,13 @@ public class TextFieldBinding
             }
         );
         
-        this.valueNormalizationService = editor.getLocalModelElement().service( editor.getProperty(), ValueNormalizationService.class );
+        this.valueNormalizationService = editor.property().service( ValueNormalizationService.class );
+    }
+    
+    @Override
+    public Value<?> property()
+    {
+        return (Value<?>) super.property();
     }
     
     protected void updateTextContent( final String textContent )
@@ -94,7 +97,7 @@ public class TextFieldBinding
     {
         if( ! this.text.isDisposed() && ( this.text.getStyle() & SWT.READ_ONLY ) == 0 ) 
         {
-            getModelElement().write( getProperty(), this.textContent );
+            property().write( this.textContent );
         }
     }
     
@@ -102,7 +105,7 @@ public class TextFieldBinding
     protected void doUpdateTarget()
     {
         final String oldValue = this.valueNormalizationService.normalize( this.text.getText() );
-        final String newValue = this.valueNormalizationService.normalize( ( (Value<?>) getPropertyValue() ).getText( false ) );
+        final String newValue = this.valueNormalizationService.normalize( ( (Value<?>) property() ).text( false ) );
         
         if( ! equal( oldValue, newValue ) )
         {

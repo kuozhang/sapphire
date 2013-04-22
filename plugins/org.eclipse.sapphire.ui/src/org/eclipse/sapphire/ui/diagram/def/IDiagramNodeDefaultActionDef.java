@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
 
 public interface IDiagramNodeDefaultActionDef extends PartDef
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramNodeDefaultActionDef.class );
+    ElementType TYPE = new ElementType( IDiagramNodeDefaultActionDef.class );
     
     // *** Label ***
     

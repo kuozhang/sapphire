@@ -11,26 +11,26 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0015;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Transient;
-import org.eclipse.sapphire.modeling.TransientProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Transient;
+import org.eclipse.sapphire.TransientProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface RootElement extends IModelElement
+public interface RootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( RootElement.class );
+    ElementType TYPE = new ElementType( RootElement.class );
     
     // *** Switch ***
     
@@ -45,7 +45,7 @@ public interface RootElement extends IModelElement
 
     ElementProperty PROP_FOR = new ElementProperty( TYPE, "For" );
     
-    ModelElementHandle<ChildElement> getFor();
+    ElementHandle<ChildElement> getFor();
     
     // *** Final ***
     
@@ -61,7 +61,7 @@ public interface RootElement extends IModelElement
     
     ListProperty PROP_INTERFACE = new ListProperty( TYPE, "Interface" );
     
-    ModelElementList<ChildElement> getInterface();
+    ElementList<ChildElement> getInterface();
     
     // *** Public ***
     

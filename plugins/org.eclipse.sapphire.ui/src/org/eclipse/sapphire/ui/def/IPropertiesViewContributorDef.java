@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -24,10 +24,10 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IPropertiesViewContributorDef
 
-    extends IModelElement
+    extends Element
     
 {
-    ModelElementType TYPE = new ModelElementType( IPropertiesViewContributorDef.class );
+    ElementType TYPE = new ElementType( IPropertiesViewContributorDef.class );
 
     // *** PropertiesViewContribution ***
     

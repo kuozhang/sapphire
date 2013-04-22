@@ -21,10 +21,10 @@ import java.util.Set;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.help.IContext;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -62,7 +62,7 @@ public class SapphireEditorPagePart
         
         this.pageHeaderTextFunctionResult = initExpression
         (
-            def.getPageHeaderText().getContent(),
+            def.getPageHeaderText().content(),
             String.class,
             null,
             new Runnable()
@@ -76,7 +76,7 @@ public class SapphireEditorPagePart
 
         this.pageHeaderImageFunctionResult = initExpression
         (
-            def.getPageHeaderImage().getContent(),
+            def.getPageHeaderImage().content(),
             ImageData.class,
             null,
             new Runnable()
@@ -122,7 +122,7 @@ public class SapphireEditorPagePart
                 key.append( '#' );
             }
             
-            key.append( definition().getPageName().getContent() );
+            key.append( definition().getPageName().content() );
             
             final String digest = createStringDigest( key.toString() );
             
@@ -137,7 +137,7 @@ public class SapphireEditorPagePart
                 throw new IllegalStateException();
             }
             
-            final ModelElementType persistedStateElementType = ModelElementType.read( persistedStateElementJavaType.artifact() );
+            final ElementType persistedStateElementType = ElementType.read( persistedStateElementJavaType.artifact() );
             
             try
             {
@@ -175,7 +175,7 @@ public class SapphireEditorPagePart
     @Override
     public IContext getDocumentationContext()
     {
-        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
+        final ISapphireDocumentation doc = this.definition.getDocumentation().content();
         
         if( doc != null )
         {

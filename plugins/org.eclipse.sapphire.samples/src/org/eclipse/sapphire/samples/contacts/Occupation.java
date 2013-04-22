@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,9 +20,9 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 
 public interface Occupation
 
-    extends IModelElement
+    extends Element
     
 {
-    ModelElementType TYPE = new ModelElementType( Occupation.class );
+    ElementType TYPE = new ElementType( Occupation.class );
     
 }

@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.calendar.integrated;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IEvent extends IModelElement
+public interface IEvent extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IEvent.class );
+    ElementType TYPE = new ElementType( IEvent.class );
 
     // *** Subject ***
     
@@ -85,7 +85,7 @@ public interface IEvent extends IModelElement
 
     ListProperty PROP_ATTENDEES = new ListProperty( TYPE, "Attendees" );
     
-    ModelElementList<IAttendee> getAttendees();
+    ElementList<IAttendee> getAttendees();
     
     // *** Attachments ***
     
@@ -93,6 +93,6 @@ public interface IEvent extends IModelElement
 
     ListProperty PROP_ATTACHMENTS = new ListProperty( TYPE, "Attachments" );
     
-    ModelElementList<IEventAttachment> getAttachments();
+    ElementList<IEventAttachment> getAttachments();
     
 }

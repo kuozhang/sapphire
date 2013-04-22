@@ -45,13 +45,9 @@ import org.eclipse.swt.widgets.Label;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class RadioButtonsGroup 
-
-    extends Composite
-    
+public class RadioButtonsGroup extends Composite
 {
     private final boolean vertical;
-    private final SapphireRenderingContext context;
     private final List<Button> buttons;
     private final List<Button> buttonsReadOnly;
     private final Map<Button,Control> auxTextControls;
@@ -66,7 +62,6 @@ public class RadioButtonsGroup
         super( composite, SWT.NONE );
 
         this.vertical = vertical;
-        this.context = context;
         this.buttons = new ArrayList<Button>();
         this.buttonsReadOnly = Collections.unmodifiableList( this.buttons );
         this.auxTextControls = new HashMap<Button,Control>();

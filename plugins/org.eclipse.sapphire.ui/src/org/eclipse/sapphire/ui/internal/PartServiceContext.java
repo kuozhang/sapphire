@@ -14,12 +14,12 @@ package org.eclipse.sapphire.ui.internal;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactoryProxy;
@@ -55,13 +55,13 @@ public final class PartServiceContext extends ServiceContext
             {
                 obj = type.cast( this.part );
             }
-            else if( IModelElement.class.isAssignableFrom( type ) )
+            else if( Element.class.isAssignableFrom( type ) )
             {
-                final IModelElement element = this.part.getLocalModelElement();
+                final Element element = this.part.getLocalModelElement();
                 
                 if( element != null )
                 {
-                    if( type == IModelElement.class )
+                    if( type == Element.class )
                     {
                         obj = type.cast( element );
                     }
@@ -90,7 +90,7 @@ public final class PartServiceContext extends ServiceContext
             
             for( ServiceDef.Override override : serviceDef.getOverrides() )
             {
-                String id = override.getId().getText();
+                String id = override.getId().text();
                 
                 if( id != null )
                 {

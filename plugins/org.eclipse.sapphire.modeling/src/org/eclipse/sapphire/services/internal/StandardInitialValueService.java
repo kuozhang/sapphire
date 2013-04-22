@@ -12,11 +12,11 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.InitialValue;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -44,7 +44,7 @@ public final class StandardInitialValueService extends InitialValueService
     @Override
     protected void initInitialValueService()
     {
-        final InitialValue annotation = context( ModelProperty.class ).getAnnotation( InitialValue.class );
+        final InitialValue annotation = context( PropertyDef.class ).getAnnotation( InitialValue.class );
         
         if( annotation != null )
         {
@@ -68,7 +68,7 @@ public final class StandardInitialValueService extends InitialValueService
                 {
                     function = FailSafeFunction.create( function, Literal.create( String.class ) );
                     
-                    final ModelElementFunctionContext context = new ModelElementFunctionContext( context( IModelElement.class ) );
+                    final ModelElementFunctionContext context = new ModelElementFunctionContext( context( Element.class ) );
                     
                     this.functionResult = function.evaluate( context );
                     
@@ -124,7 +124,7 @@ public final class StandardInitialValueService extends InitialValueService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             
             if( property != null )
             {

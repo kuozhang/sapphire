@@ -11,23 +11,23 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0009;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestRootElement extends IModelElement
+public interface TestRootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestRootElement.class );
+    ElementType TYPE = new ElementType( TestRootElement.class );
     
     // *** ValuePropertyA ***
     
@@ -49,7 +49,7 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_LIST_PROPERTY_A = new ListProperty( TYPE, "ListPropertyA" );
     
-    ModelElementList<TestChildElement> getListPropertyA();
+    ElementList<TestChildElement> getListPropertyA();
     
     // *** ElementPropertyA ***
     
@@ -57,6 +57,6 @@ public interface TestRootElement extends IModelElement
     
     ElementProperty PROP_ELEMENT_PROPERTY_A = new ElementProperty( TYPE, "ElementPropertyA" );
     
-    ModelElementHandle<TestChildElement> getElementPropertyA();
+    ElementHandle<TestChildElement> getElementPropertyA();
 
 }

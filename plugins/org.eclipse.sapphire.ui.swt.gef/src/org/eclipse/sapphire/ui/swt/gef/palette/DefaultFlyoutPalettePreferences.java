@@ -32,12 +32,12 @@ public class DefaultFlyoutPalettePreferences implements FlyoutPaletteComposite.F
 
 	public final int getDockLocation() 
 	{
-		return this.pageState.getPalettePreferences().getDockLocation().getContent();
+		return this.pageState.getPalettePreferences().getDockLocation().content();
 	}
 
 	public final void setDockLocation(int dockLocation) 
 	{
-		int currentLocation = this.pageState.getPalettePreferences().getDockLocation().getContent();
+		int currentLocation = this.pageState.getPalettePreferences().getDockLocation().content();
 		if (currentLocation != dockLocation)
 		{
             this.pageState.getPalettePreferences().setDockLocation(dockLocation);            
@@ -54,12 +54,12 @@ public class DefaultFlyoutPalettePreferences implements FlyoutPaletteComposite.F
 
 	public final int getPaletteState() 
 	{
-		return this.pageState.getPalettePreferences().getPaletteState().getContent();
+		return this.pageState.getPalettePreferences().getPaletteState().content();
 	}
 
 	public final void setPaletteState(int paletteState) 
 	{
-		int currentState = this.pageState.getPalettePreferences().getPaletteState().getContent();
+		int currentState = this.pageState.getPalettePreferences().getPaletteState().content();
 		if (currentState != paletteState)
 		{
             this.pageState.getPalettePreferences().setPaletteState(paletteState);            
@@ -76,12 +76,12 @@ public class DefaultFlyoutPalettePreferences implements FlyoutPaletteComposite.F
 
 	public final int getPaletteWidth() 
 	{
-		return this.pageState.getPalettePreferences().getPaletteWidth().getContent();
+		return this.pageState.getPalettePreferences().getPaletteWidth().content();
 	}
 
 	public final void setPaletteWidth(int paletteWidth) 
 	{
-		int currentWidth = this.pageState.getPalettePreferences().getPaletteWidth().getContent();
+		int currentWidth = this.pageState.getPalettePreferences().getPaletteWidth().content();
 		if (currentWidth != paletteWidth)
 		{
             this.pageState.getPalettePreferences().setPaletteWidth(paletteWidth);            

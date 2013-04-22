@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -27,7 +27,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface LineSeparatorDef extends SeparatorDef
 {
-    ModelElementType TYPE = new ModelElementType( LineSeparatorDef.class );
+    ElementType TYPE = new ElementType( LineSeparatorDef.class );
  
     // *** Label ***
     

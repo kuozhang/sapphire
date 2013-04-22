@@ -35,14 +35,14 @@ public final class ScaleFunction extends Function
             @Override
             protected Object evaluate()
             {
-                BigDecimal num = cast( operand( 0 ).value(), BigDecimal.class );
+                BigDecimal num = cast( operand( 0 ), BigDecimal.class );
                 
                 if( num == null )
                 {
                     num = new BigDecimal( 0 );
                 }
                 
-                Integer scale = cast( operand( 1 ).value(), Integer.class );
+                Integer scale = cast( operand( 1 ), Integer.class );
                 
                 if( scale == null )
                 {

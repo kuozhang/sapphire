@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface IPropertiesViewContributionDef extends PartDef
 {
-    ModelElementType TYPE = new ModelElementType( IPropertiesViewContributionDef.class );
+    ElementType TYPE = new ElementType( IPropertiesViewContributionDef.class );
     
     // *** Pages ***
     
@@ -36,6 +36,6 @@ public interface IPropertiesViewContributionDef extends PartDef
     
     ListProperty PROP_PAGES = new ListProperty( TYPE, "Pages" );
     
-    ModelElementList<IPropertiesViewContributionPageDef> getPages();
+    ElementList<IPropertiesViewContributionPageDef> getPages();
 
 }

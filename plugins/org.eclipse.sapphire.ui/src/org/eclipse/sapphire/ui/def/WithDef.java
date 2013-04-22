@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface WithDef extends PageBookDef
 {
-    ModelElementType TYPE = new ModelElementType( WithDef.class );
+    ElementType TYPE = new ElementType( WithDef.class );
 
     static final String HINT_VALUE_STYLE_CHECKBOX = "checkbox";
     static final String HINT_VALUE_STYLE_RADIO_BUTTONS = "radio.buttons";

@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ReferenceValue;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -43,9 +43,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 @Label( standard = "function" )
 
-public interface FunctionDef extends IModelElement
+public interface FunctionDef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( FunctionDef.class );
+    ElementType TYPE = new ElementType( FunctionDef.class );
     
     // *** Name ***
     
@@ -66,9 +66,9 @@ public interface FunctionDef extends IModelElement
     
     @Label( standard = "operand count" )
     
-    interface OperandCount extends IModelElement
+    interface OperandCount extends Element
     {
-        ModelElementType TYPE = new ModelElementType( OperandCount.class );
+        ElementType TYPE = new ElementType( OperandCount.class );
         
         // *** Count ***
         
@@ -99,7 +99,7 @@ public interface FunctionDef extends IModelElement
     
     ListProperty PROP_OPERAND_COUNTS = new ListProperty( TYPE, "OperandCounts" );
     
-    ModelElementList<OperandCount> getOperandCounts();
+    ElementList<OperandCount> getOperandCounts();
     
     // *** Description ***
     

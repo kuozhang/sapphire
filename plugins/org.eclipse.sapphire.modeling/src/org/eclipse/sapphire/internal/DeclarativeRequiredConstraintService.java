@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.RequiredConstraintService;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -46,7 +46,7 @@ public final class DeclarativeRequiredConstraintService extends RequiredConstrai
     {
         Function function;
         
-        final Required annotation = context( ModelProperty.class ).getAnnotation( Required.class );
+        final Required annotation = context( PropertyDef.class ).getAnnotation( Required.class );
         
         if( annotation == null )
         {
@@ -75,7 +75,7 @@ public final class DeclarativeRequiredConstraintService extends RequiredConstrai
             }
         }
 
-        final ModelElementFunctionContext context = new ModelElementFunctionContext( context( IModelElement.class ) );
+        final ModelElementFunctionContext context = new ModelElementFunctionContext( context( Element.class ) );
         
         this.functionResult = function.evaluate( context );
         
@@ -121,7 +121,7 @@ public final class DeclarativeRequiredConstraintService extends RequiredConstrai
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             return ( property instanceof ValueProperty || ( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) ) );
         }
 

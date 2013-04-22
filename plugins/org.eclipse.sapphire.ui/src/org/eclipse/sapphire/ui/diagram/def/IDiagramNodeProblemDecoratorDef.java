@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramNodeProblemDecoratorDef extends IDiagramDecoratorDef 
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramNodeProblemDecoratorDef.class );
+    ElementType TYPE = new ElementType( IDiagramNodeProblemDecoratorDef.class );
     
     // *** ShowDecorator ***
     

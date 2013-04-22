@@ -14,11 +14,12 @@ package org.eclipse.sapphire.modeling.util.internal;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EnumValueType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ValueKeyword;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
 import org.eclipse.sapphire.modeling.annotations.NamedValues.NamedValue;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -30,27 +31,31 @@ import org.eclipse.sapphire.services.DefaultValueService;
 
 public class SapphireCommonUtil {
     
-    public final static String getDefaultValueLabel( final IModelElement element, 
-                                                     final ValueProperty property ) 
+    public final static String getDefaultValueLabel( final Value<?> value ) 
     {
-        final DefaultValueService defaultValueService = element.service( property, DefaultValueService.class );
+        final DefaultValueService defaultValueService = value.service( DefaultValueService.class );
         
         if( defaultValueService != null )
         {
-            final String defaultValue = defaultValueService.value();
+            final String defaultText = defaultValueService.value();
             
-            if( defaultValue != null )
+            if( defaultText != null )
             {
-                return getValueLabel( element, property, defaultValue );
+                return getValueLabel( value, defaultText );
             }
         }
         
         return null;
     }
     
-    public final static String getValueLabel( final IModelElement element, 
-                                              final ValueProperty property,
-                                              final String value ) 
+    public final static String getValueLabel( final Property property,
+                                              final String value )
+    {
+        return getValueLabel( (ValueProperty) property.definition(), value );
+    }
+    
+    private final static String getValueLabel( final ValueProperty property,
+                                               final String value ) 
     {
         String valueLabel = value;
         

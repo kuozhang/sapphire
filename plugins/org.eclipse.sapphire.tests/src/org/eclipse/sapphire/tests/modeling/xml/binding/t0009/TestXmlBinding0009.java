@@ -81,7 +81,7 @@ public final class TestXmlBinding0009
         final TestChildElementA listChild3 = (TestChildElementA) model.getListPropertyA().insert( TestChildElementA.TYPE );
         listChild3.setValuePropertyA( "eeee" );
         
-        final TestChildElementB elementChild = (TestChildElementB) model.getElementPropertyA().element( true, TestChildElementB.TYPE );
+        final TestChildElementB elementChild = (TestChildElementB) model.getElementPropertyA().content( true, TestChildElementB.TYPE );
         elementChild.setValuePropertyB( "ffff" );
         
         model.resource().save();
@@ -121,7 +121,7 @@ public final class TestXmlBinding0009
         final ITestChildElementA listChild3 = (ITestChildElementA) model.getListPropertyA().insert( ITestChildElementA.TYPE );
         listChild3.setValuePropertyA( "eeee" );
         
-        final ITestChildElementB elementChild = (ITestChildElementB) model.getElementPropertyA().element( true, ITestChildElementB.TYPE );
+        final ITestChildElementB elementChild = (ITestChildElementB) model.getElementPropertyA().content( true, ITestChildElementB.TYPE );
         elementChild.setValuePropertyB( "ffff" );
         
         model.resource().save();
@@ -137,15 +137,15 @@ public final class TestXmlBinding0009
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         final TestRootElement model = TestRootElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        assertEquals( "aaaa", model.getValuePropertyA().getText() );
-        assertEquals( "bbbb", model.getValuePropertyB().getText() );
+        assertEquals( "aaaa", model.getValuePropertyA().text() );
+        assertEquals( "bbbb", model.getValuePropertyB().text() );
         
         assertEquals( 3, model.getListPropertyA().size() );
-        assertEquals( "cccc", ( (TestChildElementA) model.getListPropertyA().get( 0 ) ).getValuePropertyA().getText() );
-        assertEquals( "dddd", ( (TestChildElementB) model.getListPropertyA().get( 1 ) ).getValuePropertyB().getText() );
-        assertEquals( "eeee", ( (TestChildElementA) model.getListPropertyA().get( 2 ) ).getValuePropertyA().getText() );
+        assertEquals( "cccc", ( (TestChildElementA) model.getListPropertyA().get( 0 ) ).getValuePropertyA().text() );
+        assertEquals( "dddd", ( (TestChildElementB) model.getListPropertyA().get( 1 ) ).getValuePropertyB().text() );
+        assertEquals( "eeee", ( (TestChildElementA) model.getListPropertyA().get( 2 ) ).getValuePropertyA().text() );
         
-        assertEquals( "ffff", ( (TestChildElementB) model.getElementPropertyA().element( false ) ).getValuePropertyB().getText() );
+        assertEquals( "ffff", ( (TestChildElementB) model.getElementPropertyA().content( false ) ).getValuePropertyB().text() );
     }
 
     public void testDefaultBindingRead2() throws Exception
@@ -154,15 +154,15 @@ public final class TestXmlBinding0009
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         final ITestRootElement model = ITestRootElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        assertEquals( "aaaa", model.getValuePropertyA().getText() );
-        assertEquals( "bbbb", model.getValuePropertyB().getText() );
+        assertEquals( "aaaa", model.getValuePropertyA().text() );
+        assertEquals( "bbbb", model.getValuePropertyB().text() );
         
         assertEquals( 3, model.getListPropertyA().size() );
-        assertEquals( "cccc", ( (ITestChildElementA) model.getListPropertyA().get( 0 ) ).getValuePropertyA().getText() );
-        assertEquals( "dddd", ( (ITestChildElementB) model.getListPropertyA().get( 1 ) ).getValuePropertyB().getText() );
-        assertEquals( "eeee", ( (ITestChildElementA) model.getListPropertyA().get( 2 ) ).getValuePropertyA().getText() );
+        assertEquals( "cccc", ( (ITestChildElementA) model.getListPropertyA().get( 0 ) ).getValuePropertyA().text() );
+        assertEquals( "dddd", ( (ITestChildElementB) model.getListPropertyA().get( 1 ) ).getValuePropertyB().text() );
+        assertEquals( "eeee", ( (ITestChildElementA) model.getListPropertyA().get( 2 ) ).getValuePropertyA().text() );
         
-        assertEquals( "ffff", ( (ITestChildElementB) model.getElementPropertyA().element( false ) ).getValuePropertyB().getText() );
+        assertEquals( "ffff", ( (ITestChildElementB) model.getElementPropertyA().content( false ) ).getValuePropertyB().text() );
     }
 
 }

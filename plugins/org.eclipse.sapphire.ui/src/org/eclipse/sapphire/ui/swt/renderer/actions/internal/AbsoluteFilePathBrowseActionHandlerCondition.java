@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
@@ -23,15 +23,12 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AbsoluteFilePathBrowseActionHandlerCondition 
-
-    extends SapphirePropertyEditorCondition
-    
+public final class AbsoluteFilePathBrowseActionHandlerCondition extends SapphirePropertyEditorCondition
 {
     @Override
     protected boolean evaluate( final PropertyEditorPart part )
     {
-        final ModelProperty property = part.getProperty();
+        final PropertyDef property = part.property().definition();
         
         if( property.isOfType( Path.class ) && property.hasAnnotation( AbsolutePath.class ) )
         {

@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.ElementType;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -42,7 +44,7 @@ public abstract class LayeredElementBindingImpl
     
     @Override
     
-    public Resource create( final ModelElementType type )
+    public Resource create( final ElementType type )
     {
         this.object = createUnderlyingObject( type );
         this.resource = createResource( this.object );
@@ -50,7 +52,7 @@ public abstract class LayeredElementBindingImpl
         return this.resource;
     }
     
-    protected Object createUnderlyingObject( final ModelElementType type )
+    protected Object createUnderlyingObject( final ElementType type )
     {
         throw new UnsupportedOperationException();
     }

@@ -11,12 +11,8 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SourceEditorService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -39,8 +35,8 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final IModelElement element = context.getModelElement();
-        final ModelProperty prop = context.getProperty();
+        final Element element = context.element();
+        final Property property = context.property();
         final SourceEditorService sourceEditorService = element.adapt( SourceEditorService.class );
         
         if( sourceEditorService == null )
@@ -50,33 +46,13 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
         
         boolean contribute = false;
         
-        if (prop == null)
+        if( property == null )
         {
         	contribute = true;
         }
-        else if( !prop.isDerived() )
+        else if( ! property.definition().isDerived() )
         {
-            if( prop instanceof ValueProperty )
-            {
-                if( element.read( (ValueProperty) prop ).getText( false ) != null )
-                {
-                    contribute = true;
-                }
-            }
-            else if( prop instanceof ListProperty )
-            {
-                if( element.read( (ListProperty) prop ).size() > 0 )
-                {
-                    contribute = true;
-                }
-            }
-            else if( prop instanceof ElementProperty && ! ( prop instanceof ImpliedElementProperty ) )
-            {
-                if( element.read( (ElementProperty) prop ).element() != null )
-                {
-                    contribute = true;
-                }
-            }
+            contribute = ! property.empty();
         }
         
         if( ! contribute )
@@ -95,7 +71,7 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
             {
                 public void run()
                 {
-                    sourceEditorService.show( element, prop );
+                    sourceEditorService.show( element, property.definition() );
                 }
             }
         );

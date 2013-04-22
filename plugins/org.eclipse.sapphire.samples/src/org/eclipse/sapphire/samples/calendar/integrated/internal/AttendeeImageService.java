@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.services.ImageService;
@@ -44,13 +44,13 @@ public final class AttendeeImageService extends ImageService
             }
         };
         
-        context( IModelElement.class ).attach( this.listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
+        context( Element.class ).property( IAttendee.PROP_IN_CONTACT_REPOSITORY ).attach( this.listener );
     }
 
     @Override
     protected ImageServiceData compute()
     {
-        if( context( IAttendee.class ).isInContactRepository().getContent() )
+        if( context( IAttendee.class ).isInContactRepository().content() )
         {
             return IMG_PERSON;
         }
@@ -65,7 +65,7 @@ public final class AttendeeImageService extends ImageService
     {
         super.dispose();
         
-        context( IModelElement.class ).detach( this.listener, IAttendee.PROP_IN_CONTACT_REPOSITORY );
+        context( Element.class ).property( IAttendee.PROP_IN_CONTACT_REPOSITORY ).detach( this.listener );
     }
     
 }

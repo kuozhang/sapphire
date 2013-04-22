@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services;
 
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 
 /**

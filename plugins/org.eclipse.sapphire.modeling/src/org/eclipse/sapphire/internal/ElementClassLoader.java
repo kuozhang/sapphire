@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.internal;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,7 +24,7 @@ public final class ElementClassLoader extends ClassLoader
         super( parent );
     }
     
-    public synchronized Class<?> loadImplementationClass( final ModelElementType type )
+    public synchronized Class<?> loadImplementationClass( final ElementType type )
     {
         final Class<?> typeInterfaceClass = type.getModelElementClass();
         final String typeImplClassName = typeInterfaceClass.getName() + "$Impl";

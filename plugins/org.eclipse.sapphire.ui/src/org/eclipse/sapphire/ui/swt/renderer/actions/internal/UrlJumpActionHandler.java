@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import java.net.URL;
 
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -27,10 +27,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class UrlJumpActionHandler 
-
-    extends SapphireJumpActionHandler
-    
+public final class UrlJumpActionHandler extends SapphireJumpActionHandler
 {
     public static final String ID = "Sapphire.Jump.URL";
     
@@ -44,7 +41,7 @@ public final class UrlJumpActionHandler
     {
         if( super.computeEnablementState() == true )
         {
-            final Value<URL> value = getModelElement().read( getProperty() );
+            final Value<?> value = (Value<?>) property();
             return ( value.validation().severity() != Status.Severity.ERROR );
         }
         
@@ -54,7 +51,7 @@ public final class UrlJumpActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final URL url = getModelElement().<URL>read( getProperty() ).getContent();
+        final URL url = (URL) ( (Value<?>) property() ).content();
         
         if( url != null )
         {

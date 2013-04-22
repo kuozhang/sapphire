@@ -11,22 +11,22 @@
 
 package org.eclipse.sapphire.tests.services.t0003;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestModel extends IModelElement
+public interface TestModel extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModel.class );
+    ElementType TYPE = new ElementType( TestModel.class );
     
     // *** Item ***
     
@@ -34,7 +34,7 @@ public interface TestModel extends IModelElement
 
     ElementProperty PROP_ITEM = new ElementProperty( TYPE, "Item" );
     
-    ModelElementHandle<TestModelItem> getItem();
+    ElementHandle<TestModelItem> getItem();
     
     // *** ItemImplied ***
     
@@ -50,6 +50,6 @@ public interface TestModel extends IModelElement
     
     ListProperty PROP_ITEMS = new ListProperty( TYPE, "Items" );
     
-    ModelElementList<TestModelItem> getItems();
+    ElementList<TestModelItem> getItems();
     
 }

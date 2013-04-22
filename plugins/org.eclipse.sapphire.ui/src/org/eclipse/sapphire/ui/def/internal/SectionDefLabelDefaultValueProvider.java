@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.def.SectionDef;
@@ -39,11 +39,11 @@ public final class SectionDefLabelDefaultValueProvider extends DefaultValueServi
         
         if( section.parent() != null )
         {
-            final IModelElement parent = (IModelElement) section.parent().parent();
+            final Element parent = section.parent().element();
             
             if( parent instanceof MasterDetailsContentNodeDef )
             {
-                defaultValue = ( (MasterDetailsContentNodeDef) parent ).getLabel().getText();
+                defaultValue = ( (MasterDetailsContentNodeDef) parent ).getLabel().text();
             }
         }
         

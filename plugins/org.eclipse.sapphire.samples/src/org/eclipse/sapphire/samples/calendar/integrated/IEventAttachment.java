@@ -13,11 +13,11 @@ package org.eclipse.sapphire.samples.calendar.integrated;
 
 import java.net.URL;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -30,9 +30,9 @@ import org.eclipse.sapphire.samples.calendar.internal.EventAttachmentLocalCopyRe
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IEventAttachment extends IModelElement
+public interface IEventAttachment extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IEventAttachment.class );
+    ElementType TYPE = new ElementType( IEventAttachment.class );
 
     // *** LocalCopyLocation ***
     

@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.samples.ezbug;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @XmlBinding( path = "bugs" )
 
-public interface BugRepository extends IModelElement
+public interface BugRepository extends Element
 {
-    ModelElementType TYPE = new ModelElementType( BugRepository.class );
+    ElementType TYPE = new ElementType( BugRepository.class );
 
     // *** BugReports ***
     
@@ -40,6 +40,6 @@ public interface BugRepository extends IModelElement
     
     ListProperty PROP_BUG_REPORTS = new ListProperty( TYPE, "BugReports" );
     
-    ModelElementList<BugReport> getBugReports();
+    ElementList<BugReport> getBugReports();
     
 }

@@ -33,7 +33,7 @@ public final class ContentDefaultValueService extends DefaultValueService
         String value = null;
         
         final TestElementChild element = context( TestElementChild.class );
-        final String ref = element.getReference().getText();
+        final String ref = element.getReference().text();
         
         if( ref != null )
         {
@@ -41,9 +41,9 @@ public final class ContentDefaultValueService extends DefaultValueService
             
             for( TestElementChild child : root.getChildren() )
             {
-                if( child != element && ref.equals( child.getId().getText() ) )
+                if( child != element && ref.equals( child.getId().text() ) )
                 {
-                    value = child.getContent().getText();
+                    value = child.getContent().text();
                 }
             }
         }

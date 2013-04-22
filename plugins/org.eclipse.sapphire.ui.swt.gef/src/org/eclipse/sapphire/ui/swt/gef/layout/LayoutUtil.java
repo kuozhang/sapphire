@@ -25,10 +25,10 @@ public class LayoutUtil {
 	}
 
 	public static Insets calculateMargin(MarginPresentation def) {
-		final int top = def.getTopMargin().getContent();
-		final int bottom = def.getBottomMargin().getContent();
-		final int left = def.getLeftMargin().getContent();
-		final int right = def.getRightMargin().getContent();
+		final int top = def.getTopMargin().content();
+		final int bottom = def.getBottomMargin().content();
+		final int left = def.getLeftMargin().content();
+		final int right = def.getRightMargin().content();
 	
 		return new Insets(top, left, bottom, right);
 	}

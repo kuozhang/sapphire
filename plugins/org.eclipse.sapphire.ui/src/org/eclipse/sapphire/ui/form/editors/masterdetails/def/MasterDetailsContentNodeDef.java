@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -36,7 +36,7 @@ import org.eclipse.sapphire.ui.def.SectionRef;
 
 public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChildDef, IPropertiesViewContributorDef
 {
-    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeDef.class );
+    ElementType TYPE = new ElementType( MasterDetailsContentNodeDef.class );
     
     // *** Property ***
     
@@ -81,7 +81,7 @@ public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChi
     
     ListProperty PROP_SECTIONS = new ListProperty( TYPE, "Sections" );
     
-    ModelElementList<FormComponentDef> getSections();
+    ElementList<FormComponentDef> getSections();
     
     // *** ChildNodes ***
     
@@ -101,6 +101,6 @@ public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChi
     
     ListProperty PROP_CHILD_NODES = new ListProperty( TYPE, "ChildNodes" );
     
-    ModelElementList<MasterDetailsContentNodeChildDef> getChildNodes();
+    ElementList<MasterDetailsContentNodeChildDef> getChildNodes();
     
 }

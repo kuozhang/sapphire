@@ -31,7 +31,7 @@ public class CompositeMarginTopBottomDefaultValueProvider extends DefaultValueSe
     @Override
     protected DefaultValueServiceData compute()
     {
-        return new DefaultValueServiceData( context( CompositeDef.class ).getMarginHeight().getText() );
+        return new DefaultValueServiceData( context( CompositeDef.class ).getMarginHeight().text() );
     }
     
 }

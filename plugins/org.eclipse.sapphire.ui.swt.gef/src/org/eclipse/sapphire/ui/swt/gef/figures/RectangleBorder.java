@@ -40,10 +40,10 @@ public class RectangleBorder extends AbstractBorder
 	public Insets getInsets(IFigure figure) 
 	{
 		int tw, bw, lw, rw;
-		tw = this.rectPresentation.getTopBorder().getWeight().getContent();
-		bw = this.rectPresentation.getBottomBorder().getWeight().getContent();
-		lw = this.rectPresentation.getLeftBorder().getWeight().getContent();
-		rw = this.rectPresentation.getRightBorder().getWeight().getContent();
+		tw = this.rectPresentation.getTopBorder().getWeight().content();
+		bw = this.rectPresentation.getBottomBorder().getWeight().content();
+		lw = this.rectPresentation.getLeftBorder().getWeight().content();
+		rw = this.rectPresentation.getRightBorder().getWeight().content();
 		
 		return new Insets(tw, lw, bw, rw);
 	}
@@ -52,9 +52,9 @@ public class RectangleBorder extends AbstractBorder
 	{
 		tempRect.setBounds(getPaintRectangle(figure, insets));
 		BorderComponent borderDef = this.rectPresentation.getTopBorder();
-		if (this.hasUniformBorders && borderDef.getWeight().getContent() > 0)
+		if (this.hasUniformBorders && borderDef.getWeight().content() > 0)
 		{			
-			int w = borderDef.getWeight().getContent();
+			int w = borderDef.getWeight().content();
 			int inset = Math.max(1, w >> 1);
 			tempRect.x += inset;
 			tempRect.y += inset;
@@ -68,9 +68,9 @@ public class RectangleBorder extends AbstractBorder
 			cornerHeight = Math.max(1, cornerHeight - (w + cornerHeight / 64));
 			cornerWidth = Math.max(1, cornerWidth - (w + cornerWidth / 64));
 						
-			graphics.setLineWidth(borderDef.getWeight().getContent());
-			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-			graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
+			graphics.setLineWidth(borderDef.getWeight().content());
+			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().content()));
+			graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().content()));
 			graphics.drawRoundRectangle(tempRect,
 					Math.max(0, (int)cornerWidth),
 					Math.max(0, (int)cornerHeight));
@@ -78,12 +78,12 @@ public class RectangleBorder extends AbstractBorder
 		}
 		else
 		{
-			if( borderDef.getWeight().getContent() > 0 )
+			if( borderDef.getWeight().content() > 0 )
 			{
-				int w = borderDef.getWeight().getContent();
+				int w = borderDef.getWeight().content();
 				graphics.setLineWidth(w);
-				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().content()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().content()));
 				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x;
 				int y = tempRect.y + inset;
@@ -92,12 +92,12 @@ public class RectangleBorder extends AbstractBorder
 			}
 			
 			borderDef = this.rectPresentation.getBottomBorder();			
-			if( borderDef.getWeight().getContent() > 0 )
+			if( borderDef.getWeight().content() > 0 )
 			{	
-				int w = borderDef.getWeight().getContent();
+				int w = borderDef.getWeight().content();
 				graphics.setLineWidth(w);
-				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().content()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().content()));
 				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x;
 				int y = tempRect.y + tempRect.height - inset;
@@ -106,12 +106,12 @@ public class RectangleBorder extends AbstractBorder
 			}
 	
 			borderDef = this.rectPresentation.getLeftBorder();			
-			if( borderDef.getWeight().getContent() > 0 )
+			if( borderDef.getWeight().content() > 0 )
 			{	
-				int w = borderDef.getWeight().getContent();
+				int w = borderDef.getWeight().content();
 				graphics.setLineWidth(w);
-				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().content()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().content()));
 				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x + inset;
 				int y = tempRect.y;
@@ -120,12 +120,12 @@ public class RectangleBorder extends AbstractBorder
 			}
 
 			borderDef = this.rectPresentation.getRightBorder();			
-			if( borderDef.getWeight().getContent() > 0 )
+			if( borderDef.getWeight().content() > 0 )
 			{	
-				int w = borderDef.getWeight().getContent();
+				int w = borderDef.getWeight().content();
 				graphics.setLineWidth(w);
-				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().getContent()));
-				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().getContent()));
+				graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().content()));
+				graphics.setLineStyle(FigureUtil.convertLineStyle(borderDef.getStyle().content()));
 				int inset = Math.max(1, w >> 1);
 				int x = tempRect.x + tempRect.width - inset;
 				int y = tempRect.y;
@@ -138,28 +138,28 @@ public class RectangleBorder extends AbstractBorder
 	private boolean hasUniformBorders()
 	{
 		org.eclipse.sapphire.Color tc, bc, lc, rc;
-		tc = this.rectPresentation.getTopBorder().getColor().getContent();
-		bc = this.rectPresentation.getBottomBorder().getColor().getContent();
-		lc = this.rectPresentation.getLeftBorder().getColor().getContent();
-		rc = this.rectPresentation.getRightBorder().getColor().getContent();
+		tc = this.rectPresentation.getTopBorder().getColor().content();
+		bc = this.rectPresentation.getBottomBorder().getColor().content();
+		lc = this.rectPresentation.getLeftBorder().getColor().content();
+		rc = this.rectPresentation.getRightBorder().getColor().content();
 		if (!(tc.equals(bc) && tc.equals(lc) && tc.equals(rc)))
 		{
 			return false;
 		}
 		int tw, bw, lw, rw;
-		tw = this.rectPresentation.getTopBorder().getWeight().getContent();
-		bw = this.rectPresentation.getBottomBorder().getWeight().getContent();
-		lw = this.rectPresentation.getLeftBorder().getWeight().getContent();
-		rw = this.rectPresentation.getRightBorder().getWeight().getContent();
+		tw = this.rectPresentation.getTopBorder().getWeight().content();
+		bw = this.rectPresentation.getBottomBorder().getWeight().content();
+		lw = this.rectPresentation.getLeftBorder().getWeight().content();
+		rw = this.rectPresentation.getRightBorder().getWeight().content();
 		if (!(tw == bw && tw == lw && tw == rw))
 		{
 			return false;
 		}
 		LineStyle ts, bs, ls, rs;
-		ts = this.rectPresentation.getTopBorder().getStyle().getContent();
-		bs = this.rectPresentation.getBottomBorder().getStyle().getContent();
-		ls = this.rectPresentation.getLeftBorder().getStyle().getContent();
-		rs = this.rectPresentation.getRightBorder().getStyle().getContent();
+		ts = this.rectPresentation.getTopBorder().getStyle().content();
+		bs = this.rectPresentation.getBottomBorder().getStyle().content();
+		ls = this.rectPresentation.getLeftBorder().getStyle().content();
+		rs = this.rectPresentation.getRightBorder().getStyle().content();
 		if (!(ts == bs && ts == ls && ts == rs))
 		{
 			return false;

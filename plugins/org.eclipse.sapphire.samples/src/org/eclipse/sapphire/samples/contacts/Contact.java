@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
@@ -39,7 +39,6 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactCategoryPossibleVal
 import org.eclipse.sapphire.samples.contacts.internal.ContactEqualityService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactImageService;
 import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
-import org.eclipse.sapphire.samples.contacts.internal.DuplicateContactValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -51,14 +50,13 @@ import org.eclipse.sapphire.samples.contacts.internal.DuplicateContactValidation
 (
     { 
         @Service( impl = ContactImageService.class ), 
-        @Service( impl = ContactEqualityService.class ),
-        @Service( impl = DuplicateContactValidationService.class )
+        @Service( impl = ContactEqualityService.class )
     }
 )
 
-public interface Contact extends IModelElement
+public interface Contact extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Contact.class );
+    ElementType TYPE = new ElementType( Contact.class );
 
     // *** Name ***
     
@@ -103,7 +101,7 @@ public interface Contact extends IModelElement
                              
     ListProperty PROP_PHONE_NUMBERS = new ListProperty( TYPE, "PhoneNumbers" );
     
-    ModelElementList<PhoneNumber> getPhoneNumbers();
+    ElementList<PhoneNumber> getPhoneNumbers();
     
     // *** WebSites ***
     
@@ -113,7 +111,7 @@ public interface Contact extends IModelElement
                              
     ListProperty PROP_WEB_SITES = new ListProperty( TYPE, "WebSites" );
     
-    ModelElementList<WebSite> getWebSites();
+    ElementList<WebSite> getWebSites();
     
     // *** METHOD: removePhoneNumbersByAreaCode ***
     
@@ -143,7 +141,7 @@ public interface Contact extends IModelElement
     
     ElementProperty PROP_ASSISTANT = new ElementProperty( TYPE, "Assistant" );
 
-    ModelElementHandle<Assistant> getAssistant();
+    ElementHandle<Assistant> getAssistant();
     
     // *** Connections ***
     
@@ -153,7 +151,7 @@ public interface Contact extends IModelElement
                              
     ListProperty PROP_CONNECTIONS = new ListProperty( TYPE, "Connections" );
     
-    ModelElementList<Connection> getConnections();
+    ElementList<Connection> getConnections();
     
     // *** PrimaryOccupation ***
     
@@ -188,6 +186,6 @@ public interface Contact extends IModelElement
     
     ElementProperty PROP_PRIMARY_OCCUPATION = new ElementProperty( TYPE, "PrimaryOccupation" );
     
-    ModelElementHandle<Occupation> getPrimaryOccupation();
+    ElementHandle<Occupation> getPrimaryOccupation();
     
 }

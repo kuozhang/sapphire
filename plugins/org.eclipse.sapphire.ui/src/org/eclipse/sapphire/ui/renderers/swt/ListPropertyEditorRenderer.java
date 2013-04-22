@@ -11,13 +11,12 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
@@ -51,13 +50,11 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
             {
                 public void run()
                 {
-                    final IModelElement element = getModelElement();
+                    final Element element = getModelElement();
                     
                     if( ! element.disposed() )
                     {
-                        final ModelElementList<IModelElement> list =element.read( getProperty() );
-        
-                        for( IModelElement entry : list )
+                        for( Element entry : (ElementList<?>) property() )
                         {
                             for( ModelPath childPropertyPath : getPart().getChildProperties() )
                             {
@@ -70,22 +67,9 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
         );
     }
 
-    @Override
-    public ListProperty getProperty()
+    public final ElementList<?> getList()
     {
-        return (ListProperty) super.getProperty();
-    }
-
-    public final ModelElementList<IModelElement> getList()
-    {
-        final IModelElement modelElement = getModelElement();
-        
-        if( modelElement != null )
-        {
-            return modelElement.read( getProperty() );
-        }
-        
-        return null;
+        return (ElementList<?>) property();
     }
     
     @Override
@@ -101,16 +85,11 @@ public abstract class ListPropertyEditorRenderer extends PropertyEditorRenderer
     
     private void attachListElementListener()
     {
-        final ModelElementList<IModelElement> list = getList();
-        
-        if( list != null )
+        for( Element entry : getList() )
         {
-            for( IModelElement entry : list )
+            for( ModelPath childPropertyPath : getPart().getChildProperties() )
             {
-                for( ModelPath childPropertyPath : getPart().getChildProperties() )
-                {
-                    entry.attach( this.listElementListener, childPropertyPath );
-                }
+                entry.attach( this.listElementListener, childPropertyPath );
             }
         }
     }

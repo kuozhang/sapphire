@@ -23,10 +23,7 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FirstSegmentFunction
-
-    extends Function
-
+public final class FirstSegmentFunction extends Function
 {
     @Override
     public String name()
@@ -42,8 +39,8 @@ public final class FirstSegmentFunction
             @Override
             protected Object evaluate()
             {
-                final String str = cast( operand( 0 ).value(), String.class );
-                final String separators = cast( operand( 1 ).value(), String.class );
+                final String str = cast( operand( 0 ), String.class );
+                final String separators = cast( operand( 1 ), String.class );
                 
                 final StringTokenizer tokenizer = new StringTokenizer( str, separators );
                 

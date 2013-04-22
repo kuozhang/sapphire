@@ -31,9 +31,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -68,8 +66,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
     protected void createContents( final Composite parent )
     {
         final PropertyEditorPart part = getPart();
-        final IModelElement element = part.getLocalModelElement();
-        final ModelProperty property = part.getProperty();
+        final Value<?> value = (Value<?>) part.property();
         
         final Text textField = (Text) super.createContents( parent, true );
 
@@ -100,7 +97,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
         treeViewer.setSorter( new ViewerSorter() );
         
         final ValidFileSystemResourceType validFileSystemResourceTypeAnnotation
-            = property.getAnnotation( ValidFileSystemResourceType.class );
+            = value.definition().getAnnotation( ValidFileSystemResourceType.class );
     
         if( validFileSystemResourceTypeAnnotation != null )
         {
@@ -109,7 +106,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
                 treeViewer.addFilter( new ContainersOnlyViewerFilter() );
             }
             
-            final FileExtensionsService fileExtensionsService = element.service( property, FileExtensionsService.class );
+            final FileExtensionsService fileExtensionsService = value.service( FileExtensionsService.class );
             
             if( fileExtensionsService != null )
             {
@@ -172,8 +169,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
         this.decorator.addEditorControl( drillDown );
         this.decorator.addEditorControl( tree );
 
-        final Value<?> value = element.read( getProperty() );
-        final String val = value.getText();
+        final String val = value.text();
         
         if( val != null )
         {

@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
@@ -24,7 +24,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public interface BorderComponent extends LinePresentation 
 {
-	ModelElementType TYPE = new ModelElementType( BorderComponent.class );
+	ElementType TYPE = new ElementType( BorderComponent.class );
 	
 	// *** Color ***
     

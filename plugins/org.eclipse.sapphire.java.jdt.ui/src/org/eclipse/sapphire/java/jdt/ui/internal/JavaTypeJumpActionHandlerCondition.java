@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.java.jdt.ui.internal;
 
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
@@ -23,15 +23,12 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JavaTypeJumpActionHandlerCondition 
-
-    extends SapphirePropertyEditorCondition
-    
+public final class JavaTypeJumpActionHandlerCondition extends SapphirePropertyEditorCondition
 {
     @Override
     protected boolean evaluate( final PropertyEditorPart part )
     {
-        final ModelProperty property = part.getProperty();
+        final PropertyDef property = part.property().definition();
         
         if( property instanceof ValueProperty && property.isOfType( JavaTypeName.class ) )
         {

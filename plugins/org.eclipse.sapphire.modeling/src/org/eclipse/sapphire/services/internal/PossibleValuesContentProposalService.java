@@ -15,8 +15,7 @@ package org.eclipse.sapphire.services.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.ContentProposal;
 import org.eclipse.sapphire.services.ContentProposalService;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -38,10 +37,9 @@ public final class PossibleValuesContentProposalService extends ContentProposalS
     {
         super.init();
         
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
+        final Property property = context( Property.class );
         
-        this.possibleValuesService = element.service( property, PossibleValuesService.class );
+        this.possibleValuesService = property.service( PossibleValuesService.class );
         
         if( this.possibleValuesService == null )
         {
@@ -90,19 +88,8 @@ public final class PossibleValuesContentProposalService extends ContentProposalS
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service ) 
         {
-            final IModelElement element = context.find( IModelElement.class );
-
-            if( element != null )
-            {
-                final ValueProperty property = context.find( ValueProperty.class );
-                
-                if( property != null && element.service( property, PossibleValuesService.class ) != null )
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            final Property property = context.find( Property.class );
+            return ( property != null && property.service( PossibleValuesService.class ) != null );
         }
 
         @Override

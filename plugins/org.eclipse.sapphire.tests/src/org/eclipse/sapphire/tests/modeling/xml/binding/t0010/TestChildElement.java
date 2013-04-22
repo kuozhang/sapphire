@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0010;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.InitialValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -24,9 +24,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-public interface TestChildElement extends IModelElement {
+public interface TestChildElement extends Element {
 
-    ModelElementType TYPE = new ModelElementType(TestChildElement.class);
+    ElementType TYPE = new ElementType(TestChildElement.class);
 
     // *** Prop51 ***
 

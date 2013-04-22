@@ -32,7 +32,7 @@ public final class SapphireHintValueDefaultValueService extends DefaultValueServ
     @Override
     protected DefaultValueServiceData compute()
     {
-        return new DefaultValueServiceData( getDefaultValue( context( ISapphireHint.class ).getName().getText() ) );
+        return new DefaultValueServiceData( getDefaultValue( context( ISapphireHint.class ).getName().text() ) );
     }
     
     public static String getDefaultValue( final String hint )

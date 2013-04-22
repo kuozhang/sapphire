@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
@@ -20,15 +20,12 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireBrowseActionHandler
-
-    extends SapphirePropertyEditorActionHandler
-    
+public abstract class SapphireBrowseActionHandler extends SapphirePropertyEditorActionHandler
 {
     @Override
-    public final ValueProperty getProperty()
+    public Value<?> property()
     {
-        return (ValueProperty) super.getProperty();
+        return (Value<?>) super.property();
     }
     
     @Override
@@ -40,7 +37,7 @@ public abstract class SapphireBrowseActionHandler
         {
             try
             {
-                getModelElement().write( getProperty(), text );
+                property().write( text );
             }
             catch( Exception e )
             {

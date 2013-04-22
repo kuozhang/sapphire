@@ -129,10 +129,10 @@ public final class SapphireAction extends SapphireActionSystemPart
 
         if( def != null )
         {
-            this.type = def.getType().getContent();
-            this.group = def.getGroup().getContent();
-            this.keyBinding = def.getKeyBinding().getContent();
-            this.keyBindingBehavior = def.getKeyBindingBehavior().getContent();
+            this.type = def.getType().content();
+            this.group = def.getGroup().content();
+            this.keyBinding = def.getKeyBinding().content();
+            this.keyBindingBehavior = def.getKeyBindingBehavior().content();
         }
         
         setEnabled( false );
@@ -141,12 +141,12 @@ public final class SapphireAction extends SapphireActionSystemPart
         
         for( ISapphireHint hint : def.getHints() )
         {
-            final String name = hint.getName().getText();
+            final String name = hint.getName().text();
             Object parsedValue = null;
             
             if( name.equals( PartDef.HINT_STYLE ) )
             {
-                parsedValue = hint.getValue().getText();
+                parsedValue = hint.getValue().text();
             }
            
             this.hints.put( name, parsedValue );

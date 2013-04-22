@@ -13,6 +13,9 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.List;
 
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -27,9 +30,9 @@ public abstract class ListBindingImpl extends BindingImpl
     
     public abstract List<? extends Resource> read();
     
-    public abstract ModelElementType type( Resource resource );    
+    public abstract ElementType type( Resource resource );    
     
-    public Resource insert( final ModelElementType type,
+    public Resource insert( final ElementType type,
                             final int position )
     {
         throw new UnsupportedOperationException();

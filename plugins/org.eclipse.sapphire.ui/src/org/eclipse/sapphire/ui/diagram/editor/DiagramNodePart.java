@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
@@ -55,7 +55,7 @@ public class DiagramNodePart
 	
 	private DiagramNodeTemplate nodeTemplate;
 	private IDiagramNodeDef definition;
-	private IModelElement modelElement;
+	private Element modelElement;
 	private FunctionResult idFunctionResult;
 	private SapphireAction defaultAction;
 	private SapphireActionHandler defaultActionHandler;
@@ -73,7 +73,7 @@ public class DiagramNodePart
         
         this.idFunctionResult = initExpression
         ( 
-            this.definition.getInstanceId().getContent(), 
+            this.definition.getInstanceId().content(), 
             String.class,
             null,
             new Runnable()
@@ -164,7 +164,7 @@ public class DiagramNodePart
     }
     
     @Override
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
         return this.modelElement;
     }    
@@ -296,7 +296,7 @@ public class DiagramNodePart
     
     public String getNodeTypeId()
     {
-        return this.definition.getId().getContent();
+        return this.definition.getId().content();
     }
     
     public String getInstanceId()
@@ -313,19 +313,19 @@ public class DiagramNodePart
 	
 	public boolean canResizeShape()
 	{
-		return this.definition.isResizable().getContent();
+		return this.definition.isResizable().content();
 	}
 	
 	public DiagramNodeBounds getNodeBounds()
 	{
 		DiagramNodeBounds bounds = new DiagramNodeBounds(this.nodeBounds);
-		if (bounds.getWidth() < 0 && this.definition.getWidth().getContent() != null )
+		if (bounds.getWidth() < 0 && this.definition.getWidth().content() != null )
 		{
-			bounds.setWidth(this.definition.getWidth().getContent());
+			bounds.setWidth(this.definition.getWidth().content());
 		}
-		if (bounds.getHeight() < 0 && this.definition.getHeight().getContent() != null)
+		if (bounds.getHeight() < 0 && this.definition.getHeight().content() != null)
 		{
-			bounds.setHeight(this.definition.getHeight().getContent());
+			bounds.setHeight(this.definition.getHeight().content());
 		}
 		return bounds;
 	}
@@ -391,7 +391,7 @@ public class DiagramNodePart
         
     private void createShapePart()
     {
-    	ShapeDef shape = this.definition.getShape().element();
+    	ShapeDef shape = this.definition.getShape().content();
     	if (shape instanceof TextDef)
     	{
 	        this.shapePart = new TextPart();

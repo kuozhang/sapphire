@@ -13,7 +13,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.Color;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
@@ -27,7 +27,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 public class TextPart extends ShapePart 
 {
 	private TextDef textDef;
-	private IModelElement modelElement;
+	private Element modelElement;
 	private Function textFunction;
 	private FunctionResult functionResult;
 	
@@ -38,7 +38,7 @@ public class TextPart extends ShapePart
         this.textDef = (TextDef)super.definition;
         this.modelElement = getModelElement();
         
-        this.textFunction = this.textDef.getContent().getContent();
+        this.textFunction = this.textDef.getContent().content();
         this.functionResult = initExpression
         ( 
             this.modelElement,
@@ -83,7 +83,7 @@ public class TextPart extends ShapePart
         
     public Color getTextColor()
     {
-    	return this.textDef.getColor().getContent();
+    	return this.textDef.getColor().content();
     }
 
     public FontDef getFontDef() 
@@ -93,6 +93,6 @@ public class TextPart extends ShapePart
     
     public boolean truncatable()
     {
-    	return this.textDef.isTruncatable().getContent();
+    	return this.textDef.isTruncatable().content();
     }
 }

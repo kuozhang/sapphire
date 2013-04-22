@@ -13,8 +13,8 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
@@ -34,7 +34,7 @@ public final class CountConstraintFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final CountConstraint constraint = context( ModelProperty.class ).getAnnotation( CountConstraint.class );
+        final CountConstraint constraint = context( PropertyDef.class ).getAnnotation( CountConstraint.class );
         final int min = constraint.min();
         final int max = constraint.max();
         

@@ -69,9 +69,9 @@ public class CompositePart extends FormPart
         Composite parent = createOuterComposite( context );
         
         final CompositeDef def = (CompositeDef) this.definition;
-        final boolean indent = def.getIndent().getContent();
-        final boolean scrollVertically = def.getScrollVertically().getContent();
-        final boolean scrollHorizontally = def.getScrollHorizontally().getContent();
+        final boolean indent = def.getIndent().content();
+        final boolean scrollVertically = def.getScrollVertically().content();
+        final boolean scrollHorizontally = def.getScrollHorizontally().content();
         
         if( indent )
         {
@@ -104,17 +104,17 @@ public class CompositePart extends FormPart
             scrolledComposite = null;
         }
         
-        final boolean scaleVertically = def.getScaleVertically().getContent(); 
+        final boolean scaleVertically = def.getScaleVertically().content(); 
         
         final int width = getWidth( -1 );
         final int height = getHeight( -1 );
         
         final GridData gd = gdwhint( gdhhint( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), ( indent ? 1 : 2 ) ), height ), width );
         
-        final int marginLeft = def.getMarginLeft().getContent();
-        final int marginRight = def.getMarginRight().getContent();
-        final int marginTop = def.getMarginTop().getContent();
-        final int marginBottom = def.getMarginBottom().getContent();
+        final int marginLeft = def.getMarginLeft().content();
+        final int marginRight = def.getMarginRight().content();
+        final int marginTop = def.getMarginTop().content();
+        final int marginBottom = def.getMarginBottom().content();
         
         final Composite composite = new Composite( parent, SWT.NONE ) {
             public Point computeSize (int wHint, int hHint, boolean changed) {
@@ -139,7 +139,7 @@ public class CompositePart extends FormPart
             composite.setLayoutData( gd );
         }
         
-        final ISapphireDocumentation doc = this.definition.getDocumentation().element();
+        final ISapphireDocumentation doc = this.definition.getDocumentation().content();
         
         if( doc != null )
         {
@@ -271,13 +271,13 @@ public class CompositePart extends FormPart
     
     public int getWidth( final int defaultValue )
     {
-        final Integer width = definition().getWidth().getContent();
+        final Integer width = definition().getWidth().content();
         return ( width == null || width < 1 ? defaultValue : width );
     }
     
     public int getHeight( final int defaultValue )
     {
-        final Integer height = definition().getHeight().getContent();
+        final Integer height = definition().getHeight().content();
         return ( height == null || height < 1 ? defaultValue : height );
     }
     

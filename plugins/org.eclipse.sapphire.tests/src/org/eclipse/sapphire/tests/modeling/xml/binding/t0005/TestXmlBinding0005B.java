@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0005;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
@@ -22,9 +22,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestXmlBinding0005B extends IModelElement
+public interface TestXmlBinding0005B extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlBinding0005B.class );
+    ElementType TYPE = new ElementType( TestXmlBinding0005B.class );
     
     // *** TestProperty ***
 
@@ -33,6 +33,6 @@ public interface TestXmlBinding0005B extends IModelElement
     
     ElementProperty PROP_TEST_PROPERTY = new ElementProperty( TYPE, "TestProperty" );
     
-    ModelElementHandle<TestXmlBinding0005B> getTestProperty();
+    ElementHandle<TestXmlBinding0005B> getTestProperty();
     
 }

@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
@@ -45,7 +45,7 @@ import org.eclipse.sapphire.ui.def.internal.PropertyEditorDefMethods;
 
 public interface PropertyEditorDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( PropertyEditorDef.class );
+    ElementType TYPE = new ElementType( PropertyEditorDef.class );
     
     String HINT_CHECKBOX_LAYOUT = "checkbox.layout";
     String HINT_VALUE_CHECKBOX_LAYOUT_LEADING_LABEL = "leading.label";
@@ -85,7 +85,7 @@ public interface PropertyEditorDef extends FormComponentDef
     
     ListProperty PROP_CHILD_PROPERTIES = new ListProperty( TYPE, "ChildProperties" );
     
-    ModelElementList<PropertyEditorDef> getChildProperties();
+    ElementList<PropertyEditorDef> getChildProperties();
     
     // *** Method : getChildPropertyEditor ***
     
@@ -125,7 +125,7 @@ public interface PropertyEditorDef extends FormComponentDef
                              
     ListProperty PROP_RELATED_CONTENT = new ListProperty( TYPE, "RelatedContent" );
     
-    ModelElementList<PartDef> getRelatedContent();
+    ElementList<PartDef> getRelatedContent();
     
     // *** RelatedContentWidth ***
     

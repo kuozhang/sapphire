@@ -218,7 +218,7 @@ public final class SapphireActionGroup
     {
         for( ActionHandlerDef def : defs )
         {
-            final SapphireAction action = getAction( def.getAction().getContent() );
+            final SapphireAction action = getAction( def.getAction().content() );
             
             if( action != null && isForContext( def ) && checkCondition( def ) )
             {
@@ -250,7 +250,7 @@ public final class SapphireActionGroup
     {
         for( ActionHandlerFactoryDef def : defs )
         {
-            final SapphireAction action = getAction( def.getAction().getContent() );
+            final SapphireAction action = getAction( def.getAction().content() );
             
             if( action != null && isForContext( def ) && checkCondition( def ) )
             {
@@ -345,7 +345,7 @@ public final class SapphireActionGroup
         {
             for( ActionContextRef ctxt : def.getContexts() )
             {
-                if( this.context.equalsIgnoreCase( ctxt.getContext().getContent() ) )
+                if( this.context.equalsIgnoreCase( ctxt.getContext().content() ) )
                 {
                     return true;
                 }

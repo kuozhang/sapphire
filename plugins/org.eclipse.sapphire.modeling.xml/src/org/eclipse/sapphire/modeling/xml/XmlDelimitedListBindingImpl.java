@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.DelimitedListBindingImpl;
-import org.eclipse.sapphire.modeling.IModelElement;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,7 +30,7 @@ public abstract class XmlDelimitedListBindingImpl extends DelimitedListBindingIm
     @Override
     protected final String readListString()
     {
-        final IModelElement parent = element();
+        final Element parent = element();
         final XmlElement parentXmlElement = ( (XmlResource) parent.resource() ).getXmlElement();
         
         if( parentXmlElement == null )
@@ -51,7 +51,7 @@ public abstract class XmlDelimitedListBindingImpl extends DelimitedListBindingIm
     @Override
     protected final void writeListString( String str )
     {
-        final IModelElement parent = element();
+        final Element parent = element();
         final XmlElement parentXmlElement = ( (XmlResource) parent.resource() ).getXmlElement( true );
         final XmlNode listXmlNode = parentXmlElement.getChildNode( this.path, false );
         

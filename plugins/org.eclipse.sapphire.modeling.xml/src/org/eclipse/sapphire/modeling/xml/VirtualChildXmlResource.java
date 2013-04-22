@@ -11,9 +11,11 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.w3c.dom.Node;
 
 /**
@@ -40,21 +42,23 @@ public class VirtualChildXmlResource extends XmlResource
     }
 
     @Override
-    public void init( final IModelElement element )
+    public void init( final Element element )
     {
         super.init( element );
         
-        element.attach
-        (
-            new FilteredListener<PropertyContentEvent>()
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                @Override
-                protected void handleTypedEvent( final PropertyContentEvent event )
-                {
-                    removeIfEmpty();
-                }
+                removeIfEmpty();
             }
-        );
+        };
+        
+        for( Property property : element.properties() )
+        {
+            property.attach( listener );
+        }
     }
 
     @Override
@@ -78,7 +82,7 @@ public class VirtualChildXmlResource extends XmlResource
         if( this.lastDomNode != node )
         {
             final XmlResourceStore store = adapt( RootXmlResource.class ).store();
-            final IModelElement modelElement = element();
+            final Element modelElement = element();
             
             if( this.lastDomNode != null )
             {

@@ -34,7 +34,7 @@ public final class LowerCaseFunction extends Function
             @Override
             protected Object evaluate()
             {
-                return cast( operand( 0 ).value(), String.class ).toLowerCase();
+                return cast( operand( 0 ), String.class ).toLowerCase();
             }
         };
     }

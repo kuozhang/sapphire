@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface PageBookDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( PageBookDef.class );
+    ElementType TYPE = new ElementType( PageBookDef.class );
     
     // *** Pages ***
     
@@ -38,7 +38,7 @@ public interface PageBookDef extends FormComponentDef
     
     ListProperty PROP_PAGES = new ListProperty( TYPE, "Pages" );
     
-    ModelElementList<PageBookKeyMapping> getPages();
+    ElementList<PageBookKeyMapping> getPages();
 
     // *** DefaultPage ***
     

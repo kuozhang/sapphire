@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0011e;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
@@ -24,6 +24,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
 public interface TestModelElementA2 extends TestModelElementA
 {
-    ModelElementType TYPE = new ModelElementType( TestModelElementA2.class );
+    ElementType TYPE = new ElementType( TestModelElementA2.class );
 
 }

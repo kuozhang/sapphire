@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.sqlschema;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface Table extends IModelElement 
+public interface Table extends Element 
 {
-    ModelElementType TYPE = new ModelElementType( Table.class );
+    ElementType TYPE = new ElementType( Table.class );
     
     // *** Name ***
     
@@ -49,7 +49,7 @@ public interface Table extends IModelElement
     
     ListProperty PROP_COLUMNS = new ListProperty( TYPE, "Columns" );
     
-    ModelElementList<Column> getColumns();    
+    ElementList<Column> getColumns();    
 
     // *** ForeignKeys ***
     
@@ -58,6 +58,6 @@ public interface Table extends IModelElement
 
     ListProperty PROP_FOREIGN_KEYS = new ListProperty( TYPE, "ForeignKeys" );
     
-    ModelElementList<ForeignKey> getForeignKeys();
+    ElementList<ForeignKey> getForeignKeys();
     
 }

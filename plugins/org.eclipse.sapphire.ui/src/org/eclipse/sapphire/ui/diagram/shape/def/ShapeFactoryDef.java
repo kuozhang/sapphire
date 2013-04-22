@@ -12,13 +12,13 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -38,7 +38,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface ShapeFactoryDef extends ShapeDef 
 {
-	ModelElementType TYPE = new ModelElementType( ShapeFactoryDef.class );
+	ElementType TYPE = new ElementType( ShapeFactoryDef.class );
 	
     // *** Property ***
     
@@ -59,7 +59,7 @@ public interface ShapeFactoryDef extends ShapeDef
                              
     ListProperty PROP_CASES = new ListProperty( TYPE, "Cases" );
     
-    ModelElementList<ShapeFactoryCaseDef> getCases();
+    ElementList<ShapeFactoryCaseDef> getCases();
 
     // *** Separator ***
     
@@ -95,6 +95,6 @@ public interface ShapeFactoryDef extends ShapeDef
 	
     ElementProperty PROP_SEPARATOR = new ElementProperty( TYPE, "Separator" );
     
-    ModelElementHandle<ShapeDef> getSeparator();
+    ElementHandle<ShapeDef> getSeparator();
     
 }

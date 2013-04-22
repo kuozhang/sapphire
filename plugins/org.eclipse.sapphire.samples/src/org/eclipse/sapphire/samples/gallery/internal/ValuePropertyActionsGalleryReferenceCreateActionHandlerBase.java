@@ -28,7 +28,7 @@ public abstract class ValuePropertyActionsGalleryReferenceCreateActionHandlerBas
     {
         for( IValuePropertyActionsGalleryEntity entity : getModelElement().nearest( IValuePropertyActionsGallery.class ).getEntities() )
         {
-            final String x = entity.getName().getContent();
+            final String x = entity.getName().content();
             
             if( x != null && x.equals( entityName ) )
             {

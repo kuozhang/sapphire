@@ -55,10 +55,10 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 				resourceCache, isDragAllowed());
 		if (selectionPresentation != null)
 		{
-			selectionHandle.setLineInset(selectionPresentation.getInset().getContent());
-			selectionHandle.setLineWidth(selectionPresentation.getWeight().getContent());
-			selectionHandle.setLineStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().getContent()));
-			selectionHandle.setLineColor(selectionPresentation.getColor().getContent());
+			selectionHandle.setLineInset(selectionPresentation.getInset().content());
+			selectionHandle.setLineWidth(selectionPresentation.getWeight().content());
+			selectionHandle.setLineStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().content()));
+			selectionHandle.setLineColor(selectionPresentation.getColor().content());
 		}
 		list.add(selectionHandle);
 		return list;

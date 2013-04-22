@@ -16,9 +16,9 @@ package org.eclipse.sapphire.ui.diagram.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -137,7 +137,7 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
 
     private void deleteNodeConnections(DiagramNodePart nodePart)
     {
-        IModelElement nodeModel = nodePart.getLocalModelElement();
+        Element nodeModel = nodePart.getLocalModelElement();
         SapphireDiagramEditorPagePart diagramPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
         
         // Look for embedded connections
@@ -176,14 +176,14 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
     
     private void deleteConnection(DiagramConnectionPart connPart)
     {
-        final IModelElement element = connPart.getLocalModelElement();
-        final ModelElementList<?> list = (ModelElementList<?>) element.parent();
+        final Element element = connPart.getLocalModelElement();
+        final ElementList<?> list = (ElementList<?>) element.parent();
         list.remove(element);            
     }
     
     private void deleteNode(DiagramNodePart nodePart)
     {
-        IModelElement nodeModel = nodePart.getLocalModelElement();
+        Element nodeModel = nodePart.getLocalModelElement();
         // Need to remove connection parts that are associated with this node
         deleteNodeConnections(nodePart);
         
@@ -194,24 +194,24 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
         {
             if (connTemplate.getConnectionType() == DiagramConnectionTemplate.ConnectionType.OneToMany)
             {
-                IModelElement connParentElement = connTemplate.getConnectionParentElement(nodeModel);
+                Element connParentElement = connTemplate.getConnectionParentElement(nodeModel);
                 if (connParentElement != null)
                 {
-                    ModelElementList<?> connParentList = (ModelElementList<?>)connParentElement.parent();
+                    ElementList<?> connParentList = (ElementList<?>) connParentElement.parent();
                     connParentList.remove(connParentElement);
                 }
             }
         }
         
-        ModelElementList<?> list = (ModelElementList<?>) nodeModel.parent();
+        ElementList<?> list = (ElementList<?>) nodeModel.parent();
         list.remove(nodeModel);            
     	
     }
     
     private void deleteShapePart(ShapePart shapePart)
     {
-    	IModelElement shapeModel = shapePart.getLocalModelElement();
-    	ModelElementList<?> list = (ModelElementList<?>) shapeModel.parent();
+    	Element shapeModel = shapePart.getLocalModelElement();
+    	ElementList<?> list = (ElementList<?>) shapeModel.parent();
         list.remove(shapeModel);    	
     }
 }

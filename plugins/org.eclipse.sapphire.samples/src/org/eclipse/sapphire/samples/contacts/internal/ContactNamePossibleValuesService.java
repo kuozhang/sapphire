@@ -28,7 +28,7 @@ public final class ContactNamePossibleValuesService extends PossibleValuesServic
     {
         for( Contact contact : context( ContactRepository.class ).getContacts() )
         {
-            final String name = contact.getName().getText();
+            final String name = contact.getName().text();
             
             if( name != null )
             {

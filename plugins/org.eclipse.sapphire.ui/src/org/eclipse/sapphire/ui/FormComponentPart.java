@@ -28,12 +28,12 @@ public abstract class FormComponentPart extends SapphirePart
     
     public Color getBackgroundColor()
     {
-        return definition().getBackgroundColor().getContent();
+        return definition().getBackgroundColor().content();
     }
     
     public final boolean getScaleVertically()
     {
-        return definition().getScaleVertically().getContent();
+        return definition().getScaleVertically().content();
     }
     
 }

@@ -55,15 +55,15 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.setIntegerValueProperty( 123 );
             element.getListProperty().insert();
             
-            assertEquals( "abc", element.getStringValueProperty().getContent() );
-            assertEquals( Integer.valueOf( 123 ), element.getIntegerValueProperty().getContent() );
+            assertEquals( "abc", element.getStringValueProperty().content() );
+            assertEquals( Integer.valueOf( 123 ), element.getIntegerValueProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
             
-            element.clear( TestElement.PROP_STRING_VALUE_PROPERTY );
-            element.clear( TestElement.PROP_INTEGER_VALUE_PROPERTY );
+            element.property( TestElement.PROP_STRING_VALUE_PROPERTY ).clear();
+            element.property( TestElement.PROP_INTEGER_VALUE_PROPERTY ).clear();
             
-            assertNull( element.getStringValueProperty().getContent() );
-            assertNull( element.getIntegerValueProperty().getContent() );
+            assertNull( element.getStringValueProperty().content() );
+            assertNull( element.getIntegerValueProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
         }
         finally
@@ -84,7 +84,7 @@ public final class ModelElementClearTests extends SapphireTestCase
             assertEquals( this, element.getTransientProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
             
-            element.clear( TestElement.PROP_TRANSIENT_PROPERTY );
+            element.property( TestElement.PROP_TRANSIENT_PROPERTY ).clear();
             
             assertNull( element.getTransientProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
@@ -101,15 +101,15 @@ public final class ModelElementClearTests extends SapphireTestCase
         
         try
         {
-            element.getElementProperty().element( true ).setValueProperty( "abc" );
+            element.getElementProperty().content( true ).setValueProperty( "abc" );
             element.getListProperty().insert();
             
-            assertEquals( "abc", element.getElementProperty().element().getValueProperty().getContent() );
+            assertEquals( "abc", element.getElementProperty().content().getValueProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
             
-            element.clear( TestElement.PROP_ELEMENT_PROPERTY );
+            element.property( TestElement.PROP_ELEMENT_PROPERTY ).clear();
             
-            assertNull( element.getElementProperty().element() );
+            assertNull( element.getElementProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
         }
         finally
@@ -127,12 +127,12 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.getImpliedElementProperty().setValueProperty( "abc" );
             element.getListProperty().insert();
             
-            assertEquals( "abc", element.getImpliedElementProperty().getValueProperty().getContent() );
+            assertEquals( "abc", element.getImpliedElementProperty().getValueProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
             
-            element.clear( TestElement.PROP_IMPLIED_ELEMENT_PROPERTY );
+            element.property( TestElement.PROP_IMPLIED_ELEMENT_PROPERTY ).clear();
             
-            assertNull( element.getImpliedElementProperty().getValueProperty().getContent() );
+            assertNull( element.getImpliedElementProperty().getValueProperty().content() );
             assertEquals( 1, element.getListProperty().size() );
         }
         finally
@@ -152,12 +152,12 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.setStringValueProperty( "abc" );
             
             assertEquals( 2, element.getListProperty().size() );
-            assertEquals( "abc", element.getStringValueProperty().getContent() );
+            assertEquals( "abc", element.getStringValueProperty().content() );
             
-            element.clear( TestElement.PROP_LIST_PROPERTY );
+            element.property( TestElement.PROP_LIST_PROPERTY ).clear();
             
             assertEquals( 0, element.getListProperty().size() );
-            assertEquals( "abc", element.getStringValueProperty().getContent() );
+            assertEquals( "abc", element.getStringValueProperty().content() );
         }
         finally
         {
@@ -174,25 +174,25 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.setStringValueProperty( "abc" );
             element.setIntegerValueProperty( 123 );
             element.setTransientProperty( this );
-            element.getElementProperty().element( true ).setValueProperty( "abc" );
+            element.getElementProperty().content( true ).setValueProperty( "abc" );
             element.getImpliedElementProperty().setValueProperty( "abc" );
             element.getListProperty().insert();
             element.getListProperty().insert();
             
-            assertEquals( "abc", element.getStringValueProperty().getContent() );
-            assertEquals( Integer.valueOf( 123 ), element.getIntegerValueProperty().getContent() );
+            assertEquals( "abc", element.getStringValueProperty().content() );
+            assertEquals( Integer.valueOf( 123 ), element.getIntegerValueProperty().content() );
             assertEquals( this, element.getTransientProperty().content() );
-            assertEquals( "abc", element.getElementProperty().element().getValueProperty().getContent() );
-            assertEquals( "abc", element.getImpliedElementProperty().getValueProperty().getContent() );
+            assertEquals( "abc", element.getElementProperty().content().getValueProperty().content() );
+            assertEquals( "abc", element.getImpliedElementProperty().getValueProperty().content() );
             assertEquals( 2, element.getListProperty().size() );
             
             element.clear();
             
-            assertNull( element.getStringValueProperty().getContent() );
-            assertNull( element.getIntegerValueProperty().getContent() );
+            assertNull( element.getStringValueProperty().content() );
+            assertNull( element.getIntegerValueProperty().content() );
             assertNull( element.getTransientProperty().content() );
-            assertNull( element.getElementProperty().element() );
-            assertNull( element.getImpliedElementProperty().getValueProperty().getContent() );
+            assertNull( element.getElementProperty().content() );
+            assertNull( element.getImpliedElementProperty().getValueProperty().content() );
             assertEquals( 0, element.getListProperty().size() );
         }
         finally

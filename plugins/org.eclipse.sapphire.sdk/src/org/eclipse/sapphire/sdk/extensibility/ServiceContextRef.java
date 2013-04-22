@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.sdk.extensibility;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status.Severity;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 @Label( standard = "service context reference" )
 
-public interface ServiceContextRef extends IModelElement
+public interface ServiceContextRef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ServiceContextRef.class );
+    ElementType TYPE = new ElementType( ServiceContextRef.class );
     
     // *** Context ***
     

@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
 
@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
 
 public class StandardXmlNamespaceResolver extends XmlNamespaceResolver
 {
-    private final ModelElementType type;
+    private final ElementType type;
     
-    public StandardXmlNamespaceResolver( final ModelElementType type )
+    public StandardXmlNamespaceResolver( final ElementType type )
     {
         this.type = type;
     }

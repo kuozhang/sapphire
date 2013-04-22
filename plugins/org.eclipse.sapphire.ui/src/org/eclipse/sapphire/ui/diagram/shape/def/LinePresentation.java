@@ -12,10 +12,10 @@
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
 import org.eclipse.sapphire.Color;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.ui.LineStyle;
 
 @Label( standard = "line presentation" )
 
-public interface LinePresentation extends IModelElement 
+public interface LinePresentation extends Element 
 {
-	ModelElementType TYPE = new ModelElementType( LinePresentation.class );
+	ElementType TYPE = new ElementType( LinePresentation.class );
 	
 	// *** Color ***
     

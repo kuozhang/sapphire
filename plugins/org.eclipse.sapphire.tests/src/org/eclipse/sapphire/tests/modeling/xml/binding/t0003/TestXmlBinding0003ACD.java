@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0003;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
@@ -24,9 +24,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0003/u", prefix = "u" )
 
-public interface TestXmlBinding0003ACD extends IModelElement
+public interface TestXmlBinding0003ACD extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlBinding0003ACD.class );
+    ElementType TYPE = new ElementType( TestXmlBinding0003ACD.class );
     
     // *** Acda ***
     

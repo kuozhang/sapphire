@@ -18,8 +18,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Sapphire;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
@@ -311,7 +311,7 @@ public final class DefinitionLoader
         this.sdef.dispose();
     }
 
-    public static final class Reference<T extends IModelElement>
+    public static final class Reference<T extends Element>
     {
         // Must reference loader to make sure it doesn't go away while this reference is still in use.
         // When the loader goes away, the sdef is disposed.

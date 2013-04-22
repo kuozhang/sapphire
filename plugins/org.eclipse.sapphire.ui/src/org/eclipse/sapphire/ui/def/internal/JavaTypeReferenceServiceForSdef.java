@@ -12,11 +12,11 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.ClassBasedJavaType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -44,7 +44,7 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
             {
                 for( IPackageReference packageRef : sdef.getImportedPackages() )
                 {
-                    final String packageName = packageRef.getName().getText();
+                    final String packageName = packageRef.getName().text();
                     
                     if( packageName != null )
                     {

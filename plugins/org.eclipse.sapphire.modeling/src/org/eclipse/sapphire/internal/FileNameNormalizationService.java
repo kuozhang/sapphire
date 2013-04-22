@@ -14,9 +14,8 @@ package org.eclipse.sapphire.internal;
 import java.util.List;
 
 import org.eclipse.sapphire.FileName;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -101,8 +100,7 @@ public final class FileNameNormalizationService extends ValueNormalizationServic
                 
                 if( segments == 1 )
                 {
-                    final FileExtensionsService fileExtensionsService 
-                        = context( IModelElement.class ).service( context( ModelProperty.class ), FileExtensionsService.class );
+                    final FileExtensionsService fileExtensionsService = context( Property.class ).service( FileExtensionsService.class );
                     
                     if( fileExtensionsService != null )
                     {

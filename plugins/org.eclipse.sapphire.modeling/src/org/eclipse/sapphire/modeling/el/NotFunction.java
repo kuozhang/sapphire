@@ -17,10 +17,7 @@ package org.eclipse.sapphire.modeling.el;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class NotFunction
-
-    extends Function
-
+public final class NotFunction extends Function
 {
     public static NotFunction create( final Function operand )
     {
@@ -55,7 +52,7 @@ public final class NotFunction
             @Override
             protected Object evaluate()
             {
-                final boolean a = cast( operand( 0 ).value(), Boolean.class );
+                final boolean a = cast( operand( 0 ), Boolean.class );
                 return ( ! a );
             }
         };

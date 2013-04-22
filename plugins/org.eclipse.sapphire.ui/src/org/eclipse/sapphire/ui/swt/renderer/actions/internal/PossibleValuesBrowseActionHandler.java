@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import java.util.Collection;
 
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
@@ -38,8 +38,8 @@ public final class PossibleValuesBrowseActionHandler extends SapphireBrowseActio
     @Override
     protected String browse( final SapphireRenderingContext context )
     {
-        final ValueProperty property = getProperty();
-        final PossibleValuesService possibleValuesService = getModelElement().service( property, PossibleValuesService.class );
+        final ValueProperty property = property().definition();
+        final PossibleValuesService possibleValuesService = property().service( PossibleValuesService.class );
 
         if( possibleValuesService != null )
         {

@@ -13,7 +13,7 @@ package org.eclipse.sapphire.services;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * Enumerates the possible child element types for a list or an element property. Each 
@@ -34,7 +34,7 @@ public abstract class PossibleTypesService extends DataService<PossibleTypesServ
     {
     }
     
-    public final SortedSet<ModelElementType> types()
+    public final SortedSet<ElementType> types()
     {
         return data().types();
     }

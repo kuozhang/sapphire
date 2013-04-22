@@ -24,11 +24,11 @@ import java.util.TreeMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.docsys.DocumentationContent;
@@ -50,20 +50,20 @@ public final class ExportModelDocumentationOpMethods
     private static String STYLE;
     
     public static String execute( final IExportModelDocumentationOp op,
-                                  final ModelElementType type,
+                                  final ElementType type,
                                   final IProgressMonitor monitor )
     {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter out = new PrintWriter( stringWriter );
         
-        if( op.getCreateFinishedDocument().getContent() )
+        if( op.getCreateFinishedDocument().content() )
         {
             out.println( "<html>" );
             out.println();
             out.println( "<head>" );
-            out.println( "  <title>" + op.getDocumentTitle().getContent() + "</title>" );
+            out.println( "  <title>" + op.getDocumentTitle().content() + "</title>" );
             
-            if( op.getEmbedDefaultStyle().getContent() )
+            if( op.getEmbedDefaultStyle().content() )
             {
                 out.println( style() );
             }
@@ -75,7 +75,7 @@ public final class ExportModelDocumentationOpMethods
         
         execute( type, out );
         
-        if( op.getCreateFinishedDocument().getContent() )
+        if( op.getCreateFinishedDocument().content() )
         {
             out.println( "<br/><br/>" );
             out.println( "</body>" );
@@ -88,14 +88,14 @@ public final class ExportModelDocumentationOpMethods
         return stringWriter.getBuffer().toString();
     }
     
-    private static void execute( final ModelElementType type,
+    private static void execute( final ElementType type,
                                  final PrintWriter out )
     {
         // Build a sorted map of XML path to property.
         
-        final TreeMap<String,ModelProperty> properties = new TreeMap<String,ModelProperty>();
+        final TreeMap<String,PropertyDef> properties = new TreeMap<String,PropertyDef>();
         
-        for( ModelProperty property : type.properties() )
+        for( PropertyDef property : type.properties() )
         {
             String xmlPath = null;
             
@@ -181,10 +181,10 @@ public final class ExportModelDocumentationOpMethods
         out.println( "    <th>Description</th>" );
         out.println( "  </tr>" );
         
-        for( Map.Entry<String,ModelProperty> entry : properties.entrySet() )
+        for( Map.Entry<String,PropertyDef> entry : properties.entrySet() )
         {
             final String xmlPath = entry.getKey();
-            final ModelProperty property = entry.getValue();
+            final PropertyDef property = entry.getValue();
             
             final String cardinality;
             
@@ -232,12 +232,12 @@ public final class ExportModelDocumentationOpMethods
             {
                 boolean skip = false;
                 
-                final ModelElementType childType = property.service( PossibleTypesService.class ).types().first();
-                final SortedSet<ModelProperty> childTypeProperties = childType.properties();
+                final ElementType childType = property.service( PossibleTypesService.class ).types().first();
+                final SortedSet<PropertyDef> childTypeProperties = childType.properties();
                 
                 if( childTypeProperties.size() == 1 )
                 {
-                    final ModelProperty childTypeProperty = childTypeProperties.first();
+                    final PropertyDef childTypeProperty = childTypeProperties.first();
                     
                     if( childTypeProperty instanceof ValueProperty )
                     {

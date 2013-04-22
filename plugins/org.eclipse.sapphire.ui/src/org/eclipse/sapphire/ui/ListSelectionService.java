@@ -17,7 +17,7 @@ import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdenti
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceEvent;
 import org.eclipse.sapphire.util.ListFactory;
@@ -32,7 +32,7 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class ListSelectionService extends Service
 {
-    private List<IModelElement> elements = Collections.emptyList();
+    private List<Element> elements = Collections.emptyList();
 
     /**
      * Returns the list of currently selected elements.
@@ -40,7 +40,7 @@ public final class ListSelectionService extends Service
      * @return an unmodifiable list of the current selection
      */
     
-    public List<IModelElement> selection()
+    public List<Element> selection()
     {
         return this.elements;
     }
@@ -52,9 +52,9 @@ public final class ListSelectionService extends Service
      * @param element the new selection or null
      */
     
-    public void select( final IModelElement element )
+    public void select( final Element element )
     {
-        select( ListFactory.<IModelElement>start().add( element ).result() );
+        select( ListFactory.<Element>start().add( element ).result() );
     }
 
     /**
@@ -64,11 +64,11 @@ public final class ListSelectionService extends Service
      * @param elements the new selection
      */
     
-    public void select( final List<IModelElement> elements )
+    public void select( final List<Element> elements )
     {
         if( ! equalsBasedOnEntryIdentity( this.elements, elements ) )
         {
-            final List<IModelElement> before = this.elements;
+            final List<Element> before = this.elements;
             
             this.elements = ListFactory.unmodifiable( elements );
 
@@ -82,12 +82,12 @@ public final class ListSelectionService extends Service
 
     public static final class ListSelectionChangedEvent extends ServiceEvent
     {
-        private List<IModelElement> before;
-        private List<IModelElement> after;
+        private List<Element> before;
+        private List<Element> after;
 
         ListSelectionChangedEvent( final ListSelectionService service,
-                                   final List<IModelElement> before, 
-                                   final List<IModelElement> after )
+                                   final List<Element> before, 
+                                   final List<Element> after )
         {
             super( service );
             
@@ -95,12 +95,12 @@ public final class ListSelectionService extends Service
             this.after = after;
         }
 
-        public List<IModelElement> before()
+        public List<Element> before()
         {
             return this.before;
         }
 
-        public List<IModelElement> after()
+        public List<Element> after()
         {
             return this.after;
         }

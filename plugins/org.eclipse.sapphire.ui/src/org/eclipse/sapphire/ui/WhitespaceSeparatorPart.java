@@ -37,7 +37,7 @@ public final class WhitespaceSeparatorPart extends SeparatorPart
         final WhitespaceSeparatorDef def = (WhitespaceSeparatorDef) this.definition;
         
         final Composite spacer = new Composite( context.getComposite(), SWT.NONE );
-        spacer.setLayoutData( gdhhint( gdhspan( gdhfill(), 2 ), def.getSize().getContent() ) );
+        spacer.setLayoutData( gdhhint( gdhspan( gdhfill(), 2 ), def.getSize().content() ) );
         spacer.setLayout( glayout( 1, 0, 0, 0, 0 ) );
     }
     

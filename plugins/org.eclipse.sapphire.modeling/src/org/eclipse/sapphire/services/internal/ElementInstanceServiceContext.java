@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -19,9 +19,9 @@ import org.eclipse.sapphire.modeling.IModelElement;
 
 public final class ElementInstanceServiceContext extends ElementServiceContext
 {
-    private final IModelElement element;
+    private final Element element;
     
-    public ElementInstanceServiceContext( final IModelElement element )
+    public ElementInstanceServiceContext( final Element element )
     {
         super( ID_ELEMENT_INSTANCE, element.type().services(), element.type() );
         
@@ -37,7 +37,7 @@ public final class ElementInstanceServiceContext extends ElementServiceContext
         
         if( obj == null )
         {
-            if( type == IModelElement.class )
+            if( type == Element.class )
             {
                 obj = (T) this.element;
             }

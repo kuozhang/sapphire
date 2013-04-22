@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 public interface IDiagramExplicitConnectionBindingDef extends IDiagramConnectionBindingDef 
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramExplicitConnectionBindingDef.class );
+    ElementType TYPE = new ElementType( IDiagramExplicitConnectionBindingDef.class );
     
     // *** Endpoint1 ***
     
@@ -35,7 +35,7 @@ public interface IDiagramExplicitConnectionBindingDef extends IDiagramConnection
 
     ElementProperty PROP_ENDPOINT_1 = new ElementProperty( TYPE, "Endpoint1" );
     
-    ModelElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint1();
+    ElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint1();
 
     // *** Endpoint2 ***
     
@@ -44,7 +44,7 @@ public interface IDiagramExplicitConnectionBindingDef extends IDiagramConnection
 
     ElementProperty PROP_ENDPOINT_2 = new ElementProperty( TYPE, "Endpoint2" );
     
-    ModelElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint2();
+    ElementHandle<IDiagramConnectionEndpointBindingDef> getEndpoint2();
     
 
 }

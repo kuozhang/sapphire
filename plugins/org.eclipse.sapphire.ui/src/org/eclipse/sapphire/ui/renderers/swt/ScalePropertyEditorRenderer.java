@@ -18,9 +18,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glspacing;
 
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -40,10 +39,7 @@ import org.eclipse.swt.widgets.Text;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ScalePropertyEditorRenderer
-
-    extends ValuePropertyEditorRenderer
-    
+public final class ScalePropertyEditorRenderer extends ValuePropertyEditorRenderer
 {
     private int minimum;
     private int maximum;
@@ -60,10 +56,7 @@ public final class ScalePropertyEditorRenderer
     @Override
     protected void createContents( final Composite parent )
     {
-        final PropertyEditorPart part = getPart();
-        final ValueProperty property = (ValueProperty) part.getProperty();
-
-        final NumericRange rangeAnnotation = property.getAnnotation( NumericRange.class );
+        final NumericRange rangeAnnotation = property().definition().getAnnotation( NumericRange.class );
         
         try
         {
@@ -117,7 +110,7 @@ public final class ScalePropertyEditorRenderer
             @Override
             public String getDefaultText()
             {
-                return getPropertyValue().getDefaultText();
+                return property().getDefaultText();
             }
         };
         
@@ -154,17 +147,17 @@ public final class ScalePropertyEditorRenderer
     {
         super.handlePropertyChangedEvent();
         
-        final Value<?> value = getPropertyValue();
+        final Value<?> value = property();
         
         final String existingValueInTextField = this.textField.getText();
-        final String newValueForTextField = value.getText( false );
+        final String newValueForTextField = value.text( false );
         
         if( ! existingValueInTextField.equals( newValueForTextField ) )
         {
             this.textField.setText( newValueForTextField == null ? MiscUtil.EMPTY_STRING : newValueForTextField );
         }
 
-        final Integer newValueInteger = (Integer) value.getContent( true );
+        final Integer newValueInteger = (Integer) value.content( true );
         int newValueForScale = ( newValueInteger == null ? this.scale.getMinimum() : newValueInteger.intValue() + this.offset );
         
         if( newValueForScale < this.minimum )
@@ -188,15 +181,12 @@ public final class ScalePropertyEditorRenderer
         this.scale.setFocus();
     }
 
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
-            final ModelProperty property = propertyEditorDefinition.getProperty();
+            final PropertyDef property = propertyEditorPart.property().definition();
             
             if( property.isOfType( Integer.class ) )
             {

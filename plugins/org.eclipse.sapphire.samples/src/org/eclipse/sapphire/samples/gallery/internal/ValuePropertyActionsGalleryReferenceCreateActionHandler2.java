@@ -14,8 +14,8 @@ package org.eclipse.sapphire.samples.gallery.internal;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGallery;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGalleryEntity;
@@ -27,10 +27,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ValuePropertyActionsGalleryReferenceCreateActionHandler2
-
-    extends ValuePropertyActionsGalleryReferenceCreateActionHandlerBase
-    
+public final class ValuePropertyActionsGalleryReferenceCreateActionHandler2 extends ValuePropertyActionsGalleryReferenceCreateActionHandlerBase
 {
     @Override
     public void init( final SapphireAction action,
@@ -75,12 +72,12 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler2
         if( dialog.open() != Window.CANCEL )
         {
             final String entityName = dialog.getValue();
-            final IModelElement element = getModelElement();
+            final Element element = getModelElement();
             
             final IValuePropertyActionsGalleryEntity entity = element.nearest( IValuePropertyActionsGallery.class ).getEntities().insert();
             entity.setName( entityName );
             
-            element.write( (ValueProperty) getProperty(), entityName );
+            ( (Value<?>) property() ).write( entityName );
         }
         
         return null;

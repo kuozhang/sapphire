@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0003;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
@@ -22,9 +22,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElement extends IModelElement
+public interface TestElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
     // *** AAA ***
     
@@ -33,7 +33,7 @@ public interface TestElement extends IModelElement
     
     ListProperty PROP_AAA = new ListProperty( TYPE, "Aaa" );
     
-    ModelElementList<TestElementChild> getAaa();
+    ElementList<TestElementChild> getAaa();
     
     // *** BBB ***
     
@@ -42,7 +42,7 @@ public interface TestElement extends IModelElement
     
     ListProperty PROP_BBB = new ListProperty( TYPE, "Bbb" );
     
-    ModelElementList<TestElementChild> getBbb();
+    ElementList<TestElementChild> getBbb();
     
     // *** CCC ***
     
@@ -51,6 +51,6 @@ public interface TestElement extends IModelElement
     
     ListProperty PROP_CCC = new ListProperty( TYPE, "Ccc" );
     
-    ModelElementList<TestElementChild> getCcc();
+    ElementList<TestElementChild> getCcc();
     
 }

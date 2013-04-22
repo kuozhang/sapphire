@@ -11,14 +11,12 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.sapphire.PropertyInstance;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.ModelProperty;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -26,13 +24,13 @@ import org.eclipse.sapphire.modeling.ModelProperty;
 
 public class ModelUtil 
 {
-    public static ModelProperty resolve(final IModelElement modelElement, 
+    public static PropertyDef resolve(final Element modelElement, 
             String propertyName)
     {
         if (propertyName != null)
         {
-            final ModelElementType type = modelElement.type();
-            final ModelProperty property = type.property( propertyName );
+            final ElementType type = modelElement.type();
+            final PropertyDef property = type.property( propertyName );
             if( property == null )
             {
                 throw new RuntimeException( "Could not find property " + propertyName + " in " + type.getQualifiedName() );
@@ -42,12 +40,12 @@ public class ModelUtil
         return null;
     }
 
-    public static ModelProperty resolve(ModelElementType modelElementType, ModelPath path)
+    public static PropertyDef resolve(ElementType modelElementType, ModelPath path)
     {
         if (path.length() == 1)
         {
             String propertyName = ((ModelPath.PropertySegment)path.head()).getPropertyName();
-            ModelProperty modelProperty = modelElementType.property(propertyName);
+            PropertyDef modelProperty = modelElementType.property(propertyName);
             return modelProperty;
         }
         else
@@ -56,10 +54,10 @@ public class ModelUtil
             if (head instanceof ModelPath.PropertySegment)
             {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
-                final ModelProperty property = modelElementType.property(propertyName);
+                final PropertyDef property = modelElementType.property(propertyName);
                 if (property instanceof ListProperty)
                 {
-                    ModelElementType type = ((ListProperty)property).getType();
+                    ElementType type = ((ListProperty)property).getType();
                     return resolve(type, path.tail());
                 }
                 else
@@ -74,7 +72,7 @@ public class ModelUtil
         }
     }
 
-    public static ModelProperty resolve(IModelElement modelElement, ModelPath path)
+    public static PropertyDef resolve(Element modelElement, ModelPath path)
     {
         if (path.length() == 1)
         {
@@ -87,10 +85,10 @@ public class ModelUtil
             if (head instanceof ModelPath.PropertySegment)
             {
                 final String propertyName = ((ModelPath.PropertySegment)head).getPropertyName();
-                final PropertyInstance property = modelElement.property(propertyName);
-                if (property != null && property.property() instanceof ListProperty)
+                final Property property = modelElement.property(propertyName);
+                if (property != null && property.definition() instanceof ListProperty)
                 {
-                    ModelElementType type = ((ListProperty)property.property()).getType();
+                    ElementType type = ((ListProperty)property.definition()).getType();
                     return resolve(type, path.tail());
                 }
                 else
@@ -100,12 +98,8 @@ public class ModelUtil
             }
             else if (head instanceof ModelPath.ParentElementSegment)
             {
-                IModelParticle parent = modelElement.parent();
-                if (parent instanceof ModelElementList<?>)
-                {
-                    parent = parent.parent();
-                }
-                return resolve((IModelElement)parent, path.tail());
+                final Property parent = modelElement.parent();
+                return resolve(parent.element(), path.tail());
             }
             else 
             {

@@ -13,7 +13,7 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.Value;
 
 /**
  * Determines if an object is of specified type. The object to be checked is the first operand and the
@@ -62,7 +62,7 @@ public final class InstanceOfFunction
             @Override
             protected Object evaluate()
             {
-                Object obj = operand( 0 ).value();
+                Object obj = operand( 0 );
                 
                 if( obj == null )
                 {
@@ -72,10 +72,10 @@ public final class InstanceOfFunction
                 {
                     if( obj instanceof Value )
                     {
-                        obj = ( (Value<?>) obj ).getContent();
+                        obj = ( (Value<?>) obj ).content();
                     }
                     
-                    final String type = cast( operand( 1 ).value(), String.class );
+                    final String type = cast( operand( 1 ), String.class );
                     
                     if( type == null )
                     {

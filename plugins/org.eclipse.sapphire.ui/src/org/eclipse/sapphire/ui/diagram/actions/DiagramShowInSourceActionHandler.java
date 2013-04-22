@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -29,7 +29,7 @@ public class DiagramShowInSourceActionHandler extends
     protected Object run(SapphireRenderingContext context) 
     {
         ISapphirePart part = context.getPart();
-        IModelElement element = part.getModelElement();
+        Element element = part.getModelElement();
         element.adapt( SourceEditorService.class ).show( element, null );
         return null;
     }

@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -29,7 +29,7 @@ import org.eclipse.sapphire.samples.contacts.internal.ManagerNameValidationServi
 
 public interface JobOccupation extends Occupation
 {
-    ModelElementType TYPE = new ModelElementType( JobOccupation.class );
+    ElementType TYPE = new ElementType( JobOccupation.class );
     
     // *** Employer ***
     

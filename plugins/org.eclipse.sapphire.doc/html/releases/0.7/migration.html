@@ -30,6 +30,15 @@
       margin-right: 0px;
       overflow: auto
     }
+    .unaffected
+    {
+      color: #888888
+    }
+    .comment
+    {
+      color: #006600;
+      font-style: italic
+    }
   </style>
 </head>
 
@@ -47,18 +56,36 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#Color">Color</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
+  <li><a href="#DependenciesAggregationService">DependenciesAggregationService</a></li>
   <li><a href="#DtdParser">DtdParser</a></li>
+  <li><a href="#ElementProperty">ElementProperty</a></li>
+  <li><a href="#Event">Event</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
+  <li><a href="#IModelParticle">IModelParticle</a></li>
+  <li><a href="#ImpliedElementProperty">ImpliedElementProperty</a></li>
+  <li><a href="#ListProperty">ListProperty</a></li>
   <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
+  <li><a href="#ModelElementHandle">ModelElementHandle</a></li>
   <li><a href="#ModelElementList">ModelElementList</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
+  <li><a href="#ModelProperty">ModelProperty</a></li>
   <li><a href="#PossibleValuesService">PossibleValuesService</a></li>
+  <li><a href="#PropertyContentEvent">PropertyContentEvent</a></li>
+  <li><a href="#PropertyEnablementEvent">PropertyEnablementEvent</a></li>
+  <li><a href="#PropertyEvent">PropertyEvent</a></li>
+  <li><a href="#PropertyInitializationEvent">PropertyInitializationEvent</a></li>
+  <li><a href="#PropertyValidationEvent">PropertyValidationEvent</a></li>
+  <li><a href="#ReferenceValue">ReferenceValue</a></li>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
+  <li><a href="#Transient">Transient</a></li>
+  <li><a href="#TransientProperty">TransientProperty</a></li>
   <li><a href="#TypeCast">TypeCast</a></li>
   <li><a href="#UrlResolver">UrlResolver</a></li>
+  <li><a href="#ValidationAggregationService">ValidationAggregationService</a></li>
   <li><a href="#Value">Value</a></li>
+  <li><a href="#ValueProperty">ValueProperty</a></li>
   <li><a href="#ValueSerializationMasterService">ValueSerializationMasterService</a></li>
   <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
   <li><a href="#XmlDocumentSchemasCache">XmlDocumentSchemasCache</a></li>
@@ -77,69 +104,69 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class</font> ExampleAdapterService <font color="#888888">extends</font> AdapterService
-<font color="#888888">{
+<pre class="source-code"><code><span class="unaffected">public class</span> ExampleAdapterService <span class="unaffected">extends</span> AdapterService
+<span class="unaffected">{
     @Override
-    public &lt;T> T</font> adapt<font color="#888888">( Class&lt;T> type )
+    public &lt;T> T</span> adapt<span class="unaffected">( Class&lt;T> type )
     {
         if( type == IProject.class )
-        {</font>
+        {</span>
             INewProjectFileOp op = context( INewProjectFileOp.class );
-            <font color="#888888">return type.cast( op.getProject().resolve() );
+            <span class="unaffected">return type.cast( op.getProject().resolve() );
         }
 
         return null;
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class</font> ExampleConversionService <font color="#888888">extends</font> UniversalConversionService
-<font color="#888888">{
+<pre class="source-code"><code><span class="unaffected">public class</span> ExampleConversionService <span class="unaffected">extends</span> UniversalConversionService
+<span class="unaffected">{
     @Override
-    public &lt;T> T</font> convert<font color="#888888">(</font> Object object, <font color="#888888">Class&lt;T> type )
+    public &lt;T> T</span> convert<span class="unaffected">(</span> Object object, <span class="unaffected">Class&lt;T> type )
     {
-        if(</font> object instanceof INewProjectFileOp && <font color="#888888">type == IProject.class )
-        {</font>
+        if(</span> object instanceof INewProjectFileOp && <span class="unaffected">type == IProject.class )
+        {</span>
             INewProjectFileOp op = (INewProjectFileOp) object;
-            <font color="#888888">return type.cast( op.getProject().resolve() );
+            <span class="unaffected">return type.cast( op.getProject().resolve() );
         }
 
         return null;
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class</font> ExampleAdapterService <font color="#888888">extends</font> AdapterService
-<font color="#888888">{
+<pre class="source-code"><code><span class="unaffected">public class</span> ExampleAdapterService <span class="unaffected">extends</span> AdapterService
+<span class="unaffected">{
     @Override
-    public</font> &lt;T> T adapt<font color="#888888">( Class&lt;T> type )
-    {</font>
+    public</span> &lt;T> T adapt<span class="unaffected">( Class&lt;T> type )
+    {</span>
         if( type == IProject.class )
         {
             INewProjectFileOp op = context( INewProjectFileOp.class );
-            <font color="#888888">return</font> type.cast( <font color="#888888">op.getProject().resolve()</font> )<font color="#888888">;</font>
+            <span class="unaffected">return</span> type.cast( <span class="unaffected">op.getProject().resolve()</span> )<span class="unaffected">;</span>
         }
 
         return null;
-    <font color="#888888">}
-}</font></code></pre>
+    <span class="unaffected">}
+}</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class</font> ExampleConversionService <font color="#888888">extends</font> ConversionService&lt;INewProjectFileOp,IProject>
-<font color="#888888">{</font>
+<pre class="source-code"><code><span class="unaffected">public class</span> ExampleConversionService <span class="unaffected">extends</span> ConversionService&lt;INewProjectFileOp,IProject>
+<span class="unaffected">{</span>
     public ExampleConversionService()
     {
         super( INewProjectFileOp.class, IProject.class );
     }
 
-    <font color="#888888">@Override
-    public</font> IProject convert<font color="#888888">(</font> INewProjectFileOp op <font color="#888888">)
+    <span class="unaffected">@Override
+    public</span> IProject convert<span class="unaffected">(</span> INewProjectFileOp op <span class="unaffected">)
     {
         return op.getProject().resolve();
     }
-}</font></code></pre>
+}</span></code></pre>
 
 <p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
 achieved by migrating to the typed ConversionService API. Conversions implemented in this manner are quicker for
@@ -158,34 +185,34 @@ Sapphire to find.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">import</font> org.eclipse.sapphire.ui<font color="#888888">.Color</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">import</span> org.eclipse.sapphire.ui<span class="unaffected">.Color</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">import</font> org.eclipse.sapphire<font color="#888888">.Color</font></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><font color="#888888">color.</font>getRed<font color="#888888">()</font></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><font color="#888888">color.</font>red<font color="#888888">()</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">import</span> org.eclipse.sapphire<span class="unaffected">.Color</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">color.</font>getGreen<font color="#888888">()</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">color.</span>getRed<span class="unaffected">()</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">color.</font>green<font color="#888888">()</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">color.</span>red<span class="unaffected">()</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">color.</font>getBlue<font color="#888888">()</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">color.</span>getGreen<span class="unaffected">()</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">color.</font>blue<font color="#888888">()</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">color.</span>green<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">color.</span>getBlue<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">color.</span>blue<span class="unaffected">()</span></code></pre>
     </td>
   </tr>
 </table>
@@ -200,8 +227,8 @@ Sapphire to find.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends</font> ConversionService
-<font color="#888888">{
+<pre class="source-code"><code><span class="unaffected">public class ExampleConversionService extends</span> ConversionService
+<span class="unaffected">{
     @Override
     public &lt;T> T convert( Object object, Class&lt;T> type )
     {
@@ -212,11 +239,11 @@ Sapphire to find.</p>
 
         return null;
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends</font> UniversalConversionService
-<font color="#888888">{
+<pre class="source-code"><code><span class="unaffected">public class ExampleConversionService extends</span> UniversalConversionService
+<span class="unaffected">{
     @Override
     public &lt;T> T convert( Object object, Class&lt;T> type )
     {
@@ -227,39 +254,39 @@ Sapphire to find.</p>
 
         return null;
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends ConversionService
+<pre class="source-code"><code><span class="unaffected">public class ExampleConversionService extends ConversionService
 {
     @Override
-    public</font> &lt;T> T <font color="#888888">convert(</font> Object object, Class&lt;T> type <font color="#888888">)
-    {</font>
+    public</span> &lt;T> T <span class="unaffected">convert(</span> Object object, Class&lt;T> type <span class="unaffected">)
+    {</span>
         if( object instanceof IFile && type == Resource.class )
         {
-            <font color="#888888">...</font>
+            <span class="unaffected">...</span>
         }
 
         return null;
-    <font color="#888888">}
-}</font></code></pre>
+    <span class="unaffected">}
+}</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class ExampleConversionService extends ConversionService</font>&lt;IFile,Resource>
-<font color="#888888">{</font>
+<pre class="source-code"><code><span class="unaffected">public class ExampleConversionService extends ConversionService</span>&lt;IFile,Resource>
+<span class="unaffected">{</span>
     public ExampleConversionService()
     {
         super( IFile.class, Resource.class );
     }
 
-    <font color="#888888">@Override
-    public</font> Resource <font color="#888888">convert(</font> IFile file <font color="#888888">)
+    <span class="unaffected">@Override
+    public</span> Resource <span class="unaffected">convert(</span> IFile file <span class="unaffected">)
     {
         ...
     }
-}</font></code></pre>
+}</span></code></pre>
 
 <p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
 achieved by migrating to the new ConversionService API. Conversions implemented in this manner are quicker for
@@ -278,7 +305,7 @@ Sapphire to find.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+<pre class="source-code"><code><span class="unaffected">@Type( base = Date.class )</span>
 
 @Service
 (
@@ -290,14 +317,14 @@ Sapphire to find.</p>
     }
 )
 
-<font color="#888888">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+<span class="unaffected">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
 
 Value&lt;Date> getDate();
 void setDate( String value );
-void setDate( Date value );</font></code></pre>
+void setDate( Date value );</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+<pre class="source-code"><code><span class="unaffected">@Type( base = Date.class )</span>
 
 @Services
 (
@@ -320,11 +347,11 @@ void setDate( Date value );</font></code></pre>
     }
 )
 
-<font color="#888888">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+<span class="unaffected">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
 
 Value&lt;Date> getDate();
 void setDate( String value );
-void setDate( Date value );</font></code></pre>
+void setDate( Date value );</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -361,6 +388,31 @@ public class TestDateToStringConversionService extends DateToStringConversionSer
 </table>
 
 
+<h2><a name="DependenciesAggregationService">DependenciesAggregationService</a></h2>
+
+<p>As an optimization, the aggregation intermediary to DependenciesService has been removed.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Set&lt;ModelPath> dependencies =</span> property.service( DependenciesAggregationService.class ).dependencies();</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Set&lt;ModelPath> dependencies =</span> new HashSet&lt;ModelPath>();
+
+for( DependenciesService service : property.services( DependenciesService.class ) )
+{
+    dependencies.addAll( service.dependencies() );
+}</code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="DtdParser">DtdParser</a></h2>
 
 <table>
@@ -370,18 +422,113 @@ public class TestDateToStringConversionService extends DateToStringConversionSer
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">DtdParser.</font>parseFromString<font color="#888888">( dtd )</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">DtdParser.</span>parseFromString<span class="unaffected">( dtd )</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">DtdParser.</font>parse<font color="#888888">( dtd )</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">DtdParser.</span>parse<span class="unaffected">( dtd )</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">DtdParser.</font>parseFromUrl( referer, location )</code></pre>
+<pre class="source-code"><code><span class="unaffected">DtdParser.</span>parseFromUrl( referer, location )</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">DtdParser.</font>parse( new URL( location ) )</code></pre>
+<pre class="source-code"><code><span class="unaffected">DtdParser.</span>parse( new URL( location ) )</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ElementProperty">ElementProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ElementProperty</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ElementProperty</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="Event">Event</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>Event.filter<span class="unaffected">( listener, eventTypes )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>new FilteringListenerWrapper<span class="unaffected">( listener, eventTypes )</span>
+
+<span class="comment">...</span>
+
+public class FilteringListenerWrapper extends Listener
+{
+    private final Listener listener;
+    private final Class&lt;?>[] eventTypes;
+
+    public FilteringListenerWrapper( Listener listener, Class&lt;?>[] eventTypes )
+    {
+        this.listener = listener;
+        this.eventTypes = eventTypes;
+    }
+
+    @Override
+    public void handle( Event event )
+    {
+        boolean ok = false;
+
+        for( Class&lt;?> type : this.eventTypes )
+        {
+            if( type.isInstance( event ) )
+            {
+                ok = true;
+                break;
+            }
+        }
+
+        if( ok )
+        {
+            this.listener.handle( event );
+        }
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if( obj instanceof FilteringListenerWrapper )
+        {
+            FilteringListenerWrapper x = (FilteringListenerWrapper) obj;
+            return ( this.listener.equals( x.listener ) && Arrays.equals( this.eventTypes, x.eventTypes ) );
+        }
+
+        return false;
+    }
+        
+    @Override
+    public int hashCode()
+    {
+        int hashcode = this.listener.hashCode();
+
+        for( Class&lt;?> eventType : this.eventTypes )
+        {
+            hashcode = hashcode ^ eventType.hashCode();
+        }
+
+        return hashcode;
+    }
+}</code></pre>
     </td>
   </tr>
 </table>
@@ -405,18 +552,327 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>List<font color="#888888">&lt;ModelProperty> properties = element.properties()</font></code></pre>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">modeling.IModelElement</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>SortedSet<font color="#888888">&lt;ModelProperty> properties = element</font>.type()<font color="#888888">.properties()</font></code></pre>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">Element</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">ModelProperty property = element.property( "Name" )</font></code></pre>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">root = element.root()</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">ModelProperty property = element</font>.type()<font color="#888888">.property( "Name" )</font></code></pre>
+<pre class="source-code"><code>Element <span class="unaffected">root = element.root()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = element.parent()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Property <span class="unaffected">parent = element.parent()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>getParentProperty()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>parent().definition()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>List&lt;ModelProperty> <span class="unaffected">properties = element.properties()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>SortedSet&lt;PropertyDef> <span class="unaffected">properties = element</span>.type()<span class="unaffected">.properties()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.property( "ExampleProperty" )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.property( "ExampleProperty" )</span>.definition()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>read<span class="unaffected">( "ExampleProperty" )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property<span class="unaffected">( "ExampleProperty" )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>read<span class="unaffected">( ExampleElement.PROP_EXAMPLE )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property<span class="unaffected">( ExampleElement.PROP_EXAMPLE )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">SortedSet&lt;String> strings =</span> element.read( path );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">SortedSet&lt;String> strings =</span> new TreeSet&lt;String>();
+
+element.visit
+(
+    path,
+    new PropertyVisitor()
+    {
+        @Override
+        public boolean visit( Value&lt;?> property )
+        {
+            strings.add( property.text() );
+            return true;
+        }
+    }
+);</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">SortedSet&lt;String> strings = new TreeSet&lt;String>();
+
+element.</span>read( path, strings );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">SortedSet&lt;String> strings = new TreeSet&lt;String>();
+
+element.</span>visit
+(
+    path,
+    new PropertyVisitor()
+    {
+        @Override
+        public boolean visit( Value&lt;?> property )
+        {
+            strings.add( property.text() );
+            return true;
+        }
+    }
+);</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>write( ExampleElement.PROP_VALUE, content )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( ExampleElement.PROP_VALUE ).write( content )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>write( ExampleElement.PROP_TRANSIENT, content )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( ExampleElement.PROP_TRANSIENT ).write( content )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>write( "ExampleProperty", content )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>( (Value&lt;?>) <span class="unaffected">element.</span>property( "ExampleProperty" ) ).write( content )
+
+<span class="comment">or</span>
+
+( (Transient&lt;?>) <span class="unaffected">element.</span>property( "ExampleProperty" ) ).write( content )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.refresh</span>( force )
+
+<span class="comment">or</span>
+
+<span class="unaffected">element.refresh</span>( force, deep )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.refresh</span>()
+
+<span class="comment">The concepts of forcing a refresh and deep refresh are no longer supported.</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>refresh<span class="unaffected">( "ExampleProperty" )</span>
+
+<span class="comment">or</span>
+
+<span class="unaffected">element.</span>refresh<span class="unaffected">( "ExampleProperty"</span>, force <span class="unaffected">)</span>
+
+<span class="comment">or</span>
+
+<span class="unaffected">element.</span>refresh<span class="unaffected">( "ExampleProperty"</span>, force, deep <span class="unaffected">)</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property<span class="unaffected">( "ExampleProperty" )</span>.refresh()
+
+<span class="comment">The concepts of forcing a refresh and deep refresh are no longer supported.</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>refresh( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )
+
+<span class="comment">or</span>
+
+<span class="unaffected">element.</span>refresh( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span>, force )
+
+<span class="comment">or</span>
+
+<span class="unaffected">element.</span>refresh( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span>, force, deep )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).refresh()
+
+<span class="comment">The concepts of forcing a refresh and deep refresh are no longer supported.</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>service( <span class="unaffected">"ExampleProperty"</span>, <span class="unaffected">ExampleService.class</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">"ExampleProperty"</span> ).service( <span class="unaffected">ExampleService.class</span> )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>service( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span>, <span class="unaffected">ExampleService.class</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).service( <span class="unaffected">ExampleService.class</span> )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>services( <span class="unaffected">"ExampleProperty"</span>, <span class="unaffected">ExampleService.class</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">"ExampleProperty"</span> ).services( <span class="unaffected">ExampleService.class</span> )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>services( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span>, <span class="unaffected">ExampleService.class</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).services( <span class="unaffected">ExampleService.class</span> )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>enabled( <span class="unaffected">"ExampleProperty"</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">"ExampleProperty"</span> ).enabled()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>enabled( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).enabled()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>empty( <span class="unaffected">"ExampleProperty"</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">"ExampleProperty"</span> ).empty()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>empty( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).empty()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>validation( <span class="unaffected">"ExampleProperty"</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">"ExampleProperty"</span> ).validation()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>validation( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).validation()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>attach( <span class="unaffected">listener</span>, <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).attach( <span class="unaffected">listener</span> )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>detach( <span class="unaffected">listener</span>, <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.</span>property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ).detach( <span class="unaffected">listener</span> )</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="IModelParticle">IModelParticle</a></h2>
+
+<p>This interface has been removed and no direct analog has been provided. Reference Element and Property classes directly.</p>
+
+
+<h2><a name="ImpliedElementProperty">ImpliedElementProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ImpliedElementProperty</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ImpliedElementProperty</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ListProperty">ListProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ListProperty</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ListProperty</span></code></pre>
     </td>
   </tr>
 </table>
@@ -431,10 +887,133 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">MasterDetailsEditorPageState state = page.</font>getState<font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">MasterDetailsEditorPageState state = page.</span>getState<span class="unaffected">();</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">MasterDetailsEditorPageState state = page.</font>state<font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">MasterDetailsEditorPageState state = page.</span>state<span class="unaffected">();</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ModelElementHandle">ModelElementHandle</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.ModelElementHandle</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>ElementHandle</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">root = handle.root()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Element <span class="unaffected">root = handle.root()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = handle.parent()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Element <span class="unaffected">parent = handle.element()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>getProperty<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>definition<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>element<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>content<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>element<span class="unaffected">( createIfNecessary )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>content<span class="unaffected">( createIfNecessary )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>element<span class="unaffected">( createIfNecessary, type )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>content<span class="unaffected">( createIfNecessary, type )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>remove<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>clear<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>removable()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handle.</span>definition() instanceof ImplementElementProperty</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Status validation =</span> handle.validation()
+
+<span class="comment">or</span>
+
+<span class="unaffected">Status validation =</span> handle.validation( true )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="comment">Element property validation no longer includes validation of the child element.</span>
+
+Status.CompositeStatusFactory factory = Status.factoryForComposite();
+
+factory.merge( handle.validation() );
+
+Element child = handle.content();
+
+if( child != null )
+{
+    factory.merge( child.validation() );
+}
+
+<span class="unaffected">Status validation =</span> factory.create();</code></pre>
     </td>
   </tr>
 </table>
@@ -449,10 +1028,69 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">ListProperty property = element.getListProperty().</font>getParentProperty<code><font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.ModelElementList</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">ListProperty property = element.getListProperty().</font>property<code><font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>ElementList</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">root = list.root()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Element <span class="unaffected">root = list.root()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = list.parent()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Element <span class="unaffected">parent = list.element()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">list.</span>adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">list.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">list.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">list.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">list.</span>getParentProperty<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">list.</span>definition<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Status validation =</span> list.validation()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="comment">List property validation no longer includes validation of the child element.</span>
+
+Status.CompositeStatusFactory factory = Status.factoryForComposite();
+
+factory.merge( list.validation() );
+
+for( Element child : list )
+{
+    factory.merge( child.validation() );
+}
+
+<span class="unaffected">Status validation =</span> factory.create();</code></pre>
     </td>
   </tr>
 </table>
@@ -465,13 +1103,13 @@ of the generated implementation class. As such, the following methods have been 
 equivalents have been provided. For further guidance, post a question 
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
 
-<pre class="source-code"><code><font color="#888888">ModelElementType
-{</font>
+<pre class="source-code"><code><span class="unaffected">ModelElementType
+{</span>
     Class<?> getImplClass()
     String getImplClassName( Class<?> elementTypeClass )
     String getImplClassName( String elementTypeClassName, GenerateImpl generateImplAnnotation )
     String getImplClassName( String elementTypeClassName, String preferredImplPackageName, String preferredImplClassName )
-<font color="#888888">}</font></code></pre>
+<span class="unaffected">}</span></code></pre>
 
 <table>
   <tr>
@@ -480,10 +1118,44 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>List<font color="#888888">&lt;ModelProperty> properties = type.properties()</font></code></pre>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">modeling.ModelElementType</font></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>SortedSet<font color="#888888">&lt;ModelProperty> properties = type.properties()</font></code></pre>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">ElementType</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>List<span class="unaffected">&lt;ModelProperty> properties = type.properties()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>SortedSet<span class="unaffected">&lt;ModelProperty> properties = type.properties()</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ModelProperty">ModelProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">modeling.ModelProperty</font></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">PropertyDef</font></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">property.</span>getName()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">property.</span>name()</code></pre>
     </td>
   </tr>
 </table>
@@ -498,30 +1170,125 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class ExamplePossibleValuesService extends PossibleValuesService
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
 {
-    protected void fillPossibleValues(</font> SortedSet<font color="#888888">&lt;String> values )
+    protected void fillPossibleValues(</span> SortedSet<span class="unaffected">&lt;String> values )
     {
         ...
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class ExamplePossibleValuesService extends PossibleValuesService
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
 {
-    protected void fillPossibleValues(</font> Set<font color="#888888">&lt;String> values )
+    protected void fillPossibleValues(</span> Set<span class="unaffected">&lt;String> values )
     {
         ...
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>SortedSet<font color="#888888">&lt;String> values = possibleValuesService.values();</font></code></pre>
+<pre class="source-code"><code>SortedSet<span class="unaffected">&lt;String> values = possibleValuesService.values();</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>Set<font color="#888888">&lt;String> values = possibleValuesService.values();</font></code></pre>
+<pre class="source-code"><code>Set<span class="unaffected">&lt;String> values = possibleValuesService.values();</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyContentEvent">PropertyContentEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyContentEvent</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyContentEvent</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEnablementEvent">PropertyEnablementEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEvent">PropertyEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEvent</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyEvent</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyInitializationEvent">PropertyInitializationEvent</a></h2>
+
+<p>As an optimization, property initialization events are no longer broadcast.</p>
+
+
+<h2><a name="PropertyValidationEvent">PropertyValidationEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyValidationEvent</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyValidationEvent</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ReferenceValue">ReferenceValue</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ReferenceValue</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ReferenceValue</span></code></pre>
     </td>
   </tr>
 </table>
@@ -536,10 +1303,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">DiagramEditorPageState state = page.</font>getState<font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">DiagramEditorPageState state = page.</span>getState<span class="unaffected">();</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">DiagramEditorPageState state = page.</font>state<font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">DiagramEditorPageState state = page.</span>state<span class="unaffected">();</span></code></pre>
     </td>
   </tr>
 </table>
@@ -550,10 +1317,86 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <p>The following method has been removed and no direct equivalent have been provided. For further guidance, post a question 
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
 
-<pre class="source-code"><code><font color="#888888">SapphireEditor
-{</font>
+<pre class="source-code"><code><span class="unaffected">SapphireEditor
+{</span>
     File getDefaultStateStorageFile( SapphireEditorPagePart part )
-<font color="#888888">}</font></code></pre>
+<span class="unaffected">}</span></code></pre>
+
+
+<h2><a name="Transient">Transient</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">Transient</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">Transient</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">root = transient.root()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Element <span class="unaffected">root = transient.root()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.parent()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.element()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.</span>adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.</span>property<code><span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">transient.</span>definition<code><span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="TransientProperty">TransientProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">TransientProperty</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">TransientProperty</span></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="TypeCast">TypeCast</a></h2>
@@ -565,8 +1408,8 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">public class</font> StringToVersionTypeCast <font color="#888888">extends</font> TypeCast
-<font color="#888888">{</font>
+<pre class="source-code"><code><span class="unaffected">public class</span> StringToVersionTypeCast <span class="unaffected">extends</span> TypeCast
+<span class="unaffected">{</span>
     @Override
     public boolean applicable( FunctionContext context,
                                Function requestor,
@@ -576,17 +1419,17 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
         return ( target == Version.class && value instanceof String );
     }
 
-    <font color="#888888">@Override
-    public</font> Object evaluate( FunctionContext context,
+    <span class="unaffected">@Override
+    public</span> Object evaluate( FunctionContext context,
                             Function requestor,
                             Object value,
                             Class&lt;?> target )
-    <font color="#888888">{
+    <span class="unaffected">{
         Version result = null;
 		
         try
         {
-            result = new Version(</font> (String) value <font color="#888888">);
+            result = new Version(</span> (String) value <span class="unaffected">);
         }
         catch( IllegalArgumentException e )
         {
@@ -595,24 +1438,24 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 		
         return null;
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">public class</font> StringToVersionConversionService <font color="#888888">extends</font> ConversionService&lt;String,Version>
-<font color="#888888">{</font>
+<pre class="source-code"><code><span class="unaffected">public class</span> StringToVersionConversionService <span class="unaffected">extends</span> ConversionService&lt;String,Version>
+<span class="unaffected">{</span>
     public StringToVersionConversionService()
     {
         super( String.class, Version.class );
     }
 
-    <font color="#888888">@Override
-    public</font> Version convert( String string )
-    <font color="#888888">{
+    <span class="unaffected">@Override
+    public</span> Version convert( String string )
+    <span class="unaffected">{
         Version result = null;
         
         try
         {
-            result = new Version(</font> string <font color="#888888">);
+            result = new Version(</span> string <span class="unaffected">);
         }
         catch( IllegalArgumentException e )
         {
@@ -621,27 +1464,27 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
         
         return result;
     }
-}</font></code></pre>
+}</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">&lt;extension></font>
+<pre class="source-code"><code><span class="unaffected">&lt;extension></span>
     &lt;type-cast>
         &lt;source>java.lang.String&lt;/source>
         &lt;target>org.eclipse.sapphire.Version&lt;/target>
         &lt;impl>org.eclipse.sapphire.modeling.el.internal.StringToVersionTypeCast&lt;/impl>
     &lt;/type-cast>
-<font color="#888888">&lt;/extension></font></code></pre>
+<span class="unaffected">&lt;/extension></span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">&lt;extension></font>
+<pre class="source-code"><code><span class="unaffected">&lt;extension></span>
     &lt;service>
         &lt;id>Sapphire.ConversionService.StringToVersion&lt;/id>
         &lt;implementation>org.eclipse.sapphire.internal.StringToVersionConversionService&lt;/implementation>
         &lt;context>Sapphire&lt;/context>
     &lt;/service>
-<font color="#888888">&lt;/extension></font></code></pre>
+<span class="unaffected">&lt;/extension></span></code></pre>
     </td>
   </tr>
 </table>
@@ -665,6 +1508,45 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="ValidationAggregationService">ValidationAggregationService</a></h2>
+
+<p>As an optimization, the aggregation intermediary to ValidationService has been removed. Adopters should not use ValidationService directly. Instead, access
+validation using Property.validation() API. The property manages the interaction with ValidationService implementations.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Status validation = property</span>.service( ValidationAggregationService.class ).<span class="unaffected">validation();</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Status validation = property</span>.<span class="unaffected">validation()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValueProperty">ValueProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ValueProperty</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ValueProperty</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="Value">Value</a></h2>
 
 <table>
@@ -674,10 +1556,130 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">ValueProperty property = element.getValueProperty().</font>getProperty<code><font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">Value</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">ValueProperty property = element.getValueProperty().</font>property<code><font color="#888888">();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">Value</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">root = value.root()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Element <span class="unaffected">root = value.root()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = value.parent()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Element <span class="unaffected">parent = value.element()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getProperty<code><span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>definition<code><span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getText<code><span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>text<code><span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getText<code><span class="unaffected">( useDefaultValue )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>text<code><span class="unaffected">( useDefaultValue )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getLocalizedText<code><span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>localized<code><span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getLocalizedText<code><span class="unaffected">( useDefaultValue )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>localized<code><span class="unaffected">( useDefaultValue )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getLocalizedText<code><span class="unaffected">( capitalizationType, includeMnemonic )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>localized<code><span class="unaffected">( capitalizationType, includeMnemonic )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getLocalizedText<code><span class="unaffected">( useDefaultValue, capitalizationType, includeMnemonic )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>localized<code><span class="unaffected">( useDefaultValue, capitalizationType, includeMnemonic )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getContent<code><span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>content<code><span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>getContent<code><span class="unaffected">( useDefaultValue )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>content<code><span class="unaffected">( useDefaultValue )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>isDefault<code><span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>empty<code><span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>isMalformed<code><span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">value.</span>malformed<code><span class="unaffected">()</span></code></pre>
     </td>
   </tr>
 </table>
@@ -692,18 +1694,18 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">Integer num = </font>(Integer) <font color="#888888">element.service( prop,</font> ValueSerializationMasterService<font color="#888888">.class ).</font>decode<font color="#888888">( str );</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">Integer num = </span>(Integer) <span class="unaffected">element.service( prop,</span> ValueSerializationMasterService<span class="unaffected">.class ).</span>decode<span class="unaffected">( str );</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">Integer num = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( str</font>, Integer.class <font color="#888888">);</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">Integer num = element.service( prop,</span> MasterConversionService<span class="unaffected">.class ).</span>convert<span class="unaffected">( str</span>, Integer.class <span class="unaffected">);</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> ValueSerializationMasterService<font color="#888888">.class ).</font>encode<font color="#888888">( num );</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">String str = element.service( prop,</span> ValueSerializationMasterService<span class="unaffected">.class ).</span>encode<span class="unaffected">( num );</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( num</font>, String.class <font color="#888888">);</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">String str = element.service( prop,</span> MasterConversionService<span class="unaffected">.class ).</span>convert<span class="unaffected">( num</span>, String.class <span class="unaffected">);</span></code></pre>
     </td>
   </tr>
 </table>
@@ -718,18 +1720,18 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">Integer num = </font>(Integer) <font color="#888888">element.service( prop,</font> ValueSerializationService<font color="#888888">.class ).</font>decode<font color="#888888">( str );</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">Integer num = </span>(Integer) <span class="unaffected">element.service( prop,</span> ValueSerializationService<span class="unaffected">.class ).</span>decode<span class="unaffected">( str );</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">Integer num = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( str</font>, Integer.class <font color="#888888">);</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">Integer num = element.service( prop,</span> MasterConversionService<span class="unaffected">.class ).</span>convert<span class="unaffected">( str</span>, Integer.class <span class="unaffected">);</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> ValueSerializationService<font color="#888888">.class ).</font>encode<font color="#888888">( num );</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">String str = element.service( prop,</span> ValueSerializationService<span class="unaffected">.class ).</span>encode<span class="unaffected">( num );</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">String str = element.service( prop,</font> MasterConversionService<font color="#888888">.class ).</font>convert<font color="#888888">( num</font>, String.class <font color="#888888">);</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">String str = element.service( prop,</span> MasterConversionService<span class="unaffected">.class ).</span>convert<span class="unaffected">( num</span>, String.class <span class="unaffected">);</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -794,10 +1796,10 @@ matches the default implementation of the encode() method.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">XmlDocumentSchemasCache.getSchema</font>( location, referer )</code></pre>
+<pre class="source-code"><code><span class="unaffected">XmlDocumentSchemasCache.getSchema</span>( location, referer )</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">XmlDocumentSchemasCache.getSchema</font>( referer, null, location )</code></pre>
+<pre class="source-code"><code><span class="unaffected">XmlDocumentSchemasCache.getSchema</span>( referer, null, location )</code></pre>
     </td>
   </tr>
 </table>
@@ -812,22 +1814,22 @@ matches the default implementation of the encode() method.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
-XmlResource parent = resource.parent();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">XmlResource resource = ...
+XmlResource parent = resource.parent();</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
-XmlResource parent =</font> (XmlResource) <font color="#888888">resource.parent();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">XmlResource resource = ...
+XmlResource parent =</span> (XmlResource) <span class="unaffected">resource.parent();</span></code></pre>
     </td>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
-RootXmlResource root = resource.root();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">XmlResource resource = ...
+RootXmlResource root = resource.root();</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">XmlResource resource = ...
-RootXmlResource root =</font> (RootXmlResource) <font color="#888888">resource.root();</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">XmlResource resource = ...
+RootXmlResource root =</span> (RootXmlResource) <span class="unaffected">resource.root();</span></code></pre>
     </td>
   </tr>
 </table>
@@ -847,10 +1849,10 @@ metamodel context will need an adjustment.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><font color="#888888">@Service( impl = ExampleService.class )</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">@Service( impl = ExampleService.class )</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><font color="#888888">@Service( impl = ExampleService.class</font>, context = Service.Context.METAMODEL <font color="#888888">)</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">@Service( impl = ExampleService.class</span>, context = Service.Context.METAMODEL <span class="unaffected">)</span></code></pre>
     </td>
   </tr>
 </table>

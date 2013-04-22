@@ -13,8 +13,8 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.List;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.Service;
@@ -31,7 +31,7 @@ public final class StandardElementDocumentationService extends StandardDocumenta
     protected void initStandardDocumentationService( final StringBuilder content,
                                                      final List<Topic> topics )
     {
-        final ModelElementType type = context( ModelElementType.class );
+        final ElementType type = context( ElementType.class );
         final Documentation docAnnotation = type.getAnnotation( Documentation.class );
         
         if( docAnnotation != null )
@@ -54,7 +54,7 @@ public final class StandardElementDocumentationService extends StandardDocumenta
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return context.find( ModelElementType.class ).hasAnnotation( Documentation.class );
+            return context.find( ElementType.class ).hasAnnotation( Documentation.class );
         }
     
         @Override

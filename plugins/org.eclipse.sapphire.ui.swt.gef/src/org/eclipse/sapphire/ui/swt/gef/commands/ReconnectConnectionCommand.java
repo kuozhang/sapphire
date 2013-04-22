@@ -13,8 +13,8 @@
 package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -97,7 +97,7 @@ public class ReconnectConnectionCommand extends Command {
         DiagramConnectionPart newConnPart = 
             connectionPart.getDiagramConnectionTemplate().createNewDiagramConnection(srcNode, targetNode); 
 
-        final IModelElement oldConnElement = connectionPart.getLocalModelElement();
+        final Element oldConnElement = connectionPart.getLocalModelElement();
         newConnPart.getLocalModelElement().copy(oldConnElement);
         // Bug 382912 - Reconnecting an existing connection adds a bend point 
         // After the copy, connection endpoint event is triggered which causes SapphireConnectionRouter
@@ -112,7 +112,7 @@ public class ReconnectConnectionCommand extends Command {
 		{
 			newConnPart.resetEndpoint2(newTarget.getModelPart());
 		}
-        final ModelElementList<?> list = (ModelElementList<?>) oldConnElement.parent();
+        final ElementList<?> list = (ElementList<?>) oldConnElement.parent();
         list.remove(oldConnElement);
 	}
 

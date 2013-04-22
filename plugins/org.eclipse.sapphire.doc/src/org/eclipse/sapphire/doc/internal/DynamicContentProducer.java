@@ -25,10 +25,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.IHelpContentProducer;
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.ConversionService;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -77,14 +77,14 @@ public class DynamicContentProducer implements IHelpContentProducer
                 op.setCreateFinishedDocument( false );
 
                 final ExtensionSummarySectionDef section = op.getSections().insert();
-                section.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.getName() );
+                section.setExtensionType( SapphireExtensionDef.PROP_FUNCTIONS.name() );
                 section.setIncludeSectionHeader( false );
 
                 final ExtensionSummarySectionColumnDef nameColumn = section.getColumns().insert();
-                nameColumn.setName( FunctionDef.PROP_NAME.getName() );
+                nameColumn.setName( FunctionDef.PROP_NAME.name() );
 
                 final ExtensionSummarySectionColumnDef descColumn = section.getColumns().insert();
-                descColumn.setName( FunctionDef.PROP_DESCRIPTION.getName() );
+                descColumn.setName( FunctionDef.PROP_DESCRIPTION.name() );
 
                 final String functions = op.execute( getExtensions(), null );
 
@@ -97,24 +97,24 @@ public class DynamicContentProducer implements IHelpContentProducer
                 op.setCreateFinishedDocument( false );
 
                 final ExtensionSummarySectionDef section = op.getSections().insert();
-                section.setExtensionType( SapphireExtensionDef.PROP_SERVICES.getName() );
+                section.setExtensionType( SapphireExtensionDef.PROP_SERVICES.name() );
                 section.setIncludeSectionHeader( false );
 
                 final ExtensionSummarySectionColumnDef idColumn = section.getColumns().insert();
-                idColumn.setName( ServiceDef.PROP_ID.getName() );
+                idColumn.setName( ServiceDef.PROP_ID.name() );
 
                 final ExtensionSummarySectionColumnDef descColumn = section.getColumns().insert();
-                descColumn.setName( ServiceDef.PROP_DESCRIPTION.getName() );
+                descColumn.setName( ServiceDef.PROP_DESCRIPTION.name() );
                 
-                final Filter<IModelElement> filter = new Filter<IModelElement>()
+                final Filter<Element> filter = new Filter<Element>()
                 {
                     @Override
-                    public boolean allows( final IModelElement element )
+                    public boolean allows( final Element element )
                     {
                         if( element instanceof ServiceDef )
                         {
                             final ServiceDef def = (ServiceDef) element;
-                            final String id = def.getId().getText();
+                            final String id = def.getId().text();
                             
                             JavaType type = def.getType().resolve();
                             
@@ -147,24 +147,24 @@ public class DynamicContentProducer implements IHelpContentProducer
                 op.setCreateFinishedDocument( false );
 
                 final ExtensionSummarySectionDef section = op.getSections().insert();
-                section.setExtensionType( SapphireExtensionDef.PROP_SERVICES.getName() );
+                section.setExtensionType( SapphireExtensionDef.PROP_SERVICES.name() );
                 section.setIncludeSectionHeader( false );
 
                 final ExtensionSummarySectionColumnDef idColumn = section.getColumns().insert();
-                idColumn.setName( ServiceDef.PROP_ID.getName() );
+                idColumn.setName( ServiceDef.PROP_ID.name() );
 
                 final ExtensionSummarySectionColumnDef descColumn = section.getColumns().insert();
-                descColumn.setName( ServiceDef.PROP_DESCRIPTION.getName() );
+                descColumn.setName( ServiceDef.PROP_DESCRIPTION.name() );
                 
-                final Filter<IModelElement> filter = new Filter<IModelElement>()
+                final Filter<Element> filter = new Filter<Element>()
                 {
                     @Override
-                    public boolean allows( final IModelElement element )
+                    public boolean allows( final Element element )
                     {
                         if( element instanceof ServiceDef )
                         {
                             final ServiceDef def = (ServiceDef) element;
-                            final String id = def.getId().getText();
+                            final String id = def.getId().text();
                             
                             JavaType type = def.getType().resolve();
                             
@@ -217,7 +217,7 @@ public class DynamicContentProducer implements IHelpContentProducer
         return null;
     }
 
-    private static String exportModelDocumentation( final ModelElementType type )
+    private static String exportModelDocumentation( final ElementType type )
     {
         final IExportModelDocumentationOp op = IExportModelDocumentationOp.TYPE.instantiate();
         op.setCreateFinishedDocument( false );

@@ -16,7 +16,7 @@ import static org.eclipse.sapphire.modeling.el.internal.FunctionUtils.isDecimalS
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.eclipse.sapphire.modeling.Value;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
@@ -60,11 +60,11 @@ public final class ArithmeticNegationFunction extends Function
             @Override
             protected Object evaluate()
             {
-                Object a = operand( 0 ).value();
+                Object a = operand( 0 );
                 
                 if( a instanceof Value<?> )
                 {
-                    a = ( (Value<?>) a ).getContent();
+                    a = ( (Value<?>) a ).content();
                 }
                 
                 if( a == null )

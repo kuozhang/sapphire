@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.util;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IContext2;
 import org.eclipse.help.IHelpResource;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.internal.DocumentationUtil;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -71,24 +71,24 @@ public class SapphireHelpSystem {
         
         public DocumentationContext(final ISapphireDocumentationDef def) {
             if (def != null) {
-                this.title = def.getTitle().getLocalizedText();
+                this.title = def.getTitle().localized();
                 if (this.title != null) {
                     this.title = LabelTransformer.transform( this.title, CapitalizationType.TITLE_STYLE, false );
                 }
-                this.content = DocumentationUtil.decodeDocumentationTags(def.getContent().getLocalizedText());
+                this.content = DocumentationUtil.decodeDocumentationTags(def.getContent().localized());
                 
-                ModelElementList<ISapphireDocumentationTopicDef> topics = def.getTopics();
+                ElementList<ISapphireDocumentationTopicDef> topics = def.getTopics();
                 final int length = topics.size();
                 this.topics = new IHelpResource[length];
                 for( int i = 0, n = length; i < n; i++ ) {
                     final ISapphireDocumentationTopicDef topic = topics.get(i);
                     this.topics[i] = new IHelpResource() {
                         public String getHref() {
-                            return topic.getHref().getText();
+                            return topic.getHref().text();
                         }
         
                         public String getLabel() {
-                            String label = topic.getLabel().getLocalizedText();
+                            String label = topic.getLabel().localized();
                             if (label != null) {
                                 return LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
                             }

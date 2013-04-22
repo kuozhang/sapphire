@@ -40,8 +40,9 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.SensitiveData;
 import org.eclipse.sapphire.services.ContentProposal;
@@ -118,13 +119,12 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
                                       final boolean suppressBrowseAction )
     {
         final PropertyEditorPart part = getPart();
-        final IModelElement element = part.getLocalModelElement();
-        final ValueProperty property = (ValueProperty) part.getProperty();
+        final Property property = part.property();
         
-        final boolean isLongString = property.hasAnnotation( LongString.class );
-        final boolean isDeprecated = property.hasAnnotation( Deprecated.class );
-        final boolean isReadOnly = ( property.isReadOnly() || part.getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );
-        final boolean isSensitiveData = property.hasAnnotation( SensitiveData.class );
+        final boolean isLongString = property.definition().hasAnnotation( LongString.class );
+        final boolean isDeprecated = property.definition().hasAnnotation( Deprecated.class );
+        final boolean isReadOnly = ( property.definition().isReadOnly() || part.getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );
+        final boolean isSensitiveData = property.definition().hasAnnotation( SensitiveData.class );
         
         final SapphireActionGroup actions = getActions();
         final SapphireActionHandler jumpActionHandler = actions.getAction( ACTION_JUMP ).getFirstActiveHandler();
@@ -217,7 +217,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
             @Override
             public String getDefaultText()
             {
-                String def = element.read( getProperty() ).getDefaultText();
+                String def = ( (Value<?>) property ).getDefaultText();
                 
                 if( def != null && isSensitiveData )
                 {
@@ -296,7 +296,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
             relatedControls.add( toolbar );
         }
         
-        final ContentProposalService contentProposalService = element.service( property, ContentProposalService.class );
+        final ContentProposalService contentProposalService = property.service( ContentProposalService.class );
         
         if( contentProposalService != null )
         {
@@ -336,7 +336,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
                 try
                 {
                     final ValuePropertyEditorListener listener = (ValuePropertyEditorListener) cl.newInstance();
-                    listener.initialize( this.context, element, property );
+                    listener.initialize( this.context, property.element(), property.definition() );
                     listeners.add( listener );
                 }
                 catch( Exception e )
@@ -376,7 +376,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
     @Override
     protected boolean canScaleVertically()
     {
-        return getProperty().hasAnnotation( LongString.class );
+        return property().definition().hasAnnotation( LongString.class );
     }
     
     @Override
@@ -388,9 +388,9 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
     public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
-            return ( propertyEditorDefinition.getProperty() instanceof ValueProperty );
+            return ( propertyEditorPart.property().definition() instanceof ValueProperty );
         }
         
         @Override

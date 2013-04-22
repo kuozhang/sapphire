@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ServiceFactory;
@@ -27,21 +26,15 @@ import org.eclipse.sapphire.services.ServiceFactory;
 public final class VersionCompatibilityValidationServiceForProperty extends VersionCompatibilityValidationService
 {
     @Override
-    protected IModelElement element()
+    protected Property property()
     {
-        return context( IModelElement.class );
-    }
-
-    @Override
-    protected ModelProperty property()
-    {
-        return context( ModelProperty.class );
+        return context( Property.class );
     }
     
     @Override
     protected boolean problem()
     {
-        return ( super.problem() && ! element().empty( property() ) );
+        return ( super.problem() && ! property().empty() );
     }
     
     public static final class Factory extends ServiceFactory

@@ -15,13 +15,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -52,14 +50,11 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
         setLabel( Resources.label );
         addImage( ImageData.createFromClassLoader( AbsoluteFilePathBrowseActionHandler.class, "File.png" ) );
         
-        final IModelElement element = getModelElement();
-        final ModelProperty property = getProperty();
-        
         final String staticFileExtensions = def.getParam( PARAM_EXTENSIONS );
         
         if( staticFileExtensions == null )
         {
-            this.fileExtensionService = element.service( property, FileExtensionsService.class );
+            this.fileExtensionService = property().service( FileExtensionsService.class );
             
             if( this.fileExtensionService == null )
             {
@@ -85,13 +80,13 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
     @Override
     protected String browse( final SapphireRenderingContext context )
     {
-        final ValueProperty property = getProperty();
+        final Property property = property();
         
         final FileDialog dialog = new FileDialog( context.getShell() );
-        dialog.setText( property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
+        dialog.setText( property.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
         
-        final Value<Path> value = getModelElement().read( property );
-        final Path path = value.getContent();
+        final Value<?> value = (Value<?>) property;
+        final Path path = (Path) value.content();
         
         if( path != null && path.segmentCount() > 1 )
         {

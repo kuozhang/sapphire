@@ -61,9 +61,9 @@ public abstract class SapphireActionSystemPart
         
         if( def != null )
         {
-            this.id = def.getId().getContent();
+            this.id = def.getId().content();
             
-            final Function labelFunction = FailSafeFunction.create( def.getLabel().getContent(), Literal.create( String.class ) );
+            final Function labelFunction = FailSafeFunction.create( def.getLabel().content(), Literal.create( String.class ) );
             
             this.labelFunctionResult = labelFunction.evaluate( this.functionContext );
             
@@ -79,7 +79,7 @@ public abstract class SapphireActionSystemPart
                 }
             );
             
-            final Function toolTipFunction = FailSafeFunction.create( def.getToolTip().getContent(), Literal.create( String.class ) );
+            final Function toolTipFunction = FailSafeFunction.create( def.getToolTip().content(), Literal.create( String.class ) );
 
             this.toolTipFunctionResult = toolTipFunction.evaluate( this.functionContext );
 
@@ -95,11 +95,11 @@ public abstract class SapphireActionSystemPart
                 }
             );
 
-            this.description = def.getDescription().getContent();
+            this.description = def.getDescription().content();
             
             for( ImageReference image : def.getImages() )
             {
-                final Function imageFunction = FailSafeFunction.create( image.getImage().getContent(), Literal.create( ImageData.class ) );
+                final Function imageFunction = FailSafeFunction.create( image.getImage().content(), Literal.create( ImageData.class ) );
                 final FunctionResult imageFunctionResult = imageFunction.evaluate( this.functionContext ); 
                 final ImageData data = (ImageData) imageFunctionResult.value();
                 
@@ -113,7 +113,7 @@ public abstract class SapphireActionSystemPart
             
             for( ActionLocationHint locationHintDef : def.getLocationHints() )
             {
-                final String locationHintText = locationHintDef.getReferenceEntityId().getContent();
+                final String locationHintText = locationHintDef.getReferenceEntityId().content();
                 
                 if( locationHintText != null )
                 {

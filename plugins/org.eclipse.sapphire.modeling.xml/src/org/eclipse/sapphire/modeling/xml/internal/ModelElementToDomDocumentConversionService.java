@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.modeling.xml.internal;
 
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.modeling.ModelElement;
+import org.eclipse.sapphire.ElementImpl;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
@@ -24,15 +24,15 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ModelElementToDomDocumentConversionService extends ConversionService<ModelElement,Document>
+public final class ModelElementToDomDocumentConversionService extends ConversionService<ElementImpl,Document>
 {
     public ModelElementToDomDocumentConversionService()
     {
-        super( ModelElement.class, Document.class );
+        super( ElementImpl.class, Document.class );
     }
 
     @Override
-    public Document convert( final ModelElement element )
+    public Document convert( final ElementImpl element )
     {
         final Resource resource = element.resource();
         

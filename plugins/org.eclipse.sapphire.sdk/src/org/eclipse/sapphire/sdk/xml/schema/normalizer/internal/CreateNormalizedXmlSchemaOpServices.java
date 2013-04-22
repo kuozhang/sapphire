@@ -16,8 +16,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.platform.PathBridge;
 import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp;
 import org.eclipse.sapphire.services.InitialValueService;
@@ -47,7 +47,7 @@ public final class CreateNormalizedXmlSchemaOpServices
                 }
             };
             
-            context( CreateNormalizedXmlSchemaOp.class ).attach( this.listener, CreateNormalizedXmlSchemaOp.PROP_CONTEXT );
+            context( CreateNormalizedXmlSchemaOp.class ).property( CreateNormalizedXmlSchemaOp.PROP_CONTEXT ).attach( this.listener );
         }
     
         @Override
@@ -71,7 +71,7 @@ public final class CreateNormalizedXmlSchemaOpServices
             
             if( this.listener != null )
             {
-                context( CreateNormalizedXmlSchemaOp.class ).detach( this.listener, CreateNormalizedXmlSchemaOp.PROP_CONTEXT );
+                context( CreateNormalizedXmlSchemaOp.class ).property( CreateNormalizedXmlSchemaOp.PROP_CONTEXT ).detach( this.listener );
             }
         }
     }
@@ -81,8 +81,8 @@ public final class CreateNormalizedXmlSchemaOpServices
         @Override
         protected void handleTypedEvent( final PropertyContentEvent event )
         {
-            final CreateNormalizedXmlSchemaOp op = (CreateNormalizedXmlSchemaOp) event.element();
-            final Path sourceFilePath = op.getSourceFile().getContent();
+            final CreateNormalizedXmlSchemaOp op = (CreateNormalizedXmlSchemaOp) event.property().element();
+            final Path sourceFilePath = op.getSourceFile().content();
             
             String folder = null;
             String fileName = null;
@@ -121,10 +121,10 @@ public final class CreateNormalizedXmlSchemaOpServices
             {
                 try
                 {
-                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_ROOT_ELEMENTS );
-                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_EXCLUSIONS );
-                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_TYPE_SUBSTITUTIONS );
-                    op.copy( state, CreateNormalizedXmlSchemaOp.PROP_SORT_SEQUENCE_CONTENT );
+                    op.property( CreateNormalizedXmlSchemaOp.PROP_ROOT_ELEMENTS ).copy( state );
+                    op.property( CreateNormalizedXmlSchemaOp.PROP_EXCLUSIONS ).copy( state );
+                    op.property( CreateNormalizedXmlSchemaOp.PROP_TYPE_SUBSTITUTIONS ).copy( state );
+                    op.property( CreateNormalizedXmlSchemaOp.PROP_SORT_SEQUENCE_CONTENT ).copy( state );
                 }
                 finally
                 {

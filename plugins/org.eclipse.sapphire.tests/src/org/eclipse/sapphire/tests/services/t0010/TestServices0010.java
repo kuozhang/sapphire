@@ -14,12 +14,13 @@ package org.eclipse.sapphire.tests.services.t0010;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.Version;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
@@ -141,7 +142,7 @@ public final class TestServices0010 extends SapphireTestCase
         assertNull( rootContextVersionService.version() );
 
         final TestVersionCompatibilityService service 
-            = (TestVersionCompatibilityService) root.service( RootElement.PROP_VALUE_VERSION_COMPATIBILITY_SERVICE, VersionCompatibilityService.class );
+            = (TestVersionCompatibilityService) root.property( RootElement.PROP_VALUE_VERSION_COMPATIBILITY_SERVICE ).service( VersionCompatibilityService.class );
         
         assertNotNull( service );
         
@@ -164,7 +165,7 @@ public final class TestServices0010 extends SapphireTestCase
     {
         final RootElement root = RootElement.TYPE.instantiate();
         
-        final ChildElement elementPropertyChild = root.getChild().element( true );
+        final ChildElement elementPropertyChild = root.getChild().content( true );
         final ChildElement impliedElementPropertyChild = root.getChildImplied();
         final ChildElement listElementChild1 = root.getChildren().insert();
         final ChildElement listElementChild2 = root.getChildren().insert();
@@ -256,17 +257,17 @@ public final class TestServices0010 extends SapphireTestCase
         
         assertValidationOk( root.getChild() );
         
-        root.getChild().element( true );
+        root.getChild().content( true );
         assertValidationError( root.getChild(), "Version constraint exists, but no version constraint target was found." );
 
-        root.getChild().remove();
+        root.getChild().clear();
         root.setVersion( "1.0" );
         assertValidationOk( root.getChild() );
         
-        root.getChild().element( true );
+        root.getChild().content( true );
         assertValidationError( root.getChild(), "Not compatible with version 1 of Test Versioned System." );
         
-        root.getChild().remove();
+        root.getChild().clear();
         assertValidationOk( root.getChild() );
     }
     
@@ -293,65 +294,69 @@ public final class TestServices0010 extends SapphireTestCase
     public void testVersionCompatibilityEnablementServiceForValue() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
+        final Property property = root.property( RootElement.PROP_VALUE_SINCE );
         
-        assertFalse( root.enabled( RootElement.PROP_VALUE_SINCE ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_VALUE_SINCE ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "3.0" );
-        assertTrue( root.enabled( RootElement.PROP_VALUE_SINCE ) );
+        assertTrue( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_VALUE_SINCE ) );
+        assertFalse( property.enabled() );
     }
     
     public void testVersionCompatibilityEnablementServiceForElement() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
+        final Property property = root.property( RootElement.PROP_CHILD );
         
-        assertFalse( root.enabled( RootElement.PROP_CHILD ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_CHILD ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "3.0" );
-        assertTrue( root.enabled( RootElement.PROP_CHILD ) );
+        assertTrue( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_CHILD ) );
+        assertFalse( property.enabled() );
     }
 
     public void testVersionCompatibilityEnablementServiceForElementImplied() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
+        final Property property = root.property( RootElement.PROP_CHILD_IMPLIED );
         
-        assertFalse( root.enabled( RootElement.PROP_CHILD_IMPLIED ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_CHILD_IMPLIED ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "3.0" );
-        assertTrue( root.enabled( RootElement.PROP_CHILD_IMPLIED ) );
+        assertTrue( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_CHILD_IMPLIED ) );
+        assertFalse( property.enabled() );
     }
     
     public void testVersionCompatibilityEnablementServiceForList() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
+        final Property property = root.property( RootElement.PROP_CHILDREN );
         
-        assertFalse( root.enabled( RootElement.PROP_CHILDREN ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_CHILDREN ) );
+        assertFalse( property.enabled() );
         
         root.setVersion( "3.0" );
-        assertTrue( root.enabled( RootElement.PROP_CHILDREN ) );
+        assertTrue( property.enabled() );
         
         root.setVersion( "1.0" );
-        assertFalse( root.enabled( RootElement.PROP_CHILDREN ) );
+        assertFalse( property.enabled() );
     }
 
     public void testVersionCompatibilityFactsService() throws Exception
@@ -378,11 +383,11 @@ public final class TestServices0010 extends SapphireTestCase
         assertFact( child, ChildElement.PROP_VALUE_SINCE, "Since Test Versioned System 3" );
     }
 
-    private static void assertVersionCompatibility( final IModelElement element,
-                                                    final ModelProperty property,
+    private static void assertVersionCompatibility( final Element element,
+                                                    final PropertyDef property,
                                                     final boolean expectedVersionCompatibility )
     {
-        final MasterVersionCompatibilityService service = element.service( property, MasterVersionCompatibilityService.class );
+        final MasterVersionCompatibilityService service = element.property( property ).service( MasterVersionCompatibilityService.class );
         
         assertNotNull( service );
         assertEquals( expectedVersionCompatibility, service.compatible() );

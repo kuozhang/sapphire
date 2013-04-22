@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.modeling.LoggingService;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -40,9 +42,16 @@ public abstract class ServiceFactoryProxy
     {
         boolean result = false;
     
-        if( service.isAssignableFrom( type() ) )
+        try
         {
-            result = applicableHandOff( context, service );
+            if( service.isAssignableFrom( type() ) )
+            {
+                result = applicableHandOff( context, service );
+            }
+        }
+        catch( Exception e )
+        {
+            LoggingService.log( e );
         }
     
         return result;
@@ -57,7 +66,18 @@ public abstract class ServiceFactoryProxy
     public final Service create( final ServiceContext context,
                                  final Class<? extends Service> service )
     {
-        return createHandOff( context, service );
+        Service result = null;
+        
+        try
+        {
+            result = createHandOff( context, service );
+        }
+        catch( Exception e )
+        {
+            LoggingService.log( e );
+        }
+        
+        return result;
     }
 
     protected abstract Service createHandOff( ServiceContext context,

@@ -11,14 +11,14 @@
 
 package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityTarget;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -44,8 +44,8 @@ public final class DeclarativeVersionCompatibilityTargetService extends VersionC
     @Override
     protected void initContextVersionService()
     {
-        final IModelElement element = context( IModelElement.class );
-        final ModelProperty property = context( ModelProperty.class );
+        final Element element = context( Element.class );
+        final PropertyDef property = context( PropertyDef.class );
         
         final VersionCompatibilityTarget versionCompatibilityTargetAnnotation;
         
@@ -171,7 +171,7 @@ public final class DeclarativeVersionCompatibilityTargetService extends VersionC
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             
             if( property != null )
             {
@@ -179,7 +179,7 @@ public final class DeclarativeVersionCompatibilityTargetService extends VersionC
             }
             else
             {
-                final IModelElement element = context.find( IModelElement.class );
+                final Element element = context.find( Element.class );
                 return element != null && element.type().hasAnnotation( VersionCompatibilityTarget.class );
             }
         }

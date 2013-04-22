@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.Status;
  */
 
 @Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD, ElementType.TYPE } )
+@Target( ElementType.FIELD )
 
 public @interface Validation
 {

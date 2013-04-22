@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.services.ImageService;
@@ -44,7 +44,7 @@ public final class ContactRepositoryImageService extends ImageService
             }
         };
         
-        context( IModelElement.class ).attach( this.listener, "Contacts/EMail" );
+        context( Element.class ).attach( this.listener, "Contacts/EMail" );
     }
 
     @Override
@@ -54,7 +54,7 @@ public final class ContactRepositoryImageService extends ImageService
         
         for( Contact contact : context( ContactRepository.class ).getContacts() )
         {
-            if( contact.getEMail().getContent() != null )
+            if( contact.getEMail().content() != null )
             {
                 foundContactWithEMail = true;
                 break;
@@ -69,7 +69,7 @@ public final class ContactRepositoryImageService extends ImageService
     {
         super.dispose();
         
-        context( IModelElement.class ).detach( this.listener, "Contacts/EMail" );
+        context( Element.class ).detach( this.listener, "Contacts/EMail" );
     }
     
 }

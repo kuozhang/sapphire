@@ -78,8 +78,8 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * Constructs a SapphireSequenceLayout with a specified SequenceLayoutDef
 	 */
 	public SapphireSequenceLayout(SequenceLayoutDef def) {
-		setHorizontal(def.getOrientation().getContent() == SequenceLayoutOrientation.HORIZONTAL);
-		setSpacing(def.getSpacing().getContent());
+		setHorizontal(def.getOrientation().content() == SequenceLayoutOrientation.HORIZONTAL);
+		setSpacing(def.getSpacing().content());
 		this.marginInsets = LayoutUtil.calculateMargin(def);
 	}
 	

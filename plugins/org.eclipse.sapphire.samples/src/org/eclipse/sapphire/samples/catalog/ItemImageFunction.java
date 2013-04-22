@@ -13,11 +13,11 @@ package org.eclipse.sapphire.samples.catalog;
 
 import static java.lang.Math.abs;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
@@ -62,7 +62,7 @@ public final class ItemImageFunction extends Function
             
             if( page != null )
             {
-                final IModelElement element = part.getLocalModelElement();
+                final Element element = part.getLocalModelElement();
                 
                 if( element instanceof Item )
                 {
@@ -85,8 +85,8 @@ public final class ItemImageFunction extends Function
                                 }
                             };
                             
-                            state.attach( this.listener, MasterDetailsEditorPageState.PROP_ATTRIBUTES.getName() + "/*" );
-                            element.attach( this.listener, Item.PROP_MANUFACTURER );
+                            state.attach( this.listener, MasterDetailsEditorPageState.PROP_ATTRIBUTES.name() + "/*" );
+                            element.property( Item.PROP_MANUFACTURER ).attach( this.listener );
                         }
     
                         @Override
@@ -96,7 +96,7 @@ public final class ItemImageFunction extends Function
                             
                             if( color )
                             {
-                                final String manufacturer = item.getManufacturer().getContent();
+                                final String manufacturer = item.getManufacturer().content();
                                 final int hashCode = ( manufacturer == null ? 0 : manufacturer.hashCode() );
                                 final int index = abs( hashCode ) % IMAGES.length;
                                 
@@ -115,8 +115,8 @@ public final class ItemImageFunction extends Function
                             
                             if( this.listener != null )
                             {
-                                state.detach( this.listener, MasterDetailsEditorPageState.PROP_ATTRIBUTES.getName() + "/*" );
-                                element.detach( this.listener, Item.PROP_MANUFACTURER );
+                                state.detach( this.listener, MasterDetailsEditorPageState.PROP_ATTRIBUTES.name() + "/*" );
+                                element.property( Item.PROP_MANUFACTURER ).detach( this.listener );
                                 
                                 this.listener = null;
                             }

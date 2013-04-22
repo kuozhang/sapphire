@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 public interface ConditionalDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( ConditionalDef.class );
+    ElementType TYPE = new ElementType( ConditionalDef.class );
     
     // *** Condition ***
     
@@ -78,7 +78,7 @@ public interface ConditionalDef extends FormComponentDef
                              
     ListProperty PROP_THEN_CONTENT = new ListProperty( TYPE, "ThenContent" );
     
-    ModelElementList<PartDef> getThenContent();
+    ElementList<PartDef> getThenContent();
     
     // *** ElseContent ***
     
@@ -110,6 +110,6 @@ public interface ConditionalDef extends FormComponentDef
                              
     ListProperty PROP_ELSE_CONTENT = new ListProperty( TYPE, "ElseContent" );
     
-    ModelElementList<PartDef> getElseContent();
+    ElementList<PartDef> getElseContent();
     
 }

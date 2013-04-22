@@ -11,9 +11,8 @@
 
 package org.eclipse.sapphire.ui.renderers.swt;
 
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -23,10 +22,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ValuePropertyEditorRenderer
-
-    extends PropertyEditorRenderer
-    
+public abstract class ValuePropertyEditorRenderer extends PropertyEditorRenderer
 {
     private final ModifyPropertyValueTask modifyPropertyTask;
     
@@ -37,16 +33,17 @@ public abstract class ValuePropertyEditorRenderer
         
         this.modifyPropertyTask = new ModifyPropertyValueTask();
     }
-
-    @Override
-    public final ValueProperty getProperty()
-    {
-        return (ValueProperty) super.getProperty();
-    }
     
-    protected final <T> Value<T> getPropertyValue()
+    @Override
+    public Value<?> property()
     {
-        return getModelElement().read( getProperty() );
+        return (Value<?>) super.property();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public final <T> Value<T> value()
+    {
+        return (Value<T>) super.property();
     }
     
     protected final void setPropertyValue( final String value )
@@ -68,7 +65,7 @@ public abstract class ValuePropertyEditorRenderer
             
             try
             {
-                getModelElement().write( getProperty(), value );
+                property().write( value );
             }
             catch( Exception e )
             {

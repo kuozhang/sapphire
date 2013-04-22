@@ -14,7 +14,7 @@
 package org.eclipse.sapphire.samples.map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -48,7 +48,7 @@ public final class MapEditor extends SapphireEditor
     }
 
     @Override
-    protected IModelElement createModel() 
+    protected Element createModel() 
     {
         this.modelMap = Map.TYPE.instantiate(new RootXmlResource(new XmlEditorResourceStore(this, this.mapSourceEditor)));
         return this.modelMap;

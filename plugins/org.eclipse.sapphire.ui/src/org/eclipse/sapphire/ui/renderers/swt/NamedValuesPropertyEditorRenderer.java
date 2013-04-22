@@ -25,11 +25,11 @@ import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.changeRadioButtonSele
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
 import org.eclipse.sapphire.modeling.annotations.NamedValues.NamedValue;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -76,7 +76,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
     protected void createContents( final Composite parent )
     {
         final PropertyEditorPart part = getPart();
-        final ValueProperty property = (ValueProperty) part.getProperty();
+        final ValueProperty property = (ValueProperty) part.property().definition();
         
         this.rootComposite = new Composite( parent, SWT.NONE )
         {
@@ -188,7 +188,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
             @Override
             public String getDefaultText()
             {
-                return getModelElement().read( getProperty() ).getDefaultText();
+                return ( (Value<?>) property() ).getDefaultText();
             }
         };
     
@@ -266,8 +266,8 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         
         try
         {
-            final Value<?> val = getModelElement().read( getProperty() );
-            final String valueWithDefault = val.getText( true );
+            final Value<?> val = property();
+            final String valueWithDefault = val.text( true );
             NamedValueLocal namedValue = null;
 
             if( valueWithDefault != null )
@@ -309,7 +309,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
                 this.arbitraryValueTextField.setEnabled( true );
                 
                 final String existingValue = this.arbitraryValueTextField.getText();
-                String valueWithoutDefault = val.getText( false );
+                String valueWithoutDefault = val.text( false );
                 valueWithoutDefault = ( valueWithoutDefault == null ? "" : valueWithoutDefault );
 
                 if( ! existingValue.equals( valueWithoutDefault ) )
@@ -328,7 +328,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
     {
         try
         {
-            getModelElement().write( getProperty(), value );
+            property().write( value );
         }
         catch( Exception e )
         {
@@ -351,15 +351,12 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         this.namedValuesRadioButtons[ 0 ].setFocus();
     }
 
-    public static final class Factory
-    
-        extends PropertyEditorRendererFactory
-        
+    public static final class Factory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
         {
-            final ModelProperty property = propertyEditorDefinition.getProperty();
+            final PropertyDef property = propertyEditorPart.property().definition();
             return ( property instanceof ValueProperty && property.hasAnnotation( NamedValues.class ) );
         }
         
@@ -384,10 +381,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         }
     }
     
-    private final class NamedValuesBinding 
-
-        extends AbstractBinding
-        
+    private final class NamedValuesBinding extends AbstractBinding
     {
         public NamedValuesBinding( final PropertyEditorPart editor,
                                    final SapphireRenderingContext context )
@@ -406,6 +400,5 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
             update();
         }
     }
-    
     
 }

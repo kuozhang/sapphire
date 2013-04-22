@@ -16,16 +16,15 @@ import java.util.Set;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
@@ -45,10 +44,8 @@ public final class JavaTypeValidationService extends ValidationService
     {
         super.init();
 
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
-
-        final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
+        final Property property = context( Property.class );
+        final JavaTypeConstraintService javaTypeConstraintService = property.service( JavaTypeConstraintService.class );
         
         if( javaTypeConstraintService != null )
         {
@@ -59,7 +56,7 @@ public final class JavaTypeValidationService extends ValidationService
                     @Override
                     public void handle( final Event event )
                     {
-                        element.refresh( property );
+                        property.refresh();
                     }
                 }
             );
@@ -69,10 +66,8 @@ public final class JavaTypeValidationService extends ValidationService
     @Override
     public Status validate()
     {
-        final IModelElement element = context( IModelElement.class );
-        final ValueProperty property = context( ValueProperty.class );
-        
-        final JavaTypeConstraintService javaTypeConstraintService = element.service( property, JavaTypeConstraintService.class );
+        final ReferenceValue<?,?> value = context( ReferenceValue.class );
+        final JavaTypeConstraintService javaTypeConstraintService = value.service( JavaTypeConstraintService.class );
         
         if( javaTypeConstraintService == null )
         {
@@ -83,8 +78,7 @@ public final class JavaTypeValidationService extends ValidationService
         final Set<String> requiredBaseTypes = javaTypeConstraintService.types();
         final JavaTypeConstraintBehavior behavior = javaTypeConstraintService.behavior();
         
-        final ReferenceValue<?,?> value = (ReferenceValue<?,?>) element.read( property );
-        final String val = value.getText( false );
+        final String val = value.text( false );
         
         if( val != null )
         {
@@ -103,7 +97,7 @@ public final class JavaTypeValidationService extends ValidationService
                 {
                     if( ! kinds.contains( JavaTypeKind.CLASS ) )
                     {
-                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.classNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -114,7 +108,7 @@ public final class JavaTypeValidationService extends ValidationService
                 {
                     if( ! kinds.contains( JavaTypeKind.ABSTRACT_CLASS ) )
                     {
-                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.abstractClassNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -125,7 +119,7 @@ public final class JavaTypeValidationService extends ValidationService
                 {
                     if( ! kinds.contains( JavaTypeKind.INTERFACE ) )
                     {
-                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.interfaceNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -136,7 +130,7 @@ public final class JavaTypeValidationService extends ValidationService
                 {
                     if( ! kinds.contains( JavaTypeKind.ANNOTATION ) )
                     {
-                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.annotationNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -147,7 +141,7 @@ public final class JavaTypeValidationService extends ValidationService
                 {
                     if( ! kinds.contains( JavaTypeKind.ENUM ) )
                     {
-                        final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
                         final String msg = Resources.bind( Resources.enumNotAllowed, val, label );
                         return Status.createErrorStatus( msg );
                     }
@@ -218,16 +212,15 @@ public final class JavaTypeValidationService extends ValidationService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            final IModelElement element = context.find( IModelElement.class );
+            final Property property = context.find( Property.class );
             
-            if ( property != null && element != null && property.getTypeClass() == JavaTypeName.class )
+            if( property != null && property.definition().getTypeClass() == JavaTypeName.class )
             {
-                final Reference referenceAnnotation = property.getAnnotation( Reference.class );
+                final Reference referenceAnnotation = property.definition().getAnnotation( Reference.class );
                 
                 if( referenceAnnotation != null && referenceAnnotation.target() == JavaType.class )
                 {
-                    return element.service( property, JavaTypeConstraintService.class ) != null;
+                    return property.service( JavaTypeConstraintService.class ) != null;
                 }
             }
             

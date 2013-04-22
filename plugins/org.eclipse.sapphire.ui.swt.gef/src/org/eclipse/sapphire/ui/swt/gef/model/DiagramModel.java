@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -192,8 +192,8 @@ public class DiagramModel extends DiagramModelBase {
 			return;
 		}
 		
-		IModelElement endpoint1 = connPart.getEndpoint1();
-		IModelElement endpoint2 = connPart.getEndpoint2();
+		Element endpoint1 = connPart.getEndpoint1();
+		Element endpoint2 = connPart.getEndpoint2();
 		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
 		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
 		if (nodePart1 != null && nodePart2 != null) {

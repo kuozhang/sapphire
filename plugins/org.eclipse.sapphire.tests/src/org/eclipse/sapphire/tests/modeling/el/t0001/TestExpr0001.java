@@ -48,10 +48,10 @@ public final class TestExpr0001
     public void testParentFunction()
     {
         final TestExpr0001ModelElement r = TestExpr0001ModelElement.TYPE.instantiate();
-        final TestExpr0001ModelElement r_e = r.getElement().element( true );
+        final TestExpr0001ModelElement r_e = r.getElement().content( true );
         final TestExpr0001ModelElement r_l = r.getList().insert();
         final TestExpr0001ModelElement r_e_l = r_e.getList().insert();
-        final TestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
+        final TestExpr0001ModelElement r_l_e = r_l.getElement().content( true );
 
         testForExpectedValue( r_e, "${ Parent() }", r );
         testForExpectedValue( r_l, "${ Parent() }", r );
@@ -66,10 +66,10 @@ public final class TestExpr0001
     public void testRootFunction()
     {
         final TestExpr0001ModelElement r = TestExpr0001ModelElement.TYPE.instantiate( new RootXmlResource() );
-        final TestExpr0001ModelElement r_e = r.getElement().element( true );
+        final TestExpr0001ModelElement r_e = r.getElement().content( true );
         final TestExpr0001ModelElement r_l = r.getList().insert();
         final TestExpr0001ModelElement r_e_l = r_e.getList().insert();
-        final TestExpr0001ModelElement r_l_e = r_l.getElement().element( true );
+        final TestExpr0001ModelElement r_l_e = r_l.getElement().content( true );
 
         testForExpectedValue( r_e, "${ Root() }", r );
         testForExpectedValue( r_l, "${ Root() }", r );

@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -48,7 +48,7 @@ public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler
     	super.init(action, def);
     	setId( ID_BASE + this.javaType.name());
         final Class<?> cl = this.javaType.artifact();
-        ModelElementType elementType = ModelElementType.read(cl);
+        ElementType elementType = ElementType.read(cl);
     	setLabel(elementType.getSimpleName());
     	
 		final ImageData typeSpecificAddImage = elementType.image();

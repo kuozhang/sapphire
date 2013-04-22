@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.ui.diagram.layout.standard;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 @XmlBinding( path = "diagram-geometry" )
 
-public interface StandardDiagramLayout extends IModelElement 
+public interface StandardDiagramLayout extends Element 
 {
-    ModelElementType TYPE = new ModelElementType( StandardDiagramLayout.class );
+    ElementType TYPE = new ElementType( StandardDiagramLayout.class );
     
     // *** GridLayout ***
     
@@ -56,7 +56,7 @@ public interface StandardDiagramLayout extends IModelElement
     
     ListProperty PROP_DIAGRAM_NODES_LAYOUT = new ListProperty( TYPE, "DiagramNodesLayout" );
     
-    ModelElementList<DiagramNodeLayout> getDiagramNodesLayout();
+    ElementList<DiagramNodeLayout> getDiagramNodesLayout();
     
     // *** DiagramConnectionsLayout ***
 
@@ -66,6 +66,6 @@ public interface StandardDiagramLayout extends IModelElement
     
     ListProperty PROP_DIAGRAM_CONNECTIONS_LAYOUT = new ListProperty( TYPE, "DiagramConnectionsLayout" );
     
-    ModelElementList<DiagramConnectionLayout> getDiagramConnectionsLayout();
+    ElementList<DiagramConnectionLayout> getDiagramConnectionsLayout();
 
 }

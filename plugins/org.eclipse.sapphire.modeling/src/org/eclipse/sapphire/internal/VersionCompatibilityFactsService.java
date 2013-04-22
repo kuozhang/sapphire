@@ -13,11 +13,9 @@ package org.eclipse.sapphire.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionConstraint;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.Service;
@@ -36,9 +34,7 @@ public final class VersionCompatibilityFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final IModelElement element = context( IModelElement.class );
-        final ModelProperty property = context( ModelProperty.class );
-        final DeclarativeVersionCompatibilityService service = findDeclarativeVersionCompatibilityService( element, property );
+        final DeclarativeVersionCompatibilityService service = findDeclarativeVersionCompatibilityService( context( Property.class ) );
         
         if( service != null )
         {
@@ -73,27 +69,17 @@ public final class VersionCompatibilityFactsService extends FactsService
         }
     }
     
-    private static DeclarativeVersionCompatibilityService findDeclarativeVersionCompatibilityService( final IModelElement element,
-                                                                                                      final ModelProperty property )
+    private static DeclarativeVersionCompatibilityService findDeclarativeVersionCompatibilityService( final Property property )
     {
-        DeclarativeVersionCompatibilityService service = element.service( property, DeclarativeVersionCompatibilityService.class );
+        DeclarativeVersionCompatibilityService service = property.service( DeclarativeVersionCompatibilityService.class );
         
         if( service == null )
         {
-            final ModelProperty parentProperty = element.getParentProperty();
+            final Property parent = property.element().parent();
             
-            if( parentProperty != null )
+            if( parent != null )
             {
-                IModelParticle parent = element.parent();
-                
-                if( ! ( parent instanceof IModelElement ) )
-                {
-                    parent = parent.parent();
-                }
-                
-                final IModelElement parentElement = (IModelElement) parent;
-                
-                service = findDeclarativeVersionCompatibilityService( parentElement, parentProperty );
+                service = findDeclarativeVersionCompatibilityService( parent );
             }
         }
         
@@ -106,10 +92,7 @@ public final class VersionCompatibilityFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = context.find( ModelProperty.class );
-            
-            return ( findDeclarativeVersionCompatibilityService( element, property ) != null );
+            return ( findDeclarativeVersionCompatibilityService( context.find( Property.class ) ) != null );
         }
     
         @Override

@@ -14,8 +14,8 @@ package org.eclipse.sapphire.tests.modeling.xml.dtd.t0003;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
@@ -67,7 +67,7 @@ public final class TestXmlDtd0003 extends SapphireTestCase
         test( TestElementError1.TYPE, "ExpectedError2.txt" );
     }
 
-    private void test( final ModelElementType type,
+    private void test( final ElementType type,
                        final String expected )
                                
         throws Exception

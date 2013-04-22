@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -26,9 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @Image( path = "org/eclipse/sapphire/samples/Web.png" )
 
-public interface WebSite extends IModelElement
+public interface WebSite extends Element
 {
-    ModelElementType TYPE = new ModelElementType( WebSite.class );
+    ElementType TYPE = new ElementType( WebSite.class );
 
     // *** Url ***
     

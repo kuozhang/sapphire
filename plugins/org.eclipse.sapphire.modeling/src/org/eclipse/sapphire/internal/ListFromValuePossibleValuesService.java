@@ -15,13 +15,13 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.Service;
@@ -120,26 +120,22 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ListProperty listProperty = context.find( ListProperty.class );
+            final Property property = context.find( Property.class );
             
-            if( listProperty != null )
+            if( property != null && property.definition() instanceof ListProperty && 
+                property.service( PossibleTypesService.class ).types().size() == 1 )
             {
-                final IModelElement element = context.find( IModelElement.class );
+                final ElementType memberType = property.definition().getType();
+                final SortedSet<PropertyDef> properties = memberType.properties();
                 
-                if( element.service( listProperty, PossibleTypesService.class ).types().size() == 1 )
+                if( properties.size() == 1 )
                 {
-                    final ModelElementType memberType = listProperty.getType();
-                    final SortedSet<ModelProperty> properties = memberType.properties();
+                    final PropertyDef memberProperty = properties.first();
                     
-                    if( properties.size() == 1 )
+                    if( memberProperty instanceof ValueProperty &&
+                        memberProperty.service( PossibleValuesService.class ) != null )
                     {
-                        final ModelProperty memberProperty = properties.first();
-                        
-                        if( memberProperty instanceof ValueProperty &&
-                            memberProperty.service( PossibleValuesService.class ) != null )
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }

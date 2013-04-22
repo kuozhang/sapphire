@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PreferDefaultValue;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 import org.eclipse.sapphire.workspace.WorkspaceFileType;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.workspace.WorkspaceFileType;
 
 public interface CreateCatalogOp extends CreateWorkspaceFileOp
 {
-    ModelElementType TYPE = new ModelElementType( CreateCatalogOp.class );
+    ElementType TYPE = new ElementType( CreateCatalogOp.class );
     
     // *** FileName ***
     

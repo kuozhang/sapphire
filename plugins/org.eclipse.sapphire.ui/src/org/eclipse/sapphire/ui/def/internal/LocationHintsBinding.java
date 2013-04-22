@@ -15,9 +15,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.ChildXmlResource;
 import org.eclipse.sapphire.modeling.xml.StandardXmlListBindingImpl;
@@ -37,18 +37,18 @@ public final class LocationHintsBinding extends StandardXmlListBindingImpl
     public static final String AFTER_PREFIX = "after:";
     
     @Override
-    protected void initBindingMetadata( final IModelElement element,
-                                        final ModelProperty property,
+    protected void initBindingMetadata( final Element element,
+                                        final PropertyDef property,
                                         final String[] params )
     {
         this.xmlElementNames = new QName[] { new QName( EL_LOCATION ) };
     }
     
     @Override
-    public ModelElementType type( final Resource resource )
+    public ElementType type( final Resource resource )
     {
         final String text = ( (XmlResource) resource ).getXmlElement().getText();
-        final ModelElementType type;
+        final ElementType type;
         
         if( text != null && text.toLowerCase().startsWith( AFTER_PREFIX ) )
         {
@@ -69,7 +69,7 @@ public final class LocationHintsBinding extends StandardXmlListBindingImpl
     }
 
     @Override
-    protected Object insertUnderlyingObject( final ModelElementType type,
+    protected Object insertUnderlyingObject( final ElementType type,
                                              final int position )
     {
         final List<?> list = readUnderlyingList();

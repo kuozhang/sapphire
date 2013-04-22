@@ -46,18 +46,19 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -95,7 +96,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
 {
     private Table table;
     private CheckboxTableViewer tableViewer;
-    private ModelElementType memberType;
+    private ElementType memberType;
     private ValueProperty memberProperty;
 
     public CheckBoxListPropertyEditorRenderer( final SapphireRenderingContext context,
@@ -110,16 +111,15 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         // Initialize
         
         final PropertyEditorPart part = getPart();
-        final IModelElement element = part.getLocalModelElement();
-        final ListProperty listProperty = (ListProperty) part.getProperty();
+        final Property property = part.property();
         
-        this.memberType = listProperty.getType();
+        this.memberType = property.definition().getType();
         
-        final SortedSet<ModelProperty> allMemberProperties = this.memberType.properties();
+        final SortedSet<PropertyDef> allMemberProperties = this.memberType.properties();
         
         if( allMemberProperties.size() == 1 )
         {
-            final ModelProperty prop = allMemberProperties.first();
+            final PropertyDef prop = allMemberProperties.first();
             
             if( prop instanceof ValueProperty )
             {
@@ -135,7 +135,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             throw new IllegalStateException();
         }
         
-        final PossibleValuesService possibleValuesService = element.service( listProperty, PossibleValuesService.class );
+        final PossibleValuesService possibleValuesService = property.service( PossibleValuesService.class );
         
         // Create Controls
         
@@ -196,16 +196,16 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                     this.entries = null;
                 }
                 
-                final Map<String,LinkedList<IModelElement>> valueToElements = new HashMap<String,LinkedList<IModelElement>>();
+                final Map<String,LinkedList<Element>> valueToElements = new HashMap<String,LinkedList<Element>>();
                 
-                for( IModelElement element : getList() )
+                for( Element element : getList() )
                 {
                     final String value = readMemberProperty( element );
-                    LinkedList<IModelElement> elements = valueToElements.get( value );
+                    LinkedList<Element> elements = valueToElements.get( value );
                     
                     if( elements == null )
                     {
-                        elements = new LinkedList<IModelElement>();
+                        elements = new LinkedList<Element>();
                         valueToElements.put( value, elements );
                     }
                     
@@ -229,7 +229,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 for( String value : possibleValues )
                 {
                     final Entry entry;
-                    final LinkedList<IModelElement> elements = valueToElements.get( value );
+                    final LinkedList<Element> elements = valueToElements.get( value );
                     
                     if( elements == null )
                     {
@@ -237,7 +237,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                     }
                     else
                     {
-                        final IModelElement element = elements.remove();
+                        final Element element = elements.remove();
                         
                         if( elements.isEmpty() )
                         {
@@ -250,11 +250,11 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                     this.entries.add( entry );
                 }
                 
-                for( Map.Entry<String,LinkedList<IModelElement>> entry : valueToElements.entrySet() )
+                for( Map.Entry<String,LinkedList<Element>> entry : valueToElements.entrySet() )
                 {
                     final String value = entry.getKey();
                     
-                    for( IModelElement element : entry.getValue() )
+                    for( Element element : entry.getValue() )
                     {
                         this.entries.add( new Entry( value, element ) );
                     }
@@ -439,7 +439,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         refresh();
     }
     
-    public final IModelElement getSelectedElement()
+    public final Element getSelectedElement()
     {
         final IStructuredSelection sel = (IStructuredSelection) CheckBoxListPropertyEditorRenderer.this.tableViewer.getSelection();
         
@@ -453,16 +453,16 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         }
     }
     
-    public final List<IModelElement> getSelectedElements()
+    public final List<Element> getSelectedElements()
     {
         final IStructuredSelection sel = (IStructuredSelection) CheckBoxListPropertyEditorRenderer.this.tableViewer.getSelection();
-        final ListFactory<IModelElement> elements = ListFactory.start();
+        final ListFactory<Element> elements = ListFactory.start();
         
         if( sel != null )
         {
             for( Iterator<?> itr = sel.iterator(); itr.hasNext(); )
             {
-                final IModelElement element = ( (Entry) itr.next() ).element;
+                final Element element = ( (Entry) itr.next() ).element;
                 
                 if( element != null )
                 {
@@ -474,13 +474,13 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         return elements.result();
     }
     
-    public final void setSelectedElements( final List<IModelElement> elements )
+    public final void setSelectedElements( final List<Element> elements )
     {
         if( ! equalsBasedOnEntryIdentity( getSelectedElements(), elements ) )
         {
             final ListFactory<Entry> entries = ListFactory.start();
             
-            for( IModelElement element : elements )
+            for( Element element : elements )
             {
                 for( TableItem item : this.table.getItems() )
                 {
@@ -533,7 +533,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         }
     }
 
-    private ModelElementType getMemberType()
+    private ElementType getMemberType()
     {
         return this.memberType;
     }
@@ -543,9 +543,9 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         return this.memberProperty;
     }
     
-    private String readMemberProperty( final IModelElement element )
+    private String readMemberProperty( final Element element )
     {
-        final String text = element.read( this.memberProperty ).getText();
+        final String text = element.property( this.memberProperty ).text();
         return ( text == null ? "" : text );
     }
     
@@ -553,14 +553,14 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     {
         private final LocalizationService localizationService;
         private String value;
-        private IModelElement element;
+        private Element element;
         private ValueLabelService valueLabelService;
         private ValueImageService valueImageService;
         private ImageService elementImageService;
         private Listener listener;
         
         public Entry( final String value,
-                      final IModelElement element )
+                      final Element element )
         {
             this.localizationService = getPart().definition().adapt( LocalizationService.class );
             this.value = value;
@@ -648,7 +648,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             }
             else if( this.elementImageService != null )
             {
-                final Status st = this.element.read( getMemberProperty() ).validation();
+                final Status st = this.element.property( getMemberProperty() ).validation();
                 image = cache.image( this.elementImageService.image(), st.severity() );
             }
             else
@@ -681,7 +681,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             if( this.element == null )
             {
                 this.element = getList().insert();
-                this.element.write( getMemberProperty(), this.value );
+                this.element.property( getMemberProperty() ).write( this.value );
                 
                 this.elementImageService = this.element.service( ImageService.class );
                 
@@ -702,7 +702,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 // trigger property change event and it is possible for the resulting refresh to 
                 // set the element field to a new value before returning.
                 
-                final IModelElement el = this.element;
+                final Element el = this.element;
                 this.element = null;
                 getList().remove( el );
             }
@@ -736,19 +736,18 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     public static final class EnumFactory extends PropertyEditorRendererFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
+        public boolean isApplicableTo( final PropertyEditorPart part )
         {
-            final IModelElement element = propertyEditorDefinition.getLocalModelElement();
-            final ModelProperty property = propertyEditorDefinition.getProperty();
+            final Property property = part.property();
             
-            if( property instanceof ListProperty &&
-                element.service( property, PossibleTypesService.class ).types().size() == 1 )
+            if( property.definition() instanceof ListProperty &&
+                property.service( PossibleTypesService.class ).types().size() == 1 )
             {
-                final SortedSet<ModelProperty> properties = property.getType().properties();
+                final SortedSet<PropertyDef> properties = property.definition().getType().properties();
                 
                 if( properties.size() == 1 )
                 {
-                    final ModelProperty memberProperty = properties.first();
+                    final PropertyDef memberProperty = properties.first();
                     
                     if( memberProperty instanceof ValueProperty &&
                         memberProperty.hasAnnotation( NoDuplicates.class ) &&

@@ -30,7 +30,7 @@ public final class ContactEqualityService extends EqualityService
             final Contact c1 = context( Contact.class );
             final Contact c2 = (Contact) obj;
             
-            return equal( c1.getName().getText(), c2.getName().getText() );
+            return equal( c1.getName().text(), c2.getName().text() );
         }
         else
         {
@@ -42,7 +42,7 @@ public final class ContactEqualityService extends EqualityService
     public int doHashCode()
     {
         final Contact c = context( Contact.class );
-        final String name = c.getName().getText();
+        final String name = c.getName().text();
         
         return ( name == null ? 1 : name.hashCode() );
     }

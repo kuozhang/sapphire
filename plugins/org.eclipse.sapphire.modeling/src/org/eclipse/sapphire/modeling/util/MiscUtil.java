@@ -62,8 +62,7 @@ public class MiscUtil
         return false;
     }
     
-    public static <T> boolean containsUsingIdentity( final Collection<T> collection,
-                                                     final T item )
+    public static <T> boolean containsUsingIdentity( final Collection<? extends T> collection, final T item )
     {
         for( T x : collection )
         {

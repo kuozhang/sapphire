@@ -12,12 +12,12 @@
 
 package org.eclipse.sapphire.samples.map;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Location extends IModelElement 
+public interface Location extends Element 
 {
-    ModelElementType TYPE = new ModelElementType( Location.class );
+    ElementType TYPE = new ElementType( Location.class );
     
     // *** Name ***
     
@@ -51,7 +51,7 @@ public interface Location extends IModelElement
     
     ListProperty PROP_RAILWAY_ROUTES = new ListProperty( TYPE, "RailwayRoutes" );
     
-    ModelElementList<RailwayRoute> getRailwayRoutes();
+    ElementList<RailwayRoute> getRailwayRoutes();
     
     
 }

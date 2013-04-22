@@ -143,20 +143,12 @@ public class ServiceContext
                     {
                         this.exhaustedServiceFactories.add( id );
                         
-                        Service service = null;
-                        
-                        try
-                        {
-                            service = factory.create( this, type );
-                            service.init( this, id, factory.parameters(), factory.overrides() );
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
+                        final Service service = factory.create( this, type );
                         
                         if( service != null )
                         {
+                            service.init( this, id, factory.parameters(), factory.overrides() );
+                            
                             if( this.coordinatingListenerContext != null )
                             {
                                 service.coordinate( this.coordinatingListenerContext );
@@ -182,20 +174,12 @@ public class ServiceContext
                     {
                         this.exhaustedServiceFactories.add( id );
                         
-                        Service service = null;
+                        final Service service = factory.create( this, type );
                         
-                        try
-                        {
-                            service = factory.create( this, type );
-                            service.init( this, id, factory.parameters(), factory.overrides() );
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
-        
                         if( service != null )
                         {
+                            service.init( this, id, factory.parameters(), factory.overrides() );
+                            
                             if( this.coordinatingListenerContext != null )
                             {
                                 service.coordinate( this.coordinatingListenerContext );

@@ -12,11 +12,11 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0002;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
 @XmlNamespace( uri="http://www.eclipse.org/sapphire/tests/xml/xsd/0002" )
 @XmlBinding( path= "element" )
 
-public interface TestXmlXsd0002ModelRoot extends IModelElement
+public interface TestXmlXsd0002ModelRoot extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestXmlXsd0002ModelRoot.class );
+    ElementType TYPE = new ElementType( TestXmlXsd0002ModelRoot.class );
     
     // *** Aaa ***
     

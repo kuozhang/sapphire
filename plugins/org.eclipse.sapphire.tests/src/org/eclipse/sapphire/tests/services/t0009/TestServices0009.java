@@ -49,7 +49,7 @@ public final class TestServices0009 extends SapphireTestCase
         
         element.setVersion( "1.2.3" );
         
-        final Version version = element.getVersion().getContent();
+        final Version version = element.getVersion().content();
         
         assertNotNull( version );
         assertEquals( 3, version.length() );
@@ -64,7 +64,7 @@ public final class TestServices0009 extends SapphireTestCase
         
         element.setVersionConstraint( "[1.2.3-2.0)" );
         
-        final VersionConstraint constraint = element.getVersionConstraint().getContent();
+        final VersionConstraint constraint = element.getVersionConstraint().content();
         
         assertNotNull( constraint );
         assertTrue( constraint.check( "1.2.3" ) );

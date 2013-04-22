@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,22 +27,22 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 
 public final class PossibleTypesServiceData
 {
-    private static final Comparator<ModelElementType> COMPARATOR = new Comparator<ModelElementType>()
+    private static final Comparator<ElementType> COMPARATOR = new Comparator<ElementType>()
     {
-        public int compare( final ModelElementType x,
-                            final ModelElementType y )
+        public int compare( final ElementType x,
+                            final ElementType y )
         {
             return x.getSimpleName().compareTo( y.getSimpleName() );
         }
     };
     
-    private final SortedSet<ModelElementType> types;
+    private final SortedSet<ElementType> types;
     
-    public PossibleTypesServiceData( final Collection<ModelElementType> types )
+    public PossibleTypesServiceData( final Collection<ElementType> types )
     {
-        final SortedSet<ModelElementType> clean = new TreeSet<ModelElementType>( COMPARATOR );
+        final SortedSet<ElementType> clean = new TreeSet<ElementType>( COMPARATOR );
         
-        for( ModelElementType type : types )
+        for( ElementType type : types )
         {
             if( type != null )
             {
@@ -53,12 +53,12 @@ public final class PossibleTypesServiceData
         this.types = Collections.unmodifiableSortedSet( clean );
     }
     
-    public PossibleTypesServiceData( final ModelElementType... types )
+    public PossibleTypesServiceData( final ElementType... types )
     {
         this( list( types ) );
     }
     
-    public SortedSet<ModelElementType> types()
+    public SortedSet<ElementType> types()
     {
         return this.types;
     }

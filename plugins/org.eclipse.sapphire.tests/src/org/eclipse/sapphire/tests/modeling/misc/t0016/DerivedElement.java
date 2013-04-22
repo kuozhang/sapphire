@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0016;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.Enablement;
 
 public interface DerivedElement extends BaseElement
 {
-    ModelElementType TYPE = new ModelElementType( DerivedElement.class );
+    ElementType TYPE = new ElementType( DerivedElement.class );
     
     // *** Value ***
     

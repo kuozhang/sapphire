@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -25,9 +25,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IValuePropertiesGallery extends IModelElement
+public interface IValuePropertiesGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IValuePropertiesGallery.class );
+    ElementType TYPE = new ElementType( IValuePropertiesGallery.class );
     
     // *** WhitespaceHandlingGallery ***
     
@@ -53,7 +53,7 @@ public interface IValuePropertiesGallery extends IModelElement
 
     ElementProperty PROP_INITIAL_VALUE_GALLERY = new ElementProperty( TYPE, "InitialValueGallery" );
     
-    ModelElementHandle<InitialValueGallery> getInitialValueGallery();
+    ElementHandle<InitialValueGallery> getInitialValueGallery();
     
     // *** PossibleValuesGallery ***
     

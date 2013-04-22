@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.def.internal;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import org.eclipse.sapphire.Context;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
@@ -43,7 +43,7 @@ public final class DefinitionReferenceService extends ReferenceService
             
             if( reference != null )
             {
-                final Context context = context( IModelElement.class ).adapt( Context.class );
+                final Context context = context( Element.class ).adapt( Context.class );
                 
                 try
                 {

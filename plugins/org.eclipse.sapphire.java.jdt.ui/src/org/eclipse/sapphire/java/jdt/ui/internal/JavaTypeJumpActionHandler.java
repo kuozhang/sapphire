@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -29,10 +29,7 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JavaTypeJumpActionHandler 
-
-    extends SapphireJumpActionHandler
-    
+public final class JavaTypeJumpActionHandler extends SapphireJumpActionHandler
 {
     public static final String ID = "Sapphire.Jump.Java.Type";
     
@@ -46,10 +43,10 @@ public final class JavaTypeJumpActionHandler
     {
         if( super.computeEnablementState() == true )
         {
-            final IModelElement element = getModelElement();
-            final String typeName = element.read( getProperty() ).getText( true );
+            final Value<?> value = (Value<?>) property();
+            final String typeName = value.text( true );
             
-            if( typeName != null && getType( typeName, element.adapt( IProject.class ) ) != null )
+            if( typeName != null && getType( typeName, value.element().adapt( IProject.class ) ) != null )
             {
                 return true;
             }
@@ -61,16 +58,15 @@ public final class JavaTypeJumpActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
+        final Value<?> value = (Value<?>) property();
+        final String typeName = value.text( true );
         
-        try
+        if( typeName != null )
         {
-            final String typeName = element.read( getProperty() ).getText( true );
+            final IType type = getType( typeName, value.element().adapt( IProject.class ) );
             
-            if( typeName != null )
+            try
             {
-                final IType type = getType( typeName, element.adapt( IProject.class ) );
-                
                 if( type != null )
                 {
                     JavaUI.openInEditor( type );
@@ -80,12 +76,12 @@ public final class JavaTypeJumpActionHandler
                     final String message = NLS.bind( Resources.couldNotFindTypeDialogMessage, typeName );
                     MessageDialog.openInformation( context.getShell(), Resources.couldNotFindTypeDialogTitle, message );
                 }
+            } 
+            catch( CoreException e ) 
+            {
+                SapphireUiFrameworkPlugin.log( e );
             }
-        } 
-        catch( CoreException e ) 
-        {
-            SapphireUiFrameworkPlugin.log( e );
-        }
+    }
         
         return null;
     }

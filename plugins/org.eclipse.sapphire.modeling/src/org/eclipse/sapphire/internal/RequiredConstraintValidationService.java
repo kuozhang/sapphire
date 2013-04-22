@@ -11,15 +11,16 @@
 
 package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.RequiredConstraintService;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,7 +33,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public abstract class RequiredConstraintValidationService extends ValidationService
 {
-    private ModelProperty property;
+    private Property property;
     private RequiredConstraintService requiredConstraintService;
     private Listener listener;
     
@@ -41,8 +42,8 @@ public abstract class RequiredConstraintValidationService extends ValidationServ
     {
         super.init();
         
-        this.property = context( ModelProperty.class );
-        this.requiredConstraintService = context( IModelElement.class ).service( this.property, RequiredConstraintService.class );
+        this.property = context( Property.class );
+        this.requiredConstraintService = this.property.service( RequiredConstraintService.class );
         
         this.listener = new Listener()
         {
@@ -65,7 +66,7 @@ public abstract class RequiredConstraintValidationService extends ValidationServ
         }
         else
         {
-            final String label = this.property.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
+            final String label = this.property.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
             final String message = NLS.bind( Resources.message, label );
             return Status.createErrorStatus( message );
         }
@@ -90,16 +91,15 @@ public abstract class RequiredConstraintValidationService extends ValidationServ
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final IModelElement element = context.find( IModelElement.class );
-            final ModelProperty property = context.find( ModelProperty.class );
-            return ( element != null && property != null && element.service( property, RequiredConstraintService.class ) != null );
+            final Property property = context.find( Property.class );
+            return ( property != null && property.service( RequiredConstraintService.class ) != null );
         }
 
         @Override
         public Service create( final ServiceContext context,
                                final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             
             if( property instanceof ValueProperty )
             {
@@ -108,7 +108,7 @@ public abstract class RequiredConstraintValidationService extends ValidationServ
                     @Override
                     protected boolean check()
                     {
-                        return ( context( IModelElement.class ).read( context( ValueProperty.class ) ).getText() != null );
+                        return ( context( Value.class ).text() != null );
                     }
                 };
             }
@@ -119,7 +119,7 @@ public abstract class RequiredConstraintValidationService extends ValidationServ
                     @Override
                     protected boolean check()
                     {
-                        return ( context( IModelElement.class ).read( context( ElementProperty.class ) ).element() != null );
+                        return ( context( ElementHandle.class ).content() != null );
                     }
                 };
             }

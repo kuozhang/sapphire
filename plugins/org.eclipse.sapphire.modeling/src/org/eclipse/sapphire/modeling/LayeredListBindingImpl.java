@@ -13,6 +13,7 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.List;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.util.IdentityCache;
 import org.eclipse.sapphire.util.ListFactory;
 
@@ -52,7 +53,7 @@ public abstract class LayeredListBindingImpl extends ListBindingImpl
     protected abstract List<?> readUnderlyingList();
     
     @Override
-    public final Resource insert( final ModelElementType type,
+    public final Resource insert( final ElementType type,
                                   final int position )
     {
         final Object obj = insertUnderlyingObject( type, position );
@@ -72,7 +73,7 @@ public abstract class LayeredListBindingImpl extends ListBindingImpl
         return resource;
     }
     
-    protected Object insertUnderlyingObject( final ModelElementType type,
+    protected Object insertUnderlyingObject( final ElementType type,
                                              final int position )
     {
         throw new UnsupportedOperationException();

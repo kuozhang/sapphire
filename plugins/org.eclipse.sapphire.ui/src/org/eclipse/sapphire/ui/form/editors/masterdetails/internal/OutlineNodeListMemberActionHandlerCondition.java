@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
@@ -73,9 +73,9 @@ public class OutlineNodeListMemberActionHandlerCondition extends SapphireConditi
     
     protected boolean check( final MasterDetailsContentNode node )
     {
-        final IModelElement element = node.getModelElement();
+        final Element element = node.getModelElement();
         
-        if( element.parent() instanceof ModelElementList<?> && ! element.getParentProperty().isReadOnly() )
+        if( element.parent() instanceof ElementList && ! element.parent().definition().isReadOnly() )
         {
             final ISapphirePart parentPart = node.getParentPart();
             

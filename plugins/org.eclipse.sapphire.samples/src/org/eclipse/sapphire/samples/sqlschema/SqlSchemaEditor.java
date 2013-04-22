@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.samples.sqlschema;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -44,7 +44,7 @@ public class SqlSchemaEditor extends SapphireEditor
     }
 
     @Override
-    protected IModelElement createModel() 
+    protected Element createModel() 
     {
         this.schemaModel = Schema.TYPE.instantiate(new RootXmlResource(new XmlEditorResourceStore(this, this.schemaSourceEditor)));
         return this.schemaModel;

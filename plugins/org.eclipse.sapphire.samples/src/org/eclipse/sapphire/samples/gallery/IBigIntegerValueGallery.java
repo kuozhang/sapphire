@@ -13,10 +13,10 @@ package org.eclipse.sapphire.samples.gallery;
 
 import java.math.BigInteger;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IBigIntegerValueGallery extends IModelElement
+public interface IBigIntegerValueGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IBigIntegerValueGallery.class );
+    ElementType TYPE = new ElementType( IBigIntegerValueGallery.class );
 
     // *** Simple ***
 

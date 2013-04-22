@@ -33,11 +33,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.help.IContext;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -162,7 +162,7 @@ public abstract class SapphireEditor
     private static final String PREFS_INSTANCE_BY_EDITOR_INPUT_TYPE = "InstanceByEditorInputType"; //$NON-NLS-1$
     
     private final String pluginId;
-    private IModelElement model;
+    private Element model;
     private IResourceChangeListener fileChangeListener;
     private SwtResourceCache imageCache;
     private SapphireEditorContentOutline outline;
@@ -190,19 +190,19 @@ public abstract class SapphireEditor
         return null;
     }
     
-    public final IModelElement getModelElement()
+    public final Element getModelElement()
     {
         return this.model;
     }
 
-    public final IModelElement getLocalModelElement()
+    public final Element getLocalModelElement()
     {
         return this.model;
     }
 
-    protected abstract IModelElement createModel();
+    protected abstract Element createModel();
     
-    protected void adaptModel( final IModelElement model )
+    protected void adaptModel( final Element model )
     {
         final CorruptedResourceExceptionInterceptor interceptor 
             = new CorruptedResourceExceptionInterceptorImpl( getEditorSite().getShell() );
@@ -721,7 +721,7 @@ public abstract class SapphireEditor
     {
         for( Object page : this.pages )
         {
-            if( page instanceof EditorPagePresentation && ( (EditorPagePresentation) page ).getPart().definition().getPageName().getContent().equalsIgnoreCase( name ) )
+            if( page instanceof EditorPagePresentation && ( (EditorPagePresentation) page ).getPart().definition().getPageName().content().equalsIgnoreCase( name ) )
             {
                 return ( (EditorPagePresentation) page ).getPart();
             }
@@ -841,7 +841,7 @@ public abstract class SapphireEditor
         return this.imageCache;
     }
     
-    public void collectAllReferencedProperties( final Set<ModelProperty> collection )
+    public void collectAllReferencedProperties( final Set<PropertyDef> collection )
     {
         throw new UnsupportedOperationException();
     }

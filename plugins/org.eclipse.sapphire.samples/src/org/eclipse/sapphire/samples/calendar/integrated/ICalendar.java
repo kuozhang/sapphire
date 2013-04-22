@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.samples.calendar.integrated;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
     overrides = "Sapphire.ConversionService.IFileToWorkspaceFileResourceStore"
 )
 
-public interface ICalendar extends IModelElement
+public interface ICalendar extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ICalendar.class );
+    ElementType TYPE = new ElementType( ICalendar.class );
     
     // *** Events ***
 
@@ -38,6 +38,6 @@ public interface ICalendar extends IModelElement
     
     ListProperty PROP_EVENTS = new ListProperty( TYPE, "Events" );
     
-    ModelElementList<IEvent> getEvents();
+    ElementList<IEvent> getEvents();
     
 }

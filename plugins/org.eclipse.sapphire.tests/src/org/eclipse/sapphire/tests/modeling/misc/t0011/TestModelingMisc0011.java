@@ -59,13 +59,13 @@ public final class TestModelingMisc0011 extends SapphireTestCase
         z.setId( "z" );
         z.setReference( "y" );
         
-        assertEquals( y.getContent().getText(), "123" );
-        assertEquals( z.getContent().getText(), "123" );
+        assertEquals( y.getContent().text(), "123" );
+        assertEquals( z.getContent().text(), "123" );
         
         x.setContent( "456" );
         
-        assertEquals( y.getContent().getText(), "456" );
-        assertEquals( z.getContent().getText(), "456" );
+        assertEquals( y.getContent().text(), "456" );
+        assertEquals( z.getContent().text(), "456" );
     }
 
     public void testFromExistingModel() throws Exception
@@ -77,13 +77,13 @@ public final class TestModelingMisc0011 extends SapphireTestCase
         final TestElementChild y = root.getChildren().get( 1 );
         final TestElementChild z = root.getChildren().get( 2 );
         
-        assertEquals( y.getContent().getText(), "123" );
-        assertEquals( z.getContent().getText(), "123" );
+        assertEquals( y.getContent().text(), "123" );
+        assertEquals( z.getContent().text(), "123" );
         
         x.setContent( "456" );
         
-        assertEquals( y.getContent().getText(), "456" );
-        assertEquals( z.getContent().getText(), "456" );
+        assertEquals( y.getContent().text(), "456" );
+        assertEquals( z.getContent().text(), "456" );
     }
 
 }

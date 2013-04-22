@@ -20,8 +20,6 @@ import org.eclipse.sapphire.tests.services.t0002.TestServices0002;
 import org.eclipse.sapphire.tests.services.t0003.TestServices0003;
 import org.eclipse.sapphire.tests.services.t0004.TestServices0004;
 import org.eclipse.sapphire.tests.services.t0005.TestServices0005;
-import org.eclipse.sapphire.tests.services.t0006.TestServices0006;
-import org.eclipse.sapphire.tests.services.t0007.TestServices0007;
 import org.eclipse.sapphire.tests.services.t0008.TestServices0008;
 import org.eclipse.sapphire.tests.services.t0009.TestServices0009;
 import org.eclipse.sapphire.tests.services.t0010.TestServices0010;
@@ -52,8 +50,6 @@ public final class ServicesTestSuite extends TestCase
         suite.addTest( TestServices0003.suite() );
         suite.addTest( TestServices0004.suite() );
         suite.addTest( TestServices0005.suite() );
-        suite.addTest( TestServices0006.suite() );
-        suite.addTest( TestServices0007.suite() );
         suite.addTest( TestServices0008.suite() );
         suite.addTest( TestServices0009.suite() );
         suite.addTest( TestServices0010.suite() );

@@ -23,10 +23,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -86,8 +86,7 @@ public final class PropertyEditorAssistDecorator
         = SwtRendererUtil.createImageDescriptor( PropertyEditorAssistContext.class, "AssistClear.png" );
     
     private final SapphirePart part;
-    private final IModelElement element;
-    private final ModelProperty property;
+    private final Property property;
     private final SapphireRenderingContext context;
     private final Label control;
     private Control primary;
@@ -96,6 +95,7 @@ public final class PropertyEditorAssistDecorator
     private boolean mouseOverEditorControl;
     private EditorControlMouseTrackListener mouseTrackListener;
     private final Listener modelPropertyListener;
+    private final Listener partValidationListener;
     private final SapphireAction assistAction;
     private final SapphireActionHandler assistActionHandler;
     private final List<PropertyEditorAssistContributor> contributors;
@@ -104,17 +104,15 @@ public final class PropertyEditorAssistDecorator
                                           final SapphireRenderingContext context,
                                           final Composite parent )
     {
-        this( part, part.getLocalModelElement(), part.getProperty(), context, parent );
+        this( part, part.property(), context, parent );
     }
     
     public PropertyEditorAssistDecorator( final SapphirePart part,
-                                          final IModelElement element,
-                                          final ModelProperty property,
+                                          final Property property,
                                           final SapphireRenderingContext context,
                                           final Composite parent )
     {
         this.part = part;
-        this.element = element;
         this.property = property;
         this.context = context;
         this.mouseOverEditorControl = false;
@@ -200,7 +198,7 @@ public final class PropertyEditorAssistDecorator
         {
             try
             {
-                contributor.init( this.element, this.property );
+                contributor.init( this.part );
             }
             catch( Exception e )
             {
@@ -241,7 +239,27 @@ public final class PropertyEditorAssistDecorator
             }
         };
         
-        this.element.attach( this.modelPropertyListener, this.property );
+        this.property.attach( this.modelPropertyListener );
+        
+        this.partValidationListener = new FilteredListener<PartValidationEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PartValidationEvent event )
+            {
+                Display.getDefault().asyncExec
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            refresh();
+                        }
+                    }
+                );
+            }
+        };
+        
+        this.part.attach( this.partValidationListener );
         
         this.assistAction = part.getActions().getAction( SapphireActionSystem.ACTION_ASSIST );
         
@@ -325,12 +343,7 @@ public final class PropertyEditorAssistDecorator
         return this.part;
     }
     
-    public IModelElement element()
-    {
-        return this.element;
-    }
-    
-    public ModelProperty property()
+    public Property property()
     {
         return this.property;
     }
@@ -410,12 +423,10 @@ public final class PropertyEditorAssistDecorator
             return;
         }
         
-        final boolean enabled  = this.element.enabled( this.property );
-        
-        if( enabled )
+        if( this.property.enabled() )
         {
-            this.assistContext = new PropertyEditorAssistContext( this.part, this.element, this.property, this.context );
-            this.problem = this.element.validation( this.property );
+            this.assistContext = new PropertyEditorAssistContext( this.part, this.property.element(), this.property, this.context );
+            this.problem = this.part.validation();
             
             for( PropertyEditorAssistContributor c : this.contributors )
             {
@@ -508,7 +519,8 @@ public final class PropertyEditorAssistDecorator
     
     private void dispose()
     {
-        this.element.detach( this.modelPropertyListener, this.property );
+        this.part.detach( this.partValidationListener );
+        this.property.detach( this.modelPropertyListener );
         this.assistAction.removeHandler( this.assistActionHandler );
         
         for( PropertyEditorAssistContributor contributor : this.contributors )

@@ -78,7 +78,7 @@ public final class LabelPart extends SapphirePart
         
         this.labelFunctionResult = initExpression
         (
-            def.getText().getContent(), 
+            def.getText().content(), 
             String.class,
             null,
             new Runnable()

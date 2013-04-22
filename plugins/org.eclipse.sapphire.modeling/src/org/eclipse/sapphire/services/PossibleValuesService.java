@@ -16,8 +16,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.util.Comparators;
@@ -81,7 +81,7 @@ public abstract class PossibleValuesService extends Service
     
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( this.invalidValueMessageTemplate, invalidValue, context( ModelProperty.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        return NLS.bind( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
     }
     
     public Status.Severity getInvalidValueSeverity( final String invalidValue )

@@ -24,10 +24,7 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ConditionalFunction
-
-    extends Function
-
+public final class ConditionalFunction extends Function
 {
     public static ConditionalFunction create( final Function condition,
                                               final Function positive,
@@ -92,7 +89,7 @@ public final class ConditionalFunction
             @Override
             protected Object evaluate()
             {
-                final Boolean conditionValue = cast( operand( 0 ).value(), Boolean.class );
+                final Boolean conditionValue = cast( operand( 0 ), Boolean.class );
                 
                 if( this.lastActiveBranch != null && ! MiscUtil.equal( this.lastConditionValue, conditionValue ) )
                 {

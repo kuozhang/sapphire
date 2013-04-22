@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IValuePropertyActionsGallery extends IModelElement
+public interface IValuePropertyActionsGallery extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IValuePropertyActionsGallery.class );
+    ElementType TYPE = new ElementType( IValuePropertyActionsGallery.class );
     
     // *** Entities ***
     
@@ -40,7 +40,7 @@ public interface IValuePropertyActionsGallery extends IModelElement
     
     ListProperty PROP_ENTITIES = new ListProperty( TYPE, "Entities" );
     
-    ModelElementList<IValuePropertyActionsGalleryEntity> getEntities();
+    ElementList<IValuePropertyActionsGalleryEntity> getEntities();
     
     // *** Reference ***
     
@@ -61,7 +61,7 @@ public interface IValuePropertyActionsGallery extends IModelElement
     
     ListProperty PROP_REFERENCES = new ListProperty( TYPE, "References" );
     
-    ModelElementList<IValuePropertyActionsGalleryReference> getReferences();
+    ElementList<IValuePropertyActionsGalleryReference> getReferences();
     
     // *** Actuators ***
     

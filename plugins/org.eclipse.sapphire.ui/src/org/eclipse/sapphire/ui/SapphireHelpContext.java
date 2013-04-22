@@ -19,9 +19,9 @@ import java.util.List;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IContext2;
 import org.eclipse.help.IHelpResource;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.util.internal.DocumentationUtil;
 import org.eclipse.sapphire.services.DocumentationService;
 
@@ -35,18 +35,20 @@ public final class SapphireHelpContext implements IContext, IContext2
     private final String content;
     private final List<IHelpResource> topics;
     
-    public SapphireHelpContext( final IModelElement element, 
-                                final ModelProperty property ) 
+    public SapphireHelpContext( final Element element, 
+                                final PropertyDef property ) 
     {
         String title = null;
         final StringBuilder content = new StringBuilder();
         final List<DocumentationService.Topic> topics = new ArrayList<DocumentationService.Topic>();
         
         DocumentationService propDocService = null;
-        if (property != null)
+        
+        if(property != null)
         {
-        	propDocService = element.service( property, DocumentationService.class );
+        	propDocService = element.property( property ).service( DocumentationService.class );
         }
+        
         final DocumentationService elDocService = element.service( DocumentationService.class );
         
         content.append( "[br/]" );

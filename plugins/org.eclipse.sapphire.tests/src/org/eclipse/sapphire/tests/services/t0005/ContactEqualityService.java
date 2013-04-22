@@ -27,16 +27,16 @@ public final class ContactEqualityService extends EqualityService
         final Contact c1 = context( Contact.class );
         final Contact c2 = (Contact) obj;
         
-        return equal( c1.getLastName().getText(), c2.getLastName().getText() ) &&
-               equal( c1.getFirstName().getText(), c2.getFirstName().getText() );
+        return equal( c1.getLastName().text(), c2.getLastName().text() ) &&
+               equal( c1.getFirstName().text(), c2.getFirstName().text() );
     }
 
     @Override
     public int doHashCode()
     {
         final Contact c = context( Contact.class );
-        final String lastName = c.getLastName().getText();
-        final String firstName = c.getFirstName().getText();
+        final String lastName = c.getLastName().text();
+        final String firstName = c.getFirstName().text();
         
         return ( lastName == null ? 1 : lastName.hashCode() ) ^ ( firstName == null ? 1 : firstName.hashCode() );
     }

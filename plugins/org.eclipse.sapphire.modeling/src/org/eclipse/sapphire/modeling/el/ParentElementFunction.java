@@ -13,8 +13,8 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Property;
 
 /**
  * A function that returns the parent of the current model element. 
@@ -22,10 +22,7 @@ import org.eclipse.sapphire.modeling.IModelParticle;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ParentElementFunction
-
-    extends Function
-
+public final class ParentElementFunction extends Function
 {
     public static ParentElementFunction create()
     {
@@ -49,7 +46,7 @@ public final class ParentElementFunction
             protected Object evaluate()
             {
                 final List<FunctionResult> operands = operands();
-                final IModelElement element;
+                final Element element;
                 
                 if( operands.isEmpty() )
                 {
@@ -57,17 +54,12 @@ public final class ParentElementFunction
                 }
                 else
                 {
-                    element = cast( operand( 0 ).value(), IModelElement.class );
+                    element = cast( operand( 0 ), Element.class );
                 }
                 
-                IModelParticle result = element.parent();
+                final Property parent = element.parent();
                 
-                if( result != null && ! ( result instanceof IModelElement ) )
-                {
-                    result = result.parent();
-                }
-                
-                return result;
+                return ( parent == null ? null : parent.element() );
             }
         };
     }

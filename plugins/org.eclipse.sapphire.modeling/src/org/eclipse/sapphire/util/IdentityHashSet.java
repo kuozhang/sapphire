@@ -31,7 +31,7 @@ public final class IdentityHashSet<T> extends AbstractSet<T>
         this.map = new IdentityHashMap<T,Object>();
     }
     
-    public IdentityHashSet( final Collection<T> set )
+    public IdentityHashSet( final Collection<? extends T> set )
     {
         this();
         

@@ -13,11 +13,9 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
-import org.eclipse.sapphire.modeling.PropertyInitializationEvent;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
@@ -47,35 +45,32 @@ public final class AttendeeResource extends Resource
             @Override
             protected void handleTypedEvent( final PropertyEvent event )
             {
-                if( ! ( event instanceof PropertyInitializationEvent ) )
+                final PropertyDef property = event.property().definition();
+                final IAttendee attendee = (IAttendee) element();
+                
+                if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_NAME )
                 {
-                    final ModelProperty property = event.property();
-                    final IModelElement element = element();
-                    
-                    if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_NAME )
-                    {
-                        element.refresh( IAttendee.PROP_NAME );
-                        element.refresh( IAttendee.PROP_IN_CONTACT_REPOSITORY );
-                        element.refresh( IAttendee.PROP_E_MAIL );
-                    }
-                    else if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_TYPE )
-                    {
-                        element.refresh( IAttendee.PROP_TYPE );
-                    }
-                    else if( property == ContactRepository.PROP_CONTACTS )
-                    {
-                        element.refresh( IAttendee.PROP_IN_CONTACT_REPOSITORY );
-                        element.refresh( IAttendee.PROP_E_MAIL );
-                    }
-                    else if( property == Contact.PROP_NAME )
-                    {
-                        element.refresh( IAttendee.PROP_IN_CONTACT_REPOSITORY );
-                        element.refresh( IAttendee.PROP_E_MAIL );
-                    }
-                    else if( property == Contact.PROP_E_MAIL )
-                    {
-                        element.refresh( IAttendee.PROP_E_MAIL );
-                    }
+                    attendee.getName().refresh();
+                    attendee.isInContactRepository().refresh();
+                    attendee.getEMail().refresh();
+                }
+                else if( property == org.eclipse.sapphire.samples.calendar.IAttendee.PROP_TYPE )
+                {
+                    attendee.getType().refresh();
+                }
+                else if( property == ContactRepository.PROP_CONTACTS )
+                {
+                    attendee.isInContactRepository().refresh();
+                    attendee.getEMail().refresh();
+                }
+                else if( property == Contact.PROP_NAME )
+                {
+                    attendee.isInContactRepository().refresh();
+                    attendee.getEMail().refresh();
+                }
+                else if( property == Contact.PROP_E_MAIL )
+                {
+                    attendee.getEMail().refresh();
                 }
             }
         };
@@ -90,7 +85,7 @@ public final class AttendeeResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final ModelProperty property )
+    protected BindingImpl createBinding( final PropertyDef property )
     {
         if( property == IAttendee.PROP_NAME )
         {
@@ -99,7 +94,7 @@ public final class AttendeeResource extends Resource
                 @Override
                 public String read()
                 {
-                    return getBase().getName().getText( false );
+                    return getBase().getName().text( false );
                 }
                 
                 @Override
@@ -116,7 +111,7 @@ public final class AttendeeResource extends Resource
                 @Override
                 public String read()
                 {
-                    return getBase().getType().getText( false );
+                    return getBase().getType().text( false );
                 }
                 
                 @Override
@@ -134,7 +129,7 @@ public final class AttendeeResource extends Resource
                 public String read()
                 {
                     final Contact c = findContactRecord( false );
-                    return ( c != null ? c.getEMail().getText() : null );
+                    return ( c != null ? c.getEMail().text() : null );
                 }
                 
                 @Override
@@ -173,13 +168,13 @@ public final class AttendeeResource extends Resource
     private Contact findContactRecord( final boolean createIfNecessary )
     {
         Contact c = null;
-        final String name = this.base.getName().getText();
+        final String name = this.base.getName().text();
         
         if( name != null )
         {
             for( Contact contact : this.contacts.getContacts() )
             {
-                if( name.equals( contact.getName().getText() ) )
+                if( name.equals( contact.getName().text() ) )
                 {
                     c = contact;
                     break;

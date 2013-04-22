@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
@@ -105,7 +105,7 @@ public final class TestExpr0012 extends TestExpr
     public void testWithModelElementList()
     {
         final TestModelRoot root = TestModelRoot.TYPE.instantiate();
-        final ModelElementList<TestModelElementA> list = root.getList1();
+        final ElementList<TestModelElementA> list = root.getList1();
         final FunctionContext context = new ModelElementFunctionContext( root );
         
         TestModelElementA a;

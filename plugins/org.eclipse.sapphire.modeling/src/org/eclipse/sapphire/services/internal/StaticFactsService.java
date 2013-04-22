@@ -13,8 +13,8 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.annotations.Fact;
 import org.eclipse.sapphire.modeling.annotations.Facts;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -34,7 +34,7 @@ public final class StaticFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final ModelProperty property = context( ModelProperty.class );
+        final PropertyDef property = context( PropertyDef.class );
         
         final Fact factAnnotation = property.getAnnotation( Fact.class );
         
@@ -57,7 +57,7 @@ public final class StaticFactsService extends FactsService
     private void facts( final SortedSet<String> facts,
                         final Fact fact )
     {
-        final LocalizationService localization = context( ModelProperty.class ).getLocalizationService();
+        final LocalizationService localization = context( PropertyDef.class ).getLocalizationService();
         facts.add( localization.text( fact.statement(), CapitalizationType.NO_CAPS, true ) );
     }
     
@@ -67,7 +67,7 @@ public final class StaticFactsService extends FactsService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            final ModelProperty property = context.find( ModelProperty.class );
+            final PropertyDef property = context.find( PropertyDef.class );
             return ( property != null && ( property.hasAnnotation( Fact.class ) || property.hasAnnotation( Facts.class ) ) );
         }
     

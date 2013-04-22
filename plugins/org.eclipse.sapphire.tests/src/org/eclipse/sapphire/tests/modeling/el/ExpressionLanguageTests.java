@@ -362,7 +362,7 @@ public final class ExpressionLanguageTests
                                 @Override
                                 protected Object evaluate()
                                 {
-                                    return cast( operand( 0 ).value(), BigInteger.class ).add( cast( operand( 1 ).value(), BigInteger.class ) );
+                                    return cast( operand( 0 ), BigInteger.class ).add( cast( operand( 1 ), BigInteger.class ) );
                                 }
                             };
                         }
@@ -386,7 +386,7 @@ public final class ExpressionLanguageTests
                                 @Override
                                 protected Object evaluate()
                                 {
-                                    return cast( operand( 0 ).value(), BigInteger.class ).subtract( cast( operand( 1 ).value(), BigInteger.class ) );
+                                    return cast( operand( 0 ), BigInteger.class ).subtract( cast( operand( 1 ), BigInteger.class ) );
                                 }
                             };
                         }
@@ -470,8 +470,8 @@ public final class ExpressionLanguageTests
                              final Object expected )
     {
         final TestElement root = TestElement.TYPE.instantiate();
-        final TestElement child = root.getFooBar().element( true );
-        final TestElement grandchild = child.getFooBar().element( true );
+        final TestElement child = root.getFooBar().content( true );
+        final TestElement grandchild = child.getFooBar().content( true );
         
         root.setIntegerProp( 1 );
         root.setStringProp( "ABC" );

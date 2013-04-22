@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.modeling.el.ExpressionLanguageTests;
-import org.eclipse.sapphire.tests.modeling.events.EventSystemTests;
+import org.eclipse.sapphire.tests.modeling.events.TestPropertyEvents;
 import org.eclipse.sapphire.tests.modeling.misc.ModelingMiscTests;
 import org.eclipse.sapphire.tests.modeling.xml.XmlBindingTests;
 
@@ -44,7 +44,7 @@ public final class SapphireModelingFrameworkTests
         suite.addTest( XmlBindingTests.suite() );
         suite.addTest( TopologicalSorterTests.suite() );
         suite.addTest( ExpressionLanguageTests.suite() );
-        suite.addTest( EventSystemTests.suite() );
+        suite.addTest( TestPropertyEvents.suite() );
         suite.addTest( ModelingMiscTests.suite() );
         
         return suite;

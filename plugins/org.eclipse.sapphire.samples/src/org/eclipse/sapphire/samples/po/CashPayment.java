@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.po;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
@@ -22,6 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public interface CashPayment extends Payment
 {
-    ModelElementType TYPE = new ModelElementType( CashPayment.class );
+    ElementType TYPE = new ElementType( CashPayment.class );
     
 }

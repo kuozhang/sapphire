@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.tests;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface EmptyModelElement extends IModelElement
+public interface EmptyModelElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( EmptyModelElement.class );
+    ElementType TYPE = new ElementType( EmptyModelElement.class );
 
 }

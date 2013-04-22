@@ -80,15 +80,15 @@ public final class TestExpr0008
         final TestModelRoot root = TestModelRoot.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( root );
 
-        root.getElement().element( true, TestModelElementA.TYPE );
+        root.getElement().content( true, TestModelElementA.TYPE );
         
         testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.TestModelElementA' ) }", true );
 
-        root.getElement().element( true, TestModelElementB.TYPE );
+        root.getElement().content( true, TestModelElementB.TYPE );
         
         testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.TestModelElementB' ) }", true );
         
-        root.getElement().remove();
+        root.getElement().clear();
         
         testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.TestModelElementB' ) }", false );
     }

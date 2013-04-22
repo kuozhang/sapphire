@@ -13,6 +13,7 @@ package org.eclipse.sapphire.modeling;
 
 import java.util.Map;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 
 /**
@@ -21,14 +22,14 @@ import org.eclipse.sapphire.Event;
 
 public abstract class ElementEvent extends Event
 {
-    private final IModelElement element;
+    private final Element element;
     
-    protected ElementEvent( final IModelElement element )
+    protected ElementEvent( final Element element )
     {
         this.element = element;
     }
     
-    public IModelElement element()
+    public Element element()
     {
         return this.element;
     }

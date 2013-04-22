@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -27,9 +27,9 @@ import org.eclipse.sapphire.ui.def.VerticalAlignment;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface IDiagramDecoratorDef extends IModelElement 
+public interface IDiagramDecoratorDef extends Element 
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramDecoratorDef.class );
+    ElementType TYPE = new ElementType( IDiagramDecoratorDef.class );
     
     // *** DecoratorPlacement ***
     

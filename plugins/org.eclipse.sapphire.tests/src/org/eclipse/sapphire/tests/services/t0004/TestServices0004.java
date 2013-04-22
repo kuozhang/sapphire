@@ -54,13 +54,13 @@ public final class TestServices0004 extends SapphireTestCase
     {
         final TestElement element = TestElement.TYPE.instantiate();
 
-        final PossibleValuesService possibleValuesService = element.service( TestElement.PROP_SHAPES, PossibleValuesService.class );
+        final PossibleValuesService possibleValuesService = element.property( TestElement.PROP_SHAPES ).service( PossibleValuesService.class );
         assertNotNull( possibleValuesService );
 
         final Set<String> values = possibleValuesService.values();
         assertNotNull( values );
 
-        final ContentProposalService contentProposalService = element.service( TestElement.PROP_SHAPES, ContentProposalService.class );
+        final ContentProposalService contentProposalService = element.property( TestElement.PROP_SHAPES ).service( ContentProposalService.class );
         assertNotNull( contentProposalService );
 
         final ContentProposalService.Session session = contentProposalService.session();
@@ -89,7 +89,7 @@ public final class TestServices0004 extends SapphireTestCase
         final String[] values = possibleValuesAnnotation.values();
         assertNotNull( values );
 
-        final ContentProposalService contentProposalService = item.service( TestElement.PROP_COLORS, ContentProposalService.class );
+        final ContentProposalService contentProposalService = item.property( TestElement.PROP_COLORS ).service( ContentProposalService.class );
         assertNotNull( contentProposalService );
 
         final ContentProposalService.Session session = contentProposalService.session();

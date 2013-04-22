@@ -11,14 +11,14 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ElementBindingImpl
-
-    extends BindingImpl
-    
+public abstract class ElementBindingImpl extends BindingImpl
 {
     @Override
     public final ElementProperty property()
@@ -28,9 +28,9 @@ public abstract class ElementBindingImpl
     
     public abstract Resource read();
     
-    public abstract ModelElementType type( Resource resource );
+    public abstract ElementType type( Resource resource );
     
-    public Resource create( final ModelElementType type )
+    public Resource create( final ElementType type )
     {
         throw new UnsupportedOperationException();
     }
@@ -38,11 +38,6 @@ public abstract class ElementBindingImpl
     public void remove()
     {
         throw new UnsupportedOperationException();
-    }
-    
-    public boolean removable()
-    {
-        return false;
     }
 
 }

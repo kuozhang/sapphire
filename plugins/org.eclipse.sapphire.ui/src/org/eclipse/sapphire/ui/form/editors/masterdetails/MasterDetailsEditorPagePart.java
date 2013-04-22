@@ -44,7 +44,7 @@ public class MasterDetailsEditorPagePart extends SapphireEditorPagePart
 
         this.outlineHeaderTextFunctionResult = initExpression
         (
-            def.getOutlineHeaderText().getContent(),
+            def.getOutlineHeaderText().content(),
             String.class,
             null,
             new Runnable()

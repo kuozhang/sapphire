@@ -52,7 +52,7 @@ public final class TestXmlBinding0011c extends SapphireTestCase
         ( (TestModelElementA1) root.getList().insert( TestModelElementA1.TYPE ) ).setValue( "1111" );
         ( (TestModelElementA2) root.getList().insert( TestModelElementA2.TYPE ) ).setValue( "2222" );
         
-        ( (TestModelElementB2) root.getElement().element( true, TestModelElementB2.TYPE ) ).setValue( "3333" );
+        ( (TestModelElementB2) root.getElement().content( true, TestModelElementB2.TYPE ) ).setValue( "3333" );
         
         root.resource().save();
         

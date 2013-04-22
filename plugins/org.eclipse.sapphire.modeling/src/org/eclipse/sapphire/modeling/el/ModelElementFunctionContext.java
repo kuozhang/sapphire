@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -30,22 +28,22 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public class ModelElementFunctionContext extends FunctionContext
 {
-    private final IModelElement element;
+    private final Element element;
     private final LocalizationService localizationService;
     
-    public ModelElementFunctionContext( final IModelElement element )
+    public ModelElementFunctionContext( final Element element )
     {
         this( element, SourceLanguageLocalizationService.INSTANCE );
     }
     
-    public ModelElementFunctionContext( final IModelElement element,
+    public ModelElementFunctionContext( final Element element,
                                         final LocalizationService localizationService )
     {
         this.element = element;
         this.localizationService = localizationService;
     }
     
-    public final IModelElement element()
+    public final Element element()
     {
         return this.element;
     }
@@ -54,24 +52,23 @@ public class ModelElementFunctionContext extends FunctionContext
     public FunctionResult property( final Object element,
                                     final String name )
     {
-        if( element == this || element instanceof IModelElement )
+        if( element == this || element instanceof Element )
         {
-            final IModelElement el = ( element == this ? element() : (IModelElement) element );
-            final ModelElementType type = el.type();
-            final ModelProperty property = type.property( name );
+            final Element el = ( element == this ? element() : (Element) element );
+            final Property property = el.property( name );
             
             if( property != null )
             {
-                final Function f = new ReadPropertyFunction( el, property )
+                final Function f = new ReadPropertyFunction( property )
                 {
                     @Override
                     protected Object evaluate()
                     {
-                        Object res = this.element.read( this.property );
+                        Object res = this.property;
                         
-                        if( res instanceof ModelElementHandle<?> )
+                        if( res instanceof ElementHandle<?> )
                         {
-                            res = ( (ModelElementHandle<?>) res ).element();
+                            res = ( (ElementHandle<?>) res ).content();
                         }
                         
                         return res;
@@ -83,18 +80,18 @@ public class ModelElementFunctionContext extends FunctionContext
                 return f.evaluate( this );
             }
         }
-        else if( element instanceof ModelElementList )
+        else if( element instanceof ElementList )
         {
-            final ModelElementList<?> list = (ModelElementList<?>) element;
+            final ElementList<?> list = (ElementList<?>) element;
             
             if( name.equalsIgnoreCase( "Size" ) )
             {
-                final Function f = new ReadPropertyFunction( list.parent(), list.property() )
+                final Function f = new ReadPropertyFunction( list )
                 {
                     @Override
                     protected Object evaluate()
                     {
-                        return this.element.read( (ListProperty) this.property ).size();
+                        return ( (ElementList<?>) this.property ).size();
                     }
                 };
                 
@@ -108,12 +105,12 @@ public class ModelElementFunctionContext extends FunctionContext
                 {
                     final int index = Integer.parseInt( name );
                     
-                    final Function f = new ReadPropertyFunction( list.parent(), list.property() )
+                    final Function f = new ReadPropertyFunction( list )
                     {
                         @Override
                         protected Object evaluate()
                         {
-                            final ModelElementList<?> list = this.element.read( (ListProperty) this.property );
+                            final ElementList<?> list = (ElementList<?>) this.property;
                             
                             if( index >= 0 && index < list.size() )
                             {
@@ -148,13 +145,10 @@ public class ModelElementFunctionContext extends FunctionContext
     
     private static abstract class ReadPropertyFunction extends Function
     {
-        protected final IModelElement element;
-        protected final ModelProperty property;
+        protected final Property property;
         
-        public ReadPropertyFunction( final IModelElement element,
-                                     final ModelProperty property )
+        public ReadPropertyFunction( final Property property )
         {
-            this.element = element;
             this.property = property;
         }
         
@@ -167,8 +161,7 @@ public class ModelElementFunctionContext extends FunctionContext
         @Override
         public final FunctionResult evaluate( final FunctionContext context )
         {
-            final IModelElement element = this.element;
-            final ModelProperty property = this.property;
+            final Property property = this.property;
             
             return new FunctionResult( this, context )
             {
@@ -188,7 +181,7 @@ public class ModelElementFunctionContext extends FunctionContext
                         }
                     };
                     
-                    element.attach( this.listener, property );
+                    property.attach( this.listener );
                 }
 
                 @Override
@@ -201,7 +194,7 @@ public class ModelElementFunctionContext extends FunctionContext
                 public void dispose()
                 {
                     super.dispose();
-                    element.detach( this.listener, property );
+                    property.detach( this.listener );
                 }
             };
         }

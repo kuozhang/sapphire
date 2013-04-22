@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributionDef;
 import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
@@ -23,7 +23,7 @@ public final class PropertiesViewContributionManager
 {
     private final SapphirePart part;
     private final IPropertiesViewContributorDef def;
-    private final IModelElement element;
+    private final Element element;
     private PropertiesViewContributionPart propertiesViewContribution;
     private boolean propertiesViewContributionInitialized;
     
@@ -33,13 +33,13 @@ public final class PropertiesViewContributionManager
     }
     
     public PropertiesViewContributionManager( final SapphirePart part,
-                                              final IModelElement element )
+                                              final Element element )
     {
         this( part, element, (IPropertiesViewContributorDef) part.definition() );
     }
     
     public PropertiesViewContributionManager( final SapphirePart part,
-                                              final IModelElement element,
+                                              final Element element,
                                               final IPropertiesViewContributorDef def )
     {
         this.part = part;

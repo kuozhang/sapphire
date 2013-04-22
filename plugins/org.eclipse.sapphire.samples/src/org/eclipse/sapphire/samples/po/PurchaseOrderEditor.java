@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.po;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.FormEditorPage;
 import org.eclipse.sapphire.ui.SapphireEditor;
@@ -42,7 +42,7 @@ public final class PurchaseOrderEditor extends SapphireEditor
     }
 
     @Override
-    protected IModelElement createModel() 
+    protected Element createModel() 
     {
         this.model = PurchaseOrder.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.pageSource ) ) );
         return this.model;

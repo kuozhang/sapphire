@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.samples.po;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.FileExtensions;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.workspace.WorkspaceFileType;
 
 public interface CreatePurchaseOrderOp extends CreateWorkspaceFileOp
 {
-    ModelElementType TYPE = new ModelElementType( CreatePurchaseOrderOp.class );
+    ElementType TYPE = new ElementType( CreatePurchaseOrderOp.class );
     
     // *** FileName ***
     

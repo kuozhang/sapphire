@@ -11,7 +11,7 @@ package org.eclipse.sapphire.ui.diagram.def.internal;
 
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
@@ -27,7 +27,7 @@ public class ToolPaletteCompartmentPossibleValuesService extends PossibleValuesS
 	protected void fillPossibleValues(Set<String> values) 
 	{
 		IDiagramEditorPageDef diagramPageDef = context(IDiagramEditorPageDef.class);
-		ModelElementList<IDiagramPaletteCompartmentDef> compartments = diagramPageDef.getPaletteCompartments();
+		ElementList<IDiagramPaletteCompartmentDef> compartments = diagramPageDef.getPaletteCompartments();
 		if (compartments.size() == 0)
 		{
 			values.add(DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_ID);
@@ -37,7 +37,7 @@ public class ToolPaletteCompartmentPossibleValuesService extends PossibleValuesS
 		{
 			for (IDiagramPaletteCompartmentDef compartment : compartments)
 			{
-				values.add(compartment.getId().getContent());
+				values.add(compartment.getId().content());
 			}
 		}
 	}

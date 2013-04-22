@@ -14,8 +14,8 @@ package org.eclipse.sapphire.tests.modeling.xml.binding.t0012;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
-import org.eclipse.sapphire.modeling.ModelElementList;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
@@ -73,7 +73,7 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         
         try
         {
-            final ModelElementList<TestListEntry> list = element.getList();
+            final ElementList<TestListEntry> list = element.getList();
             
             final TestListEntry x = list.insert();
             x.setValue( "x" );
@@ -95,7 +95,7 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         
         try
         {
-            final ModelElementList<TestListEntry> list = element.getList();
+            final ElementList<TestListEntry> list = element.getList();
             
             final TestListEntry x = list.insert();
             x.setValue( "x" );
@@ -110,21 +110,21 @@ public final class TestXmlBinding0012 extends SapphireTestCase
             
             assertEquals( 3, list.size() );
             assertSame( x, list.get( 0 ) );
-            assertEquals( x.getValue().getText(), "x" );
+            assertEquals( x.getValue().text(), "x" );
             assertSame( z, list.get( 1 ) );
-            assertEquals( z.getValue().getText(), "z" );
+            assertEquals( z.getValue().text(), "z" );
             assertSame( y, list.get( 2 ) );
-            assertEquals( y.getValue().getText(), "y" );
+            assertEquals( y.getValue().text(), "y" );
             
             list.moveUp( z );
             
             assertEquals( 3, list.size() );
             assertSame( z, list.get( 0 ) );
-            assertEquals( z.getValue().getText(), "z" );
+            assertEquals( z.getValue().text(), "z" );
             assertSame( x, list.get( 1 ) );
-            assertEquals( x.getValue().getText(), "x" );
+            assertEquals( x.getValue().text(), "x" );
             assertSame( y, list.get( 2 ) );
-            assertEquals( y.getValue().getText(), "y" );
+            assertEquals( y.getValue().text(), "y" );
         }
         finally
         {
@@ -140,7 +140,7 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         
         try
         {
-            final ModelElementList<TestListEntry> list = element.getList();
+            final ElementList<TestListEntry> list = element.getList();
             
             final TestListEntry x = list.insert();
             x.setValue( "x" );
@@ -155,21 +155,21 @@ public final class TestXmlBinding0012 extends SapphireTestCase
             
             assertEquals( 3, list.size() );
             assertSame( y, list.get( 0 ) );
-            assertEquals( y.getValue().getText(), "y" );
+            assertEquals( y.getValue().text(), "y" );
             assertSame( x, list.get( 1 ) );
-            assertEquals( x.getValue().getText(), "x" );
+            assertEquals( x.getValue().text(), "x" );
             assertSame( z, list.get( 2 ) );
-            assertEquals( z.getValue().getText(), "z" );
+            assertEquals( z.getValue().text(), "z" );
             
             list.moveDown( x );
             
             assertEquals( 3, list.size() );
             assertSame( y, list.get( 0 ) );
-            assertEquals( y.getValue().getText(), "y" );
+            assertEquals( y.getValue().text(), "y" );
             assertSame( z, list.get( 1 ) );
-            assertEquals( z.getValue().getText(), "z" );
+            assertEquals( z.getValue().text(), "z" );
             assertSame( x, list.get( 2 ) );
-            assertEquals( x.getValue().getText(), "x" );
+            assertEquals( x.getValue().text(), "x" );
         }
         finally
         {

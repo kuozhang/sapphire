@@ -11,11 +11,11 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.ImageData;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.ImageServiceData;
@@ -43,13 +43,13 @@ public final class ContactImageService extends ImageService
             }
         };
         
-        context( IModelElement.class ).attach( this.listener, "EMail" );
+        context( Element.class ).attach( this.listener, "EMail" );
     }
 
     @Override
     protected ImageServiceData compute()
     {
-        if( context( Contact.class ).getEMail().getContent() == null )
+        if( context( Contact.class ).getEMail().content() == null )
         {
             return IMG_PERSON_FADED;
         }
@@ -64,7 +64,7 @@ public final class ContactImageService extends ImageService
     {
         super.dispose();
         
-        context( IModelElement.class ).detach( this.listener, "EMail" );
+        context( Element.class ).detach( this.listener, "EMail" );
     }
     
 }

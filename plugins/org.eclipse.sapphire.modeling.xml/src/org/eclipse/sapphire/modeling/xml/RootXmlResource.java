@@ -21,10 +21,10 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.CorruptedResourceException;
-import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlRootBinding;
@@ -34,7 +34,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlSchema;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlSchemas;
 import org.eclipse.sapphire.modeling.xml.internal.DocumentTypeRootElementController;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
@@ -74,11 +73,11 @@ public class RootXmlResource extends XmlResource
     }
     
     @Override
-    public void init( final IModelElement modelElement )
+    public void init( final Element modelElement )
     {
         super.init( modelElement );
 
-        final ModelElementType modelElementType = modelElement.type();
+        final ElementType modelElementType = modelElement.type();
         
         final CustomXmlRootBinding customXmlRootBindingAnnotation = modelElementType.getAnnotation( CustomXmlRootBinding.class );
         
@@ -167,7 +166,7 @@ public class RootXmlResource extends XmlResource
     @Override
     public XmlElement getXmlElement( final boolean createIfNecessary )
     {
-        Element root = this.document.getDocumentElement();
+        org.w3c.dom.Element root = this.document.getDocumentElement();
     
         if( this.document.getChildNodes().getLength() == 0 )
         {

@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.modeling.xml.internal;
 
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.modeling.ModelElement;
+import org.eclipse.sapphire.ElementImpl;
 import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
@@ -23,15 +23,15 @@ import org.eclipse.sapphire.modeling.xml.XmlResource;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ModelElementToXmlElementConversionService extends ConversionService<ModelElement,XmlElement>
+public final class ModelElementToXmlElementConversionService extends ConversionService<ElementImpl,XmlElement>
 {
     public ModelElementToXmlElementConversionService()
     {
-        super( ModelElement.class, XmlElement.class );
+        super( ElementImpl.class, XmlElement.class );
     }
 
     @Override
-    public XmlElement convert( final ModelElement element )
+    public XmlElement convert( final ElementImpl element )
     {
         final Resource resource = element.resource();
         

@@ -11,7 +11,9 @@
 
 package org.eclipse.sapphire.modeling;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.services.ServiceEvent;
 
 /**
@@ -20,7 +22,7 @@ import org.eclipse.sapphire.services.ServiceEvent;
 
 public final class ElementDisposeEvent extends ElementEvent
 {
-    public ElementDisposeEvent( final IModelElement element )
+    public ElementDisposeEvent( final Element element )
     {
         super( element );
     }
@@ -31,7 +33,7 @@ public final class ElementDisposeEvent extends ElementEvent
         // When a dispose event is issued on an element, it makes irrelevant all other outstanding
         // events on that element.
         
-        final IModelElement element = element();
+        final Element element = element();
         
         if( event instanceof ElementEvent )
         {
@@ -42,14 +44,14 @@ public final class ElementDisposeEvent extends ElementEvent
         }
         else if( event instanceof PropertyEvent )
         {
-            if( ( (PropertyEvent) event ).element() == element )
+            if( ( (PropertyEvent) event ).property().element() == element )
             {
                 return true;
             }
         }
         else if( event instanceof ServiceEvent )
         {
-            if( ( (ServiceEvent) event ).service().context( IModelElement.class ) == element )
+            if( ( (ServiceEvent) event ).service().context( Element.class ) == element )
             {
                 return true;
             }

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.form.editors.masterdetails.def;
 
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
@@ -23,6 +23,6 @@ public interface MasterDetailsContentNodeChildDef
     extends PartDef
     
 {
-    ModelElementType TYPE = new ModelElementType( MasterDetailsContentNodeChildDef.class );
+    ElementType TYPE = new ElementType( MasterDetailsContentNodeChildDef.class );
 
 }

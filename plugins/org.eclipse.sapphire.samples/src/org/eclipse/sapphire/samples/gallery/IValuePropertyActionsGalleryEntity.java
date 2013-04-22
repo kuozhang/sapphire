@@ -11,10 +11,10 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -23,9 +23,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IValuePropertyActionsGalleryEntity extends IModelElement
+public interface IValuePropertyActionsGalleryEntity extends Element
 {
-    ModelElementType TYPE = new ModelElementType( IValuePropertyActionsGalleryEntity.class );
+    ElementType TYPE = new ElementType( IValuePropertyActionsGalleryEntity.class );
     
     // *** Name ***
     

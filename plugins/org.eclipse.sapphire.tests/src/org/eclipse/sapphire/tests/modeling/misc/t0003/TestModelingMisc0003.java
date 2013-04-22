@@ -48,15 +48,15 @@ public final class TestModelingMisc0003 extends SapphireTestCase
         // String Value Property
         
         element.sEtVaLuEpRoPeRtY1( "abc" );
-        assertEquals( "abc", element.getvalueproperty1().getText() );
+        assertEquals( "abc", element.getvalueproperty1().text() );
         
         // Integer Value Property
         
         element.sEtVaLuEpRoPeRtY2( "1" );
-        assertEquals( Integer.valueOf( 1 ), element.GETVALUEPROPERTY2().getContent() );
+        assertEquals( Integer.valueOf( 1 ), element.GETVALUEPROPERTY2().content() );
         
         element.SeTvAlUePrOpErTy2( 2 );
-        assertEquals( Integer.valueOf( 2 ), element.GETVALUEPROPERTY2().getContent() );
+        assertEquals( Integer.valueOf( 2 ), element.GETVALUEPROPERTY2().content() );
 
         // List Property
         
@@ -65,13 +65,13 @@ public final class TestModelingMisc0003 extends SapphireTestCase
         
         // Explicit Element Property
         
-        element.gEtElEmEnTpRoPeRtY().element( true );
-        assertNotNull( element.gEtElEmEnTpRoPeRtY().element() );
+        element.gEtElEmEnTpRoPeRtY().content( true );
+        assertNotNull( element.gEtElEmEnTpRoPeRtY().content() );
         
         // Implied Element Property
         
         element.GETIMPLIEDELEMENTPROPERTY().setText( "xyz" );
-        assertEquals( "xyz", element.GETIMPLIEDELEMENTPROPERTY().getText().getText() );
+        assertEquals( "xyz", element.GETIMPLIEDELEMENTPROPERTY().getText().text() );
         
         // Transient Property
         

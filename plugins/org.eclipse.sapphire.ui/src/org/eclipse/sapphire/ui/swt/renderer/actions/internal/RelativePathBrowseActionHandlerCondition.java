@@ -11,10 +11,9 @@
 
 package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
@@ -23,18 +22,13 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class RelativePathBrowseActionHandlerCondition 
-
-    extends SapphirePropertyEditorCondition
-    
+public final class RelativePathBrowseActionHandlerCondition extends SapphirePropertyEditorCondition
 {
     @Override
     protected boolean evaluate( final PropertyEditorPart part )
     {
-        final IModelElement element = part.getModelElement();
-        final ModelProperty property = part.getProperty();
-        
-        return ( property instanceof ValueProperty && Path.class.isAssignableFrom( property.getTypeClass() ) && element.service( property, RelativePathService.class ) != null );
+        final Property property = part.property();
+        return ( property.definition() instanceof ValueProperty && Path.class.isAssignableFrom( property.definition().getTypeClass() ) && property.service( RelativePathService.class ) != null );
     }
 
 }

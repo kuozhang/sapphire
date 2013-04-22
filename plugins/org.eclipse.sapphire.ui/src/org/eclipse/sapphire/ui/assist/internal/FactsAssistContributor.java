@@ -14,12 +14,8 @@ package org.eclipse.sapphire.ui.assist.internal;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
@@ -41,56 +37,38 @@ public final class FactsAssistContributor extends PropertyEditorAssistContributo
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final IModelElement element = context.getModelElement();
-        final ModelProperty property = context.getProperty();
+        final Element element = context.element();
+        final Property property = context.property();
         
         boolean contribute = false;
         
-        if ( property == null )
+        if( property == null )
         {
         	contribute = ! element.validation().ok();
         }
-        else if( ! element.validation( property ).ok() )
+        else if( ! property.validation().ok() )
         {
             contribute = true;
         }
         else
         {
-            if( property instanceof ValueProperty )
-            {
-                if( element.read( (ValueProperty) property ).getText( false ) != null )
-                {
-                    contribute = true;
-                }
-            }
-            else if( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) )
-            {
-                if( element.read( (ElementProperty) property ).element() != null )
-                {
-                    contribute = true;
-                }
-            }
-            else if( property instanceof ListProperty )
-            {
-                if( element.read( (ListProperty) property ).size() > 0 )
-                {
-                    contribute = true;
-                }
-            }
+            contribute = ! property.empty();
         }
         
         if( contribute )
         {
-        	Set<String> facts;
-        	if (property != null)
+        	final Set<String> facts;
+        	
+        	if( property != null )
         	{
-        		facts = element.service( property, FactsAggregationService.class ).facts();
+        		facts = property.service( FactsAggregationService.class ).facts();
         	}
         	else
         	{
         		FactsAggregationService service = element.service( FactsAggregationService.class );
         		facts = service != null ? service.facts() : new TreeSet<String>();				
         	}
+        	
             for( String fact : facts )
             {
                 final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();

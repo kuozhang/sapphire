@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -30,10 +30,10 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 
 public interface IDiagramConnectionBindingDef 
 
-    extends IModelElement, IPropertiesViewContributorDef
+    extends Element, IPropertiesViewContributorDef
     
 {
-    ModelElementType TYPE = new ModelElementType( IDiagramConnectionBindingDef.class );
+    ElementType TYPE = new ElementType( IDiagramConnectionBindingDef.class );
     
     // *** ConnectionId ***
     
@@ -76,6 +76,6 @@ public interface IDiagramConnectionBindingDef
     
     ElementProperty PROP_LABEL = new ElementProperty( TYPE, "Label" );
     
-    ModelElementHandle<IDiagramLabelDef> getLabel();
+    ElementHandle<IDiagramLabelDef> getLabel();
 
 }

@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 public interface TabGroupDef extends FormComponentDef
 {
-    ModelElementType TYPE = new ModelElementType( TabGroupDef.class );
+    ElementType TYPE = new ElementType( TabGroupDef.class );
     
     // *** Tabs ***
     
@@ -38,6 +38,6 @@ public interface TabGroupDef extends FormComponentDef
     
     ListProperty PROP_TABS = new ListProperty( TYPE, "Tabs" );
     
-    ModelElementList<TabGroupPageDef> getTabs();
+    ElementList<TabGroupPageDef> getTabs();
     
 }

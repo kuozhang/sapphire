@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 
@@ -45,7 +45,7 @@ public final class StringToFunctionConversionService extends ConversionService<S
         
         if( result != null )
         {
-            result.initOrigin( context( IModelElement.class ), true );
+            result.initOrigin( context( Element.class ), true );
         }
         
         return result;

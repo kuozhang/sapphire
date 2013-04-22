@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.tests.services.t0001;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementList;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.AbsolutePath;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
@@ -40,9 +40,9 @@ import org.eclipse.sapphire.tests.EmptyModelElement;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestRootElement extends IModelElement
+public interface TestRootElement extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestRootElement.class );
+    ElementType TYPE = new ElementType( TestRootElement.class );
     
     // *** Plain ***
     
@@ -138,7 +138,7 @@ public interface TestRootElement extends IModelElement
     
     ElementProperty PROP_REQUIRED_ELEMENT = new ElementProperty( TYPE, "RequiredElement" );
     
-    ModelElementHandle<EmptyModelElement> getRequiredElement();
+    ElementHandle<EmptyModelElement> getRequiredElement();
     
     // *** ReadOnly ***
     
@@ -155,7 +155,7 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_COUNT_CONSTRAINT_AT_LEAST_ONE = new ListProperty( TYPE, "CountConstraintAtLeastOne" );
     
-    ModelElementList<EmptyModelElement> getCountConstraintAtLeastOne();
+    ElementList<EmptyModelElement> getCountConstraintAtLeastOne();
     
     // *** CountConstraintMin ***
     
@@ -164,7 +164,7 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_COUNT_CONSTRAINT_MIN = new ListProperty( TYPE, "CountConstraintMin" );
     
-    ModelElementList<EmptyModelElement> getCountConstraintMin();
+    ElementList<EmptyModelElement> getCountConstraintMin();
     
     // *** CountConstraintMax ***
     
@@ -173,7 +173,7 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_COUNT_CONSTRAINT_MAX = new ListProperty( TYPE, "CountConstraintMax" );
     
-    ModelElementList<EmptyModelElement> getCountConstraintMax();
+    ElementList<EmptyModelElement> getCountConstraintMax();
     
     // *** CountConstraintMinMax ***
     
@@ -182,7 +182,7 @@ public interface TestRootElement extends IModelElement
 
     ListProperty PROP_COUNT_CONSTRAINT_MIN_MAX = new ListProperty( TYPE, "CountConstraintMinMax" );
     
-    ModelElementList<EmptyModelElement> getCountConstraintMinMax();
+    ElementList<EmptyModelElement> getCountConstraintMinMax();
     
     // *** AbsolutePath ***
     
@@ -224,7 +224,7 @@ public interface TestRootElement extends IModelElement
     
     ListProperty PROP_NO_DUPLICATES = new ListProperty( TYPE, "NoDuplicates" );
     
-    ModelElementList<TestNoDuplicatesChildElement> getNoDuplicates();
+    ElementList<TestNoDuplicatesChildElement> getNoDuplicates();
     
     // *** FileExtensionsOne ***
     

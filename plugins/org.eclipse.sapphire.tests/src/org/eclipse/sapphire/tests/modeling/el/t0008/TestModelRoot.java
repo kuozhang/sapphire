@@ -11,21 +11,21 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0008;
 
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementHandle;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestModelRoot extends IModelElement
+public interface TestModelRoot extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestModelRoot.class );
+    ElementType TYPE = new ElementType( TestModelRoot.class );
     
     // *** Integer ***
     
@@ -43,6 +43,6 @@ public interface TestModelRoot extends IModelElement
     
     ElementProperty PROP_ELEMENT = new ElementProperty( TYPE, "Element" );
     
-    ModelElementHandle<TestModelElement> getElement();
+    ElementHandle<TestModelElement> getElement();
     
 }

@@ -11,12 +11,11 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.IModelParticle;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEnablementEvent;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.Service;
@@ -29,24 +28,13 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class ParentBasedEnablementService extends EnablementService
 {
-    private IModelElement parentElement;
-    private ModelProperty parentProperty;
+    private Property parent;
     private Listener listener;
     
     @Override
     protected void initEnablementService()
     {
-        final IModelElement element = context( IModelElement.class );
-        
-        IModelParticle parent = element.parent();
-        
-        if( ! ( parent instanceof IModelElement ) )
-        {
-            parent = parent.parent();
-        }
-        
-        this.parentElement = (IModelElement) parent;
-        this.parentProperty = element.getParentProperty();
+        this.parent = context( Element.class ).parent();
         
         this.listener = new FilteredListener<PropertyEnablementEvent>()
         {
@@ -57,13 +45,13 @@ public final class ParentBasedEnablementService extends EnablementService
             }
         };
         
-        this.parentElement.attach( this.listener, this.parentProperty );
+        this.parent.attach( this.listener );
     }
 
     @Override
     public EnablementServiceData compute()
     {
-        return new EnablementServiceData( this.parentElement.enabled( this.parentProperty ) );
+        return new EnablementServiceData( this.parent.enabled() );
     }
 
     @Override
@@ -73,7 +61,7 @@ public final class ParentBasedEnablementService extends EnablementService
         
         if( this.listener != null )
         {
-            this.parentElement.detach( this.listener, this.parentProperty );
+            this.parent.detach( this.listener );
         }
     }
     
@@ -83,7 +71,7 @@ public final class ParentBasedEnablementService extends EnablementService
         public boolean applicable( final ServiceContext context,
                                    final Class<? extends Service> service )
         {
-            return ( context.find( IModelElement.class ).getParentProperty() != null );
+            return ( context.find( Element.class ).parent() != null );
         }
 
         @Override

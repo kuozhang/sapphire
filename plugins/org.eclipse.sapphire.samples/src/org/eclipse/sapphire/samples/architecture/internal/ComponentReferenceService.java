@@ -30,7 +30,7 @@ public final class ComponentReferenceService extends ReferenceService
             
             for( Component component : arch.getComponents() )
             {
-                if( reference.equals( component.getName().getText() ) )
+                if( reference.equals( component.getName().text() ) )
                 {
                     return component;
                 }

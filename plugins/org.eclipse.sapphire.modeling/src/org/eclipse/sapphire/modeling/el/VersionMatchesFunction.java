@@ -42,11 +42,11 @@ public final class VersionMatchesFunction extends Function
             {
                 boolean result = false;
                 
-                final Version version = cast( operand( 0 ).value(), Version.class );
+                final Version version = cast( operand( 0 ), Version.class );
                 
                 if( version != null )
                 {
-                    final VersionConstraint constraint = cast( operand( 1 ).value(), VersionConstraint.class );
+                    final VersionConstraint constraint = cast( operand( 1 ), VersionConstraint.class );
                     
                     if( constraint != null )
                     {

@@ -12,10 +12,10 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -28,9 +28,9 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 
 @Label( standard = "action context" )
 
-public interface ActionContextRef extends IModelElement
+public interface ActionContextRef extends Element
 {
-    ModelElementType TYPE = new ModelElementType( ActionContextRef.class );
+    ElementType TYPE = new ElementType( ActionContextRef.class );
     
     // *** Context ***
     

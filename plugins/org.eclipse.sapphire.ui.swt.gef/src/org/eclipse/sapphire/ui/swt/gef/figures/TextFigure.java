@@ -40,10 +40,10 @@ public class TextFigure extends Label
 		this.resourceCache = resourceCache;
 		this.textPresentation = textPresentation;
 		setForegroundColor(resourceCache.getColor(textPresentation.getTextColor()));
-		this.horizontalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getHorizontalAlignment().getContent());
+		this.horizontalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getHorizontalAlignment().content());
 		setLabelAlignment(this.horizontalAlignment);
 		// TODO how to reconcile both horizontal and vertical alignment with draw2d label alignment
-		this.verticalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getVerticalAlignment().getContent());
+		this.verticalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getVerticalAlignment().content());
 		setFont(this.resourceCache.getFont(textPresentation.getFontDef()));
 		setText(textPresentation.getContent());
 	}

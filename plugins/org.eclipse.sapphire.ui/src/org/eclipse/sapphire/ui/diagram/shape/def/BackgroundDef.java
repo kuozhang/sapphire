@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 @Label( standard = "background" )
 
-public interface BackgroundDef extends IModelElement
+public interface BackgroundDef extends Element
 {
-	ModelElementType TYPE = new ModelElementType( BackgroundDef.class );
+	ElementType TYPE = new ElementType( BackgroundDef.class );
 }

@@ -19,13 +19,13 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import org.eclipse.sapphire.PropertyInstance;
-import org.eclipse.sapphire.modeling.ElementProperty;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ListProperty;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.Literal;
@@ -66,7 +66,7 @@ public final class StringResourcesExtractor
         // Gather string resources from the input..
         
         final Set<String> strings = new HashSet<String>();
-        final ModelElementType type;
+        final ElementType type;
         
         if( file.getName().endsWith( ".sdef" ) )
         {
@@ -78,7 +78,7 @@ public final class StringResourcesExtractor
             
         }
         
-        final IModelElement root = type.instantiate( new RootXmlResource( new XmlResourceStore( file ) ) );
+        final Element root = type.instantiate( new RootXmlResource( new XmlResourceStore( file ) ) );
         
         try
         {
@@ -113,20 +113,21 @@ public final class StringResourcesExtractor
         return resourcesFileContent;
     }
 
-    private static void gather( final IModelElement element,
+    private static void gather( final Element element,
                                 final Set<String> strings )
     {
-        for( PropertyInstance instance : element.properties() )
+        for( Property property : element.properties() )
         {
-            final ModelProperty property = instance.property();
-            
-            if( property instanceof ValueProperty )
+            if( property instanceof Value<?> )
             {
-                if( property.hasAnnotation( Localizable.class ) )
+                final Value<?> value = (Value<?>) property;
+                final ValueProperty p = value.definition();
+                
+                if( p.hasAnnotation( Localizable.class ) )
                 {
-                    if( property.getTypeClass() == Function.class )
+                    if( p.getTypeClass() == Function.class )
                     {
-                        final Function function = (Function) element.read( (ValueProperty) property ).getContent( false );
+                        final Function function = (Function) value.content( false );
                         
                         if( function != null )
                         {
@@ -135,14 +136,14 @@ public final class StringResourcesExtractor
                     }
                     else
                     {
-                        final String value = element.read( (ValueProperty) property ).getText( false );
+                        final String text = value.text( false );
                         
-                        if( value != null )
+                        if( text != null )
                         {
-                            strings.add( value );
+                            strings.add( text );
                         }
                         
-                        final DefaultValue defaultValueAnnotation = property.getAnnotation( DefaultValue.class );
+                        final DefaultValue defaultValueAnnotation = p.getAnnotation( DefaultValue.class );
                         
                         if( defaultValueAnnotation != null )
                         {
@@ -156,18 +157,18 @@ public final class StringResourcesExtractor
                     }
                 }
             }
-            else if( property instanceof ListProperty )
+            else if( property instanceof ElementHandle<?> )
             {
-                for( IModelElement child : element.read( (ListProperty) property ) )
+                final Element child = ( (ElementHandle<?>) property ).content();
+                
+                if( child != null )
                 {
                     gather( child, strings );
                 }
             }
-            else if( property instanceof ElementProperty )
+            else if( property instanceof ElementList<?> )
             {
-                final IModelElement child = element.read( (ElementProperty) property ).element();
-                
-                if( child != null )
+                for( Element child : (ElementList<?>) property )
                 {
                     gather( child, strings );
                 }

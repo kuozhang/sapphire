@@ -56,15 +56,15 @@ public final class TestExpr0018 extends TestExpr
         element.setBooleanValue( "abc" );
         element.setBooleanValueWithDefault( "abc" );
         
-        assertEquals( "abc", element.getBooleanValue().getText() );
-        assertEquals( null, element.getBooleanValue().getContent() );
+        assertEquals( "abc", element.getBooleanValue().text() );
+        assertEquals( null, element.getBooleanValue().content() );
 
         assertFailSafeValueEquals( context, "${ BooleanValue }", String.class, Boolean.TRUE, "abc" );
         assertFailSafeValueEquals( context, "${ BooleanValue }", Boolean.class, Boolean.TRUE, Boolean.TRUE );
         assertFailSafeValueEquals( context, "${ BooleanValue }", Boolean.class, null, Boolean.FALSE );
 
-        assertEquals( "abc", element.getBooleanValueWithDefault().getText() );
-        assertEquals( Boolean.TRUE, element.getBooleanValueWithDefault().getContent() );
+        assertEquals( "abc", element.getBooleanValueWithDefault().text() );
+        assertEquals( Boolean.TRUE, element.getBooleanValueWithDefault().content() );
         
         assertFailSafeValueEquals( context, "${ BooleanValueWithDefault }", String.class, Boolean.TRUE, "abc" );
         assertFailSafeValueEquals( context, "${ BooleanValueWithDefault }", Boolean.class, Boolean.TRUE, Boolean.TRUE );
@@ -79,15 +79,15 @@ public final class TestExpr0018 extends TestExpr
         element.setIntegerValue( "abc" );
         element.setIntegerValueWithDefault( "abc" );
         
-        assertEquals( "abc", element.getIntegerValue().getText() );
-        assertEquals( null, element.getIntegerValue().getContent() );
+        assertEquals( "abc", element.getIntegerValue().text() );
+        assertEquals( null, element.getIntegerValue().content() );
 
         assertFailSafeValueEquals( context, "${ IntegerValue }", String.class, 2, "abc" );
         assertFailSafeValueEquals( context, "${ IntegerValue }", Integer.class, 2, 2 );
         assertFailSafeValueEquals( context, "${ IntegerValue }", Integer.class, null, 0 );
 
-        assertEquals( "abc", element.getIntegerValueWithDefault().getText() );
-        assertEquals( Integer.valueOf( 1 ), element.getIntegerValueWithDefault().getContent() );
+        assertEquals( "abc", element.getIntegerValueWithDefault().text() );
+        assertEquals( Integer.valueOf( 1 ), element.getIntegerValueWithDefault().content() );
         
         assertFailSafeValueEquals( context, "${ IntegerValueWithDefault }", String.class, 2, "abc" );
         assertFailSafeValueEquals( context, "${ IntegerValueWithDefault }", Integer.class, 2, 1 );
@@ -102,15 +102,15 @@ public final class TestExpr0018 extends TestExpr
         element.setEnumValue( "abc" );
         element.setEnumValueWithDefault( "abc" );
         
-        assertEquals( "abc", element.getEnumValue().getText() );
-        assertEquals( null, element.getEnumValue().getContent() );
+        assertEquals( "abc", element.getEnumValue().text() );
+        assertEquals( null, element.getEnumValue().content() );
 
         assertFailSafeValueEquals( context, "${ EnumValue }", String.class, TestElement.EnumType.B, "abc" );
         assertFailSafeValueEquals( context, "${ EnumValue }", TestElement.EnumType.class, TestElement.EnumType.B, TestElement.EnumType.B );
         assertFailSafeValueEquals( context, "${ EnumValue }", TestElement.EnumType.class, null, null );
 
-        assertEquals( "abc", element.getEnumValueWithDefault().getText() );
-        assertEquals( TestElement.EnumType.A, element.getEnumValueWithDefault().getContent() );
+        assertEquals( "abc", element.getEnumValueWithDefault().text() );
+        assertEquals( TestElement.EnumType.A, element.getEnumValueWithDefault().content() );
         
         assertFailSafeValueEquals( context, "${ EnumValueWithDefault }", String.class, TestElement.EnumType.B, "abc" );
         assertFailSafeValueEquals( context, "${ EnumValueWithDefault }", TestElement.EnumType.class, TestElement.EnumType.B, TestElement.EnumType.A );

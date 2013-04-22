@@ -12,11 +12,11 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGallery;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGalleryEntity;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -44,9 +44,9 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1 exte
             }
         };
         
-        final IModelElement element = getModelElement();
+        final Element element = getModelElement();
         final IValuePropertyActionsGallery gallery = element.nearest( IValuePropertyActionsGallery.class );
-        final String propertyName = getProperty().getName();
+        final String propertyName = property().name();
         
         gallery.attach( listener, "Entities/*" );
         element.attach( listener, propertyName );
@@ -69,7 +69,7 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1 exte
     
     private void refreshActionState()
     {
-        final String entityName = getModelElement().read( (ValueProperty) getProperty() ).getText();
+        final String entityName = ( (Value<?>) property() ).text();
         
         final boolean newEnablementState = ( entityName != null && ! isEntityDefined( entityName ) );
         setEnabled( newEnablementState );
@@ -81,8 +81,8 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler1 exte
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
-        final String entityName = element.read( (ValueProperty) getProperty() ).getText();
+        final Element element = getModelElement();
+        final String entityName = ( (Value<?>) property() ).text();
         
         if( entityName != null && ! isEntityDefined( entityName ) )
         {

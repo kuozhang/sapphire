@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
@@ -35,7 +35,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 public class ShapePart extends SapphirePart implements IPropertiesViewContributorPart
 {
 	private ShapeDef shapeDef;
-	private IModelElement modelElement;
+	private Element modelElement;
 	private boolean isActive = false;
 	private boolean isEditable = false;
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
@@ -94,7 +94,7 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
     }
 	
     @Override
-    public IModelElement getLocalModelElement()
+    public Element getLocalModelElement()
     {
         return this.modelElement;
     }    

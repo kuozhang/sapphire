@@ -13,9 +13,9 @@ package org.eclipse.sapphire.ui.swt.renderer.actions.internal;
 
 import java.io.File;
 
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -45,14 +45,12 @@ public final class RelativePathJumpActionHandler extends SapphireJumpActionHandl
     {
         if( super.computeEnablementState() == true )
         {
-            final IModelElement element = getModelElement();
-            final ValueProperty property = getProperty();
-            
-            final Path relativePath = (Path) element.read( property ).getContent();
+            final Property property = property();
+            final Path relativePath = (Path) ( (Value<?>) property ).content();
             
             if( relativePath != null )
             {
-                final Path absolutePath = element.service( property, RelativePathService.class ).convertToAbsolute( relativePath );
+                final Path absolutePath = property.service( RelativePathService.class ).convertToAbsolute( relativePath );
                 
                 if( absolutePath != null )
                 {
@@ -72,14 +70,12 @@ public final class RelativePathJumpActionHandler extends SapphireJumpActionHandl
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        final IModelElement element = getModelElement();
-        final ValueProperty property = getProperty();
-        
-        final Path relativePath = (Path) element.read( property ).getContent();
+        final Property property = property();
+        final Path relativePath = (Path) ( (Value<?>) property ).content();
         
         if( relativePath != null )
         {
-            final Path absolutePath = element.service( property, RelativePathService.class ).convertToAbsolute( relativePath );
+            final Path absolutePath = property.service( RelativePathService.class ).convertToAbsolute( relativePath );
             
             if( absolutePath != null )
             {

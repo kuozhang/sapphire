@@ -41,7 +41,7 @@ public final class SapphireDialogPart
     
     public String getLabel()
     {
-        return this.def.getLabel().getLocalizedText( CapitalizationType.TITLE_STYLE, false );
+        return this.def.getLabel().localized( CapitalizationType.TITLE_STYLE, false );
     }
     
 }

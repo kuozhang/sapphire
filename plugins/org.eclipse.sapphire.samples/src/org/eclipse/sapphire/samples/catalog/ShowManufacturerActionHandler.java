@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.catalog;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
@@ -42,13 +42,13 @@ public final class ShowManufacturerActionHandler extends SapphireActionHandler
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                setChecked( ShowManufacturerActionHandler.this.state.getShowManufacturer().getContent() );
+                setChecked( ShowManufacturerActionHandler.this.state.getShowManufacturer().content() );
             }
         };
         
-        this.state.attach( listener, CatalogEditorPageState.PROP_SHOW_MANUFACTURER );
+        this.state.property( CatalogEditorPageState.PROP_SHOW_MANUFACTURER ).attach( listener );
         
-        setChecked( this.state.getShowManufacturer().getContent() );
+        setChecked( this.state.getShowManufacturer().content() );
         
         attach
         (
@@ -57,7 +57,7 @@ public final class ShowManufacturerActionHandler extends SapphireActionHandler
                 @Override
                 protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    ShowManufacturerActionHandler.this.state.detach( listener, CatalogEditorPageState.PROP_SHOW_MANUFACTURER );
+                    ShowManufacturerActionHandler.this.state.property( CatalogEditorPageState.PROP_SHOW_MANUFACTURER ).detach( listener );
                 }
             }
         );
@@ -66,7 +66,7 @@ public final class ShowManufacturerActionHandler extends SapphireActionHandler
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
-        this.state.setShowManufacturer( ! this.state.getShowManufacturer().getContent() );
+        this.state.setShowManufacturer( ! this.state.getShowManufacturer().content() );
         
         return null;
     }

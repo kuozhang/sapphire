@@ -11,19 +11,19 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0003;
 
-import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelElementType;
-import org.eclipse.sapphire.modeling.Value;
-import org.eclipse.sapphire.modeling.ValueProperty;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElementChild extends IModelElement
+public interface TestElementChild extends Element
 {
-    ModelElementType TYPE = new ModelElementType( TestElementChild.class );
+    ElementType TYPE = new ElementType( TestElementChild.class );
     
     // *** Text ***
     

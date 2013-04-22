@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
@@ -53,7 +53,7 @@ public class ValidationMarkerEditPart extends ShapeEditPart
 		ValidationMarkerSize size = markerPart.getSize();
 		Image image = null;
 				
-		IModelElement model = nodePart.getModelElement();		
+		Element model = nodePart.getModelElement();		
 		Status status = model.validation();
 		if (status.severity() != Status.Severity.OK) 
 		{
