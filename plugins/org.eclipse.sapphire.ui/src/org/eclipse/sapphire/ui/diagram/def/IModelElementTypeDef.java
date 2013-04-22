@@ -38,7 +38,7 @@ public interface IModelElementTypeDef extends Element
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "model element type" )
-    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.modeling.IModelElement" )
+    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.Element" )
     @MustExist
     @XmlBinding( path = "" )
     

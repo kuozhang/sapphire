@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests the IModelElement.copy() methods.
+ * Tests the Element.copy() methods.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

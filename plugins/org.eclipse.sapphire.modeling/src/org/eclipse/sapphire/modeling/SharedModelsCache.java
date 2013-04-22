@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ElementType;
  * 
  * <p>Models are stored in this cache using a key object. The only requirement on the key is that it correctly
  * implements hashCode() and equals() methods. For many cases the supplied StandardKey class makes a good
- * key. It combines ResourceStore (which identifies a file or another storage medium) and ModelElementType.</p>
+ * key. It combines ResourceStore (which identifies a file or another storage medium) and ElementType.</p>
  * 
  * <p>The cache is managed in a memory-sensitive manner. In particular, there is no guarantee that a retrieve
  * call will return a non-null result even if you know that the particular model was stored in the cache. If 

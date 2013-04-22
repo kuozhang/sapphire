@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests behavior of ModelElementList when the list property is read-only.
+ * Tests behavior of ElementList when the list property is read-only.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

@@ -58,6 +58,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
   <li><a href="#DependenciesAggregationService">DependenciesAggregationService</a></li>
   <li><a href="#DtdParser">DtdParser</a></li>
+  <li><a href="#ElementBindingImpl">ElementBindingImpl</a></li>
   <li><a href="#ElementProperty">ElementProperty</a></li>
   <li><a href="#Event">Event</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
@@ -79,6 +80,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ReferenceValue">ReferenceValue</a></li>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
+  <li><a href="#SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></li>
   <li><a href="#Transient">Transient</a></li>
   <li><a href="#TransientProperty">TransientProperty</a></li>
   <li><a href="#TypeCast">TypeCast</a></li>
@@ -439,6 +441,37 @@ for( DependenciesService service : property.services( DependenciesService.class 
 </table>
 
 
+<h2><a name="ElementBindingImpl">ElementBindingImpl</a></h2>
+
+<p>The removable method has been removed from ElementBindingImpl class.</p>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends ElementBindingImpl
+{
+    ...</span>
+
+    @Override
+    public boolean removable()
+    {
+        ...
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends ElementBindingImpl
+{
+    ...
+}</span></code></pre>
+    </td>
+</table>
+
+
 <h2><a name="ElementProperty">ElementProperty</a></h2>
 
 <table>
@@ -448,10 +481,10 @@ for( DependenciesService service : property.services( DependenciesService.class 
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ElementProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">ElementProperty</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ElementProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ElementProperty</span></code></pre>
     </td>
   </tr>
 </table>
@@ -851,10 +884,10 @@ element.</span>visit
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ImpliedElementProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">ImpliedElementProperty</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ImpliedElementProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ImpliedElementProperty</span></code></pre>
     </td>
   </tr>
 </table>
@@ -869,10 +902,10 @@ element.</span>visit
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ListProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">ListProperty</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ListProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ListProperty</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1118,10 +1151,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">modeling.ModelElementType</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.ModelElementType</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">ElementType</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>ElementType</code></pre>
     </td>
   </tr>
   <tr>
@@ -1144,10 +1177,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">modeling.ModelProperty</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.ModelProperty</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">PropertyDef</font></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>PropertyDef</code></pre>
     </td>
   </tr>
   <tr>
@@ -1208,10 +1241,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyContentEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyContentEvent</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyContentEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyContentEvent</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1226,10 +1259,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1244,10 +1277,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEvent</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyEvent</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1267,10 +1300,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyValidationEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyValidationEvent</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">PropertyValidationEvent</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyValidationEvent</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1285,10 +1318,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ReferenceValue</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">ReferenceValue</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ReferenceValue</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ReferenceValue</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1323,6 +1356,24 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <span class="unaffected">}</span></code></pre>
 
 
+<h2><a name="SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handler.</span>getProperty()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">handler.</span>property().definition()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="Transient">Transient</a></h2>
 
 <table>
@@ -1332,10 +1383,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">Transient</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">Transient</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">Transient</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">Transient</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1390,10 +1441,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">TransientProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">TransientProperty</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">TransientProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">TransientProperty</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1538,10 +1589,10 @@ validation using Property.validation() API. The property manages the interaction
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">ValueProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">ValueProperty</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">ValueProperty</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ValueProperty</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1556,10 +1607,10 @@ validation using Property.validation() API. The property manages the interaction
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.modeling.<span class="unaffected">Value</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">Value</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">oracle.eclipse.sapphire</span>.<span class="unaffected">Value</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">Value</span></code></pre>
     </td>
   </tr>
   <tr>

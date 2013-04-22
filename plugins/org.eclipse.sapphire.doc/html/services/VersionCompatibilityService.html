@@ -61,7 +61,7 @@ void setInitialQuoteDate( Date value );</font></code></pre>
 
     protected void initVersionCompatibilityService()
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         final ModelProperty property = context( ModelProperty.class );
 
         this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( element, property );

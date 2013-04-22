@@ -15,13 +15,13 @@
 
 <templates>
 
-  <template name="sf-type" description="%Type" id="sapphire.modeling.Type" context="java-members" enabled="true">
-ModelElementType TYPE = new ModelElementType( ${enclosing_type}.class );
-${:import(org.eclipse.sapphire.modeling.ModelElementType)}
+  <template name="sf-type" description="%Type" id="sapphire.Type" context="java-members" enabled="true">
+ElementType TYPE = new ElementType( ${enclosing_type}.class );
+${:import(org.eclipse.sapphire.ElementType)}
 ${cursor}
   </template>
 
-  <template name="sf-value" description="%ValueProperty" id="sapphire.modeling.ValueProperty" context="java-members" enabled="true">
+  <template name="sf-value" description="%ValueProperty" id="sapphire.ValueProperty" context="java-members" enabled="true">
 // *** ${name} ***
 
 @Label( standard = "${label}" )
@@ -30,11 +30,11 @@ ValueProperty PROP_${field} = new ValueProperty( TYPE, "${name}" );
     
 Value&lt;String&gt; get${name}();
 void set${name}( String value );
-${:import(org.eclipse.sapphire.modeling.ValueProperty,org.eclipse.sapphire.modeling.Value,org.eclipse.sapphire.modeling.annotations.Label)}
+${:import(org.eclipse.sapphire.ValueProperty,org.eclipse.sapphire.Value,org.eclipse.sapphire.modeling.annotations.Label)}
 ${cursor}
   </template>
 
-  <template name="sf-value-typed" description="%ValuePropertyTyped" id="sapphire.modeling.ValuePropertyTyped" context="java-members" enabled="true">
+  <template name="sf-value-typed" description="%ValuePropertyTyped" id="sapphire.ValuePropertyTyped" context="java-members" enabled="true">
 // *** ${name} ***
 
 @Type( base = ${type}.class )
@@ -45,11 +45,11 @@ ValueProperty PROP_${field} = new ValueProperty( TYPE, "${name}" );
 Value&lt;${type}&gt; get${name}();
 void set${name}( String value );
 void set${name}( ${type} value );
-${:import(org.eclipse.sapphire.modeling.ValueProperty,org.eclipse.sapphire.modeling.Value,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+${:import(org.eclipse.sapphire.ValueProperty,org.eclipse.sapphire.Value,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
 ${cursor}
   </template>
   
-  <template name="sf-element" description="%ElementProperty" id="sapphire.modeling.ElementProperty" context="java-members" enabled="true">
+  <template name="sf-element" description="%ElementProperty" id="sapphire.ElementProperty" context="java-members" enabled="true">
 // *** ${name} ***
 
 @Type( base = ${type}.class )
@@ -57,12 +57,12 @@ ${cursor}
     
 ElementProperty PROP_${field} = new ElementProperty( TYPE, "${name}" );
     
-ModelElementHandle&lt;${type}&gt; get${name}();
-${:import(org.eclipse.sapphire.modeling.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.modeling.ModelElementHandle)}
+ElementHandle&lt;${type}&gt; get${name}();
+${:import(org.eclipse.sapphire.ElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.ElementHandle)}
 ${cursor}
   </template>
   
-  <template name="sf-element-implied" description="%ImpliedElementProperty" id="sapphire.modeling.ImpliedElementProperty" context="java-members" enabled="true">
+  <template name="sf-element-implied" description="%ImpliedElementProperty" id="sapphire.ImpliedElementProperty" context="java-members" enabled="true">
 // *** ${name} ***
 
 @Type( base = ${type}.class )
@@ -71,11 +71,11 @@ ${cursor}
 ImpliedElementProperty PROP_${field} = new ImpliedElementProperty( TYPE, "${name}" );
     
 ${type} get${name}();
-${:import(org.eclipse.sapphire.modeling.ImpliedElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+${:import(org.eclipse.sapphire.ImpliedElementProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
 ${cursor}
   </template>
     
-  <template name="sf-list" description="%ListProperty" id="sapphire.modeling.ListProperty" context="java-members" enabled="true">
+  <template name="sf-list" description="%ListProperty" id="sapphire.ListProperty" context="java-members" enabled="true">
 // *** ${name} ***
 
 @Type( base = ${type}.class )
@@ -83,12 +83,12 @@ ${cursor}
     
 ListProperty PROP_${field} = new ListProperty( TYPE, "${name}" );
     
-ModelElementList&lt;${type}&gt; get${name}();
-${:import(org.eclipse.sapphire.modeling.ListProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.modeling.ModelElementList)}
+ElementList&lt;${type}&gt; get${name}();
+${:import(org.eclipse.sapphire.ListProperty,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.ElementList)}
 ${cursor}
   </template>
 
-  <template name="sf-transient" description="%TransientProperty" id="sapphire.modeling.TransientProperty" context="java-members" enabled="true">
+  <template name="sf-transient" description="%TransientProperty" id="sapphire.TransientProperty" context="java-members" enabled="true">
 // *** ${name} ***
 
 @Type( base = ${type}.class )
@@ -98,7 +98,7 @@ TransientProperty PROP_${field} = new TransientProperty( TYPE, "${name}" );
     
 Transient&lt;${type}&gt; get${name}();
 void set${name}( ${type} value );
-${:import(org.eclipse.sapphire.modeling.TransientProperty,org.eclipse.sapphire.modeling.Transient,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
+${:import(org.eclipse.sapphire.TransientProperty,org.eclipse.sapphire.Transient,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
 ${cursor}
   </template>
 

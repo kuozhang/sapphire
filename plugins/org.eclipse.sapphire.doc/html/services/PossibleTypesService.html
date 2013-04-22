@@ -34,7 +34,7 @@ The framework provides an implementation of PossibleTypesService that works with
 
 ListProperty PROP_SHAPES = new ListProperty( TYPE, "Shapes" );
 
-ModelElementList&lt;Shape> getShapes();</font></code></pre>
+ElementList&lt;Shape> getShapes();</font></code></pre>
 
 <p>When the set of possible types varies due to model extensibility or runtime conditions, a custom implementation
 of PossibleTypesService can be provided.</p>
@@ -55,7 +55,7 @@ of PossibleTypesService can be provided.</p>
     {
         // Compute the list of possible types.
 
-        List&lt;ModelElementType> types = new ArrayList&lt;ModelElementType>();
+        List&lt;ElementType> types = new ArrayList&lt;ElementType>();
 
         ...
 
@@ -76,7 +76,7 @@ of PossibleTypesService can be provided.</p>
 
 <code><font color="#888888">ListProperty PROP_SHAPES = new ListProperty( TYPE, "Shapes" );
 
-ModelElementList&lt;Shape> getShapes();</font></code></pre>
+ElementList&lt;Shape> getShapes();</font></code></pre>
 
 <p>If the set of possible types is not specified via @Type annotation or via a custom PossibleTypesService
 implementation, the set of possible types is defined to be a singleton set composed of the property's base

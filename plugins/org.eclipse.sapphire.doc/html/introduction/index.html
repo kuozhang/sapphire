@@ -58,9 +58,9 @@ them. All model authoring and consumption happens through the interfaces.</p>
 <p>In this article we will walk through a Sapphire sample called EzBug. The sample is based
 around a scenario of building a bug reporting system. Let's start by looking at BugReport.</p>
 
-<pre class="source-code"><code>public interface BugReport extends IModelElement
+<pre class="source-code"><code>public interface BugReport extends Element
 {
-    ModelElementType TYPE = new ModelElementType( BugReport.class );
+    ElementType TYPE = new ElementType( BugReport.class );
 
     // *** CustomerId ***
 
@@ -129,7 +129,7 @@ around a scenario of building a bug reporting system. Let's start by looking at 
 
     ListProperty PROP_HARDWARE = new ListProperty( TYPE, "Hardware" );
 
-    ModelElementList&lt;HardwareItem> getHardware();
+    ElementList&lt;HardwareItem> getHardware();
 }</code></pre>
 
 <p>As you can see in the above code listing, a model element definition in Sapphire is composed of a series
@@ -151,9 +151,9 @@ arbitrary object reference that does not need to be persisted to permanent stora
 above listing, there is one list property. It is homogeneous and references HardwareItem element type. Let's
 look at that type next.</p>
 
-<pre class="source-code"><code>public interface HardwareItem extends IModelElement
+<pre class="source-code"><code>public interface HardwareItem extends Element
 {
-    ModelElementType TYPE = new ModelElementType( HardwareItem.class );
+    ElementType TYPE = new ElementType( HardwareItem.class );
 
     // *** Type ***
 
@@ -208,9 +208,9 @@ is just a collection of Java interfaces that are annotated in a certain way and 
 
 <pre class="source-code"><code>@XmlBinding( path = "report" )
 
-public interface FileBugReportOp extends IModelElement
+public interface FileBugReportOp extends Element
 {
-    ModelElementType TYPE = new ModelElementType( FileBugReportOp.class );
+    ElementType TYPE = new ElementType( FileBugReportOp.class );
 
     // *** BugReport ***
 
@@ -539,9 +539,9 @@ have a pretty good idea of what that will look like.</p>
 
 <pre class="source-code"><code>@XmlBinding( path = "bugs" )
 
-public interface BugRepository extends IModelElement
+public interface BugRepository extends Element
 {
-    ModelElementType TYPE = new ModelElementType( BugRepository.class );
+    ElementType TYPE = new ElementType( BugRepository.class );
 
     // *** BugReports ***
 
@@ -551,7 +551,7 @@ public interface BugRepository extends IModelElement
 
     ListProperty PROP_BUG_REPORTS = new ListProperty( TYPE, "BugReports" );
 
-    ModelElementList&lt;BugReport> getBugReports();
+    ElementList&lt;BugReport> getBugReports();
 }</code></pre>
 
 <p>That was easy. Now let's go back to the UI definition file.</p>

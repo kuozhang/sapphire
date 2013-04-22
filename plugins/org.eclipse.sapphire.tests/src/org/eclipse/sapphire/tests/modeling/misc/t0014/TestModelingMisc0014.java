@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests operation of IModelElement.dispose() method when the element contains an element or a list property that
+ * Tests operation of Element.dispose() method when the element contains an element or a list property that
  * has not been accessed.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

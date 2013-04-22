@@ -34,9 +34,9 @@ which supports <a href="../el/index.html">the expression language</a>.</p>
 
 <pre class="source-code"><code>@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
 
-<font color="#888888">public interface PurchaseOrder extends IModelElement
+<font color="#888888">public interface PurchaseOrder extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );</font>
+    ElementType TYPE = new ElementType( PurchaseOrder.class );</font>
 
     // *** Version ***
 
@@ -56,7 +56,7 @@ which supports <a href="../el/index.html">the expression language</a>.</p>
 
 <pre class="source-code"><code>@Service( impl = ExampleVersionCompatibilityTargetService.class )
 
-<font color="#888888">public interface PurchaseOrder extends IModelElement
+<font color="#888888">public interface PurchaseOrder extends Element
 {
     ...
 }</font></code></pre>

@@ -24,7 +24,7 @@ public abstract class EqualityService extends Service
      * Performs the delegated equality computation. 
      * 
      * <p>Note that one of the objects to compare must be retrieved from the service context. For instance, 
-     * if the context is a model element, implementation would need to make <code>context( IModelElement.class )</code>
+     * if the context is a model element, implementation would need to make <code>context( Element.class )</code>
      * call.</p>
      *  
      * @param obj the object to compare for equality with the context object

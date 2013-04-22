@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 
 /**
- * Tests behavior of IModelElement.enabled( ModelProperty ) method for overridden properties.
+ * Tests behavior of Element.enabled( ModelProperty ) method for overridden properties.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

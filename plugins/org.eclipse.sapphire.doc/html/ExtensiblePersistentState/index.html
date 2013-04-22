@@ -38,7 +38,7 @@ persistent state is also used for communication between the toggle and the item 
 
 <pre class="source-code"><code>public interface CatalogEditorPageState extends MasterDetailsEditorPageState
 {
-    ModelElementType TYPE = new ModelElementType( CatalogEditorPageState.class );
+    ElementType TYPE = new ElementType( CatalogEditorPageState.class );
 
     // *** ShowManufacturer ***
 
@@ -251,7 +251,7 @@ based on the manufacturer.</p>
 
             if( page != null )
             {
-                final IModelElement element = part.getLocalModelElement();
+                final Element element = part.getLocalModelElement();
 
                 if( element instanceof Item )
                 {

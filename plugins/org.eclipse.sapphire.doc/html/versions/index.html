@@ -107,9 +107,9 @@ typically references a property that defines the version.</p>
 
 <pre class="source-code"><code>@VersionCompatibilityTarget( version = "${ Version }", versioned = "Purchase Order" )
 
-<font color="#888888">public interface PurchaseOrder extends IModelElement
+<font color="#888888">public interface PurchaseOrder extends Element
 {
-    ModelElementType TYPE = new ModelElementType( PurchaseOrder.class );</font>
+    ElementType TYPE = new ElementType( PurchaseOrder.class );</font>
 
     // *** Version ***
 
@@ -197,7 +197,7 @@ typically references a property that defines the version.</p>
 
     ElementProperty PROP_PAYMENT = new ElementProperty( TYPE, "Payment" );
 
-    ModelElementHandle&lt;Payment> getPayment();
+    ElementHandle&lt;Payment> getPayment();
 }</font></code></pre>
 
 <p style="margin-left: 20px;">With the default 2.0 version, all of the purchase order fields are visible.</p>
@@ -227,7 +227,7 @@ implementations.</p>
 
     protected void initVersionCompatibilityService()
     {
-        final IModelElement element = context( IModelElement.class );
+        final Element element = context( Element.class );
         final ModelProperty property = context( ModelProperty.class );
 
         this.versionCompatibilityTargetService = VersionCompatibilityTargetService.find( element, property );
