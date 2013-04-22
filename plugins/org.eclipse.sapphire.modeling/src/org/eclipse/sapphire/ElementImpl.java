@@ -506,6 +506,7 @@ public abstract class ElementImpl implements Element
                 {
                     final String name = ( (PropertySegment) head ).getPropertyName();
                     final Property property = this.propertiesByName.get( name.toLowerCase() );
+                    final ModelPath tail = path.tail();
                     
                     if( property instanceof ElementHandle )
                     {
@@ -513,7 +514,17 @@ public abstract class ElementImpl implements Element
                         
                         if( element != null )
                         {
-                            return element.visit( path.tail(), visitor );
+                            return element.visit( tail, visitor );
+                        }
+                    }
+                    else if( property instanceof ElementList )
+                    {
+                        for( Element element : (ElementList<?>) property )
+                        {
+                            if( ! element.visit( tail, visitor ) )
+                            {
+                                return false;
+                            }
                         }
                     }
                     
