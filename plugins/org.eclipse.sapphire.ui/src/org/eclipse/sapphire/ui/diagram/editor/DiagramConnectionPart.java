@@ -66,7 +66,6 @@ public class DiagramConnectionPart
 	private IDiagramConnectionEndpointBindingDef endpoint2Def;
 	private Element srcNodeModel;
 	private Element targetNodeModel;
-	private Listener endpointModelListener;
 	private FunctionResult endpoint1FunctionResult;
 	private FunctionResult endpoint2FunctionResult;
 	private PropertyDef endpoint1Property;
@@ -134,15 +133,6 @@ public class DiagramConnectionPart
     protected void init()
     {
         initLabelId();
-        
-        this.endpointModelListener = new FilteredListener<PropertyEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final PropertyEvent event )
-            {
-            	handlEndpointModelPropertyChange( event );
-            }
-        };
         
         this.endpoint1Def = this.bindingDef.getEndpoint1().content();        
         this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
@@ -450,56 +440,12 @@ public class DiagramConnectionPart
     {
         this.modelElement.attach(this.modelPropertyListener, this.endpoint1Path);
         this.modelElement.attach(this.modelPropertyListener, this.endpoint2Path);
-        if (this.srcNodeModel != null)
-        {
-        	this.srcNodeModel.attach(this.endpointModelListener);
-        }
-        if (this.targetNodeModel != null)
-        {
-        	this.targetNodeModel.attach(this.endpointModelListener);
-        }
     }
     
     public void removeModelListener()
     {
         this.modelElement.detach(this.modelPropertyListener, this.endpoint1Path);
         this.modelElement.detach(this.modelPropertyListener, this.endpoint2Path);
-        if (this.srcNodeModel != null)
-        {
-        	this.srcNodeModel.detach(this.endpointModelListener);
-        }
-        if (this.targetNodeModel != null)
-        {
-        	this.targetNodeModel.detach(this.endpointModelListener);
-        }
-    }
-    
-    protected void handlEndpointModelPropertyChange(final PropertyEvent event)
-    {
-    	boolean endpointChanged = false;
-    	boolean sourceChange = false;
-    	if (this.srcNodeModel == null || event.property().element() == this.srcNodeModel)
-    	{
-    		Element newSrcModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
-    		if (newSrcModel != this.srcNodeModel)
-    		{
-    			endpointChanged = true;
-    			sourceChange = true;
-    		}
-    	}
-    	else if (this.targetNodeModel == null || event.property().element() == this.targetNodeModel)
-    	{
-    		Element newTargetModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
-    		if (newTargetModel != this.targetNodeModel)
-    		{
-    			endpointChanged = true;
-    		}    		
-    	}
-    	if (endpointChanged)
-    	{
-            handleEndpointChange(sourceChange);
-            notifyConnectionEndpointUpdate();    		
-    	}
     }
     
     protected void handleModelPropertyChange(final PropertyEvent event)

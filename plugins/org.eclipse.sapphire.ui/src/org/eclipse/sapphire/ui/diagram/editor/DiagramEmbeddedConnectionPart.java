@@ -34,7 +34,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
 {
     private Element srcNodeModel;
     private Element endpointModel;
-    private Listener endpointModelListener;
     private ModelPath endpointPath;
     private FunctionResult endpointFunctionResult;
     private IDiagramConnectionEndpointBindingDef endpointDef;
@@ -50,14 +49,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     protected void init()
     {   
         initLabelId();
-        this.endpointModelListener = new FilteredListener<PropertyEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final PropertyEvent event )
-            {
-                handlEndpointModelPropertyChange( event );
-            }
-        };
         
         this.endpointDef = this.bindingDef.getEndpoint2().content();
         this.endpointModel = resolveEndpoint(this.modelElement, this.endpointPath);
@@ -99,20 +90,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     public Element getEndpoint2()
     {
         return this.endpointModel;
-    }
-
-    @Override
-    protected void handlEndpointModelPropertyChange(final PropertyEvent event)
-    {
-    	if (this.endpointModel == null || event.property().element() == this.endpointModel)
-    	{
-    		Element newTargetModel = resolveEndpoint(this.modelElement, this.endpointPath);
-    		if (newTargetModel != this.endpointModel)
-    		{
-    			handleEndpointChange();
-    			notifyConnectionEndpointUpdate(); 
-    		}    		
-    	}
     }
     
     @Override
@@ -171,10 +148,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         }
         this.modelElement.attach(this.modelPropertyListener, 
                                     this.endpointDef.getProperty().content());
-        if (this.endpointModel != null)
-        {
-        	this.endpointModel.attach(this.endpointModelListener);
-        }
     }
     
     @Override
@@ -186,10 +159,6 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
         }
         this.modelElement.detach(this.modelPropertyListener, 
                                     this.endpointDef.getProperty().content());
-        if (this.endpointModel != null)
-        {
-        	this.endpointModel.detach(this.endpointModelListener);
-        }
     }
 
     @Override

@@ -58,7 +58,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     protected Element modelElement;
     private SapphireDiagramEditorPagePart diagramEditor;
     private String propertyName;
-    private ModelPath allDescendentsPath;
+//    private ModelPath allDescendentsPath;
     private ListProperty modelProperty;
     private List<Class<?>> modelElementTypes;
     private List<DiagramImplicitConnectionPart> implicitConnections;
@@ -128,16 +128,19 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     public void addModelListener()
     {
         this.modelElement.attach(this.modelPropertyListener, this.propertyName);
-        String temp = this.propertyName + "/*";
-        this.allDescendentsPath = new ModelPath(temp);
-        this.modelElement.attach(this.modelPropertyListener, this.allDescendentsPath);
+        // I don't think the following code is necessary since the condition expression
+        // refreshes implicit connections. TODO more testing when the "Property instance construct"
+        // change propogrates to OEPE
+//        String temp = this.propertyName + "/*";
+//        this.allDescendentsPath = new ModelPath(temp);
+//        this.modelElement.attach(this.modelPropertyListener, this.allDescendentsPath);
     }
     
     @Override
     public void removeModelListener()
     {
         this.modelElement.detach(this.modelPropertyListener, this.propertyName);
-        this.modelElement.detach(this.modelPropertyListener, this.allDescendentsPath);
+//        this.modelElement.detach(this.modelPropertyListener, this.allDescendentsPath);
     }
     
     public void refreshImplicitConnections()
