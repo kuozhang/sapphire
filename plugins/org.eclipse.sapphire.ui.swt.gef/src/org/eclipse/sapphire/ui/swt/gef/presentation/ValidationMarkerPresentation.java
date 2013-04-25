@@ -23,8 +23,10 @@ import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.internal.ActionsSectionAssistContributor;
@@ -36,6 +38,7 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDialog;
 import org.eclipse.sapphire.ui.assist.internal.ResetActionsAssistContributor;
 import org.eclipse.sapphire.ui.assist.internal.RestoreInitialValueActionsAssistContributor;
 import org.eclipse.sapphire.ui.assist.internal.ShowInSourceActionAssistContributor;
+import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
@@ -88,6 +91,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	private PropertyEditorAssistContext assistContext;
 	private Status problem;
 	private final List<PropertyEditorAssistContributor> contributors;
+	private Listener validationListener;
 	
 	public ValidationMarkerPresentation(ShapePresentation parent, ValidationMarkerPart validationMarkerPart, 
 			DiagramConfigurationManager configManager)
@@ -158,6 +162,16 @@ public class ValidationMarkerPresentation extends ShapePresentation
                 }
             }
         );
+        
+        this.validationListener = new FilteredListener<PartValidationEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PartValidationEvent event )
+            {
+            	refresh();
+            }
+        };
+        getContainerPart().attach(this.validationListener);
         		
 		addMouseListener();
 		
@@ -174,13 +188,24 @@ public class ValidationMarkerPresentation extends ShapePresentation
 		return getValidationMarkerPart().getSize();
 	}
 	
+	@Override
+	public void dispose()
+	{
+		((ContainerShapePart)this.getPart().getParentPart()).detach(this.validationListener);
+	}
+	
+	private ContainerShapePart getContainerPart()
+	{
+		return (ContainerShapePart)this.getPart().getParentPart();
+	}
+	
 	private void refresh()
 	{
 		refreshAssistContext();
 		
 		Image image = null;
 		
-		Status status = this.element.validation();
+		Status status = getContainerPart().validation();
 		ValidationMarkerSize size = getSize();
 		if (status.severity() != Status.Severity.OK) 
 		{
@@ -263,7 +288,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
     		ShapePart parentPart = (ShapePart)this.getValidationMarkerPart().getParentPart();
     		DiagramRenderingContext context = getConfigurationManager().getDiagramRenderingContextCache().get(parentPart);	            
 			
-	        this.assistContext = new PropertyEditorAssistContext( getPart(), this.element, null, context );
+	        this.assistContext = new PropertyEditorAssistContext( this.getPart(), context );
 	        this.problem = this.element.validation();
             for( PropertyEditorAssistContributor c : this.contributors )
             {

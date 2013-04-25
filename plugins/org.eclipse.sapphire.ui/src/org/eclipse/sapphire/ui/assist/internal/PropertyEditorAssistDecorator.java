@@ -425,7 +425,7 @@ public final class PropertyEditorAssistDecorator
         
         if( this.property.enabled() )
         {
-            this.assistContext = new PropertyEditorAssistContext( this.part, this.property.element(), this.property, this.context );
+            this.assistContext = new PropertyEditorAssistContext( this.part, this.context );
             this.problem = this.part.validation();
             
             for( PropertyEditorAssistContributor c : this.contributors )

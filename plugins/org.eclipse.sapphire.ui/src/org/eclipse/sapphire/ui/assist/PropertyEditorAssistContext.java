@@ -29,20 +29,14 @@ import org.eclipse.swt.widgets.Shell;
 public final class PropertyEditorAssistContext
 {
     private final SapphirePart part;
-    private final Element element;
-    private final Property property;
     private final SapphireRenderingContext context;
     private final LinkedHashMap<String,PropertyEditorAssistSection> sections; 
     private final Map<String,PropertyEditorAssistSection> sectionsReadOnly; 
     
     public PropertyEditorAssistContext( final SapphirePart part,
-                                        final Element element,
-                                        final Property property,
                                         final SapphireRenderingContext context )
     {
         this.part = part;
-        this.element = element;
-        this.property = property;
         this.context = context;
         this.sections = new LinkedHashMap<String,PropertyEditorAssistSection>();
         this.sectionsReadOnly = Collections.unmodifiableMap( this.sections );
@@ -52,29 +46,7 @@ public final class PropertyEditorAssistContext
     {
         return this.part;
     }
-    
-    public Element element()
-    {
-        return this.element;
-    }
-    
-    public Property property()
-    {
-        return this.property;
-    }
-    
-    public boolean isPropertyEditorReadOnly()
-    {
-        if( this.part instanceof PropertyEditorPart )
-        {
-            return ( (PropertyEditorPart) this.part ).isReadOnly();
-        }
-        else
-        {
-            return this.property != null ? this.property.definition().isReadOnly() : false;
-        }
-    }
-    
+        
     public SapphireRenderingContext getUiContext()
     {
         return this.context;

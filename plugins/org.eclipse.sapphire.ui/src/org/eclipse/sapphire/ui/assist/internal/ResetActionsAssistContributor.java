@@ -17,6 +17,9 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.DefaultValueService;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.WithPart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -37,15 +40,31 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final Property property = context.property();
+    	SapphirePart part = context.getPart();
+        Property property0 = null;
+        boolean propertyReadOnly = false;
+        if (part instanceof PropertyEditorPart)
+        {
+        	property0 = ((PropertyEditorPart)part).property();
+        	propertyReadOnly = ( (PropertyEditorPart) part ).isReadOnly();
+        	
+        }
+        else if (part instanceof WithPart)
+        {
+        	property0 = ((WithPart)part).property();
+        	propertyReadOnly = property0.definition().isReadOnly();
+        }
         
-        if( context.isPropertyEditorReadOnly() || property.empty() )
+    	        
+        if( property0 == null || property0.empty() || propertyReadOnly  )
         {
             return;
         }
         
+        final Property property = property0;
         if( property instanceof Value<?> )
         {
+        	
             final DefaultValueService defaultValueService = property.service( DefaultValueService.class );
             final boolean hasDefaultValue = ( defaultValueService == null ? false : defaultValueService.value() != null );
             final boolean isBooleanType = property.definition().getTypeClass().equals( Boolean.class );

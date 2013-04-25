@@ -14,7 +14,10 @@ package org.eclipse.sapphire.ui.assist.internal;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SourceEditorService;
+import org.eclipse.sapphire.ui.WithPart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -35,8 +38,19 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final Element element = context.element();
-        final Property property = context.property();
+    	SapphirePart part = context.getPart();
+        Property property0 = null;
+        if (part instanceof PropertyEditorPart)
+        {
+        	property0 = ((PropertyEditorPart)part).property();
+        	
+        }
+        else if (part instanceof WithPart)
+        {
+        	property0 = ((WithPart)part).property();
+        }
+        final Element element = part.getLocalModelElement();
+        
         final SourceEditorService sourceEditorService = element.adapt( SourceEditorService.class );
         
         if( sourceEditorService == null )
@@ -46,13 +60,13 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
         
         boolean contribute = false;
         
-        if( property == null )
+        if( property0 == null )
         {
         	contribute = true;
         }
-        else if( ! property.definition().isDerived() )
+        else if( ! property0.definition().isDerived() )
         {
-            contribute = ! property.empty();
+            contribute = ! property0.empty();
         }
         
         if( ! contribute )
@@ -60,6 +74,7 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
             return;
         }
 
+        final Property property = property0;
         final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
         
         contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.action ) + "</a></p>" );
@@ -71,7 +86,7 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
             {
                 public void run()
                 {
-                    sourceEditorService.show( element, property.definition() );
+                    sourceEditorService.show( element, property != null ? property.definition() : null);
                 }
             }
         );

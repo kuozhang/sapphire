@@ -15,6 +15,9 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.InitialValueService;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.WithPart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -35,7 +38,17 @@ public final class RestoreInitialValueActionsAssistContributor extends PropertyE
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final Property property = context.property();
+    	SapphirePart part = context.getPart();
+        Property property = null;
+        if (part instanceof PropertyEditorPart)
+        {
+        	property = ((PropertyEditorPart)part).property();
+        	
+        }
+        else if (part instanceof WithPart)
+        {
+        	property = ((WithPart)part).property();
+        }
         
         if( property == null || property.definition().isReadOnly() )
         {

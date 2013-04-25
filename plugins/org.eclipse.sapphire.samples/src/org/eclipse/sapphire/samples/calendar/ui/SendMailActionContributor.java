@@ -27,7 +27,7 @@ public final class SendMailActionContributor extends PropertyEditorAssistContrib
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final IAttendee attendee = (IAttendee) context.element();
+        final IAttendee attendee = (IAttendee) context.getPart().getLocalModelElement();
         
         if( attendee.getEMail().text() != null )
         {

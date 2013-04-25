@@ -17,6 +17,9 @@ import java.util.TreeSet;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.FactsAggregationService;
+import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.WithPart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -37,8 +40,17 @@ public final class FactsAssistContributor extends PropertyEditorAssistContributo
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
-        final Element element = context.element();
-        final Property property = context.property();
+    	SapphirePart part = context.getPart();
+        final Element element = part.getLocalModelElement();
+        Property property = null;
+        if (part instanceof PropertyEditorPart)
+        {
+        	property = ((PropertyEditorPart)part).property();
+        }
+        else if (part instanceof WithPart)
+        {
+        	property = ((WithPart)part).property();
+        }
         
         boolean contribute = false;
         

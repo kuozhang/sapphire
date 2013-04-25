@@ -12,8 +12,15 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.runOnDisplayThread;
+
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
@@ -30,6 +37,8 @@ public class TextPart extends ShapePart
 	private Element modelElement;
 	private Function textFunction;
 	private FunctionResult functionResult;
+	private Property property;
+	private Listener propertyListener;
 	
 	@Override
     protected void init()
@@ -53,6 +62,29 @@ public class TextPart extends ShapePart
                 }
             }
         );
+        this.property = FunctionUtil.getFunctionProperty(this.modelElement, this.functionResult);
+        this.propertyListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                if( event instanceof PropertyValidationEvent )
+                {
+                    runOnDisplayThread
+                    (
+                        new Runnable()
+                        {
+                            public void run()
+                            {
+                                refreshValidation();
+                            }
+                        }
+                    );
+                }
+            }
+        };
+        
+        this.property.attach(this.propertyListener);        
         this.setEditable(!(this.textFunction instanceof Literal));
     }
 	
@@ -64,8 +96,15 @@ public class TextPart extends ShapePart
         {
             this.functionResult.dispose();
         }
+        this.property.detach( this.propertyListener );
     }
 	
+    @Override
+    protected Status computeValidation()
+    {
+    	return this.property.validation();
+    }
+    
     public String getContent()
     {
     	String value = null;

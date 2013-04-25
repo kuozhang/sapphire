@@ -17,7 +17,10 @@ import java.util.List;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
@@ -126,6 +129,18 @@ public class ContainerShapePart extends ShapePart
                 );
                 childPart.attach
                 (
+                    new FilteredListener<PartValidationEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( PartValidationEvent event )
+                        {
+                        	refreshValidation();
+                        }
+                    }
+                );
+                
+                childPart.attach
+                (
                      new FilteredListener<ShapeReorderEvent>()
                      {
                         @Override
@@ -162,6 +177,23 @@ public class ContainerShapePart extends ShapePart
         	index++;
         }
     }
+	
+    @Override
+    protected Status computeValidation()
+    {
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+
+        for( SapphirePart child : this.children )
+        {
+        	if (!(child instanceof ValidationMarkerPart))
+        	{
+        		factory.merge( child.validation() );
+        	}
+        }
+        
+        return factory.create();
+    }
+	
 
 	public ShapeLayoutDef getLayout()
 	{
