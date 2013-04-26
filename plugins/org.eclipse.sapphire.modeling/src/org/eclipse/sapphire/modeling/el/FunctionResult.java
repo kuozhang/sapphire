@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Shenxue Zhou - Attach property listeners in operands()
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.el;
@@ -34,6 +35,7 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public abstract class FunctionResult
@@ -121,6 +123,31 @@ public abstract class FunctionResult
     
     public final List<FunctionResult> operands()
     {
+    	for (FunctionResult fr : this.operands)
+    	{
+    		Object operand = null;
+    		try
+    		{
+    			operand = fr.value();
+    		}
+    		catch (FunctionException fe) {};
+    		
+            if( operand instanceof Property )
+            {
+                final Property property = (Property) operand;
+                
+                property.attach( this.listener );
+                
+                if( this.properties == null )
+                {
+                    this.properties = new ArrayList<Property>( 1 );
+                }
+                if (!this.properties.contains(property))
+                {
+                	this.properties.add( property );
+                }
+            }    		
+    	}
         return this.operands;
     }
     
