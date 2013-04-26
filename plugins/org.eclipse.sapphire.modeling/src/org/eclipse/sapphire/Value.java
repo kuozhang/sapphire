@@ -40,6 +40,18 @@ public class Value<T> extends Property
         super( element, property );
     }
     
+    @SuppressWarnings( "unchecked" )
+    
+    public final <TX> Value<TX> typed( final Class<TX> type )
+    {
+        if( definition().getTypeClass() != type )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return (Value<TX>) this;
+    }
+    
     @Override
     public final void refresh()
     {

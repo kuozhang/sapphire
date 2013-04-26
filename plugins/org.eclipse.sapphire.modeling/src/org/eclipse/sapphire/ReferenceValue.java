@@ -12,6 +12,7 @@
 package org.eclipse.sapphire;
 
 import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
@@ -28,6 +29,23 @@ public final class ReferenceValue<R,T> extends Value<R>
         super( element, property );
         
         this.service = service( ReferenceService.class );
+    }
+    
+    @SuppressWarnings( "unchecked" )
+    
+    public <RX,TX> ReferenceValue<RX,TX> typed( final Class<RX> referenceType, final Class<TX> targetType )
+    {
+        if( definition().getTypeClass() != referenceType )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition().getAnnotation( Reference.class ).target() != targetType )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return (ReferenceValue<RX,TX>) this;
     }
     
     @SuppressWarnings( "unchecked" )

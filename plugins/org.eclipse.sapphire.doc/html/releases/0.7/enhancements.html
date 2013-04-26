@@ -31,11 +31,15 @@
   </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
-    <li><a href="#Core-IModelElement">IModelElement</a></li>
-    <li><a href="#Core-ModelElementHandle">ModelElementHandle</a></li>
+    <li><a href="#Core-Element">Element</a></li>
+    <li><a href="#Core-ElementHandle">ElementHandle</a></li>
+    <li><a href="#Core-ElementList">ElementList</a></li>
     <li><a href="#Core-ModelElementType">ModelElementType</a></li>
     <li><a href="#Core-PropertyInstance">PropertyInstance</a></li>
+    <li><a href="#Core-ReferenceValue">ReferenceValue</a></li>
     <li><a href="#Core-RequiredConstraintService">RequiredConstraintService</a></li>
+    <li><a href="#Core-Transient">Transient</a></li>
+    <li><a href="#Core-Value">Value</a></li>
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
     <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
     <li><a href="#Core-NewConversions">New Conversions</a></li>
@@ -459,7 +463,7 @@ that references the CatalogItemImage() function.</p>
 &lt;/node-factory></font></code></pre>
 
 
-<h2><a name="Core"><a name="Core-IModelElement">IModelElement</a></a></h2>
+<h2><a name="Core"><a name="Core-Element">Element</a></a></h2>
 
 <p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
 copy individual properties is also available.</p>
@@ -493,25 +497,74 @@ a property within an element.</p>
 <font color="#888888">}</font></code></pre>
 
 
-<h2><a name="Core-ModelElementHandle">ModelElementHandle</a></h2>
+<h2><a name="Core-ElementHandle">ElementHandle</a></h2>
 
-<p>Among objects returned by property getters (Value, Transient, ModelElementHandle and ModelElementList),
-ModelElementHandle was the only one that had no API to retrieve the parent property.</p>
+<p>Among objects returned by property getters (Value, Transient, ElementHandle and ElementList),
+ElementHandle was the only one that had no API to retrieve the parent property.</p>
 
-<pre class="source-code"><code><font color="#888888">ModelElementHandle
+<pre class="source-code"><code><font color="#888888">ElementHandle
 {</font>
     ElementProperty property()
 <font color="#888888">}</font></code></pre>
 
 <p>For convenience, type can be specified using the type's class to avoid having to cast the result.</p>
 
-<pre class="source-code"><code><font color="#888888">ModelElementHandle
+<pre class="source-code"><code><font color="#888888">ElementHandle
 {
     T element()
     T element( boolean createIfNecessary )
     T element( boolean createIfNecessary, ModelElementType type )</font>
     &lt;C extends IModelElement> C element( boolean createIfNecessary, Class&lt;C> cl )
 <font color="#888888">}</font></code></pre>
+
+<p>In certain cases, a property is referenced as ElementHandle&lt;?> without specifying its type parameter. Converting
+such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
+A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
+specified type parameter does not match the property.</p>
+
+<pre class="source-code"><code><font color="#888888">ElementHandle
+{</font>
+   &lt;TX> ElementHandle&lt;TX> typed( Class&lt;TX> type )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public class ExampleValidationService extends ValidationService
+{
+    @Override
+    public Status validate()
+    {</font>
+        ElementHandle&lt;Item> item = context( ElementHandle.class ).typed( Item.class );
+        
+        <font color="#888888">...
+    }
+}</font></code></pre>
+
+
+<h2><a name="Core-ElementList">ElementList</a></h2>
+
+<p>In certain cases, a property is referenced as ElementList&lt;?> without specifying its type parameter. Converting
+such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
+A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
+specified type parameter does not match the property.</p>
+
+<pre class="source-code"><code><font color="#888888">ElementList
+{</font>
+   &lt;TX> ElementList&lt;TX> typed( Class&lt;TX> type )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public class ExampleValidationService extends ValidationService
+{
+    @Override
+    public Status validate()
+    {</font>
+        ElementList&lt;Item> items = context( ElementList.class ).typed( Item.class );
+        
+        <font color="#888888">...
+    }
+}</font></code></pre>
 
 
 <h2><a name="Core-ModelElementType">ModelElementType</a></h2>
@@ -549,6 +602,32 @@ A property instance can found using methods on <a href="#Core-IModelElement">IMo
     void attach( Listener listener )
     void detach( Listener listener )
 }</code></pre>
+
+
+<h2><a name="Core-ReferenceValue">ReferenceValue</a></h2>
+
+<p>In certain cases, a property is referenced as ReferenceValue&lt;?,?> without specifying its type parameters. Converting
+such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
+A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
+specified type parameters do not match the property.</p>
+
+<pre class="source-code"><code><font color="#888888">ReferenceValue
+{</font>
+   &lt;RX,TX> ReferenceValue&lt;RX,TX> typed( Class&lt;RX> referenceType, Class&lt;TX> targetType )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public class ExampleValidationService extends ValidationService
+{
+    @Override
+    public Status validate()
+    {</font>
+        ReferenceValue&lt;JavaTypeName,JavaType> implementation = context( ReferenceValue.class ).typed( JavaTypeName.class, JavaType.class );
+        
+        <font color="#888888">...
+    }
+}</font></code></pre>
 
 
 <h2><a name="Core-RequiredConstraintService">RequiredConstraintService</a></h2>
@@ -589,6 +668,58 @@ an element property is required to have content. Most frequently specified via a
 
 Value&lt;String> getCategory();
 void setCategory( String value );</font></code></pre>
+
+
+<h2><a name="Core-Transient">Transient</a></h2>
+
+<p>In certain cases, a property is referenced as Transient&lt;?> without specifying its type parameter. Converting
+such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
+A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
+specified type parameter does not match the property.</p>
+
+<pre class="source-code"><code><font color="#888888">Transient
+{</font>
+   &lt;TX> Transient&lt;TX> typed( Class&lt;TX> type )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public class ExampleValidationService extends ValidationService
+{
+    @Override
+    public Status validate()
+    {</font>
+        Transient&lt;IProject> project = context( Transient.class ).typed( IProject.class );
+        
+        <font color="#888888">...
+    }
+}</font></code></pre>
+
+
+<h2><a name="Core-Value">Value</a></h2>
+
+<p>In certain cases, a property is referenced as Value&lt;?> without specifying its type parameter. Converting
+such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
+A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
+specified type parameter does not match the property.</p>
+
+<pre class="source-code"><code><font color="#888888">Value
+{</font>
+   &lt;TX> Value&lt;TX> typed( Class&lt;TX> type )
+<font color="#888888">}</font></code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">public class ExampleValidationService extends ValidationService
+{
+    @Override
+    public Status validate()
+    {</font>
+        Value&lt;Integer> value = context( Value.class ).typed( Integer.class );
+        
+        <font color="#888888">...
+    }
+}</font></code></pre>
 
 
 <h2><a name="Core-RootServiceContext">Root Service Context</a></h2>
@@ -937,7 +1068,7 @@ interface Employee extends IModelElement
 
 ListProperty PROP_EMPLOYEES = new ListProperty( TYPE, "Employees" );
 
-ModelElementList&lt;Employee> getEmployees();</code></pre>
+ElementList&lt;Employee> getEmployees();</code></pre>
 
 <pre class="source-code"><code>&lt;property-editor>
     &lt;property>Employees&lt;/property>

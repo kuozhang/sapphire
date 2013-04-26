@@ -37,6 +37,18 @@ public final class ElementHandle<T extends Element> extends Property
         super( element, property );
     }
     
+    @SuppressWarnings( "unchecked" )
+    
+    public <TX extends Element> ElementHandle<TX> typed( final Class<TX> type )
+    {
+        if( definition().getTypeClass() != type )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return (ElementHandle<TX>) this;
+    }
+    
     @Override
     public void refresh()
     {

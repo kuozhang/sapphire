@@ -41,6 +41,18 @@ public final class ElementList<T extends Element> extends Property implements Li
         super( element, property );
     }
     
+    @SuppressWarnings( "unchecked" )
+    
+    public <TX extends Element> ElementList<TX> typed( final Class<TX> type )
+    {
+        if( definition().getTypeClass() != type )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return (ElementList<TX>) this;
+    }
+    
     @Override
     public void refresh()
     {

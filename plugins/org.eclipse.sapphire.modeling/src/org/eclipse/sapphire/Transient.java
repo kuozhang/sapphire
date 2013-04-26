@@ -27,6 +27,18 @@ public final class Transient<T> extends Property
         super( element, property );
     }
     
+    @SuppressWarnings( "unchecked" )
+    
+    public <TX> Transient<TX> typed( final Class<TX> type )
+    {
+        if( definition().getTypeClass() != type )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return (Transient<TX>) this;
+    }
+    
     @Override
     public void refresh()
     {
