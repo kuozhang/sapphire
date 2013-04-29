@@ -45,14 +45,14 @@ public final class SapphireHtmlPanelDefSourceBinding extends XmlValueBindingImpl
             type = HtmlContentSourceType.EMBEDDED;
         }
         
-        return element().property( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE ).service( MasterConversionService.class ).convert( type, String.class );
+        return property().element().property( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE ).service( MasterConversionService.class ).convert( type, String.class );
     }
 
     @Override
     public void write( final String value )
     {
         final XmlElement element = xml();
-        final HtmlContentSourceType type = element().property( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE ).service( MasterConversionService.class ).convert( value, HtmlContentSourceType.class );
+        final HtmlContentSourceType type = property().element().property( HtmlPanelDef.PROP_CONTENT_SOURCE_TYPE ).service( MasterConversionService.class ).convert( value, HtmlContentSourceType.class );
         
         if( value == null )
         {

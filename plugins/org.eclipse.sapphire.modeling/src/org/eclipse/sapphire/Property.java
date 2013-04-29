@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -325,9 +324,21 @@ public abstract class Property implements Observable
         return this.definition.name();
     }
     
-    protected BindingImpl binding()
+    public final <T> T nearest( final Class<T> type )
     {
-        return element().resource().binding( definition() );
+        if( type.isAssignableFrom( getClass() ) )
+        {
+            return type.cast( this );
+        }
+        else
+        {
+            return element().nearest( type );
+        }
+    }
+    
+    protected PropertyBinding binding()
+    {
+        return element().resource().binding( this );
     }
     
     /**

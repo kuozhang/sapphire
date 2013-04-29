@@ -14,7 +14,7 @@ package org.eclipse.sapphire.samples.calendar.integrated;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResource;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
 

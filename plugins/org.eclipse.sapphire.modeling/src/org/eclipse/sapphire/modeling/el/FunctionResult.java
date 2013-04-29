@@ -7,7 +7,6 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Shenxue Zhou - Attach property listeners in operands()
  ******************************************************************************/
 
 package org.eclipse.sapphire.modeling.el;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +35,6 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
- * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public abstract class FunctionResult
@@ -43,7 +42,7 @@ public abstract class FunctionResult
     private final Function function;
     private final FunctionContext context;
     private final List<FunctionResult> operands;
-    private List<Property> properties;
+    private Set<Property> properties;
     private final ListenerContext listeners;
     private final Listener listener;
     private Object value;
@@ -71,11 +70,6 @@ public abstract class FunctionResult
                     refresh();
                 }
             };
-            
-            for( FunctionResult operand : this.operands )
-            {
-                operand.attach( this.listener );
-            }
         }
         
         init();
@@ -123,31 +117,11 @@ public abstract class FunctionResult
     
     public final List<FunctionResult> operands()
     {
-    	for (FunctionResult fr : this.operands)
-    	{
-    		Object operand = null;
-    		try
-    		{
-    			operand = fr.value();
-    		}
-    		catch (FunctionException fe) {};
-    		
-            if( operand instanceof Property )
-            {
-                final Property property = (Property) operand;
-                
-                property.attach( this.listener );
-                
-                if( this.properties == null )
-                {
-                    this.properties = new ArrayList<Property>( 1 );
-                }
-                if (!this.properties.contains(property))
-                {
-                	this.properties.add( property );
-                }
-            }    		
-    	}
+        for( FunctionResult operand : this.operands )
+        {
+            listenToOperand( operand );
+        }
+        
         return this.operands;
     }
     
@@ -155,28 +129,47 @@ public abstract class FunctionResult
     {
         if( position < this.operands.size() )
         {
-            final Object operand = this.operands.get( position ).value();
+            final FunctionResult operand = this.operands.get( position );
             
-            if( operand instanceof Property )
-            {
-                final Property property = (Property) operand;
-                
-                property.attach( this.listener );
-                
-                if( this.properties == null )
-                {
-                    this.properties = new ArrayList<Property>( 1 );
-                }
-                
-                this.properties.add( property );
-            }
+            listenToOperand( operand );
             
-            return operand;
+            return operand.value();
         }
         else
         {
             throw new FunctionException( NLS.bind( Resources.missingOperandMessage, getClass().getName(), String.valueOf( position ) ) );
         }
+    }
+    
+    private void listenToOperand( final FunctionResult operand )
+    {
+        operand.attach( this.listener );
+        
+        Object obj = null;
+        
+        try
+        {
+            obj = operand.value();
+        }
+        catch( FunctionException e )
+        {
+            // Safe to ignore. When the function implementation accesses the value,
+            // the exception will be thrown again.
+        }
+        
+        if( obj instanceof Property )
+        {
+            final Property property = (Property) obj;
+            
+            property.attach( this.listener );
+            
+            if( this.properties == null )
+            {
+                this.properties = new HashSet<Property>( 1 );
+            }
+            
+            this.properties.add( property );
+        }           
     }
     
     protected abstract Object evaluate() throws FunctionException;
@@ -227,6 +220,8 @@ public abstract class FunctionResult
             {
                 property.detach( this.listener );
             }
+            
+            this.properties.clear();
         }
         
         try
@@ -274,6 +269,16 @@ public abstract class FunctionResult
         for( FunctionResult operand : this.operands )
         {
             operand.dispose();
+        }
+        
+        if( this.properties != null )
+        {
+            for( Property property : this.properties )
+            {
+                property.detach( this.listener );
+            }
+            
+            this.properties.clear();
         }
     }
     

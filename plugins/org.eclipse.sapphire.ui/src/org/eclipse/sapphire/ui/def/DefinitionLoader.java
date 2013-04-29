@@ -19,8 +19,8 @@ import java.util.Map;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.Sapphire;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.UrlResourceStore;

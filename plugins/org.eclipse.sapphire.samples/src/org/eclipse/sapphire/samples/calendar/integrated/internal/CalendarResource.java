@@ -14,15 +14,16 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 import java.util.List;
 
 import org.eclipse.sapphire.ElementList;
-import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListPropertyBinding;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
-import org.eclipse.sapphire.modeling.BindingImpl;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
-import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.samples.calendar.integrated.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.IEvent;
@@ -93,11 +94,11 @@ public final class CalendarResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final PropertyDef property )
+    protected PropertyBinding createBinding( final Property property )
     {
-        if( property == ICalendar.PROP_EVENTS )
+        if( property.definition() == ICalendar.PROP_EVENTS )
         {
-            final ListBindingImpl binding = new LayeredListBindingImpl()
+            final ListPropertyBinding binding = new LayeredListBindingImpl()
             {
                 private final ElementList<org.eclipse.sapphire.samples.calendar.IEvent> base
                     = CalendarResource.this.base.getEvents();
@@ -141,7 +142,7 @@ public final class CalendarResource extends Resource
                 }
             };
             
-            binding.init( element(), ICalendar.PROP_EVENTS, null );
+            binding.init( property, null );
             
             return binding;
         }

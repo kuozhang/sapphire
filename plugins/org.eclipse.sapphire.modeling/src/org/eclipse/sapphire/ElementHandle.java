@@ -14,13 +14,12 @@ package org.eclipse.sapphire;
 
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.ElementBindingImpl;
+import org.eclipse.sapphire.modeling.ElementPropertyBinding;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.services.PossibleTypesService;
 
 /**
@@ -79,7 +78,7 @@ public final class ElementHandle<T extends Element> extends Property
         
         if( initialized || ( ! initialized && onlyIfNotInitialized ) )
         {
-            final ElementBindingImpl binding = binding();
+            final ElementPropertyBinding binding = binding();
             final Resource resourceAfter = binding.read();
             final boolean proceed;
             
@@ -143,9 +142,9 @@ public final class ElementHandle<T extends Element> extends Property
     }
     
     @Override
-    protected ElementBindingImpl binding()
+    protected ElementPropertyBinding binding()
     {
-        return (ElementBindingImpl) super.binding();
+        return (ElementPropertyBinding) super.binding();
     }
     
     @Override

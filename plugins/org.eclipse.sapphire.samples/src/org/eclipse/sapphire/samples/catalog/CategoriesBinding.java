@@ -22,15 +22,16 @@ import java.util.TreeSet;
 import javax.xml.namespace.QName;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListPropertyBinding;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.ValuePropertyBinding;
 import org.eclipse.sapphire.modeling.xml.ChildXmlResource;
 import org.eclipse.sapphire.modeling.xml.StandardXmlListBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
@@ -42,33 +43,32 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CategoriesBinding extends ListBindingImpl
+public final class CategoriesBinding extends ListPropertyBinding
 {
     private List<CategoryResource> cache = ListFactory.empty();
     private Listener listener;
     
     @Override
-    public void init( final Element element,
-                      final PropertyDef property,
+    public void init( final Property property,
                       final String[] params )
     {
-        super.init( element, property, params );
+        super.init( property, params );
         
         this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                element.property( property ).refresh();
+                property.refresh();
                 
-                for( Category category : ( (Catalog) element ).getCategories() )
+                for( Category category : ( (Catalog) property.element() ).getCategories() )
                 {
                     category.getItems().refresh();
                 }
             }
         };
         
-        element.attach( this.listener, "Items/Category" );
+        property.element().attach( this.listener, "Items/Category" );
     }
 
     @Override
@@ -79,7 +79,7 @@ public final class CategoriesBinding extends ListBindingImpl
         
         final Set<String> categories = new TreeSet<String>( CategoryNamesComparator.INSTANCE );
         
-        for( Item item : ( (Catalog) element() ).getItems() )
+        for( Item item : ( (Catalog) property().element() ).getItems() )
         {
             categories.add( item.getCategory().text() );
         }
@@ -145,7 +145,7 @@ public final class CategoriesBinding extends ListBindingImpl
         
         this.cache = null;
         
-        element().detach( this.listener, "Items/Category" );
+        property().element().detach( this.listener, "Items/Category" );
         this.listener = null;
     }
 
@@ -183,7 +183,7 @@ public final class CategoriesBinding extends ListBindingImpl
         
         public CategoryResource( final String name )
         {
-            super( CategoriesBinding.this.element().resource() );
+            super( CategoriesBinding.this.property().element().resource() );
             
             this.name = name;
         }
@@ -204,13 +204,15 @@ public final class CategoriesBinding extends ListBindingImpl
         }
 
         @Override
-        protected BindingImpl createBinding( final PropertyDef property )
+        protected PropertyBinding createBinding( final Property property )
         {
-            BindingImpl binding = null;
+            final PropertyDef pdef = property.definition();
             
-            if( property == Category.PROP_NAME )
+            PropertyBinding binding = null;
+            
+            if( pdef == Category.PROP_NAME )
             {
-                binding = new ValueBindingImpl()
+                binding = new ValuePropertyBinding()
                 {
                     @Override
                     public String read()
@@ -225,7 +227,7 @@ public final class CategoriesBinding extends ListBindingImpl
                     }
                 };
             }
-            else if( property == Category.PROP_ITEMS )
+            else if( pdef == Category.PROP_ITEMS )
             {
                 binding = new StandardXmlListBindingImpl()
                 {
@@ -284,7 +286,7 @@ public final class CategoriesBinding extends ListBindingImpl
             
             if( binding != null )
             {
-                binding.init( element(), property, null );
+                binding.init( property, null );
             }
             
             return binding;

@@ -22,12 +22,13 @@ import java.util.SortedSet;
 import javax.xml.namespace.QName;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.modeling.LayeredElementBindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
@@ -46,13 +47,12 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     private ElementType[] modelElementTypes;
     
     @Override
-    public void init( final Element element,
-                      final PropertyDef property,
+    public void init( final Property property,
                       final String[] params )
     {
-        super.init( element, property, params );
+        super.init( property, params );
         
-        this.possibleTypesService = element.property( property ).service( PossibleTypesService.class );
+        this.possibleTypesService = property.service( PossibleTypesService.class );
         
         this.possibleTypesServiceListener = new Listener()
         {
@@ -70,8 +70,8 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     
     private void initBindingMetadata()
     {
-        final Element element = element();
-        final PropertyDef property = property();
+        final Element element = property().element();
+        final PropertyDef property = property().definition();
         
         try
         {
@@ -249,7 +249,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     protected Resource createResource( final Object obj )
     {
         final XmlElement xmlElement = (XmlElement) obj;
-        final XmlResource parentXmlResource = (XmlResource) element().resource();
+        final XmlResource parentXmlResource = (XmlResource) property().element().resource();
         
         return new ChildXmlResource( parentXmlResource, xmlElement );
     }
@@ -297,7 +297,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     
     protected XmlElement base( final boolean createIfNecessary )
     {
-        final XmlResource resource = (XmlResource) element().resource();
+        final XmlResource resource = (XmlResource) property().element().resource();
         return resource.getXmlElement( createIfNecessary );
     }
 

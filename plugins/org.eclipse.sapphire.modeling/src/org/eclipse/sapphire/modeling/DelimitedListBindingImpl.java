@@ -14,31 +14,27 @@ package org.eclipse.sapphire.modeling;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListPropertyBinding;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.ValuePropertyBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DelimitedListBindingImpl extends ListBindingImpl
+public abstract class DelimitedListBindingImpl extends ListPropertyBinding
 {
     private ListEntryResource head;
     
     @Override
-    public void init( final Element element,
-                      final PropertyDef property,
-                      final String[] params )
-    {
-        super.init( element, property, params );
-    }
-    
-    @Override
     public ElementType type( final Resource resource )
     {
-        return property().getType();
+        return property().definition().getType();
     }
 
     @Override
@@ -270,7 +266,7 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
         
         public ListEntryResource()
         {
-            super( DelimitedListBindingImpl.this.element().resource() );
+            super( DelimitedListBindingImpl.this.property().element().resource() );
         }
         
         public final String getValue()
@@ -365,7 +361,7 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
         
         public DefaultListEntryResource()
         {
-            final ElementType listEntryType = property().getType();
+            final ElementType listEntryType = property().definition().getType();
             
             for( PropertyDef prop : listEntryType.properties() )
             {
@@ -391,11 +387,11 @@ public abstract class DelimitedListBindingImpl extends ListBindingImpl
         }
         
         @Override
-        protected BindingImpl createBinding( final PropertyDef property )
+        protected PropertyBinding createBinding( final Property property )
         {
-            if( property == this.listEntryProperty )
+            if( property.definition() == this.listEntryProperty )
             {
-                return new ValueBindingImpl()
+                return new ValuePropertyBinding()
                 {
                     @Override
                     public String read()

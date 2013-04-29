@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling;
 
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Resource;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -19,7 +20,7 @@ import org.eclipse.sapphire.ElementType;
 
 public abstract class LayeredElementBindingImpl
 
-    extends ElementBindingImpl
+    extends ElementPropertyBinding
     
 {
     private Object object;

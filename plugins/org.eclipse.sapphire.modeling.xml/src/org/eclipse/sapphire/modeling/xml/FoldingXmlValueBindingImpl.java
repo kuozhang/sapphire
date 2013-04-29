@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.xml.XmlNode.Event;
 import org.eclipse.sapphire.modeling.xml.XmlNode.EventType;
 
@@ -20,20 +19,16 @@ import org.eclipse.sapphire.modeling.xml.XmlNode.EventType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FoldingXmlValueBindingImpl
-
-    extends XmlValueBindingImpl
-
+public final class FoldingXmlValueBindingImpl extends XmlValueBindingImpl
 {
     private String elementName;
     private XmlElement.Listener listener;
     
     @Override
-    public void init( final Element element,
-                      final PropertyDef property,
+    public void init( final Property property,
                       final String[] params )
     {
-        super.init( element, property, params );
+        super.init( property, params );
         
         final XmlElement root = xml();
         

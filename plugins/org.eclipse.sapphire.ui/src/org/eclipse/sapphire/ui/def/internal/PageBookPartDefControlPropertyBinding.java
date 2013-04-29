@@ -35,7 +35,7 @@ public final class PageBookPartDefControlPropertyBinding
     public String read()
     {
         final XmlElement el = xml( false );
-        final PageBookPartControlMethod method = ( (PageBookExtDef) element() ).getControlMethod().content();
+        final PageBookPartControlMethod method = ( (PageBookExtDef) property().element() ).getControlMethod().content();
         
         if( method == PageBookPartControlMethod.ENUM_VALUE )
         {
@@ -52,7 +52,7 @@ public final class PageBookPartDefControlPropertyBinding
     @Override
     public void write( final String value )
     {
-        final PageBookPartControlMethod method = ( (PageBookExtDef) element() ).getControlMethod().content();
+        final PageBookPartControlMethod method = ( (PageBookExtDef) property().element() ).getControlMethod().content();
         final XmlElement el = xml( true );
         
         if( method == PageBookPartControlMethod.ENUM_VALUE )

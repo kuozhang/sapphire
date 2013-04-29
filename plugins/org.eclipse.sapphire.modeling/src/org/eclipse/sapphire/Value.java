@@ -14,7 +14,6 @@ package org.eclipse.sapphire;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.DefaultValueService;
@@ -224,9 +223,9 @@ public class Value<T> extends Property
     }
     
     @Override
-    protected final ValueBindingImpl binding()
+    protected final ValuePropertyBinding binding()
     {
-        return (ValueBindingImpl) super.binding();
+        return (ValuePropertyBinding) super.binding();
     }
     
     public final String text()

@@ -16,7 +16,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.modeling.ElementBindingImpl;
+import org.eclipse.sapphire.modeling.ElementPropertyBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,6 +27,6 @@ import org.eclipse.sapphire.modeling.ElementBindingImpl;
 
 public @interface CustomXmlElementBinding
 {
-    Class<? extends ElementBindingImpl> impl();
+    Class<? extends ElementPropertyBinding> impl();
     String[] params() default {};
 }

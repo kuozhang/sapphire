@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Resource;
 
 /**
  * <p>Facility for managing shared model instances. Note that no exclusivity of access guarantees are made, so this

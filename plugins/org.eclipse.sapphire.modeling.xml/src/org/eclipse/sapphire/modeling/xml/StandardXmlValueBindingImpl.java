@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -21,10 +20,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StandardXmlValueBindingImpl
-
-    extends XmlValueBindingImpl
-    
+public final class StandardXmlValueBindingImpl extends XmlValueBindingImpl
 {
     private XmlPath path;
     private boolean treatExistanceAsValue;
@@ -33,17 +29,16 @@ public final class StandardXmlValueBindingImpl
     private boolean removeNodeOnSetIfNull;
     
     @Override
-    public void init( final Element element,
-                      final PropertyDef property,
+    public void init( final Property property,
                       final String[] params )
     {
-        super.init( element, property, params );
+        super.init( property, params );
         
         try
         {
             final XmlNamespaceResolver xmlNamespaceResolver = resource().getXmlNamespaceResolver();
             
-            final XmlBinding genericBindingAnnotation = property.getAnnotation( XmlBinding.class );
+            final XmlBinding genericBindingAnnotation = property.definition().getAnnotation( XmlBinding.class );
             
             if( genericBindingAnnotation != null )
             {
@@ -52,7 +47,7 @@ public final class StandardXmlValueBindingImpl
             }
             else
             {
-                final XmlValueBinding bindingAnnotation = property.getAnnotation( XmlValueBinding.class );
+                final XmlValueBinding bindingAnnotation = property.definition().getAnnotation( XmlValueBinding.class );
                 
                 if( bindingAnnotation != null )
                 {
@@ -119,7 +114,7 @@ public final class StandardXmlValueBindingImpl
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.name(), e.getMessage() );
+            final String msg = NLS.bind( Resources.failure, property.element().type().getSimpleName(), property.name(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }

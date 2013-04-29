@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
+import org.eclipse.sapphire.ValuePropertyBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class XmlValueBindingImpl extends ValueBindingImpl
+public abstract class XmlValueBindingImpl extends ValuePropertyBinding
 {
     public XmlNode getXmlNode()
     {
@@ -75,7 +75,7 @@ public abstract class XmlValueBindingImpl extends ValueBindingImpl
     
     protected final XmlResource resource()
     {
-        return (XmlResource) element().resource();
+        return (XmlResource) property().element().resource();
     }
     
 }

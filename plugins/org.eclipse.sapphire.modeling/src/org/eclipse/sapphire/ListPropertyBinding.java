@@ -9,25 +9,16 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire;
 
 import java.util.List;
-
-import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.ListProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ListBindingImpl extends BindingImpl
+public abstract class ListPropertyBinding extends PropertyBinding
 {
-    @Override
-    public final ListProperty property()
-    {
-        return (ListProperty) super.property();
-    }
-    
     public abstract List<? extends Resource> read();
     
     public abstract ElementType type( Resource resource );    

@@ -53,6 +53,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 
 <ol>
   <li><a href="#AdapterService">AdapterService</a></li>
+  <li><a href="#BindingImpl">BindingImpl</a></li>
   <li><a href="#Color">Color</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
@@ -60,11 +61,13 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#DtdParser">DtdParser</a></li>
   <li><a href="#ElementBindingImpl">ElementBindingImpl</a></li>
   <li><a href="#ElementProperty">ElementProperty</a></li>
+  <li><a href="#ElementValidationEvent">ElementValidationEvent</a></li>
   <li><a href="#Event">Event</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#IModelParticle">IModelParticle</a></li>
   <li><a href="#ImpliedElementProperty">ImpliedElementProperty</a></li>
+  <li><a href="#ListBindingImpl">ListBindingImpl</a></li>
   <li><a href="#ListProperty">ListProperty</a></li>
   <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
   <li><a href="#ModelElementHandle">ModelElementHandle</a></li>
@@ -75,9 +78,12 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#PropertyContentEvent">PropertyContentEvent</a></li>
   <li><a href="#PropertyEnablementEvent">PropertyEnablementEvent</a></li>
   <li><a href="#PropertyEvent">PropertyEvent</a></li>
+  <li><a href="#PropertyEditorAssistContext">PropertyEditorAssistContext</a></li>
+  <li><a href="#PropertyEditorAssistContributor">PropertyEditorAssistContributor</a></li>
   <li><a href="#PropertyInitializationEvent">PropertyInitializationEvent</a></li>
   <li><a href="#PropertyValidationEvent">PropertyValidationEvent</a></li>
   <li><a href="#ReferenceValue">ReferenceValue</a></li>
+  <li><a href="#Resource">Resource</a></li>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></li>
@@ -87,6 +93,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#UrlResolver">UrlResolver</a></li>
   <li><a href="#ValidationAggregationService">ValidationAggregationService</a></li>
   <li><a href="#Value">Value</a></li>
+  <li><a href="#ValueBindingImpl">ValueBindingImpl</a></li>
   <li><a href="#ValueProperty">ValueProperty</a></li>
   <li><a href="#ValueSerializationMasterService">ValueSerializationMasterService</a></li>
   <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
@@ -173,6 +180,62 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 <p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
 achieved by migrating to the typed ConversionService API. Conversions implemented in this manner are quicker for
 Sapphire to find.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="BindingImpl">BindingImpl</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.BindingImpl</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.PropertyBinding</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">binding</span>.<span class="unaffected">element()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">binding</span>.property().<span class="unaffected">element()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">binding.property()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">binding.property()</span>.definition()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends</span> BindingImpl
+<span class="unaffected">{
+    @Override
+    public void init(</span> Element element, PropertyDef property<span class="unaffected">, String[] params )
+    {
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends</span> PropertyBinding
+<span class="unaffected">{
+    @Override
+    public void init(</span> Property property<span class="unaffected">, String[] params )
+    {
+        ...
+    }
+}</span></code></pre>
     </td>
   </tr>
 </table>
@@ -452,8 +515,16 @@ for( DependenciesService service : property.services( DependenciesService.class 
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends ElementBindingImpl
-{
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.ElementBindingImpl</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.ElementPropertyBinding</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends</span> ElementBindingImpl
+<span class="unaffected">{
     ...</span>
 
     @Override
@@ -464,8 +535,8 @@ for( DependenciesService service : property.services( DependenciesService.class 
 <span class="unaffected">}</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends ElementBindingImpl
-{
+<pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends</span> ElementPropertyBinding
+<span class="unaffected">{
     ...
 }</span></code></pre>
     </td>
@@ -485,6 +556,48 @@ for( DependenciesService service : property.services( DependenciesService.class 
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ElementProperty</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ElementValidationEvent">ElementValidationEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.attach
+(
+    new FilteredListener&lt;</span>ElementValidationEvent<span class="unaffected">>()
+    {
+        @Override
+        protected void handleTypedEvent(</span> ElementValidationEvent <span class="unaffected">event )
+        {
+            ...
+        }
+    }
+)</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">element.attach
+(
+    new FilteredListener&lt;</span>PropertyValidationEvent<span class="unaffected">>()
+    {
+        @Override
+        protected void handleTypedEvent(</span> PropertyValidationEvent <span class="unaffected">event )
+        {
+            ...
+        }
+    }</span>,
+    "*"
+<span class="unaffected">)</span>
+
+<span class="comment">ElementValidationEvent no longer exists. To get a similar effect, one
+needs to listen on all PropertyValidationEvents.</span></code></pre>
     </td>
   </tr>
 </table>
@@ -893,6 +1006,24 @@ element.</span>visit
 </table>
 
 
+<h2><a name="ListBindingImpl">ListBindingImpl</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.ListBindingImpl</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.ListPropertyBinding</code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ListProperty">ListProperty</a></h2>
 
 <table>
@@ -954,10 +1085,10 @@ element.</span>visit
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = handle.parent()</span></code></pre>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = handle.</span>parent<span class="unaffected">()</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>Element <span class="unaffected">parent = handle.element()</span></code></pre>
+<pre class="source-code"><code>Element <span class="unaffected">parent = handle.</span>element<span class="unaffected">()</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -966,14 +1097,6 @@ element.</span>visit
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">handle.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">handle.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">handle.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1077,10 +1200,10 @@ if( child != null )
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = list.parent()</span></code></pre>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = list.</span>parent<span class="unaffected">()</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>Element <span class="unaffected">parent = list.element()</span></code></pre>
+<pre class="source-code"><code>Element <span class="unaffected">parent = list.</span>element<span class="unaffected">()</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1089,14 +1212,6 @@ if( child != null )
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">list.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">list.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">list.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1163,6 +1278,14 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code>SortedSet<span class="unaffected">&lt;ModelProperty> properties = type.properties()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">type.instantiate(</span> element, pdef<span class="unaffected">, resource )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">type.instantiate(</span> element.property( pdef )<span class="unaffected">, resource )</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1283,6 +1406,90 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyEvent</span></code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">event</span>.<span class="unaffected">element()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">event</span>.property().<span class="unaffected">element()</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEditorAssistContributor">PropertyEditorAssistContributor</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleContributor extends PropertyEditorAssistContributor
+{
+    @Override
+    public void init(</span> IModelElement element, ModelProperty property <span class="unaffected">)
+    {
+        if(</span> property != null <span class="unaffected">)
+        {
+            ...
+        }
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleContributor extends PropertyEditorAssistContributor
+{
+    @Override
+    public void init(</span> SapphirePart part <span class="unaffected">)
+    {</span>
+        Element element = part.getLocalModelElement();
+        
+        <span class="unaffected">if(</span> part instanceof PropertyEditorPart <span class="unaffected">)
+        {</span>
+            PropertyDef property = ( (PropertyEditorPart) part ).property().definition();
+            
+            <span class="unaffected">...
+        }
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEditorAssistContext">PropertyEditorAssistContext</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">context.</span>getModelElement()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">context.</span>getPart().getLocalModelElement()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">context.</span>getProperty()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>( (PropertyEditorPart) <span class="unaffected">context.</span>getPart() ).property().definition()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">context.</span>isPropertyEditorReadOnly()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>( (PropertyEditorPart) <span class="unaffected">context.</span>getPart() ).isReadOnly()</code></pre>
+    </td>
+  </tr>
 </table>
 
 
@@ -1322,6 +1529,56 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ReferenceValue</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="Resource">Resource</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">Resource</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">Resource</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">resource.binding</span>( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">resource.binding</span>( element.property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ) )</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleResource extends Resource
+{
+    @Override
+    protected</span> BindingImpl <span class="unaffected">createBinding(</span> ModelProperty pdef <span class="unaffected">)
+    {
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleResource extends Resource
+{
+    @Override
+    protected</span> PropertyBinding <span class="unaffected">createBinding(</span> Property property <span class="unaffected">)
+    {</span>
+        PropertyDef pdef = property.definition();
+        
+        <span class="unaffected">...
+    }
+}</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1399,10 +1656,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">transient.parent()</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">transient.</span>parent<span class="unaffected">()</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">transient.element()</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">transient.</span>element<span class="unaffected">()</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1411,14 +1668,6 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">transient.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">transient.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">transient.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1580,24 +1829,6 @@ validation using Property.validation() API. The property manages the interaction
 </table>
 
 
-<h2><a name="ValueProperty">ValueProperty</a></h2>
-
-<table>
-  <tr>
-    <th>Before</th>
-    <th>After</th>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">ValueProperty</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ValueProperty</span></code></pre>
-    </td>
-  </tr>
-</table>
-
-
 <h2><a name="Value">Value</a></h2>
 
 <table>
@@ -1623,10 +1854,10 @@ validation using Property.validation() API. The property manages the interaction
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = value.parent()</span></code></pre>
+<pre class="source-code"><code>IModelParticle <span class="unaffected">parent = value.</span>parent<span class="unaffected">()</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>Element <span class="unaffected">parent = value.element()</span></code></pre>
+<pre class="source-code"><code>Element <span class="unaffected">parent = value.</span>element<span class="unaffected">()</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1635,14 +1866,6 @@ validation using Property.validation() API. The property manages the interaction
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">value.</span>element().adapt<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">value.</span>nearest<span class="unaffected">( Example.class )</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">value.</span>element().nearest<span class="unaffected">( Example.class )</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -1731,6 +1954,42 @@ validation using Property.validation() API. The property manages the interaction
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">value.</span>malformed<code><span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValueBindingImpl">ValueBindingImpl</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.ValueBindingImpl</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.ValuePropertyBinding</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValueProperty">ValueProperty</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">ValueProperty</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ValueProperty</span></code></pre>
     </td>
   </tr>
 </table>

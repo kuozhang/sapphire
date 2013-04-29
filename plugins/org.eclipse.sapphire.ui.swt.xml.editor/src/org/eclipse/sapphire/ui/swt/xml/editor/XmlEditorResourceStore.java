@@ -38,12 +38,12 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.ValidateEditException;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
@@ -694,7 +694,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
                 if( resource instanceof XmlResource )
                 {
                     final XmlResource r = (XmlResource) resource;
-                    final XmlNode xmlNode = ( (XmlValueBindingImpl) r.binding( (ValueProperty ) property ) ).getXmlNode();
+                    final XmlNode xmlNode = ( (XmlValueBindingImpl) r.binding( element.property( property ) ) ).getXmlNode();
                     
                     if( xmlNode != null )
                     {

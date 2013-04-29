@@ -13,11 +13,12 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
-import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.ValuePropertyBinding;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
@@ -85,11 +86,13 @@ public final class AttendeeResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final PropertyDef property )
+    protected PropertyBinding createBinding( final Property property )
     {
-        if( property == IAttendee.PROP_NAME )
+        final PropertyDef pdef = property.definition();
+        
+        if( pdef == IAttendee.PROP_NAME )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -104,9 +107,9 @@ public final class AttendeeResource extends Resource
                 }
             };
         }
-        else if( property == IAttendee.PROP_TYPE )
+        else if( pdef == IAttendee.PROP_TYPE )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -121,9 +124,9 @@ public final class AttendeeResource extends Resource
                 }
             };
         }
-        else if( property == IAttendee.PROP_E_MAIL )
+        else if( pdef == IAttendee.PROP_E_MAIL )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -144,9 +147,9 @@ public final class AttendeeResource extends Resource
                 }
             };
         }
-        else if( property == IAttendee.PROP_IN_CONTACT_REPOSITORY )
+        else if( pdef == IAttendee.PROP_IN_CONTACT_REPOSITORY )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()

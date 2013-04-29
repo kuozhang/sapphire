@@ -9,19 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementProperty;
-import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.MasterConversionService;
-import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.Sapphire;
-import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
 
@@ -33,7 +29,7 @@ public abstract class Resource
 {
     private final Resource parent;
     private Element element;
-    private final Map<PropertyDef,BindingImpl> bindings = new HashMap<PropertyDef,BindingImpl>();
+    private final Map<Property,PropertyBinding> bindings = new HashMap<Property,PropertyBinding>();
     private CorruptedResourceExceptionInterceptor corruptedResourceExceptionInterceptor;
     private final Map<Locale,LocalizationService> localizationServices = new HashMap<Locale,LocalizationService>();
     
@@ -74,24 +70,9 @@ public abstract class Resource
         return this.element;
     }
     
-    public final ValueBindingImpl binding( final ValueProperty property )
+    public final PropertyBinding binding( final Property property )
     {
-        return (ValueBindingImpl) binding( (PropertyDef) property );
-    }
-    
-    public final ElementBindingImpl binding( final ElementProperty property )
-    {
-        return (ElementBindingImpl) binding( (PropertyDef) property );
-    }
-    
-    public final ListBindingImpl binding( final ListProperty property )
-    {
-        return (ListBindingImpl) binding( (PropertyDef) property );
-    }
-    
-    public final BindingImpl binding( final PropertyDef property )
-    {
-        BindingImpl binding = this.bindings.get( property );
+        PropertyBinding binding = this.bindings.get( property );
         
         if( binding == null )
         {
@@ -108,16 +89,13 @@ public abstract class Resource
         return binding;
     }
     
-    protected abstract BindingImpl createBinding( final PropertyDef property );
+    protected abstract PropertyBinding createBinding( final Property property );
     
     /**
      * @throws ResourceStoreException  
      */
     
-    public void save() 
-    
-        throws ResourceStoreException
-        
+    public void save() throws ResourceStoreException
     {
         final Resource root = root();
         
@@ -216,7 +194,7 @@ public abstract class Resource
     
     public void dispose()
     {
-        for( BindingImpl binding : this.bindings.values() )
+        for( PropertyBinding binding : this.bindings.values() )
         {
             try
             {

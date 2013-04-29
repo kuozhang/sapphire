@@ -18,13 +18,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.ListBindingImpl;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.services.PossibleTypesService;
 
 /**
@@ -81,7 +79,7 @@ public final class ElementList<T extends Element> extends Property implements Li
         
         if( initialized || ( ! initialized && onlyIfNotInitialized ) )
         {
-            final ListBindingImpl binding = binding();
+            final ListPropertyBinding binding = binding();
             final List<? extends Resource> freshResources = binding.read();
             final int freshContentSize = freshResources.size();
             
@@ -204,9 +202,9 @@ public final class ElementList<T extends Element> extends Property implements Li
     }
     
     @Override
-    protected ListBindingImpl binding()
+    protected ListPropertyBinding binding()
     {
-        return (ListBindingImpl) super.binding();
+        return (ListPropertyBinding) super.binding();
     }
     
     @Override
@@ -540,7 +538,7 @@ public final class ElementList<T extends Element> extends Property implements Li
         
         if( aPosition != bPosition )
         {
-            final ListBindingImpl binding = binding();
+            final ListPropertyBinding binding = binding();
             binding.move( a.resource(), bPosition );
             binding.move( b.resource(), aPosition );
             refresh();

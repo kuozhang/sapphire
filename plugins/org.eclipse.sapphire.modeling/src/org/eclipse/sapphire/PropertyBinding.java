@@ -9,35 +9,35 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
-
-import org.eclipse.sapphire.ElementProperty;
-import org.eclipse.sapphire.ElementType;
+package org.eclipse.sapphire;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ElementBindingImpl extends BindingImpl
+public abstract class PropertyBinding
 {
-    @Override
-    public final ElementProperty property()
+    private Property property;
+
+    public void init( final Property property,
+                      final String[] params )
     {
-        return (ElementProperty) super.property();
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.property = property;
     }
     
-    public abstract Resource read();
-    
-    public abstract ElementType type( Resource resource );
-    
-    public Resource create( final ElementType type )
+    public Property property()
     {
-        throw new UnsupportedOperationException();
+        return this.property;
     }
     
-    public void remove()
+    public void dispose()
     {
-        throw new UnsupportedOperationException();
+        // The default implementation doesn't do anything.
     }
 
 }

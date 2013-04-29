@@ -30,7 +30,7 @@ public abstract class XmlDelimitedListBindingImpl extends DelimitedListBindingIm
     @Override
     protected final String readListString()
     {
-        final Element parent = element();
+        final Element parent = property().element();
         final XmlElement parentXmlElement = ( (XmlResource) parent.resource() ).getXmlElement();
         
         if( parentXmlElement == null )
@@ -51,7 +51,7 @@ public abstract class XmlDelimitedListBindingImpl extends DelimitedListBindingIm
     @Override
     protected final void writeListString( String str )
     {
-        final Element parent = element();
+        final Element parent = property().element();
         final XmlElement parentXmlElement = ( (XmlResource) parent.resource() ).getXmlElement( true );
         final XmlNode listXmlNode = parentXmlElement.getChildNode( this.path, false );
         

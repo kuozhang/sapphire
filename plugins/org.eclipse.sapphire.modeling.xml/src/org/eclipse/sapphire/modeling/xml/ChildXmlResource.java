@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.modeling.xml;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.Resource;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

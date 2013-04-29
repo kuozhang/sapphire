@@ -14,16 +14,17 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 import java.util.List;
 
 import org.eclipse.sapphire.ElementList;
-import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListPropertyBinding;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
-import org.eclipse.sapphire.modeling.BindingImpl;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.ValuePropertyBinding;
 import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
-import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.calendar.integrated.IEvent;
 import org.eclipse.sapphire.samples.calendar.integrated.IEventAttachment;
@@ -91,11 +92,13 @@ public final class EventResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final PropertyDef property )
+    protected PropertyBinding createBinding( final Property property )
     {
-        if( property == IEvent.PROP_SUBJECT )
+        final PropertyDef pdef = property.definition();
+        
+        if( pdef == IEvent.PROP_SUBJECT )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -110,9 +113,9 @@ public final class EventResource extends Resource
                 }
             };
         }
-        else if( property == IEvent.PROP_LOCATION )
+        else if( pdef == IEvent.PROP_LOCATION )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -127,9 +130,9 @@ public final class EventResource extends Resource
                 }
             };
         }
-        else if( property == IEvent.PROP_NOTES )
+        else if( pdef == IEvent.PROP_NOTES )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -144,9 +147,9 @@ public final class EventResource extends Resource
                 }
             };
         }
-        else if( property == IEvent.PROP_START_TIME )
+        else if( pdef == IEvent.PROP_START_TIME )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -161,9 +164,9 @@ public final class EventResource extends Resource
                 }
             };
         }
-        else if( property == IEvent.PROP_END_TIME )
+        else if( pdef == IEvent.PROP_END_TIME )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -178,9 +181,9 @@ public final class EventResource extends Resource
                 }
             };
         }
-        else if( property == IEvent.PROP_ATTENDEES )
+        else if( pdef == IEvent.PROP_ATTENDEES )
         {
-            final ListBindingImpl binding = new LayeredListBindingImpl()
+            final ListPropertyBinding binding = new LayeredListBindingImpl()
             {
                 private final ElementList<org.eclipse.sapphire.samples.calendar.IAttendee> base
                     = EventResource.this.base.getAttendees();
@@ -224,13 +227,13 @@ public final class EventResource extends Resource
                 }
             };
             
-            binding.init( element(), IEvent.PROP_ATTENDEES, null );
+            binding.init( property, null );
             
             return binding;
         }
-        else if( property == IEvent.PROP_ATTACHMENTS )
+        else if( pdef == IEvent.PROP_ATTACHMENTS )
         {
-            final ListBindingImpl binding = new LayeredListBindingImpl()
+            final ListPropertyBinding binding = new LayeredListBindingImpl()
             {
                 private final ElementList<org.eclipse.sapphire.samples.calendar.IEventAttachment> base
                     = EventResource.this.base.getAttachments();
@@ -274,7 +277,7 @@ public final class EventResource extends Resource
                 }
             };
             
-            binding.init( element(), IEvent.PROP_ATTACHMENTS, null );
+            binding.init( property, null );
             
             return binding;
         }

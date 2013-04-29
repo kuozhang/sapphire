@@ -13,11 +13,12 @@ package org.eclipse.sapphire.samples.calendar.integrated.internal;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
-import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.ValuePropertyBinding;
 import org.eclipse.sapphire.samples.calendar.integrated.IEventAttachment;
 
 /**
@@ -63,11 +64,13 @@ public final class EventAttachmentResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final PropertyDef property )
+    protected PropertyBinding createBinding( final Property property )
     {
-        if( property == IEventAttachment.PROP_LOCAL_COPY_LOCATION )
+        final PropertyDef pdef = property.definition();
+        
+        if( pdef == IEventAttachment.PROP_LOCAL_COPY_LOCATION )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -82,9 +85,9 @@ public final class EventAttachmentResource extends Resource
                 }
             };
         }
-        else if( property == IEventAttachment.PROP_PUBLIC_COPY_LOCATION )
+        else if( pdef == IEventAttachment.PROP_PUBLIC_COPY_LOCATION )
         {
-            return new ValueBindingImpl()
+            return new ValuePropertyBinding()
             {
                 @Override
                 public String read()
@@ -102,7 +105,6 @@ public final class EventAttachmentResource extends Resource
         
         return null;
     }
-    
 
     @Override
     public <A> A adapt( final Class<A> adapterType )

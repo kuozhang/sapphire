@@ -22,15 +22,16 @@ import java.util.TreeSet;
 import javax.xml.namespace.QName;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ListPropertyBinding;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.ValuePropertyBinding;
 import org.eclipse.sapphire.modeling.xml.ChildXmlResource;
 import org.eclipse.sapphire.modeling.xml.StandardXmlListBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
@@ -42,33 +43,32 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ManufacturersBinding extends ListBindingImpl
+public final class ManufacturersBinding extends ListPropertyBinding
 {
     private List<ManufacturerResource> cache = ListFactory.empty();
     private Listener listener;
     
     @Override
-    public void init( final Element element,
-                      final PropertyDef property,
+    public void init( final Property property,
                       final String[] params )
     {
-        super.init( element, property, params );
+        super.init( property, params );
         
         this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                element.property( property ).refresh();
+                property.refresh();
                 
-                for( Manufacturer manufacturer : ( (Catalog) element ).getManufacturers() )
+                for( Manufacturer manufacturer : ( (Catalog) property.element() ).getManufacturers() )
                 {
                     manufacturer.getItems().refresh();
                 }
             }
         };
         
-        element.attach( this.listener, "Items/Manufacturer" );
+        property.element().attach( this.listener, "Items/Manufacturer" );
     }
 
     @Override
@@ -79,7 +79,7 @@ public final class ManufacturersBinding extends ListBindingImpl
         
         final Set<String> manufacturers = new TreeSet<String>( ManufacturerNamesComparator.INSTANCE );
         
-        for( Item item : ( (Catalog) element() ).getItems() )
+        for( Item item : ( (Catalog) property().element() ).getItems() )
         {
             manufacturers.add( item.getManufacturer().text() );
         }
@@ -145,7 +145,7 @@ public final class ManufacturersBinding extends ListBindingImpl
         
         this.cache = null;
         
-        element().detach( this.listener, "Items/Manufacturer" );
+        property().element().detach( this.listener, "Items/Manufacturer" );
         this.listener = null;
     }
 
@@ -183,7 +183,7 @@ public final class ManufacturersBinding extends ListBindingImpl
         
         public ManufacturerResource( final String name )
         {
-            super( ManufacturersBinding.this.element().resource() );
+            super( ManufacturersBinding.this.property().element().resource() );
             
             this.name = name;
         }
@@ -204,13 +204,15 @@ public final class ManufacturersBinding extends ListBindingImpl
         }
 
         @Override
-        protected BindingImpl createBinding( final PropertyDef property )
+        protected PropertyBinding createBinding( final Property property )
         {
-            BindingImpl binding = null;
+            final PropertyDef pdef = property.definition();
             
-            if( property == Manufacturer.PROP_NAME )
+            PropertyBinding binding = null;
+            
+            if( pdef == Manufacturer.PROP_NAME )
             {
-                binding = new ValueBindingImpl()
+                binding = new ValuePropertyBinding()
                 {
                     @Override
                     public String read()
@@ -225,7 +227,7 @@ public final class ManufacturersBinding extends ListBindingImpl
                     }
                 };
             }
-            else if( property == Manufacturer.PROP_ITEMS )
+            else if( pdef == Manufacturer.PROP_ITEMS )
             {
                 binding = new StandardXmlListBindingImpl()
                 {
@@ -284,7 +286,7 @@ public final class ManufacturersBinding extends ListBindingImpl
             
             if( binding != null )
             {
-                binding.init( element(), property, null );
+                binding.init( property, null );
             }
             
             return binding;

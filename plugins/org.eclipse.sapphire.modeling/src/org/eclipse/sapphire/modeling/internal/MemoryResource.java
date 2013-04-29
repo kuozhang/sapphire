@@ -14,26 +14,23 @@ package org.eclipse.sapphire.modeling.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
-import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.BindingImpl;
-import org.eclipse.sapphire.modeling.ElementBindingImpl;
-import org.eclipse.sapphire.modeling.ListBindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
-import org.eclipse.sapphire.modeling.ValueBindingImpl;
+import org.eclipse.sapphire.ListPropertyBinding;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValuePropertyBinding;
+import org.eclipse.sapphire.modeling.ElementPropertyBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MemoryResource
-
-    extends Resource
-    
+public final class MemoryResource extends Resource
 {
     private static final String[] EMPTY_PARAMS = new String[ 0 ];
     
@@ -69,13 +66,13 @@ public final class MemoryResource
     }
     
     @Override
-    protected BindingImpl createBinding( final PropertyDef property )
+    protected PropertyBinding createBinding( final Property property )
     {
-        BindingImpl binding = null;
+        PropertyBinding binding = null;
         
-        if( property instanceof ValueProperty )
+        if( property instanceof Value )
         {
-            binding = new ValueBindingImpl()
+            binding = new ValuePropertyBinding()
             {
                 private String value;
                 
@@ -92,60 +89,63 @@ public final class MemoryResource
                 }
             };
         }
-        else if( property instanceof ImpliedElementProperty )
+        else if( property instanceof ElementHandle )
         {
-            binding = new ElementBindingImpl()
+            if( property.definition() instanceof ImpliedElementProperty )
             {
-                private final MemoryResource element = new MemoryResource( property.getType(), MemoryResource.this );
-                
-                @Override
-                public ElementType type( final Resource resource )
+                binding = new ElementPropertyBinding()
                 {
-                    return ( (MemoryResource) resource ).type();
-                }
-                
-                @Override
-                public Resource read()
-                {
-                    return this.element;
-                }
-            };
-        }
-        else if( property instanceof ElementProperty )
-        {
-            binding = new ElementBindingImpl()
+                    private final MemoryResource element = new MemoryResource( property.definition().getType(), MemoryResource.this );
+                    
+                    @Override
+                    public ElementType type( final Resource resource )
+                    {
+                        return ( (MemoryResource) resource ).type();
+                    }
+                    
+                    @Override
+                    public Resource read()
+                    {
+                        return this.element;
+                    }
+                };
+            }
+            else
             {
-                private MemoryResource element;
-                
-                @Override
-                public ElementType type( final Resource resource )
+                binding = new ElementPropertyBinding()
                 {
-                    return ( (MemoryResource) resource ).type();
-                }
-                
-                @Override
-                public Resource read()
-                {
-                    return this.element;
-                }
-
-                @Override
-                public Resource create( ElementType type )
-                {
-                    this.element = new MemoryResource( type, MemoryResource.this );
-                    return this.element;
-                }
-
-                @Override
-                public void remove()
-                {
-                    this.element = null;
-                }
-            };
+                    private MemoryResource element;
+                    
+                    @Override
+                    public ElementType type( final Resource resource )
+                    {
+                        return ( (MemoryResource) resource ).type();
+                    }
+                    
+                    @Override
+                    public Resource read()
+                    {
+                        return this.element;
+                    }
+    
+                    @Override
+                    public Resource create( ElementType type )
+                    {
+                        this.element = new MemoryResource( type, MemoryResource.this );
+                        return this.element;
+                    }
+    
+                    @Override
+                    public void remove()
+                    {
+                        this.element = null;
+                    }
+                };
+            }
         }
-        else if( property instanceof ListProperty )
+        else if( property instanceof ElementList )
         {
-            binding = new ListBindingImpl()
+            binding = new ListPropertyBinding()
             {
                 private final List<Resource> list = new ArrayList<Resource>();
                 
@@ -198,7 +198,7 @@ public final class MemoryResource
         
         if( binding != null )
         {
-            binding.init( element(), property, EMPTY_PARAMS );
+            binding.init( property, EMPTY_PARAMS );
         }
         
         return binding;

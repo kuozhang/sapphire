@@ -9,24 +9,30 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.xml.annotations;
+package org.eclipse.sapphire.modeling;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.eclipse.sapphire.ListPropertyBinding;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PropertyBinding;
+import org.eclipse.sapphire.Resource;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( { ElementType.FIELD } )
-
-public @interface CustomXmlListBinding
+public abstract class ElementPropertyBinding extends PropertyBinding
 {
-    Class<? extends ListPropertyBinding> impl();
-    String[] params() default {};
+    public abstract Resource read();
+    
+    public abstract ElementType type( Resource resource );
+    
+    public Resource create( final ElementType type )
+    {
+        throw new UnsupportedOperationException();
+    }
+    
+    public void remove()
+    {
+        throw new UnsupportedOperationException();
+    }
+
 }

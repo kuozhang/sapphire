@@ -12,14 +12,14 @@
 package org.eclipse.sapphire.modeling.xml;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ImpliedElementProperty;
-import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.BindingImpl;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
@@ -58,14 +58,14 @@ public abstract class XmlResource extends Resource
     }
     
     @Override
-    protected BindingImpl createBinding( final PropertyDef property )
+    protected PropertyBinding createBinding( final Property property )
     {
-        BindingImpl binding = null;
+        PropertyBinding binding = null;
         String[] params = null;
         
-        if( property instanceof ValueProperty )
+        if( property instanceof Value )
         {
-            final CustomXmlValueBinding customBindingAnnotation = property.getAnnotation( CustomXmlValueBinding.class );
+            final CustomXmlValueBinding customBindingAnnotation = property.definition().getAnnotation( CustomXmlValueBinding.class );
             
             if( customBindingAnnotation != null )
             {
@@ -85,9 +85,9 @@ public abstract class XmlResource extends Resource
                 binding = new StandardXmlValueBindingImpl();
             }
         }
-        else if( property instanceof ElementProperty )
+        else if( property instanceof ElementHandle )
         {
-            final CustomXmlElementBinding customBindingAnnotation = property.getAnnotation( CustomXmlElementBinding.class );
+            final CustomXmlElementBinding customBindingAnnotation = property.definition().getAnnotation( CustomXmlElementBinding.class );
             
             if( customBindingAnnotation != null )
             {
@@ -102,7 +102,7 @@ public abstract class XmlResource extends Resource
                     binding = null;
                 }
             }
-            else if( property instanceof ImpliedElementProperty )
+            else if( property.definition() instanceof ImpliedElementProperty )
             {
                 binding = new StandardImpliedXmlElementBindingImpl();
             }
@@ -111,9 +111,9 @@ public abstract class XmlResource extends Resource
                 binding = new StandardXmlElementBindingImpl();
             }
         }
-        else if( property instanceof ListProperty )
+        else if( property instanceof ElementList )
         {
-            final CustomXmlListBinding customBindingAnnotation = property.getAnnotation( CustomXmlListBinding.class );
+            final CustomXmlListBinding customBindingAnnotation = property.definition().getAnnotation( CustomXmlListBinding.class );
             
             if( customBindingAnnotation != null )
             {
@@ -136,7 +136,7 @@ public abstract class XmlResource extends Resource
         
         if( binding != null )
         {
-            binding.init( element(), property, params );
+            binding.init( property, params );
         }
         
         return binding;

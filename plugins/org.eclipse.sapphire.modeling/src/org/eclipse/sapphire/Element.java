@@ -17,7 +17,6 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 
@@ -31,7 +30,7 @@ public interface Element extends Observable
     Resource resource();
     Element root();
     Property parent();
-    <T> T nearest( Class<T> particleType );    
+    <T> T nearest( Class<T> type );    
     Status validation();
     <A> A adapt( Class<A> adapterType );
     

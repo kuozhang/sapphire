@@ -36,11 +36,12 @@ import java.util.SortedSet;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.BindingImpl;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
@@ -537,8 +538,8 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
         
 
         @Override
-        protected BindingImpl createBinding(PropertyDef property) {
-            if (property instanceof ValueProperty) {
+        protected PropertyBinding createBinding(Property property) {
+            if (property instanceof Value) {
                 return new ProxyBinding();
             }
             return null;

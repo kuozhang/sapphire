@@ -27,7 +27,6 @@ import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
-import org.eclipse.sapphire.modeling.Resource;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -152,17 +151,17 @@ public abstract class ElementImpl implements Element
         return this.parent;
     }
     
-    public final <T> T nearest( final Class<T> particleType )
+    public final <T> T nearest( final Class<T> type )
     {
-        if( particleType.isAssignableFrom( getClass() ) )
+        if( type.isAssignableFrom( getClass() ) )
         {
-            return particleType.cast( this );
+            return type.cast( this );
         }
         else
         {
             if( this.parent != null )
             {
-                return this.parent.element().nearest( particleType );
+                return this.parent.element().nearest( type );
             }
             else
             {

@@ -18,7 +18,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.modeling.xml.ChildXmlResource;
 import org.eclipse.sapphire.modeling.xml.StandardXmlListBindingImpl;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
@@ -65,7 +65,7 @@ public final class LocationHintsBinding extends StandardXmlListBindingImpl
     @Override
     protected Resource resource( final Object obj )
     {
-        return new ChildXmlResource( (XmlResource) element().resource(), (XmlElement) obj );
+        return new ChildXmlResource( (XmlResource) property().element().resource(), (XmlElement) obj );
     }
 
     @Override

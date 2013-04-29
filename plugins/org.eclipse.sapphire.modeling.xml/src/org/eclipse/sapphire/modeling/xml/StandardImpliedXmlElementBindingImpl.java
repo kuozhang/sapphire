@@ -12,11 +12,10 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.ElementBindingImpl;
-import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.modeling.ElementPropertyBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -25,26 +24,25 @@ import org.eclipse.sapphire.services.PossibleTypesService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class StandardImpliedXmlElementBindingImpl extends ElementBindingImpl
+public final class StandardImpliedXmlElementBindingImpl extends ElementPropertyBinding
 {
     private XmlPath path;
     private Resource resource;
     
     @Override
-    public void init( final Element element,
-                      final PropertyDef property,
+    public void init( final Property property,
                       final String[] params )
     {
-        super.init( element, property, params );
+        super.init( property, params );
         
-        if( element.property( property ).service( PossibleTypesService.class ).types().size() > 1 )
+        if( property.service( PossibleTypesService.class ).types().size() > 1 )
         {
             throw new IllegalStateException();
         }
         
         String pathString = "";
         
-        final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
+        final XmlElementBinding xmlElementBindingAnnotation = property.definition().getAnnotation( XmlElementBinding.class );
         
         if( xmlElementBindingAnnotation != null )
         {
@@ -57,7 +55,7 @@ public final class StandardImpliedXmlElementBindingImpl extends ElementBindingIm
         }
         else
         {
-            final XmlBinding xmlBindingAnnotation = property.getAnnotation( XmlBinding.class );
+            final XmlBinding xmlBindingAnnotation = property.definition().getAnnotation( XmlBinding.class );
             
             if( xmlBindingAnnotation != null )
             {
@@ -69,13 +67,13 @@ public final class StandardImpliedXmlElementBindingImpl extends ElementBindingIm
             }
         }
         
-        this.path = new XmlPath( pathString, ( (XmlResource) element.resource() ).getXmlNamespaceResolver() );
+        this.path = new XmlPath( pathString, ( (XmlResource) property.element().resource() ).getXmlNamespaceResolver() );
     }
     
     @Override
     public ElementType type( final Resource resource )
     {
-        return property().getType();
+        return property().definition().getType();
     }
 
     @Override
@@ -83,7 +81,7 @@ public final class StandardImpliedXmlElementBindingImpl extends ElementBindingIm
     {
         if( this.resource == null )
         {
-            final XmlResource parentXmlResource = (XmlResource) element().resource();
+            final XmlResource parentXmlResource = (XmlResource) property().element().resource();
             this.resource = new VirtualChildXmlResource( parentXmlResource, this.path );
         }
         

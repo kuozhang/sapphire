@@ -13,7 +13,7 @@ package org.eclipse.sapphire.modeling.xml.internal;
 
 import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.ElementImpl;
-import org.eclipse.sapphire.modeling.Resource;
+import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResource;
 

@@ -9,25 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
-
-import org.eclipse.sapphire.ValueProperty;
+package org.eclipse.sapphire;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ValueBindingImpl
-
-    extends BindingImpl
-    
+public abstract class ValuePropertyBinding extends PropertyBinding
 {
-    @Override
-    public final ValueProperty property()
-    {
-        return (ValueProperty) super.property();
-    }
-    
     /**
      * Reads the current value of the property and returns it to the caller. The method should 
      * return null when the property value is not set rather than returning a default value.
