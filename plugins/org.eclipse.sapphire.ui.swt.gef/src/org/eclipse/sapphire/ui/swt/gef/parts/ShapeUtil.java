@@ -132,7 +132,7 @@ public class ShapeUtil {
 			// find the parent figure
 			if (containerFigure != null) 
 			{
-				int index = containerPresentation.getChildren().indexOf(updateShape);
+				int index = containerPresentation.getChildFigureIndex(updateShape);
 				if (updateFigure != null) 
 				{
 					// first delete it

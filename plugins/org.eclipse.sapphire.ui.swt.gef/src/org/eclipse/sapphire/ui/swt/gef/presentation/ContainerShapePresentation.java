@@ -96,5 +96,24 @@ public class ContainerShapePresentation extends ShapePresentation
 			shapePresentation.dispose();
 		}
 	}
+	
+	public int getChildFigureIndex(ShapePresentation childShapePresentation)
+	{
+		int shapeIndex = getChildren().indexOf(childShapePresentation);
+		if (shapeIndex == -1)
+		{
+			return -1;
+		}
+
+		int figureIndex = 0;
+		for (int i = 0; i < shapeIndex; i++)
+		{
+			if (getChildren().get(i).getFigure() != null)
+			{
+				figureIndex++;
+			}
+		}
+		return figureIndex;
+	}
 }
 
