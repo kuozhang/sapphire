@@ -15,9 +15,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.modeling.xml.ChildXmlResource;
 import org.eclipse.sapphire.modeling.xml.StandardXmlListBindingImpl;
@@ -37,9 +35,7 @@ public final class LocationHintsBinding extends StandardXmlListBindingImpl
     public static final String AFTER_PREFIX = "after:";
     
     @Override
-    protected void initBindingMetadata( final Element element,
-                                        final PropertyDef property,
-                                        final String[] params )
+    protected void initBindingMetadata()
     {
         this.xmlElementNames = new QName[] { new QName( EL_LOCATION ) };
     }

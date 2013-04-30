@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.def.internal;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
+import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,11 +25,11 @@ public final class LocationHintBinding extends XmlValueBindingImpl
     private String prefix;
     
     @Override
-    public void init( final Property property,
-                      final String[] params )
+    public void init( final Property property )
     {
-        super.init( property, params );
-        this.prefix = params[ 0 ];
+        super.init( property );
+        
+        this.prefix = property.definition().getAnnotation( CustomXmlValueBinding.class ).params()[ 0 ];
     }
 
     @Override

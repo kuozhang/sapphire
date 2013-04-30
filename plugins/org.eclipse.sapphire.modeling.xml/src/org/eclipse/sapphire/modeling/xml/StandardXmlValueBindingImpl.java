@@ -29,10 +29,9 @@ public final class StandardXmlValueBindingImpl extends XmlValueBindingImpl
     private boolean removeNodeOnSetIfNull;
     
     @Override
-    public void init( final Property property,
-                      final String[] params )
+    public void init( final Property property )
     {
-        super.init( property, params );
+        super.init( property );
         
         try
         {

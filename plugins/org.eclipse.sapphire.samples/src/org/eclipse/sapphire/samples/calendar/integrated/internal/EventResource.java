@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.LayeredListPropertyBinding;
 import org.eclipse.sapphire.ListPropertyBinding;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
@@ -24,7 +25,6 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.ValuePropertyBinding;
-import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.calendar.integrated.IEvent;
 import org.eclipse.sapphire.samples.calendar.integrated.IEventAttachment;
@@ -183,7 +183,7 @@ public final class EventResource extends Resource
         }
         else if( pdef == IEvent.PROP_ATTENDEES )
         {
-            final ListPropertyBinding binding = new LayeredListBindingImpl()
+            final ListPropertyBinding binding = new LayeredListPropertyBinding()
             {
                 private final ElementList<org.eclipse.sapphire.samples.calendar.IAttendee> base
                     = EventResource.this.base.getAttendees();
@@ -227,13 +227,11 @@ public final class EventResource extends Resource
                 }
             };
             
-            binding.init( property, null );
-            
             return binding;
         }
         else if( pdef == IEvent.PROP_ATTACHMENTS )
         {
-            final ListPropertyBinding binding = new LayeredListBindingImpl()
+            final ListPropertyBinding binding = new LayeredListPropertyBinding()
             {
                 private final ElementList<org.eclipse.sapphire.samples.calendar.IEventAttachment> base
                     = EventResource.this.base.getAttachments();
@@ -276,8 +274,6 @@ public final class EventResource extends Resource
                     this.base.remove( ( (EventAttachmentResource) resource ).getBase() );
                 }
             };
-            
-            binding.init( property, null );
             
             return binding;
         }

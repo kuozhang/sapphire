@@ -21,7 +21,6 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListPropertyBinding;
@@ -49,10 +48,9 @@ public final class ManufacturersBinding extends ListPropertyBinding
     private Listener listener;
     
     @Override
-    public void init( final Property property,
-                      final String[] params )
+    public void init( final Property property )
     {
-        super.init( property, params );
+        super.init( property );
         
         this.listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -232,9 +230,7 @@ public final class ManufacturersBinding extends ListPropertyBinding
                 binding = new StandardXmlListBindingImpl()
                 {
                     @Override
-                    protected void initBindingMetadata( final Element element,
-                                                        final PropertyDef property,
-                                                        final String[] params )
+                    protected void initBindingMetadata()
                     {
                         this.xmlElementNames = new QName[] { createQualifiedName( "Item", null ), createQualifiedName( "MultiVariantItem", null ) };
                         this.modelElementTypes = new ElementType[] { SingleVariantItem.TYPE, MultiVariantItem.TYPE };
@@ -282,11 +278,6 @@ public final class ManufacturersBinding extends ListPropertyBinding
                         return element().nearest( Catalog.class ).adapt( XmlResource.class ).getXmlElement( createIfNecessary );
                     }
                 };
-            }
-            
-            if( binding != null )
-            {
-                binding.init( property, null );
             }
             
             return binding;

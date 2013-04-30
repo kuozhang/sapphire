@@ -47,10 +47,9 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
     private ElementType[] modelElementTypes;
     
     @Override
-    public void init( final Property property,
-                      final String[] params )
+    public void init( final Property property )
     {
-        super.init( property, params );
+        super.init( property );
         
         this.possibleTypesService = property.service( PossibleTypesService.class );
         

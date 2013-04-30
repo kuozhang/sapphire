@@ -32,8 +32,6 @@ import org.eclipse.sapphire.modeling.ElementPropertyBinding;
 
 public final class MemoryResource extends Resource
 {
-    private static final String[] EMPTY_PARAMS = new String[ 0 ];
-    
     private final ElementType type;
     
     public MemoryResource( final ElementType type )
@@ -194,11 +192,6 @@ public final class MemoryResource extends Resource
                     this.list.remove( resource );
                 }
             };
-        }
-        
-        if( binding != null )
-        {
-            binding.init( property, EMPTY_PARAMS );
         }
         
         return binding;

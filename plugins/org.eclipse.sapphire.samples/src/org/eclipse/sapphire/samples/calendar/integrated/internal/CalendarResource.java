@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.LayeredListPropertyBinding;
 import org.eclipse.sapphire.ListPropertyBinding;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
@@ -23,7 +24,6 @@ import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.Resource;
-import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.samples.calendar.integrated.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.IEvent;
@@ -98,7 +98,7 @@ public final class CalendarResource extends Resource
     {
         if( property.definition() == ICalendar.PROP_EVENTS )
         {
-            final ListPropertyBinding binding = new LayeredListBindingImpl()
+            final ListPropertyBinding binding = new LayeredListPropertyBinding()
             {
                 private final ElementList<org.eclipse.sapphire.samples.calendar.IEvent> base
                     = CalendarResource.this.base.getEvents();
@@ -141,8 +141,6 @@ public final class CalendarResource extends Resource
                     this.base.remove( ( (EventResource) resource ).getBase() );
                 }
             };
-            
-            binding.init( property, null );
             
             return binding;
         }

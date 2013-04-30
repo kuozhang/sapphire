@@ -30,10 +30,9 @@ public final class StandardImpliedXmlElementBindingImpl extends ElementPropertyB
     private Resource resource;
     
     @Override
-    public void init( final Property property,
-                      final String[] params )
+    public void init( final Property property )
     {
-        super.init( property, params );
+        super.init( property );
         
         if( property.service( PossibleTypesService.class ).types().size() > 1 )
         {

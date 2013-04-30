@@ -61,7 +61,6 @@ public abstract class XmlResource extends Resource
     protected PropertyBinding createBinding( final Property property )
     {
         PropertyBinding binding = null;
-        String[] params = null;
         
         if( property instanceof Value )
         {
@@ -72,7 +71,6 @@ public abstract class XmlResource extends Resource
                 try
                 {
                     binding = customBindingAnnotation.impl().newInstance();
-                    params = customBindingAnnotation.params();
                 }
                 catch( Exception e )
                 {
@@ -94,7 +92,6 @@ public abstract class XmlResource extends Resource
                 try
                 {
                     binding = customBindingAnnotation.impl().newInstance();
-                    params = customBindingAnnotation.params();
                 }
                 catch( Exception e )
                 {
@@ -120,7 +117,6 @@ public abstract class XmlResource extends Resource
                 try
                 {
                     binding = customBindingAnnotation.impl().newInstance();
-                    params = customBindingAnnotation.params();
                 }
                 catch( Exception e )
                 {
@@ -132,11 +128,6 @@ public abstract class XmlResource extends Resource
             {
                 binding = new StandardXmlListBindingImpl();
             }
-        }
-        
-        if( binding != null )
-        {
-            binding.init( property, params );
         }
         
         return binding;

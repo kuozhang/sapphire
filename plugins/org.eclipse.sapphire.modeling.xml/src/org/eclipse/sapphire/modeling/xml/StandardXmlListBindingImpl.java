@@ -23,14 +23,12 @@ import java.util.SortedSet;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.LayeredListPropertyBinding;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Resource;
-import org.eclipse.sapphire.modeling.LayeredListBindingImpl;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
@@ -43,7 +41,7 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:rcernich@redhat.com">Rob Cernich</a>
  */
 
-public class StandardXmlListBindingImpl extends LayeredListBindingImpl
+public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
 {
     private PossibleTypesService possibleTypesService;
     private Listener possibleTypesServiceListener;
@@ -52,10 +50,9 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
     protected ElementType[] modelElementTypes;
 
     @Override
-    public void init( final Property property,
-                      final String[] params )
+    public void init( final Property property )
     {
-        super.init( property, params );
+        super.init( property );
         
         this.possibleTypesService = property.service( PossibleTypesService.class );
         
@@ -66,7 +63,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
             {
                 try
                 {
-                    initBindingMetadata( property.element(), property.definition(), params );
+                    initBindingMetadata();
                 }
                 catch( Exception e )
                 {
@@ -80,7 +77,7 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
         
         try
         {
-            initBindingMetadata( property.element(), property.definition(), params );
+            initBindingMetadata();
         }
         catch( Exception e )
         {
@@ -89,19 +86,17 @@ public class StandardXmlListBindingImpl extends LayeredListBindingImpl
         }
     }
     
-    protected void initBindingMetadata( final Element element,
-                                        final PropertyDef property,
-                                        final String[] params )
+    protected void initBindingMetadata()
     {
-        final XmlListBinding annotation = property.getAnnotation( XmlListBinding.class );
-        final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
+        final XmlListBinding annotation = property().definition().getAnnotation( XmlListBinding.class );
+        final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) property().element().resource() ).getXmlNamespaceResolver();
         
         final SortedSet<ElementType> possible = this.possibleTypesService.types();
         this.modelElementTypes = possible.toArray( new ElementType[ possible.size() ] );
 
         if( annotation == null )
         {
-            this.path = new XmlPath( property.name(), xmlNamespaceResolver );
+            this.path = new XmlPath( property().name(), xmlNamespaceResolver );
             
             this.xmlElementNames = new QName[ this.modelElementTypes.length ];
             

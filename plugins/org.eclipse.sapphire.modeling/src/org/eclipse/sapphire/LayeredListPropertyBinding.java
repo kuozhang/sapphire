@@ -9,13 +9,10 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire;
 
 import java.util.List;
 
-import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.ListPropertyBinding;
-import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.util.IdentityCache;
 import org.eclipse.sapphire.util.ListFactory;
 
@@ -23,7 +20,7 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class LayeredListBindingImpl extends ListPropertyBinding
+public abstract class LayeredListPropertyBinding extends ListPropertyBinding
 {
     private final IdentityCache<Object,Resource> cache = new IdentityCache<Object,Resource>();
 

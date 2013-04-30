@@ -67,6 +67,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#IModelParticle">IModelParticle</a></li>
   <li><a href="#ImpliedElementProperty">ImpliedElementProperty</a></li>
+  <li><a href="#LayeredListBindingImpl">LayeredListBindingImpl</a></li>
   <li><a href="#ListBindingImpl">ListBindingImpl</a></li>
   <li><a href="#ListProperty">ListProperty</a></li>
   <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
@@ -87,6 +88,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></li>
+  <li><a href="#StandardXmlListBindingImpl">StandardXmlListBindingImpl</a></li>
   <li><a href="#Transient">Transient</a></li>
   <li><a href="#TransientProperty">TransientProperty</a></li>
   <li><a href="#TypeCast">TypeCast</a></li>
@@ -221,7 +223,7 @@ Sapphire to find.</p>
 <pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends</span> BindingImpl
 <span class="unaffected">{
     @Override
-    public void init(</span> Element element, PropertyDef property<span class="unaffected">, String[] params )
+    public void init(</span> IModelElement pdef, ModelProperty property, String[] params <span class="unaffected">)
     {
         ...
     }
@@ -231,9 +233,13 @@ Sapphire to find.</p>
 <pre class="source-code"><code><span class="unaffected">public class ExampleBinding extends</span> PropertyBinding
 <span class="unaffected">{
     @Override
-    public void init(</span> Property property<span class="unaffected">, String[] params )
-    {
-        ...
+    public void init(</span> Property property <span class="unaffected">)
+    {</span>
+        Element element = property.element();
+        PropertyDef pdef = property.definition();
+        String[] params = pdef.getAnnotation( CustomXmlValueBinding.class ).params();
+        
+        <span class="unaffected">...
     }
 }</span></code></pre>
     </td>
@@ -1006,6 +1012,24 @@ element.</span>visit
 </table>
 
 
+<h2><a name="LayeredListBindingImpl">LayeredListBindingImpl</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.LayeredListBindingImpl</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.LayeredListPropertyBinding</code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ListBindingImpl">ListBindingImpl</a></h2>
 
 <table>
@@ -1551,14 +1575,6 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">resource.binding</span>( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> )</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">resource.binding</span>( element.property( <span class="unaffected">ExampleElement.PROP_EXAMPLE</span> ) )</code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
 <pre class="source-code"><code><span class="unaffected">public class ExampleResource extends Resource
 {
     @Override
@@ -1626,6 +1642,44 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">handler.</span>property().definition()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="StandardXmlListBindingImpl">StandardXmlListBindingImpl</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>
+<span class="unaffected">public class ExampleBinding extends StandardXmlListBindingImpl
+{
+    @Override
+    protected void initBindingMetadata</span>( IModelElement element, ModelProperty property, String[] params )
+    <span class="unaffected">{
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>
+<span class="unaffected">public class ExampleBinding extends StandardXmlListBindingImpl
+{
+    @Override
+    protected void initBindingMetadata</span>()
+    <span class="unaffected">{</span>
+        Element element = property().element();
+        PropertyDef pdef = property().definition();
+        String[] params = pdef.getAnnotation( CustomXmlListBinding.class ).params();
+        
+        <span class="unaffected">...
+    }
+}</span></code></pre>
     </td>
   </tr>
 </table>

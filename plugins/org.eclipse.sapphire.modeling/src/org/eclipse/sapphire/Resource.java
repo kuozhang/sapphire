@@ -104,6 +104,8 @@ public abstract class Resource
                 throw new IllegalArgumentException();
             }
             
+            binding.init( property );
+            
             this.bindings.put( property, binding );
         }
         
