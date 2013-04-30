@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
+import org.eclipse.sapphire.modeling.ElementPropertyBinding;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -68,6 +69,26 @@ public abstract class Resource
     public final Element element()
     {
         return this.element;
+    }
+    
+    public final PropertyBinding binding( final PropertyDef property )
+    {
+        return binding( this.element.property( property ) );
+    }
+    
+    public final ValuePropertyBinding binding( final ValueProperty property )
+    {
+        return (ValuePropertyBinding) binding( (PropertyDef) property );
+    }
+    
+    public final ElementPropertyBinding binding( final ElementProperty property )
+    {
+        return (ElementPropertyBinding) binding( (PropertyDef) property );
+    }
+    
+    public final ListPropertyBinding binding( final ListProperty property )
+    {
+        return (ListPropertyBinding) binding( (PropertyDef) property );
     }
     
     public final PropertyBinding binding( final Property property )
