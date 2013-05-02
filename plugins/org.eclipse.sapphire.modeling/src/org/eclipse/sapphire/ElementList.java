@@ -39,16 +39,22 @@ public final class ElementList<T extends Element> extends Property implements Li
         super( element, property );
     }
     
-    @SuppressWarnings( "unchecked" )
+    /**
+     * Returns a reference to ElementList.class that is parameterized with the given type.
+     * 
+     * <p>Example:</p>
+     * 
+     * <p><code>Class&lt;ElementList&lt;Item>> cl = ElementList.of( Item.class );</code></p>
+     *  
+     * @param type the type
+     * @return a reference to ElementList.class that is parameterized with the given type
+     */
     
-    public <TX extends Element> ElementList<TX> typed( final Class<TX> type )
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    
+    public static <TX extends Element> Class<ElementList<TX>> of( final Class<TX> type )
     {
-        if( definition().getTypeClass() != type )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return (ElementList<TX>) this;
+        return (Class) ElementList.class;
     }
     
     @Override

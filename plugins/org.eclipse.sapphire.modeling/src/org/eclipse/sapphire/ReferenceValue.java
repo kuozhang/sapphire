@@ -12,7 +12,6 @@
 package org.eclipse.sapphire;
 
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
@@ -31,21 +30,23 @@ public final class ReferenceValue<R,T> extends Value<R>
         this.service = service( ReferenceService.class );
     }
     
-    @SuppressWarnings( "unchecked" )
+    /**
+     * Returns a reference to ReferenceValue.class that is parameterized with the given types.
+     * 
+     * <p>Example:</p>
+     * 
+     * <p><code>Class&lt;ReferenceValue&lt;JavaTypeName,JavaType>> cl = ReferenceValue.of( JavaTypeName.class, JavaType.class );</code></p>
+     *  
+     * @param referenceType the reference type
+     * @param targetType the target type
+     * @return a reference to ReferenceValue.class that is parameterized with the given types
+     */
     
-    public <RX,TX> ReferenceValue<RX,TX> typed( final Class<RX> referenceType, final Class<TX> targetType )
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    
+    public static <RX,TX> Class<ReferenceValue<RX,TX>> of( final Class<RX> referenceType, final Class<TX> targetType )
     {
-        if( definition().getTypeClass() != referenceType )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        if( definition().getAnnotation( Reference.class ).target() != targetType )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return (ReferenceValue<RX,TX>) this;
+        return (Class) ReferenceValue.class;
     }
     
     @SuppressWarnings( "unchecked" )

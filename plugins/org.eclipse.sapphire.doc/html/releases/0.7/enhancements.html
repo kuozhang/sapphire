@@ -517,14 +517,14 @@ ElementHandle was the only one that had no API to retrieve the parent property.<
     &lt;C extends IModelElement> C element( boolean createIfNecessary, Class&lt;C> cl )
 <font color="#888888">}</font></code></pre>
 
-<p>In certain cases, a property is referenced as ElementHandle&lt;?> without specifying its type parameter. Converting
-such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
-A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
-specified type parameter does not match the property.</p>
+<p>In certain situations, it is useful to be able to reference a fully typed ElementHandle class object. One such scenario
+occurs when using the context lookup method as part of a service implementation. If context lookup is performed
+using ElementHandle.class, the resulting object reference is a raw ElementHandle. Trying to assign it to a typed ElementHandle results in
+an unchecked cast warning. A method has been added to make it easy to reference a fully typed ElementHandle class object.</p> 
 
 <pre class="source-code"><code><font color="#888888">ElementHandle
 {</font>
-   &lt;TX> ElementHandle&lt;TX> typed( Class&lt;TX> type )
+   static &lt;TX> Class&lt;ElementHandle&lt;TX>> of( Class&lt;TX> type )
 <font color="#888888">}</font></code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
@@ -534,7 +534,7 @@ specified type parameter does not match the property.</p>
     @Override
     public Status validate()
     {</font>
-        ElementHandle&lt;Item> item = context( ElementHandle.class ).typed( Item.class );
+        ElementHandle&lt;Item> item = context( ElementHandle.of( Item.class ) );
         
         <font color="#888888">...
     }
@@ -543,14 +543,14 @@ specified type parameter does not match the property.</p>
 
 <h2><a name="Core-ElementList">ElementList</a></h2>
 
-<p>In certain cases, a property is referenced as ElementList&lt;?> without specifying its type parameter. Converting
-such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
-A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
-specified type parameter does not match the property.</p>
+<p>In certain situations, it is useful to be able to reference a fully typed ElementList class object. One such scenario
+occurs when using the context lookup method as part of a service implementation. If context lookup is performed
+using ElementList.class, the resulting object reference is a raw ElementList. Trying to assign it to a typed ElementList results in
+an unchecked cast warning. A method has been added to make it easy to reference a fully typed ElementList class object.</p> 
 
 <pre class="source-code"><code><font color="#888888">ElementList
 {</font>
-   &lt;TX> ElementList&lt;TX> typed( Class&lt;TX> type )
+   static &lt;TX> Class&lt;ElementList&lt;TX>> of( Class&lt;TX> type )
 <font color="#888888">}</font></code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
@@ -560,7 +560,7 @@ specified type parameter does not match the property.</p>
     @Override
     public Status validate()
     {</font>
-        ElementList&lt;Item> items = context( ElementList.class ).typed( Item.class );
+        ElementList&lt;Item> items = context( ElementList.of( Item.class ) );
         
         <font color="#888888">...
     }
@@ -606,14 +606,14 @@ A property instance can found using methods on <a href="#Core-IModelElement">IMo
 
 <h2><a name="Core-ReferenceValue">ReferenceValue</a></h2>
 
-<p>In certain cases, a property is referenced as ReferenceValue&lt;?,?> without specifying its type parameters. Converting
-such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
-A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
-specified type parameters do not match the property.</p>
+<p>In certain situations, it is useful to be able to reference a fully typed ReferenceValue class object. One such scenario
+occurs when using the context lookup method as part of a service implementation. If context lookup is performed
+using ReferenceValue.class, the resulting object reference is a raw ReferenceValue. Trying to assign it to a typed ReferenceValue results in
+an unchecked cast warning. A method has been added to make it easy to reference a fully typed ReferenceValue class object.</p> 
 
 <pre class="source-code"><code><font color="#888888">ReferenceValue
 {</font>
-   &lt;RX,TX> ReferenceValue&lt;RX,TX> typed( Class&lt;RX> referenceType, Class&lt;TX> targetType )
+   static &lt;RX,TX> Class&lt;ReferenceValue&lt;RX,TX>> of( Class&lt;RX> referenceType, Class&lt;TX> targetType )
 <font color="#888888">}</font></code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
@@ -623,7 +623,7 @@ specified type parameters do not match the property.</p>
     @Override
     public Status validate()
     {</font>
-        ReferenceValue&lt;JavaTypeName,JavaType> implementation = context( ReferenceValue.class ).typed( JavaTypeName.class, JavaType.class );
+        ReferenceValue&lt;JavaTypeName,JavaType> implementation = context( ReferenceValue.of( JavaTypeName.class, JavaType.class ) );
         
         <font color="#888888">...
     }
@@ -672,14 +672,14 @@ void setCategory( String value );</font></code></pre>
 
 <h2><a name="Core-Transient">Transient</a></h2>
 
-<p>In certain cases, a property is referenced as Transient&lt;?> without specifying its type parameter. Converting
-such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
-A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
-specified type parameter does not match the property.</p>
+<p>In certain situations, it is useful to be able to reference a fully typed Transient class object. One such scenario
+occurs when using the context lookup method as part of a service implementation. If context lookup is performed
+using Transient.class, the resulting object reference is a raw Transient. Trying to assign it to a typed Transient results in
+an unchecked cast warning. A method has been added to make it easy to reference a fully typed Transient class object.</p> 
 
 <pre class="source-code"><code><font color="#888888">Transient
 {</font>
-   &lt;TX> Transient&lt;TX> typed( Class&lt;TX> type )
+   static &lt;TX> Class&lt;Transient&lt;TX>> of( Class&lt;TX> type )
 <font color="#888888">}</font></code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
@@ -689,7 +689,7 @@ specified type parameter does not match the property.</p>
     @Override
     public Status validate()
     {</font>
-        Transient&lt;IProject> project = context( Transient.class ).typed( IProject.class );
+        Transient&lt;IProject> project = context( Transient.of( IProject.class ) );
         
         <font color="#888888">...
     }
@@ -698,14 +698,14 @@ specified type parameter does not match the property.</p>
 
 <h2><a name="Core-Value">Value</a></h2>
 
-<p>In certain cases, a property is referenced as Value&lt;?> without specifying its type parameter. Converting
-such a reference to the fully specified form using a Java cast triggers the unchecked cast warning.
-A method has been added to safely perform this cast. The new method throws IllegalArgumentException if the
-specified type parameter does not match the property.</p>
+<p>In certain situations, it is useful to be able to reference a fully typed Value class object. One such scenario
+occurs when using the context lookup method as part of a service implementation. If context lookup is performed
+using Value.class, the resulting object reference is a raw Value. Trying to assign it to a typed Value results in
+an unchecked cast warning. A method has been added to make it easy to reference a fully typed Value class object.</p> 
 
 <pre class="source-code"><code><font color="#888888">Value
 {</font>
-   &lt;TX> Value&lt;TX> typed( Class&lt;TX> type )
+   static &lt;TX> Class&lt;Value&lt;TX>> of( Class&lt;TX> type )
 <font color="#888888">}</font></code></pre>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
@@ -715,7 +715,7 @@ specified type parameter does not match the property.</p>
     @Override
     public Status validate()
     {</font>
-        Value&lt;Integer> value = context( Value.class ).typed( Integer.class );
+        Value&lt;Integer> value = context( Value.of( Integer.class ) );
         
         <font color="#888888">...
     }

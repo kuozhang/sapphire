@@ -39,16 +39,22 @@ public class Value<T> extends Property
         super( element, property );
     }
     
-    @SuppressWarnings( "unchecked" )
+    /**
+     * Returns a reference to Value.class that is parameterized with the given type.
+     * 
+     * <p>Example:</p>
+     * 
+     * <p><code>Class&lt;Value&lt;Integer>> cl = Value.of( Integer.class );</code></p>
+     *  
+     * @param type the type
+     * @return a reference to Value.class that is parameterized with the given type
+     */
     
-    public final <TX> Value<TX> typed( final Class<TX> type )
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    
+    public static <TX> Class<Value<TX>> of( final Class<TX> type )
     {
-        if( definition().getTypeClass() != type )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return (Value<TX>) this;
+        return (Class) Value.class;
     }
     
     @Override

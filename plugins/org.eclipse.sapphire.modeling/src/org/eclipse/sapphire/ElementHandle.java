@@ -36,16 +36,22 @@ public final class ElementHandle<T extends Element> extends Property
         super( element, property );
     }
     
-    @SuppressWarnings( "unchecked" )
+    /**
+     * Returns a reference to ElementHandle.class that is parameterized with the given type.
+     * 
+     * <p>Example:</p>
+     * 
+     * <p><code>Class&lt;ElementHandle&lt;Item>> cl = ElementHandle.of( Item.class );</code></p>
+     *  
+     * @param type the type
+     * @return a reference to ElementHandle.class that is parameterized with the given type
+     */
     
-    public <TX extends Element> ElementHandle<TX> typed( final Class<TX> type )
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    
+    public static <TX extends Element> Class<ElementHandle<TX>> of( final Class<TX> type )
     {
-        if( definition().getTypeClass() != type )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return (ElementHandle<TX>) this;
+        return (Class) ElementHandle.class;
     }
     
     @Override

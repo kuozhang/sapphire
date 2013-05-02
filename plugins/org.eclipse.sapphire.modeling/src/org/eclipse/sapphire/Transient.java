@@ -27,16 +27,22 @@ public final class Transient<T> extends Property
         super( element, property );
     }
     
-    @SuppressWarnings( "unchecked" )
+    /**
+     * Returns a reference to Transient.class that is parameterized with the given type.
+     * 
+     * <p>Example:</p>
+     * 
+     * <p><code>Class&lt;Transient&lt;Integer>> cl = Transient.of( Integer.class );</code></p>
+     *  
+     * @param type the type
+     * @return a reference to Transient.class that is parameterized with the given type
+     */
     
-    public <TX> Transient<TX> typed( final Class<TX> type )
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
+    
+    public static <TX> Class<Transient<TX>> of( final Class<TX> type )
     {
-        if( definition().getTypeClass() != type )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return (Transient<TX>) this;
+        return (Class) Transient.class;
     }
     
     @Override
