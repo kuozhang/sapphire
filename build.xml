@@ -798,10 +798,6 @@ Fragment-Host: @{Bundle}
             timeout="2400000"
             jvmargs="-Xmx1024m -XX:MaxPermSize=256m"/>
 
-          <xslt in="${findbugs.output}/result.xml" style="${findbugs.location}/src/xsl/default.xsl" out="${findbugs.output}/result.html"/>
-          <xslt in="${findbugs.output}/result.xml" style="${findbugs.location}/src/xsl/fancy.xsl" out="${findbugs.output}/result-fancy.html"/>
-          <xslt in="${findbugs.output}/result.xml" style="${findbugs.location}/src/xsl/plain.xsl" out="${findbugs.output}/result-plain.html"/>
-
         </then>
       </if>
 
