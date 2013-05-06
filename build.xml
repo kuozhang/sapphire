@@ -697,9 +697,126 @@ Fragment-Host: @{Bundle}
     </if>
 
   </target>
+  
+  
+  <!--
+    *************************************************************************************************
+    * FindBugs                                                                                      *
+    *************************************************************************************************
+  -->
+
+  
+  <target name="findbugs" depends="init">
+    <findbugs/>
+  </target>
 
 
+  <macrodef name="findbugs">
+    <sequential>
+      
+      <if>
+        <not><isset property="findbugs.output"/></not>
+        <then>
+          <if>
+            <available file="${build.dir}/findbugs"/>
+            <then>
+              <echo message="Found existing findbugs output..."/>
+              <var name="findbugs.output" value="${build.dir}/findbugs"/>
+            </then>
+          </if>
+        </then>
+      </if>
 
+      <if>
+        <not><isset property="findbugs.output"/></not>
+        <then>
+
+          <build-repository/>
+
+          <property name="findbugs.output" value="${build.dir}/findbugs"/>
+
+          <delete dir="${findbugs.output}" quiet="true"/>
+          <mkdir dir="${findbugs.output}"/>
+
+          <taskdef name="findbugs-task" classname="edu.umd.cs.findbugs.anttask.FindBugsTask">
+            <classpath>
+              <fileset dir="${findbugs.location}/lib">
+                <include name="*.jar"/>
+              </fileset>
+            </classpath>
+          </taskdef>
+
+          <with-target-platform configuration="${configuration.recommended}">
+            <pathconvert property=".aux.xml" pathsep="&lt;/AuxClasspathEntry&gt;&#xA;&lt;AuxClasspathEntry&gt;">
+              <path>
+                <fileset dir="${.target.platform}/plugins">
+				  <include name="**/*.jar"/>
+				</fileset>
+              </path>
+            </pathconvert>
+          </with-target-platform>
+
+          <pathconvert property=".source.xml" pathsep="&lt;/SrcDir&gt;&#xA;&lt;SrcDir&gt;">
+            <path>
+              <dirset dir="${root.dir}/plugins" includes="*/src"/>
+            </path>
+          </pathconvert>
+
+          <pathconvert property=".jars.xml" pathsep="&lt;/Jar&gt;&#xA;&lt;Jar&gt;">
+            <path>
+              <fileset dir="${build.dir}/repository/plugins">
+                <include name="org.eclipse.sapphire*.jar"/>
+                <exclude name="*.source_*.jar"/>
+                <exclude name="*.nl_re_*.jar"/>
+			  </fileset>
+            </path>
+          </pathconvert>
+
+          <echo file="${findbugs.output}/project.xml">
+            &lt;BugCollection>
+              &lt;Project filename="findbugs.project" projectName="OEPE">
+                &lt;Jar&gt;${.jars.xml}&lt;/Jar&gt;
+                &lt;AuxClasspathEntry&gt;${.aux.xml}&lt;/AuxClasspathEntry&gt;
+                &lt;SrcDir&gt;${.source.xml}&lt;/SrcDir&gt;
+                &lt;SuppressionFilter&gt;
+                  &lt;LastVersion value="-1" relOp="NEQ"/&gt;
+                &lt;/SuppressionFilter&gt;
+              &lt;/Project&gt;
+            &lt;/BugCollection&gt;
+          </echo>
+
+          <var name=".aux.xml" unset="true"/>
+          <var name=".source.xml" unset="true"/>
+          <var name=".jars.xml" unset="true"/>
+
+          <findbugs-task
+            home="${findbugs.location}"
+            projectFile="${findbugs.output}/project.xml"
+            excludeFilter="${root.dir}/findbugs-excludes.xml"
+            output="xml"
+            outputFile="${findbugs.output}/result.xml"
+            timeout="2400000"
+            jvmargs="-Xmx1024m -XX:MaxPermSize=256m"/>
+
+          <xslt in="${findbugs.output}/result.xml" style="${findbugs.location}/src/xsl/default.xsl" out="${findbugs.output}/result.html"/>
+          <xslt in="${findbugs.output}/result.xml" style="${findbugs.location}/src/xsl/fancy.xsl" out="${findbugs.output}/result-fancy.html"/>
+          <xslt in="${findbugs.output}/result.xml" style="${findbugs.location}/src/xsl/plain.xsl" out="${findbugs.output}/result-plain.html"/>
+
+        </then>
+      </if>
+
+    </sequential>
+  </macrodef>
+
+
+  <target name="clean-findbugs" depends="init">
+
+    <delete dir="${build.dir}/findbugs" quiet="true"/>
+    <var name="findbugs.output" unset="true"/>
+
+  </target>
+
+  
   <!--
     *************************************************************************************************
     * Development Environment                                                                       *
@@ -815,7 +932,7 @@ Fragment-Host: @{Bundle}
     *************************************************************************************************
   -->
 
-  <target name="hudson-build" depends="clean,build,build-alt-configurations,run-tests,prune-downloads-from-eclipse">
+  <target name="hudson-build" depends="clean,build,build-alt-configurations,run-tests,findbugs,prune-downloads-from-eclipse">
     
     <echo file="${build.dir}/version.txt">${sapphire.version}</echo>
     
