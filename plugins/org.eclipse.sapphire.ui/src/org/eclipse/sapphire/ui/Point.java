@@ -11,6 +11,10 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.util.EqualsFactory;
+import org.eclipse.sapphire.util.HashCodeFactory;
+
+
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
@@ -53,17 +57,30 @@ public class Point
     }
     
     @Override
-    public boolean equals(Object another)
+    public boolean equals( final Object obj )
     {
-    	boolean isEqual = false;
-    	if (another instanceof Point)
+    	if( obj instanceof Point )
     	{
-    		Point pt = (Point)another;
-    		if (pt.getX() == getX() && pt.getY() == getY())
-    		{
-    			isEqual = true;
-    		}
+    		final Point pt = (Point) obj;
+    		
+    		return EqualsFactory
+    		        .start()
+    		        .add( this.x, pt.x )
+    		        .add( this.y, pt.y )
+    		        .result();
     	}
-    	return isEqual;
+    	
+    	return false;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeFactory
+                .start()
+                .add( this.x )
+                .add( this.y )
+                .result();
+    }
+    
 }

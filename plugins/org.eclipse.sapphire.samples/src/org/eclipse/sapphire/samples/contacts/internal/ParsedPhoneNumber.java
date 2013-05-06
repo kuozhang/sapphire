@@ -70,7 +70,7 @@ public final class ParsedPhoneNumber
     {
         if( this.areaCode == null && this.localNumber == null )
         {
-            return null;
+            return "";
         }
         else
         {

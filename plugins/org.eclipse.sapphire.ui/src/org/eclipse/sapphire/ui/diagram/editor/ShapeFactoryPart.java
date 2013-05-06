@@ -45,7 +45,6 @@ public class ShapeFactoryPart extends ShapePart
 	private Listener shapePropertyListener;
 	private List<JavaType> javaTypes;
 	private ShapePart separator;
-	private SapphireDiagramPartListener shapeListener;
 	
 	@Override
     protected void init()
@@ -220,7 +219,6 @@ public class ShapeFactoryPart extends ShapePart
     	{
     		shapePart.init(this, modelElement, shapeDef, Collections.<String,String>emptyMap());
     		shapePart.setActive(true);
-    		shapePart.addListener(this.shapeListener);
             shapePart.attach
             (
                 new FilteredListener<TextChangeEvent>()

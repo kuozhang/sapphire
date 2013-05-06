@@ -127,7 +127,10 @@ public final class DelayedTasksExecutor
                 {
                     synchronized( sweeperCompletionResult )
                     {
-                        sweeperCompletionResult.wait();
+                        while( sweeperCompletionResult.get() == false )
+                        {
+                            sweeperCompletionResult.wait();
+                        }
                     }
                 }
                 catch( InterruptedException e ) {}

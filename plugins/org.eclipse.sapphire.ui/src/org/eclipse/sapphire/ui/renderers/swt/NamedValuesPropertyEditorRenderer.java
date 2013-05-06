@@ -60,7 +60,6 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
     private boolean updating;
     private String defaultArbitraryValue;
     private Label overallLabelControl;
-    private Label auxTextControl;
     private Button arbitraryValueRadioButton;
     private Text arbitraryValueTextField;
     private NamedValueLocal[] namedValues;
@@ -86,12 +85,6 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
                 super.setEnabled( enabled );
                 
                 NamedValuesPropertyEditorRenderer.this.overallLabelControl.setEnabled( enabled );
-                
-                if( NamedValuesPropertyEditorRenderer.this.auxTextControl != null )
-                {
-                    NamedValuesPropertyEditorRenderer.this.auxTextControl.setEnabled( enabled );
-                }
-                
                 NamedValuesPropertyEditorRenderer.this.arbitraryValueRadioButton.setEnabled( enabled );
                 NamedValuesPropertyEditorRenderer.this.arbitraryValueTextField.setEnabled( enabled && ( NamedValuesPropertyEditorRenderer.this.arbitraryValueRadioButton.getSelection() == true ) );
                 
@@ -295,6 +288,11 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
                         buttonToSelect = this.namedValuesRadioButtons[ i ];
                         break;
                     }
+                }
+                
+                if( buttonToSelect == null )
+                {
+                    throw new IllegalStateException();
                 }
 
                 changeRadioButtonSelection( this.radioButtonGroup, buttonToSelect );

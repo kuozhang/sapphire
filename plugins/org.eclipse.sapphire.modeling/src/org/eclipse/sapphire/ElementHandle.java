@@ -303,8 +303,9 @@ public final class ElementHandle<T extends Element> extends Property
         return this.content;
     }
     
-    public <C extends Element> C content( final boolean createIfNecessary,
-                                                final Class<C> cl )
+    @SuppressWarnings( "unchecked" )
+    
+    public <C extends Element> C content( final boolean createIfNecessary, final Class<C> cl )
     {
         ElementType type = null;
         
@@ -318,7 +319,7 @@ public final class ElementHandle<T extends Element> extends Property
             }
         }
         
-        return cl.cast( content( createIfNecessary, type ) );
+        return (C) content( createIfNecessary, type );
     }
     
     @Override

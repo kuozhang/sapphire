@@ -13,7 +13,6 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -35,8 +34,6 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     protected void init()
     {   
         this.connectionTemplate = (DiagramImplicitConnectionTemplate)getParentPart();
-        
-        this.definition = (IDiagramConnectionDef)definition(); 
         this.modelElement = getModelElement();
     }
     

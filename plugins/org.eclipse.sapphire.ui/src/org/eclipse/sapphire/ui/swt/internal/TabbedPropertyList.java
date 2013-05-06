@@ -556,8 +556,7 @@ public class TabbedPropertyList
      * Calculate the number of tabs that will fit in the tab list composite.
      */
     protected void computeTabsThatFitInComposite() {
-        this.tabsThatFitInComposite = Math
-            .round((getSize().y - 22) / getTabHeight());
+        this.tabsThatFitInComposite = Math.round( ( (float) ( getSize().y - 22 ) ) / getTabHeight() );
         if (this.tabsThatFitInComposite <= 0) {
             this.tabsThatFitInComposite = 1;
         }

@@ -663,7 +663,7 @@ public abstract class FunctionResult
         {
             final Double x = cast( a, Double.class );
             final Double y = cast( b, Double.class );
-            return ( x == y );
+            return x.equals( y );
         }
         else if( a instanceof BigInteger || b instanceof BigInteger )
         {
@@ -676,7 +676,7 @@ public abstract class FunctionResult
         {
             final Long x = cast( a, Long.class );
             final Long y = cast( b, Long.class );
-            return ( x == y );
+            return x.equals( y );
         }
         else if( a instanceof Boolean || b instanceof Boolean )
         {

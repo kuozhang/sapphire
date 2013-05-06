@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.modeling;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 import java.io.File;
 import java.util.Arrays;
 
@@ -531,7 +532,7 @@ public final class Path
             if (!this.segments[i].equals(targetSegments[i]))
                 return false;
         //check device last (least likely to differ)
-        return this.device == target.device || (this.device != null && this.device.equals(target.device));
+        return equal( this.device, target.device );
     }
 
     /* (Intentionally not included in javadoc)

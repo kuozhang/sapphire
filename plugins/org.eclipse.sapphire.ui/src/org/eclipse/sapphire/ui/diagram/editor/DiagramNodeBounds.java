@@ -12,6 +12,8 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.util.EqualsFactory;
+import org.eclipse.sapphire.util.HashCodeFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -71,23 +73,32 @@ public class DiagramNodeBounds extends Bounds
 		this.defaultPosition = defaultPosition;
 	}
 	
-	@Override
-	public boolean equals(Object another)
-	{
-		boolean isEqual = false;
-		if (another instanceof DiagramNodeBounds)
-		{
-			DiagramNodeBounds anotherBounds = (DiagramNodeBounds)another;
-			if (anotherBounds.getX() == getX() &&
-					anotherBounds.getY() == getY() &&
-					anotherBounds.getWidth() == getWidth() &&
-					anotherBounds.getHeight() == getHeight() &&
-					anotherBounds.isAutoLayout() == isAutoLayout() &&
-					anotherBounds.isDefaultPosition() == isDefaultPosition())
-			{
-				isEqual = true;
-			}
-		}
-		return isEqual;
-	}
+    @Override
+    public boolean equals( final Object obj )
+    {
+        if( obj instanceof DiagramNodeBounds && super.equals( obj ) )
+        {
+            final DiagramNodeBounds b = (DiagramNodeBounds) obj;
+            
+            return EqualsFactory
+                    .start()
+                    .add( this.autoLayout, b.autoLayout )
+                    .add( this.defaultPosition, b.defaultPosition )
+                    .result();
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeFactory
+                .start()
+                .add( super.hashCode() )
+                .add( this.autoLayout )
+                .add( this.defaultPosition )
+                .result();
+    }
+
 }

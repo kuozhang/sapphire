@@ -137,7 +137,7 @@ public final class ValueProperty extends PropertyDef
             {
                 result = keyword.decode( value );
                 
-                if( result != value )
+                if( ! result.equals( value ) )
                 {
                     break;
                 }
@@ -157,7 +157,7 @@ public final class ValueProperty extends PropertyDef
             {
                 result = keyword.encode( value );
                 
-                if( result != value )
+                if( ! result.equals( value ) )
                 {
                     break;
                 }

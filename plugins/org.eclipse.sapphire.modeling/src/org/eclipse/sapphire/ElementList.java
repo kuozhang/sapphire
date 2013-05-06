@@ -400,11 +400,16 @@ public final class ElementList<T extends Element> extends Property implements Li
     
     private <C extends Element> C insert$( final Class<C> cl, final int position )
     {
-        final ElementType type = ElementType.read( cl );
+        ElementType type = null;
         
-        if( type == null )
+        if( cl != null )
         {
-            throw new IllegalArgumentException();
+            type = ElementType.read( cl );
+            
+            if( type == null )
+            {
+                throw new IllegalArgumentException();
+            }
         }
         
         return cl.cast( insert$( type, position ) );

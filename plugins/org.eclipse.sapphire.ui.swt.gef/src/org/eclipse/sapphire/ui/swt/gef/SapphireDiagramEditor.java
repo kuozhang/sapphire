@@ -101,7 +101,6 @@ import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.internal.DiagramEditorContextMenuProvider;
 import org.eclipse.sapphire.ui.swt.gef.layout.HorizontalGraphLayout;
-import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModelBase;
@@ -1329,9 +1328,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
 		diagramModel.dispose();
 		part.removeListener(this.diagramPartListener);
-		layoutPersistenceService.detach(this.layoutPersistenceServiceListener);
+		
 		if (layoutPersistenceService != null)
 		{
+		    // FIXME: KOSTA: This is very questionable. Only service context should be disposing services.
+		    
+		    layoutPersistenceService.detach(this.layoutPersistenceServiceListener);
 			layoutPersistenceService.dispose();
 		}
 		

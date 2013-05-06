@@ -58,7 +58,6 @@ public class DiagramConnectionPart
 {
 	protected DiagramConnectionTemplate connectionTemplate;
 	protected IDiagramExplicitConnectionBindingDef bindingDef;
-	protected IDiagramConnectionDef definition;
 	protected Element modelElement;
 	private ModelPath endpoint1Path;
 	private ModelPath endpoint2Path;
@@ -91,7 +90,6 @@ public class DiagramConnectionPart
 	{
     	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
         
-        this.definition = (IDiagramConnectionDef)super.definition;
         this.modelElement = getModelElement();
         
         final IDiagramLabelDef labelDef = this.bindingDef.getLabel().content();
@@ -235,7 +233,7 @@ public class DiagramConnectionPart
     
     public IDiagramConnectionDef getConnectionDef()
     {
-        return this.definition;
+        return (IDiagramConnectionDef) definition();
     }
     
     public void refreshLabel()

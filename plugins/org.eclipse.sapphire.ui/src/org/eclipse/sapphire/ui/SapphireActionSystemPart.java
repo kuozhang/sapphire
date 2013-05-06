@@ -254,17 +254,6 @@ public abstract class SapphireActionSystemPart
         broadcast( new LocationHintsChangedEvent() );
     }
 
-    public final void removeLocationHint( final String locationHint )
-    {
-        if( locationHint == null )
-        {
-            throw new IllegalArgumentException();
-        }
-
-        this.locationHints.remove( locationHint );
-        broadcast( new LocationHintsChangedEvent() );
-    }
-    
     public final boolean isVisible()
     {
         synchronized( this )

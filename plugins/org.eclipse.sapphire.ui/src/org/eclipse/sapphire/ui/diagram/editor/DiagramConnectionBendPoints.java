@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.util.EqualsFactory;
+import org.eclipse.sapphire.util.HashCodeFactory;
 
 
 /**
@@ -99,30 +101,33 @@ public class DiagramConnectionBendPoints
 	}
 	
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals( final Object obj )
 	{
-		boolean isEqual = false;
-		if (obj instanceof DiagramConnectionBendPoints)
+		if( obj instanceof DiagramConnectionBendPoints )
 		{
-			DiagramConnectionBendPoints bendPoints = (DiagramConnectionBendPoints)obj;
-			if (bendPoints.getBendPoints().size() == getBendPoints().size() && 
-					bendPoints.isAutoLayout() == isAutoLayout() &&
-					bendPoints.isDefault() == isDefault())
-			{
-				isEqual = true;
-				for (int i = 0; i < bendPoints.size(); i++)
-				{
-					Point point1 = bendPoints.get(i);
-					Point point2 = get(i);
-					if (!point1.equals(point2))
-					{
-						isEqual = false;
-						break;
-					}
-				}
-				
-			}
+			final DiagramConnectionBendPoints bp = (DiagramConnectionBendPoints) obj;
+			
+			return EqualsFactory
+			        .start()
+			        .add( this.bendPoints, bp.bendPoints )
+			        .add( this.isAutoLayout, bp.isAutoLayout )
+			        .add( this.isDefault, bp.isDefault )
+			        .result();
 		}
-		return isEqual;
+		
+		return false;
 	}
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeFactory
+                .start()
+                .add( this.bendPoints )
+                .add( this.isAutoLayout )
+                .add( this.isDefault )
+                .result();
+    }
+	
+	
 }

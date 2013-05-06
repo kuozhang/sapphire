@@ -167,8 +167,8 @@ public class FigureUtil {
 		Vector v = new Vector(vx, vy);
 		double absV = v.getLength();
 		// Ray m = new Ray();
-		int mx = Math.round(c.x + vx / 2);
-		int my = Math.round(c.y + vy / 2);
+		int mx = Math.round(c.x + ( (float) vx ) / 2);
+		int my = Math.round(c.y + ( (float) vy ) / 2);
 
 		// Determine tolerance
 		// Idea:

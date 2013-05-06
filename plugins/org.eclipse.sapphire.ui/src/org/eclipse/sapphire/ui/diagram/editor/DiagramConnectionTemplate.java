@@ -24,10 +24,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.ReferenceValue;
@@ -89,7 +89,6 @@ public class DiagramConnectionTemplate extends SapphirePart
     protected SapphireDiagramEditorPagePart diagramEditor;
     protected IDiagramConnectionDef connectionDef;
     protected IDiagramExplicitConnectionBindingDef bindingDef;
-    protected Element modelElement;
     protected String propertyName;
     private ListProperty modelProperty;
     protected ListProperty connListProperty;
@@ -101,8 +100,8 @@ public class DiagramConnectionTemplate extends SapphirePart
     // The converted model path for the endpoints. The path is based on the connection element
     private ModelPath endpoint1Path;
     private ModelPath endpoint2Path;
-    private PropertyDef endpoint1Property;
-    private PropertyDef endpoint2Property;
+    private ValueProperty endpoint1Property;
+    private ValueProperty endpoint2Property;
     
     private List<DiagramConnectionPart> diagramConnections = new ArrayList<DiagramConnectionPart>();
     
@@ -116,12 +115,13 @@ public class DiagramConnectionTemplate extends SapphirePart
     @Override
     public void init()
     {
+        final Element element = getModelElement();
+        
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
-        this.modelElement = getModelElement();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         
         this.propertyName = this.bindingDef.getProperty().content();
-        this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
+        this.modelProperty = (ListProperty)ModelUtil.resolve(element, this.propertyName);
         
         this.connPartListener = new ConnectionPartListener(); 
         this.templateListeners = new CopyOnWriteArraySet<DiagramConnectionTemplateListener>();
@@ -132,7 +132,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         
         ElementType type = this.modelProperty.getType();
         this.endpoint1Property = type.property(endpt1PropStr);
-        this.endpoint2Property = ModelUtil.resolve(type, this.originalEndpoint2Path);
+        this.endpoint2Property = (ValueProperty) ModelUtil.resolve(type, this.originalEndpoint2Path);
                 
         if (getConnectionType() == ConnectionType.OneToOne)
         {
@@ -157,7 +157,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
         
         // initialize the connection parts
-        ElementList<?> list = this.modelElement.property(this.modelProperty);
+        ElementList<?> list = element.property(this.modelProperty);
         for( Element listEntryModelElement : list )
         {
             // check the type of connection: 1x1 connection versus 1xn connection            
@@ -230,7 +230,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     {
         if (getConnectionType() == ConnectionType.OneToMany)
         {
-            ElementList<?> list = this.modelElement.property(this.modelProperty);
+            ElementList<?> list = getModelElement().property(this.modelProperty);
             for( Element listEntryModelElement : list )
             {
                 Object valObj = listEntryModelElement.property(this.endpoint1Property);
@@ -290,11 +290,11 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public void addModelListener()
     {
-        this.modelElement.attach(this.modelPropertyListener, this.propertyName);
+        getModelElement().attach(this.modelPropertyListener, this.propertyName);
         if (getConnectionType() == ConnectionType.OneToMany)
         {
             // it's a 1xn connection type; need to listen to each connection list property
-            ElementList<?> list = this.modelElement.property(this.modelProperty);
+            ElementList<?> list = getModelElement().property(this.modelProperty);
             ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
             for( Element listEntryModelElement : list )
             {                
@@ -305,11 +305,11 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public void removeModelListener()
     {
-        this.modelElement.detach(this.modelPropertyListener, this.propertyName);
+        getModelElement().detach(this.modelPropertyListener, this.propertyName);
         if (getConnectionType() == ConnectionType.OneToMany)
         {
             // it's a 1xn connection type; need to listen to each connection list property
-            ElementList<?> list = this.modelElement.property(this.modelProperty);
+            ElementList<?> list = getModelElement().property(this.modelProperty);
             for( Element listEntryModelElement : list )
             {
                 ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
@@ -386,20 +386,11 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     private Element getOneToManyConnectionSrcElement(String endpoint1Value)
     {
-        ElementList<?> list = this.modelElement.property(this.modelProperty);
+        ElementList<?> list = getModelElement().property(this.modelProperty);
         Element srcElement = null;
         for (Element element : list)
         {
-            Object valObj = element.property(this.endpoint1Property);
-            String val = null;
-            if (valObj instanceof ReferenceValue)
-            {
-                val = (((ReferenceValue<?,?>)valObj).text());
-            }
-            else
-            {
-                val = (String)valObj;
-            }
+            final String val = element.property(this.endpoint1Property).text();
             if (val != null && val.equals(endpoint1Value))
             {
                 srcElement = element;
@@ -452,7 +443,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         {
             if (getConnectionType() == ConnectionType.OneToOne)
             {
-                ElementList<?> list = this.modelElement.property(this.modelProperty);
+                ElementList<?> list = getModelElement().property(this.modelProperty);
                 Element newElement = list.insert();
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint1Path.head()).getPropertyName(), endpoint1Value);
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
@@ -471,7 +462,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 
                 if (srcElement == null)
                 {
-                	ElementList<?> list = this.modelElement.property(this.modelProperty);
+                	ElementList<?> list = getModelElement().property(this.modelProperty);
                     srcElement = list.insert();
                     setModelProperty(srcElement, srcProperty, endpoint1Value);
                 }

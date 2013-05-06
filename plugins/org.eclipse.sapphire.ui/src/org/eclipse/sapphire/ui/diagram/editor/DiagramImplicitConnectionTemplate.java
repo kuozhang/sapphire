@@ -28,7 +28,6 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyEvent;
-import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -55,7 +54,6 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     
     private IDiagramImplicitConnectionBindingDef bindingDef;
     private IDiagramConnectionDef connectionDef;
-    protected Element modelElement;
     private SapphireDiagramEditorPagePart diagramEditor;
     private String propertyName;
 //    private ModelPath allDescendentsPath;
@@ -78,10 +76,9 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
         this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
         this.listEntryFunctionMap = new IdentityHashMap<Element, FunctionResult>();
-        this.modelElement = getModelElement();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         this.propertyName = this.bindingDef.getProperty().content();
-        this.modelProperty = (ListProperty)ModelUtil.resolve(this.modelElement, this.propertyName);
+        this.modelProperty = (ListProperty)ModelUtil.resolve(getModelElement(), this.propertyName);
         
         this.modelElementTypes = new ArrayList<Class<?>>();
         ElementList<IModelElementTypeDef> types = this.bindingDef.getModelElementTypes();
@@ -127,7 +124,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void addModelListener()
     {
-        this.modelElement.attach(this.modelPropertyListener, this.propertyName);
+        getModelElement().attach(this.modelPropertyListener, this.propertyName);
         // I don't think the following code is necessary since the condition expression
         // refreshes implicit connections. TODO more testing when the "Property instance construct"
         // change propogrates to OEPE
@@ -139,7 +136,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void removeModelListener()
     {
-        this.modelElement.detach(this.modelPropertyListener, this.propertyName);
+        getModelElement().detach(this.modelPropertyListener, this.propertyName);
 //        this.modelElement.detach(this.modelPropertyListener, this.allDescendentsPath);
     }
     
@@ -188,7 +185,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     
     private List<Element> getFilteredModelElementList()
     {
-        ElementList<?> list = this.modelElement.property(this.modelProperty);
+        ElementList<?> list = getModelElement().property(this.modelProperty);
         List<Element> filteredList = new ArrayList<Element>();
         for( Element listEntryModelElement : list )
         {

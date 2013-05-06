@@ -23,10 +23,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
@@ -58,7 +58,6 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     {
         this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
         this.diagramEditor = this.nodeTemplate.getDiagramEditorPart();
-        this.modelElement = getModelElement();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         
         this.diagramConnectionMap = new HashMap<Element, List<DiagramConnectionPart>>();
@@ -92,7 +91,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         String endpointPropStr = this.bindingDef.getEndpoint2().content().getProperty().content();
         this.endpointPath = new ModelPath(endpointPropStr);
         
-        ElementList<Element> srcNodeList = this.modelElement.property(nodeProperty);
+        ElementList<Element> srcNodeList = getModelElement().property(nodeProperty);
         for (Element srcNodeModel : srcNodeList)
         {
             PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
@@ -171,7 +170,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         if (modelProperty instanceof ListProperty)
         {
             ListProperty listProperty = (ListProperty)modelProperty;
-            ElementList<?> list = this.modelElement.property(listProperty);
+            ElementList<?> list = getModelElement().property(listProperty);
             for (Element listEntryModelElement : list)
             {
                 if (listEntryModelElement == srcNodeModel)
@@ -184,9 +183,9 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         else if (modelProperty instanceof ElementProperty)
         {
             ElementProperty elementProperty = (ElementProperty)modelProperty;
-            if (this.modelElement.property(elementProperty) != null)
+            if (getModelElement().property(elementProperty) != null)
             {
-                Element localModelElement = this.modelElement.property(elementProperty).content();
+                Element localModelElement = getModelElement().property(elementProperty).content();
                 if (localModelElement == srcNodeModel)
                 {
                     found = true;
@@ -248,7 +247,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public void addModelListener()
     {
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
-        ElementList<Element> srcNodeList = this.modelElement.property(nodeProperty);
+        ElementList<Element> srcNodeList = getModelElement().property(nodeProperty);
         for (Element srcNodeModel : srcNodeList)
         {
             addModelListener(srcNodeModel);
@@ -259,7 +258,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public void removeModelListener()
     {
         ListProperty nodeProperty = (ListProperty)this.nodeTemplate.getModelProperty();
-        ElementList<Element> srcNodeList = this.modelElement.property(nodeProperty);
+        ElementList<Element> srcNodeList = getModelElement().property(nodeProperty);
         for (Element srcNodeModel : srcNodeList)
         {
             removeModelListener(srcNodeModel);

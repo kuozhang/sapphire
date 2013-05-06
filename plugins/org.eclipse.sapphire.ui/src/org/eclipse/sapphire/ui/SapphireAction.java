@@ -127,30 +127,30 @@ public final class SapphireAction extends SapphireActionSystemPart
             }
         );
 
+        this.hints = new HashMap<String,Object>();
+        
         if( def != null )
         {
             this.type = def.getType().content();
             this.group = def.getGroup().content();
             this.keyBinding = def.getKeyBinding().content();
             this.keyBindingBehavior = def.getKeyBindingBehavior().content();
+
+            for( ISapphireHint hint : def.getHints() )
+            {
+                final String name = hint.getName().text();
+                Object parsedValue = null;
+                
+                if( name.equals( PartDef.HINT_STYLE ) )
+                {
+                    parsedValue = hint.getValue().text();
+                }
+               
+                this.hints.put( name, parsedValue );
+            }
         }
         
         setEnabled( false );
-        
-        this.hints = new HashMap<String,Object>();
-        
-        for( ISapphireHint hint : def.getHints() )
-        {
-            final String name = hint.getName().text();
-            Object parsedValue = null;
-            
-            if( name.equals( PartDef.HINT_STYLE ) )
-            {
-                parsedValue = hint.getValue().text();
-            }
-           
-            this.hints.put( name, parsedValue );
-        }
     }
     
     @Override

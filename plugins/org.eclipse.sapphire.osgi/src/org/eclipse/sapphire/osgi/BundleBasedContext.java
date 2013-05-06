@@ -117,13 +117,16 @@ public final class BundleBasedContext extends Context
         {
             final Enumeration<URL> enumeration = this.bundle.getResources( name );
             
-            while( enumeration.hasMoreElements() )
+            if( enumeration != null )
             {
-                final URL resource = enumeration.nextElement();
-                
-                if( resource != null )
+                while( enumeration.hasMoreElements() )
                 {
-                    resourcesListFactory.add( resource );
+                    final URL resource = enumeration.nextElement();
+                    
+                    if( resource != null )
+                    {
+                        resourcesListFactory.add( resource );
+                    }
                 }
             }
         }

@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.util.EqualsFactory;
+import org.eclipse.sapphire.util.HashCodeFactory;
+
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
@@ -58,6 +61,34 @@ public class Bounds extends Point
     public void setHeight(int h)
     {
         this.height = h;
+    }
+    
+    @Override
+    public boolean equals( final Object obj )
+    {
+        if( obj instanceof Bounds && super.equals( obj ) )
+        {
+            final Bounds b = (Bounds) obj;
+            
+            return EqualsFactory
+                    .start()
+                    .add( this.width, b.width )
+                    .add( this.height, b.height )
+                    .result();
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeFactory
+                .start()
+                .add( super.hashCode() )
+                .add( this.width )
+                .add( this.height )
+                .result();
     }
     
     @Override

@@ -90,7 +90,7 @@ public final class ElementType extends ModelMetadataItem
     }
     
     public static ElementType read( final ClassLoader classLoader,
-                                         final String qualifiedTypeName )
+                                    final String qualifiedTypeName )
     {
         try
         {
@@ -108,8 +108,13 @@ public final class ElementType extends ModelMetadataItem
     }
     
     public static ElementType read( final Class<?> modelElementClass,
-                                         final boolean throwExceptionIfNotFound )
+                                    final boolean throwExceptionIfNotFound )
     {
+        if( modelElementClass == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         for( Field field : modelElementClass.getFields() )
         {
             if( field.getName().equals( "TYPE" ) )

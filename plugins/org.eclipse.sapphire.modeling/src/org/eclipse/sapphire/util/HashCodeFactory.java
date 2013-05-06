@@ -41,6 +41,47 @@ public final class HashCodeFactory
         }
     }
     
+    public HashCodeFactory add( final boolean value )
+    {
+        return new HashCodeFactory( this.result ^ ( value ? 1231 : 1237 ) );
+    }
+    
+    public HashCodeFactory add( final char value )
+    {
+        return new HashCodeFactory( this.result ^ value );
+    }
+    
+    public HashCodeFactory add( final byte value )
+    {
+        return new HashCodeFactory( this.result ^ value );
+    }
+    
+    public HashCodeFactory add( final short value )
+    {
+        return new HashCodeFactory( this.result ^ value );
+    }
+    
+    public HashCodeFactory add( final int value )
+    {
+        return new HashCodeFactory( this.result ^ value );
+    }
+    
+    public HashCodeFactory add( final long value )
+    {
+        return new HashCodeFactory( this.result ^ (int) ( value ^ ( value >>> 32 ) ) );
+    }
+    
+    public HashCodeFactory add( final float value )
+    {
+        return new HashCodeFactory( this.result ^ Float.floatToIntBits( value ) );
+    }
+    
+    public HashCodeFactory add( final double value )
+    {
+        final long v = Double.doubleToLongBits( value );
+        return new HashCodeFactory( this.result ^ (int) ( v ^ ( v >>> 32 ) ) );
+    }
+    
     public int result()
     {
         return this.result;

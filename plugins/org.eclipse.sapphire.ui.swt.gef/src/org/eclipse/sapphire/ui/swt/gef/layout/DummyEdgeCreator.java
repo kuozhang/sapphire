@@ -97,8 +97,6 @@ public class DummyEdgeCreator
 		Edge edge = new Edge(edgePart, sourceNode, targetNode);
 		edge.weight = 1;
 		this.edgeList.add(edge);
-
-		targetNode = sourceNode;
 		return edge;
 	}
 
