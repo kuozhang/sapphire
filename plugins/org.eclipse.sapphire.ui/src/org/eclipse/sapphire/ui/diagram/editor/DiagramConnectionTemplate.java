@@ -121,7 +121,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         
         this.propertyName = this.bindingDef.getProperty().content();
-        this.modelProperty = (ListProperty)ModelUtil.resolve(element, this.propertyName);
+        this.modelProperty = (ListProperty) element.property(this.propertyName).definition();
         
         this.connPartListener = new ConnectionPartListener(); 
         this.templateListeners = new CopyOnWriteArraySet<DiagramConnectionTemplateListener>();
@@ -132,7 +132,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         
         ElementType type = this.modelProperty.getType();
         this.endpoint1Property = type.property(endpt1PropStr);
-        this.endpoint2Property = (ValueProperty) ModelUtil.resolve(type, this.originalEndpoint2Path);
+        this.endpoint2Property = type.property(this.originalEndpoint2Path);
                 
         if (getConnectionType() == ConnectionType.OneToOne)
         {
@@ -169,7 +169,7 @@ public class DiagramConnectionTemplate extends SapphirePart
             else
             {
                 ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
-                PropertyDef connProp = ModelUtil.resolve(listEntryModelElement, head.getPropertyName());
+                PropertyDef connProp = listEntryModelElement.property(head.getPropertyName()).definition();
                 if (!(connProp instanceof ListProperty))
                 {
                     throw new RuntimeException("Expecting " + connProp.name() + " to be a list property");
@@ -468,7 +468,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 }
                 
                 ModelPath.PropertySegment head = (ModelPath.PropertySegment)this.originalEndpoint2Path.head();
-                PropertyDef connProp = ModelUtil.resolve(srcElement, head.getPropertyName());
+                PropertyDef connProp = srcElement.property(head.getPropertyName()).definition();
                 if (!(connProp instanceof ListProperty))
                 {
                     throw new RuntimeException("Expecting " + connProp.name() + " to be a list property");

@@ -94,7 +94,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         ElementList<Element> srcNodeList = getModelElement().property(nodeProperty);
         for (Element srcNodeModel : srcNodeList)
         {
-            PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
+            PropertyDef connProp = srcNodeModel.property(this.propertyName).definition();
             if (connProp instanceof ListProperty)
             {
                 ListProperty connListProperty = (ListProperty)connProp;
@@ -110,7 +110,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     
     public void refreshConnections(Element srcNodeModel)
     {
-    	PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
+    	PropertyDef connProp = srcNodeModel.property(this.propertyName).definition();
     	handleConnectionListChange(srcNodeModel, (ListProperty)connProp);
     }
     
@@ -140,7 +140,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         // check the target node type
         ElementType targetType = targetNode.getLocalModelElement().type();
         
-        PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);        
+        PropertyDef connProp = srcNodeModel.property(this.propertyName).definition();        
         ElementType connType = connProp.getType();
         PropertyDef endpointProp = 
             connType.property(this.bindingDef.getEndpoint2().content().getProperty().content());
@@ -197,7 +197,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             throw new RuntimeException( "Cannot locate the source node element");
         }
         
-        PropertyDef connProp = ModelUtil.resolve(srcNodeModel, this.propertyName);
+        PropertyDef connProp = srcNodeModel.property(this.propertyName).definition();
         Element newEndpoint = null;
         if (connProp instanceof ListProperty)
         {

@@ -170,8 +170,8 @@ public class DiagramConnectionPart
             );
         }        
         
-        this.endpoint1Property = ModelUtil.resolve(this.modelElement, this.endpoint1Path);
-        this.endpoint2Property = ModelUtil.resolve(this.modelElement, this.endpoint2Path);
+        this.endpoint1Property = this.modelElement.property(this.endpoint1Path).definition();
+        this.endpoint2Property = this.modelElement.property(this.endpoint2Path).definition();
         
         // Add model property listener
         this.modelPropertyListener = new FilteredListener<PropertyEvent>()

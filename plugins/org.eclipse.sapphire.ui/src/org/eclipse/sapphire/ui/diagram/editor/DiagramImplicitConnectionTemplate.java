@@ -78,7 +78,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         this.listEntryFunctionMap = new IdentityHashMap<Element, FunctionResult>();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         this.propertyName = this.bindingDef.getProperty().content();
-        this.modelProperty = (ListProperty)ModelUtil.resolve(getModelElement(), this.propertyName);
+        this.modelProperty = (ListProperty)getModelElement().property(this.propertyName).definition();
         
         this.modelElementTypes = new ArrayList<Class<?>>();
         ElementList<IModelElementTypeDef> types = this.bindingDef.getModelElementTypes();
