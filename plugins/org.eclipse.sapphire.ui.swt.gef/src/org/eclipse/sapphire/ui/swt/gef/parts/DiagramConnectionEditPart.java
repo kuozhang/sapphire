@@ -153,7 +153,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 	}
 
 	
-	private class DiagramConnectionLayoutEditPolicy extends LayoutEditPolicy {
+	private static final class DiagramConnectionLayoutEditPolicy extends LayoutEditPolicy {
 
 		@Override
 		protected EditPolicy createChildEditPolicy(EditPart child) {

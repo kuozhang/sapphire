@@ -98,7 +98,7 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected List createSelectionHandles() {
-		List<BendpointHandle> list = new ArrayList<BendpointHandle>();
+		List<BendpointHandle> list;
 		boolean automaticallyBending = isAutomaticallyBending();
 		if (automaticallyBending) {
 			list = createHandlesForAutomaticBendpoints();

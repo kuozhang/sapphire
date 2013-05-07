@@ -56,7 +56,8 @@ public class SideBySideDiagramLayoutPersistenceService extends StandardDiagramLa
 			String fileName = computeLayoutFileName(this.editorInput);
 			if (fileName != null)
 			{
-				XmlResourceStore resourceStore = null;
+				final XmlResourceStore resourceStore;
+				
 				if (this.editorInput instanceof IFileEditorInput)
 				{
 					IFileEditorInput fileInput = (IFileEditorInput)this.editorInput;
@@ -77,6 +78,11 @@ public class SideBySideDiagramLayoutPersistenceService extends StandardDiagramLa
 		    		File layoutFile = new File(localFile.getParentFile(), fileName);
 		    		resourceStore = new XmlResourceStore( new FileResourceStore(layoutFile));
 		    	}
+		    	else
+		    	{
+		    	    throw new IllegalStateException();
+		    	}
+				
 				layoutModel = StandardDiagramLayout.TYPE.instantiate(new RootXmlResource( resourceStore ));
 			}
 		}

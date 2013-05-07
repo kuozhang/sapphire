@@ -28,7 +28,7 @@ import org.eclipse.ui.forms.HyperlinkSettings;
  */
 @SuppressWarnings(value = { "unqualified-field-access", "unchecked", "rawtypes" })
 public class Paragraph {
-    public static final String[] PROTOCOLS = {"http://", "https://", "ftp://"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    private static final String[] PROTOCOLS = {"http://", "https://", "ftp://"};
 
     private Vector segments;
 

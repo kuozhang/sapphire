@@ -45,7 +45,6 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 	private ShapeLayoutDef layout;
 	private DiagramResourceCache resourceCache;
     private boolean selected;
-	private boolean hasFocus;
 	
 	public RectangleFigure(RectanglePresentation rectPresentation, DiagramResourceCache resourceCache,
 			DiagramConfigurationManager configManager)
@@ -157,7 +156,6 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 
 	public void setFocus(boolean b) 
 	{
-		hasFocus = b;
 		repaint();
 	}
 	

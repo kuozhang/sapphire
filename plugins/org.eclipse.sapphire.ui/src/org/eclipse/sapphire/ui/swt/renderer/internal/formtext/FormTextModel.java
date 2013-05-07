@@ -44,7 +44,7 @@ public class FormTextModel {
     /*
      * This class prevents parse errors from being written to standard output
      */
-    public class ParseErrorHandler implements ErrorHandler {
+    private static final class ParseErrorHandler implements ErrorHandler {
 
         public void error(SAXParseException arg0) throws SAXException {
         }

@@ -71,7 +71,6 @@ import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.internal.forms.Messages;
@@ -1268,7 +1267,7 @@ public class SapphireFormText extends Canvas {
                 int linkCount = model.getHyperlinkCount();
                 Object[] children = new Object[linkCount];
                 for (int i = 0; i < linkCount; i++) {
-                    children[i] = new Integer(i);
+                    children[i] = i;
                 }
                 e.children = children;
             }
@@ -1283,11 +1282,11 @@ public class SapphireFormText extends Canvas {
         inSelection = true;
         selData = new SelectionData(e);
         redraw();
-        Form form = FormUtil.getForm(this);
+        /*Form form = FormUtil.getForm(this);
         if (form != null) {
             // selectionText not in use
-            // form.setSelectionText(this);
-        }
+            form.setSelectionText(this);
+        }*/
     }
 
     private void endSelection(MouseEvent e) {

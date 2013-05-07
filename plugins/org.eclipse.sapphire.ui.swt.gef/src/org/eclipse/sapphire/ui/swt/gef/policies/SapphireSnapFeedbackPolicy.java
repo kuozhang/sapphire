@@ -157,7 +157,7 @@ public class SapphireSnapFeedbackPolicy extends GraphicalEditPolicy
 				removeFeedback(guide[offset]);
 				guide[offset] = null;
 			}
-			location[offset] = pos;
+			location[offset] = null;
 			return;
 		}
 

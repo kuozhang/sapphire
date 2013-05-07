@@ -31,8 +31,6 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 public class ContainerShapeFigure extends Shape 
 {
 	private ContainerShapePresentation containerShapePresentation;
-	private DiagramResourceCache resourceCache;
-	private DiagramConfigurationManager configManager;
 	private Element model;
 	private int validationMarkerIndex;
 	private ShapeLayoutDef layout;
@@ -41,8 +39,6 @@ public class ContainerShapeFigure extends Shape
 			DiagramConfigurationManager configManager)
 	{
 		this.containerShapePresentation = containerShapePresentation;
-		this.resourceCache = resourceCache;
-		this.configManager = configManager;
 		this.validationMarkerIndex = this.containerShapePresentation.getValidationMarkerIndex();
 		this.model = this.containerShapePresentation.getPart().getLocalModelElement();
 		this.layout = this.containerShapePresentation.getLayout();
@@ -89,7 +85,7 @@ public class ContainerShapeFigure extends Shape
 			
 	public TextFigure getTextFigure()
 	{
-		List children = this.getChildren();
+		List<?> children = this.getChildren();
 		TextFigure textFigure = null;
 		for (Object figureObj : children)
 		{

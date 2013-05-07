@@ -36,11 +36,8 @@ import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
 
 public class NodeLayoutEditPolicy extends LayoutEditPolicy 
 {
-	private DiagramNodeModel nodeModel;
-	
 	public NodeLayoutEditPolicy(DiagramNodeModel nodeModel)
 	{
-		this.nodeModel = nodeModel;		
 	}
 	
 
@@ -69,7 +66,7 @@ public class NodeLayoutEditPolicy extends LayoutEditPolicy
 		if (request instanceof ChangeBoundsRequest)
 		{
 			ChangeBoundsRequest cbr = (ChangeBoundsRequest)request;
-			List editParts = cbr.getEditParts();
+			List<?> editParts = cbr.getEditParts();
 			boolean moveShapeFactoryPart = false;
 			for (Object obj : editParts)
 			{
