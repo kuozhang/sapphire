@@ -8,7 +8,7 @@
     -->
 	
     <Match>
-        <Class name="~org\.eclipse\.sapphire.*$Resources"/>
+        <Class name="~org\.eclipse\.sapphire.*\$Resources"/>
         <Bug pattern="MS_SHOULD_BE_FINAL"/>
     </Match>
 
@@ -21,12 +21,12 @@
     -->
 		 
     <Match>
-        <Class name="~org\.eclipse\.sapphire\.modeling\.StatusException"/>
+        <Class name="org.eclipse.sapphire.modeling.StatusException"/>
         <Bug pattern="SE_BAD_FIELD"/>
     </Match>
 	
     <Match>
-        <Class name="~org\.eclipse\.sapphire\.modeling\.el\.FunctionException"/>
+        <Class name="org.eclipse.sapphire.modeling.el.FunctionException"/>
         <Bug pattern="SE_BAD_FIELD"/>
     </Match>
 	
@@ -38,7 +38,7 @@
     -->
 
     <Match>
-        <Class name="~org\.eclipse\.sapphire\.test\.SapphireTestCase"/>
+        <Class name="org.eclipse.sapphire.tests.SapphireTestCase"/>
         <Bug pattern="UI_INHERITANCE_UNSAFE_GETRESOURCE"/>
     </Match>
 	
