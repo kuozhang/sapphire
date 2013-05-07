@@ -1,2 +1,46 @@
 <FindBugsFilter>
+    
+	<!--
+	    A mutable static field could be changed by malicious code or by accident from another package. The field could be made final
+		to avoid this vulnerability.
+		
+		IGNORE: NLS resource loading requires this pattern.
+    --->
+	
+    <Match>
+        <Class name="~org\.eclipse\.sapphire.*$Resources"/>
+        <Bug pattern="MS_SHOULD_BE_FINAL"/>
+    </Match>
+
+    <!--
+	    This Serializable class defines a non-primitive instance field which is neither transient, Serializable, or java.lang.Object,
+		and does not appear to implement the Externalizable interface or the readObject() and writeObject() methods.  Objects of this
+		class will not be deserialized correctly if a non-Serializable object is stored in this field.
+		
+		IGNORE: These exceptions aren't used with Java serialization.
+    -->
+		 
+    <Match>
+        <Class name="~org\.eclipse\.sapphire.\modeling\.StatusException"/>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
+	
+    <Match>
+        <Class name="~org\.eclipse\.sapphire.\modeling\.el\.FunctionException"/>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
+	
+    <!--
+		Calling this.getClass().getResource(...) could give results other than expected if this class is extended by a class in
+		another package.
+		
+		IGNORE: SapphireTestCase.loadResourceAsStream( String ) method is specifically written to take advantage of this effect.
+    --->
+
+    <Match>
+        <Class name="~org\.eclipse\.sapphire.\test\.SapphireTestCase"/>
+        <Bug pattern="UI_INHERITANCE_UNSAFE_GETRESOURCE"/>
+    </Match>
+	
+	
 </FindBugsFilter>
