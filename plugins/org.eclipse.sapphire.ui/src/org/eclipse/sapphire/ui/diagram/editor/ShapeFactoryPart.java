@@ -30,6 +30,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryCaseDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
+import org.eclipse.sapphire.util.CollectionsUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -312,9 +313,9 @@ public class ShapeFactoryPart extends ShapePart
 			oldList.add(shapePart.getLocalModelElement());
 		}
     	
-    	List<Element> deletedShapes = ListUtil.ListDiff(oldList, newList);
-    	List<Element> newShapes = ListUtil.ListDiff(newList, oldList);
-    	if (deletedShapes.isEmpty() && newShapes.isEmpty() && ListUtil.ListDiffers(oldList, newList))
+    	List<Element> deletedShapes = CollectionsUtil.removedBasedOnEntryIdentity(oldList, newList);
+    	List<Element> newShapes = CollectionsUtil.removedBasedOnEntryIdentity(newList, oldList);
+    	if (deletedShapes.isEmpty() && newShapes.isEmpty())
     	{
     		// List has been re-ordered
     		List<ShapePart> newChildren = new ArrayList<ShapePart>();

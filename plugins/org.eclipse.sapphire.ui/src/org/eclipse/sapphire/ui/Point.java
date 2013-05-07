@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.sapphire.util.EqualsFactory;
 import org.eclipse.sapphire.util.HashCodeFactory;
 
-
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */

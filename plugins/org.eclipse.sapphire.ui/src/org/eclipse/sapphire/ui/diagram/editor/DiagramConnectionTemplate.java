@@ -46,6 +46,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
+import org.eclipse.sapphire.util.CollectionsUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -570,8 +571,8 @@ public class DiagramConnectionTemplate extends SapphirePart
         {
             oldList.add(connPart.getLocalModelElement());
         }
-        List<Element> deletedConns = ListUtil.ListDiff(oldList, newList);
-        List<Element> newConns = ListUtil.ListDiff(newList, oldList);
+        List<Element> deletedConns = CollectionsUtil.removedBasedOnEntryIdentity(oldList, newList);
+        List<Element> newConns = CollectionsUtil.removedBasedOnEntryIdentity(newList, oldList);
         
         // Handle deleted connections
         for (Element deletedConn : deletedConns)
@@ -620,8 +621,8 @@ public class DiagramConnectionTemplate extends SapphirePart
             {
                 oldList.add(it.next());
             }
-            List<Element> deletedConnParents = ListUtil.ListDiff(oldList, newList);
-            List<Element> newConnParents = ListUtil.ListDiff(newList, oldList);
+            List<Element> deletedConnParents = CollectionsUtil.removedBasedOnEntryIdentity(oldList, newList);
+            List<Element> newConnParents = CollectionsUtil.removedBasedOnEntryIdentity(newList, oldList);
             
             // connection parents are deleted and we need to dispose any connections associated with them
             List<DiagramConnectionPart> connPartsCopy = new ArrayList<DiagramConnectionPart>(connParts.size());

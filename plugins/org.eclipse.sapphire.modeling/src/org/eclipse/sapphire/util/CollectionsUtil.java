@@ -92,5 +92,37 @@ public final class CollectionsUtil
 
         return false;
     }
+    
+    public static boolean containsBasedOnEntryIdentity( final List<?> list, final Object object )
+    {
+        for( Object obj : list )
+        {
+            if( obj == object )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Computes the list of items in A that aren't in B.
+     */
+    
+    public static <T> List<T> removedBasedOnEntryIdentity( final List<? extends T> a, final List<? extends T> b )
+    {
+        final ListFactory<T> result = ListFactory.start();
+        
+        for( T obj : a )
+        {
+            if( ! containsBasedOnEntryIdentity( b, obj ) )
+            {
+                result.add( obj );
+            }
+        }
+     
+        return result.result();
+    }
 
 }

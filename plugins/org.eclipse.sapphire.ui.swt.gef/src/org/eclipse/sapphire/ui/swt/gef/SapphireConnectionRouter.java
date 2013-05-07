@@ -36,7 +36,7 @@ public class SapphireConnectionRouter
 					new HashMap<DiagramConnectionModel, Integer>();
 	private int separation = 30;
 	
-	private class HashKey 
+	private static final class HashKey 
 	{
 		private DiagramNodeModel sourceNode, targetNode;
 
@@ -177,11 +177,11 @@ public class SapphireConnectionRouter
 
 		if (index % 2 == 0) {
 			bendPoint = new Point(
-					midPoint.x + (index / 2) * (-1 * ySeparation), midPoint.y
-							+ (index / 2) * xSeparation);
+					midPoint.x + ((double)index / 2) * (-1 * ySeparation), midPoint.y
+							+ ((double)index / 2) * xSeparation);
 		} else {
-			bendPoint = new Point(midPoint.x + (index / 2) * ySeparation,
-					midPoint.y + (index / 2) * (-1 * xSeparation));
+			bendPoint = new Point(midPoint.x + ((double)index / 2) * ySeparation,
+					midPoint.y + ((double)index / 2) * (-1 * xSeparation));
 		}
 		if (!bendPoint.equals(midPoint)) {
 			return bendPoint;

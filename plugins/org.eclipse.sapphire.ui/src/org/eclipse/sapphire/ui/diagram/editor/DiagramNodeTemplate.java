@@ -25,10 +25,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.ValueProperty;
@@ -42,6 +42,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.util.CollectionsUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -347,7 +348,6 @@ public final class DiagramNodeTemplate extends SapphirePart
     	
     	// filter the list property with specified element type
     	List<Element> newList = new ArrayList<Element>();
-		newList = new ArrayList<Element>();    	
     	for (Element ele : tempList)
     	{
     		if (this.modelElementType == null)
@@ -370,8 +370,8 @@ public final class DiagramNodeTemplate extends SapphirePart
 			oldList.add(nodePart.getLocalModelElement());
 		}
     	
-    	List<Element> deletedNodes = ListUtil.ListDiff(oldList, newList);
-    	List<Element> newNodes = ListUtil.ListDiff(newList, oldList);
+    	List<Element> deletedNodes = CollectionsUtil.removedBasedOnEntryIdentity(oldList, newList);
+    	List<Element> newNodes = CollectionsUtil.removedBasedOnEntryIdentity(newList, oldList);
 		for (Element deletedNode : deletedNodes)
 		{
 			DiagramNodePart nodePart = getNodePart(deletedNode);

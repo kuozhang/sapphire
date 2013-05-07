@@ -47,13 +47,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ImageData;
@@ -646,14 +646,10 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 
                 image = cache.image( imageData );
             }
-            else if( this.elementImageService != null )
+            else
             {
                 final Status st = this.element.property( getMemberProperty() ).validation();
                 image = cache.image( this.elementImageService.image(), st.severity() );
-            }
-            else
-            {
-                image = null;
             }
             
             return image;

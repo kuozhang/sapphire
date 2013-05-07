@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.util.EqualsFactory;
+import org.eclipse.sapphire.util.HashCodeFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -69,5 +71,33 @@ public class Rectangle extends Point
 	{
 		return y >= getY() && y < getY() + getHeight() && x >= getX() && x < getX() + getWidth();
 	}
+	
+    @Override
+    public boolean equals( final Object obj )
+    {
+        if( obj instanceof Rectangle && super.equals( obj ) )
+        {
+            final Rectangle r = (Rectangle) obj;
+            
+            return EqualsFactory
+                    .start()
+                    .add( this.width, r.width )
+                    .add( this.height, r.height )
+                    .result();
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeFactory
+                .start()
+                .add( super.hashCode() )
+                .add( this.width )
+                .add( this.height )
+                .result();
+    }
     
 }

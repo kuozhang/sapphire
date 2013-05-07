@@ -250,8 +250,7 @@ public final class SapphireEditorContentOutline
         }
     }
     
-    public class EmptyOutlinePage
-        implements IContentOutlinePage
+    private static final class EmptyOutlinePage implements IContentOutlinePage
     {
         private Composite control;
         
@@ -362,7 +361,7 @@ public final class SapphireEditorContentOutline
         }
     }
     
-    public class SubPageSite implements IPageSite, INestable {
+    private static final class SubPageSite implements IPageSite, INestable {
 
         /**
          * The list of menu extender for each registered menu.

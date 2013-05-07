@@ -348,8 +348,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		    @Override
 			public void handleGridStateChangeEvent(final DiagramPageEvent event)
 			{
-				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, new Boolean(part.isGridVisible()));
-				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, new Boolean(part.isGridVisible()));
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, part.isGridVisible());
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, part.isGridVisible());
 				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING, 
 						new Dimension(part.getGridUnit(), part.getVerticalGridUnit()));
 				markEditorDirty();
