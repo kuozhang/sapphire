@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 
 public final class DefinitionLoader
 {
-    private static Map<URL,SoftReference<DefinitionLoader>> loaders = new HashMap<URL,SoftReference<DefinitionLoader>>();
+    private static Map<String,SoftReference<DefinitionLoader>> loaders = new HashMap<String,SoftReference<DefinitionLoader>>();
     
     private final Context context;
     private ISapphireUiDef sdef;
@@ -107,9 +107,11 @@ public final class DefinitionLoader
             throw new IllegalArgumentException();
         }
         
+        final String urlString = url.toString();
+        
         synchronized( loaders )
         {
-            for( Iterator<Map.Entry<URL,SoftReference<DefinitionLoader>>> itr = loaders.entrySet().iterator(); itr.hasNext(); )
+            for( Iterator<Map.Entry<String,SoftReference<DefinitionLoader>>> itr = loaders.entrySet().iterator(); itr.hasNext(); )
             {
                 if( itr.next().getValue().get() == null )
                 {
@@ -117,7 +119,7 @@ public final class DefinitionLoader
                 }
             }
             
-            SoftReference<DefinitionLoader> ref = loaders.get( url );
+            SoftReference<DefinitionLoader> ref = loaders.get( urlString );
             
             if( ref != null )
             {
@@ -161,7 +163,7 @@ public final class DefinitionLoader
         {
             synchronized( loaders )
             {
-                loaders.put( url, new SoftReference<DefinitionLoader>( this ) );
+                loaders.put( urlString, new SoftReference<DefinitionLoader>( this ) );
             }
         }
         
