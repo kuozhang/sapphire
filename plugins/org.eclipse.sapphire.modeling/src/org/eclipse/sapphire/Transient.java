@@ -124,7 +124,7 @@ public final class Transient<T> extends Property
             throw new IllegalArgumentException();
         }
         
-        final Property p = source.property( definition() );
+        final Property p = source.property( (PropertyDef) definition() );
         
         if( p instanceof Transient<?> )
         {

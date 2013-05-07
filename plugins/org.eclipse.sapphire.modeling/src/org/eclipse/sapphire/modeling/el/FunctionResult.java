@@ -410,27 +410,27 @@ public abstract class FunctionResult
                     }
                     else if( type == Byte.class )
                     {
-                        return type.cast( new Byte( ( (Number) obj ).byteValue() ) );
+                        return type.cast( Byte.valueOf( ( (Number) obj ).byteValue() ) );
                     }
                     else if( type == Short.class )
                     {
-                        return type.cast( new Short( ( (Number) obj ).shortValue() ) );
+                        return type.cast( Short.valueOf( ( (Number) obj ).shortValue() ) );
                     }
                     else if( type == Integer.class )
                     {
-                        return type.cast( new Integer( ( (Number) obj ).intValue() ) );
+                        return type.cast( Integer.valueOf( ( (Number) obj ).intValue() ) );
                     }
                     else if( type == Long.class )
                     {
-                        return type.cast( new Long( ( (Number) obj ).longValue() ) );
+                        return type.cast( Long.valueOf( ( (Number) obj ).longValue() ) );
                     }
                     else if( type == Float.class )
                     {
-                        return type.cast( new Float( ( (Number) obj ).floatValue() ) );
+                        return type.cast( Float.valueOf( ( (Number) obj ).floatValue() ) );
                     }
                     else if( type == Double.class )
                     {
-                        return type.cast( new Double( ( (Number) obj ).doubleValue() ) );
+                        return type.cast( Double.valueOf( ( (Number) obj ).doubleValue() ) );
                     }
                 }
                 else if( obj instanceof String )
@@ -682,7 +682,7 @@ public abstract class FunctionResult
         {
             final Boolean x = cast( a, Boolean.class );
             final Boolean y = cast( b, Boolean.class );
-            return ( x == y );
+            return x.equals( y );
         }
         else if( a instanceof Enum )
         {

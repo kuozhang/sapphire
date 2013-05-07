@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -21,9 +18,6 @@ import java.util.List;
 public abstract class PropertyBinding
 {
     private Property property;
-    private List<String> params = Collections.emptyList();
-    
-    
 
     public void init( final Property property )
     {

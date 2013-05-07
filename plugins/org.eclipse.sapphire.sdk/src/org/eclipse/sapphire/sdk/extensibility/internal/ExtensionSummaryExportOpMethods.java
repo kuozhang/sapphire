@@ -757,11 +757,7 @@ public final class ExtensionSummaryExportOpMethods
     private static int comp( final String x,
                              final String y )
     {
-        if( x == y )
-        {
-            return 0;
-        }
-        else if( x == null )
+        if( x == null )
         {
             return -1;
         }

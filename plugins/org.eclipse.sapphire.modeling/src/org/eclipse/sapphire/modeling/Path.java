@@ -65,11 +65,11 @@ public final class Path
     /** Constant root path string (<code>"/"</code>). */
     private static final String ROOT_STRING = "/"; //$NON-NLS-1$
 
-    /** Constant value containing the root path with no device. */
-    public static final Path ROOT = new Path(ROOT_STRING);
-
     /** Constant value indicating if the current platform is Windows */
     private static final boolean WINDOWS = java.io.File.separatorChar == '\\';
+
+    /** Constant value containing the root path with no device. */
+    public static final Path ROOT = new Path(ROOT_STRING);
 
     /** The device id string. May be null if there is no device. */
     private String device = null;

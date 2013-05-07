@@ -384,7 +384,7 @@ public final class ElementHandle<T extends Element> extends Property
             throw new UnsupportedOperationException();
         }
         
-        final Property p = source.property( definition() );
+        final Property p = source.property( (PropertyDef) definition() );
         
         if( p instanceof ElementHandle<?> )
         {
