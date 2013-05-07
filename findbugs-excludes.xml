@@ -5,7 +5,7 @@
 		to avoid this vulnerability.
 		
 		IGNORE: NLS resource loading requires this pattern.
-    --->
+    -->
 	
     <Match>
         <Class name="~org\.eclipse\.sapphire.*$Resources"/>
@@ -35,7 +35,7 @@
 		another package.
 		
 		IGNORE: SapphireTestCase.loadResourceAsStream( String ) method is specifically written to take advantage of this effect.
-    --->
+    -->
 
     <Match>
         <Class name="~org\.eclipse\.sapphire.\test\.SapphireTestCase"/>

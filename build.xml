@@ -750,8 +750,8 @@ Fragment-Host: @{Bundle}
             <pathconvert property=".aux.xml" pathsep="&lt;/AuxClasspathEntry&gt;&#xA;&lt;AuxClasspathEntry&gt;">
               <path>
                 <fileset dir="${.target.platform}/plugins">
-				  <include name="**/*.jar"/>
-				</fileset>
+                  <include name="**/*.jar"/>
+                </fileset>
               </path>
             </pathconvert>
           </with-target-platform>
@@ -768,13 +768,13 @@ Fragment-Host: @{Bundle}
                 <include name="org.eclipse.sapphire*.jar"/>
                 <exclude name="*.source_*.jar"/>
                 <exclude name="*.nl_re_*.jar"/>
-			  </fileset>
+              </fileset>
             </path>
           </pathconvert>
 
           <echo file="${findbugs.output}/project.xml">
             &lt;BugCollection>
-              &lt;Project filename="findbugs.project" projectName="OEPE">
+              &lt;Project filename="findbugs.project" projectName="Sapphire">
                 &lt;Jar&gt;${.jars.xml}&lt;/Jar&gt;
                 &lt;AuxClasspathEntry&gt;${.aux.xml}&lt;/AuxClasspathEntry&gt;
                 &lt;SrcDir&gt;${.source.xml}&lt;/SrcDir&gt;
@@ -1280,7 +1280,7 @@ Fragment-Host: @{Bundle}
     </sequential>
   </macrodef>
   
-	
+    
   <macrodef name="prune-downloads-from-eclipse">
     <sequential>
     
@@ -1296,14 +1296,14 @@ Fragment-Host: @{Bundle}
             <path>
               <fileset dir="${downloads}">
                 <include name="*"/>
-          	    <exclude name="*.properties"/>
+                  <exclude name="*.properties"/>
               </fileset>
             </path>
             <sequential>
           
               <basename file="@{dfe.file}" property=".dfe.file.name"/>
               <property name=".dfe.file.metadata" value="${downloads}/${.dfe.file.name}.properties"/>
-        	
+            
               <if>
                 <available file="${.dfe.file.metadata}"/>
                 <then>
@@ -1312,46 +1312,46 @@ Fragment-Host: @{Bundle}
               </if>
               
               <if>
-        	    <isset property=".dfe.metadata.LastUsed"/>
+                <isset property=".dfe.metadata.LastUsed"/>
                 <then>
-            	  
+                  
                   <if>
-              	    <scriptcondition language="javascript">
+                      <scriptcondition language="javascript">
                       <![CDATA[
-              		    var dateParts = project.getProperty( ".dfe.metadata.LastUsed" ).split( "-" );
-              		    
-              		    if( dateParts.length == 3 )
-              		    {
-              		        var lastUsed = new Date( dateParts[ 0 ], dateParts[ 1 ] - 1, dateParts[ 2 ] );
-              		        var today = new Date();
-              		        
-              		        if( today.getTime() - lastUsed.getTime() < ( 30 * 24 * 60 * 60 * 1000 ) )
-              		        {
-              		            self.value = false;
-              		        }
-              		        else
-              		        {
-              		            self.value = true;
+                          var dateParts = project.getProperty( ".dfe.metadata.LastUsed" ).split( "-" );
+                          
+                          if( dateParts.length == 3 )
+                          {
+                              var lastUsed = new Date( dateParts[ 0 ], dateParts[ 1 ] - 1, dateParts[ 2 ] );
+                              var today = new Date();
+                              
+                              if( today.getTime() - lastUsed.getTime() < ( 30 * 24 * 60 * 60 * 1000 ) )
+                              {
+                                  self.value = false;
+                              }
+                              else
+                              {
+                                  self.value = true;
                             }
-              		    }
-              		    else
-              		    {
-              		        self.value = false;
-              	        }
+                          }
+                          else
+                          {
+                              self.value = false;
+                          }
                       ]]>
-              	    </scriptcondition>
-              	    <then>
-              	      <delete file="@{dfe.file}"/>
-              	      <delete file="${.dfe.file.metadata}"/>
-              	    </then>
+                      </scriptcondition>
+                      <then>
+                        <delete file="@{dfe.file}"/>
+                        <delete file="${.dfe.file.metadata}"/>
+                      </then>
                   </if>
-            	  
+                  
                 </then>
                 <else>
                   <propertyfile file="${.dfe.file.metadata}">
                     <entry key="LastUsed" type="date" value="now" pattern="yyyy-MM-dd"/>
                   </propertyfile>
-        	    </else>
+                </else>
               </if>
               
               <var name=".dfe.file.name" unset="true"/>
@@ -1360,7 +1360,7 @@ Fragment-Host: @{Bundle}
               
             </sequential>
           </for>
-    	  
+          
         </then>
       </if>
       
