@@ -182,7 +182,7 @@ public class SapphireSnapFeedbackPolicy extends GraphicalEditPolicy
 			fig.translateToRelative(loc);
 			position = offset % 2 == 0 ? (int) Math.round(loc.preciseX()) : (int) Math.round(loc.preciseY());
 			Rectangle figBounds = getFeedbackLayer().getBounds().getCopy();
-			if ((offset % 2) == 1) {
+			if ((offset % 2) != 0) {
 				figBounds.height = 2;
 				figBounds.y = position;
 			} else {
@@ -197,7 +197,7 @@ public class SapphireSnapFeedbackPolicy extends GraphicalEditPolicy
 			IFigure fig = guide[offset];
 			Rectangle figBounds = fig.getBounds().getCopy();
 			Rectangle feedbackBounds = getFeedbackLayer().getBounds();
-			if ((offset % 2) == 1) {
+			if ((offset % 2) != 0) {
 				figBounds.x = feedbackBounds.x;
 				figBounds.width = feedbackBounds.width;
 			} else {

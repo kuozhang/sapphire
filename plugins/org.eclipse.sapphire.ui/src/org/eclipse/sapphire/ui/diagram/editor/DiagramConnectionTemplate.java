@@ -421,14 +421,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public void setSerializedEndpoint2(Element connModelElement, String endpoint2Value)
     {
-        if (getConnectionType() == ConnectionType.OneToOne)
-        {
-            setModelProperty(connModelElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
-        }
-        else
-        {
-        	setModelProperty(connModelElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);            
-        }            	
+    	setModelProperty(connModelElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
     }
     
     public DiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 

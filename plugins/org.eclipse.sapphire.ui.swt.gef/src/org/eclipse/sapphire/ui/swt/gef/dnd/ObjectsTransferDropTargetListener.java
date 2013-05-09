@@ -70,7 +70,7 @@ public class ObjectsTransferDropTargetListener extends AbstractTransferDropTarge
 			getCurrentEvent().detail = DND.DROP_COPY;
 	}
 
-	private class MyCreationFactory implements CreationFactory {
+	private static class MyCreationFactory implements CreationFactory {
 
 		public MyCreationFactory() {
 		}

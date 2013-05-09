@@ -53,9 +53,8 @@ public class ShapeFactoryLayoutEditPolicy extends SequenceLayoutEditPolicy
 		ShapeFactoryPart factoryPart = (ShapeFactoryPart)toMovePart.getParentPart();
 		List<ShapePart> childShapes = factoryPart.getChildren();
 		
-		int oldIndex = childShapes.indexOf(toMovePart);
 		int newIndex = childShapes.indexOf(afterShapePart);
-		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, oldIndex, newIndex);
+		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, newIndex);
 	}
 
 	@Override

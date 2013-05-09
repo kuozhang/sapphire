@@ -189,7 +189,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 				performDirectEdit();
 			}
 		}
-		else if (request.getType().equals(REQ_OPEN))
+		else if (request.getType().equals(REQ_OPEN) && (request instanceof SelectionRequest))
 		{
 			SelectionRequest selRequest = (SelectionRequest)request;
 			Point pt = selRequest.getLocation();

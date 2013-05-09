@@ -84,7 +84,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 		List<DiagramPaletteDrawer> drawers = new ArrayList<DiagramPaletteDrawer>();
 		Map<String, List<ToolEntry>> entries = new HashMap<String, List<ToolEntry>>();
 		ElementList<IDiagramPaletteCompartmentDef> compartmentDefs = diagramPageDef.getPaletteCompartments();
-		PaletteContainer defaultContainer = null;
 		if (compartmentDefs.size() == 0)
 		{
 			String label = LabelTransformer.transform(DiagramPaletteCompartmentConstants.CONNECTIONS_COMPARTMENT_LABEL, 
@@ -96,7 +95,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 					CapitalizationType.TITLE_STYLE, true);			
 			DiagramPaletteDrawer nodesDrawer = new DiagramPaletteDrawer(label2, DiagramPaletteCompartmentConstants.NODES_COMPARTMENT_ID);
 			drawers.add(nodesDrawer);
-			defaultContainer = connectionDrawer;
 		}
 		else
 		{
@@ -107,9 +105,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 				DiagramPaletteDrawer drawer = new DiagramPaletteDrawer(label, compartmentDef.getId().content());
 				drawers.add(drawer);
 				
-				if (defaultContainer == null) {
-					defaultContainer = drawer;
-				}
 			}
 		}
 		

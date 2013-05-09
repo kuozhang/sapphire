@@ -358,7 +358,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			@Override
 			public void handleGuideStateChangeEvent(final DiagramPageEvent event)
 			{
-				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, new Boolean(part.isShowGuides()));
+				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, Boolean.valueOf(part.isShowGuides()));
 				markEditorDirty();
 			}
 

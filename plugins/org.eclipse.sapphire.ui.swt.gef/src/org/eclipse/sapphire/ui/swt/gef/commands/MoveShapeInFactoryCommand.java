@@ -23,15 +23,12 @@ public class MoveShapeInFactoryCommand extends Command
 {
 	private ShapeFactoryPart shapeFactory;
 	private ShapePart shapePart;
-	private int oldIndex;
 	private int newIndex;
 	
-	public MoveShapeInFactoryCommand(ShapeFactoryPart shapeFactory, ShapePart shapePart, 
-			int oldIndex, int newIndex)
+	public MoveShapeInFactoryCommand(ShapeFactoryPart shapeFactory, ShapePart shapePart, int newIndex)
 	{
 		this.shapeFactory = shapeFactory;
 		this.shapePart = shapePart;
-		this.oldIndex = oldIndex;
 		this.newIndex = newIndex;
 	}
 	

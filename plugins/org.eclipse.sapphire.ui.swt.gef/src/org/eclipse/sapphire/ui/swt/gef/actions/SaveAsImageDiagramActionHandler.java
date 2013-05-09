@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.ui.swt.gef.actions;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.SWTGraphics;
@@ -101,28 +102,44 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 
             Image image = new Image( Display.getDefault(), rectangle.width, rectangle.height );
 
-            GC gc = new GC( image );
-            SWTGraphics graphics = new SWTGraphics( gc );
-            figure.paint( graphics );
 
-            ImageLoader loader = new ImageLoader();
-            loader.data = new ImageData[] { image.getImageData() };
-
+            FileOutputStream output = null;
+            GC gc = null;
+            SWTGraphics graphics = null;
             try
             {
-                final FileOutputStream output = new FileOutputStream( filePath );
+                gc = new GC( image );
+                graphics = new SWTGraphics( gc );
+                figure.paint( graphics );
+
+                ImageLoader loader = new ImageLoader();
+                loader.data = new ImageData[] { image.getImageData() };
+                
+                output = new FileOutputStream( filePath );
 
                 loader.save( output, SWT.IMAGE_PNG );
-                output.flush();
-                output.close();
 
                 image.dispose();
-                gc.dispose();
-                graphics.dispose();
             }
             catch( Exception e )
             {
                 LoggingService.log( e );
+            }
+            finally
+            {
+            	if (output != null)
+            	{
+            		try
+            		{
+            			output.flush();
+            			output.close();
+            		}
+            		catch (IOException e) {}
+            		if (gc != null)
+            			gc.dispose();
+            		if (graphics != null)
+            			graphics.dispose();            		
+            	}
             }
         }
 
