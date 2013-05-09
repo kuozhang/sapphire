@@ -554,11 +554,13 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
 
-			// Shenxue: include the margins in the available area. Otherwise the direct edit box could be
-			// too narrow for text that doesn't expand. It doesn't have any extra space around the text in 
-			// direct edit mode even when there are margins around the text.
-			availableBounds = new Rectangle(x, y, clientArea.width, 
-					availableBoundHeight + marginInset.top + marginInset.bottom);
+//			// Shenxue: include the margins in the available area. Otherwise the direct edit box could be
+//			// too narrow for text that doesn't expand. It doesn't have any extra space around the text in 
+//			// direct edit mode even when there are margins around the text.
+//			availableBounds = new Rectangle(x, y, clientArea.width, 
+//					availableBoundHeight + marginInset.top + marginInset.bottom);
+			availableBounds = new Rectangle(x + marginInset.left, y + marginInset.top, 
+					clientArea.width - marginInset.left - marginInset.right, availableBoundHeight);
 			
 			if (getMinorExpand(constraint)) {
 				if (child instanceof RectangleFigure) {

@@ -33,6 +33,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
+import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -42,6 +43,7 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
@@ -169,8 +171,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
 			if (textFigure != null)
 			{
-				NodeDirectEditManager manager = 
-						new NodeDirectEditManager(this, textPart, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+				DirectEditManager manager = DirectEditorManagerFactory.createDirectEditorManager(this, textPart, 
+						new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
 				manager.show();
 			}
 		}

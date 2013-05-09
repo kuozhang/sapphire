@@ -21,10 +21,12 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
+import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
@@ -111,8 +113,8 @@ public class ContainerShapeEditPart extends ShapeEditPart
 			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
 			if (textFigure != null)
 			{
-				NodeDirectEditManager manager = 
-						new NodeDirectEditManager(this, textPart, new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
+				DirectEditManager manager = DirectEditorManagerFactory.createDirectEditorManager(this, textPart, 
+						new NodeCellEditorLocator(getConfigurationManager(), textFigure), textFigure);
 				manager.show();
 			}
 		}

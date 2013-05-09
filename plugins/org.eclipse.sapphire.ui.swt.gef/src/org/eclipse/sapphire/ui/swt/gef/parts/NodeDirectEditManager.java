@@ -32,7 +32,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -56,13 +55,17 @@ public class NodeDirectEditManager extends DirectEditManager {
 	};
 	private Label label;
 	private SapphireDiagramEditor diagramEditor;
-	private TextPart textPart;
+	protected TextPart textPart;
+	protected Value<?> property;
 
 	public NodeDirectEditManager(GraphicalEditPart source, TextPart textPart, CellEditorLocator locator, Label label) {
 		super(source, null, locator);
 		this.textPart = textPart;
 		this.label = label; 
 		this.diagramEditor = ((ShapeEditPart)source).getConfigurationManager().getDiagramEditor();
+		this.property = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
+				this.textPart.getContentFunction());
+		
 	}
 
 	/**
@@ -97,7 +100,9 @@ public class NodeDirectEditManager extends DirectEditManager {
 		super.show();
 	}
 	
-	protected CellEditor createCellEditorOn(Composite composite) {
+	@Override
+	protected CellEditor createCellEditorOn(Composite composite) 
+	{
 		return new TextCellEditor(composite, SWT.CENTER);
 	}
 
@@ -108,16 +113,30 @@ public class NodeDirectEditManager extends DirectEditManager {
 		}
 	}
 
+	@Override
 	protected void initCellEditor() {
 		// update text
-		Value<?> prop = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
-							this.textPart.getContentFunction());
-		String initValue = prop.text();
+		String initValue = this.property.text();
 		if (initValue == null)
 		{
 			initValue = this.textPart.getContent();
 		}
 		getCellEditor().setValue(initValue);
+		initCellEditorPresentation();
+	}
+
+	@Override
+	protected DirectEditRequest createDirectEditRequest() 
+	{
+		DirectEditRequest req = super.createDirectEditRequest();
+		Map<String, TextPart> extendedData = new HashMap<String, TextPart>();
+		extendedData.put(DiagramNodeEditPart.DIRECT_EDIT_REQUEST_PARAM, this.textPart);
+		req.setExtendedData(extendedData);
+		return req;
+	}
+
+	protected void initCellEditorPresentation()
+	{
 		// Shenxue: set text to "" doesn't work since it messes the size calculation in parent's
 		// layout manager. It'd shrink the label figure size to 0. Use figure's visibility instead.
 		//label.setText("");
@@ -142,19 +161,9 @@ public class NodeDirectEditManager extends DirectEditManager {
 		saveCurrentActions(actionBars);
 		actionHandler = new CellEditorActionHandler(actionBars);
 		actionHandler.addCellEditor(getCellEditor());
-		actionBars.updateActionBars();
+		actionBars.updateActionBars();		
 	}
-
-	@Override
-	protected DirectEditRequest createDirectEditRequest() 
-	{
-		DirectEditRequest req = super.createDirectEditRequest();
-		Map<String, TextPart> extendedData = new HashMap<String, TextPart>();
-		extendedData.put(DiagramNodeEditPart.DIRECT_EDIT_REQUEST_PARAM, this.textPart);
-		req.setExtendedData(extendedData);
-		return req;
-	}
-
+	
 	private void restoreSavedActions(IActionBars actionBars) {
 		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);
@@ -183,18 +192,18 @@ public class NodeDirectEditManager extends DirectEditManager {
 	private void updateScaledFont(double zoom) {
 		if (cachedZoom == zoom)
 			return;
-
-		Text text = (Text) getCellEditor().getControl();
 		Font font = this.label.getFont();
 
 		disposeScaledFont();
 		cachedZoom = zoom;
-		if (zoom == 1.0)
-			text.setFont(font);
+		if (zoom == 1.0) {
+			getCellEditor().getControl().setFont(font);
+		}
 		else {
 			FontData fd = font.getFontData()[0];
 			fd.setHeight((int) (fd.getHeight() * zoom));
-			text.setFont(scaledFont = new Font(null, fd));
+			this.scaledFont = new Font(null, fd);
+			getCellEditor().getControl().setFont(this.scaledFont);
 		}
 	}
 

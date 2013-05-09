@@ -14,9 +14,12 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
 
@@ -36,10 +39,23 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 	}
 
 	public void relocate(CellEditor celleditor) {
-		double zoom = manager.getDiagramEditor().getZoomLevel();
 		Rectangle labelRect = textFigure.getClientArea();
 		Rectangle parentRect = textFigure.getAvailableArea();
-
+		double zoom = manager.getDiagramEditor().getZoomLevel();
+		if (celleditor instanceof ComboBoxCellEditor)
+		{
+			GC gc = new GC(((ComboBoxCellEditor)celleditor).getControl());
+			int charHeight = gc.getFontMetrics().getHeight();
+			gc.dispose();
+			
+			CellEditor.LayoutData layoutData = celleditor.getLayoutData();
+			CCombo combo = (CCombo)celleditor.getControl();
+			textFigure.translateToAbsolute(labelRect);
+			combo.setBounds(labelRect.x, labelRect.y, layoutData.minimumWidth, charHeight);
+			return;
+		}
+		
+		
 		labelRect.x = parentRect.x;
 		labelRect.width = parentRect.width;
 		// zoom
@@ -94,6 +110,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		textFigure.translateToAbsolute(labelRect);
 		
 		text.setBounds(labelRect.x + horizontalOffet, labelRect.y + verticalOffet, size.x, size.y);
+		
 	}
 	
 	protected TextFigure getLabel() {
