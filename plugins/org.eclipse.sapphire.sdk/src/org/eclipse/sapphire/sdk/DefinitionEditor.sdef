@@ -1711,6 +1711,7 @@
             </section>
             <image>${ Image() }</image>
             <node-include>DiagramShapeLayoutConstraintNode</node-include>
+            <node-include>ActionsOverallNode</node-include>
             <section>
                 <label>presentation</label>
                 <content>
@@ -1754,6 +1755,7 @@
             </section>
             <image>${ Image() }</image>
             <node-include>DiagramShapeLayoutConstraintNode</node-include>
+            <node-include>ActionsOverallNode</node-include>
         </case>
         <case>
             <model-element-type>ValidationMarkerDef</model-element-type>
@@ -1907,6 +1909,7 @@
                 </node-include>
                 <image>${ &quot;Content.png&quot; }</image>
             </node>
+            <node-include>ActionsOverallNode</node-include>
             <image>${ Image() }</image>
         </case>
         <case>

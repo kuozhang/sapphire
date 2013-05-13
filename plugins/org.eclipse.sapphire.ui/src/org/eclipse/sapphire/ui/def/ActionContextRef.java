@@ -60,6 +60,8 @@ public interface ActionContextRef extends Element
             SapphireActionSystem.CONTEXT_DIAGRAM,
             SapphireActionSystem.CONTEXT_DIAGRAM_NODE,
             SapphireActionSystem.CONTEXT_DIAGRAM_NODE_HIDDEN,
+            SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE,
+            SapphireActionSystem.CONTEXT_DIAGRAM_SHAPE_HIDDEN,
             SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION,
             SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION_HIDDEN,
             SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS,

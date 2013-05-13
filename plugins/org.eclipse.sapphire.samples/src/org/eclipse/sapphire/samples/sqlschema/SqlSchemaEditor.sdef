@@ -137,6 +137,17 @@
                                             <horizontal-alignment>left</horizontal-alignment>
                                             <expand-horizontally>true</expand-horizontally>
                                         </sequence-layout-constraint>
+                                        <action>
+                                            <id>SqlSchemaEditor.TogglePrimaryKey</id>
+                                            <label>toggle primary key</label>
+                                            <context>Sapphire.Diagram.Node.Shape</context>
+                                            <image>org/eclipse/sapphire/samples/sqlschema/key.gif</image>
+                                        </action>
+                                        <action-handler>
+                                            <action>SqlSchemaEditor.TogglePrimaryKey</action>
+                                            <id>SqlSchemaEditor.TogglePrimaryKey</id>
+                                            <impl>org.eclipse.sapphire.samples.sqlschema.internal.TogglePrimaryKeyActionHandler</impl>
+                                        </action-handler>
 							            <properties-view>
 							                <page>
 							                    <label>Column</label>
@@ -157,7 +168,7 @@
                                     <selection-presentation>
                                         <weight>1</weight>
                                         <inset>2</inset>
-                                    </selection-presentation>                                    
+                                    </selection-presentation>
                                 </case>
                                 <separator>
                                     <line>
