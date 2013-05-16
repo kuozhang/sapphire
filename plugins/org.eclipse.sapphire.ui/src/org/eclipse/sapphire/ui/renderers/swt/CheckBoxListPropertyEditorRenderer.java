@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [404482] CheckBoxListPropertyEditorRenderer needs a listener
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.renderers.swt;
@@ -84,6 +85,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRenderer
@@ -92,6 +94,8 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
     private CheckboxTableViewer tableViewer;
     private ModelElementType memberType;
     private ValueProperty memberProperty;
+    private PossibleValuesService possibleValuesService;
+    private Listener possibleValuesServiceListener;
 
     public CheckBoxListPropertyEditorRenderer( final SapphireRenderingContext context,
                                                final PropertyEditorPart part )
@@ -130,8 +134,19 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
             throw new IllegalStateException();
         }
         
-        final PossibleValuesService possibleValuesService = element.service( listProperty, PossibleValuesService.class );
+        this.possibleValuesService = element.service( listProperty, PossibleValuesService.class );
         
+        this.possibleValuesServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+            	CheckBoxListPropertyEditorRenderer.this.tableViewer.refresh();
+            }
+        };
+        
+        this.possibleValuesService.attach( this.possibleValuesServiceListener );
+
         // Create Controls
         
         final Composite mainComposite = createMainComposite( parent );
@@ -228,7 +243,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 
                 try
                 {
-                    possibleValues = possibleValuesService.values();
+                    possibleValues = CheckBoxListPropertyEditorRenderer.this.possibleValuesService.values();
                 }
                 catch( Exception e )
                 {
@@ -360,6 +375,11 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                 public void run()
                 {
                     selectionService.detach( selectionServiceListener );
+                    
+                    if( CheckBoxListPropertyEditorRenderer.this.possibleValuesService != null )
+                    {
+                    	CheckBoxListPropertyEditorRenderer.this.possibleValuesService.detach( CheckBoxListPropertyEditorRenderer.this.possibleValuesServiceListener );
+                    }
                 }
             }
         );
