@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [408293] RuntimeException when selecting from multi-select list in sample
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.gallery;
@@ -34,6 +35,7 @@ import org.eclipse.sapphire.samples.gallery.internal.ColorValueLabelService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 @GenerateImpl
@@ -138,6 +140,8 @@ public interface ListPropertiesGallery
     
     // *** MultiSelectEnum ***
     
+    @GenerateImpl
+
     interface MultiSelectEnumItem extends IModelElement
     {
         ModelElementType TYPE = new ModelElementType( MultiSelectEnumItem.class );
