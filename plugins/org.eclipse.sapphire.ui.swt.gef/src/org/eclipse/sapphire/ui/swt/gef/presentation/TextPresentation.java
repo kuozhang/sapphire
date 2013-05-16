@@ -15,6 +15,7 @@ import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -45,6 +46,17 @@ public class TextPresentation extends ShapePresentation
 	public boolean truncatable()
 	{
 		return getTextPart().truncatable();
+	}
+	
+	@Override
+	public void refreshVisuals()
+	{
+		super.refreshVisuals();
+		if (this.getFigure() != null)
+		{
+			TextFigure textFigure = (TextFigure)getFigure();
+			textFigure.setText(getTextPart().getContent());
+		}
 	}
 	
 	private TextPart getTextPart()

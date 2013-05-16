@@ -118,6 +118,10 @@ public class ShapePresentation
 	{		
 	}
 	
+	public void refreshVisuals()
+	{
+	}
+	
     public static final class ShapePresentationFactory
     {
     	public static ShapePresentation createShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)

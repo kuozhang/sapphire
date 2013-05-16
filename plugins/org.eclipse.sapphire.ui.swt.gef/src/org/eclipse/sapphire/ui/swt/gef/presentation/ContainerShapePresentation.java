@@ -97,6 +97,16 @@ public class ContainerShapePresentation extends ShapePresentation
 		}
 	}
 	
+	@Override
+	public void refreshVisuals()
+	{
+		super.refreshVisuals();
+		for (ShapePresentation shapePresentation : getChildren())
+		{
+			shapePresentation.refreshVisuals();
+		}
+	}
+
 	public int getChildFigureIndex(ShapePresentation childShapePresentation)
 	{
 		int shapeIndex = getChildren().indexOf(childShapePresentation);

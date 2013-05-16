@@ -235,6 +235,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	@Override
 	protected void refreshVisuals() 
 	{
+		ShapePresentation shapePresentation = getCastedModel().getShapePresentation();
+		shapePresentation.refreshVisuals();
 		refreshNodeBounds();
 	}
 	

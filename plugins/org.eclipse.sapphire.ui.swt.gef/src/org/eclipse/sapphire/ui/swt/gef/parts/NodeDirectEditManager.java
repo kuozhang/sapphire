@@ -39,6 +39,7 @@ import org.eclipse.ui.part.CellEditorActionHandler;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class NodeDirectEditManager extends DirectEditManager {
@@ -121,7 +122,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 		{
 			initValue = this.textPart.getContent();
 		}
-		getCellEditor().setValue(initValue);
+		getCellEditor().setValue(initValue);		
 		initCellEditorPresentation();
 	}
 
@@ -164,6 +165,17 @@ public class NodeDirectEditManager extends DirectEditManager {
 		actionBars.updateActionBars();		
 	}
 	
+	@Override
+	protected void handleValueChanged() 
+	{
+		// In Kepler when the cell editor is brought up and the focus is set on the text, the text
+		// triggers a focus lost event which causes direct edit manager's bringDown() method to be called.
+		// The overridden bringDown() method would set the label to be visible again. Resetting the label's
+		// visibility here is a workaround.
+		label.setVisible(false);
+		super.handleValueChanged();
+	}
+
 	private void restoreSavedActions(IActionBars actionBars) {
 		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);
