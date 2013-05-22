@@ -12,8 +12,8 @@
  ******************************************************************************
 -->
 <feature
-      id="org.eclipse.sapphire.stage2"
-      label="Sapphire Build Stage 2"
+      id="org.eclipse.sapphire.everything"
+      label="Sapphire Build"
       version="0.7.0.qualifier"
       provider-name="Eclipse.org - Sapphire">
 

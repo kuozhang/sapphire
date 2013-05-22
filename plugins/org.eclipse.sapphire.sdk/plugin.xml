@@ -39,12 +39,6 @@
     </content-type>
   </extension>
   
-  <extension id="builder" name="%builderName" point="org.eclipse.core.resources.builders"> 
-    <builder hasNature="false"> 
-      <run class="org.eclipse.sapphire.sdk.build.internal.SapphireBuilder"/> 
-    </builder> 
-  </extension> 
-  
   <extension point="org.eclipse.wst.xml.core.catalogContributions">
     <catalogContribution>
       <system

@@ -97,39 +97,25 @@
           <VerifyCopyrightHeaders Source="${root.dir}"/>
           <VerifyAuthorTags Source="${root.dir}"/>
 
-          <!-- Stage 2: Build the SDK. -->
+          <!-- Stage 2 -->
 
           <with-target-platform configuration="${configuration.recommended}">
-            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage1" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.everything" eclipse="${.target.platform}" root.dir="${root.dir}"/>
           </with-target-platform>
 
-          <unzip src="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip" dest="${build.dir}/repository">
+          <unzip src="${build.dir}/org.eclipse.sapphire.everything-${DSTAMP}.zip" dest="${build.dir}/repository">
             <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
           </unzip>
 
-          <delete file="${build.dir}/org.eclipse.sapphire.stage1-${DSTAMP}.zip"/>
-
-          <!-- Stage 3: Now build everything together. -->
-
-          <with-target-platform configuration="${configuration.recommended}">
-            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
-          </with-target-platform>
-
-          <delete dir="${build.dir}/repository"/>
-
-          <unzip src="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip" dest="${build.dir}/repository">
-            <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-          </unzip>
-
-          <delete file="${build.dir}/org.eclipse.sapphire.stage2-${DSTAMP}.zip"/>
+          <delete file="${build.dir}/org.eclipse.sapphire.everything-${DSTAMP}.zip"/>
 
           <zip-dirs source.dir="${build.dir}/repository/features" suffix="jar"/>
 
           <delete>
-            <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.stage2_*.jar"/>
+            <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.everything_*.jar"/>
           </delete>
 
-          <!-- Stage 4 -->
+          <!-- Stage 3 -->
 
           <echo message="Setting Require-Bundle version constraints..."/>
 
@@ -161,11 +147,12 @@
             pluginsDirectory="${build.dir}/repository/temp">
             <exclude id=".*\.source"/>
             <rule bundle="org.junit" expr="[M1.M2.M3,5.0.0)"/>
+			<rule bundle="org.objectweb.asm" expr="[4.0.0,5.0.0)"/>
             <rule bundle="org.eclipse.sapphire*" expr="[M1.M2.M3,T1.T2.T3+1)"/>
             <rule bundle="*" expr="[M1.M2.M3,T1+1.0.0)"/>
           </set-bundle-version-constraints>
 
-          <!-- Stage 5 -->
+          <!-- Stage 4 -->
 
           <echo message="Setting versions of Export-Package entries..."/>
 
@@ -175,35 +162,13 @@
 
           <delete dir="${build.dir}/repository/temp"/>
             
-          <!-- Stage 6 -->
-            
-          <echo message="Generating samples test translation..."/>
-            
-          <BuildTestTranslation 
-            Bundle="org.eclipse.sapphire.samples" 
-            Feature="org.eclipse.sapphire.samples" 
-            Repository="${build.dir}/repository"
-            WorkArea="${build.dir}/test-translation"/>
-
-          <BuildTestTranslation 
-            Bundle="org.eclipse.sapphire.modeling" 
-            Feature="org.eclipse.sapphire.samples" 
-            Repository="${build.dir}/repository"
-            WorkArea="${build.dir}/test-translation"/>
-
-          <BuildTestTranslation 
-            Bundle="org.eclipse.sapphire.ui" 
-            Feature="org.eclipse.sapphire.samples" 
-            Repository="${build.dir}/repository"
-            WorkArea="${build.dir}/test-translation"/>
-              
-          <!-- Stage 7 -->
+          <!-- Stage 5 -->
             
           <echo message="Performing repository verification..."/>
             
           <VerifyAboutHtml Repository="${build.dir}/repository"/>
 
-          <!-- Stage 8 -->
+          <!-- Stage 6 -->
             
           <property-from-set property=".sapphire.feature">
             <fileset dir="${build.dir}/repository/features" includes="org.eclipse.sapphire.modeling_*.jar"/>
@@ -232,19 +197,19 @@
             </then>
           </if>
             
-          <!-- Stage 9 -->
+          <!-- Stage 7 -->
             
           <echo message="Mirroring ASM..."/>
 
           <with-target-platform configuration="${configuration.recommended}">
             <copy todir="${build.dir}/repository/plugins">
               <fileset dir="${.target.platform}/plugins">
-                <include name="org.objectweb.asm_*.jar"/>
+                <include name="org.objectweb.asm_4.0.0.*.jar"/>
               </fileset>
             </copy>
           </with-target-platform>
 
-          <!-- Stage 10 -->
+          <!-- Stage 8 -->
 
           <echo message="Packaging the repository..."/>
 
@@ -281,138 +246,6 @@
   </macrodef>
   
 
-  <macrodef name="BuildTestTranslation">
-    <attribute name="Bundle"/>
-    <attribute name="Feature"/>
-    <attribute name="Repository"/>
-    <attribute name="WorkArea"/>
-    <sequential>
-    
-      <delete dir="@{WorkArea}" quiet="true"/>
-      <mkdir dir="@{WorkArea}"/>
-    
-      <property-from-set property=".bundle.file">
-        <fileset dir="@{Repository}/plugins" includes="@{Bundle}_*.jar"/>
-      </property-from-set>
-    
-      <property-from-set property=".feature.file">
-        <fileset dir="@{Repository}/features" includes="@{Feature}_*.jar"/>
-      </property-from-set>
-    
-      <unzip src="${.bundle.file}" dest="@{WorkArea}">
-        <patternset>
-          <include name="META-INF/MANIFEST.MF"/>
-        </patternset>
-      </unzip>
-    
-      <loadfile property=".bundle.manifest" srcfile="@{WorkArea}/META-INF/MANIFEST.MF"/>
-      <propertyregex property=".bundle.version" input="${.bundle.manifest}" regexp=".*Bundle-Version:\s*([0-9\.]*).*" select="\1"/>
-      <var name=".bundle.manifest" unset="true"/>
-    
-      <mkdir dir="@{WorkArea}/english"/>
-    
-      <unzip src="${.bundle.file}" dest="@{WorkArea}/english">
-        <patternset>
-          <include name="**/*.properties"/>
-          <exclude name="about.properties"/>
-          <exclude name="plugin.properties"/>
-        </patternset>
-      </unzip>
-
-      <mkdir dir="@{WorkArea}/reversed"/>
-    
-      <for param="file">
-        <path>
-          <fileset dir="@{WorkArea}/english"/>
-        </path>
-        <sequential>
-      
-          <pathconvert property=".output.file">
-            <path location="@{file}"/>
-            <map from="@{WorkArea}/english" to="@{WorkArea}/reversed"/>
-          </pathconvert>
-        
-          <dirname file="${.output.file}" property=".output.folder"/>
-          <mkdir dir="${.output.folder}"/>
-        
-          <propertyregex property=".output.file" override="true" input="${.output.file}" regexp="(.*)\.properties" select="\1_re.properties"/>
-        
-          <property file="@{file}" prefix="..."/>
-          <propertyselector property=".properties" match="\.\.\..*" select="\0"/>
-        
-          <for param="property" list="${.properties}">
-            <sequential>
-          
-              <propertyregex property=".key" input="@{property}" regexp="\.\.\.(.*)" select="\1"/> 
-              <propertycopy property=".value" override="true" from="@{property}"/>
-
-              <script language="javascript"> <![CDATA[
-                val = project.getProperty( ".value" );
-                reversed = val.split('').reverse().join('');                                // Character-by-chracter reverse.
-                reversed = reversed.replace( /\}([0-9]+)\{/g, "{$1}" );                     // Fix template syntax.
-                reversed = reversed.replace( /\.\.\.(.*)/, "$1..." );                       // Tripple dots belong at the end.
-                reversed = reversed.replace( /([a-z])\x26([^\x26]|$)/gi, "\x26$1$2" );      // Maintain the same mnemonic chracter.
-                reversed = reversed.replace( />(.*)</, "<$1>" );                            // Common meta text brackets.
-                project.setProperty( ".reversed", reversed );
-              ]]> </script>
-
-              <propertyfile file="${.output.file}">
-                <entry key="${.key}" value="${.reversed}"/>
-              </propertyfile>
-            
-              <var name="@{property}" unset="true"/>
-              <var name=".key" unset="true"/>
-              <var name=".value" unset="true"/>
-              <var name=".reversed" unset="true"/>
-            
-            </sequential>
-          </for>
-        
-          <var name=".output.file" unset="true"/>
-          <var name=".output.folder" unset="true"/>
-          <var name=".properties" unset="true"/>
-        
-        </sequential>
-      </for>
-    
-      <mkdir dir="@{WorkArea}/reversed/META-INF"/>
-    
-      <echo file="@{WorkArea}/reversed/META-INF/MANIFEST.MF">Manifest-Version: 1.0
-Bundle-Name: Test Localization for @{Bundle}
-Bundle-SymbolicName: @{Bundle}.nl_re;singleton=true
-Bundle-Version: ${.bundle.version}
-Bundle-Vendor: Eclipse.org - Sapphire
-Fragment-Host: @{Bundle}
-</echo>
-
-      <unzip src="${.bundle.file}" dest="@{WorkArea}/reversed">
-        <patternset>
-          <include name="about.html"/>
-        </patternset>
-      </unzip>
-
-      <zip destfile="@{Repository}/plugins/@{Bundle}.nl_re_${.bundle.version}.jar" basedir="@{WorkArea}/reversed"/>
-      
-      <unzip src="${.feature.file}" dest="@{WorkArea}/feature"/>
-      
-      <replace 
-        file="@{WorkArea}/feature/feature.xml" 
-        token="&lt;/feature&gt;"
-        value="  &lt;plugin download-size=&quot;0&quot; id=&quot;@{Bundle}.nl_re&quot; install-size=&quot;0&quot; unpack=&quot;false&quot; version=&quot;${.bundle.version}&quot;/&gt;&#10;&#10;&lt;/feature&gt;"/>
-      
-      <delete file="${.feature.file}"/>
-      <zip destfile="${.feature.file}" basedir="@{WorkArea}/feature"/>
-    
-      <delete dir="@{WorkArea}"/>
-      
-      <var name=".bundle.file" unset="true"/>
-      <var name=".feature.file" unset="true"/>
-      <var name=".bundle.version" unset="true"/>
-    
-    </sequential>
-  </macrodef>
-  
-  
   <macrodef name="VerifyCopyrightHeaders">
     <attribute name="Source"/>
     <sequential>
@@ -590,7 +423,7 @@ Fragment-Host: @{Bundle}
           <echo message="Building Sapphire with ${.configuration} configuration..."/>
 
           <with-target-platform configuration="${.configuration}">
-            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.stage2" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.everything" eclipse="${.target.platform}" root.dir="${root.dir}"/>
           </with-target-platform>
 
           <delete file="${build.dir}/org.eclipse.sapphire.stage3-${DSTAMP}.zip"/>
