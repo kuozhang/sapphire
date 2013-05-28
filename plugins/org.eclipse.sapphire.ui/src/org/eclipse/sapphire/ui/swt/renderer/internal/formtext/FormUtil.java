@@ -406,6 +406,8 @@ public class FormUtil {
             case SWT.PAGE_DOWN:
                 FormUtil.scrollPage(scomp, false);
                 break;
+            default:
+                // Ignore other events.
             }
         }
     }

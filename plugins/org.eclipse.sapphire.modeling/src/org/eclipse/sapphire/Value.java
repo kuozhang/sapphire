@@ -367,7 +367,7 @@ public class Value<T> extends Property
         {
             if( this.text != null )
             {
-                return ( this.text != null && this.content == null );
+                return ( this.content == null );
             }
         }
         

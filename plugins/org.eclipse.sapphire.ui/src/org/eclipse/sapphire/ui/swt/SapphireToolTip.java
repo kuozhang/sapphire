@@ -657,6 +657,8 @@ public abstract class SapphireToolTip
 
                 toolTipHide(CURRENT_TOOLTIP, event);
                 break;
+            default:
+                // Ignore all other events.
             }
         }
     }
@@ -690,6 +692,8 @@ public abstract class SapphireToolTip
                     }
 
                     break;
+                default:
+                    // Ignore all other events.
                 }
             }
         }

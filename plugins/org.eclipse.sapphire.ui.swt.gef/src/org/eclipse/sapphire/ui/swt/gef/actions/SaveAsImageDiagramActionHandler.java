@@ -102,7 +102,6 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 
             Image image = new Image( Display.getDefault(), rectangle.width, rectangle.height );
 
-
             FileOutputStream output = null;
             GC gc = null;
             SWTGraphics graphics = null;
@@ -118,8 +117,7 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
                 output = new FileOutputStream( filePath );
 
                 loader.save( output, SWT.IMAGE_PNG );
-
-                image.dispose();
+                output.flush();
             }
             catch( Exception e )
             {
@@ -127,18 +125,21 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
             }
             finally
             {
+                image.dispose();
+                
+                if (gc != null)
+                    gc.dispose();
+                
+                if (graphics != null)
+                    graphics.dispose();
+                
             	if (output != null)
             	{
             		try
             		{
-            			output.flush();
             			output.close();
             		}
             		catch (IOException e) {}
-            		if (gc != null)
-            			gc.dispose();
-            		if (graphics != null)
-            			graphics.dispose();            		
             	}
             }
         }

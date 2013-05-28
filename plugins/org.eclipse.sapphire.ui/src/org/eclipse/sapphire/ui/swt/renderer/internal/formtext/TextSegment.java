@@ -72,21 +72,6 @@ public class TextSegment extends ParagraphSegment {
         }
     }
 
-    static class SelectionRange {
-        public int start;
-
-        public int stop;
-
-        public SelectionRange() {
-            reset();
-        }
-
-        public void reset() {
-            start = -1;
-            stop = -1;
-        }
-    }
-
     static class TextFragment {
         short index;
 

@@ -386,33 +386,27 @@ public final class ElementHandle<T extends Element> extends Property
         
         final Property p = source.property( (PropertyDef) definition() );
         
-        if( p instanceof ElementHandle<?> )
+        if( definition().getClass() == p.definition().getClass() )
         {
             if( definition() instanceof ImpliedElementProperty )
             {
-                if( p.definition() instanceof ImpliedElementProperty )
-                {
-                    content().copy( ( (ElementHandle<?>) p ).content() );
-                }
+                content().copy( ( (ElementHandle<?>) p ).content() );
             }
             else
             {
-                if( p.definition() instanceof ElementProperty )
+                final Element sourceChildElement = ( (ElementHandle<?>) p ).content();
+                
+                if( sourceChildElement == null )
                 {
-                    final Element sourceChildElement = ( (ElementHandle<?>) p ).content();
+                    clear();
+                }
+                else
+                {
+                    final ElementType sourceChildElementType = sourceChildElement.type();
                     
-                    if( sourceChildElement == null )
+                    if( service( PossibleTypesService.class ).types().contains( sourceChildElementType ) )
                     {
-                        clear();
-                    }
-                    else
-                    {
-                        final ElementType sourceChildElementType = sourceChildElement.type();
-                        
-                        if( service( PossibleTypesService.class ).types().contains( sourceChildElementType ) )
-                        {
-                            content( true, sourceChildElementType ).copy( sourceChildElement );
-                        }
+                        content( true, sourceChildElementType ).copy( sourceChildElement );
                     }
                 }
             }

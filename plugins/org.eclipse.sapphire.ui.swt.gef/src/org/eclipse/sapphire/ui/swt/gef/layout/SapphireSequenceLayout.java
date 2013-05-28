@@ -540,6 +540,8 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 					case SWT.BOTTOM:
 						offset = extraHeights[i];
 						break;
+					default:
+					    throw new IllegalStateException();
 					}
 					newBounds = new Rectangle(x, y + marginInset.top + offset, prefWidth, prefHeight);
 				}

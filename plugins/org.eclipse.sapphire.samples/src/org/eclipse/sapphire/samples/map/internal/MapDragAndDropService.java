@@ -59,14 +59,11 @@ public class MapDragAndDropService extends DragAndDropService
             
             for( String line = br.readLine(); line != null; line = br.readLine() )
             {
-                if( line != null )
+                line = line.trim();
+                
+                if( line.length() > 0 )
                 {
-                    line = line.trim();
-                    
-                    if( line.length() > 0 )
-                    {
-                        locations.add( line );
-                    }
+                    locations.add( line );
                 }
             }
         }
