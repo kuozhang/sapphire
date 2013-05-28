@@ -14,12 +14,12 @@ package org.eclipse.sapphire.internal;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleTypesService;

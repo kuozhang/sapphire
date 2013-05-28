@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.tests;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +32,9 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Value;
@@ -99,7 +101,7 @@ public abstract class SapphireTestCase extends TestCase
         
         try
         {
-            final BufferedReader r = new BufferedReader( new InputStreamReader( in ) );
+            final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF8 ) );
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();
             

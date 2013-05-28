@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.Property;
 
 /**

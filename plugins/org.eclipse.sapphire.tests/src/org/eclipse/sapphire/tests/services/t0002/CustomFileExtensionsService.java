@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.tests.services.t0002;
 
-import org.eclipse.sapphire.services.FileExtensionsServiceData;
 import org.eclipse.sapphire.services.FileExtensionsService;
+import org.eclipse.sapphire.services.FileExtensionsServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

@@ -14,9 +14,9 @@ package org.eclipse.sapphire.internal;
 import java.util.List;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Validation;
 import org.eclipse.sapphire.Validations;

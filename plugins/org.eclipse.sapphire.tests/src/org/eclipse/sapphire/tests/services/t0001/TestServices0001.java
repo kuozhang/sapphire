@@ -14,8 +14,8 @@ package org.eclipse.sapphire.tests.services.t0001;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 

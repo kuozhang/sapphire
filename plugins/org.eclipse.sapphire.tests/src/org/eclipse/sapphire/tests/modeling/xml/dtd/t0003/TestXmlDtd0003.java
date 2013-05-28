@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0003;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -85,7 +86,7 @@ public final class TestXmlDtd0003 extends SapphireTestCase
         root.getAaa().insert().setText( "666" );
         
         root.resource().save();
-        final String result = new String( byteArrayResourceStore.getContents(), "UTF-8" );
+        final String result = new String( byteArrayResourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( expected ), result );
     }

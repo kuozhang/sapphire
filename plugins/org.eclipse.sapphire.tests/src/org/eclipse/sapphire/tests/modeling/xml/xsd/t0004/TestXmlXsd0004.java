@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0004;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
+
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -120,7 +122,7 @@ public final class TestXmlXsd0004 extends SapphireTestCase
 
         workbook.resource().save();
         
-        final String result = new String( resourceStore.getContents(), "UTF-8" );
+        final String result = new String( resourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "ExpectedInsertionOrder.txt" ), result );
     }

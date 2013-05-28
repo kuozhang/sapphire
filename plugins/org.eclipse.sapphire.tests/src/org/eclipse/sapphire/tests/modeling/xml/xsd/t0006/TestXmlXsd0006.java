@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0006;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -194,7 +195,7 @@ public final class TestXmlXsd0006 extends SapphireTestCase
         
         xmlResourceStore.save();
         
-        final String actual = new String( byteArrayResourceStore.getContents(), "UTF-8" );
+        final String actual = new String( byteArrayResourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( expected, actual );
     }

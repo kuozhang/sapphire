@@ -13,8 +13,8 @@ package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;

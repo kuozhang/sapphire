@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.modeling;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
+
 import java.io.File;
 import java.util.Arrays;
 

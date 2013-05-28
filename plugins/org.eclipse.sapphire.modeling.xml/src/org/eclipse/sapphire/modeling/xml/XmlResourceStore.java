@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.modeling.xml;
 
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.XML_DECLARATION;
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -52,8 +53,6 @@ import org.xml.sax.SAXParseException;
 
 public class XmlResourceStore extends ResourceStore
 {
-    private static final String UTF8_ENCODING = "UTF-8";
-    
     private final ByteArrayResourceStore base;
     private Document document;
     
@@ -74,7 +73,7 @@ public class XmlResourceStore extends ResourceStore
     
                     try
                     {
-                        final Reader reader = new InputStreamReader( in, UTF8_ENCODING );
+                        final Reader reader = new InputStreamReader( in, UTF8 );
                         this.document = doc( reader );
                     }
                     finally
@@ -190,7 +189,7 @@ public class XmlResourceStore extends ResourceStore
                 
                 transformer.transform( source, result );
                 
-                this.base.setContents( sw.toString().getBytes( UTF8_ENCODING ) );
+                this.base.setContents( sw.toString().getBytes( UTF8 ) );
             }
             else
             {

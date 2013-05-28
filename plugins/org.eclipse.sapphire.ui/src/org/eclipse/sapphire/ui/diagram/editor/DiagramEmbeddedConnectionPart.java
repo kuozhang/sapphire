@@ -17,7 +17,6 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.ModelPath;

@@ -14,9 +14,9 @@ package org.eclipse.sapphire.samples.gallery.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.gallery.IChildElement;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithEnum;

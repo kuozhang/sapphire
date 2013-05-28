@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 

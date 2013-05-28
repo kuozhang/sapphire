@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.xml;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,7 +126,7 @@ public final class XmlBindingTests
         
         model.resource().save();
         
-        final String result = new String( resourceStore.getContents(), "UTF-8" );
+        final String result = new String( resourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( expected, result );
     }
@@ -150,7 +152,7 @@ public final class XmlBindingTests
         
         try
         {
-            final BufferedReader r = new BufferedReader( new InputStreamReader( in ) );
+            final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF8 ) );
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();
             

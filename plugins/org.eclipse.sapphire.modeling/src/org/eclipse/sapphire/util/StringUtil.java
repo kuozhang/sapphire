@@ -9,22 +9,16 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.services.t0003;
+package org.eclipse.sapphire.util;
 
-import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.services.DependenciesService;
-import org.eclipse.sapphire.services.DependenciesServiceData;
+import java.nio.charset.Charset;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CustomDependenciesService extends DependenciesService
+public class StringUtil
 {
-    @Override
-    protected DependenciesServiceData compute()
-    {
-        return new DependenciesServiceData( new ModelPath( "Name" ), new ModelPath( "Id" ) );
-    }
+    public static final Charset UTF8 = Charset.forName( "UTF-8" );
     
 }

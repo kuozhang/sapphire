@@ -11,9 +11,10 @@
 
 package org.eclipse.sapphire.modeling;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -36,14 +37,7 @@ public class ByteArrayResourceStore extends ResourceStore
     
     public ByteArrayResourceStore( final String contents )
     {
-        try
-        {
-            setContents( contents.getBytes( "UTF-8" ) );
-        }
-        catch( UnsupportedEncodingException e )
-        {
-            throw new RuntimeException( e );
-        }
+        setContents( contents.getBytes( UTF8 ) );
     }
     
     public ByteArrayResourceStore( final InputStream in ) throws ResourceStoreException

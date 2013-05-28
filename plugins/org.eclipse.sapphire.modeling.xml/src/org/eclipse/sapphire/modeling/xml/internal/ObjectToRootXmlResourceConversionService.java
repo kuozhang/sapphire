@@ -14,8 +14,8 @@ package org.eclipse.sapphire.modeling.xml.internal;
 import java.io.File;
 
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;

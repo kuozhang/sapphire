@@ -14,10 +14,10 @@ package org.eclipse.sapphire.internal;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;

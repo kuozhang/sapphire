@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0002;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
+
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -94,7 +96,7 @@ public final class TestXmlXsd0002 extends SapphireTestCase
         
         model.resource().save();
         
-        final String result = new String( resourceStore.getContents(), "UTF-8" );
+        final String result = new String( resourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "0002.txt" ), result );
     }

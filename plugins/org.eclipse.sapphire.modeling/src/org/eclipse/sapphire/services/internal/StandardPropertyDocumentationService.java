@@ -14,8 +14,8 @@ package org.eclipse.sapphire.services.internal;
 import java.util.List;
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;

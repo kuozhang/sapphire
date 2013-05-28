@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.sapphire.samples.contacts.ContactAddress;
 import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.ContactAddress;
 import org.eclipse.sapphire.samples.contacts.PhoneNumber;
 import org.eclipse.sapphire.samples.contacts.SendContactOp;
-import org.eclipse.sapphire.services.DerivedValueServiceData;
 import org.eclipse.sapphire.services.DerivedValueService;
+import org.eclipse.sapphire.services.DerivedValueServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

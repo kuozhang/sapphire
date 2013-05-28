@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0008;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -60,22 +61,22 @@ public final class TestXmlBinding0008
         child.setCcc( "333" );
         
         root.resource().save();
-        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-1.txt" ), new String( byteArrayResourceStore.getContents(), "UTF-8" ) );
+        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-1.txt" ), new String( byteArrayResourceStore.getContents(), UTF8 ) );
         
         child.setAaa( null );
 
         root.resource().save();
-        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-2.txt" ), new String( byteArrayResourceStore.getContents(), "UTF-8" ) );
+        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-2.txt" ), new String( byteArrayResourceStore.getContents(), UTF8 ) );
         
         child.setBbb( null );
 
         root.resource().save();
-        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-3.txt" ), new String( byteArrayResourceStore.getContents(), "UTF-8" ) );
+        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-3.txt" ), new String( byteArrayResourceStore.getContents(), UTF8 ) );
         
         child.setCcc( null );
 
         root.resource().save();
-        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-4.txt" ), new String( byteArrayResourceStore.getContents(), "UTF-8" ) );
+        assertEqualsIgnoreNewLineDiffs( loadResource( "checkpoint-4.txt" ), new String( byteArrayResourceStore.getContents(), UTF8 ) );
     }
 
 }

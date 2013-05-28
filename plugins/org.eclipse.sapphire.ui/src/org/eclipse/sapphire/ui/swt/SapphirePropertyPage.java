@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui.swt;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;

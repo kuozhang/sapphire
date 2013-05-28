@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.samples.map.internal;
 
-import org.eclipse.sapphire.samples.map.Map;
 import org.eclipse.sapphire.samples.map.Location;
+import org.eclipse.sapphire.samples.map.Map;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

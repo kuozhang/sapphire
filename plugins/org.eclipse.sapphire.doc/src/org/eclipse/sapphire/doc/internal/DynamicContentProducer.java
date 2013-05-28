@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.doc.internal;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -211,7 +213,7 @@ public class DynamicContentProducer implements IHelpContentProducer
 
         if( content != null )
         {
-            return new ByteArrayInputStream( content.getBytes() );
+            return new ByteArrayInputStream( content.getBytes( UTF8 ) );
         }
 
         return null;
@@ -235,7 +237,7 @@ public class DynamicContentProducer implements IHelpContentProducer
 
         try
         {
-            final BufferedReader r = new BufferedReader( new InputStreamReader( in ) );
+            final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF8 ) );
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();
 

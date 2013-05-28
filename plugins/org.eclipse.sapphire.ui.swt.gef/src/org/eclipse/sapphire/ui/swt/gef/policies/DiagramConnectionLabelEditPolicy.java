@@ -22,7 +22,6 @@ import org.eclipse.gef.Handle;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.handles.MoveHandle;
-import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionLabelEditPart;
 import org.eclipse.swt.graphics.Cursor;

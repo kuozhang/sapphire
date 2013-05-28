@@ -13,8 +13,8 @@ package org.eclipse.sapphire.workspace;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.Transient;
 import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.Value;

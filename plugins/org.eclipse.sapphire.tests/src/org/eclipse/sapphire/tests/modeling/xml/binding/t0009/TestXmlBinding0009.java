@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0009;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -86,7 +87,7 @@ public final class TestXmlBinding0009
         
         model.resource().save();
         
-        final String result = new String( resourceStore.getContents(), "UTF-8" );
+        final String result = new String( resourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "TestData.txt" ), result );
     }
@@ -126,7 +127,7 @@ public final class TestXmlBinding0009
         
         model.resource().save();
         
-        final String result = new String( resourceStore.getContents(), "UTF-8" );
+        final String result = new String( resourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "TestData.txt" ), result );
     }

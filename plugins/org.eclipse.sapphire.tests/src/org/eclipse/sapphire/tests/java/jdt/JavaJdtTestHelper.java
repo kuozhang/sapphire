@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.tests.java.jdt;
 
+import static org.eclipse.sapphire.util.StringUtil.UTF8;
+
 import java.io.ByteArrayInputStream;
 
 import org.eclipse.core.resources.IContainer;
@@ -100,7 +102,7 @@ public final class JavaJdtTestHelper
         
         buf.append( content );
         
-        final byte[] bytes = buf.toString().getBytes( "UTF-8" );
+        final byte[] bytes = buf.toString().getBytes( UTF8 );
         
         final IFile file = folder.getFile( className + ".java" );
         file.create( new ByteArrayInputStream( bytes ), true, null );
