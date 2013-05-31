@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
+import org.eclipse.sapphire.tests.modeling.el.functions.FunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.operators.OperatorTests;
 import org.eclipse.sapphire.tests.modeling.el.t0001.TestExpr0001;
 import org.eclipse.sapphire.tests.modeling.el.t0002.TestExpr0002;
@@ -37,7 +38,6 @@ import org.eclipse.sapphire.tests.modeling.el.t0011.TestExpr0011;
 import org.eclipse.sapphire.tests.modeling.el.t0012.TestExpr0012;
 import org.eclipse.sapphire.tests.modeling.el.t0013.TestExpr0013;
 import org.eclipse.sapphire.tests.modeling.el.t0014.TestExpr0014;
-import org.eclipse.sapphire.tests.modeling.el.t0015.TestExpr0015;
 import org.eclipse.sapphire.tests.modeling.el.t0016.TestExpr0016;
 import org.eclipse.sapphire.tests.modeling.el.t0017.TestExpr0017;
 import org.eclipse.sapphire.tests.modeling.el.t0018.TestExpr0018;
@@ -120,6 +120,7 @@ public final class ExpressionLanguageTests
         }
         
         suite.addTest( OperatorTests.suite() );
+        suite.addTest( FunctionTests.suite() );
         suite.addTest( TestExpr0001.suite() );
         suite.addTest( TestExpr0002.suite() );
         suite.addTest( TestExpr0003.suite() );
@@ -132,7 +133,6 @@ public final class ExpressionLanguageTests
         suite.addTest( TestExpr0012.suite() );
         suite.addTest( TestExpr0013.suite() );
         suite.addTest( TestExpr0014.suite() );
-        suite.addTest( TestExpr0015.suite() );
         suite.addTest( TestExpr0016.suite() );
         suite.addTest( TestExpr0017.suite() );
         suite.addTest( TestExpr0018.suite() );

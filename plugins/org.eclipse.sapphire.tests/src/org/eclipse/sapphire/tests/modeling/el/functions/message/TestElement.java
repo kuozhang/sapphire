@@ -9,40 +9,30 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.el.t0015;
+package org.eclipse.sapphire.tests.modeling.el.functions.message;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface ChildElement extends Element
+public interface TestElement extends Element
 {
-    ElementType TYPE = new ElementType( ChildElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
-    // *** EnableValue ***
+    // *** IntegerValue ***
     
-    @Type( base = Boolean.class )
+    @Type( base = Integer.class )
 
-    ValueProperty PROP_ENABLE_VALUE = new ValueProperty( TYPE, "EnableValue" );
+    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
     
-    Value<Boolean> getEnableValue();
-    void setEnableValue( String value );
-    void setEnableValue( Boolean value );
-    
-    // *** Value ***
-    
-    @Enablement( expr = "${ EnableValue }" )
-    
-    ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
-    
-    Value<String> getValue();
-    void setValue( String value );
-    
+    Value<Integer> getIntegerValue();
+    void setIntegerValue( String value );
+    void setIntegerValue( Integer value );
+
 }

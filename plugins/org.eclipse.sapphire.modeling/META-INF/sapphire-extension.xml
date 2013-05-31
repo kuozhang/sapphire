@@ -623,13 +623,6 @@
         <description>Implementation of VersionCompatibilityService that derives its behavior from version compatibility of the containing element's parent property.</description>
     </service>
     <function>
-        <name>Enabled</name>
-        <operand-count>1</operand-count>
-        <operand-count>2</operand-count>
-        <impl>org.eclipse.sapphire.modeling.el.EnabledFunction</impl>
-        <description>Determines if a property is enabled. Can be used either with two arguments (element and property name) or with a single property name argument. In the single argument form, the context element is used.</description>
-    </function>
-    <function>
         <name>UpperCase</name>
         <impl>org.eclipse.sapphire.modeling.el.UpperCaseFunction</impl>
         <description>Converts a string to upper case. Can be used either as UpperCase( Name ) or as Name.UpperCase().</description>
@@ -656,4 +649,46 @@
         <id>Sapphire.MasterVersionCompatibilityService</id>
         <implementation>org.eclipse.sapphire.MasterVersionCompatibilityService</implementation>
     </service>
+    <function>
+        <name>Text</name>
+        <operand-count>1</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.TextFunction</impl>
+        <description>Returns the text of a value, taking into account the default, if applicable.</description>
+    </function>
+    <function>
+        <name>Content</name>
+        <operand-count>1</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.ContentFunction</impl>
+        <description>Returns the content of a value or a transient. For value properties, the default is taken into account, if applicable.</description>
+    </function>
+    <function>
+        <name>Size</name>
+        <operand-count>1</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.SizeFunction</impl>
+        <description>Determines the size of a collection, a map or an array.</description>
+    </function>
+    <function>
+        <description>Returns the validation result of a property.</description>
+        <impl>org.eclipse.sapphire.modeling.el.internal.ValidationFunction</impl>
+        <name>Validation</name>
+        <operand-count>1</operand-count>
+    </function>
+    <function>
+        <name>Severity</name>
+        <operand-count>1</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.SeverityFunction</impl>
+        <description>Returns the severity of a validation result.</description>
+    </function>
+    <function>
+        <name>Message</name>
+        <operand-count>1</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.MessageFunction</impl>
+        <description>Returns the message from a validation result.</description>
+    </function>
+    <function>
+        <name>Enabled</name>
+        <operand-count>1</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.EnabledFunction</impl>
+        <description>Returns the enablement of a property.</description>
+    </function>
 </extension>

@@ -14,9 +14,10 @@ package org.eclipse.sapphire.modeling.el;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
-import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
@@ -59,12 +60,12 @@ public class ModelElementFunctionContext extends FunctionContext
             
             if( property != null )
             {
-                final Function f = new ReadPropertyFunction( property )
+                final Function f = new ReadPropertyFunction( property, name, PropertyContentEvent.class )
                 {
                     @Override
                     protected Object evaluate()
                     {
-                        Object res = this.property;
+                        Object res = this.context;
                         
                         if( res instanceof ElementHandle<?> )
                         {
@@ -84,14 +85,25 @@ public class ModelElementFunctionContext extends FunctionContext
         {
             final ElementList<?> list = (ElementList<?>) element;
             
-            if( name.equalsIgnoreCase( "Size" ) )
+            try
             {
-                final Function f = new ReadPropertyFunction( list )
+                final int index = Integer.parseInt( name );
+                
+                final Function f = new ReadPropertyFunction( list, name, PropertyContentEvent.class )
                 {
                     @Override
                     protected Object evaluate()
                     {
-                        return ( (ElementList<?>) this.property ).size();
+                        final ElementList<?> list = (ElementList<?>) this.context;
+                        
+                        if( index >= 0 && index < list.size() )
+                        {
+                            return list.get( index );
+                        }
+                        else
+                        {
+                            throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
+                        }
                     }
                 };
                 
@@ -99,38 +111,9 @@ public class ModelElementFunctionContext extends FunctionContext
                 
                 return f.evaluate( this );
             }
-            else
+            catch( NumberFormatException e )
             {
-                try
-                {
-                    final int index = Integer.parseInt( name );
-                    
-                    final Function f = new ReadPropertyFunction( list )
-                    {
-                        @Override
-                        protected Object evaluate()
-                        {
-                            final ElementList<?> list = (ElementList<?>) this.property;
-                            
-                            if( index >= 0 && index < list.size() )
-                            {
-                                return list.get( index );
-                            }
-                            else
-                            {
-                                throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
-                            }
-                        }
-                    };
-                    
-                    f.init();
-                    
-                    return f.evaluate( this );
-                }
-                catch( NumberFormatException e )
-                {
-                    // Ignore. Non-integer property means call isn't trying to index into the list.
-                }
+                // Ignore. Non-integer property means call isn't trying to index into the list.
             }
         }
         
@@ -145,23 +128,30 @@ public class ModelElementFunctionContext extends FunctionContext
     
     private static abstract class ReadPropertyFunction extends Function
     {
-        protected final Property property;
+        protected final Property context;
+        private final String name;
+        private final Class<? extends PropertyEvent> eventType;
         
-        public ReadPropertyFunction( final Property property )
+        public ReadPropertyFunction( final Property context,
+                                     final String name,
+                                     final Class<? extends PropertyEvent> eventType )
         {
-            this.property = property;
+            this.context = context;
+            this.name = name;
+            this.eventType = eventType;
         }
         
         @Override
         public final String name()
         {
-            return "ReadProperty";
+            return this.name;
         }
 
         @Override
         public final FunctionResult evaluate( final FunctionContext context )
         {
-            final Property property = this.property;
+            final Property property = this.context;
+            final Class<? extends PropertyEvent> eventType = this.eventType;
             
             return new FunctionResult( this, context )
             {
@@ -172,12 +162,15 @@ public class ModelElementFunctionContext extends FunctionContext
                 {
                     super.init();
                     
-                    this.listener = new FilteredListener<PropertyEvent>()
+                    this.listener = new Listener()
                     {
                         @Override
-                        protected void handleTypedEvent( final PropertyEvent event )
+                        public void handle( final Event event )
                         {
-                            refresh();
+                            if( eventType.isInstance( event ) )
+                            {
+                                refresh();
+                            }
                         }
                     };
                     

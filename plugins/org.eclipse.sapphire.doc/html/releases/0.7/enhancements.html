@@ -47,11 +47,17 @@
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
+    <li><a href="#ExpressionLanguage-FunctionsAsProperties">Functions as Properties</a></li>
+    <li><a href="#ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></li>
     <li><a href="#ExpressionLanguage-UseForValidation">Use for Validation</a></li>
     <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
+    <li><a href="#ExpressionLanguage-ContentFunction">Content Function</a></li>
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
-    <li><a href="#ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></li>
+    <li><a href="#ExpressionLanguage-MessageFunction">Message Function</a></li>
+    <li><a href="#ExpressionLanguage-SeverityFunction">Severity Function</a></li>
     <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
+    <li><a href="#ExpressionLanguage-TextFunction">Text Function</a></li>
+    <li><a href="#ExpressionLanguage-ValidationFunction">Validation Function</a></li>
   </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
@@ -832,7 +838,48 @@ the severity rank order, not in the alphabetical order.</p>
 <font color="#888888">}</font></code></pre>
 
 
-<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-UseForValidation">Use EL for Validation</a></a></h2>
+<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-FunctionsAsProperties">EL Functions as Properties</a></a></h2>
+
+<p>Any single argument EL function can now be accessed using property notation. Note that functions have a lower
+precedence than properties. If a conflict with a property is encountered, function notation must be used to disambiguate. </p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">The following expressions are equivalent. The last variant is new for this release.</p>
+
+<pre class="source-code"><code>${ Size( PurchaseOrder.Entries ) }</code></pre>
+<pre class="source-code"><code>${ PurchaseOrder.Entries.Size() }</code></pre>
+<pre class="source-code"><code>${ PurchaseOrder.Entries.Size }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></h2>
+
+<p>Sapphire EL functions are registered by name and the same function can take an arbitrary number of operands. In certain
+cases, it is useful to direct different operand counts to different implementations. To that end, it is now possible to
+constraint which operand counts a particular function definition applies to. Absent the constraint, a function definition
+still applies to all operand counts.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    &lt;function>
+        &lt;name>Enabled&lt;/name></font>
+        &lt;operand-count>1&lt;/operand-count>
+        &lt;operand-count>2&lt;/operand-count>
+        <font color="#888888">&lt;impl>org.eclipse.sapphire.modeling.el.EnabledFunction&lt;/impl>
+    &lt;/function>
+&lt;/extension></font></code></pre>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    &lt;function>
+        &lt;name>Enabled&lt;/name></font>
+        &lt;operand-count>0&lt;/operand-count>
+        <font color="#888888">&lt;impl>org.eclipse.sapphire.ui.internal.PropertyEditorEnabledFunction&lt;/impl>
+    &lt;/function>
+&lt;/extension></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-UseForValidation">Use EL for Validation</a></h2>
 
 <p>Use EL to specify validation rules.</p>
 
@@ -869,10 +916,34 @@ Value&lt;String> getCategory();
 void setCategory( String value );</font></code></pre>
 
 
+<h2><a name="ExpressionLanguage-ContentFunction">Content Function</a></h2>
+
+<p>Returns the content of a value or a transient. For value properties, the default is taken into account, if applicable.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Content }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-MessageFunction">Message Function</a></h2>
+
+<p>Returns the message from a validation result.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation.Message }</code></pre>
+
+
 <h2><a name="ExpressionLanguage-EnabledFunction">Enabled Function</a></h2>
 
-<p>In the context of a property editor, specifying property name when using Enabled() function can be redundant,
-so a zero argument version of the function is now available, but only for the property editor context.</p>
+<p>Returns the enablement of a property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Enabled }</code></pre>
+
+<p>In the context of a property editor, Enabled function can also be called with zero arguments. This accesses the
+enablement of the property editor part.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
@@ -882,31 +953,13 @@ so a zero argument version of the function is now available, but only for the pr
 &lt;/property-editor></font></code></pre>
 
 
-<h2><a name="ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></h2>
+<h2><a name="ExpressionLanguage-SeverityFunction">Severity Function</a></h2>
 
-<p>Sapphire EL functions are registered by name and the same function can take an arbitrary number of operands. In certain
-cases, it is useful to direct different operand counts to different implementations. To that end, it is now possible to
-constraint which operand counts a particular function definition applies to. Absent the constraint, a function definition
-still applies to all operand counts.</p>
+<p>Returns the severity of a validation result.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
-    &lt;function>
-        &lt;name>Enabled&lt;/name></font>
-        &lt;operand-count>1&lt;/operand-count>
-        &lt;operand-count>2&lt;/operand-count>
-        <font color="#888888">&lt;impl>org.eclipse.sapphire.modeling.el.EnabledFunction&lt;/impl>
-    &lt;/function>
-&lt;/extension></font></code></pre>
-
-<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
-    &lt;function>
-        &lt;name>Enabled&lt;/name></font>
-        &lt;operand-count>0&lt;/operand-count>
-        <font color="#888888">&lt;impl>org.eclipse.sapphire.ui.internal.PropertyEditorEnabledFunction&lt;/impl>
-    &lt;/function>
-&lt;/extension></font></code></pre>
+<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation.Severity }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-StateFunction">State Function</a></h2>
@@ -926,6 +979,24 @@ in the catalog sample should include the manufacturer.</p>
         &lt;label></font>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }<font color="#888888">&lt;/label>
     &lt;/case>
 &lt;/node-factory></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-TextFunction">Text Function</a></h2>
+
+<p>Returns the text of a value, taking into account the default, if applicable.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Text }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-ValidationFunction">Validation Function</a></h2>
+
+<p>Returns the validation result of a property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation }</code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-SectionReference">Section Reference</a></a></h2>

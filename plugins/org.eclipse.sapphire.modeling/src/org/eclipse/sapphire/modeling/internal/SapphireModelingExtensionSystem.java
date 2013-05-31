@@ -104,6 +104,29 @@ public final class SapphireModelingExtensionSystem
         throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
     }
     
+    public static Function createFunctionNoEx( final String name,
+                                               final Function... operands )
+    {
+        initialize();
+
+        final List<FunctionFactory> factories = functionFactories.get( name.toLowerCase() );
+
+        if( factories != null )
+        {
+            for( FunctionFactory factory : factories )
+            {
+                final Function function = factory.create( operands );
+                
+                if( function != null )
+                {
+                    return function;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
     private static synchronized void initialize()
     {
         if( ! initialized )

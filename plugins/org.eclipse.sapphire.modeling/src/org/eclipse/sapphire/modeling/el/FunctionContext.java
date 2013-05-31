@@ -12,9 +12,7 @@
 package org.eclipse.sapphire.modeling.el;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -30,37 +28,34 @@ public class FunctionContext
     public FunctionResult property( final Object element,
                                     final String name )
     {
-        final Function f = new Function()
+        if( element == null )
         {
-            @Override
-            public String name()
+            throw new FunctionException( Resources.cannotReadPropertiesFromNull );
+        }
+        else
+        {
+            try
             {
-                return "ReadProperty";
-            }
-            
-            @Override
-            public FunctionResult evaluate( final FunctionContext context )
-            {
-                return new FunctionResult( this, context )
+                final int index = Integer.parseInt( name );
+
+                final Function f = new Function()
                 {
                     @Override
-                    protected Object evaluate() throws FunctionException
+                    public String name()
                     {
-                        if( element == null )
+                        return name;
+                    }
+
+                    @Override
+                    public FunctionResult evaluate( final FunctionContext context )
+                    {
+                        return new FunctionResult( this, context )
                         {
-                            throw new FunctionException( Resources.cannotReadPropertiesFromNull );
-                        }
-                        else
-                        {
-                            if( element instanceof Collection && name.equalsIgnoreCase( "Size" ) )
+                            @Override
+                            protected Object evaluate()
                             {
-                                return ( (Collection<?>) element ).size();
-                            }
-                            else if( element instanceof List )
-                            {
-                                try
+                                if( element instanceof List )
                                 {
-                                    final int index = Integer.parseInt( name );
                                     final List<?> list = (List<?>) element;
                                     
                                     if( index >= 0 && index < list.size() )
@@ -72,92 +67,63 @@ public class FunctionContext
                                         throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
                                     }
                                 }
-                                catch( NumberFormatException e )
+                                else if( element.getClass().isArray() )
                                 {
-                                    // Ignore. Non-integer property means call isn't trying to index into the list.
-                                }
-                            }
-                            else if( element.getClass().isArray() )
-                            {
-                                if( name.equalsIgnoreCase( "Size" ) )
-                                {
-                                    return Array.getLength( element );
+                                    if( index >= 0 && index < Array.getLength( element ) )
+                                    {
+                                        return Array.get( element, index );
+                                    }
+                                    else
+                                    {
+                                        throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
+                                    }
                                 }
                                 else
                                 {
-                                    try
-                                    {
-                                        final int index = Integer.parseInt( name );
-                                        
-                                        if( index >= 0 && index < Array.getLength( element ) )
-                                        {
-                                            return Array.get( element, index );
-                                        }
-                                        else
-                                        {
-                                            throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
-                                        }
-                                    }
-                                    catch( NumberFormatException e )
-                                    {
-                                        // Ignore. Non-integer property means call isn't trying to index into the list.
-                                    }
+                                    throw new FunctionException( "wrong type" );
                                 }
                             }
-                            else if( element instanceof Map )
-                            {
-                                final Map<?,?> map = (Map<?,?>) element;
-                                
-                                if( name.equalsIgnoreCase( "Size" ) )
-                                {
-                                    return map.size();
-                                }
-                                else
-                                {
-                                    for( final Map.Entry<?,?> entry : map.entrySet() )
-                                    {
-                                        final Object key = entry.getKey();
-                                        
-                                        if( key instanceof String )
-                                        {
-                                            if( ( (String) key ).equalsIgnoreCase( name ) )
-                                            {
-                                                return entry.getValue();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if( element == FunctionContext.this )
-                        {
-                            throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessage, name ) );
-                        }
-                        else
-                        {
-                            final Class<?> cl = element.getClass();
-                            final String type;
-                            
-                            if( cl.isArray() )
-                            {
-                                type = cl.getComponentType().getName() + "[]";
-                            }
-                            else
-                            {
-                                type = cl.getName();
-                            }
-                            
-                            throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessageExt, name, type ) );
-                        }
+                        };
                     }
                 };
+                
+                f.init();
+                
+                return f.evaluate( this );
             }
-        };
+            catch( NumberFormatException e )
+            {
+                // Ignore. Non-integer property means call isn't trying to index into a collection.
+            }
+        }
         
-        f.init();
+        final Function f = SapphireModelingExtensionSystem.createFunctionNoEx( name, new Function[] { Literal.create( element ) } );
         
-        return f.evaluate( this );
+        if( f != null )
+        {
+            return f.evaluate( this );
+        }
+        
+        if( element == FunctionContext.this )
+        {
+            throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessage, name ) );
+        }
+        else
+        {
+            final Class<?> cl = element.getClass();
+            final String type;
+            
+            if( cl.isArray() )
+            {
+                type = cl.getComponentType().getName() + "[]";
+            }
+            else
+            {
+                type = cl.getName();
+            }
+            
+            throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessageExt, name, type ) );
+        }
     }
     
     public Function function( final String name,

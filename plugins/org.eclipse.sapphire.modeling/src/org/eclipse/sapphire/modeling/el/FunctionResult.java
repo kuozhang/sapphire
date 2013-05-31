@@ -290,6 +290,11 @@ public abstract class FunctionResult
             throw new IllegalArgumentException();
         }
         
+        if( obj != null && type.isAssignableFrom( obj.getClass() ) )
+        {
+            return type.cast( obj );
+        }
+        
         try
         {
             if( type == String.class )

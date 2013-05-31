@@ -9,11 +9,10 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.el.t0015;
+package org.eclipse.sapphire.tests.modeling.el.functions.enabled;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
@@ -23,46 +22,27 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface RootElement extends Element
+public interface TestElement extends Element
 {
-    ElementType TYPE = new ElementType( RootElement.class );
+    ElementType TYPE = new ElementType( TestElement.class );
     
-    // *** EnableValue ***
+    // *** Enable ***
     
     @Type( base = Boolean.class )
 
-    ValueProperty PROP_ENABLE_VALUE = new ValueProperty( TYPE, "EnableValue" );
+    ValueProperty PROP_ENABLE = new ValueProperty( TYPE, "Enable" );
     
-    Value<Boolean> getEnableValue();
-    void setEnableValue( String value );
-    void setEnableValue( Boolean value );
+    Value<Boolean> getEnable();
+    void setEnable( String value );
+    void setEnable( Boolean value );
     
     // *** Value ***
     
-    @Enablement( expr = "${ EnableValue }" )
+    @Enablement( expr = "${ Enable }" )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     
     Value<String> getValue();
     void setValue( String value );
-    
-    // *** EnableChild ***
-    
-    @Type( base = Boolean.class )
 
-    ValueProperty PROP_ENABLE_CHILD = new ValueProperty( TYPE, "EnableChild" );
-    
-    Value<Boolean> getEnableChild();
-    void setEnableChild( String value );
-    void setEnableChild( Boolean value );
-
-    // *** Child ***
-    
-    @Type( base = ChildElement.class )
-    @Enablement( expr = "${ EnableChild }" )
-    
-    ImpliedElementProperty PROP_CHILD = new ImpliedElementProperty( TYPE, "Child" );
-    
-    ChildElement getChild();
-    
 }

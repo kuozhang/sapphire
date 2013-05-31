@@ -1842,25 +1842,25 @@
                     <content>
                         <property-editor>ShapeType</property-editor>
                         <if>
-                            <condition>${ Enabled( 'Radius' ) }</condition>
+                            <condition>${ Radius.Enabled }</condition>
                             <then>
                                 <property-editor>Radius</property-editor>
                             </then>
                         </if>
                         <if>
-                            <condition>${ Enabled( 'EdgeLength1' ) }</condition>
+                            <condition>${ EdgeLength1.Enabled ) }</condition>
                             <then>
                                 <property-editor>EdgeLength1</property-editor>
                             </then>
                         </if>
                         <if>
-                            <condition>${ Enabled( 'EdgeLength2' ) }</condition>
+                            <condition>${ EdgeLength2.Enabled ) }</condition>
                             <then>
                                 <property-editor>EdgeLength2</property-editor>
                             </then>
                         </if>
                         <if>
-                            <condition>${ Enabled( 'EdgeLength3' ) }</condition>
+                            <condition>${ EdgeLength3.Enabled ) }</condition>
                             <then>
                                 <property-editor>EdgeLength3</property-editor>
                             </then>
