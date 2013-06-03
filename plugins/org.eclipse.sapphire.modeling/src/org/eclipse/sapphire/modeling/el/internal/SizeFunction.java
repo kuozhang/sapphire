@@ -23,6 +23,7 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Determines the size of a collection, a map or an array.
@@ -49,38 +50,40 @@ public final class SizeFunction extends Function
             @Override
             protected Object evaluate()
             {
-                final Object operand = operand( 0 );
+                Object operand = null;
                 
-                if( this.operand != operand )
+                try
                 {
-                    if( this.operand instanceof ElementList && this.listener != null )
+                    operand = operand( 0, Object.class, false );
+                }
+                finally
+                {
+                    if( this.operand != operand )
                     {
-                        ( (ElementList<?>) this.operand ).detach( this.listener );
-                    }
-                    
-                    this.operand = operand;
-                    
-                    if( this.operand instanceof ElementList )
-                    {
-                        if( this.listener == null )
+                        if( this.operand instanceof ElementList && this.listener != null )
                         {
-                            this.listener = new FilteredListener<PropertyContentEvent>()
-                            {
-                                @Override
-                                protected void handleTypedEvent( final PropertyContentEvent event )
-                                {
-                                    refresh();
-                                }
-                            };
+                            ( (ElementList<?>) this.operand ).detach( this.listener );
                         }
                         
-                        ( (ElementList<?>) this.operand ).attach( this.listener );
+                        this.operand = operand;
+                        
+                        if( this.operand instanceof ElementList )
+                        {
+                            if( this.listener == null )
+                            {
+                                this.listener = new FilteredListener<PropertyContentEvent>()
+                                {
+                                    @Override
+                                    protected void handleTypedEvent( final PropertyContentEvent event )
+                                    {
+                                        refresh();
+                                    }
+                                };
+                            }
+                            
+                            ( (ElementList<?>) this.operand ).attach( this.listener );
+                        }
                     }
-                }
-                
-                if( this.operand == null )
-                {
-                    throw new FunctionException( "null" );
                 }
                 
                 if( this.operand instanceof Collection )
@@ -95,10 +98,9 @@ public final class SizeFunction extends Function
                 {
                     return Array.getLength( this.operand );
                 }
-                else
-                {
-                    throw new FunctionException( "wrong type" );
-                }
+
+                final String msg = NLS.bind( Resources.unsupportedTypeMessage, this.operand.getClass().getName() );
+                throw new FunctionException( msg );
             }
             
             @Override
@@ -115,6 +117,16 @@ public final class SizeFunction extends Function
                 this.listener = null;
             }
         };
+    }
+
+    private static final class Resources extends NLS
+    {
+        public static String unsupportedTypeMessage;
+        
+        static
+        {
+            initializeMessages( SizeFunction.class.getName(), Resources.class );
+        }
     }
 
 }

@@ -141,6 +141,30 @@ public abstract class FunctionResult
         }
     }
     
+    public final <T> T operand( final int position, final Class<T> type, final boolean nullable )
+    {
+        final Object operand = operand( position );
+        final T operandTyped;
+        
+        try
+        {
+            operandTyped = cast( operand, type );
+        }
+        catch( FunctionException e )
+        {
+            final String msg = NLS.bind( Resources.operandWrongTypeMessage, function().name(), position, type.getName(), operand.getClass().getName() );
+            throw new FunctionException( msg );
+        }
+        
+        if( operandTyped == null && ! nullable )
+        {
+            final String msg = NLS.bind( Resources.operandNullMessage, function().name(), position );
+            throw new FunctionException( msg );
+        }
+        
+        return operandTyped;
+    }
+    
     private void listenToOperand( final FunctionResult operand )
     {
         operand.attach( this.listener );
@@ -713,6 +737,8 @@ public abstract class FunctionResult
     {
         public static String cannotCastMessage;
         public static String missingOperandMessage;
+        public static String operandNullMessage;
+        public static String operandWrongTypeMessage;
         
         static
         {

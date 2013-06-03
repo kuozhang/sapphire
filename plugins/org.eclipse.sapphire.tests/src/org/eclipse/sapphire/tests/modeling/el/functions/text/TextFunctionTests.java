@@ -14,6 +14,7 @@ package org.eclipse.sapphire.tests.modeling.el.functions.text;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
@@ -40,6 +41,8 @@ public final class TextFunctionTests extends TestExpr
         suite.setName( "TextFunctionTests" );
 
         suite.addTest( new TextFunctionTests( "testTextFunction" ) );
+        suite.addTest( new TextFunctionTests( "testTextFunctionNull" ) );
+        suite.addTest( new TextFunctionTests( "testTextFunctionWrongType" ) );
         
         return suite;
     }
@@ -84,5 +87,44 @@ public final class TextFunctionTests extends TestExpr
         }
     }
 
-}
+    public void testTextFunctionNull()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( null ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Text does not accept nulls in position 0.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
 
+    public void testTextFunctionWrongType()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Text( 'abc' ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Text expects org.eclipse.sapphire.Value in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+
+}

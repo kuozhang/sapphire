@@ -20,7 +20,6 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
-import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 
 /**
@@ -40,41 +39,43 @@ public abstract class PropertyFunction<P extends Property> extends Function
             @Override
             protected Object evaluate()
             {
-                final P p = cast( operand( 0 ), findPropertyType() );
+                P p = null;
                 
-                if( this.property != p )
+                try
                 {
-                    if( this.property != null && this.listener != null )
+                    p = operand( 0, findPropertyType(), false );
+                }
+                finally
+                {
+                    if( this.property != p )
                     {
-                        this.property.detach( this.listener );
-                    }
-                    
-                    this.property = p;
-                    
-                    if( this.property != null )
-                    {
-                        if( this.listener == null )
+                        if( this.property != null && this.listener != null )
                         {
-                            this.listener = new Listener()
-                            {
-                                @Override
-                                public void handle( final Event event )
-                                {
-                                    if( event instanceof PropertyEvent && relevant( (PropertyEvent) event ) )
-                                    {
-                                        refresh();
-                                    }
-                                }
-                            };
+                            this.property.detach( this.listener );
                         }
                         
-                        this.property.attach( this.listener );
+                        this.property = p;
+                        
+                        if( this.property != null )
+                        {
+                            if( this.listener == null )
+                            {
+                                this.listener = new Listener()
+                                {
+                                    @Override
+                                    public void handle( final Event event )
+                                    {
+                                        if( event instanceof PropertyEvent && relevant( (PropertyEvent) event ) )
+                                        {
+                                            refresh();
+                                        }
+                                    }
+                                };
+                            }
+                            
+                            this.property.attach( this.listener );
+                        }
                     }
-                }
-                
-                if( this.property == null )
-                {
-                    throw new FunctionException( "null" );
                 }
                 
                 return PropertyFunction.this.evaluate( this.property );

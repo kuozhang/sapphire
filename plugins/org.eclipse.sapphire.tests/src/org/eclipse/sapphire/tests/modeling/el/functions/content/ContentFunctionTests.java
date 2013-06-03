@@ -14,6 +14,7 @@ package org.eclipse.sapphire.tests.modeling.el.functions.content;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
@@ -40,6 +41,8 @@ public final class ContentFunctionTests extends TestExpr
         suite.setName( "ContentFunctionTests" );
 
         suite.addTest( new ContentFunctionTests( "testContentFunction" ) );
+        suite.addTest( new ContentFunctionTests( "testContentFunctionNull" ) );
+        suite.addTest( new ContentFunctionTests( "testContentFunctionWrongType" ) );
         
         return suite;
     }
@@ -98,5 +101,44 @@ public final class ContentFunctionTests extends TestExpr
         }
     }
 
-}
+    public void testContentFunctionNull()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( null ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Content does not accept nulls in position 0.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
 
+    public void testContentFunctionWrongType()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Content( 'abc' ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Content expects org.eclipse.sapphire.Property in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+
+}

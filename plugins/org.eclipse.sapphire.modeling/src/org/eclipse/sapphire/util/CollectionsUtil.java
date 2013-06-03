@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.util;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -59,6 +60,31 @@ public final class CollectionsUtil
         }
 
         return null;
+    }
+    
+    public static <V> V findIgnoringCase( final Map<?,V> map,
+                                          final String key )
+    {
+        V value = map.get( key );
+        
+        if( value == null )
+        {
+            for( Map.Entry<?,V> entry : map.entrySet() )
+            {
+                final Object entryKey = entry.getKey();
+                
+                if( entryKey instanceof String )
+                {
+                    if( ( (String) entryKey ).equalsIgnoreCase( key ) )
+                    {
+                        value = entry.getValue();
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return value;
     }
 
     public static <T> boolean equalsBasedOnEntryIdentity( final List<T> a, 

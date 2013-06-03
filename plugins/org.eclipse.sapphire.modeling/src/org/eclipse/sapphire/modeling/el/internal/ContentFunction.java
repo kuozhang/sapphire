@@ -17,6 +17,7 @@ import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.Transient;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.el.FunctionException;
+import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Returns the content of a value or a transient. For value properties, the default is taken into account, if applicable.
@@ -44,13 +45,24 @@ public final class ContentFunction extends PropertyFunction<Property>
             return ( (Transient<?>) property ).content();
         }
         
-        throw new FunctionException( "wrong type" );
+        final String msg = NLS.bind( Resources.unsupportedTypeMessage, property.getClass().getName() );
+        throw new FunctionException( msg );
     }
 
     @Override
     protected boolean relevant( final PropertyEvent event )
     {
         return ( event instanceof PropertyContentEvent );
+    }
+    
+    private static final class Resources extends NLS
+    {
+        public static String unsupportedTypeMessage;
+        
+        static
+        {
+            initializeMessages( ContentFunction.class.getName(), Resources.class );
+        }
     }
     
 }

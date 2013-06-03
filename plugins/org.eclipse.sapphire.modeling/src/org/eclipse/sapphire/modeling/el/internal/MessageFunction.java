@@ -14,7 +14,6 @@ package org.eclipse.sapphire.modeling.el.internal;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
-import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 
 /**
@@ -39,14 +38,7 @@ public final class MessageFunction extends Function
             @Override
             protected Object evaluate()
             {
-                final Status valres = cast( operand( 0 ), Status.class );
-                
-                if( valres == null )
-                {
-                    throw new FunctionException( "null" );
-                }
-                
-                return valres.message();
+                return operand( 0, Status.class, false ).message();
             }
         };
     }

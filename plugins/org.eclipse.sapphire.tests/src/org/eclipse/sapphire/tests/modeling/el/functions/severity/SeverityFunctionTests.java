@@ -41,6 +41,8 @@ public final class SeverityFunctionTests extends TestExpr
         suite.setName( "SeverityFunctionTests" );
 
         suite.addTest( new SeverityFunctionTests( "testSeverityFunction" ) );
+        suite.addTest( new SeverityFunctionTests( "testSeverityFunctionNull" ) );
+        suite.addTest( new SeverityFunctionTests( "testSeverityFunctionWrongType" ) );
         
         return suite;
     }
@@ -71,5 +73,44 @@ public final class SeverityFunctionTests extends TestExpr
         }
     }
 
-}
+    public void testSeverityFunctionNull()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( null ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Severity does not accept nulls in position 0.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
 
+    public void testSeverityFunctionWrongType()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Severity( 'abc' ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Severity expects org.eclipse.sapphire.modeling.Status in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+
+}

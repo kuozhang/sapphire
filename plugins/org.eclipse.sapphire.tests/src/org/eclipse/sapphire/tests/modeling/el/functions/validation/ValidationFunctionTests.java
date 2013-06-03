@@ -41,6 +41,8 @@ public final class ValidationFunctionTests extends TestExpr
         suite.setName( "ValidationFunctionTests" );
 
         suite.addTest( new ValidationFunctionTests( "testValidationFunction" ) );
+        suite.addTest( new ValidationFunctionTests( "testValidationFunctionNull" ) );
+        suite.addTest( new ValidationFunctionTests( "testValidationFunctionWrongType" ) );
         
         return suite;
     }
@@ -71,5 +73,44 @@ public final class ValidationFunctionTests extends TestExpr
         }
     }
 
-}
+    public void testValidationFunctionNull()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Validation( null ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Validation does not accept nulls in position 0.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
 
+    public void testValidationFunctionWrongType()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Validation( 'abc' ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Validation expects org.eclipse.sapphire.Property in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+
+}

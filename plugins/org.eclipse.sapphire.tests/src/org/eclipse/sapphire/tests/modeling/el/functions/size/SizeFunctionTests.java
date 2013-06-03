@@ -14,6 +14,7 @@ package org.eclipse.sapphire.tests.modeling.el.functions.size;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
@@ -40,6 +41,8 @@ public final class SizeFunctionTests extends TestExpr
         suite.setName( "SizeFunctionTests" );
 
         suite.addTest( new SizeFunctionTests( "testSizeFunction" ) );
+        suite.addTest( new SizeFunctionTests( "testSizeFunctionNull" ) );
+        suite.addTest( new SizeFunctionTests( "testSizeFunctionWrongType" ) );
         
         return suite;
     }
@@ -70,5 +73,44 @@ public final class SizeFunctionTests extends TestExpr
         }
     }
 
-}
+    public void testSizeFunctionNull()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( null ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Size does not accept nulls in position 0.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
 
+    public void testSizeFunctionWrongType()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 'abc' ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Size cannot be applied to a java.lang.String object.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+
+}

@@ -11,8 +11,11 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import static org.eclipse.sapphire.util.CollectionsUtil.findIgnoringCase;
+
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -34,66 +37,126 @@ public class FunctionContext
         }
         else
         {
-            try
+            if( element instanceof Map )
             {
-                final int index = Integer.parseInt( name );
-
-                final Function f = new Function()
+                if( ! name.equalsIgnoreCase( "Size" ) )
                 {
-                    @Override
-                    public String name()
+                    final Map<?,?> map = (Map<?,?>) element;
+                    final Object value = findIgnoringCase( map, name );
+                    
+                    if( value != null )
                     {
-                        return name;
-                    }
-
-                    @Override
-                    public FunctionResult evaluate( final FunctionContext context )
-                    {
-                        return new FunctionResult( this, context )
+                        final Function f = new Function()
                         {
                             @Override
-                            protected Object evaluate()
+                            public String name()
                             {
-                                if( element instanceof List )
+                                return name;
+                            }
+        
+                            @Override
+                            public FunctionResult evaluate( final FunctionContext context )
+                            {
+                                return new FunctionResult( this, context )
                                 {
-                                    final List<?> list = (List<?>) element;
-                                    
-                                    if( index >= 0 && index < list.size() )
+                                    @Override
+                                    protected Object evaluate()
                                     {
-                                        return list.get( index );
+                                        return value;
                                     }
-                                    else
-                                    {
-                                        throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
-                                    }
-                                }
-                                else if( element.getClass().isArray() )
-                                {
-                                    if( index >= 0 && index < Array.getLength( element ) )
-                                    {
-                                        return Array.get( element, index );
-                                    }
-                                    else
-                                    {
-                                        throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
-                                    }
-                                }
-                                else
-                                {
-                                    throw new FunctionException( "wrong type" );
-                                }
+                                };
                             }
                         };
+                        
+                        f.init();
+                        
+                        return f.evaluate( this );
                     }
-                };
-                
-                f.init();
-                
-                return f.evaluate( this );
+                }
             }
-            catch( NumberFormatException e )
+            else
             {
-                // Ignore. Non-integer property means call isn't trying to index into a collection.
+                try
+                {
+                    final int index = Integer.parseInt( name );
+                    
+                    if( element instanceof List )
+                    {
+                        final List<?> list = (List<?>) element;
+                        
+                        final Function f = new Function()
+                        {
+                            @Override
+                            public String name()
+                            {
+                                return name;
+                            }
+        
+                            @Override
+                            public FunctionResult evaluate( final FunctionContext context )
+                            {
+                                return new FunctionResult( this, context )
+                                {
+                                    @Override
+                                    protected Object evaluate()
+                                    {
+                                        if( index >= 0 && index < list.size() )
+                                        {
+                                            return list.get( index );
+                                        }
+                                        else
+                                        {
+                                            throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
+                                        }
+                                    }
+                                };
+                            }
+                        };
+                        
+                        f.init();
+                        
+                        return f.evaluate( this );
+                    }
+                    else if( element.getClass().isArray() )
+                    {
+                        final Function f = new Function()
+                        {
+                            @Override
+                            public String name()
+                            {
+                                return name;
+                            }
+        
+                            @Override
+                            public FunctionResult evaluate( final FunctionContext context )
+                            {
+                                return new FunctionResult( this, context )
+                                {
+                                    @Override
+                                    protected Object evaluate()
+                                    {
+                                        if( index >= 0 && index < Array.getLength( element ) )
+                                        {
+                                            return Array.get( element, index );
+                                        }
+                                        else
+                                        {
+                                            throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
+                                        }
+                                    }
+                                };
+                            }
+                        };
+                        
+                        f.init();
+                        
+                        return f.evaluate( this );
+                    }
+                }
+                catch( NumberFormatException e )
+                {
+                    // Ignore. Non-integer property means call isn't trying to index into a collection.
+                }
             }
         }
         

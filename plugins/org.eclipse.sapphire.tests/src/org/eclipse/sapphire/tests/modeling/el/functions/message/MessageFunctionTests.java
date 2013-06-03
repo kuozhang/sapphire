@@ -14,11 +14,13 @@ package org.eclipse.sapphire.tests.modeling.el.functions.message;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.eclipse.sapphire.tests.modeling.el.functions.severity.TestElement;
 
 /**
  * Tests Message function.
@@ -40,6 +42,8 @@ public final class MessageFunctionTests extends TestExpr
         suite.setName( "MessageFunctionTests" );
 
         suite.addTest( new MessageFunctionTests( "testMessageFunction" ) );
+        suite.addTest( new MessageFunctionTests( "testMessageFunctionNull" ) );
+        suite.addTest( new MessageFunctionTests( "testMessageFunctionWrongType" ) );
         
         return suite;
     }
@@ -70,5 +74,44 @@ public final class MessageFunctionTests extends TestExpr
         }
     }
 
-}
+    public void testMessageFunctionNull()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Message( null ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Message does not accept nulls in position 0.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
 
+    public void testMessageFunctionWrongType()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Message( 'abc' ) }" ).evaluate( context );
+        
+        try
+        {
+            final Status st = fr.status();
+            
+            assertEquals( Status.Severity.ERROR, st.severity() );
+            assertEquals( "Function Message expects org.eclipse.sapphire.modeling.Status in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+    
+}
