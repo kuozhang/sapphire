@@ -1848,19 +1848,19 @@
                             </then>
                         </if>
                         <if>
-                            <condition>${ EdgeLength1.Enabled ) }</condition>
+                            <condition>${ EdgeLength1.Enabled }</condition>
                             <then>
                                 <property-editor>EdgeLength1</property-editor>
                             </then>
                         </if>
                         <if>
-                            <condition>${ EdgeLength2.Enabled ) }</condition>
+                            <condition>${ EdgeLength2.Enabled }</condition>
                             <then>
                                 <property-editor>EdgeLength2</property-editor>
                             </then>
                         </if>
                         <if>
-                            <condition>${ EdgeLength3.Enabled ) }</condition>
+                            <condition>${ EdgeLength3.Enabled }</condition>
                             <then>
                                 <property-editor>EdgeLength3</property-editor>
                             </then>
