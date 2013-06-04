@@ -714,7 +714,7 @@ public final class PropertyEditorPart extends FormComponentPart
             this.presentation.dispose();
         }
         
-        if( this.propertyValidationListener != null )
+        if( this.propertyValidationListener != null && ! this.property.disposed() )
         {
             this.property.detach( this.propertyValidationListener );
             
