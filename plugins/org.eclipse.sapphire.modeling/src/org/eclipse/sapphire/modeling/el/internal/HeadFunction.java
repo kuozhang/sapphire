@@ -1,0 +1,62 @@
+/******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.modeling.el.internal;
+
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+
+/**
+ * Returns a fragment of a string starting at the beginning and not exceeding the specified length.
+ * 
+ * <p>A negative fragment length is normalized to zero.<br/>
+ * A fragment length exceeding the length of the input is normalized to the length of the input.</p>
+ * 
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ */
+
+public final class HeadFunction extends Function
+{
+    @Override
+    public String name()
+    {
+        return "Head";
+    }
+
+    @Override
+    public FunctionResult evaluate( final FunctionContext context )
+    {
+        return new FunctionResult( this, context )
+        {
+            @Override
+            protected Object evaluate()
+            {
+                final String string = cast( operand( 0 ), String.class );
+                final int stringLength = string.length();
+                
+                int length = cast( operand( 1 ), Integer.class );
+                
+                if( length < 0 )
+                {
+                    length = 0;
+                }
+                else if( length > stringLength )
+                {
+                    length = stringLength;
+                }
+                
+                return string.substring( 0, length );
+            }
+        };
+    }
+    
+}

@@ -53,9 +53,12 @@
     <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
     <li><a href="#ExpressionLanguage-ContentFunction">Content Function</a></li>
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
+    <li><a href="#ExpressionLanguage-FragmentFunction">Fragment Function</a></li>
+    <li><a href="#ExpressionLanguage-HeadFunction">Head Function</a></li>
     <li><a href="#ExpressionLanguage-MessageFunction">Message Function</a></li>
     <li><a href="#ExpressionLanguage-SeverityFunction">Severity Function</a></li>
     <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
+    <li><a href="#ExpressionLanguage-TailFunction">Tail Function</a></li>
     <li><a href="#ExpressionLanguage-TextFunction">Text Function</a></li>
     <li><a href="#ExpressionLanguage-ValidationFunction">Validation Function</a></li>
   </ol>
@@ -953,6 +956,40 @@ enablement of the property editor part.</p>
 &lt;/property-editor></font></code></pre>
 
 
+<h2><a name="ExpressionLanguage-FragmentFunction">Fragment Function</a></h2>
+
+<p>Returns a fragment of a string. The fragment starts at the index specified by the second argument and extends to
+the character before the index specified by the third argument. The length of the fragment is end index minus start
+index.</p>
+
+<ul>
+  <li>A negative start index is normalized to zero.</li>
+  <li>A start index exceeding the length of the input is normalized to the length of the input.</li>
+  <li>An end index exceeding the length of the input is normalized to the length of the input.</li>
+  <li>An end index that is smaller than the start index is normalized to the start index.</li>
+</ul>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ Value.Fragment( 3, 6 ) }
+${ Fragment( "abcdef", 0, 3 ) }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-HeadFunction">Head Function</a></h2>
+
+<p>Returns a fragment of a string starting at the beginning and not exceeding the specified length.</p>
+
+<ul>
+  <li>A negative fragment length is normalized to zero.</li>
+  <li>A fragment length exceeding the length of the input is normalized to the length of the input.</li>
+</ul>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ Value.Head( 3 ) }
+${ Head( "abcdef", 3 ) }</code></pre>
+
+
 <h2><a name="ExpressionLanguage-SeverityFunction">Severity Function</a></h2>
 
 <p>Returns the severity of a validation result.</p>
@@ -979,6 +1016,21 @@ in the catalog sample should include the manufacturer.</p>
         &lt;label></font>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }<font color="#888888">&lt;/label>
     &lt;/case>
 &lt;/node-factory></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-TailFunction">Tail Function</a></h2>
+
+<p>Returns a fragment of a string starting at the end and not exceeding the specified length.</p>
+
+<ul>
+  <li>A negative fragment length is normalized to zero.</li>
+  <li>A fragment length exceeding the length of the input is normalized to the length of the input.</li>
+</ul>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ Value.Tail( 3 ) }
+${ Tail( "abcdef", 3 ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-TextFunction">Text Function</a></h2>

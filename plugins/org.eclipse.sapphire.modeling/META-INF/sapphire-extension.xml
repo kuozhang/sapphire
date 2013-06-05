@@ -691,4 +691,22 @@
         <impl>org.eclipse.sapphire.modeling.el.internal.EnabledFunction</impl>
         <description>Returns the enablement of a property.</description>
     </function>
+    <function>
+        <name>Fragment</name>
+        <operand-count>3</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.FragmentFunction</impl>
+        <description>Returns a fragment of a string. The fragment starts at the index specified by the second argument and extends to the character before the index specified by the third argument. The length of the fragment is end index minus start index. A negative start index is normalized to zero. A start index exceeding the length of the input is normalized to the length of the input. An end index exceeding the length of the input is normalized to the length of the input. An end index that is smaller than the start index is normalized to the start index.</description>
+    </function>
+    <function>
+        <name>Head</name>
+        <operand-count>2</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.HeadFunction</impl>
+        <description>Returns a fragment of a string starting at the beginning and not exceeding the specified length. A negative fragment length is normalized to zero. A fragment length exceeding the length of the input is normalized to the length of the input.</description>
+    </function>
+    <function>
+        <name>Tail</name>
+        <operand-count>2</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.TailFunction</impl>
+        <description>Returns a fragment of a string starting at the end and not exceeding the specified length. A negative fragment length is normalized to zero. A fragment length exceeding the length of the input is normalized to the length of the input.</description>
+    </function>
 </extension>

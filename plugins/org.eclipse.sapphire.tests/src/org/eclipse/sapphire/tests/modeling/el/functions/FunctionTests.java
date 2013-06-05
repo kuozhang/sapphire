@@ -17,9 +17,12 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.modeling.el.functions.content.ContentFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.enabled.EnabledFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.fragment.FragmentFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.head.HeadFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.message.MessageFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.severity.SeverityFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.size.SizeFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.tail.TailFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.text.TextFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.validation.ValidationFunctionTests;
 
@@ -42,9 +45,12 @@ public final class FunctionTests extends TestCase
         
         suite.addTest( ContentFunctionTests.suite() );
         suite.addTest( EnabledFunctionTests.suite() );
+        suite.addTest( FragmentFunctionTests.suite() );
+        suite.addTest( HeadFunctionTests.suite() );
         suite.addTest( MessageFunctionTests.suite() );
         suite.addTest( SeverityFunctionTests.suite() );
         suite.addTest( SizeFunctionTests.suite() );
+        suite.addTest( TailFunctionTests.suite() );
         suite.addTest( TextFunctionTests.suite() );
         suite.addTest( ValidationFunctionTests.suite() );
         
