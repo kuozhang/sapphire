@@ -18,8 +18,10 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 /**
  * Returns a fragment of a string starting at the end and not exceeding the specified length.
  * 
- * <p>A negative fragment length is normalized to zero.<br/>
- * A fragment length exceeding the length of the input is normalized to the length of the input.</p>
+ * <ul>
+ *   <li>A negative fragment length is normalized to zero.</li>
+ *   <li>A fragment length exceeding the length of the input is normalized to the length of the input.</li>
+ * </ul>
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

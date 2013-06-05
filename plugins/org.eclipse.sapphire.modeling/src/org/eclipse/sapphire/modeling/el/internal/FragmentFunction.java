@@ -20,10 +20,12 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
  * the character before the index specified by the third argument. The length of the fragment is end index minus start
  * index.
  * 
- * <p>A negative start index is normalized to zero.<br/>
- * A start index exceeding the length of the input is normalized to the length of the input.<br/>
- * An end index exceeding the length of the input is normalized to the length of the input.<br/>
- * An end index that is smaller than the start index is normalized to the start index.</p>
+ * <ul>
+ *   <li>A negative start index is normalized to zero.</li>
+ *   <li>A start index exceeding the length of the input is normalized to the length of the input.</li>
+ *   <li>An end index exceeding the length of the input is normalized to the length of the input.</li>
+ *   <li>An end index that is smaller than the start index is normalized to the start index.</li>
+ * </ul>
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
