@@ -18,7 +18,9 @@ import java.util.Map;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
@@ -26,7 +28,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
- * Determines the size of a collection, a map or an array.
+ * Determines the size of a collection, a map, an array or a string.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -60,14 +62,14 @@ public final class SizeFunction extends Function
                 {
                     if( this.operand != operand )
                     {
-                        if( this.operand instanceof ElementList && this.listener != null )
+                        if( this.operand instanceof Property && this.listener != null )
                         {
-                            ( (ElementList<?>) this.operand ).detach( this.listener );
+                            ( (Property) this.operand ).detach( this.listener );
                         }
                         
                         this.operand = operand;
                         
-                        if( this.operand instanceof ElementList )
+                        if( this.operand instanceof Property )
                         {
                             if( this.listener == null )
                             {
@@ -81,7 +83,7 @@ public final class SizeFunction extends Function
                                 };
                             }
                             
-                            ( (ElementList<?>) this.operand ).attach( this.listener );
+                            ( (Property) this.operand ).attach( this.listener );
                         }
                     }
                 }
@@ -97,6 +99,15 @@ public final class SizeFunction extends Function
                 else if( this.operand.getClass().isArray() )
                 {
                     return Array.getLength( this.operand );
+                }
+                else if( this.operand instanceof Value )
+                {
+                    final String text = ( (Value<?>) this.operand ).text();
+                    return ( text == null ? 0 : text.length() );
+                }
+                else if( this.operand instanceof String )
+                {
+                    return ( (String) this.operand ).length();
                 }
 
                 final String msg = NLS.bind( Resources.unsupportedTypeMessage, this.operand.getClass().getName() );

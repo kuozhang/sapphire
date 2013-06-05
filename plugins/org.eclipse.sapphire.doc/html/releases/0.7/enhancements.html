@@ -57,6 +57,7 @@
     <li><a href="#ExpressionLanguage-HeadFunction">Head Function</a></li>
     <li><a href="#ExpressionLanguage-MessageFunction">Message Function</a></li>
     <li><a href="#ExpressionLanguage-SeverityFunction">Severity Function</a></li>
+    <li><a href="#ExpressionLanguage-SizeFunction">Size Function</a></li>
     <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
     <li><a href="#ExpressionLanguage-TailFunction">Tail Function</a></li>
     <li><a href="#ExpressionLanguage-TextFunction">Text Function</a></li>
@@ -997,6 +998,17 @@ ${ Head( "abcdef", 3 ) }</code></pre>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation.Severity }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-SizeFunction">Size Function</a></h2>
+
+<p>Determines the size of a collection, a map, an array or a string.</p>
+
+<p style="margin-left: 20px;"><b>Examples</b></p>
+
+<pre class="source-code"><code>${ PurchaseOrder.Entries.Size }
+${ PurchaseOrder.BillingInformation.Name.Size }
+${ Size( "abcdef" ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-StateFunction">State Function</a></h2>

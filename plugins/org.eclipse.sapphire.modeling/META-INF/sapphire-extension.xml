@@ -665,7 +665,7 @@
         <name>Size</name>
         <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.SizeFunction</impl>
-        <description>Determines the size of a collection, a map or an array.</description>
+        <description>Determines the size of a collection, a map, an array or a string.</description>
     </function>
     <function>
         <description>Returns the validation result of a property.</description>

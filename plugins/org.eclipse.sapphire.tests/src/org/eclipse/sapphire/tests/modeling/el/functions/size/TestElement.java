@@ -27,6 +27,13 @@ public interface TestElement extends Element
 {
     ElementType TYPE = new ElementType( TestElement.class );
     
+    // *** Value ***
+    
+    ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    
+    Value<String> getValue();
+    void setValue( String value );
+    
     // *** List ***
     
     interface ListEntry extends Element

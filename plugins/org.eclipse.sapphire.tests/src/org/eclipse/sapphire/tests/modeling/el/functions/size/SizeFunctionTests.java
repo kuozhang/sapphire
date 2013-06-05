@@ -40,19 +40,21 @@ public final class SizeFunctionTests extends TestExpr
         
         suite.setName( "SizeFunctionTests" );
 
-        suite.addTest( new SizeFunctionTests( "testSizeFunction" ) );
+        suite.addTest( new SizeFunctionTests( "testSizeFunctionOnList" ) );
+        suite.addTest( new SizeFunctionTests( "testSizeFunctionOnValue" ) );
+        suite.addTest( new SizeFunctionTests( "testSizeFunctionOnString" ) );
         suite.addTest( new SizeFunctionTests( "testSizeFunctionNull" ) );
         suite.addTest( new SizeFunctionTests( "testSizeFunctionWrongType" ) );
         
         return suite;
     }
     
-    public void testSizeFunction()
+    public void testSizeFunctionOnList()
     {
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        FunctionResult fr = ExpressionLanguageParser.parse( "${ List.Size }" ).evaluate( context );
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ List.Size }" ).evaluate( context );
         
         try
         {
@@ -66,6 +68,45 @@ public final class SizeFunctionTests extends TestExpr
             
             element.getList().clear();
             assertEquals( 0, fr.value() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+
+    public void testSizeFunctionOnValue()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Size }" ).evaluate( context );
+        
+        try
+        {
+            assertEquals( 0, fr.value() );
+            
+            element.setValue( "abc" );
+            assertEquals( 3, fr.value() );
+            
+            element.setValue( null );
+            assertEquals( 0, fr.value() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
+    }
+
+    public void testSizeFunctionOnString()
+    {
+        final FunctionContext context = new FunctionContext();
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 'abcdef' ) }" ).evaluate( context );
+        
+        try
+        {
+            assertEquals( 6, fr.value() );
         }
         finally
         {
@@ -98,14 +139,14 @@ public final class SizeFunctionTests extends TestExpr
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 'abc' ) }" ).evaluate( context );
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Size( 3 ) }" ).evaluate( context );
         
         try
         {
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
-            assertEquals( "Function Size cannot be applied to a java.lang.String object.", st.message() );
+            assertEquals( "Function Size cannot be applied to a java.math.BigInteger object.", st.message() );
         }
         finally
         {
