@@ -715,4 +715,10 @@
         <impl>org.eclipse.sapphire.modeling.el.internal.MatchesFunction</impl>
         <description>Determines whether a string matches a regular expression. The full semantics are specified by Java's String.matches() function.</description>
     </function>
+    <function>
+        <name>Index</name>
+        <operand-count>1</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.IndexFunction</impl>
+        <description>Determines the index of a model element within its parent list.</description>
+    </function>
 </extension>
