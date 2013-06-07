@@ -709,4 +709,10 @@
         <impl>org.eclipse.sapphire.modeling.el.internal.TailFunction</impl>
         <description>Returns a fragment of a string starting at the end and not exceeding the specified length. A negative fragment length is normalized to zero. A fragment length exceeding the length of the input is normalized to the length of the input.</description>
     </function>
+    <function>
+        <name>Matches</name>
+        <operand-count>2</operand-count>
+        <impl>org.eclipse.sapphire.modeling.el.internal.MatchesFunction</impl>
+        <description>Determines whether a string matches a regular expression. The full semantics are specified by Java's String.matches() function.</description>
+    </function>
 </extension>
