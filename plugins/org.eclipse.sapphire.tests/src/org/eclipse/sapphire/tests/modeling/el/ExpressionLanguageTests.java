@@ -26,6 +26,7 @@ import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.functions.FunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.operators.OperatorTests;
+import org.eclipse.sapphire.tests.modeling.el.properties.PropertyTests;
 import org.eclipse.sapphire.tests.modeling.el.t0001.TestExpr0001;
 import org.eclipse.sapphire.tests.modeling.el.t0002.TestExpr0002;
 import org.eclipse.sapphire.tests.modeling.el.t0003.TestExpr0003;
@@ -121,6 +122,7 @@ public final class ExpressionLanguageTests
         
         suite.addTest( OperatorTests.suite() );
         suite.addTest( FunctionTests.suite() );
+        suite.addTest( PropertyTests.suite() );
         suite.addTest( TestExpr0001.suite() );
         suite.addTest( TestExpr0002.suite() );
         suite.addTest( TestExpr0003.suite() );

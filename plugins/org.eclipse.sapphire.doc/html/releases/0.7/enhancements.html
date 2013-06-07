@@ -63,6 +63,7 @@
     <li><a href="#ExpressionLanguage-TailFunction">Tail Function</a></li>
     <li><a href="#ExpressionLanguage-TextFunction">Text Function</a></li>
     <li><a href="#ExpressionLanguage-ValidationFunction">Validation Function</a></li>
+    <li><a href="#ExpressionLanguage-ThisProperty">This Property</a></li>
   </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
@@ -1071,6 +1072,19 @@ ${ Tail( "abcdef", 3 ) }</code></pre>
 <p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-ThisProperty">This Property</a></h2>
+
+<p>In situations where EL context is established by a model element, it can be useful to directly reference that
+element in order to pass it to functions. Mirroring Java, the context now exposes "This" property.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, the expression computes the index of the context model element within
+its parent list.</p>
+
+<pre class="source-code"><code>${ This.Index }</code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-SectionReference">Section Reference</a></a></h2>

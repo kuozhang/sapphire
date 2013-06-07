@@ -27,6 +27,8 @@ import org.eclipse.sapphire.services.Service;
 
 public interface Element extends Observable
 {
+    ElementType TYPE = new ElementType( Element.class );
+    
     Resource resource();
     Element root();
     Property parent();

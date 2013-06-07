@@ -53,7 +53,35 @@ public class ModelElementFunctionContext extends FunctionContext
     public FunctionResult property( final Object element,
                                     final String name )
     {
-        if( element == this || element instanceof Element )
+        if( element == this && name.equalsIgnoreCase( "This" ) )
+        {
+            final Function f = new Function()
+            {
+                @Override
+                public String name()
+                {
+                    return "This";
+                }
+
+                @Override
+                public FunctionResult evaluate( final FunctionContext context )
+                {
+                    return new FunctionResult( this, context )
+                    {
+                        @Override
+                        protected Object evaluate()
+                        {
+                            return element();
+                        }
+                    };
+                }
+            };
+            
+            f.init();
+            
+            return f.evaluate( this );
+        }
+        else if( element == this || element instanceof Element )
         {
             final Element el = ( element == this ? element() : (Element) element );
             final Property property = el.property( name );
