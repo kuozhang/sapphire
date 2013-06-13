@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.policies;
@@ -25,6 +26,7 @@ import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ShapeFactoryLayoutEditPolicy extends SequenceLayoutEditPolicy 
@@ -53,8 +55,13 @@ public class ShapeFactoryLayoutEditPolicy extends SequenceLayoutEditPolicy
 		ShapeFactoryPart factoryPart = (ShapeFactoryPart)toMovePart.getParentPart();
 		List<ShapePart> childShapes = factoryPart.getChildren();
 		
+		int oldIndex = childShapes.indexOf(toMovePart);
 		int newIndex = childShapes.indexOf(afterShapePart);
-		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, newIndex);
+		// subtract self from the index
+		if (newIndex > oldIndex) {
+			newIndex--;
+		}
+   		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, newIndex);
 	}
 
 	@Override

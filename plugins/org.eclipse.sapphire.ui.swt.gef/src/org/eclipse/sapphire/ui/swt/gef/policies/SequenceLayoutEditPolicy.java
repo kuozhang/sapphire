@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.policies;
@@ -30,6 +31,7 @@ import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
@@ -245,10 +247,10 @@ public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
 			if (x > pRight)
 				x = rRight + (pRight - rRight) / 2;
 		}
-		Point p1 = new Point(x, r.y - 4);
+		Point p1 = new Point(x, r.y);
 		p1 = transposer.t(p1);
 		fb.translateToRelative(p1);
-		Point p2 = new Point(x, r.y + r.height + 4);
+		Point p2 = new Point(x, r.y + r.height);
 		p2 = transposer.t(p2);
 		fb.translateToRelative(p2);
 		fb.setPoint(p1, 0);
