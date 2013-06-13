@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
@@ -30,6 +31,7 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ShapeFactoryEditPart extends ShapeEditPart
@@ -135,6 +137,7 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 		if (prop.equals(ShapeFactoryModel.SHAPE_ADD))
 		{
 			refreshChildren();
+			getNodeEditPart().refresh();
 		}
 		else if (prop.equals(ShapeFactoryModel.SHAPE_DELETE))
 		{

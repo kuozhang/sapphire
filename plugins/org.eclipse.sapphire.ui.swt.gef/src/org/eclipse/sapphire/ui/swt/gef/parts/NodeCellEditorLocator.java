@@ -49,9 +49,14 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 			gc.dispose();
 			
 			CellEditor.LayoutData layoutData = celleditor.getLayoutData();
+			// adjust location if space available
+			int offset = 0;
+			if (layoutData.minimumWidth > labelRect.width && parentRect.x < labelRect.x) {
+				offset = Math.min(layoutData.minimumWidth - labelRect.width, labelRect.x - parentRect.x);
+			}
 			CCombo combo = (CCombo)celleditor.getControl();
 			textFigure.translateToAbsolute(labelRect);
-			combo.setBounds(labelRect.x, labelRect.y, layoutData.minimumWidth, charHeight);
+			combo.setBounds(labelRect.x - offset, labelRect.y, layoutData.minimumWidth, charHeight);
 			return;
 		}
 		
