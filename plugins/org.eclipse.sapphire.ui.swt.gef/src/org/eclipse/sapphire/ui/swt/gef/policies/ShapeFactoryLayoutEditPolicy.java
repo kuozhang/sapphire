@@ -44,24 +44,28 @@ public class ShapeFactoryLayoutEditPolicy extends SequenceLayoutEditPolicy
 		{
 			return null;
 		}
-		if (!(after instanceof ShapeEditPart))
-		{
-			return null;
-		}
 		ShapeEditPart toMove = (ShapeEditPart)child;
-		ShapeEditPart afterShape = (ShapeEditPart)after;
 		ShapePart toMovePart = (ShapePart)(((ShapeModel)toMove.getModel()).getSapphirePart());
-		ShapePart afterShapePart = (ShapePart)(((ShapeModel)afterShape.getModel()).getSapphirePart());
 		ShapeFactoryPart factoryPart = (ShapeFactoryPart)toMovePart.getParentPart();
 		List<ShapePart> childShapes = factoryPart.getChildren();
-		
-		int oldIndex = childShapes.indexOf(toMovePart);
-		int newIndex = childShapes.indexOf(afterShapePart);
-		// subtract self from the index
-		if (newIndex > oldIndex) {
-			newIndex--;
+
+		if (!(after instanceof ShapeEditPart))
+		{
+	   		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, -1);
+		} 
+		else 
+		{
+			ShapeEditPart afterShape = (ShapeEditPart)after;
+			ShapePart afterShapePart = (ShapePart)(((ShapeModel)afterShape.getModel()).getSapphirePart());
+			
+			int oldIndex = childShapes.indexOf(toMovePart);
+			int newIndex = childShapes.indexOf(afterShapePart);
+			// subtract self from the index
+			if (newIndex > oldIndex) {
+				newIndex--;
+			}
+	   		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, newIndex);
 		}
-   		return new MoveShapeInFactoryCommand(factoryPart, toMovePart, newIndex);
 	}
 
 	@Override

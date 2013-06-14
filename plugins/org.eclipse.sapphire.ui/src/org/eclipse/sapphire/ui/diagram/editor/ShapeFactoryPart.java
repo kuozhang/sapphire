@@ -115,9 +115,13 @@ public class ShapeFactoryPart extends ShapePart
     	ElementList<Element> list = this.modelElement.property(this.modelProperty);
     	int oldIndex = list.indexOf(childPart.getLocalModelElement());
     	this.modelElement.detach(this.shapePropertyListener, this.propertyName);
-    	if (oldIndex < newIndex)
+    	
+    	int newNewIndex = newIndex == -1 ? this.children.size() : newIndex;
+    	
+    	if (oldIndex < newNewIndex)
     	{
-    		for (int i = oldIndex; i < newIndex; i++)
+    		
+    		for (int i = oldIndex; i < newNewIndex; i++)
     		{
     			list.moveDown(childPart.getLocalModelElement());
     		}
@@ -131,7 +135,11 @@ public class ShapeFactoryPart extends ShapePart
     	}
     	this.modelElement.attach(this.shapePropertyListener, this.propertyName);
     	this.children.remove(childPart);
-    	this.children.add(newIndex, childPart);
+    	if (newIndex == -1) {
+        	this.children.add(childPart);
+    	} else {
+        	this.children.add(newIndex, childPart);
+    	}
     	broadcast(new ShapeReorderEvent(this));
     }
     
