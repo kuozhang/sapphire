@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - fixes to case lookup logic
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -34,6 +35,7 @@ import org.eclipse.sapphire.util.CollectionsUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class ShapeFactoryPart extends ShapePart 
@@ -44,7 +46,6 @@ public class ShapeFactoryPart extends ShapePart
 	private String propertyName;
 	private List<ShapePart> children;
 	private Listener shapePropertyListener;
-	private List<JavaType> javaTypes;
 	private ShapePart separator;
 	
 	@Override
@@ -54,12 +55,6 @@ public class ShapeFactoryPart extends ShapePart
         this.modelElement = getModelElement();
         this.shapeFactoryDef = (ShapeFactoryDef)super.definition;
         this.children = new ArrayList<ShapePart>();
-        this.javaTypes = new ArrayList<JavaType>();
-        
-        for (ShapeFactoryCaseDef shapeCase : this.shapeFactoryDef.getCases())
-        {
-        	this.javaTypes.add(shapeCase.getType().resolve());
-        }
         
         this.propertyName = this.shapeFactoryDef.getProperty().content();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
@@ -109,19 +104,6 @@ public class ShapeFactoryPart extends ShapePart
 		return this.separator;
 	}
 
-	public List<JavaType> getSupportedTypes()
-	{
-		return this.javaTypes;
-	}
-	    
-    public ShapePart newShape(JavaType javaType)
-    {
-    	ElementList<?> list = this.modelElement.property(this.modelProperty);
-    	final Class cl = javaType.artifact();
-    	Element element = list.insert(cl);
-    	return getShapePart(element);
-    }
-	
     public ElementList<Element> getModelElementList()
     {
     	ElementList<Element> list = this.modelElement.property(this.modelProperty);
@@ -165,7 +147,7 @@ public class ShapeFactoryPart extends ShapePart
         }        
     }
     
-    private ShapePart getShapePart(Element element)
+    public ShapePart getShapePart(Element element)
     {
         List<ShapePart> shapeParts = getChildren();
         for (ShapePart shapePart : shapeParts)
@@ -178,19 +160,28 @@ public class ShapeFactoryPart extends ShapePart
         return null;
     }
 
-    private ShapeFactoryCaseDef getShapeFactoryCase(Element listEntryModelElement)
+    private ShapeFactoryCaseDef getShapeFactoryCase( final Element element )
 	{
-        for (ShapeFactoryCaseDef shapeFactoryCase : this.shapeFactoryDef.getCases())
+        for( ShapeFactoryCaseDef shapeFactoryCaseDef : this.shapeFactoryDef.getCases() )
         {
-        	JavaType javaType = shapeFactoryCase.getType().resolve();
-        	Class<?> cl = javaType.artifact();
-        	if (cl.isAssignableFrom(listEntryModelElement.getClass()))
-        	{
-        		return shapeFactoryCase;
-        	}
-        			
+            final JavaType type = shapeFactoryCaseDef.getType().resolve();
+            
+            if( type == null )
+            {
+                return shapeFactoryCaseDef;
+            }
+            else
+            {
+                final Class<?> cl = type.artifact();
+
+                if( cl == null || cl.isAssignableFrom( element.getClass() ) )
+                {
+                    return shapeFactoryCaseDef;
+                }
+            }
         }
-		return null;
+
+        throw new RuntimeException();
 	}
 	
     private ShapePart createShapePart(ShapeDef shapeDef, Element modelElement)

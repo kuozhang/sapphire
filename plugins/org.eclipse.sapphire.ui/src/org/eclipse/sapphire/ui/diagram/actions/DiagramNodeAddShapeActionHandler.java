@@ -7,12 +7,14 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - fixes to case lookup logic
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -25,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler 
@@ -32,13 +35,13 @@ public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler
 	private static final String ID_BASE = "Sapphire.Add.";
 	private DiagramNodePart nodePart;
 	private ShapeFactoryPart factory;
-	private JavaType javaType;
+	private ElementType type;
 	
-	public DiagramNodeAddShapeActionHandler(DiagramNodePart nodePart, ShapeFactoryPart factory, JavaType javaType)
+	public DiagramNodeAddShapeActionHandler(DiagramNodePart nodePart, ShapeFactoryPart factory, ElementType type)
 	{
 		this.nodePart = nodePart;
 		this.factory = factory;
-		this.javaType = javaType;
+		this.type = type;
 	}
 	
     @Override
@@ -46,12 +49,10 @@ public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler
                       final ActionHandlerDef def )
     {
     	super.init(action, def);
-    	setId( ID_BASE + this.javaType.name());
-        final Class<?> cl = this.javaType.artifact();
-        ElementType elementType = ElementType.read(cl);
-    	setLabel(elementType.getSimpleName());
+    	setId( ID_BASE + this.type.getSimpleName());
+    	setLabel( this.type.getLabel( true, CapitalizationType.NO_CAPS, false ) );
     	
-		final ImageData typeSpecificAddImage = elementType.image();
+		final ImageData typeSpecificAddImage = this.type.image();
 		if (typeSpecificAddImage != null)
 		{
 			addImage(typeSpecificAddImage);
@@ -61,7 +62,8 @@ public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler
 	@Override
 	protected Object run(SapphireRenderingContext context) 
 	{
-		ShapePart shapePart = this.factory.newShape(this.javaType);
+	    final Element element = this.factory.getModelElementList().insert( this.type );
+		final ShapePart shapePart = this.factory.getShapePart( element );
 		this.nodePart.addShape(shapePart);
 		SapphireDiagramEditorPagePart diagramPart = this.nodePart.nearest(SapphireDiagramEditorPagePart.class);
 		if (shapePart.isEditable())

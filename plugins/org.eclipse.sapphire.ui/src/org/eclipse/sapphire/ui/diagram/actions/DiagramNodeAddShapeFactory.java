@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - fixes to case lookup logic
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
@@ -14,7 +15,8 @@ package org.eclipse.sapphire.ui.diagram.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandlerFactory;
@@ -27,6 +29,7 @@ import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public class DiagramNodeAddShapeFactory extends SapphireActionHandlerFactory 
@@ -55,12 +58,11 @@ public class DiagramNodeAddShapeFactory extends SapphireActionHandlerFactory
         }
         for (ShapeFactoryPart shapeFactoryPart : shapeFactories)
         {
-        	for (JavaType javaType : shapeFactoryPart.getSupportedTypes())
-        	{
-        		final DiagramNodeAddShapeActionHandler handler = 
-        				new DiagramNodeAddShapeActionHandler(nodePart, shapeFactoryPart, javaType);
-        		handlers.add(handler);
-        	}
+            for( ElementType type : shapeFactoryPart.getModelElementList().service( PossibleTypesService.class ).types() )
+            {
+                final DiagramNodeAddShapeActionHandler handler = new DiagramNodeAddShapeActionHandler( nodePart, shapeFactoryPart, type );
+                handlers.add(handler);
+            }
         }
         
 		return handlers.result();
