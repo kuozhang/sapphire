@@ -28,6 +28,8 @@ import org.eclipse.gef.editpolicies.OrderedLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -153,6 +155,11 @@ public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
 		if (insertionLine == null) {
 			insertionLine = new Polyline();
 			insertionLine.setLineWidth(2);
+			if (getHost() instanceof ShapeEditPart) {
+				ShapeEditPart shapeEditPart = (ShapeEditPart)getHost();
+				DiagramResourceCache resourceCache = shapeEditPart.getNodeEditPart().getCastedModel().getDiagramModel().getResourceCache();
+				insertionLine.setForegroundColor(resourceCache.getOutlineColor());
+			}
 			insertionLine.addPoint(new Point(0, 0));
 			insertionLine.addPoint(new Point(10, 10));
 			addFeedback(insertionLine);
