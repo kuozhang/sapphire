@@ -377,4 +377,20 @@
     </wizard>
   </extension>
 
+  <!-- 
+    **************
+    * UML Sample *
+    **************
+  -->
+  
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      id="org.eclipse.sapphire.samples.uml.SystemStructureEditor"
+      class="org.eclipse.sapphire.samples.uml.SystemStructureEditor"
+      default="true"
+      filenames="uml.xml"
+      name="UML Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+  </extension>
+  
 </plugin>

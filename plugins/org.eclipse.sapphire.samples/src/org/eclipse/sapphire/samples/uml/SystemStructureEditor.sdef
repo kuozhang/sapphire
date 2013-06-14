@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation
+ ******************************************************************************
+-->
+
+<definition>
+    <diagram-page>
+        <node>
+            <rectangle>
+                <background>
+                    <color>
+                        <Color>#FFFFCE</Color>
+                    </color>
+                </background>
+                <border>
+                    <weight>1</weight>
+                </border>
+                <content>
+                    <text>
+                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                    </text>
+                </content>
+            </rectangle>
+            <instance-id>${ Name }</instance-id>
+            <id>Entity</id>
+            <property>Entities</property>
+            <tool-palette-label>entity</tool-palette-label>
+        </node>
+        <element-type>org.eclipse.sapphire.samples.uml.System</element-type>
+        <page-name>diagram</page-name>
+        <page-header-text>diagram</page-header-text>
+        <id>DiagramPage</id>
+    </diagram-page>
+</definition>
