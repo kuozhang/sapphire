@@ -35,6 +35,7 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.LineShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapeFactoryPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation;
@@ -70,6 +71,11 @@ public class ShapeUtil {
 						{
 							figure.add(childFigure);
 						}
+					}
+				} else {
+					if (childShapePresentation instanceof ShapeFactoryPresentation) {
+						ShapeFactoryPresentation shapeFactoryPresentation = (ShapeFactoryPresentation)childShapePresentation;
+						shapeFactoryPresentation.setIndex(figure.getChildren().size());
 					}
 				}
 			}

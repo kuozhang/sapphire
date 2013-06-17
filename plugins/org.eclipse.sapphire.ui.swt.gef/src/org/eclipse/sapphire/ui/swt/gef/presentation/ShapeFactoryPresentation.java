@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
@@ -23,6 +24,7 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ShapeFactoryPresentation extends ShapePresentation 
@@ -30,6 +32,7 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	private List<ShapePresentation> children;
 	private ShapePresentation separator;
 	private Map<ShapePresentation, IFigure> separatorMap;
+	private int index;
 	
 	public ShapeFactoryPresentation(ShapePresentation parent, ShapeFactoryPart shapeFactoryPart,
 			DiagramConfigurationManager configManager)
@@ -89,6 +92,14 @@ public class ShapeFactoryPresentation extends ShapePresentation
 		return this.separatorMap.get(child);
 	}
 	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
 	@Override
 	public void dispose()
 	{

@@ -76,6 +76,7 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 		{
 			newIndex = index * 2;
 		}
+		newIndex += factory.getIndex();
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
 		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
 		ContainerShapePresentation parentPresentation = getParentContainer(shapePresentation);
