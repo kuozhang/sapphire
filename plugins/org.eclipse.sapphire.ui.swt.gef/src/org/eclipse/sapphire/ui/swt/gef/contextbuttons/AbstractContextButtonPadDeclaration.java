@@ -421,8 +421,8 @@ public abstract class AbstractContextButtonPadDeclaration implements IContextBut
 		int referenceHeight = getPadReferenceRectangle().height + (2 * getPadVerticalOverlap());
 		// substract one button from reference height
 		referenceHeight -= (2 * getPadPaddingOutside()) + getButtonSize();
-		if (referenceHeight < 0) { // not even one button fits
-			maxNumberOfButtons = 0;
+		if (referenceHeight < 0) { // not even one button fits (LH change from 0 to 1, to fit at least one)
+			maxNumberOfButtons = 1;
 		} else { // one button fits, plus how many other buttons with padding
 			double additionalButtons = ((double) referenceHeight) / (getButtonSize() + getButtonPadding());
 			// always round up
