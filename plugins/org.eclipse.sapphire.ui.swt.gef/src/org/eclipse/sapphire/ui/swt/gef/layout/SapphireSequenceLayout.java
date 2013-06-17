@@ -407,9 +407,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		int wHint = -1;
 		int hHint = -1;
 		if (isHorizontal()) {
-			hHint = parent.getClientArea(Rectangle.SINGLETON).height;
+			hHint = parent.getClientArea(Rectangle.SINGLETON).height - (margins.top + margins.bottom);
 		} else {
-			wHint = parent.getClientArea(Rectangle.SINGLETON).width;
+			wHint = parent.getClientArea(Rectangle.SINGLETON).width - (margins.left + margins.right);
 		}
 
 		/*
