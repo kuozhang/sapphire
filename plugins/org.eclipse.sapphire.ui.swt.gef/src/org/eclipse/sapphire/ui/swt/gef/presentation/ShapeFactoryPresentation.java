@@ -79,17 +79,24 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	
 	public void addSeparatorFigure(ShapePresentation child, IFigure fig)
 	{
-		this.separatorMap.put(child, fig);
+		if (this.separatorMap != null) {
+			this.separatorMap.put(child, fig);
+		}
 	}
 	
 	public void removeSeparatorFigure(ShapePresentation child)
 	{
-		this.separatorMap.remove(child);
+		if (this.separatorMap != null) {
+			this.separatorMap.remove(child);
+		}
 	}
 	
 	public IFigure getSeparatorFigure(ShapePresentation child)
 	{
-		return this.separatorMap.get(child);
+		if (this.separatorMap != null) {
+			return this.separatorMap.get(child);
+		}
+		return null;
 	}
 	
 	public int getIndex() {
