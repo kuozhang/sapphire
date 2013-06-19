@@ -101,7 +101,7 @@ public final class TestModelingMisc0002
         
         final Object a = new Object();
         sorter.add( "a", a );
-        sorter.dependency( a, "c" );
+        sorter.dependency( "a", "c" );
 
         final Object b = new Object();
         sorter.add( "b", b );
@@ -124,11 +124,11 @@ public final class TestModelingMisc0002
         
         final Object a = new Object();
         sorter.add( "a", a );
-        sorter.dependency( a, "b" );
+        sorter.dependency( "a", "b" );
 
         final Object b = new Object();
         sorter.add( "b", b );
-        sorter.dependency( b, "c" );
+        sorter.dependency( "b", "c" );
         
         final Object c = new Object();
         sorter.add( "c", c );
@@ -154,15 +154,15 @@ public final class TestModelingMisc0002
         
         final Object a = new Object();
         sorter.add( "a", a );
-        sorter.dependency( a, "b" );
+        sorter.dependency( "a", "b" );
 
         final Object b = new Object();
         sorter.add( "b", b );
-        sorter.dependency( b, "c" );
+        sorter.dependency( "b", "c" );
         
         final Object c = new Object();
         sorter.add( "c", c );
-        sorter.dependency( c, "b" );
+        sorter.dependency( "c", "b" );
         
         final List<Object> sorted = sorter.sort();
         
@@ -183,15 +183,15 @@ public final class TestModelingMisc0002
         
         final Object a = new Object();
         sorter.add( "a", a );
-        sorter.dependency( a, "b" );
+        sorter.dependency( "a", "b" );
 
         final Object b = new Object();
         sorter.add( "b", b );
-        sorter.dependency( b, "c" );
+        sorter.dependency( "b", "c" );
         
         final Object c = new Object();
         sorter.add( "c", c );
-        sorter.dependency( c, "a" );
+        sorter.dependency( "c", "a" );
         
         final List<Object> sorted = sorter.sort();
         
@@ -214,15 +214,15 @@ public final class TestModelingMisc0002
         
         final Object a = new Object();
         sorter.add( "a", a );
-        sorter.dependency( a, "b" );
+        sorter.dependency( "a", "b" );
 
         final Object b = new Object();
         sorter.add( "b", b );
-        sorter.dependency( b, "c" );
+        sorter.dependency( "b", "c" );
         
         final Object c = new Object();
         sorter.add( "c", c );
-        sorter.dependency( c, "a" );
+        sorter.dependency( "c", "a" );
         
         final Object d = new Object();
         sorter.add( "d", d );

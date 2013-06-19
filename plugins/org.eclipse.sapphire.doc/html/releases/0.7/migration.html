@@ -89,6 +89,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></li>
+  <li><a href="#ServiceFactory">ServiceFactory</a></li>
   <li><a href="#StandardXmlListBindingImpl">StandardXmlListBindingImpl</a></li>
   <li><a href="#Transient">Transient</a></li>
   <li><a href="#TransientProperty">TransientProperty</a></li>
@@ -1672,6 +1673,62 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">handler.</span>property().definition()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ServiceFactory">ServiceFactory</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class CustomValidationService</span>Factory <span class="unaffected">extends Service</span>Factory
+<span class="unaffected">{
+    @Override
+    public boolean applicable( ServiceContext context</span>, Class&lt;? extends Service> service <span class="unaffected">)
+    {
+        ...
+    }</span>
+
+    @Override
+    public Service create( ServiceContext context, Class&lt;? extends Service> service )
+    {
+        return new CustomValidationService();
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class CustomValidationService</span>Condition <span class="unaffected">extends Service</span>Condition
+<span class="unaffected">{
+    @Override
+    public boolean applicable( ServiceContext context )
+    {
+        ...
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">&lt;service>
+    &lt;id>CustomValidationService&lt;/id>
+    &lt;context>Sapphire.Property.Instance&lt;/context></span>
+    &lt;type>org.eclipse.sapphire.services.ValidationService&lt;/type>
+    &lt;factory>org.adopter.CustomValidationServiceFactory&lt;/factory>
+<span class="unaffected">&lt;/service></span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">&lt;service>
+    &lt;id>CustomValidationService&lt;/id>
+    &lt;context>Sapphire.Property.Instance&lt;/context></span>
+    &lt;implementation>org.adopter.CustomValidationService&lt;/implementation>
+    &lt;condition>org.adopter.CustomValidationServiceCondition&lt;/condition>
+<span class="unaffected">&lt;/service></span></code></pre>
     </td>
   </tr>
 </table>

@@ -18,9 +18,8 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
@@ -64,11 +63,10 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
         return null;
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class );
             
@@ -83,13 +81,6 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
             }
             
             return false;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new JavaTypeReferenceServiceForSdef();
         }
     }
 

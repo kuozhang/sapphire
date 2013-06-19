@@ -18,9 +18,8 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.EnablementServiceData;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -65,20 +64,12 @@ public final class ParentBasedEnablementService extends EnablementService
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             return ( context.find( Element.class ).parent() != null );
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new ParentBasedEnablementService();
         }
     }
     

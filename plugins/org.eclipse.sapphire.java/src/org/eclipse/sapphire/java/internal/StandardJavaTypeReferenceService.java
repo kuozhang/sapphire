@@ -19,9 +19,8 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,23 +28,36 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class StandardJavaTypeReferenceService extends JavaTypeReferenceService
 {
-    private final Context context;
+    private Context context;
     
-    public StandardJavaTypeReferenceService( final Context context )
+    public StandardJavaTypeReferenceService()
     {
-        if( context == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.context = context;
     }
+
+    /**
+     * Constructor used by the unit tests.
+     */
     
     public StandardJavaTypeReferenceService( final ClassLoader loader )
     {
-        this( Context.adapt( loader ) );
+        this.context = Context.adapt( loader );
     }
     
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        final Element element = context( Element.class );
+        
+        this.context = element.adapt( Context.class );
+        
+        if( this.context == null )
+        {
+            this.context = Context.adapt( element.type().getModelElementClass().getClassLoader() );
+        }
+    }
+
     @Override
     public JavaType resolve( final String name )
     {
@@ -59,11 +71,10 @@ public final class StandardJavaTypeReferenceService extends JavaTypeReferenceSer
         return null;
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class );
             
@@ -78,22 +89,6 @@ public final class StandardJavaTypeReferenceService extends JavaTypeReferenceSer
             }
             
             return false;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            final Element element = context.find( Element.class );
-            
-            Context ctxt = element.adapt( Context.class );
-            
-            if( ctxt == null )
-            {
-                ctxt = Context.adapt( element.type().getModelElementClass().getClassLoader() );
-            }
-
-            return new StandardJavaTypeReferenceService( ctxt );
         }
     }
 

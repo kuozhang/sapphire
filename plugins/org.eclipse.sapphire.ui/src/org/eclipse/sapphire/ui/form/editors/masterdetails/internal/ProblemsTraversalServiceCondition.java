@@ -9,18 +9,23 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire.ui.form.editors.masterdetails.internal;
+
+import org.eclipse.sapphire.services.ServiceCondition;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ServiceFactory
+public final class ProblemsTraversalServiceCondition extends ServiceCondition
 {
-    public abstract boolean applicable( ServiceContext context,
-                                        Class<? extends Service> service );
+    @Override
+    public boolean applicable( final ServiceContext context )
+    {
+        return ( context.find( SapphirePart.class ) instanceof MasterDetailsEditorPagePart );
+    }
     
-    public abstract Service create( ServiceContext context,
-                                    Class<? extends Service> service );
-                                     
 }

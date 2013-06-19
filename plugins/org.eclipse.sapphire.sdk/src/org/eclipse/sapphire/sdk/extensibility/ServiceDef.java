@@ -102,6 +102,26 @@ public interface ServiceDef extends Element
     void setImplementation( String value );
     void setImplementation( JavaTypeName value );
     
+    // *** Condition ***
+    
+    @Type( base = JavaTypeName.class )
+    @Reference( target = JavaType.class )
+    @Label( standard = "condition" )
+    @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.services.ServiceCondition" )
+    @MustExist
+    @XmlBinding( path = "condition" )
+    
+    @Documentation
+    (
+        content = "The condition that determines when the service active."
+    )
+
+    ValueProperty PROP_CONDITION = new ValueProperty( TYPE, "Condition" );
+    
+    ReferenceValue<JavaTypeName,JavaType> getCondition();
+    void setCondition( String value );
+    void setCondition( JavaTypeName value );
+    
     // *** Type ***
     
     @Type( base = JavaTypeName.class )

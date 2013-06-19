@@ -21,9 +21,8 @@ import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.DocumentationMergeStrategy;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.FactsAggregationService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -122,11 +121,10 @@ public final class StandardPropertyDocumentationService extends StandardDocument
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final Property property = context.find( Property.class );
             
@@ -144,13 +142,6 @@ public final class StandardPropertyDocumentationService extends StandardDocument
             }
             
             return false;
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new StandardPropertyDocumentationService();
         }
     }
     

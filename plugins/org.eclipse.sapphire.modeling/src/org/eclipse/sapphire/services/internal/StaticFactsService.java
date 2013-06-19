@@ -19,9 +19,8 @@ import org.eclipse.sapphire.modeling.annotations.Fact;
 import org.eclipse.sapphire.modeling.annotations.Facts;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.FactsService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about property by using static content specified in @Fact and @Facts annotations.
@@ -61,21 +60,13 @@ public final class StaticFactsService extends FactsService
         facts.add( localization.text( fact.statement(), CapitalizationType.NO_CAPS, true ) );
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final PropertyDef property = context.find( PropertyDef.class );
             return ( property != null && ( property.hasAnnotation( Fact.class ) || property.hasAnnotation( Facts.class ) ) );
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new StaticFactsService();
         }
     }
     

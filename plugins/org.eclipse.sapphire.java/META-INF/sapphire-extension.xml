@@ -16,29 +16,29 @@
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <service>
         <description>Resolves Java types visible to the class loader that contains a given model element type interface.</description>
-        <type>org.eclipse.sapphire.services.ReferenceService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService$Factory</factory>
         <id>Sapphire.Java.TypeReferenceService</id>
+        <implementation>org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService</implementation>
+        <condition>org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.java.internal.JavaTypeValidationService$Factory</factory>
         <id>Sapphire.Java.TypeValidationService</id>
+        <implementation>org.eclipse.sapphire.java.internal.JavaTypeValidationService</implementation>
+        <condition>org.eclipse.sapphire.java.internal.JavaTypeValidationService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.Java.TypeConstraintService</id>
         <context>Sapphire.Property.Instance</context>
-        <type>org.eclipse.sapphire.java.JavaTypeConstraintService</type>
-        <factory>org.eclipse.sapphire.java.internal.StandardJavaTypeConstraintService$Factory</factory>
+        <implementation>org.eclipse.sapphire.java.internal.StandardJavaTypeConstraintService</implementation>
+        <condition>org.eclipse.sapphire.java.internal.StandardJavaTypeConstraintService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about Java type property's constraints by using semantical information specified by @JavaTypeConstraints annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.java.internal.JavaTypeConstraintFactsService$Factory</factory>
         <id>Sapphire.FactsService.JavaTypeConstraint</id>
+        <implementation>org.eclipse.sapphire.java.internal.JavaTypeConstraintFactsService</implementation>
+        <condition>org.eclipse.sapphire.java.internal.JavaTypeConstraintFactsService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.ConversionService.StringToJavaTypeName</id>

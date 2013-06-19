@@ -12,24 +12,25 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyVisitor;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.util.SetFactory;
 
 /**
@@ -41,29 +42,30 @@ import org.eclipse.sapphire.util.SetFactory;
 
 public final class ModelBasedPossibleValuesService extends PossibleValuesService
 {
-    private final ModelPath path;
+    private ModelPath path;
+    private String invalidValueMessageTemplate;
+    private Status.Severity invalidValueSeverity;
+    private boolean caseSensitive;
+    private boolean ordered;
     private Set<String> values;
     private boolean initialized;
     private boolean readPriorToInit;
-    
-    public ModelBasedPossibleValuesService( final ModelPath path,
-                                            final String invalidValueMessageTemplate,
-                                            final Status.Severity invalidValueSeverity,
-                                            final boolean caseSensitive,
-                                            final boolean ordered )
-    {
-        super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive, ordered );
-        
-        this.path = path;
-        this.values = Collections.emptySet();
-    }
     
     @Override
     protected void init()
     {
         super.init();
         
-        final Element element = context( Element.class );
+        final Value<?> value = context( Value.class );
+        final Element element = value.element();
+        
+        final PossibleValues a = value.definition().getAnnotation( PossibleValues.class );
+        
+        this.path = new ModelPath( a.property() );
+        this.invalidValueMessageTemplate = a.invalidValueMessage();
+        this.invalidValueSeverity = a.invalidValueSeverity();
+        this.caseSensitive = a.caseSensitive();
+        this.ordered = a.ordered();
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
@@ -104,6 +106,30 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         values.addAll( this.values );
     }
     
+    @Override
+    public String getInvalidValueMessage( final String invalidValue )
+    {
+        return NLS.bind( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+    }
+    
+    @Override
+    public Status.Severity getInvalidValueSeverity( final String invalidValue )
+    {
+        return this.invalidValueSeverity;
+    }
+    
+    @Override
+    public boolean isCaseSensitive()
+    {
+        return this.caseSensitive;
+    }
+
+    @Override
+    public boolean ordered()
+    {
+        return this.ordered;
+    }
+
     private void refresh()
     {
         final Element element = context( Element.class );
@@ -140,24 +166,14 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( PossibleValues.class ) && property.getAnnotation( PossibleValues.class ).property().length() > 0 );
         }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            final PossibleValues a = context.find( ValueProperty.class ).getAnnotation( PossibleValues.class );
-            return new ModelBasedPossibleValuesService( new ModelPath( a.property() ), a.invalidValueMessage(), a.invalidValueSeverity(), a.caseSensitive(), a.ordered() );
-        }
     }
-    
     
 }

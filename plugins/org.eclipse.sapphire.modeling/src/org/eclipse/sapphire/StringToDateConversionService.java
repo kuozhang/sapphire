@@ -135,7 +135,7 @@ public class StringToDateConversionService extends ConversionService<String,Date
             }
         }
         
-        return null;
+        throw new ConversionException();
     }
     
 }

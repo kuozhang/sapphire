@@ -11,17 +11,14 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
+import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ServiceExtension;
+import org.eclipse.sapphire.modeling.util.DependencySorter;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -38,10 +35,7 @@ public class ServiceContext
     
     private final String type;
     private final ServiceContext parent;
-    private final List<Service> services = new ArrayList<Service>();
-    private final Set<Class<?>> initializingServiceTypes = new HashSet<Class<?>>();
-    private final Set<Class<?>> initializedServiceTypes = new HashSet<Class<?>>();
-    private final Set<String> exhaustedServiceFactories = new HashSet<String>();
+    private List<ServiceProxy> services;
     private ListenerContext coordinatingListenerContext;
     private boolean disposed = false;
     
@@ -83,8 +77,6 @@ public class ServiceContext
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
-    @SuppressWarnings( "unchecked" )
-    
     public final synchronized <S extends Service> List<S> services( final Class<S> type )
     {
         if( type == null )
@@ -97,138 +89,97 @@ public class ServiceContext
             throw new IllegalStateException();
         }
         
-        if( ! this.initializedServiceTypes.contains( type ) )
+        if( this.services == null )
         {
-            if( this.initializingServiceTypes.contains( type ) )
+            final ListFactory<ServiceProxy> services = ListFactory.start();
+            
+            services.add( local() );
+            
+            for( final ServiceExtension extension : SapphireModelingExtensionSystem.services() )
             {
-                throw new IllegalStateException();
+                if( extension.contexts().contains( this.type ) )
+                {
+                    services.add
+                    (
+                        new ServiceProxy
+                        (
+                            this,
+                            extension.id(),
+                            extension.implementation(),
+                            extension.condition(),
+                            extension.overrides(),
+                            null
+                        )
+                    );
+                }
             }
             
-            this.initializingServiceTypes.add( type );
-            
-            final Class<? super S> serviceTypeSuperClass = type.getSuperclass();
-            
-            if( serviceTypeSuperClass == Service.class || serviceTypeSuperClass == DataService.class )
+            this.services = new CopyOnWriteArrayList<ServiceProxy>( services.result() );
+        }
+        
+        final DependencySorter<String,S> sorter = new DependencySorter<String,S>();
+        final ListFactory<ServiceProxy> failed = ListFactory.start();
+        
+        for( final ServiceProxy proxy : this.services )
+        {
+            if( type.isAssignableFrom( proxy.type() ) )
             {
-                // Find all applicable service factories declared via the extension system.
-                
-                final Map<String,ServiceFactoryProxy> applicable = new HashMap<String,ServiceFactoryProxy>();
-    
-                for( ServiceFactoryProxy factory : SapphireModelingExtensionSystem.getServiceFactories() )
+                if( sorter.contains( proxy.id() ) )
                 {
-                    if( factory.applicable( this, type ) )
-                    {
-                        applicable.put( factory.id(), factory );
-                    }
+                    failed.add( proxy );
                 }
-                
-                // Remove those that are overridden by another applicable service. Note that a cycle will 
-                // cause all services in the cycle to be removed.
-                
-                for( ServiceFactoryProxy factory : new ArrayList<ServiceFactoryProxy>( applicable.values() ) )
+                else
                 {
-                    for( String overriddenServiceId : factory.overrides() )
-                    {
-                        applicable.remove( overriddenServiceId );
-                    }
-                }
-                
-                // Process local service definitions.
-                
-                for( ServiceFactoryProxy factory : local() )
-                {
-                    final String id = factory.id();
+                    final S service = type.cast( proxy.service() );
                     
-                    if( ! this.exhaustedServiceFactories.contains( id ) && factory.applicable( this, type ) )
+                    if( service == null )
                     {
-                        this.exhaustedServiceFactories.add( id );
-                        
-                        final Service service = factory.create( this, type );
-                        
-                        if( service != null )
+                        failed.add( proxy );
+                    }
+                    else
+                    {
+                        if( this.coordinatingListenerContext != null )
                         {
-                            service.init( this, id, factory.parameters(), factory.overrides() );
-                            
-                            if( this.coordinatingListenerContext != null )
-                            {
-                                service.coordinate( this.coordinatingListenerContext );
-                            }
-                            
-                            for( String overriddenServiceId : factory.overrides() )
-                            {
-                                applicable.remove( overriddenServiceId );
-                            }
-                            
-                            this.services.add( service );
+                            service.coordinate( this.coordinatingListenerContext );
                         }
-                    }
-                }
-                
-                // Instantiate global services that haven't been overridden.
-                
-                for( ServiceFactoryProxy factory : applicable.values() )
-                {
-                    final String id = factory.id();
-                    
-                    if( ! this.exhaustedServiceFactories.contains( id ) )
-                    {
-                        this.exhaustedServiceFactories.add( id );
                         
-                        final Service service = factory.create( this, type );
+                        sorter.add( service.id(), service );
                         
-                        if( service != null )
+                        for( final String override : service.overrides() )
                         {
-                            service.init( this, id, factory.parameters(), factory.overrides() );
-                            
-                            if( this.coordinatingListenerContext != null )
-                            {
-                                service.coordinate( this.coordinatingListenerContext );
-                            }
-                            
-                            this.services.add( service );
+                            sorter.dependency( override, service.id() );
                         }
                     }
                 }
             }
-            else
-            {
-                services( (Class<Service>) serviceTypeSuperClass );
-            }
-            
-            this.initializingServiceTypes.remove( type );
-            this.initializedServiceTypes.add( type );
         }
         
-        final Set<String> matchedServiceOverrides = new HashSet<String>();
-        final ListFactory<S> matchedServicesListFactory = ListFactory.start();
-        
-        for( Service service : this.services )
-        {
-            if( type.isInstance( service ) )
-            {
-                matchedServiceOverrides.add( service.id() );
-                matchedServiceOverrides.addAll( service.overrides() );
-                matchedServicesListFactory.add( type.cast( service ) );
-            }
-        }
-        
-        for( int i = 0, n = matchedServicesListFactory.size(); i < n; i++ )
-        {
-            matchedServicesListFactory.get( i ).initIfNecessary();
-        }
+        this.services.removeAll( failed.result() );
         
         if( this.parent != null )
         {
-            for( Service service : this.parent.services( type ) )
+            for( final S service : this.parent.services( type ) )
             {
-                if( ! matchedServiceOverrides.contains( service.id() ) )
+                if( ! sorter.contains( service.id()  ) )
                 {
-                    matchedServicesListFactory.add( type.cast( service ) );
+                    sorter.add( service.id(), service );
+                    
+                    for( final String override : service.overrides() )
+                    {
+                        sorter.dependency( override, service.id() );
+                    }
                 }
             }
         }
         
-        return matchedServicesListFactory.result();
+        final List<S> services = sorter.sort();
+        
+        for( final Service service : services )
+        {
+            service.initIfNecessary();
+        }
+        
+        return services;
     }
     
     public final void coordinate( final ListenerContext context )
@@ -236,7 +187,7 @@ public class ServiceContext
         this.coordinatingListenerContext = context;
     }
 
-    protected List<ServiceFactoryProxy> local()
+    protected List<ServiceProxy> local()
     {
         return Collections.emptyList();
     }
@@ -245,19 +196,12 @@ public class ServiceContext
     {
         this.disposed = true;
         
-        for( Service service : this.services )
+        for( final ServiceProxy service : this.services )
         {
-            try
-            {
-                service.dispose();
-            }
-            catch( Exception e )
-            {
-                LoggingService.log( e );
-            }
+            service.dispose();
         }
         
-        this.services.clear();
+        this.services = null;
     }
     
 }

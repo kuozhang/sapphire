@@ -15,9 +15,8 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * An implementation of ValidationService that produces a validation error when an element is directly
@@ -34,21 +33,13 @@ public final class VersionCompatibilityValidationServiceForElement extends Versi
         return context( Element.class ).parent();
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final Property parent = context.find( Element.class ).parent();
             return parent != null && ( parent.definition() instanceof ElementProperty || parent.definition() instanceof ListProperty );
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new VersionCompatibilityValidationServiceForElement();
         }
     }
 

@@ -18,9 +18,8 @@ import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionConstraint;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about property's version compatibility by using semantic information specified
@@ -86,20 +85,12 @@ public final class VersionCompatibilityFactsService extends FactsService
         return service;
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             return ( findDeclarativeVersionCompatibilityService( context.find( Property.class ) ) != null );
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new VersionCompatibilityFactsService();
         }
     }
     

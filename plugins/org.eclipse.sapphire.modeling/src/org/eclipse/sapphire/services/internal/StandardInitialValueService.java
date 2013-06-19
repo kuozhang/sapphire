@@ -26,9 +26,8 @@ import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.InitialValueServiceData;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of {@link InitialValueService} that draws the initial value from @{@link InitialValue} annotation.
@@ -118,11 +117,10 @@ public final class StandardInitialValueService extends InitialValueService
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final PropertyDef property = context.find( PropertyDef.class );
             
@@ -132,13 +130,6 @@ public final class StandardInitialValueService extends InitialValueService
             }
             
             return false;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new StandardInitialValueService();
         }
     }
     

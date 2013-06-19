@@ -13,10 +13,8 @@
 package org.eclipse.sapphire.ui.internal;
 
 import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.ui.ListSelectionService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 
 /**
@@ -24,21 +22,14 @@ import org.eclipse.sapphire.ui.PropertyEditorPart;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ListSelectionServiceFactory extends ServiceFactory
+public final class ListSelectionServiceCondition extends ServiceCondition
 {
     @Override
-    public boolean applicable( final ServiceContext context, 
-                               final Class<? extends Service> service )
+    public boolean applicable( final ServiceContext context )
     {
         final PropertyEditorPart propertyEditorPart = context.find( PropertyEditorPart.class );
 
         return ( propertyEditorPart != null && propertyEditorPart.property().definition() instanceof ListProperty );
-    }
-
-    @Override
-    public Service create( final ServiceContext context, final Class<? extends Service> service )
-    {
-        return new ListSelectionService();
     }
 
 }

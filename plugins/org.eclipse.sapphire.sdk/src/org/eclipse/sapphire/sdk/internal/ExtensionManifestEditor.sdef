@@ -51,6 +51,7 @@
                                     <property>Description</property>
                                     <height>75</height>
                                 </property-editor>
+                                <property-editor>Condition</property-editor>
                                 <property-editor>
                                     <hint>
                                         <name>factory</name>

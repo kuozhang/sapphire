@@ -20,9 +20,8 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.DependenciesService;
 import org.eclipse.sapphire.services.DependenciesServiceData;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of DependenciesService that exposes implied dependencies specified by the @NoDuplicates annotation.
@@ -38,11 +37,10 @@ public final class UniqueValueDependenciesService extends DependenciesService
         return new DependenciesServiceData( new ModelPath( "#/" + context( PropertyDef.class ).name() ) );
     }
 
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class );
             final Element element = context.find( Element.class );
@@ -58,13 +56,6 @@ public final class UniqueValueDependenciesService extends DependenciesService
             }
             
             return false;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new UniqueValueDependenciesService();
         }
     }
     

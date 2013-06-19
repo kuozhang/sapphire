@@ -27,9 +27,8 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * {@link RequiredConstraintService} implementation that derives its behavior from @{@link Required} annotation.
@@ -115,21 +114,13 @@ public final class DeclarativeRequiredConstraintService extends RequiredConstrai
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final PropertyDef property = context.find( PropertyDef.class );
             return ( property instanceof ValueProperty || ( property instanceof ElementProperty && ! ( property instanceof ImpliedElementProperty ) ) );
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new DeclarativeRequiredConstraintService();
         }
     }
     

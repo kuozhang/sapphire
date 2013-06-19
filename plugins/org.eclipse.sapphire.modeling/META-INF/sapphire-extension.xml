@@ -15,362 +15,372 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     <service>
-        <type>org.eclipse.sapphire.services.ImageService</type>
         <context>Sapphire.Element.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.StaticImageService$Factory</factory>
         <id>Sapphire.ImageService.Static</id>
+        <implementation>org.eclipse.sapphire.services.internal.StaticImageService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StaticImageService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.DefaultValueService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.StandardDefaultValueService$Factory</factory>
         <id>Sapphire.DefaultValueService.Standard</id>
         <description>Implementation of DefaultValueService that draws the default value from @DefaultValue annotation.</description>
+        <implementation>org.eclipse.sapphire.services.internal.StandardDefaultValueService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StandardDefaultValueService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.InitialValueService.Standard</id>
-        <type>org.eclipse.sapphire.services.InitialValueService</type>
-        <factory>org.eclipse.sapphire.services.internal.StandardInitialValueService$Factory</factory>
         <description>Implementation of InitialValueService that draws the initial value from @InitialValue annotation.</description>
         <context>Sapphire.Property.Instance</context>
+        <implementation>org.eclipse.sapphire.services.internal.StandardInitialValueService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StandardInitialValueService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.PossibleValuesService.Static</id>
-        <type>org.eclipse.sapphire.services.PossibleValuesService</type>
-        <factory>org.eclipse.sapphire.services.internal.StaticPossibleValuesService$Factory</factory>
         <context>Sapphire.Property.MetaModel</context>
         <description>Implementation of PossibleValuesService based on @PossibleValues annotation's values attribute..</description>
+        <implementation>org.eclipse.sapphire.services.internal.StaticPossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StaticPossibleValuesService$Condition</condition>
     </service>
     <service>
         <description>Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..</description>
-        <factory>org.eclipse.sapphire.services.internal.ModelBasedPossibleValuesService$Factory</factory>
         <id>Sapphire.PossibleValuesService.ModelBased</id>
-        <type>org.eclipse.sapphire.services.PossibleValuesService</type>
         <context>Sapphire.Property.Instance</context>
+        <implementation>org.eclipse.sapphire.services.internal.ModelBasedPossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.ModelBasedPossibleValuesService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.PossibleValuesService</type>
-        <factory>org.eclipse.sapphire.services.internal.EnumPossibleValuesService$Factory</factory>
         <id>Sapphire.PossibleValuesService.Enum</id>
         <context>Sapphire.Property.MetaModel</context>
+        <implementation>org.eclipse.sapphire.services.internal.EnumPossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.EnumPossibleValuesService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.PossibleValuesService.ListFromValue</id>
-        <type>org.eclipse.sapphire.services.PossibleValuesService</type>
-        <factory>org.eclipse.sapphire.internal.ListFromValuePossibleValuesService$Factory</factory>
         <description>Implementation of PossibleValuesService for list properties based on PossibleValuesService implementation of list member's value property. This service implementation will only activate if the list property has one possible type, and that type has a single property, and that property is a value property, and that value property has a PossibleValuesService implementation in the property metamodel context.</description>
         <context>Sapphire.Property.Instance</context>
+        <implementation>org.eclipse.sapphire.internal.ListFromValuePossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.internal.ListFromValuePossibleValuesService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.PossibleValuesService.ValueFromList</id>
-        <type>org.eclipse.sapphire.services.PossibleValuesService</type>
-        <factory>org.eclipse.sapphire.internal.ValueFromListPossibleValuesService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
         <description>Implementation of PossibleValuesService for value properties based on PossibleValuesService implementation of the containing list property. This service implementation will only activate if the value property is the sole property in its type, and the element is contained by a list property, and the list property has a PossibleValueService implementation in the property instance context.</description>
+        <implementation>org.eclipse.sapphire.internal.ValueFromListPossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.internal.ValueFromListPossibleValuesService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.CountConstraintValidationService$Factory</factory>
         <id>Sapphire.ValidationService.CountConstraint</id>
+        <implementation>org.eclipse.sapphire.services.internal.CountConstraintValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.CountConstraintValidationService$Condition</condition>
     </service>
     <service>
         <description>ValidationService implementation that derives its behavior from @Validation annotation.</description>
-        <factory>org.eclipse.sapphire.internal.DeclarativeValidationService$Factory</factory>
         <id>Sapphire.ValidationService.Declarative</id>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
+        <implementation>org.eclipse.sapphire.internal.DeclarativeValidationService</implementation>
+        <condition>org.eclipse.sapphire.internal.DeclarativeValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.internal.RequiredConstraintValidationService$Factory</factory>
         <id>Sapphire.ValidationService.Required</id>
         <description>ValidationService implementation that validates whether the property conforms to semantics specified by RequiredConstraintService.</description>
+        <implementation>org.eclipse.sapphire.internal.RequiredConstraintValidationService</implementation>
+        <condition>org.eclipse.sapphire.internal.RequiredConstraintValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.UniqueValueValidationServiceFactory</factory>
         <id>Sapphire.ValidationService.UniqueValue</id>
+        <implementation>org.eclipse.sapphire.services.UniqueValueValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.UniqueValueValidationServiceCondition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.ReferenceValidationService$Factory</factory>
         <id>Sapphire.ValidationService.Reference</id>
+        <implementation>org.eclipse.sapphire.services.internal.ReferenceValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.ReferenceValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.AbsolutePathValidationService$Factory</factory>
         <id>Sapphire.ValidationService.AbsolutePath</id>
+        <implementation>org.eclipse.sapphire.services.internal.AbsolutePathValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.AbsolutePathValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.RelativePathValidationService$Factory</factory>
         <id>Sapphire.ValidationService.RelativePath</id>
+        <implementation>org.eclipse.sapphire.services.internal.RelativePathValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.RelativePathValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.MalformedValueValidationService$Factory</factory>
         <id>Sapphire.ValidationService.MalformedValue</id>
+        <implementation>org.eclipse.sapphire.services.internal.MalformedValueValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.MalformedValueValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.PossibleValuesValidationService$Factory</factory>
         <id>Sapphire.ValidationService.PossibleValues</id>
+        <implementation>org.eclipse.sapphire.services.internal.PossibleValuesValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.PossibleValuesValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.NumericRangeValidationService$Factory</factory>
         <id>Sapphire.ValidationService.NumericRange</id>
+        <implementation>org.eclipse.sapphire.services.internal.NumericRangeValidationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.NumericRangeValidationService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.ValidationService.Element.Standard</id>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
-        <factory>org.eclipse.sapphire.services.internal.StandardElementValidationService$Factory</factory>
         <context>Sapphire.Element.Instance</context>
+        <implementation>org.eclipse.sapphire.services.internal.StandardElementValidationService</implementation>
     </service>
     <service>
         <context>Sapphire.Element.Instance</context>
         <description>An implementation of ValidationService that produces a validation error when an element is directly contained by an element or a list property that is not compatible with the version compatibility target.</description>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForElement$Factory</factory>
         <id>Sapphire.ValidationService.Property.VersionCompatibility.Element</id>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
+        <implementation>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForElement</implementation>
+        <condition>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForElement$Condition</condition>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForProperty$Factory</factory>
         <id>Sapphire.ValidationService.Property.VersionCompatibility.Property</id>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <description>An implementation of ValidationService that produces a validation error when a property is not compatible with the version compatibility target yet contains data.</description>
+        <implementation>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForProperty</implementation>
     </service>
     <service>
         <id>Sapphire.ValidationService.Property.PreferDefaultValue</id>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
-        <factory>org.eclipse.sapphire.internal.PreferDefaultValueValidationService$Factory</factory>
         <description>Implementation of ValidationService that produces a validation warning when property value doesn't match its default.</description>
         <context>Sapphire.Property.Instance</context>
+        <implementation>org.eclipse.sapphire.internal.PreferDefaultValueValidationService</implementation>
+        <condition>org.eclipse.sapphire.internal.PreferDefaultValueValidationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.EnablementService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.ParentBasedEnablementService$Factory</factory>
         <id>Sapphire.EnablementService.ParentPropertyState</id>
+        <implementation>org.eclipse.sapphire.services.internal.ParentBasedEnablementService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.ParentBasedEnablementService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.EnablementService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.FunctionBasedEnablementService$Factory</factory>
         <id>Sapphire.EnablementService.FunctionBased</id>
+        <implementation>org.eclipse.sapphire.services.internal.FunctionBasedEnablementService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.FunctionBasedEnablementService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.EnablementService.VersionCompatibility</id>
-        <type>org.eclipse.sapphire.services.EnablementService</type>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityEnablementService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
         <description>Implementation of EnablementService that determines property's enablement state based on property's compatibility with the version compatibility target.</description>
+        <implementation>org.eclipse.sapphire.internal.VersionCompatibilityEnablementService</implementation>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValueNormalizationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.StandardValueNormalizationServiceFactory</factory>
         <id>Sapphire.ValueNormalizationService</id>
+        <condition>org.eclipse.sapphire.services.internal.StandardValueNormalizationServiceCondition</condition>
+        <implementation>org.eclipse.sapphire.services.StandardValueNormalizationService</implementation>
     </service>
     <service>
         <id>Sapphire.ValueNormalizationService.FileName</id>
-        <type>org.eclipse.sapphire.services.ValueNormalizationService</type>
-        <factory>org.eclipse.sapphire.internal.FileNameNormalizationService$Factory</factory>
         <description>Implementation of ValueNormalizationService for value properties of type FileName.</description>
         <context>Sapphire.Property.Instance</context>
         <overrides>Sapphire.ValueNormalizationService</overrides>
+        <implementation>org.eclipse.sapphire.internal.FileNameNormalizationService</implementation>
+        <condition>org.eclipse.sapphire.internal.FileNameNormalizationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.RelativePathService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.ModelRelativePathService$Factory</factory>
         <id>Sapphire.RelativePathService.Model</id>
+        <implementation>org.eclipse.sapphire.services.internal.ModelRelativePathService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.ModelRelativePathService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValueLabelService</type>
-        <factory>org.eclipse.sapphire.services.internal.DefaultValueLabelService$Factory</factory>
         <id>Sapphire.ValueLabelService.Default</id>
         <context>Sapphire.Property.MetaModel</context>
+        <implementation>org.eclipse.sapphire.services.internal.DefaultValueLabelService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.DefaultValueLabelService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValueLabelService</type>
-        <factory>org.eclipse.sapphire.services.internal.EnumValueLabelService$Factory</factory>
         <id>Sapphire.ValueLabelService.Enum</id>
         <overrides>Sapphire.ValueLabelService.Default</overrides>
         <context>Sapphire.Property.MetaModel</context>
+        <implementation>org.eclipse.sapphire.services.internal.EnumValueLabelService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.EnumValueLabelService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValueImageService</type>
-        <factory>org.eclipse.sapphire.services.internal.DefaultValueImageService$Factory</factory>
         <id>Sapphire.ValueImageService.Default</id>
         <context>Sapphire.Property.MetaModel</context>
+        <implementation>org.eclipse.sapphire.services.internal.DefaultValueImageService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.DefaultValueImageService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValueImageService</type>
-        <factory>org.eclipse.sapphire.services.internal.EnumValueImageService$Factory</factory>
         <id>Sapphire.ValueImageService.Enum</id>
         <overrides>Sapphire.ValueImageService.Default</overrides>
         <context>Sapphire.Property.MetaModel</context>
+        <implementation>org.eclipse.sapphire.services.internal.EnumValueImageService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.EnumValueImageService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.DocumentationService.Element.Standard</id>
-        <type>org.eclipse.sapphire.services.DocumentationService</type>
         <context>Sapphire.Element.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.StandardElementDocumentationService$Factory</factory>
+        <implementation>org.eclipse.sapphire.services.internal.StandardElementDocumentationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StandardElementDocumentationService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.DocumentationService.Property.Standard</id>
-        <type>org.eclipse.sapphire.services.DocumentationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.StandardPropertyDocumentationService$Factory</factory>
+        <implementation>org.eclipse.sapphire.services.internal.StandardPropertyDocumentationService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StandardPropertyDocumentationService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.FactsAggregationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.FactsAggregationServiceFactory</factory>
         <id>Sapphire.FactsAggregationService</id>
+        <implementation>org.eclipse.sapphire.services.FactsAggregationService</implementation>
     </service>
     <service>
         <description>Creates fact statements about property by using static content specified in @Fact and @Facts annotations.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.StaticFactsService$Factory</factory>
         <id>Sapphire.FactsService.Static</id>
+        <implementation>org.eclipse.sapphire.services.internal.StaticFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StaticFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about property's default value by using semantical information specified by DefaultValueService and @DefaultValue annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.DefaultValueFactsService$Factory</factory>
         <id>Sapphire.FactsService.DefaultValue</id>
+        <implementation>org.eclipse.sapphire.services.internal.DefaultValueFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.DefaultValueFactsService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.FactsService.InitialValue</id>
-        <type>org.eclipse.sapphire.services.FactsService</type>
-        <factory>org.eclipse.sapphire.services.internal.InitialValueFactsService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
         <description>Creates fact statements about property's initial value by using semantical information specified by InitialValueService and @InitialValue annotation.</description>
+        <implementation>org.eclipse.sapphire.services.internal.InitialValueFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.InitialValueFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about numeric value property's range by using semantical information specified by @NumericRange annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.NumericRangeFactsService$Factory</factory>
         <id>Sapphire.FactsService.NumericRange</id>
+        <implementation>org.eclipse.sapphire.services.internal.NumericRangeFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.NumericRangeFactsService$Condition</condition>
     </service>
     <service>
         <description>FactsService implementation that contributes fact statements based on semantics specified by RequiredConstraintService.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.internal.RequiredConstraintFactsService$Factory</factory>
         <id>Sapphire.FactsService.Required</id>
+        <implementation>org.eclipse.sapphire.internal.RequiredConstraintFactsService</implementation>
+        <condition>org.eclipse.sapphire.internal.RequiredConstraintFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about property's read-only state by using semantical information specified by @ReadOnly annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.ReadOnlyPropertyFactsService$Factory</factory>
         <id>Sapphire.FactsService.ReadOnly</id>
+        <implementation>org.eclipse.sapphire.services.internal.ReadOnlyPropertyFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.ReadOnlyPropertyFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about list property's count constraint by using semantical information specified by @CountConstraint annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.CountConstraintFactsService$Factory</factory>
         <id>Sapphire.FactsService.CountConstraint</id>
+        <implementation>org.eclipse.sapphire.services.internal.CountConstraintFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.CountConstraintFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about property's absolute path requirement by using semantical information specified by @AbsolutePath annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.AbsolutePathFactsService$Factory</factory>
         <id>Sapphire.FactsService.AbsolutePath</id>
+        <implementation>org.eclipse.sapphire.services.internal.AbsolutePathFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.AbsolutePathFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about existence requirement on the entity referenced by property's value by using semantical information specified by @MustExist annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.MustExistFactsService$Factory</factory>
         <id>Sapphire.FactsService.MustExist</id>
+        <implementation>org.eclipse.sapphire.services.internal.MustExistFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.MustExistFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about value property's uniqueness constraint by using semantical information specified by @NoDuplicates annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.NoDuplicatesFactsService$Factory</factory>
         <id>Sapphire.FactsService.NoDuplicates</id>
+        <implementation>org.eclipse.sapphire.services.internal.NoDuplicatesFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.NoDuplicatesFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about valid file extensions for property's value by using semantical information specified by @FileExtensions annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.FileExtensionsFactsService$Factory</factory>
         <id>Sapphire.FactsService.FileExtensions</id>
+        <implementation>org.eclipse.sapphire.services.internal.FileExtensionsFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.FileExtensionsFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about valid file system resource type (file or folder) for property's value by using semantical information specified by @ValidFileSystemResourceType annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.ValidFileSystemResourceTypeFactsService$Factory</factory>
         <id>Sapphire.FactsService.ValidFileSystemResourceType</id>
+        <implementation>org.eclipse.sapphire.services.internal.ValidFileSystemResourceTypeFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.ValidFileSystemResourceTypeFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about property's deprecated state by using semantical information specified by @Deprecated annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.DeprecatedPropertyFactsService$Factory</factory>
         <id>Sapphire.FactsService.Deprecated</id>
+        <implementation>org.eclipse.sapphire.services.internal.DeprecatedPropertyFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.DeprecatedPropertyFactsService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.FactsService.PreferDefaultValue</id>
         <description>Creates fact statements about property's recommended value by using semantical information specified by @PreferDefaultValue annotation.</description>
         <context>Sapphire.Property.Instance</context>
-        <type>org.eclipse.sapphire.services.FactsService</type>
-        <factory>org.eclipse.sapphire.internal.PreferDefaultValueFactsService$Factory</factory>
+        <implementation>org.eclipse.sapphire.internal.PreferDefaultValueFactsService</implementation>
+        <condition>org.eclipse.sapphire.internal.PreferDefaultValueFactsService$Condition</condition>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>
         <description>Creates fact statements about property's version compatibility by using semantic information specified by @Since and @VersionCompatibility annotations.</description>
-        <factory>org.eclipse.sapphire.internal.VersionCompatibilityFactsService$Factory</factory>
         <id>Sapphire.FactsService.VersionCompatibility</id>
-        <type>org.eclipse.sapphire.services.FactsService</type>
+        <implementation>org.eclipse.sapphire.internal.VersionCompatibilityFactsService</implementation>
+        <condition>org.eclipse.sapphire.internal.VersionCompatibilityFactsService$Condition</condition>
     </service>
     <service>
         <description>Implementation of FileExtensionsService that derives its behavior from @FileExtensions annotation.</description>
-        <type>org.eclipse.sapphire.services.FileExtensionsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.DeclarativeFileExtensionsService$Factory</factory>
         <id>Sapphire.FileExtensionsService.Declarative</id>
+        <implementation>org.eclipse.sapphire.services.internal.DeclarativeFileExtensionsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.DeclarativeFileExtensionsService$Condition</condition>
     </service>
     <service>
         <description>Implementation of DependenciesService that exposes dependencies specified by the @DependsOn annotation.</description>
-        <type>org.eclipse.sapphire.services.DependenciesService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.DeclarativeDependenciesService$Factory</factory>
         <id>Sapphire.DependenciesService.Declarative</id>
+        <implementation>org.eclipse.sapphire.services.internal.DeclarativeDependenciesService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.DeclarativeDependenciesService$Condition</condition>
     </service>
     <service>
         <description>Implementation of DependenciesService that exposes implied dependencies specified by the @NoDuplicates annotation.</description>
-        <type>org.eclipse.sapphire.services.DependenciesService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.services.internal.UniqueValueDependenciesService$Factory</factory>
         <id>Sapphire.DependenciesService.UniqueValue</id>
+        <implementation>org.eclipse.sapphire.services.internal.UniqueValueDependenciesService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.UniqueValueDependenciesService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.ConversionService.ObjectToString</id>
         <description>ConversionService implementation for Object to String conversions that uses object's toString() method.</description>
         <implementation>org.eclipse.sapphire.internal.ObjectToStringConversionService</implementation>
         <context>Sapphire</context>
+    </service>
+    <service>
+        <context>Sapphire</context>
+        <description>ConversionService implementation for Date to String conversions.</description>
+        <id>Sapphire.ConversionService.DateToString</id>
+        <implementation>org.eclipse.sapphire.DateToStringConversionService</implementation>
+        <overrides>Sapphire.ConversionService.ObjectToString</overrides>
+    </service>
+    <service>
+        <context>Sapphire</context>
+        <description>ConversionService implementation for Enum to String conversions.</description>
+        <id>Sapphire.ConversionService.EnumToString</id>
+        <implementation>org.eclipse.sapphire.internal.EnumToStringConversionService</implementation>
+        <overrides>Sapphire.ConversionService.ObjectToString</overrides>
     </service>    
     <service>
         <id>Sapphire.ConversionService.StringToBoolean</id>
@@ -427,22 +437,10 @@
         <description>ConversionService implementation for String to BigDecimal conversions.</description>
     </service>
     <service>
-        <id>Sapphire.ConversionService.EnumToString</id>
-        <implementation>org.eclipse.sapphire.internal.EnumToStringConversionService</implementation>
-        <context>Sapphire</context>
-        <description>ConversionService implementation for Enum to String conversions.</description>
-    </service>
-    <service>
         <id>Sapphire.ConversionService.StringToEnum</id>
         <implementation>org.eclipse.sapphire.internal.StringToEnumConversionService</implementation>
         <context>Sapphire</context>
         <description>ConversionService implementation for String to Enum conversions.</description>
-    </service>
-    <service>
-        <id>Sapphire.ConversionService.DateToString</id>
-        <description>ConversionService implementation for Date to String conversions.</description>
-        <implementation>org.eclipse.sapphire.DateToStringConversionService</implementation>
-        <context>Sapphire</context>
     </service>
     <service>
         <id>Sapphire.ConversionService.StringToDate</id>
@@ -540,30 +538,29 @@
     </service>
     <service>
         <id>Sapphire.PossibleTypesService.Standard</id>
-        <type>org.eclipse.sapphire.services.PossibleTypesService</type>
         <context>Sapphire.Property.MetaModel</context>
         <description>Implementation of PossibleTypesService using information specified by @Type annotation.</description>
-        <factory>org.eclipse.sapphire.services.internal.StandardPossibleTypesService$Factory</factory>
+        <implementation>org.eclipse.sapphire.services.internal.StandardPossibleTypesService</implementation>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>
         <description>RequiredConstraintService implementation that derives its behavior from @Required annotation.</description>
-        <factory>org.eclipse.sapphire.internal.DeclarativeRequiredConstraintService$Factory</factory>
         <id>Sapphire.RequiredConstraintService.Declarative</id>
-        <type>org.eclipse.sapphire.RequiredConstraintService</type>
+        <implementation>org.eclipse.sapphire.internal.DeclarativeRequiredConstraintService</implementation>
+        <condition>org.eclipse.sapphire.internal.DeclarativeRequiredConstraintService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.ContentProposalService.PossibleValues</id>
-        <type>org.eclipse.sapphire.services.ContentProposalService</type>
-        <factory>org.eclipse.sapphire.services.internal.PossibleValuesContentProposalService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
         <description>Implementation of ContentProposalService based on PossibleValuesService.</description>
+        <implementation>org.eclipse.sapphire.services.internal.PossibleValuesContentProposalService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.PossibleValuesContentProposalService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.DerivedValueService.Standard</id>
-        <type>org.eclipse.sapphire.services.DerivedValueService</type>
-        <factory>org.eclipse.sapphire.services.internal.StandardDerivedValueService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
+        <implementation>org.eclipse.sapphire.services.internal.StandardDerivedValueService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.StandardDerivedValueService$Condition</condition>
     </service>
     <function>
         <name>Scale</name>
@@ -602,25 +599,25 @@
     </function>
     <service>
         <id>Sapphire.VersionCompatibilityTargetService.Declarative</id>
-        <type>org.eclipse.sapphire.VersionCompatibilityTargetService</type>
-        <factory>org.eclipse.sapphire.internal.DeclarativeVersionCompatibilityTargetService$Factory</factory>
         <context>Sapphire.Element.Instance</context>
         <context>Sapphire.Property.Instance</context>
         <description>Implementation of VersionCompatibilityTargetService that derives its behavior from @VersionCompatibilityTarget annotation.</description>
+        <implementation>org.eclipse.sapphire.internal.DeclarativeVersionCompatibilityTargetService</implementation>
+        <condition>org.eclipse.sapphire.internal.DeclarativeVersionCompatibilityTargetService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.VersionCompatibilityService.Declarative</id>
-        <factory>org.eclipse.sapphire.internal.DeclarativeVersionCompatibilityService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
-        <type>org.eclipse.sapphire.VersionCompatibilityService</type>
         <description>Implementation of VersionCompatibilityService that derives its behavior from @VersionCompatibility and @Since annotations.</description>
+        <implementation>org.eclipse.sapphire.internal.DeclarativeVersionCompatibilityService</implementation>
+        <condition>org.eclipse.sapphire.internal.DeclarativeVersionCompatibilityService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.VersionCompatibilityService.ParentBased</id>
-        <type>org.eclipse.sapphire.VersionCompatibilityService</type>
-        <factory>org.eclipse.sapphire.internal.ParentBasedVersionCompatibilityService$Factory</factory>
         <context>Sapphire.Property.Instance</context>
         <description>Implementation of VersionCompatibilityService that derives its behavior from version compatibility of the containing element's parent property.</description>
+        <implementation>org.eclipse.sapphire.internal.ParentBasedVersionCompatibilityService</implementation>
+        <condition>org.eclipse.sapphire.internal.ParentBasedVersionCompatibilityService$Condition</condition>
     </service>
     <function>
         <name>UpperCase</name>

@@ -16,10 +16,10 @@
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <service>
         <description>Resolves Java types visible to the Java project that the model is loaded from.</description>
-        <type>org.eclipse.sapphire.services.ReferenceService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService$Factory</factory>
         <id>Sapphire.Java.JDT.TypeReferenceService</id>
         <overrides>Sapphire.Java.TypeReferenceService</overrides>
+        <implementation>org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService</implementation>
+        <condition>org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService$Condition</condition>
     </service>
 </extension>

@@ -13,14 +13,14 @@ package org.eclipse.sapphire.modeling.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.sapphire.util.IdentityHashSet;
+import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * Sorts objects in dependencies-first order.
@@ -30,11 +30,11 @@ import org.eclipse.sapphire.util.IdentityHashSet;
 
 public final class DependencySorter<K,T>
 {
-    private final Map<K,T> objectByKey = new HashMap<K,T>();
-    private final Map<T,Set<K>> objectToDependencies = new IdentityHashMap<T,Set<K>>();
+    private final Map<K,T> keyToObject = new LinkedHashMap<K,T>();
+    private final Map<T,K> objectToKey = new LinkedHashMap<T,K>();
+    private final Map<K,Set<K>> dependencies = new LinkedHashMap<K,Set<K>>();
     
-    public void add( final K key,
-                     final T object )
+    public void add( final K key, final T object )
     {
         if( key == null )
         {
@@ -46,36 +46,71 @@ public final class DependencySorter<K,T>
             throw new IllegalArgumentException();
         }
         
-        if( this.objectByKey.containsKey( key ) )
+        if( this.keyToObject.containsKey( key ) )
         {
-            if( this.objectByKey.get( key ) != object )
+            if( this.keyToObject.get( key ) != object )
             {
                 throw new IllegalArgumentException();
             }
         }
         else
         {
-            this.objectByKey.put( key, object );
-            this.objectToDependencies.put( object, new HashSet<K>() );
+            this.keyToObject.put( key, object );
+            this.objectToKey.put( object, key );
+            
+            if( this.dependencies.get( key ) == null )
+            {
+                this.dependencies.put( key, new LinkedHashSet<K>() );
+            }
         }
     }
     
-    public void dependency( final T from,
-                            final K toKey )
+    /**
+     * Determines if the sorter contains an object with the specified key.
+     * 
+     * @param key the object key
+     * @return true if and only if the sorter contains an object with the specified key
+     */
+    
+    public boolean contains( final K key )
     {
-        if( ! this.objectToDependencies.containsKey( from ) )
+        return ( this.keyToObject.get( key ) != null );
+    }
+    
+    public void dependency( final K from, final K to )
+    {
+        if( from == null )
         {
             throw new IllegalArgumentException();
         }
         
-        this.objectToDependencies.get( from ).add( toKey );
+        if( to == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        Set<K> set = this.dependencies.get( from );
+        
+        if( set == null )
+        {
+            set = new LinkedHashSet<K>();
+            this.dependencies.put( from, set );
+        }
+        
+        set.add( to );
     }
+    
+    /**
+     * Returns the sorted list. The returned list is not modifiable.
+     * 
+     * @return the sorted list
+     */
     
     public List<T> sort()
     {
         // Return early if no objects defined.
         
-        if( this.objectToDependencies.isEmpty() )
+        if( this.keyToObject.isEmpty() )
         {
             return Collections.emptyList();
         }
@@ -84,30 +119,27 @@ public final class DependencySorter<K,T>
         
         final List<T> roots = new ArrayList<T>();
         
-        for( T x : this.objectToDependencies.keySet() )
+        for( final K key : this.dependencies.keySet() )
         {
             boolean found = false;
             
-            for( Set<K> dependencies : this.objectToDependencies.values() )
+            for( final Set<K> dependencies : this.dependencies.values() )
             {
-                for( K dependency : dependencies )
+                if( dependencies.contains( key ) )
                 {
-                    if( this.objectByKey.get( dependency ) == x )
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                
-                if( found )
-                {
+                    found = true;
                     break;
                 }
             }
             
             if( ! found )
             {
-                roots.add( x );
+                final T object = this.keyToObject.get( key );
+                
+                if( object != null )
+                {
+                    roots.add( object );
+                }
             }
         }
         
@@ -116,16 +148,16 @@ public final class DependencySorter<K,T>
         // be another root and visit what can be reached from that object. Repeat
         // until all objects have been visited.
         
-        final Set<T> visited = new IdentityHashSet<T>();
+        final Set<T> visited = new HashSet<T>();
         
         for( T root : roots )
         {
             visit( root, visited );
         }
         
-        while( visited.size() != this.objectToDependencies.size() )
+        while( visited.size() != this.keyToObject.size() )
         {
-            for( T object : this.objectToDependencies.keySet() )
+            for( T object : this.keyToObject.values() )
             {
                 if( ! visited.contains( object ) )
                 {
@@ -136,21 +168,18 @@ public final class DependencySorter<K,T>
             }
         }
         
-        // Traverse the dependency trees of each root and add objects in depth-first
-        // order. The visited set tracks objects already traversed so that we can
-        // break cycles.
+        // Finally, traverse the dependency trees of each root and add objects in depth-first order. The visited set
+        // tracks objects already traversed so that we can break cycles.
         
-        final List<T> list = new ArrayList<T>();
+        final ListFactory<T> result = ListFactory.start();
         visited.clear();
         
         for( T root : roots )
         {
-            traverse( root, list, visited );
+            traverse( root, visited, result );
         }
         
-        // Return the sorted list.
-        
-        return list;
+        return result.result();
     }
     
     private void visit( final T object,
@@ -163,9 +192,9 @@ public final class DependencySorter<K,T>
         
         visited.add( object );
         
-        for( K key : this.objectToDependencies.get( object ) )
+        for( K key : this.dependencies.get( this.objectToKey.get( object ) ) )
         {
-            final T x = this.objectByKey.get( key );
+            final T x = this.keyToObject.get( key );
             
             if( x != null )
             {
@@ -175,8 +204,8 @@ public final class DependencySorter<K,T>
     }
 
     private void traverse( final T object,
-                           final List<T> list,
-                           final Set<T> visited )
+                           final Set<T> visited,
+                           final ListFactory<T> result )
     {
         if( visited.contains( object ) )
         {
@@ -185,17 +214,17 @@ public final class DependencySorter<K,T>
         
         visited.add( object );
         
-        for( K key : this.objectToDependencies.get( object ) )
+        for( K key : this.dependencies.get( this.objectToKey.get( object ) ) )
         {
-            final T x = this.objectByKey.get( key );
+            final T x = this.keyToObject.get( key );
             
             if( x != null )
             {
-                traverse( x, list, visited );
+                traverse( x, visited, result );
             }
         }
         
-        list.add( object );
+        result.add( object );
     }
     
 }

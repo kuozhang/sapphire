@@ -17,9 +17,8 @@ import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.services.FileExtensionsService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 
 /**
@@ -119,21 +118,13 @@ public final class FileNameNormalizationService extends ValueNormalizationServic
         return normalized;
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class ); 
             return ( property != null && property.isOfType( FileName.class ) );
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new FileNameNormalizationService();
         }
     }
     

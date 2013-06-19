@@ -24,9 +24,6 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleTypesServiceData;
-import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of PossibleTypesService using information specified by @Type annotation.
@@ -83,23 +80,6 @@ public final class StandardPossibleTypesService extends PossibleTypesService
     protected PossibleTypesServiceData compute()
     {
         return new PossibleTypesServiceData( this.possible );
-    }
-
-    public static final class Factory extends ServiceFactory
-    {
-        @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
-        {
-            return true;
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new StandardPossibleTypesService();
-        }
     }
 
 }

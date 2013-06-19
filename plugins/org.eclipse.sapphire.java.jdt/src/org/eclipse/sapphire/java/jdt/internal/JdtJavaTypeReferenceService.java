@@ -28,9 +28,8 @@ import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.java.jdt.JdtJavaType;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,13 +37,16 @@ import org.eclipse.sapphire.services.ServiceFactory;
 
 public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
 {
-    private final IJavaProject project;
+    private IJavaProject project;
     private IElementChangedListener listener;
     
-    public JdtJavaTypeReferenceService( final IProject project )
+    public JdtJavaTypeReferenceService()
     {
-        this( JavaCore.create( project ) );
     }
+    
+    /**
+     * Constructor used by the unit tests.
+     */
 
     public JdtJavaTypeReferenceService( final IJavaProject project )
     {
@@ -55,6 +57,8 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
     protected void init()
     {
         super.init();
+        
+        this.project = JavaCore.create( context( Element.class ).adapt( IProject.class ) );
         
         final Value<?> value = context( Value.class );
         
@@ -127,11 +131,10 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
         JavaCore.removeElementChangedListener( this.listener );
     }
 
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final Property property = context.find( Property.class );
             
@@ -164,14 +167,6 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
             }
             
             return false;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            final IProject project = context.find( Element.class ).adapt( IProject.class );
-            return new JdtJavaTypeReferenceService( project );
         }
     }
     

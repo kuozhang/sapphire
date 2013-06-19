@@ -30,9 +30,8 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of VersionCompatibilityService that derives its behavior from @VersionCompatibility and @Since annotations.
@@ -208,24 +207,16 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final Element element = context.find( Element.class );
             final PropertyDef property = context.find( PropertyDef.class );
             
             return ( property.hasAnnotation( VersionCompatibility.class ) || property.hasAnnotation( Since.class ) ) &&
                    ( VersionCompatibilityTargetService.find( element, property ) != null );
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new DeclarativeVersionCompatibilityService();
         }
     }
     

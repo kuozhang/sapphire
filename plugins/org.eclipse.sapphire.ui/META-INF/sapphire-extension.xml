@@ -18,18 +18,12 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     <service>
-        <type>org.eclipse.sapphire.services.ReferenceService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.ui.def.internal.JavaTypeReferenceServiceForSdef$Factory</factory>
         <id>Sapphire.UI.Definition.Java.TypeReferenceService</id>
         <overrides>Sapphire.Java.TypeReferenceService</overrides>
         <overrides>Sapphire.Java.JDT.TypeReferenceService</overrides>
-    </service>
-    <service>
-        <id>Sapphire.ConversionService.StringToColor</id>
-        <implementation>org.eclipse.sapphire.ui.def.internal.StringToColorConversionService</implementation>
-        <context>Sapphire</context>
-        <description>ConversionService implementation for String to Color conversions.</description>
+        <implementation>org.eclipse.sapphire.ui.def.internal.JavaTypeReferenceServiceForSdef</implementation>
+        <condition>org.eclipse.sapphire.ui.def.internal.JavaTypeReferenceServiceForSdef$Condition</condition>
     </service>
     <action>
         <id>Sapphire.Add</id>
@@ -577,16 +571,16 @@
     </service>
     <service>
         <id>Sapphire.ListSelectionService</id>
-        <type>org.eclipse.sapphire.ui.ListSelectionService</type>
-        <factory>org.eclipse.sapphire.ui.internal.ListSelectionServiceFactory</factory>
         <context>Sapphire.Part</context>
+        <implementation>org.eclipse.sapphire.ui.ListSelectionService</implementation>
+        <condition>org.eclipse.sapphire.ui.internal.ListSelectionServiceCondition</condition>
     </service>
     <service>
         <id>Sapphire.ProblemsTraversalService</id>
-        <type>org.eclipse.sapphire.ui.form.editors.masterdetails.ProblemsTraversalService</type>
-        <factory>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.ProblemsTraversalServiceFactory</factory>
         <context>Sapphire.Part</context>
         <description>Produces a problem-annotated traversal order through the content outline, which can be used to find the next error or warning from any location in the content outline. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
+        <implementation>org.eclipse.sapphire.ui.form.editors.masterdetails.ProblemsTraversalService</implementation>
+        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.ProblemsTraversalServiceCondition</condition>
     </service>
     <function>
         <name>Enabled</name>

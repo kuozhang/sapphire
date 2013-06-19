@@ -15,23 +15,20 @@ import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.RequiredConstraintService;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.NLS;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class RequiredConstraintValidationService extends ValidationService
+public final class RequiredConstraintValidationService extends ValidationService
 {
     private Property property;
     private RequiredConstraintService requiredConstraintService;
@@ -72,7 +69,19 @@ public abstract class RequiredConstraintValidationService extends ValidationServ
         }
     }
     
-    protected abstract boolean check();
+    protected boolean check()
+    {
+        if( this.property instanceof Value )
+        {
+            return ( ( (Value<?>) this.property ).text() != null );
+        }
+        else if( this.property instanceof ElementHandle )
+        {
+            return ( ( (ElementHandle<?>) this.property ).content() != null );
+        }
+        
+        throw new IllegalStateException();
+    }
 
     @Override
     public void dispose()
@@ -85,44 +94,13 @@ public abstract class RequiredConstraintValidationService extends ValidationServ
         }
     }
 
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( RequiredConstraintService.class ) != null );
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            final PropertyDef property = context.find( PropertyDef.class );
-            
-            if( property instanceof ValueProperty )
-            {
-                return new RequiredConstraintValidationService()
-                {
-                    @Override
-                    protected boolean check()
-                    {
-                        return ( context( Value.class ).text() != null );
-                    }
-                };
-            }
-            else
-            {
-                return new RequiredConstraintValidationService()
-                {
-                    @Override
-                    protected boolean check()
-                    {
-                        return ( context( ElementHandle.class ).content() != null );
-                    }
-                };
-            }
         }
     }
     

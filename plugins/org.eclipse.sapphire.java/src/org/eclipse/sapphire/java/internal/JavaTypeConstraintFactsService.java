@@ -26,9 +26,8 @@ import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ReferenceService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about Java type property's constraints by using semantical information 
@@ -177,21 +176,13 @@ public final class JavaTypeConstraintFactsService extends FactsService
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( JavaTypeConstraintService.class ) != null );
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new JavaTypeConstraintFactsService();
         }
     }
     

@@ -11,17 +11,17 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleValuesService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
-import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * Implementation of PossibleValuesService based on @PossibleValues annotation's values attribute..
@@ -31,41 +31,66 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class StaticPossibleValuesService extends PossibleValuesService
 {
-    private final List<String> values;
+    private String[] values;
+    private String invalidValueMessageTemplate;
+    private Status.Severity invalidValueSeverity;
+    private boolean caseSensitive;
+    private boolean ordered;
     
-    public StaticPossibleValuesService( final String[] values,
-                                        final String invalidValueMessageTemplate,
-                                        final Status.Severity invalidValueSeverity,
-                                        final boolean caseSensitive,
-                                        final boolean ordered )
+    @Override
+    protected void init()
     {
-        super( invalidValueMessageTemplate, invalidValueSeverity, caseSensitive, ordered );
+        super.init();
         
-        this.values = ListFactory.unmodifiable( values );
+        final PossibleValues a = context( ValueProperty.class ).getAnnotation( PossibleValues.class );
+        
+        this.values = a.values();
+        this.invalidValueMessageTemplate = a.invalidValueMessage();
+        this.invalidValueSeverity = a.invalidValueSeverity();
+        this.caseSensitive = a.caseSensitive();
+        this.ordered = a.ordered();
     }
 
     @Override
     protected void fillPossibleValues( final Set<String> values )
     {
-        values.addAll( this.values );
+        for( String value : this.values )
+        {
+            values.add( value );
+        }
     }
     
-    public static final class Factory extends ServiceFactory
+    @Override
+    public String getInvalidValueMessage( final String invalidValue )
+    {
+        return NLS.bind( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+    }
+    
+    @Override
+    public Status.Severity getInvalidValueSeverity( final String invalidValue )
+    {
+        return this.invalidValueSeverity;
+    }
+    
+    @Override
+    public boolean isCaseSensitive()
+    {
+        return this.caseSensitive;
+    }
+
+    @Override
+    public boolean ordered()
+    {
+        return this.ordered;
+    }
+
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( PossibleValues.class ) && property.getAnnotation( PossibleValues.class ).values().length > 0 );
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            final PossibleValues a = context.find( ValueProperty.class ).getAnnotation( PossibleValues.class );
-            return new StaticPossibleValuesService( a.values(), a.invalidValueMessage(), a.invalidValueSeverity(), a.caseSensitive(), a.ordered() );
         }
     }
     

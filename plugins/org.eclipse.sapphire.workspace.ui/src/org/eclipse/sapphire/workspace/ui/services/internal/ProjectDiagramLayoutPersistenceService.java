@@ -26,9 +26,8 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.LayoutPersistence;
@@ -112,11 +111,10 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
 		return null;
 	}
 
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
         	ISapphirePart part = context.find(ISapphirePart.class);
         	if (part instanceof SapphireDiagramEditorPagePart)
@@ -129,13 +127,6 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
         		}
         	}
         	return false;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new ProjectDiagramLayoutPersistenceService();
         }
     }
 

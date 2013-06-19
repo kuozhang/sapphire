@@ -25,9 +25,8 @@ import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.java.jdt.JdtJavaType;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
@@ -37,16 +36,14 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
 public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceService
 {
-    private final IJavaProject project;
+    private IJavaProject project;
     
-    public SdkJavaTypeReferenceServiceForSdef( final IProject project )
+    @Override
+    protected void init()
     {
-        this.project = JavaCore.create( project );
-    }
-
-    public SdkJavaTypeReferenceServiceForSdef( final IJavaProject project )
-    {
-        this.project = project;
+        super.init();
+        
+        this.project = JavaCore.create( context( Element.class ).adapt( IProject.class ) );
     }
 
     @Override
@@ -91,11 +88,10 @@ public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceS
         return null;
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ISapphireUiDef def = context.find( ISapphireUiDef.class );
             final ValueProperty property = context.find( ValueProperty.class );
@@ -129,14 +125,6 @@ public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceS
             }
             
             return false;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            final IProject project = context.find( Element.class ).adapt( IProject.class );
-            return new SdkJavaTypeReferenceServiceForSdef( project );
         }
     }
     

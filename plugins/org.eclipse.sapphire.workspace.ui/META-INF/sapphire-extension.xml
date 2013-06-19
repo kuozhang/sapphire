@@ -16,20 +16,20 @@
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <service>
         <id>DiagramLayoutPersistenceService.Project</id>
-        <type>org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService</type>
         <context>Sapphire.Part</context>
-        <factory>org.eclipse.sapphire.workspace.ui.services.internal.ProjectDiagramLayoutPersistenceService$Factory</factory>
+        <implementation>org.eclipse.sapphire.workspace.ui.services.internal.ProjectDiagramLayoutPersistenceService</implementation>
+        <condition>org.eclipse.sapphire.workspace.ui.services.internal.ProjectDiagramLayoutPersistenceService$Condition</condition>
     </service>
     <service>
         <id>DiagramLayoutPersistenceService.SideBySide</id>
-        <type>org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService</type>
         <context>Sapphire.Part</context>
-        <factory>org.eclipse.sapphire.workspace.ui.services.internal.SideBySideDiagramLayoutPersistenceService$Factory</factory>
+        <implementation>org.eclipse.sapphire.workspace.ui.services.internal.SideBySideDiagramLayoutPersistenceService</implementation>
+        <condition>org.eclipse.sapphire.workspace.ui.services.internal.SideBySideDiagramLayoutPersistenceService$Condition</condition>
     </service>
     <service>
         <id>DiagramLayoutPersistenceService.Workspace</id>
-        <type>org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService</type>
         <context>Sapphire.Part</context>
-        <factory>org.eclipse.sapphire.workspace.ui.services.internal.WorkspaceDiagramLayoutPersistenceService$Factory</factory>
+        <implementation>org.eclipse.sapphire.workspace.ui.services.internal.WorkspaceDiagramLayoutPersistenceService</implementation>
+        <condition>org.eclipse.sapphire.workspace.ui.services.internal.WorkspaceDiagramLayoutPersistenceService$Condition</condition>
     </service>
 </extension>

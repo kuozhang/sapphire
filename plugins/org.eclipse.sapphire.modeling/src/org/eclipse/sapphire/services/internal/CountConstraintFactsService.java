@@ -18,9 +18,8 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Creates fact statements about list property's count constraint by using semantical information 
@@ -53,11 +52,10 @@ public final class CountConstraintFactsService extends FactsService
         }
     }
     
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ListProperty property = context.find( ListProperty.class );
             
@@ -68,13 +66,6 @@ public final class CountConstraintFactsService extends FactsService
             }
             
             return false;
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new CountConstraintFactsService();
         }
     }
     

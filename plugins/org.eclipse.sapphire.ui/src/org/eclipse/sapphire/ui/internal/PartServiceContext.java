@@ -12,17 +12,15 @@
 package org.eclipse.sapphire.ui.internal;
 
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactoryProxy;
+import org.eclipse.sapphire.services.ServiceProxy;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.ServiceDef;
@@ -77,76 +75,46 @@ public final class PartServiceContext extends ServiceContext
     }
 
     @Override
-    protected List<ServiceFactoryProxy> local()
+    protected List<ServiceProxy> local()
     {
-        final ListFactory<ServiceFactoryProxy> local = ListFactory.start();
+        final ListFactory<ServiceProxy> local = ListFactory.start();
         final PartDef partDef = this.part.definition();
         
         for( ServiceDef serviceDef : partDef.getServices() )
         {
             final Class<? extends Service> serviceImplClass = resolve( serviceDef.getImplementation() );
             
-            final SetFactory<String> overridesSetFactory = SetFactory.start();
-            
-            for( ServiceDef.Override override : serviceDef.getOverrides() )
-            {
-                String id = override.getId().text();
-                
-                if( id != null )
-                {
-                    id = id.trim();
-                    
-                    if( id.length() > 0 )
-                    {
-                        overridesSetFactory.add( id );
-                    }
-                }
-            }
-            
-            final Set<String> overrides = overridesSetFactory.result();
-            
             if( serviceImplClass != null )
             {
-                final ServiceFactoryProxy proxy = new ServiceFactoryProxy()
-                {
-                    @Override
-                    public String id()
-                    {
-                        return serviceImplClass.getName();
-                    }
-                    
-                    @Override
-                    public Class<? extends Service> type()
-                    {
-                        return serviceImplClass;
-                    }
-
-                    @Override
-                    public Set<String> overrides()
-                    {
-                        return overrides;
-                    }
-
-                    @Override
-                    protected Service createHandOff( ServiceContext context,
-                                                     Class<? extends Service> service )
-                    {
-                        Service instance = null;
-                        
-                        try
-                        {
-                            instance = serviceImplClass.newInstance();
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
-                        
-                        return instance;
-                    }
-                };
+                final SetFactory<String> overridesSetFactory = SetFactory.start();
                 
-                local.add( proxy );
+                for( ServiceDef.Override override : serviceDef.getOverrides() )
+                {
+                    String id = override.getId().text();
+                    
+                    if( id != null )
+                    {
+                        id = id.trim();
+                        
+                        if( id.length() > 0 )
+                        {
+                            overridesSetFactory.add( id );
+                        }
+                    }
+                }
+                
+                local.add
+                (
+                    new ServiceProxy
+                    (
+                        this,
+                        serviceImplClass.getName(),
+                        serviceImplClass,
+                        null,
+                        overridesSetFactory.result(),
+                        null
+                    )
+                );
             }
         }
         

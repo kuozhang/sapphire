@@ -15,36 +15,36 @@
 
 <extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <service>
-        <type>org.eclipse.sapphire.services.RelativePathService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathService$Factory</factory>
         <id>Sapphire.RelativePathService.Project</id>
+        <implementation>org.eclipse.sapphire.workspace.internal.ProjectRelativePathService</implementation>
+        <condition>org.eclipse.sapphire.workspace.internal.ProjectRelativePathService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.RelativePathService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathService$Factory</factory>
         <id>Sapphire.RelativePathService.Workspace</id>
+        <implementation>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathService</implementation>
+        <condition>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathService$Condition</condition>
     </service>
     <service>
-        <type>org.eclipse.sapphire.services.ValidationService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathValidationService$Factory</factory>
         <id>Sapphire.ValidationService.ProjectRelativePath</id>
+        <implementation>org.eclipse.sapphire.workspace.internal.ProjectRelativePathValidationService</implementation>
+        <condition>org.eclipse.sapphire.workspace.internal.ProjectRelativePathValidationService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about property's relative to the project path requirement by using semantical information specified by @ProjectRelativePath annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.workspace.internal.ProjectRelativePathFactsService$Factory</factory>
         <id>Sapphire.FactsService.ProjectRelativePath</id>
+        <implementation>org.eclipse.sapphire.workspace.internal.ProjectRelativePathFactsService</implementation>
+        <condition>org.eclipse.sapphire.workspace.internal.ProjectRelativePathFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about property's relative to the workspace path requirement by using semantical information specified by @WorkspaceRelativePath annotation.</description>
-        <type>org.eclipse.sapphire.services.FactsService</type>
         <context>Sapphire.Property.Instance</context>
-        <factory>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathFactsService$Factory</factory>
         <id>Sapphire.FactsService.WorkspaceRelativePath</id>
+        <implementation>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathFactsService</implementation>
+        <condition>org.eclipse.sapphire.workspace.internal.WorkspaceRelativePathFactsService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.ConversionService.IFileToWorkspaceFileResourceStore</id>

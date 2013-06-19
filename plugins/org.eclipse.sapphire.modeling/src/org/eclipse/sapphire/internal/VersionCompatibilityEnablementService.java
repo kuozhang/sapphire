@@ -20,9 +20,6 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.EnablementServiceData;
-import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * Implementation of EnablementService that determines property's enablement state based on property's 
@@ -96,23 +93,6 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
         else
         {
             property.element().detach( this.propertyListener, property.name() );
-        }
-    }
-    
-    public static final class Factory extends ServiceFactory
-    {
-        @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
-        {
-            return true;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new VersionCompatibilityEnablementService();
         }
     }
 

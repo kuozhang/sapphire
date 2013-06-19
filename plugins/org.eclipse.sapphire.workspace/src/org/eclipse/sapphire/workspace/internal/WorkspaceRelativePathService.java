@@ -18,9 +18,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.services.RelativePathService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
@@ -87,21 +86,13 @@ public final class WorkspaceRelativePathService extends RelativePathService
         return null;
     }
 
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && Path.class.isAssignableFrom( property.getTypeClass() ) && property.hasAnnotation( WorkspaceRelativePath.class ) );
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new WorkspaceRelativePathService();
         }
     }
     

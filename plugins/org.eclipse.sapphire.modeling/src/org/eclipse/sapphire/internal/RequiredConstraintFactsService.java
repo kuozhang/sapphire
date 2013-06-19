@@ -20,9 +20,8 @@ import org.eclipse.sapphire.RequiredConstraintService;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 
 /**
  * {@link FactsService} implementation that contributes fact statements based on semantical
@@ -92,21 +91,13 @@ public final class RequiredConstraintFactsService extends FactsService
         }
     }
 
-    public static final class Factory extends ServiceFactory
+    public static final class Condition extends ServiceCondition
     {
         @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
+        public boolean applicable( final ServiceContext context )
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( RequiredConstraintService.class ) != null );
-        }
-    
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new RequiredConstraintFactsService();
         }
     }
     

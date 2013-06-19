@@ -18,9 +18,6 @@ import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactory;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
@@ -65,23 +62,6 @@ public final class StandardElementValidationService extends ValidationService
         }
         
         return factory.create();
-    }
-    
-    public static final class Factory extends ServiceFactory
-    {
-        @Override
-        public boolean applicable( final ServiceContext context,
-                                   final Class<? extends Service> service )
-        {
-            return true;
-        }
-
-        @Override
-        public Service create( final ServiceContext context,
-                               final Class<? extends Service> service )
-        {
-            return new StandardElementValidationService();
-        }
     }
 
 }

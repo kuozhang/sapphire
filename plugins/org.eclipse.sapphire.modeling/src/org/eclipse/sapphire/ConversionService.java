@@ -67,9 +67,10 @@ public abstract class ConversionService<S,T> extends Service
      * Converts an object of source type to target type.
      * 
      * @param object the object to convert
-     * @return the converted object or null if could not be converted
+     * @return the converted object or null if this implementation cannot convert, but it is ok to try other implementations
+     * @throws ConversionException if the object cannot be converted and no other implementation should be tried
      */
     
-    public abstract T convert( S object );
+    public abstract T convert( S object ) throws ConversionException;
     
 }

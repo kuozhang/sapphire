@@ -15,14 +15,11 @@ package org.eclipse.sapphire.services.internal;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ServiceFactoryProxy;
+import org.eclipse.sapphire.services.ServiceProxy;
 import org.eclipse.sapphire.util.MapFactory;
 import org.eclipse.sapphire.util.SetFactory;
 
@@ -40,9 +37,9 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
     }
     
     @Override
-    protected final List<ServiceFactoryProxy> local()
+    protected final List<ServiceProxy> local()
     {
-        final List<ServiceFactoryProxy> local = new ArrayList<ServiceFactoryProxy>();
+        final List<ServiceProxy> local = new ArrayList<ServiceProxy>();
         
         final List<org.eclipse.sapphire.modeling.annotations.Service> serviceAnnotations 
             = new ArrayList<org.eclipse.sapphire.modeling.annotations.Service>();
@@ -78,55 +75,18 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
                     paramsMapFactory.add( param.name(), param.value() );
                 }
                 
-                final Set<String> overrides = overridesSetFactory.result();
-                final Map<String,String> params = paramsMapFactory.result();
-                
-                final ServiceFactoryProxy proxy = new ServiceFactoryProxy()
-                {
-                    @Override
-                    public String id()
-                    {
-                        return cl.getName();
-                    }
-                    
-                    @Override
-                    public Class<? extends Service> type()
-                    {
-                        return cl;
-                    }
-    
-                    @Override
-                    public Set<String> overrides()
-                    {
-                        return overrides;
-                    }
-    
-                    @Override
-                    public Map<String,String> parameters()
-                    {
-                        return params;
-                    }
-    
-                    @Override
-                    protected Service createHandOff( final ServiceContext context,
-                                                     final Class<? extends Service> service )
-                    {
-                        Service instance = null;
-                        
-                        try
-                        {
-                            instance = cl.newInstance();
-                        }
-                        catch( Exception e )
-                        {
-                            LoggingService.log( e );
-                        }
-                        
-                        return instance;
-                    }
-                };
-                
-                local.add( proxy );
+                local.add
+                (
+                    new ServiceProxy
+                    (
+                        this,
+                        cl.getName(),
+                        cl,
+                        null,
+                        overridesSetFactory.result(),
+                        paramsMapFactory.result()
+                    )
+                );
             }
         }
         
