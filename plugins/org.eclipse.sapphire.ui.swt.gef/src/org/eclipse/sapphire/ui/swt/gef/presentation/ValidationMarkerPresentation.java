@@ -26,6 +26,7 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -40,6 +41,7 @@ import org.eclipse.sapphire.ui.assist.internal.RestoreInitialValueActionsAssistC
 import org.eclipse.sapphire.ui.assist.internal.ShowInSourceActionAssistContributor;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
@@ -196,7 +198,19 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	
 	private ContainerShapePart getContainerPart()
 	{
-		return (ContainerShapePart)this.getPart().getParentPart();
+		ContainerShapePart parentShapePart = (ContainerShapePart)this.getPart().getParentPart();
+		while (!isValidParent(parentShapePart)) {
+			parentShapePart =(ContainerShapePart)parentShapePart.getParentPart();
+		}
+		return parentShapePart;
+	}
+	
+	private boolean isValidParent(ShapePart part) {
+		ISapphirePart parentPart = part.getParentPart();
+		if (parentPart instanceof DiagramNodePart || parentPart instanceof ShapeFactoryPart) {
+			return true;
+		}
+		return false;
 	}
 	
 	private void refresh()
