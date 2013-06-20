@@ -29,7 +29,32 @@
                     <text>
                         <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                     </text>
-                </content>
+                    <line></line>
+                    <shape-factory>
+                        <property>Fields</property>
+                        <separator>
+                            <line></line>
+                        </separator>
+                        <case>
+                            <rectangle>
+                                <content>
+                                    <text>
+                                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                    </text>
+                                </content>
+                                <sequence-layout>
+                                    <margin>0</margin>
+                                </sequence-layout>
+                                <sequence-layout-constraint>
+                                    <margin>5</margin>
+                                </sequence-layout-constraint>
+                            </rectangle>
+                        </case>
+                    </shape-factory>                </content>
+                <sequence-layout>
+                    <margin>0</margin>
+                    <spacing>0</spacing>
+                </sequence-layout>
             </rectangle>
             <instance-id>${ Name }</instance-id>
             <id>Entity</id>
