@@ -62,6 +62,7 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         final PossibleValues a = value.definition().getAnnotation( PossibleValues.class );
         
         this.path = new ModelPath( a.property() );
+        this.values = SetFactory.empty();
         this.invalidValueMessageTemplate = a.invalidValueMessage();
         this.invalidValueSeverity = a.invalidValueSeverity();
         this.caseSensitive = a.caseSensitive();
