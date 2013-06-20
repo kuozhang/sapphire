@@ -11,7 +11,8 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.ConversionService;
@@ -37,7 +38,7 @@ public final class StringToImageDataConversionService extends ConversionService<
         final Element element = context( Element.class );
         final Context ctxt = element.adapt( Context.class );
         
-        URL url = null;
+        InputStream stream = null;
         
         if( string != null && ! string.contains( "/" ) )
         {
@@ -52,9 +53,9 @@ public final class StringToImageDataConversionService extends ConversionService<
                     if( pname != null )
                     {
                         final String possibleFullPath = pname.replace( '.', '/' ) + "/" + string;
-                        url = ctxt.findResource( possibleFullPath );
+                        stream = ctxt.findResource( possibleFullPath );
                         
-                        if( url != null )
+                        if( stream != null )
                         {
                             break;
                         }
@@ -63,14 +64,25 @@ public final class StringToImageDataConversionService extends ConversionService<
             }
         }
         
-        if( url == null )
+        if( stream == null )
         {
-            url = ctxt.findResource( string );
+            stream = ctxt.findResource( string );
         }
         
-        if( url != null )
+        if( stream != null )
         {
-            return ImageData.readFromUrl( url );
+            try
+            {
+                return ImageData.readFromStream( stream );
+            }
+            finally
+            {
+                try
+                {
+                    stream.close();
+                }
+                catch( IOException e ) {}
+            }
         }
         
         return null;

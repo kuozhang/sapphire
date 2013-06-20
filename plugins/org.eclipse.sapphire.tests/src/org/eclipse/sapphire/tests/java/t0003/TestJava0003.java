@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.java.t0003;
 
-import java.net.URL;
-import java.util.List;
+import java.io.InputStream;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -103,13 +102,7 @@ public final class TestJava0003 extends SapphireTestCase
                         }
 
                         @Override
-                        public URL findResource( final String name )
-                        {
-                            throw new UnsupportedOperationException();
-                        }
-
-                        @Override
-                        public List<URL> findResources( final String name )
+                        public InputStream findResource( final String name )
                         {
                             throw new UnsupportedOperationException();
                         }

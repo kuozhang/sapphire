@@ -12,12 +12,10 @@
 package org.eclipse.sapphire.modeling;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.List;
 
 import org.eclipse.sapphire.Context;
-import org.eclipse.sapphire.util.ListFactory;
 import org.osgi.framework.Bundle;
 
 /**
@@ -75,49 +73,28 @@ public final class BundleBasedContext extends Context
     }
 
     @Override
-    public URL findResource( String name )
+    public InputStream findResource( String name )
     {
         if( name == null )
         {
             throw new IllegalArgumentException();
         }
         
-        return this.bundle.getResource( name );
-    }
-
-    @Override
-    public List<URL> findResources( final String name )
-    {
-        if( name == null )
-        {
-            throw new IllegalArgumentException();
-        }
+        final URL url = this.bundle.getResource( name );
         
-        final ListFactory<URL> resourcesListFactory = ListFactory.start();
-
-        try
+        if( url != null )
         {
-            final Enumeration<URL> enumeration = this.bundle.getResources( name );
-            
-            if( enumeration != null )
+            try
             {
-                while( enumeration.hasMoreElements() )
-                {
-                    final URL resource = enumeration.nextElement();
-                    
-                    if( resource != null )
-                    {
-                        resourcesListFactory.add( resource );
-                    }
-                }
+                return url.openStream();
+            }
+            catch( IOException e )
+            {
+                // Failure to open is equated with not found by returning null.
             }
         }
-        catch( IOException e )
-        {
-            LoggingService.log( e );
-        }
         
-        return resourcesListFactory.result();
+        return null;
     }
     
 }

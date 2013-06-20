@@ -31,7 +31,6 @@ public final class Sapphire
 {
     private static final String VERSION_QUALIFIER_SUFFIX = ".qualifier";
     
-    private static boolean devmode = Boolean.parseBoolean( System.getProperty( "sapphire.dev.mode" ) );
     private static Version version;
     private static ServiceContext services;
     
@@ -41,11 +40,6 @@ public final class Sapphire
     
     private Sapphire()
     {
-    }
-    
-    public static boolean isDevMode()
-    {
-        return devmode;
     }
     
     /**

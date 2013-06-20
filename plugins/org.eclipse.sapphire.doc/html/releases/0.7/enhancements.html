@@ -75,6 +75,7 @@
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-JavaIdentifier">JavaIdentifier</a></li>
+    <li><a href="#Miscellaneous-ImageData">ImageData</a></li>
   </ol>
 </ol>
 
@@ -1280,6 +1281,23 @@ ValueProperty PROP_FIELD_NAME = new ValueProperty( TYPE, "FieldName" );
 Value&lt;</font>JavaIdentifier<font color="#888888">> getFieldName();
 void setFieldName( String value );
 void setFieldName(</font> JavaIdentifier <font color="#888888">value );</font></code></pre>
+
+
+<h2><a name="Miscellaneous-ImageData">ImageData</a></h2>
+
+<p>An ImageData can now be read from an InputStream.</p>
+
+<pre class="source-code"><code><font color="#888888">ImageData
+{</font>
+    static ImageData readFromStream( InputStream stream )
+    <font color="#888888">static ImageData readFromUrl( URL url )
+    static ImageData readFromClassLoader( Class&lt;?> cl, String path )
+    static ImageData readFromClassLoader( ClassLoader cl, String path )</font>
+    static ImageData createFromStream( InputStream stream )
+    <font color="#888888">static ImageData createFromUrl( URL url )
+    static ImageData createFromClassLoader( Class&lt;?> cl, String path )
+    static ImageData createFromClassLoader( ClassLoader cl, String path )
+}</font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2013 Oracle<br/>

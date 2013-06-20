@@ -11,19 +11,15 @@
 
 package org.eclipse.sapphire.ui.def;
 
-import java.lang.ref.SoftReference;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Resource;
-import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 
@@ -33,8 +29,6 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 
 public final class DefinitionLoader
 {
-    private static Map<String,SoftReference<DefinitionLoader>> loaders = new HashMap<String,SoftReference<DefinitionLoader>>();
-    
     private final Context context;
     private ISapphireUiDef sdef;
     
@@ -100,72 +94,50 @@ public final class DefinitionLoader
             throw new IllegalStateException();
         }
         
-        final URL url = this.context.findResource( name.replace( '.', '/' ) + ".sdef" );
+        final InputStream stream = this.context.findResource( name.replace( '.', '/' ) + ".sdef" );
         
-        if( url == null )
+        if( stream == null )
         {
             throw new IllegalArgumentException();
         }
         
-        final String urlString = url.toString();
-        
-        synchronized( loaders )
-        {
-            for( Iterator<Map.Entry<String,SoftReference<DefinitionLoader>>> itr = loaders.entrySet().iterator(); itr.hasNext(); )
-            {
-                if( itr.next().getValue().get() == null )
-                {
-                    itr.remove();
-                }
-            }
-            
-            SoftReference<DefinitionLoader> ref = loaders.get( urlString );
-            
-            if( ref != null )
-            {
-                final DefinitionLoader loader = ref.get();
-                
-                if( loader != null )
-                {
-                    return loader;
-                }
-            }
-        }
-            
         final Resource resource;
         
         try
         {
-            final UrlResourceStore urlResourceStore = new UrlResourceStore( url )
+            try
             {
-                @Override
-                public <A> A adapt( final Class<A> adapterType )
+                final ByteArrayResourceStore urlResourceStore = new ByteArrayResourceStore( stream )
                 {
-                    if( adapterType == Context.class )
+                    @Override
+                    public <A> A adapt( final Class<A> adapterType )
                     {
-                        return adapterType.cast( DefinitionLoader.this.context );
+                        if( adapterType == Context.class )
+                        {
+                            return adapterType.cast( DefinitionLoader.this.context );
+                        }
+                        
+                        return super.adapt( adapterType );
                     }
-                    
-                    return super.adapt( adapterType );
-                }
-            };
-            
-            resource = new RootXmlResource( new XmlResourceStore( urlResourceStore ) );
+                };
+                
+                resource = new RootXmlResource( new XmlResourceStore( urlResourceStore ) );
+            }
+            catch( ResourceStoreException e )
+            {
+                throw new IllegalArgumentException( e );
+            }
         }
-        catch( ResourceStoreException e )
+        finally
         {
-            throw new IllegalArgumentException( e );
+            try
+            {
+                stream.close();
+            }
+            catch( IOException e ) {}
         }
         
         this.sdef = ISapphireUiDef.TYPE.instantiate( resource );
-            
-        if( ! Sapphire.isDevMode() )
-        {
-            synchronized( loaders )
-            {
-                loaders.put( urlString, new SoftReference<DefinitionLoader>( this ) );
-            }
-        }
         
         return this;
     }
@@ -310,7 +282,10 @@ public final class DefinitionLoader
     @Override
     protected void finalize()
     {
-        this.sdef.dispose();
+        if( this.sdef != null )
+        {
+            this.sdef.dispose();
+        }
     }
 
     public static final class Reference<T extends Element>

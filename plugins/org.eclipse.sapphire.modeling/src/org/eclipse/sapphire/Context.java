@@ -12,12 +12,8 @@
 package org.eclipse.sapphire;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.List;
-
-import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.util.ListFactory;
 
 /**
  * An abstraction for finding classes and other resources typically loaded from a class loader.
@@ -84,17 +80,7 @@ public abstract class Context
      * @throws IllegalArgumentException if resource name is null
      */
     
-    public abstract URL findResource( String name );
-    
-    /**
-     * Finds all resources with specified name.
-     * 
-     * @param name the name of the resource
-     * @return a list of all resources with specified name or empty list if not found
-     * @throws IllegalArgumentException if resource name is null
-     */
-    
-    public abstract List<URL> findResources( String name );
+    public abstract InputStream findResource( String name );
     
     /**
      * Implementation of Context based on a class loader.
@@ -132,46 +118,28 @@ public abstract class Context
         }
 
         @Override
-        public URL findResource( final String name )
+        public InputStream findResource( final String name )
         {
             if( name == null )
             {
                 throw new IllegalArgumentException();
             }
             
-            return this.loader.getResource( name );
-        }
-
-        @Override
-        public List<URL> findResources( final String name )
-        {
-            if( name == null )
-            {
-                throw new IllegalArgumentException();
-            }
+            final URL url = this.loader.getResource( name );
             
-            final ListFactory<URL> resourcesListFactory = ListFactory.start();
-
-            try
+            if( url != null )
             {
-                final Enumeration<URL> enumeration = this.loader.getResources( name );
-                
-                while( enumeration.hasMoreElements() )
+                try
                 {
-                    final URL resource = enumeration.nextElement();
-                    
-                    if( resource != null )
-                    {
-                        resourcesListFactory.add( resource );
-                    }
+                    return url.openStream();
+                }
+                catch( IOException e )
+                {
+                    // Failure to open is equated with not found by returning null.
                 }
             }
-            catch( IOException e )
-            {
-                LoggingService.log( e );
-            }
             
-            return resourcesListFactory.result();
+            return null;
         }
     }
     
@@ -216,29 +184,16 @@ public abstract class Context
         }
 
         @Override
-        public URL findResource( final String name )
+        public InputStream findResource( final String name )
         {
-            URL resource = super.findResource( name );
+            InputStream stream = super.findResource( name );
             
-            if( resource == null && name.indexOf( '/' ) == -1 && this.path != null )
+            if( stream == null && name.indexOf( '/' ) == -1 && this.path != null )
             {
-                resource = super.findResource( this.path + "/" + name );
+                stream = super.findResource( this.path + "/" + name );
             }
             
-            return resource;
-        }
-
-        @Override
-        public List<URL> findResources( final String name )
-        {
-            List<URL> resources = super.findResources( name );
-            
-            if( resources.isEmpty() && name.indexOf( '/' ) == -1 && this.path != null )
-            {
-                resources = super.findResources( this.path + "/" + name );
-            }
-            
-            return resources;
+            return stream;
         }
     }
     

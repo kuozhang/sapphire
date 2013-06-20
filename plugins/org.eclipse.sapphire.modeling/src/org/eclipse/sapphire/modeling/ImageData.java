@@ -31,13 +31,10 @@ public final class ImageData extends BinaryData
         super( data );
     }
     
-    public static ImageData readFromUrl( final URL url )
+    public static ImageData readFromStream( final InputStream stream )
     {
-        InputStream stream = null;
-        
         try
         {
-            stream = url.openStream();
             return new ImageData( stream );
         }
         catch( IOException e )
@@ -46,14 +43,23 @@ public final class ImageData extends BinaryData
         }
         finally
         {
-            if( stream != null )
+            try
             {
-                try
-                {
-                    stream.close();
-                }
-                catch( Exception e ) {}
+                stream.close();
             }
+            catch( Exception e ) {}
+        }
+    }
+
+    public static ImageData readFromUrl( final URL url )
+    {
+        try
+        {
+            return readFromStream( url.openStream() );
+        }
+        catch( IOException e )
+        {
+            return null;
         }
     }
 
@@ -99,6 +105,18 @@ public final class ImageData extends BinaryData
         return null;
     }
     
+    public static ImageData createFromStream( final InputStream stream )
+    {
+        final ImageData image = readFromStream( stream );
+        
+        if( image == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return image;
+    }
+
     public static ImageData createFromUrl( final URL url )
     {
         final ImageData image = readFromUrl( url );
