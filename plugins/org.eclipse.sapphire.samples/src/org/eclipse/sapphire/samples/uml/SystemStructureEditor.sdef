@@ -28,29 +28,36 @@
                 <content>
                     <text>
                         <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                        <sequence-layout-constraint>
+                            <margin>5</margin>
+                        </sequence-layout-constraint>
                     </text>
-                    <line></line>
-                    <shape-factory>
-                        <property>Fields</property>
-                        <separator>
-                            <line></line>
-                        </separator>
-                        <case>
-                            <rectangle>
-                                <content>
-                                    <text>
-                                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
-                                    </text>
-                                </content>
-                                <sequence-layout>
-                                    <margin>0</margin>
-                                </sequence-layout>
-                                <sequence-layout-constraint>
-                                    <margin>5</margin>
-                                </sequence-layout-constraint>
-                            </rectangle>
-                        </case>
-                    </shape-factory>                </content>
+                    <rectangle>
+                        <content>
+                            <shape-factory>
+                                <case>
+                                    <rectangle>
+                                        <content>
+                                            <text>
+                                                <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                            </text>
+                                        </content>
+                                        <sequence-layout>
+                                            <margin>0</margin>
+                                        </sequence-layout>
+                                    </rectangle>
+                                </case>
+                                <property>Fields</property>
+                            </shape-factory>
+                        </content>
+                        <top-border>
+                            <weight>1</weight>
+                        </top-border>
+                        <sequence-layout-constraint>
+                            <expand-horizontally>true</expand-horizontally>
+                        </sequence-layout-constraint>
+                        <visible-when>${ Fields.Size &gt; 0 }</visible-when>
+                    </rectangle>                </content>
                 <sequence-layout>
                     <margin>0</margin>
                     <spacing>0</spacing>
