@@ -117,14 +117,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                         {
                             final ServiceDef def = (ServiceDef) element;
                             final String id = def.getId().text();
-                            
-                            JavaType type = def.getType().resolve();
-                            
-                            if( type == null )
-                            {
-                                type = def.getImplementation().resolve();
-                            }
-                            
+                            final JavaType type = def.getImplementation().resolve();
                             final Class<?> cl = ( type == null ? null : type.artifact() );
                             
                             if( id != null && id.startsWith( "Sapphire." ) && 
@@ -167,14 +160,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                         {
                             final ServiceDef def = (ServiceDef) element;
                             final String id = def.getId().text();
-                            
-                            JavaType type = def.getType().resolve();
-                            
-                            if( type == null )
-                            {
-                                type = def.getImplementation().resolve();
-                            }
-                            
+                            final JavaType type = def.getImplementation().resolve();
                             final Class<?> cl = ( type == null ? null : type.artifact() );
                             
                             if( id != null && id.startsWith( "Sapphire." ) && 

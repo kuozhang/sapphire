@@ -45,8 +45,6 @@
                             <content>
                                 <property-editor>Id</property-editor>
                                 <property-editor>Implementation</property-editor>
-                                <property-editor>Type</property-editor>
-                                <property-editor>Factory</property-editor>
                                 <property-editor>
                                     <property>Description</property>
                                     <height>75</height>

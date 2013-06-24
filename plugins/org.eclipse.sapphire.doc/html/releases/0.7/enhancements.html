@@ -764,9 +764,8 @@ all other contexts.</p>
 
 <h2><a name="Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></h2>
 
-<p>Registering services through Sapphire extension system has been made even easier by removing the
-need to implement a ServiceFactory for services that do not require custom applicability logic. The
-service implementation class can be specified directly.</p> 
+<p>Registering services through Sapphire extension system has been made even easier by replacing a ServiceFactory
+with a direct reference to the implementation class and an optional ServiceCondition.</p>
 
 <pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     &lt;service>

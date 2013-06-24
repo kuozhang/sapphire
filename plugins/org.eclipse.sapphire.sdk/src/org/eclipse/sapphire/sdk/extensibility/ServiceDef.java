@@ -24,7 +24,6 @@ import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
-import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
@@ -88,7 +87,6 @@ public interface ServiceDef extends Element
     @Label( standard = "implementation" )
     @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.services.Service" )
     @MustExist
-    @Enablement( expr = "${ Type == null && Factory == null }" )
     @XmlBinding( path = "implementation" )
     
     @Documentation
@@ -121,48 +119,6 @@ public interface ServiceDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getCondition();
     void setCondition( String value );
     void setCondition( JavaTypeName value );
-    
-    // *** Type ***
-    
-    @Type( base = JavaTypeName.class )
-    @Reference( target = JavaType.class )
-    @Label( standard = "service type class" )
-    @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = "org.eclipse.sapphire.services.Service" )
-    @MustExist
-    @Enablement( expr = "${ Implementation == null }" )
-    @XmlBinding( path = "type" )
-    
-    @Documentation
-    (
-        content = "The type of service that the factory can create."
-    )
-
-    ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
-    
-    ReferenceValue<JavaTypeName,JavaType> getType();
-    void setType( String value );
-    void setType( JavaTypeName value );
-    
-    // *** Factory ***
-    
-    @Type( base = JavaTypeName.class )
-    @Reference( target = JavaType.class )
-    @Label( standard = "service factory class" )
-    @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "org.eclipse.sapphire.services.ServiceFactory" )
-    @MustExist
-    @Enablement( expr = "${ Implementation == null }" )
-    @XmlBinding( path = "factory" )
-    
-    @Documentation
-    (
-        content = "The factory that can create a service of the specified type."
-    )
-
-    ValueProperty PROP_FACTORY = new ValueProperty( TYPE, "Factory" );
-    
-    ReferenceValue<JavaTypeName,JavaType> getFactory();
-    void setFactory( String value );
-    void setFactory( JavaTypeName value );
     
     // *** Contexts ***
 
