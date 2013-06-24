@@ -406,7 +406,7 @@ public final class PropertyEditorAssistDecorator
             }
             else
             {
-                position = new Point( decoratorControlBounds.x + decoratorControlBounds.width + 2, decoratorControlBounds.y + 2 );
+                position = new Point( decoratorControlBounds.x + decoratorControlBounds.width + 2, decoratorControlBounds.y );
                 position = this.control.getParent().toDisplay( position );
             }
             

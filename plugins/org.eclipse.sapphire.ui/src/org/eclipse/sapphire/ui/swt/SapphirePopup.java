@@ -188,32 +188,16 @@ public abstract class SapphirePopup extends Window
         region.add(0, 0, s.x, s.y);
 
         /* Subtract Top-Left Corner */
-        region.subtract(0, 0, 5, 1);
-        region.subtract(0, 1, 3, 1);
-        region.subtract(0, 2, 2, 1);
-        region.subtract(0, 3, 1, 1);
-        region.subtract(0, 4, 1, 1);
+        region.subtract(0, 0, 1, 1);
 
         /* Subtract Top-Right Corner */
-        region.subtract(s.x - 5, 0, 5, 1);
-        region.subtract(s.x - 3, 1, 3, 1);
-        region.subtract(s.x - 2, 2, 2, 1);
-        region.subtract(s.x - 1, 3, 1, 1);
-        region.subtract(s.x - 1, 4, 1, 1);
+        region.subtract(s.x - 1, 0, 1, 1);
 
         /* Subtract Bottom-Left Corner */
-        region.subtract(0, s.y, 5, 1);
-        region.subtract(0, s.y - 1, 3, 1);
-        region.subtract(0, s.y - 2, 2, 1);
-        region.subtract(0, s.y - 3, 1, 1);
-        region.subtract(0, s.y - 4, 1, 1);
+        region.subtract(0, s.y - 1, 1, 1);
 
         /* Subtract Bottom-Right Corner */
-        region.subtract(s.x - 5, s.y - 0, 5, 1);
-        region.subtract(s.x - 3, s.y - 1, 3, 1);
-        region.subtract(s.x - 2, s.y - 2, 2, 1);
-        region.subtract(s.x - 1, s.y - 3, 1, 1);
-        region.subtract(s.x - 1, s.y - 4, 1, 1);
+        region.subtract(s.x - 1, s.y - 1, 1, 1);
 
         /* Dispose old first */
         if (shell.getRegion() != null) {
@@ -302,9 +286,6 @@ public abstract class SapphirePopup extends Window
                 /* Gradient */
                 drawGradient(gc, clArea);
 
-                /* Fix Region Shape */
-                fixRegion(gc, clArea);
-
                 gc.dispose();
 
                 Image oldBGImage = outerCircle.getBackgroundImage();
@@ -319,38 +300,6 @@ public abstract class SapphirePopup extends Window
                 gc.setForeground(SapphirePopup.this.colors.getBackground());
                 gc.setBackground(SapphirePopup.this.colors.getColor(IFormColors.TB_BG));
                 gc.fillGradientRectangle(clArea.x, clArea.y, clArea.width, clArea.height, true);
-            }
-
-            private void fixRegion(GC gc, Rectangle clArea) {
-                gc.setForeground(SapphirePopup.this.colors.getBorderColor());
-
-                /* Fill Top Left */
-                gc.drawPoint(2, 0);
-                gc.drawPoint(3, 0);
-                gc.drawPoint(1, 1);
-                gc.drawPoint(0, 2);
-                gc.drawPoint(0, 3);
-
-                /* Fill Top Right */
-                gc.drawPoint(clArea.width - 4, 0);
-                gc.drawPoint(clArea.width - 3, 0);
-                gc.drawPoint(clArea.width - 2, 1);
-                gc.drawPoint(clArea.width - 1, 2);
-                gc.drawPoint(clArea.width - 1, 3);
-
-                /* Fill Bottom Left */
-                gc.drawPoint(2, clArea.height - 0);
-                gc.drawPoint(3, clArea.height - 0);
-                gc.drawPoint(1, clArea.height - 1);
-                gc.drawPoint(0, clArea.height - 2);
-                gc.drawPoint(0, clArea.height - 3);
-
-                /* Fill Bottom Right */
-                gc.drawPoint(clArea.width - 4, clArea.height - 0);
-                gc.drawPoint(clArea.width - 3, clArea.height - 0);
-                gc.drawPoint(clArea.width - 2, clArea.height - 1);
-                gc.drawPoint(clArea.width - 1, clArea.height - 2);
-                gc.drawPoint(clArea.width - 1, clArea.height - 3);
             }
         });
 
