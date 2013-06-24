@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ListenerContext;
 public final class MutableReference<T>
 {
     private T value;
-    private final ListenerContext listeners = new ListenerContext();
+    private ListenerContext listeners;
    
     public MutableReference()
     {
@@ -36,34 +36,39 @@ public final class MutableReference<T>
         this.value = value;
     }
     
-    public T get() 
+    public synchronized T get() 
     { 
-        synchronized( this )
+        return this.value;
+    }
+    
+    public synchronized void set( final T value ) 
+    { 
+        final T oldValue = this.value;
+        this.value = value;
+        
+        if( this.listeners != null )
         {
-            return this.value;
+            this.listeners.broadcast( new ReferenceChangedEvent( oldValue, value ) );
         }
     }
     
-    public void set( final T value ) 
-    { 
-        final T oldValue;
-        
-        synchronized( this )
-        {
-            oldValue = this.value;
-            this.value = value;
-        }
-        
-        this.listeners.broadcast( new ReferenceChangedEvent( oldValue, value ) );
-    }
-    
-    public boolean attach( final Listener listener )
+    public synchronized boolean attach( final Listener listener )
     {
+        if( this.listeners != null )
+        {
+            this.listeners = new ListenerContext();
+        }
+        
         return this.listeners.attach( listener );
     }
     
-    public boolean detach( final Listener listener )
+    public synchronized boolean detach( final Listener listener )
     {
+        if( this.listeners != null )
+        {
+            this.listeners = new ListenerContext();
+        }
+        
         return this.listeners.detach( listener );
     }
     
