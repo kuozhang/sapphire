@@ -372,8 +372,16 @@
         <context>Sapphire</context>
         <description>ConversionService implementation for Date to String conversions.</description>
         <id>Sapphire.ConversionService.DateToString</id>
-        <implementation>org.eclipse.sapphire.DateToStringConversionService</implementation>
+        <implementation>org.eclipse.sapphire.internal.DateToStringConversionService</implementation>
         <overrides>Sapphire.ConversionService.ObjectToString</overrides>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.DateToString.Property</id>
+        <description>ConversionService implementation for Date to String conversions specified at property level using @Serialization annotation.</description>
+        <context>Sapphire.Property.MetaModel</context>
+        <condition>org.eclipse.sapphire.internal.DateToStringConversionServiceForProperty$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.DateToStringConversionServiceForProperty</implementation>
+        <overrides>Sapphire.ConversionService.DateToString</overrides>
     </service>
     <service>
         <context>Sapphire</context>
@@ -445,8 +453,16 @@
     <service>
         <id>Sapphire.ConversionService.StringToDate</id>
         <description>ConversionService implementation for String to Date conversions.</description>
-        <implementation>org.eclipse.sapphire.StringToDateConversionService</implementation>
+        <implementation>org.eclipse.sapphire.internal.StringToDateConversionService</implementation>
         <context>Sapphire</context>
+    </service>
+    <service>
+        <id>Sapphire.ConversionService.StringToDate.Property</id>
+        <implementation>org.eclipse.sapphire.internal.StringToDateConversionServiceForProperty</implementation>
+        <description>ConversionService implementation for String to Date conversions specified at property level using @Serialization annotation.</description>
+        <condition>org.eclipse.sapphire.internal.StringToDateConversionServiceForProperty$Condition</condition>
+        <context>Sapphire.Property.MetaModel</context>
+        <overrides>Sapphire.ConversionService.StringToDate</overrides>
     </service>
     <service>
         <id>Sapphire.ConversionService.StringToUri</id>

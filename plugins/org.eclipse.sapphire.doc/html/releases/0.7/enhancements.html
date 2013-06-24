@@ -44,6 +44,7 @@
     <li><a href="#Core-ServiceRegistrationWithoutFactory">Service Registration Without a Factory</a></li>
     <li><a href="#Core-NewConversions">New Conversions</a></li>
     <li><a href="#Core-OrderedPossibleValues">Ordered Possible Values</a></li>
+    <li><a href="#Core-SimplerDateSerialization">Simpler Date Serialization</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -844,6 +845,22 @@ the severity rank order, not in the alphabetical order.</p>
     values = { "blocker", "critical", "major", "normal", "minor", "trivial", "enhancement" },</font>
     ordered = true
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Core-SimplerDateSerialization">Simpler Date Serialization</a></h2>
+
+<p>Easily specify date serialization using the new @Serialization annotation.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
+@Serialization( primary = "yyyy-MM-dd", alternative = { "MM/dd/yyyy", "MM.dd.yyyy" } )
+
+<font color="#888888">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( Date value );</font></code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-FunctionsAsProperties">EL Functions as Properties</a></a></h2>

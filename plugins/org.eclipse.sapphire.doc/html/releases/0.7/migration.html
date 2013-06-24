@@ -416,7 +416,7 @@ Sapphire to find.</p>
     impl = DateSerializationService.class, 
     params =
     { 
-        @Service.Param( name = "format-1", value = "yyyy.MM.dd" ), 
+        @Service.Param( name = "format-1", value = "yyyy-MM-dd" ), 
         @Service.Param( name = "format-2", value = "MM/dd/yyyy" )
     }
 )
@@ -429,27 +429,7 @@ void setDate( Date value );</span></code></pre>
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">@Type( base = Date.class )</span>
-
-@Services
-(
-    {
-        @Service
-        (
-            impl = StringToDateConversionService.class,
-            params =
-            { 
-                @Service.Param( name = "format-1", value = "yyyy.MM.dd" ), 
-                @Service.Param( name = "format-2", value = "MM/dd/yyyy" )
-            },
-            overrides = "Sapphire.ConversionService.StringToDate"
-        ),
-        @Service
-        (
-            impl = DateToStringConversionService.class,
-            params = @Service.Param( name = "format", value = "yyyy.MM.dd" )
-        )
-    }
-)
+@Serialization( primary = "yyyy-MM-dd", alternative = "MM/dd/yyyy" )
 
 <span class="unaffected">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
 
@@ -460,33 +440,38 @@ void setDate( Date value );</span></code></pre>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>public class ExampleDateSerializationService extends DateSerializationService
+<pre class="source-code"><code>class ExampleDateSerializationService extends DateSerializationService
 {
     @Override
     public List&lt;? extends DateFormat> formats()
     {
-        ...
-    }
-}</code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>public class TestStringToDateConversionService extends StringToDateConversionService
-{
-    @Override
-    protected List&lt;? extends DateFormat> formats()
-    {
-        ...
+        List &lt;DateFormat> formats = new ArrayList&lt;DateFormat>();
+        
+        formats.add( new SimpleDateFormat( "yyyy-MM-dd" );
+        formats.add( new SimpleDateFormat( "MM/dd/yyyy" );
+        
+        return formats;
     }
 }
 
-public class TestDateToStringConversionService extends DateToStringConversionService
-{
-    @Override
-    protected DateFormat format()
-    {
-        ...
-    }
-}</code></pre>
+<span class="unaffected">@Type( base = Date.class )</span>
+@Service( impl = ExampleDateSerializationService.class ) 
+
+<span class="unaffected">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( Date value );</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">@Type( base = Date.class )</span>
+@Serialization( primary = "yyyy-MM-dd", alternative = "MM/dd/yyyy" )
+
+<span class="unaffected">ValueProperty PROP_DATE = new ValueProperty( TYPE, "Date" );
+
+Value&lt;Date> getDate();
+void setDate( String value );
+void setDate( Date value );</span></code></pre>
     </td>
   </tr>
 </table>

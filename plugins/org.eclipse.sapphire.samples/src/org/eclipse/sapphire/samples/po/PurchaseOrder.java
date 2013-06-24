@@ -21,6 +21,7 @@ import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Serialization;
 import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Validation;
 import org.eclipse.sapphire.Value;
@@ -82,8 +83,9 @@ public interface PurchaseOrder extends Element
     
     @Type( base = Date.class )
     @Label( standard = "initial quote date" )
+    @Serialization( primary = "yyyy-MM-dd", alternative = "MM/dd/yyyy" )
     @Since( "1.5" )
-    
+
     ValueProperty PROP_INITIAL_QUOTE_DATE = new ValueProperty( TYPE, "InitialQuoteDate" );
     
     Value<Date> getInitialQuoteDate();
@@ -94,7 +96,8 @@ public interface PurchaseOrder extends Element
     
     @Type( base = Date.class )
     @Label( standard = "order date" )
-    
+    @Serialization( primary = "yyyy-MM-dd", alternative = "MM/dd/yyyy" )
+
     ValueProperty PROP_ORDER_DATE = new ValueProperty( TYPE, "OrderDate" );
     
     Value<Date> getOrderDate();
@@ -105,8 +108,9 @@ public interface PurchaseOrder extends Element
     
     @Type( base = Date.class )
     @Label( standard = "fulfillment date" )
+    @Serialization( primary = "yyyy-MM-dd", alternative = "MM/dd/yyyy" )
     @Since( "2.0" )
-    
+
     ValueProperty PROP_FULFILLMENT_DATE = new ValueProperty( TYPE, "FulfillmentDate" );
     
     Value<Date> getFulfillmentDate();

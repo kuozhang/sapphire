@@ -10,31 +10,32 @@
  *    Konstantin Komissarchik - initial implementation review and related changes
  ******************************************************************************/
 
-package org.eclipse.sapphire;
+package org.eclipse.sapphire.internal;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.sapphire.ConversionException;
+import org.eclipse.sapphire.ConversionService;
+
 /**
- * ConversionService implementation for String to Date conversions. Can be subclassed to support
- * custom date formats.
+ * ConversionService implementation for String to Date conversions.
  * 
  * @author <a href="marcelo.paternostro@oracle.com">Marcelo Paternostro</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class StringToDateConversionService extends ConversionService<String,Date> 
+public final class StringToDateConversionService extends ConversionService<String,Date> 
 {    
-    private final static List<DateFormat> STANDARD_FORMATS;
+    private final static List<DateFormat> FORMATS;
     
     static 
     {
-        final List<DateFormat> formats = new ArrayList<DateFormat>();
+        final List<DateFormat> formats = new ArrayList<DateFormat>( 10 );
         formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" ) );
         formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSS" ) );
         formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ) );
@@ -61,69 +62,21 @@ public class StringToDateConversionService extends ConversionService<String,Date
         
         if( ! formats.contains( format ) ) 
         {
-            formats.add(format);
+            formats.add( format );
         }
         
-        STANDARD_FORMATS = Collections.unmodifiableList(formats);
+        FORMATS = formats;
     };
     
-    private List<DateFormat> formats;
-
     public StringToDateConversionService()
     {
         super( String.class, Date.class );
     }
 
     @Override
-    protected void init()
-    {
-        final List<String> formatParamNames = new ArrayList<String>();
-        
-        for( String paramName : params().keySet() )
-        {
-            if( paramName.startsWith( "format" ) )
-            {
-                formatParamNames.add( paramName );
-            }
-        }
-        
-        if( formatParamNames.isEmpty() )
-        {
-            this.formats = STANDARD_FORMATS;
-        }
-        else
-        {
-            Collections.sort( formatParamNames );
-            
-            this.formats = new ArrayList<DateFormat>( formatParamNames.size() );
-            
-            for( String formatParamName : formatParamNames )
-            {
-                this.formats.add( new SimpleDateFormat( param( formatParamName ) ) );
-            }
-            
-            this.formats = Collections.unmodifiableList( this.formats );
-        }
-    }
-
-    /**
-     * Returns the list of date formats supported by this conversion service. The formats
-     * will be tried (in order) when decoding from string.
-     * 
-     * <p>Subclasses may override to support different formats.</p>
-     * 
-     * @return the list of date formats supported by this conversion service
-     */
-    
-    public List<? extends DateFormat> formats()
-    {
-        return this.formats;
-    }
-    
-    @Override
     public final Date convert( final String string ) 
     {
-        for( DateFormat format : formats() )
+        for( DateFormat format : FORMATS )
         {
             try
             {

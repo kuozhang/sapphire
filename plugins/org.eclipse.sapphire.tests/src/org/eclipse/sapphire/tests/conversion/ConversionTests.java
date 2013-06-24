@@ -470,12 +470,6 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "2013.01.15", Date.class ) );
         assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "01/15/2013", Date.class ) );
         assertNull( service.convert( "2013-01-15", Date.class ) );
-
-        service = element.property( DateConversionTestElement.PROP_DATE_3 ).service( MasterConversionService.class );
-        
-        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "15.01.2013", Date.class ) );
-        assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "2013/01/15", Date.class ) );
-        assertNull( service.convert( "2013-01-15", Date.class ) );
     }
 
     public void testDateToString() throws Exception
@@ -494,9 +488,6 @@ public final class ConversionTests extends SapphireTestCase
         
         service = element.property( DateConversionTestElement.PROP_DATE_2 ).service( MasterConversionService.class );
         assertEquals( "2013.01.15", service.convert( date, String.class ) );
-
-        service = element.property( DateConversionTestElement.PROP_DATE_3 ).service( MasterConversionService.class );
-        assertEquals( "15.01.2013", service.convert( date, String.class ) );
     }
 
     public void testStringToFileName() throws Exception
