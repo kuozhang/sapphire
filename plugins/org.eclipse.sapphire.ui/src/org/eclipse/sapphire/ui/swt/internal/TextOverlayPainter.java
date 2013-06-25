@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.renderer;
+package org.eclipse.sapphire.ui.swt.internal;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceColors;
@@ -49,7 +49,7 @@ public final class TextOverlayPainter
             throw new UnsupportedOperationException();
         }
         
-        public String getDefaultText()
+        public String overlay()
         {
             return null;
         }
@@ -257,7 +257,7 @@ public final class TextOverlayPainter
     private void updateTextExtent()
     {
         final GC gc = new GC( this.textControl );
-        this.textExtent = gc.textExtent( getTextWithDefault() );
+        this.textExtent = gc.textExtent( getTextWithOverlay() );
         gc.dispose();
     }
     
@@ -272,18 +272,18 @@ public final class TextOverlayPainter
                 style.foreground = JFaceColors.getActiveHyperlinkText( this.display );
                 style.underlineColor = style.foreground;
                 
-                paintTextOverlay( event.gc, style, getTextWithDefault() );
+                paintTextOverlay( event.gc, style, getTextWithOverlay() );
             }
             else if( ! this.textControl.isFocusControl() && this.textControl.getText().length() == 0 )
             {
-                final String defaultText = this.controller.getDefaultText();
+                final String overlay = this.controller.overlay();
                 
-                if( defaultText != null && defaultText.length() > 0 )
+                if( overlay != null && overlay.length() > 0 )
                 {
                     final TextStyle style = new TextStyle( this.textControl.getFont(), null, null );
                     style.foreground = this.display.getSystemColor( SWT.COLOR_GRAY );
                     
-                    paintTextOverlay( event.gc, style, defaultText );
+                    paintTextOverlay( event.gc, style, overlay );
                 }
             }
         }
@@ -304,13 +304,13 @@ public final class TextOverlayPainter
         layout.draw( gc, TEXT_OFFSET.x, TEXT_OFFSET.y );
     }
     
-    private String getTextWithDefault()
+    private String getTextWithOverlay()
     {
         String text = this.textControl.getText();
         
         if( text.length() == 0 )
         {
-            text = this.controller.getDefaultText();
+            text = this.controller.overlay();
             
             if( text == null )
             {

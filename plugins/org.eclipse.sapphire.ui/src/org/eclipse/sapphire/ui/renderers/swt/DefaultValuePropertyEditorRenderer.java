@@ -40,7 +40,7 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Serialization;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -60,8 +60,8 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.TextFieldBinding;
 import org.eclipse.sapphire.ui.listeners.ValuePropertyEditorListener;
+import org.eclipse.sapphire.ui.swt.internal.TextOverlayPainter;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.ui.swt.renderer.TextOverlayPainter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -119,7 +119,7 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
                                       final boolean suppressBrowseAction )
     {
         final PropertyEditorPart part = getPart();
-        final Property property = part.property();
+        final Value<?> property = (Value<?>) part.property();
         
         final boolean isLongString = property.definition().hasAnnotation( LongString.class );
         final boolean isDeprecated = property.definition().hasAnnotation( Deprecated.class );
@@ -196,6 +196,8 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
         this.textField = new Text( nestedComposite, style );
         this.textField.setLayoutData( gdfill() );
         decorator.addEditorControl( this.textField, true );
+        
+        final Serialization serialization = property.definition().getAnnotation( Serialization.class );
 
         final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
         {
@@ -215,9 +217,9 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
             }
 
             @Override
-            public String getDefaultText()
+            public String overlay()
             {
-                String def = ( (Value<?>) property ).getDefaultText();
+                String def = property.getDefaultText();
                 
                 if( def != null && isSensitiveData )
                 {
@@ -229,6 +231,11 @@ public class DefaultValuePropertyEditorRenderer extends ValuePropertyEditorRende
                     }
                     
                     def = buf.toString();
+                }
+                
+                if( def == null && serialization != null )
+                {
+                    def = serialization.primary();
                 }
                 
                 return def;

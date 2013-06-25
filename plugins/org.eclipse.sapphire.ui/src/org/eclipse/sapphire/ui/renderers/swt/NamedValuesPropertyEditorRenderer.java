@@ -38,7 +38,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
-import org.eclipse.sapphire.ui.swt.renderer.TextOverlayPainter;
+import org.eclipse.sapphire.ui.swt.internal.TextOverlayPainter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -179,7 +179,7 @@ public final class NamedValuesPropertyEditorRenderer extends ValuePropertyEditor
         final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
         {
             @Override
-            public String getDefaultText()
+            public String overlay()
             {
                 return ( (Value<?>) property() ).getDefaultText();
             }

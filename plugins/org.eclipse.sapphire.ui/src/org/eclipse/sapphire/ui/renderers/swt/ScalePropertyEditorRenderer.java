@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
-import org.eclipse.sapphire.ui.swt.renderer.TextOverlayPainter;
+import org.eclipse.sapphire.ui.swt.internal.TextOverlayPainter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -108,7 +108,7 @@ public final class ScalePropertyEditorRenderer extends ValuePropertyEditorRender
         final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
         {
             @Override
-            public String getDefaultText()
+            public String overlay()
             {
                 return property().getDefaultText();
             }

@@ -342,6 +342,13 @@
         <condition>org.eclipse.sapphire.internal.VersionCompatibilityFactsService$Condition</condition>
     </service>
     <service>
+        <id>Sapphire.FactsService.Serialization</id>
+        <implementation>org.eclipse.sapphire.internal.SerializationFactsService</implementation>
+        <condition>org.eclipse.sapphire.internal.SerializationFactsService$Condition</condition>
+        <context>Sapphire.Property.MetaModel</context>
+        <description>Creates fact statements about property's serialization by using semantical information specified by the @Serialization annotation.</description>
+    </service>
+    <service>
         <description>Implementation of FileExtensionsService that derives its behavior from @FileExtensions annotation.</description>
         <context>Sapphire.Property.Instance</context>
         <id>Sapphire.FileExtensionsService.Declarative</id>

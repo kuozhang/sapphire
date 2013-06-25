@@ -55,10 +55,10 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.internal.binding.AbstractBinding;
+import org.eclipse.sapphire.ui.swt.internal.TextOverlayPainter;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.ui.swt.renderer.TextOverlayPainter;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -312,7 +312,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
                 }
 
                 @Override
-                public String getDefaultText()
+                public String overlay()
                 {
                     ProxyResource resource = binding.getResource();
                     Element element = resource.getModelElement();
@@ -325,7 +325,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorR
             textOverlayPainterController = new TextOverlayPainter.Controller()
             {
                 @Override
-                public String getDefaultText()
+                public String overlay()
                 {
                     ProxyResource resource = binding.getResource();
                     Element element = resource.getModelElement();
