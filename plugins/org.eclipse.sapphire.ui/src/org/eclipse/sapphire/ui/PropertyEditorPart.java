@@ -351,6 +351,11 @@ public final class PropertyEditorPart extends FormComponentPart
         return this.property;
     }
     
+    public PropertyEditorRenderer presentation()
+    {
+        return this.presentation;
+    }
+    
     public List<ModelPath> getChildProperties()
     {
         return this.childPropertyPaths;

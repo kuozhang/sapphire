@@ -347,6 +347,13 @@
         <impl>org.eclipse.sapphire.ui.swt.internal.ColorBrowseActionHandler</impl>
     </action-handler>
     <action-handler>
+        <action>Sapphire.Browse</action>
+        <id>Sapphire.Browse.Calendar</id>
+        <description>Opens a calendar to allow date selection. Activates if the property is a value property of type Date.</description>
+        <condition>org.eclipse.sapphire.ui.swt.internal.CalendarBrowseActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.ui.swt.internal.CalendarBrowseActionHandler</impl>
+    </action-handler>
+    <action-handler>
         <action>Sapphire.Help</action>
         <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.HelpActionHandler</impl>
         <id>Sapphire.Help</id>

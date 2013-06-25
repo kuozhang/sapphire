@@ -54,6 +54,8 @@ import org.eclipse.sapphire.ui.swt.renderer.SapphireKeyboardActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -75,6 +77,7 @@ public abstract class PropertyEditorRenderer
     private Label auxTextControl;
     private AuxTextProvider auxTextProvider;
     private final Set<Control> controls;
+    private Composite mainPropertyEditorComposite;
     
     protected AbstractBinding binding;
     
@@ -141,6 +144,33 @@ public abstract class PropertyEditorRenderer
     public final SapphireActionPresentationManager getActionPresentationManager()
     {
         return this.actionPresentationManager;
+    }
+    
+    public Point getActionPopupPosition( final int width, final int height )
+    {
+        if( this.mainPropertyEditorComposite != null )
+        {
+            final Rectangle propertyEditorBounds = this.mainPropertyEditorComposite.getBounds();
+            final Point propertyEditorPosition = this.mainPropertyEditorComposite.getParent().toDisplay( propertyEditorBounds.x, propertyEditorBounds.y );
+            
+            final int x = propertyEditorPosition.x - width + propertyEditorBounds.width;
+            final int y;
+            
+            if( this.mainPropertyEditorComposite.getDisplay().getBounds().height - ( propertyEditorPosition.y + propertyEditorBounds.height + 1 + height ) < 10 )
+            {
+                y = propertyEditorPosition.y - height - 1;
+            }
+            else
+            {
+                y = propertyEditorPosition.y + propertyEditorBounds.height + 1;
+            }
+            
+            return new Point( x, y );
+        }
+        else
+        {
+            return new Point( 200, 200 ); // TODO: Implement something better.
+        }
     }
     
     protected boolean canScaleVertically()
@@ -374,7 +404,7 @@ public abstract class PropertyEditorRenderer
         
         if( count == 0 )
         {
-            return composite;
+            this.mainPropertyEditorComposite = composite;
         }
         else
         {
@@ -442,8 +472,10 @@ public abstract class PropertyEditorRenderer
                 relatedContentPart.render( new SapphireRenderingContext( relatedContentPart, this.context, relatedContentComposite ) );
             }
             
-            return mainPropertyEditorComposite;
+            this.mainPropertyEditorComposite = mainPropertyEditorComposite;
         }
+        
+        return mainPropertyEditorComposite;
     }
     
     private static final void refreshSashFormLayout( final Composite rootComposite,
