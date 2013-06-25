@@ -104,4 +104,14 @@
         <Bug pattern="URF_UNREAD_FIELD "/>
     </Match>
     
+    <!--
+        The fields of this class appear to be accessed inconsistently with respect to synchronization.
+        
+        IGNORE: This detector produces many false positives, especially for complex synchronization scenarios. 
+    -->
+    
+    <Match>
+        <Bug pattern="IS2_INCONSISTENT_SYNC "/>
+    </Match>
+
 </FindBugsFilter>
