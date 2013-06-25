@@ -243,6 +243,9 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		{
 			SapphireUiFrameworkPlugin.log( rse );
 		}
+		// Clear the dirty state
+		this.dirty = false;
+		
 	}
 	
     private void read(DiagramNodePart nodePart)
