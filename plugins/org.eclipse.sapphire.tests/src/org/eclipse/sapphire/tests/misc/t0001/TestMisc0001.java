@@ -27,7 +27,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestMisc0001 extends SapphireTestCase
 {
-    private static final String EXPECTED_VERSION_CONSTRAINT = "[0.6.2-0.6.3)";
+    private static final String EXPECTED_VERSION_CONSTRAINT = "[0.6.3-0.6.4)";
 
     private TestMisc0001( final String name )
     {
