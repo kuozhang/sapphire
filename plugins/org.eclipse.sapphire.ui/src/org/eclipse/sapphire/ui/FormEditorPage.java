@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -24,6 +25,8 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarManagerActionPresentation;
 import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
@@ -79,11 +82,15 @@ public final class FormEditorPage extends SapphireEditorFormPage
     {
         final FormEditorPagePart part = getPart();
         final ScrolledForm form = managedForm.getForm();
+        final Composite body = form.getForm().getBody();
+        
+        body.setBackground( getPart().getSwtResourceCache().color( Color.WHITE ) );
+        body.setBackgroundMode( SWT.INHERIT_DEFAULT );
         
         managedForm.getToolkit().decorateFormHeading( managedForm.getForm().getForm() );
-        managedForm.getForm().getBody().setLayout( glayout( 2, 0, 0 ) );
+        body.setLayout( glayout( 2, 0, 0 ) );
         
-        final SapphireRenderingContext context = new SapphireRenderingContext( getPart(), managedForm.getForm().getBody() );
+        final SapphireRenderingContext context = new SapphireRenderingContext( getPart(), body );
         
         for( SapphirePart child : part.getChildParts() )
         {
@@ -107,7 +114,7 @@ public final class FormEditorPage extends SapphireEditorFormPage
             
             if( docdef != null )
             {
-                SapphireHelpSystem.setHelp( managedForm.getForm().getBody(), docdef );
+                SapphireHelpSystem.setHelp( body, docdef );
             }
         }
         
