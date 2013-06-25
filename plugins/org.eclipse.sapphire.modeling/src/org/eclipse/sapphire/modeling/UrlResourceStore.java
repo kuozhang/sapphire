@@ -14,8 +14,6 @@ package org.eclipse.sapphire.modeling;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
@@ -27,39 +25,13 @@ import org.eclipse.sapphire.modeling.localization.StandardLocalizationService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class UrlResourceStore
-
-    extends ByteArrayResourceStore
-    
+public class UrlResourceStore extends ByteArrayResourceStore
 {
     private final URL url;
     
-    /**
-     * A URI object for the URL associated with this model store. The URI is used for comparison
-     * operations since URL can block for domain name resolution to equate host names if they 
-     * resolve to the same IP address.
-     */
-    
-    private final URI uri;
-    
-    public UrlResourceStore( final URL url )
-    
-        throws ResourceStoreException
-        
+    public UrlResourceStore( final URL url ) throws ResourceStoreException
     {
-        URI uri = null;
-        
-        try
-        {
-            uri = url.toURI();
-        }
-        catch( URISyntaxException e )
-        {
-            // Intentionally ignoring. This class has fail-over behavior if there is no URI.
-        }
-        
         this.url = url;
-        this.uri = uri;
         
         try
         {
@@ -88,32 +60,6 @@ public class UrlResourceStore
     public void validateSave()
     {
         throw new ValidateEditException();
-    }
-
-    @Override
-    public boolean equals( final Object obj )
-    {
-        if( obj instanceof UrlResourceStore )
-        {
-            final UrlResourceStore ums = ( (UrlResourceStore) obj );
-            
-            if( this.uri == null || ums.uri == null )
-            {
-                return this.url.toString().equals( ums.url.toString() );
-            }
-            else
-            {
-                return this.uri.equals( ums.uri );
-            }
-        }
-        
-        return false;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return ( this.uri != null ? this.uri.hashCode() : this.url.toString().hashCode() );
     }
 
     @Override

@@ -152,18 +152,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
         attachXmlNodeListener();
     }
     
-    @Override
-    public boolean equals( final Object obj )
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int hashCode()
-    {
-        throw new UnsupportedOperationException();
-    }
-
     public final SapphireEditor getEditor()
     {
         return this.sapphireEditor;

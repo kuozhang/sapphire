@@ -223,23 +223,6 @@ public class XmlResourceStore extends ResourceStore
     }
     
     @Override
-    public boolean equals( final Object obj )
-    {
-        if( obj instanceof XmlResourceStore )
-        {
-            return this.base.equals( ( (XmlResourceStore) obj ).base );
-        }
-        
-        return false;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return this.base.hashCode();
-    }
-    
-    @Override
     protected LocalizationService initLocalizationService( final Locale locale )
     {
         return this.base.getLocalizationService( locale );

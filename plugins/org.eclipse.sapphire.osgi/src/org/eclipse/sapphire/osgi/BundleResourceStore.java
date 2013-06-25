@@ -59,22 +59,6 @@ public class BundleResourceStore extends UrlResourceStore
     }
     
     @Override
-    public boolean equals( final Object obj )
-    {
-        // The URL uniquely identifies this resource store, so looking at other fields is not necessary.
-        
-        return super.equals( obj );
-    }
-
-    @Override
-    public int hashCode()
-    {
-        // The URL uniquely identifies this resource store, so looking at other fields is not necessary.
-        
-        return super.hashCode();
-    }
-
-    @Override
     public boolean isOutOfDate()
     {
         return false;
