@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
@@ -21,13 +22,12 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartValidationEvent;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.internal.ActionsSectionAssistContributor;
@@ -39,10 +39,7 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDialog;
 import org.eclipse.sapphire.ui.assist.internal.ResetActionsAssistContributor;
 import org.eclipse.sapphire.ui.assist.internal.RestoreInitialValueActionsAssistContributor;
 import org.eclipse.sapphire.ui.assist.internal.ShowInSourceActionAssistContributor;
-import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -58,6 +55,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 @SuppressWarnings("restriction")
@@ -88,7 +86,6 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	}
 	
     private SwtResourceCache imageCache;
-    private Element element;
 	private SmoothImageFigure imageFigure;
 	private PropertyEditorAssistContext assistContext;
 	private Status problem;
@@ -100,7 +97,6 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	{
 		super(parent, validationMarkerPart, configManager);
 		DiagramNodePart nodePart = validationMarkerPart.nearest(DiagramNodePart.class);
-		this.element = validationMarkerPart.getLocalModelElement();
 		this.imageCache = nodePart.getSwtResourceCache();
 		this.imageFigure = new SmoothImageFigure();
 		setFigure(this.imageFigure);
@@ -193,24 +189,13 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	@Override
 	public void dispose()
 	{
-		((ContainerShapePart)this.getPart().getParentPart()).detach(this.validationListener);
+		getContainerPart().detach(this.validationListener);
 	}
 	
-	private ContainerShapePart getContainerPart()
+	private SapphirePart getContainerPart()
 	{
-		ContainerShapePart parentShapePart = (ContainerShapePart)this.getPart().getParentPart();
-		while (!isValidParent(parentShapePart)) {
-			parentShapePart =(ContainerShapePart)parentShapePart.getParentPart();
-		}
-		return parentShapePart;
-	}
-	
-	private boolean isValidParent(ShapePart part) {
-		ISapphirePart parentPart = part.getParentPart();
-		if (parentPart instanceof DiagramNodePart || parentPart instanceof ShapeFactoryPart) {
-			return true;
-		}
-		return false;
+		
+		return getValidationMarkerPart().getContainerParent();
 	}
 	
 	private void refresh()
@@ -299,18 +284,18 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	{
 		if (this.assistContext == null)
 		{
-    		ShapePart parentPart = (ShapePart)this.getValidationMarkerPart().getParentPart();
+    		SapphirePart parentPart = getContainerPart();
     		DiagramRenderingContext context = getConfigurationManager().getDiagramRenderingContextCache().get(parentPart);	            
 			
-	        this.assistContext = new PropertyEditorAssistContext( this.getPart(), context );
-	        this.problem = this.element.validation();
+	        this.assistContext = new PropertyEditorAssistContext( parentPart, context );
+	        this.problem = getContainerPart().validation();
             for( PropertyEditorAssistContributor c : this.contributors )
             {
                 c.contribute( this.assistContext );
             }	            
 	        
 	        if( this.assistContext.isEmpty() )
-	        {
+	        {    
 	            this.assistContext = null;
 	        }
 	        else
