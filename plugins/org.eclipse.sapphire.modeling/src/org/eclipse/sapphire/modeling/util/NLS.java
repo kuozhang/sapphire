@@ -341,5 +341,18 @@ public abstract class NLS {
             }
             return null;
         }
+
+        @Override
+        public synchronized boolean equals( final Object object )
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public synchronized int hashCode()
+        {
+            throw new UnsupportedOperationException();
+        }
     }
+    
 }

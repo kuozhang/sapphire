@@ -328,7 +328,6 @@ public class SapphireFormText extends Canvas {
 
             Locator loc = new Locator();
             loc.marginWidth = marginWidth;
-            loc.marginHeight = marginHeight;
             loc.y = marginHeight;
             FontMetrics fm = gc.getFontMetrics();
             int lineHeight = fm.getHeight();

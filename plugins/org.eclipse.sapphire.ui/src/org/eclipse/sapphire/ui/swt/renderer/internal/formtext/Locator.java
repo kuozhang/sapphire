@@ -24,7 +24,6 @@ public class Locator implements Cloneable {
     public int leading;
     public int rowHeight;
     public int marginWidth;
-    public int marginHeight;
     public int rowCounter;
     public ArrayList heights;
     

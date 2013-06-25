@@ -44,8 +44,10 @@ public final class DateToStringConversionServiceForProperty extends ConversionSe
     }
     
     @Override
-    public final String convert( final Date date )
+    public synchronized String convert( final Date date )
     {
+        // Must synchronize as SimpleDateFormat is not safe for concurrent use by multiple threads.
+        
         return this.format.format( date );
     }
     

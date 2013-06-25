@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ConversionService;
 
 public final class DateToStringConversionService extends ConversionService<Date,String> 
 {    
-    private final static DateFormat FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" );
+    private final DateFormat format = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" );
     
     public DateToStringConversionService()
     {
@@ -33,9 +33,11 @@ public final class DateToStringConversionService extends ConversionService<Date,
     }
 
     @Override
-    public final String convert( final Date date )
+    public synchronized String convert( final Date date )
     {
-        return FORMAT.format( date );
+        // Must synchronize as SimpleDateFormat is not safe for concurrent use by multiple threads.
+        
+        return this.format.format( date );
     }
     
 }

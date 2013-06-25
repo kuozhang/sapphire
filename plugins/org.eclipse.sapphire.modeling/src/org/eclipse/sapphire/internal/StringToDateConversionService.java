@@ -31,52 +31,49 @@ import org.eclipse.sapphire.ConversionService;
 
 public final class StringToDateConversionService extends ConversionService<String,Date> 
 {    
-    private final static List<DateFormat> FORMATS;
-    
-    static 
-    {
-        final List<DateFormat> formats = new ArrayList<DateFormat>( 10 );
-        formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" ) );
-        formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSS" ) );
-        formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ) );
-        formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm" ) );
-        formats.add( new SimpleDateFormat( "yyyy-MM-dd" ) );
-        formats.add( new SimpleDateFormat( "HH:mm" ) );
-        formats.add( new SimpleDateFormat( "h:mm a" ) );
-
-        DateFormat format = DateFormat.getDateInstance();
-        
-        if( ! formats.contains( format ) )
-        {
-            formats.add( format );
-        }
-        
-        format = DateFormat.getTimeInstance();
-        
-        if( ! formats.contains( format ) ) 
-        {
-            formats.add( format );
-        }
-        
-        format = DateFormat.getDateTimeInstance();
-        
-        if( ! formats.contains( format ) ) 
-        {
-            formats.add( format );
-        }
-        
-        FORMATS = formats;
-    };
+    private final List<DateFormat> formats;
     
     public StringToDateConversionService()
     {
         super( String.class, Date.class );
+
+        this.formats = new ArrayList<DateFormat>( 10 );
+        this.formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSSZ" ) );
+        this.formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'.'SSS" ) );
+        this.formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ) );
+        this.formats.add( new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm" ) );
+        this.formats.add( new SimpleDateFormat( "yyyy-MM-dd" ) );
+        this.formats.add( new SimpleDateFormat( "HH:mm" ) );
+        this.formats.add( new SimpleDateFormat( "h:mm a" ) );
+
+        DateFormat format = DateFormat.getDateInstance();
+        
+        if( ! this.formats.contains( format ) )
+        {
+            this.formats.add( format );
+        }
+        
+        format = DateFormat.getTimeInstance();
+        
+        if( ! this.formats.contains( format ) ) 
+        {
+            this.formats.add( format );
+        }
+        
+        format = DateFormat.getDateTimeInstance();
+        
+        if( ! this.formats.contains( format ) ) 
+        {
+            this.formats.add( format );
+        }
     }
 
     @Override
-    public final Date convert( final String string ) 
+    public synchronized Date convert( final String string ) 
     {
-        for( DateFormat format : FORMATS )
+        // Must synchronize as SimpleDateFormat is not safe for concurrent use by multiple threads.
+        
+        for( DateFormat format : this.formats )
         {
             try
             {

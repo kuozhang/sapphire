@@ -54,7 +54,7 @@ public final class MutableReference<T>
     
     public synchronized boolean attach( final Listener listener )
     {
-        if( this.listeners != null )
+        if( this.listeners == null )
         {
             this.listeners = new ListenerContext();
         }
@@ -64,7 +64,7 @@ public final class MutableReference<T>
     
     public synchronized boolean detach( final Listener listener )
     {
-        if( this.listeners != null )
+        if( this.listeners == null )
         {
             this.listeners = new ListenerContext();
         }

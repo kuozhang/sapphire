@@ -245,7 +245,7 @@ public abstract class SapphirePopup extends Window
         
         Display display = this.shell.getDisplay();
 
-        while (this.shell != null && !this.shell.isDisposed()) {
+        while (!this.shell.isDisposed()) {
             try {
                 if (!display.readAndDispatch()) {
                     display.sleep();

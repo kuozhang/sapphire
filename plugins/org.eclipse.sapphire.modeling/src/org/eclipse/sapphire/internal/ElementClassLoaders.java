@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.internal;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -36,7 +38,18 @@ public final class ElementClassLoaders
             
             if( loader == null )
             {
-                loader = new ElementClassLoader( typeInterfaceClassLoader );
+                loader = AccessController.doPrivileged
+                (
+                    new PrivilegedAction<ElementClassLoader>()
+                    {
+                        @Override
+                        public ElementClassLoader run()
+                        {
+                            return new ElementClassLoader( typeInterfaceClassLoader );
+                        }
+                    }
+                );
+                
                 loaders.put( typeInterfaceClassLoader, loader );
             }
         }
