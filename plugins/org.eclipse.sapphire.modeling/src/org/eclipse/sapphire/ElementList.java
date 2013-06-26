@@ -398,6 +398,8 @@ public final class ElementList<T extends Element> extends Property implements Li
         }
     }
     
+    @SuppressWarnings( "unchecked" )
+    
     private <C extends Element> C insert$( final Class<C> cl, final int position )
     {
         ElementType type = null;
@@ -412,7 +414,7 @@ public final class ElementList<T extends Element> extends Property implements Li
             }
         }
         
-        return cl.cast( insert$( type, position ) );
+        return (C) insert$( type, position );
     }
     
     @Override

@@ -80,7 +80,7 @@ import org.w3c.dom.NodeList;
 
 @SuppressWarnings( "restriction" )
 
-public class XmlEditorResourceStore extends XmlResourceStore
+public final class XmlEditorResourceStore extends XmlResourceStore
 {
     private SapphireEditor sapphireEditor;
     private StructuredTextEditor sourceEditor;
@@ -145,7 +145,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
                     attachXmlNodeListener( (IDOMNode) newValue );
                 }
                 
-                handleXmlNodeChange( (Node) notifier );
+                DelayedTasksExecutor.schedule( new RefreshElementsTask( getModelElements( (Node) notifier ) ) );
             }
         };
 
@@ -412,17 +412,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
         }
     }
     
-    protected void handleXmlNodeChange( final Node xmlNode )
-    {
-        handleXmlNodeChange( xmlNode, getModelElements( xmlNode ) );
-    }
-    
-    protected void handleXmlNodeChange( final Node xmlNode,
-                                        final List<Element> nearestMatchModelElements )
-    {
-        DelayedTasksExecutor.schedule( new RefreshElementsTask( nearestMatchModelElements ) );
-    }
-    
     private void attachXmlNodeListener()
     {
         attachXmlNodeListener( (IDOMNode) getDomDocument() );
@@ -457,7 +446,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
         }
     }
     
-    protected static final class RefreshElementsTask extends DelayedTasksExecutor.Task
+    private static final class RefreshElementsTask extends DelayedTasksExecutor.Task
     {
         private final List<Element> elements;
         
