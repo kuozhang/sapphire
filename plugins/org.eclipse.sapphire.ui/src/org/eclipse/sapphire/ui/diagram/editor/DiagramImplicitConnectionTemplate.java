@@ -142,6 +142,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     
     public void refreshImplicitConnections()
     {
+    	removeModelListener();
         List<IModelElement> newFilteredList = getFilteredModelElementList();
         
         for (DiagramImplicitConnectionPart connPart : this.implicitConnections)
@@ -161,7 +162,8 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
                 this.implicitConnections.add(connPart);
                 notifyConnectionAdd(connPart);
             }
-        }            
+        } 
+        addModelListener();
     }
     
     public List<DiagramImplicitConnectionPart> getImplicitConnections()
