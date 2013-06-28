@@ -37,10 +37,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
@@ -67,8 +67,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
 {
-    private static final ImageData IMG_FILE = ImageData.createFromClassLoader( RelativePathBrowseActionHandler.class, "File.png" );
-    private static final ImageData IMG_FOLDER = ImageData.createFromClassLoader( RelativePathBrowseActionHandler.class, "Folder.png" );
+    private static final ImageData IMG_FILE = ImageData.readFromClassLoader( RelativePathBrowseActionHandler.class, "File.png" ).required();
+    private static final ImageData IMG_FOLDER = ImageData.readFromClassLoader( RelativePathBrowseActionHandler.class, "Folder.png" ).required();
     
     public static final String ID = "Sapphire.Browse.Path.Relative";
     

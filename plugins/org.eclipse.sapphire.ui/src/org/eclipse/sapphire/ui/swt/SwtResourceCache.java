@@ -32,8 +32,8 @@ public final class SwtResourceCache
 {
     private final Map<ImageDescriptor,ImageHandle> imageDescToImageHandle = new HashMap<ImageDescriptor,ImageHandle>();
     
-    private final Map<org.eclipse.sapphire.modeling.ImageData,ImageDescriptor> imageDataToImageDesc 
-        = new HashMap<org.eclipse.sapphire.modeling.ImageData,ImageDescriptor>();
+    private final Map<org.eclipse.sapphire.ImageData,ImageDescriptor> imageDataToImageDesc 
+        = new HashMap<org.eclipse.sapphire.ImageData,ImageDescriptor>();
     
     private final Map<org.eclipse.sapphire.Color,Color> colors = new HashMap<org.eclipse.sapphire.Color,Color>();
     
@@ -61,12 +61,12 @@ public final class SwtResourceCache
         return image( type.image() );
     }
     
-    public Image image( final org.eclipse.sapphire.modeling.ImageData imageData )
+    public Image image( final org.eclipse.sapphire.ImageData imageData )
     {
         return image( imageData, Status.Severity.OK );
     }
     
-    public Image image( final org.eclipse.sapphire.modeling.ImageData imageData,
+    public Image image( final org.eclipse.sapphire.ImageData imageData,
                         final Status.Severity severity )
     {
         if( imageData != null )

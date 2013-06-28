@@ -54,6 +54,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 <ol>
   <li><a href="#AdapterService">AdapterService</a></li>
   <li><a href="#BindingImpl">BindingImpl</a></li>
+  <li><a href="#BundleImageDataFactory">BundleImageDataFactory</a></li>
   <li><a href="#Color">Color</a></li>
   <li><a href="#Context">Context</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
@@ -66,6 +67,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#EnabledFunction">Enabled Function</a></li>
   <li><a href="#Event">Event</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
+  <li><a href="#ImageData">ImageData</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#IModelParticle">IModelParticle</a></li>
   <li><a href="#ImpliedElementProperty">ImpliedElementProperty</a></li>
@@ -252,6 +254,11 @@ is now handled by Resource base class</span></code></pre>
     </td>
   </tr>
 </table>
+
+
+<h2><a name="BundleImageDataFactory">BundleImageDataFactory</a></h2>
+
+<p>This facility has been removed and no analog has been provided.</p>
 
 
 <h2><a name="Color">Color</a></h2>
@@ -737,6 +744,72 @@ which elements should be compiled. Also, the developer no longer has control ove
 of the generated implementation class. As such, the @GenerateImpl annotation has been removed and no direct 
 equivalent has been provided. For further guidance, post a question 
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+
+
+<h2><a name="ImageData">ImageData</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">modeling.ImageData</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">ImageData</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.readFromStream( stream )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.readFromStream( stream )</span>.optional()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.readFromUrl( url )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.readFromUrl( url )</span>.optional()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.readFromClassLoader( cl, path )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.readFromClassLoader( cl, path )</span>.optional()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.</span>create<span class="unaffected">FromStream( stream )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.</span>read<span class="unaffected">FromStream( stream )</span>.required()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.</span>create<span class="unaffected">FromUrl( url )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.</span>read<span class="unaffected">FromUrl( url )</span>.required()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.</span>create<span class="unaffected">FromClassLoader( cl, path )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ImageData.</span>read<span class="unaffected">FromClassLoader( cl, path )</span>.required()</code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="IModelElement">IModelElement</a></h2>

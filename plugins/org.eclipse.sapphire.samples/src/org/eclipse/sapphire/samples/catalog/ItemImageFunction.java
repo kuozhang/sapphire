@@ -15,9 +15,9 @@ import static java.lang.Math.abs;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
@@ -33,17 +33,17 @@ import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEdi
 
 public final class ItemImageFunction extends Function
 {
-    private final ImageData IMAGE_GENERIC = ImageData.createFromClassLoader( ItemImageFunction.class, "Item.png" );
+    private final ImageData IMAGE_GENERIC = ImageData.readFromClassLoader( ItemImageFunction.class, "Item.png" ).required();
     
     private final ImageData[] IMAGES =
     {
-        ImageData.createFromClassLoader( ItemImageFunction.class, "ItemBlue.png" ),
-        ImageData.createFromClassLoader( ItemImageFunction.class, "ItemGreen.png" ),
-        ImageData.createFromClassLoader( ItemImageFunction.class, "ItemOrange.png" ),
-        ImageData.createFromClassLoader( ItemImageFunction.class, "ItemPurple.png" ),
-        ImageData.createFromClassLoader( ItemImageFunction.class, "ItemRed.png" ),
-        ImageData.createFromClassLoader( ItemImageFunction.class, "ItemTurquoise.png" ),
-        ImageData.createFromClassLoader( ItemImageFunction.class, "ItemYellow.png" )
+        ImageData.readFromClassLoader( ItemImageFunction.class, "ItemBlue.png" ).required(),
+        ImageData.readFromClassLoader( ItemImageFunction.class, "ItemGreen.png" ).required(),
+        ImageData.readFromClassLoader( ItemImageFunction.class, "ItemOrange.png" ).required(),
+        ImageData.readFromClassLoader( ItemImageFunction.class, "ItemPurple.png" ).required(),
+        ImageData.readFromClassLoader( ItemImageFunction.class, "ItemRed.png" ).required(),
+        ImageData.readFromClassLoader( ItemImageFunction.class, "ItemTurquoise.png" ).required(),
+        ImageData.readFromClassLoader( ItemImageFunction.class, "ItemYellow.png" ).required()
     };
     
     @Override

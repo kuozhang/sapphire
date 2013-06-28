@@ -13,10 +13,10 @@ package org.eclipse.sapphire.ui.swt.renderer.actions;
 
 import java.io.File;
 
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -41,7 +41,7 @@ public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionH
 
         setId( ID );
         setLabel( Resources.label );
-        addImage( ImageData.createFromClassLoader( AbsoluteFolderPathBrowseActionHandler.class, "Folder.png" ) );
+        addImage( ImageData.readFromClassLoader( AbsoluteFolderPathBrowseActionHandler.class, "Folder.png" ).required() );
     }
 
     @Override

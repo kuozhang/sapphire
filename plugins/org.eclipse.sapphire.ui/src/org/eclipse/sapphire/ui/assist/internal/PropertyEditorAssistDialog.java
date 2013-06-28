@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.assist.internal;
 
 import java.util.Map;
 
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;

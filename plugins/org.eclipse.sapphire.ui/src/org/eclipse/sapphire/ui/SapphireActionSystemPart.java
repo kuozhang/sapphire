@@ -21,9 +21,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;

@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.internal.ElementClassLoaders;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelMetadataItem;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -464,7 +463,7 @@ public final class ElementType extends ModelMetadataItem
             {
                 try
                 {
-                    this.image = ImageData.createFromClassLoader( findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() );
+                    this.image = ImageData.readFromClassLoader( findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ).required();
                 }
                 catch( Exception e )
                 {

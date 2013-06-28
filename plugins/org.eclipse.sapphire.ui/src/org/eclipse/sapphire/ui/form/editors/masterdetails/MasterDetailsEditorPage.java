@@ -63,12 +63,12 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -385,7 +385,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 final SapphireFormText text = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
                 text.setLayoutData( gdhfill() );
                 text.setText( "<form><li style=\"image\" value=\"error\">" + message + "</li></form>", true, false );
-                text.setImage( "error", ImageData.createFromClassLoader( SwtResourceCache.class, "Error.png" ) );
+                text.setImage( "error", ImageData.readFromClassLoader( SwtResourceCache.class, "Error.png" ).required() );
                 text.setBackground( bgcolor );
 
                 final SapphireFormText showStackTraceLink = new SapphireFormText( msgAndShowStackTraceLinkComposite, SWT.NONE );
@@ -803,8 +803,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 buffer.append( "</form>" );
                 
                 text.setText( buffer.toString(), true, false );
-                text.setImage( "error", ImageData.createFromClassLoader( SwtResourceCache.class, "Error.png" ) );
-                text.setImage( "warning", ImageData.createFromClassLoader( SwtResourceCache.class, "Warning.png" ) );
+                text.setImage( "error", ImageData.readFromClassLoader( SwtResourceCache.class, "Error.png" ).required() );
+                text.setImage( "warning", ImageData.readFromClassLoader( SwtResourceCache.class, "Warning.png" ).required() );
             }
             
             private String numberToString( final int number )

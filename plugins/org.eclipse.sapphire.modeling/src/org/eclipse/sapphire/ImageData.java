@@ -9,11 +9,16 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire;
+
+import static org.eclipse.sapphire.Result.failure;
+import static org.eclipse.sapphire.Result.success;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import org.eclipse.sapphire.modeling.BinaryData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -31,15 +36,15 @@ public final class ImageData extends BinaryData
         super( data );
     }
     
-    public static ImageData readFromStream( final InputStream stream )
+    public static Result<ImageData> readFromStream( final InputStream stream )
     {
         try
         {
-            return new ImageData( stream );
+            return success( new ImageData( stream ) );
         }
         catch( IOException e )
         {
-            return null;
+            return failure( new IllegalArgumentException( e ) );
         }
         finally
         {
@@ -51,7 +56,7 @@ public final class ImageData extends BinaryData
         }
     }
 
-    public static ImageData readFromUrl( final URL url )
+    public static Result<ImageData> readFromUrl( final URL url )
     {
         try
         {
@@ -59,12 +64,11 @@ public final class ImageData extends BinaryData
         }
         catch( IOException e )
         {
-            return null;
+            return failure( new IllegalArgumentException( e ) );
         }
     }
 
-    public static ImageData readFromClassLoader( final Class<?> cl,
-                                                 final String path )
+    public static Result<ImageData> readFromClassLoader( final Class<?> cl, final String path )
     {
         final ClassLoader classloader = cl.getClassLoader();
         
@@ -79,11 +83,11 @@ public final class ImageData extends BinaryData
                 if( pn != null && pn.length() > 0 )
                 {
                     final String possibleFullPath = pn.replace( '.', '/' ) + "/" + path;
-                    final ImageData img = readFromClassLoader( classloader, possibleFullPath );
+                    final ImageData img = readFromClassLoader( classloader, possibleFullPath ).optional();
                     
                     if( img != null )
                     {
-                        return img;
+                        return success( img );
                     }
                 }
             }
@@ -92,8 +96,7 @@ public final class ImageData extends BinaryData
         return readFromClassLoader( classloader, path );
     }
     
-    public static ImageData readFromClassLoader( final ClassLoader cl,
-                                                 final String path )
+    public static Result<ImageData> readFromClassLoader( final ClassLoader cl, final String path )
     {
         final URL url = cl.getResource( path );
         
@@ -103,56 +106,6 @@ public final class ImageData extends BinaryData
         }
         
         return null;
-    }
-    
-    public static ImageData createFromStream( final InputStream stream )
-    {
-        final ImageData image = readFromStream( stream );
-        
-        if( image == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return image;
-    }
-
-    public static ImageData createFromUrl( final URL url )
-    {
-        final ImageData image = readFromUrl( url );
-        
-        if( image == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return image;
-    }
-
-    public static ImageData createFromClassLoader( final Class<?> cl,
-                                                   final String path )
-    {
-        final ImageData image = readFromClassLoader( cl, path );
-        
-        if( image == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return image;
-    }
-    
-    public static ImageData createFromClassLoader( final ClassLoader cl,
-                                                   final String path )
-    {
-        final ImageData image = readFromClassLoader( cl, path );
-        
-        if( image == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        return image;
     }
     
 }

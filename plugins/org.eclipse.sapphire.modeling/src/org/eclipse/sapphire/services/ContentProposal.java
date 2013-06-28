@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.services;
 
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

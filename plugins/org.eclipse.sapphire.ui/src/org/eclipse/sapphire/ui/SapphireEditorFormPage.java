@@ -19,9 +19,9 @@ import java.util.Collections;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderImageEvent;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderTextEvent;

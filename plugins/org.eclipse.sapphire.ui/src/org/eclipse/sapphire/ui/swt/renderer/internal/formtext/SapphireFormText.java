@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;

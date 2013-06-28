@@ -17,7 +17,7 @@ import java.io.InputStream;
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 
@@ -73,7 +73,7 @@ public final class StringToImageDataConversionService extends ConversionService<
         {
             try
             {
-                return ImageData.readFromStream( stream );
+                return ImageData.readFromStream( stream ).optional();
             }
             finally
             {

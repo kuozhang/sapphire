@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.def.WizardPageDef;
 

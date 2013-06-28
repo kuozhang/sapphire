@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.def.TabGroupPageDef;
 public final class TabGroupPagePart extends FormPart
 {
     private static final ImageData IMG_TAB_GROUP_PAGE
-        = ImageData.createFromClassLoader( TabGroupPagePart.class, "TabGroupPage.png" );
+        = ImageData.readFromClassLoader( TabGroupPagePart.class, "TabGroupPage.png" ).required();
     
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;

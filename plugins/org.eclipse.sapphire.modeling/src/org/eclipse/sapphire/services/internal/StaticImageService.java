@@ -13,7 +13,7 @@ package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.ImageServiceData;
@@ -33,7 +33,7 @@ public final class StaticImageService extends ImageService
     {
         final ElementType type = context( Element.class ).type();
         final Image imageAnnotation = type.getAnnotation( Image.class );
-        this.data = new ImageServiceData( ImageData.createFromClassLoader( type.findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ) );
+        this.data = new ImageServiceData( ImageData.readFromClassLoader( type.findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ).required() );
     }
 
     @Override

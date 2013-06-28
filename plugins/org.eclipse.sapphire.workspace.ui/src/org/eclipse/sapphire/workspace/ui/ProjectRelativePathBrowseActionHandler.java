@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -35,7 +35,7 @@ public final class ProjectRelativePathBrowseActionHandler extends RelativePathBr
         super.init( action, def );
         
         setLabel( Resources.label );
-        addImage( ImageData.createFromClassLoader( ProjectRelativePathBrowseActionHandler.class, "Project.png" ) );
+        addImage( ImageData.readFromClassLoader( ProjectRelativePathBrowseActionHandler.class, "Project.png" ).required() );
     }
 
     @Override

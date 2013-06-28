@@ -38,6 +38,7 @@
     <li><a href="#Core-PropertyInstance">PropertyInstance</a></li>
     <li><a href="#Core-ReferenceValue">ReferenceValue</a></li>
     <li><a href="#Core-RequiredConstraintService">RequiredConstraintService</a></li>
+    <li><a href="#Core-Result">Result</a></li>
     <li><a href="#Core-Transient">Transient</a></li>
     <li><a href="#Core-Value">Value</a></li>
     <li><a href="#Core-RootServiceContext">Root Service Context</a></li>
@@ -687,6 +688,41 @@ Value&lt;String> getCategory();
 void setCategory( String value );</font></code></pre>
 
 
+<h2><a name="Core-Result">Result</a></h2>
+
+<p>When defining a function, the developer needs to decide if a failure will be signaled by an exception or a null return,
+but the developer of the function is often not in a position to know which approach will be more convenient for the users of
+the function. The Result class allows this decision to be left to the function caller in a way that is intuitive and does not
+contribute to API bloat.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">Consider a function that looks up a purchase order by id. Notice that when the purchase order
+is not found, an exception is created, but not thrown.</p>
+
+<pre class="source-code"><code>Result&lt;PurchaseOrder> findPurchaseOrder( String id )
+{
+    PurchaseOrder po = this.orders.get( id );
+    
+    if( po == null )
+    {
+        return Result.failure( new IllegalArgumentException() );
+    }
+    
+    return Result.success( po );
+}</code></pre>
+
+<p style="margin-left: 20px;">A function caller that prefers a null return would call optional() on the function result and
+never see the exception.</p>
+
+<pre class="source-code"><code>PurchaseOrder po = findPurchaseOrder( id ).optional();</code></pre>
+
+<p style="margin-left: 20px;">Similarly, a function caller that prefers an exception would call required() to get the
+desired behavior.</p>
+
+<pre class="source-code"><code>PurchaseOrder po = findPurchaseOrder( id ).required();</code></pre>
+
+
 <h2><a name="Core-Transient">Transient</a></h2>
 
 <p>In certain situations, it is useful to be able to reference a fully typed Transient class object. One such scenario
@@ -1331,14 +1367,10 @@ void setFieldName(</font> JavaIdentifier <font color="#888888">value );</font></
 
 <pre class="source-code"><code><font color="#888888">ImageData
 {</font>
-    static ImageData readFromStream( InputStream stream )
-    <font color="#888888">static ImageData readFromUrl( URL url )
-    static ImageData readFromClassLoader( Class&lt;?> cl, String path )
-    static ImageData readFromClassLoader( ClassLoader cl, String path )</font>
-    static ImageData createFromStream( InputStream stream )
-    <font color="#888888">static ImageData createFromUrl( URL url )
-    static ImageData createFromClassLoader( Class&lt;?> cl, String path )
-    static ImageData createFromClassLoader( ClassLoader cl, String path )
+    static Result&lt;ImageData> readFromStream( InputStream stream )
+    <font color="#888888">static Result&lt;ImageData> readFromUrl( URL url )
+    static Result&lt;ImageData> readFromClassLoader( Class&lt;?> cl, String path )
+    static Result&lt;ImageData> readFromClassLoader( ClassLoader cl, String path )
 }</font></code></pre>
 
 

@@ -11,6 +11,9 @@
 
 package org.eclipse.sapphire.modeling.internal;
 
+import static org.eclipse.sapphire.Result.failure;
+import static org.eclipse.sapphire.Result.success;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -24,6 +27,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.Result;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -263,32 +267,7 @@ public final class SapphireModelingExtensionSystem
         return buf.toString().trim();
     }
     
-    private static final class ValueLookupResult
-    {
-        private final String value;
-        
-        public ValueLookupResult( final String value )
-        {
-            this.value = value;
-        }
-        
-        public String required()
-        {
-            if( this.value == null )
-            {
-                throw new InvalidExtensionException();
-            }
-            
-            return this.value;
-        }
-        
-        public String optional()
-        {
-            return this.value;
-        }
-    }
-
-    private static ValueLookupResult value( final Element element, final String valueElementName )
+    private static Result<String> value( final Element element, final String valueElementName )
     {
         final NodeList nodes = element.getChildNodes();
 
@@ -302,12 +281,12 @@ public final class SapphireModelingExtensionSystem
 
                 if( valueElementName.equals( el.getLocalName() ) )
                 {
-                    return new ValueLookupResult( value( el ) );
+                    return success( value( el ) );
                 }
             }
         }
         
-        return new ValueLookupResult( null );
+        return failure( new InvalidExtensionException() );
     }
 
     private static Set<String> values( final Element root,

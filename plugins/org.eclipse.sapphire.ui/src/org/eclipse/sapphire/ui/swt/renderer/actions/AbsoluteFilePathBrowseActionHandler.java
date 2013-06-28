@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FileExtensionsService;
@@ -48,7 +48,7 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
 
         setId( ID );
         setLabel( Resources.label );
-        addImage( ImageData.createFromClassLoader( AbsoluteFilePathBrowseActionHandler.class, "File.png" ) );
+        addImage( ImageData.readFromClassLoader( AbsoluteFilePathBrowseActionHandler.class, "File.png" ).required() );
         
         final String staticFileExtensions = def.getParam( PARAM_EXTENSIONS );
         

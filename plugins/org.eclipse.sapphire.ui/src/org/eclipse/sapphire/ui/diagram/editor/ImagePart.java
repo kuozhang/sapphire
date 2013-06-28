@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 

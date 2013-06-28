@@ -11,15 +11,15 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import static org.eclipse.sapphire.modeling.ImageData.readFromClassLoader;
+import static org.eclipse.sapphire.ImageData.readFromClassLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.EnumValueType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -62,7 +62,7 @@ public final class EnumValueImageService extends ValueImageService
                 
                 if( imageAnnotation != null )
                 {
-                    image = readFromClassLoader( this.enumType.getEnumTypeClass(), imageAnnotation.path() );
+                    image = readFromClassLoader( this.enumType.getEnumTypeClass(), imageAnnotation.path() ).optional();
                     
                     if( image != null )
                     {

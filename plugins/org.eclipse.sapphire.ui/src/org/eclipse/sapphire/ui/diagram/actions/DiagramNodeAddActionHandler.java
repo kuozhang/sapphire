@@ -13,7 +13,7 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;

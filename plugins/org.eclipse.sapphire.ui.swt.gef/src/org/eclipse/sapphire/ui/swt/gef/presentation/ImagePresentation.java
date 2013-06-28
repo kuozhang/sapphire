@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 

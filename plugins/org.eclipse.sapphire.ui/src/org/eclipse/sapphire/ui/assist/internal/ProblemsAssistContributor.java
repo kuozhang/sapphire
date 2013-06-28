@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -84,11 +84,11 @@ public final class ProblemsAssistContributor extends PropertyEditorAssistContrib
         
         if( valResultSeverity == Status.Severity.ERROR )
         {
-            image = ImageData.createFromClassLoader( SwtResourceCache.class, "Error.png" );
+            image = ImageData.readFromClassLoader( SwtResourceCache.class, "Error.png" ).required();
         }
         else if( valResultSeverity == Status.Severity.WARNING )
         {
-            image = ImageData.createFromClassLoader( SwtResourceCache.class, "Warning.png" );
+            image = ImageData.readFromClassLoader( SwtResourceCache.class, "Warning.png" ).required();
         }
         
         if( image != null )

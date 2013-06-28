@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.ImageData;
 
 public final class SwtRendererUtil
 {
-    public static ImageDescriptor toImageDescriptor( final org.eclipse.sapphire.modeling.ImageData data )
+    public static ImageDescriptor toImageDescriptor( final org.eclipse.sapphire.ImageData data )
     {
         if( data != null )
         {
@@ -31,7 +31,7 @@ public final class SwtRendererUtil
         return null;
     }
     
-    public static ImageData toImageData( final org.eclipse.sapphire.modeling.ImageData data )
+    public static ImageData toImageData( final org.eclipse.sapphire.ImageData data )
     {
         if( data != null )
         {
@@ -44,28 +44,28 @@ public final class SwtRendererUtil
     public static ImageData createImageData( final ClassLoader cl,
                                              final String path )
     {
-        return toImageData( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+        return toImageData( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
     }
 
     public static ImageData createImageData( final Class<?> cl,
                                              final String path )
     {
-        return toImageData( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+        return toImageData( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
     }
 
     public static ImageDescriptor createImageDescriptor( final ClassLoader cl,
                                                          final String path )
     {
-        return toImageDescriptor( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+        return toImageDescriptor( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
     }
 
     public static ImageDescriptor createImageDescriptor( final Class<?> cl,
                                                          final String path )
     {
-        return toImageDescriptor( org.eclipse.sapphire.modeling.ImageData.createFromClassLoader( cl, path ) );
+        return toImageDescriptor( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
     }
     
-    public static int sizeOfImage( final org.eclipse.sapphire.modeling.ImageData image )
+    public static int sizeOfImage( final org.eclipse.sapphire.ImageData image )
     {
         return toImageData( image ).height;
     }

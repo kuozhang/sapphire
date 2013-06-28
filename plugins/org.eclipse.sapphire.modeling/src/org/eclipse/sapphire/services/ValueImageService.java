@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services;
 
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 
 /**
  * Provides the image to use when presenting a given value to the user.

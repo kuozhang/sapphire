@@ -13,9 +13,9 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.services.ImageService;
@@ -27,8 +27,8 @@ import org.eclipse.sapphire.services.ImageServiceData;
 
 public final class ContactRepositoryImageService extends ImageService
 {
-    private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "Contact.png" ) );
-    private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "ContactFaded.png" ) );
+    private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "Contact.png" ).required() );
+    private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "ContactFaded.png" ).required() );
     
     private Listener listener;
     

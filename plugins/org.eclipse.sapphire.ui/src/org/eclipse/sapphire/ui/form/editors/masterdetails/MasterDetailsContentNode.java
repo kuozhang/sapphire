@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
@@ -39,7 +40,6 @@ import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -81,10 +81,10 @@ public final class MasterDetailsContentNode
     
 {
     private static final ImageData IMG_CONTAINER_NODE
-        = ImageData.createFromClassLoader( MasterDetailsContentNode.class, "ContainerNode.png" );
+        = ImageData.readFromClassLoader( MasterDetailsContentNode.class, "ContainerNode.png" ).required();
 
     private static final ImageData IMG_LEAF_NODE
-        = ImageData.createFromClassLoader( MasterDetailsContentNode.class, "LeafNode.png" );
+        = ImageData.readFromClassLoader( MasterDetailsContentNode.class, "LeafNode.png" ).required();
 
     private MasterDetailsContentOutline contentTree;
     private MasterDetailsContentNodeDef definition;

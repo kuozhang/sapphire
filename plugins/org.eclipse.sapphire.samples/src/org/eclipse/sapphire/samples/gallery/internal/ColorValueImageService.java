@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import static org.eclipse.sapphire.modeling.ImageData.readFromClassLoader;
+import static org.eclipse.sapphire.ImageData.readFromClassLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.sapphire.modeling.ImageData;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.services.ValueImageService;
 
 /**
@@ -32,47 +32,41 @@ public final class ColorValueImageService extends ValueImageService
     {
         ImageData image = this.images.get( value );
         
-        if( image == null )
+        if( image == null && value != null )
         {
-            String imageResourceName = null;
+            final String imageResourceName;
             
-            if( value != null )
+            if( value.equalsIgnoreCase( "red" ) )
             {
-                if( value.equalsIgnoreCase( "red" ) )
-                {
-                    imageResourceName = "SquareRed.png";
-                }
-                else if( value.equalsIgnoreCase( "orange" ) )
-                {
-                    imageResourceName = "SquareOrange.png";
-                }
-                else if( value.equalsIgnoreCase( "yellow" ) )
-                {
-                    imageResourceName = "SquareYellow.png";
-                }
-                else if( value.equalsIgnoreCase( "green" ) )
-                {
-                    imageResourceName = "SquareGreen.png";
-                }
-                else if( value.equalsIgnoreCase( "blue" ) )
-                {
-                    imageResourceName = "SquareBlue.png";
-                }
-                else if( value.equalsIgnoreCase( "violet" ) )
-                {
-                    imageResourceName = "SquareViolet.png";
-                }
-                else
-                {
-                    imageResourceName = "SquareQuestionMark.png";
-                }
+                imageResourceName = "SquareRed.png";
             }
-            
-            if( imageResourceName != null )
+            else if( value.equalsIgnoreCase( "orange" ) )
             {
-                final String imageResourcePath = "org/eclipse/sapphire/samples/" + imageResourceName;
-                image = readFromClassLoader( ColorValueImageService.class, imageResourcePath );
+                imageResourceName = "SquareOrange.png";
             }
+            else if( value.equalsIgnoreCase( "yellow" ) )
+            {
+                imageResourceName = "SquareYellow.png";
+            }
+            else if( value.equalsIgnoreCase( "green" ) )
+            {
+                imageResourceName = "SquareGreen.png";
+            }
+            else if( value.equalsIgnoreCase( "blue" ) )
+            {
+                imageResourceName = "SquareBlue.png";
+            }
+            else if( value.equalsIgnoreCase( "violet" ) )
+            {
+                imageResourceName = "SquareViolet.png";
+            }
+            else
+            {
+                imageResourceName = "SquareQuestionMark.png";
+            }
+
+            final String imageResourcePath = "org/eclipse/sapphire/samples/" + imageResourceName;
+            image = readFromClassLoader( ColorValueImageService.class, imageResourcePath ).required();
         }
         
         return image;
