@@ -30,7 +30,7 @@ import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
-import org.eclipse.sapphire.ui.swt.gef.policies.ContainerShapeLabelDirectEditPolicy;
+import org.eclipse.sapphire.ui.swt.gef.policies.ShapeLabelDirectEditPolicy;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -52,7 +52,7 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		// Sapphire text part has its own GEF editpart.
 		if (containerPart.isEditable())
 		{
-			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ContainerShapeLabelDirectEditPolicy());
+			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ShapeLabelDirectEditPolicy());
 		}
 	}
 	

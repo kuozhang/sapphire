@@ -22,7 +22,7 @@ import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ContainerShapeLabelDirectEditPolicy extends DirectEditPolicy 
+public class ShapeLabelDirectEditPolicy extends DirectEditPolicy 
 {
 
 	@Override
