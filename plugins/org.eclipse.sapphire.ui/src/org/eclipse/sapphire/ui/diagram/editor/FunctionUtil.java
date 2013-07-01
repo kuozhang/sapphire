@@ -18,6 +18,7 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.PropertyAccessFunction;
 
 /**
@@ -30,14 +31,42 @@ public class FunctionUtil
     {
         if (functionResult.function() instanceof PropertyAccessFunction)
         {
-            if (functionResult.operand(0) instanceof String)
+            if (functionResult.operands().size() == 1)
             {
-                final Property property = element.property( (String)functionResult.operand(0) );
-                
-                if( property != null && property instanceof Value && ! property.definition().isReadOnly() )
-                {
-                    return (Value<?>)property;
-                }
+            	if (functionResult.operand(0) instanceof String)
+            	{
+	                final Property property = element.property( (String)functionResult.operand(0) );
+	                
+	                if( property != null && property instanceof Value && ! property.definition().isReadOnly() )
+	                {
+	                    return (Value<?>)property;
+	                }
+            	}
+            }
+            else 
+            {                       	
+            	if (functionResult.operand(1) instanceof String)
+            	{      
+            		String temp = (String)functionResult.operand(1);
+            		if (temp.equalsIgnoreCase("text") || temp.equalsIgnoreCase("content"))
+            		{
+            			if (functionResult.function().operand(0) instanceof PropertyAccessFunction)
+            			{
+            				PropertyAccessFunction nestedFunc = (PropertyAccessFunction)functionResult.function().operand(0);
+            				if (nestedFunc.operands().size() == 1 && nestedFunc.operand(0) instanceof Literal)
+            				{
+            					String propName = (String)((Literal)nestedFunc.operand(0)).value();
+            	                final Property property = element.property( propName );
+            	                
+            	                if( property != null && property instanceof Value && ! property.definition().isReadOnly() )
+            	                {
+            	                    return (Value<?>)property;
+            	                }
+            					
+            				}
+            			}
+            		}
+            	}
             }
         }
         else 

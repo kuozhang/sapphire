@@ -124,7 +124,7 @@
                                                 </sequence-layout-constraint>
                                             </text>
                                             <text>
-                                                <content>${Type == null ? &quot;&lt;type&gt;&quot; : Type}</content>
+                                                <content>${Type.Text == null ? &quot;&lt;type&gt;&quot; : Type.Text}</content>
                                                 <truncatable>false</truncatable>
                                                 <sequence-layout-constraint>
                             						<expand-horizontally>true</expand-horizontally>

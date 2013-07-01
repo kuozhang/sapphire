@@ -134,4 +134,9 @@ public class TextPart extends ShapePart
     {
     	return this.textDef.isTruncatable().content();
     }
+    
+    public Property getTextProperty()
+    {
+    	return this.property;
+    }
 }

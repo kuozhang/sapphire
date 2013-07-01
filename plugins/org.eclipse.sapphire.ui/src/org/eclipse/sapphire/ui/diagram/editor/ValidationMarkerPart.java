@@ -11,7 +11,10 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.PartValidationEvent;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 
@@ -28,6 +31,19 @@ public class ValidationMarkerPart extends ShapePart
     {
         super.init();
         this.markerDef = (ValidationMarkerDef)super.definition;
+        SapphirePart parentPart = (SapphirePart)getParentPart();
+        parentPart.attach
+        (
+            new FilteredListener<PartValidationEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( PartValidationEvent event )
+                {
+                	refreshValidation();
+                }
+            }
+        );
+        
     }
 	
 	
