@@ -43,7 +43,7 @@ public class NodeLayoutEditPolicy extends LayoutEditPolicy
 
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) {
-		return new RectangleSelectionEditPolicy();
+		return new ShapeSelectionEditPolicy();
 	}
 
 

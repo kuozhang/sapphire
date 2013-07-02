@@ -71,7 +71,7 @@ public class ShapeFactoryLayoutEditPolicy extends SequenceLayoutEditPolicy
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) 
 	{
-		return new RectangleSelectionEditPolicy();
+		return new ShapeSelectionEditPolicy();
 	}
 
 

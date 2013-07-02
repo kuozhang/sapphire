@@ -20,7 +20,7 @@ import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
-import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.IShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.utils.SapphireSurroundingHandle;
@@ -30,14 +30,14 @@ import org.eclipse.sapphire.ui.swt.gef.utils.SapphireSurroundingHandle;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class RectangleSelectionEditPolicy extends NonResizableEditPolicy 
+public class ShapeSelectionEditPolicy extends NonResizableEditPolicy 
 {
 	
-	private RectangleFigure getRectangleFigure() {
+	private IShapeFigure getShapeFigure() {
 		if (getHost() instanceof ShapeEditPart) {
 			ShapeEditPart part = (ShapeEditPart) getHost();
-			if (part.getFigure() instanceof RectangleFigure) {
-				return ((RectangleFigure) part.getFigure());
+			if (part.getFigure() instanceof IShapeFigure) {
+				return ((IShapeFigure) part.getFigure());
 			}
 		}
 		return null;
@@ -69,7 +69,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 	 * @see org.eclipse.gef.editpolicies.NonResizableEditPolicy#hideFocus()
 	 */
 	protected void hideFocus() {
-		RectangleFigure f = getRectangleFigure();
+		IShapeFigure f = getShapeFigure();
 		if (f != null) {
 			f.setFocus(false);
 		}
@@ -79,7 +79,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#hideSelection()
 	 */
 	protected void hideSelection() {
-		RectangleFigure f = getRectangleFigure();
+		IShapeFigure f = getShapeFigure();
 		if (f != null) {
 			f.setSelected(false);
 			f.setFocus(false);
@@ -91,7 +91,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 	 * @see org.eclipse.gef.editpolicies.NonResizableEditPolicy#showFocus()
 	 */
 	protected void showFocus() {
-		RectangleFigure f = getRectangleFigure();
+		IShapeFigure f = getShapeFigure();
 		if (f != null) {
 			f.setFocus(true);
 		}
@@ -101,7 +101,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#showSelection()
 	 */
 	protected void showPrimarySelection() {
-		RectangleFigure f = getRectangleFigure();
+		IShapeFigure f = getShapeFigure();
 		if (f != null) {
 			f.setSelected(true);
 			f.setFocus(true);
@@ -113,7 +113,7 @@ public class RectangleSelectionEditPolicy extends NonResizableEditPolicy
 	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#showSelection()
 	 */
 	protected void showSelection() {
-		RectangleFigure f = getRectangleFigure();
+		IShapeFigure f = getShapeFigure();
 		if (f != null) {
 			f.setSelected(true);
 			f.setFocus(false);
