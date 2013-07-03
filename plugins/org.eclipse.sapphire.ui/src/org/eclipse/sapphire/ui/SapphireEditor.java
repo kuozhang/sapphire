@@ -36,11 +36,12 @@ import org.eclipse.help.IContext;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
@@ -89,7 +90,21 @@ public abstract class SapphireEditor
     implements ISapphirePart
     
 {
-	private static class SapphireEditorActionBarContributor extends MultiPageEditorActionBarContributor 
+    @Text( "Associated resources are not accessible." )
+    private static LocalizableText resourceNotAccessible;
+    
+    @Text( "Editor {0} failed to instantiate its model." )
+    private static LocalizableText failedToCreateModel;
+    
+    @Text( "Error" )
+    private static LocalizableText errorPageTitle;
+    
+    static
+    {
+        LocalizableText.init( SapphireEditor.class );
+    }
+
+    private static class SapphireEditorActionBarContributor extends MultiPageEditorActionBarContributor 
 	{
 		private MultiPageEditorPart multiPageEditor = null;
 		
@@ -435,7 +450,7 @@ public abstract class SapphireEditor
         
         if( file != null && ! file.isAccessible() )
         {
-            error = Resources.resourceNotAccessible;
+            error = resourceNotAccessible.text();
         }
         
         if( error == null )
@@ -453,7 +468,7 @@ public abstract class SapphireEditor
                 
             if( this.model == null )
             {
-                error = NLS.bind( Resources.failedToCreateModel, getClass().getName() );
+                error = failedToCreateModel.format( getClass().getName() );
                 
                 for( int i = 0, n = getPageCount(); i < n; i++ )
                 {
@@ -493,7 +508,7 @@ public abstract class SapphireEditor
             message.setText( error, false, false );
             
             addPage( page );
-            setPageText( 0, Resources.errorPageTitle );
+            setPageText( 0, errorPageTitle.text() );
         }
     }
     
@@ -887,18 +902,6 @@ public abstract class SapphireEditor
         }
         
         return this.serviceContext.services( serviceType );
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String resourceNotAccessible;
-        public static String failedToCreateModel;
-        public static String errorPageTitle;
-        
-        static
-        {
-            initializeMessages( SapphireEditor.class.getName(), Resources.class );
-        }
     }
     
 }

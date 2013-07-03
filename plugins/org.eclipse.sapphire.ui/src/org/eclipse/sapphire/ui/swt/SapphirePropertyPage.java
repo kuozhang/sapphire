@@ -15,9 +15,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.FormComponentDef;
@@ -31,6 +32,14 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 public class SapphirePropertyPage extends PropertyPage
 {
+    @Text( "Error" )
+    private static LocalizableText errorDialogTitle;
+    
+    static
+    {
+        LocalizableText.init( SapphirePropertyPage.class );
+    }
+    
     private Element element;
     private boolean elementInstantiatedLocally;
     private DefinitionLoader.Reference<FormComponentDef> definition;
@@ -160,7 +169,7 @@ public class SapphirePropertyPage extends PropertyPage
         }
         catch( ResourceStoreException e )
         {
-            MessageDialog.openError( getShell(), Resources.errorDialogTitle, e.getMessage() );
+            MessageDialog.openError( getShell(), errorDialogTitle.text(), e.getMessage() );
             
             return false;
         }
@@ -191,16 +200,6 @@ public class SapphirePropertyPage extends PropertyPage
         {
             this.definition.dispose();
             this.definition = null;
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String errorDialogTitle;
-        
-        static
-        {
-            initializeMessages( SapphirePropertyPage.class.getName(), Resources.class );
         }
     }
     

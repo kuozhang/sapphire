@@ -13,9 +13,10 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -30,6 +31,17 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class NumericRangeFactsService extends FactsService
 {
+    @Text( "Minimum value is {0}." )
+    private static LocalizableText minValueStatement;
+    
+    @Text( "Maximum value is {0}." )
+    private static LocalizableText maxValueStatement;
+    
+    static
+    {
+        LocalizableText.init( NumericRangeFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -40,12 +52,12 @@ public final class NumericRangeFactsService extends FactsService
             
         if( min.length() > 0 ) 
         {
-            facts.add( NLS.bind( Resources.minValueStatement, SapphireCommonUtil.normalizeForDisplay( property, min ) ) );
+            facts.add( minValueStatement.format( SapphireCommonUtil.normalizeForDisplay( property, min ) ) );
         }
         
         if( max.length() > 0 ) 
         {
-            facts.add( NLS.bind( Resources.maxValueStatement, SapphireCommonUtil.normalizeForDisplay( property, max ) ) );
+            facts.add( maxValueStatement.format( SapphireCommonUtil.normalizeForDisplay( property, max ) ) );
         }
     }
     
@@ -63,17 +75,6 @@ public final class NumericRangeFactsService extends FactsService
             }
             
             return false;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String minValueStatement;
-        public static String maxValueStatement;
-        
-        static
-        {
-            initializeMessages( NumericRangeFactsService.class.getName(), Resources.class );
         }
     }
     

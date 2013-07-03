@@ -16,11 +16,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
@@ -37,6 +38,14 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
     public static final String ID = "Sapphire.Browse.File.Absolute";
     public static final String PARAM_EXTENSIONS = "extensions";
     
+    @Text( "absolute &file path" )
+    public static LocalizableText label;
+
+    static 
+    {
+        LocalizableText.init( AbsoluteFilePathBrowseActionHandler.class );
+    }
+
     private FileExtensionsService fileExtensionService;
     private List<String> staticFileExtensionsList;
     
@@ -47,7 +56,7 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
         super.init( action, def );
 
         setId( ID );
-        setLabel( Resources.label );
+        setLabel( label.text() );
         addImage( ImageData.readFromClassLoader( AbsoluteFilePathBrowseActionHandler.class, "File.png" ).required() );
         
         final String staticFileExtensions = def.getParam( PARAM_EXTENSIONS );
@@ -126,14 +135,4 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
         return dialog.open();
     }
     
-    private static final class Resources extends NLS 
-    {
-        public static String label;
-
-        static 
-        {
-            initializeMessages( AbsoluteFilePathBrowseActionHandler.class.getName(), Resources.class );
-        }
-    }
-
 }

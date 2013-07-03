@@ -11,9 +11,10 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
@@ -22,6 +23,14 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public abstract class SapphireBrowseActionHandler extends SapphirePropertyEditorActionHandler
 {
+    @Text( "Select {0}:" )
+    private static LocalizableText browseDialogMessage;
+
+    static 
+    {
+        LocalizableText.init( SapphireBrowseActionHandler.class );
+    }
+
     @Override
     public Value<?> property()
     {
@@ -61,17 +70,7 @@ public abstract class SapphireBrowseActionHandler extends SapphirePropertyEditor
 
     protected final String createBrowseDialogMessage( final String entity )
     {
-        return NLS.bind( Resources.browseDialogMessage, entity );
-    }
-    
-    private static final class Resources extends NLS 
-    {
-        public static String browseDialogMessage;
-
-        static 
-        {
-            initializeMessages( SapphireBrowseActionHandler.class.getName(), Resources.class );
-        }
+        return browseDialogMessage.format( entity );
     }
     
 }

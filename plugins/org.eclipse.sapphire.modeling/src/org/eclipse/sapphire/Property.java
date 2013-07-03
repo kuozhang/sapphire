@@ -23,7 +23,6 @@ import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.DependenciesService;
 import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.Service;
@@ -43,6 +42,17 @@ public abstract class Property implements Observable
     private static final int VALIDATION_INITIALIZED = 1 << 2;
     protected static final int CONTENT_INITIALIZED = 1 << 3;
     
+    @Text( "{0} property is already disposed." )
+    private static LocalizableText propertyAlreadyDisposed;
+    
+    @Text( "Path \"{2}\" is invalid for {0}#{1}." )
+    private static LocalizableText illegalPathException;
+    
+    static
+    {
+        LocalizableText.init( Property.class );
+    }
+
     private final Element element;
     private final PropertyDef definition;
     private PropertyInstanceServiceContext services;
@@ -755,33 +765,21 @@ public abstract class Property implements Observable
     {
         if( disposed() )
         {
-            final String msg = NLS.bind( Resources.propertyAlreadyDisposed, this.definition.name() );
+            final String msg = propertyAlreadyDisposed.format( this.definition.name() );
             throw new IllegalStateException( msg );
         }
     }
     
     protected final IllegalArgumentException createIllegalPathException( final ModelPath path )
     {
-        final String message = NLS.bind
+        final String message = illegalPathException.format
         (
-            Resources.illegalPathException,
             element().type().getModelElementClass().getName(),
             name(),
             path.toString()
         );
         
         return new IllegalArgumentException( message );
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String propertyAlreadyDisposed;
-        public static String illegalPathException;
-        
-        static
-        {
-            initializeMessages( Property.class.getName(), Resources.class );
-        }
     }
     
 }

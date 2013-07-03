@@ -13,9 +13,10 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -29,10 +30,18 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class MustExistFactsService extends FactsService
 {
+    @Text( "Must exist." )
+    private static LocalizableText statement;
+    
+    static
+    {
+        LocalizableText.init( MustExistFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        facts.add( Resources.statement );
+        facts.add( statement.text() );
     }
     
     public static final class Condition extends ServiceCondition
@@ -42,16 +51,6 @@ public final class MustExistFactsService extends FactsService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( MustExist.class ) );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String statement;
-        
-        static
-        {
-            initializeMessages( MustExistFactsService.class.getName(), Resources.class );
         }
     }
     

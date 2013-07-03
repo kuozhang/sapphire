@@ -53,16 +53,17 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -96,6 +97,14 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRenderer
 {
+    @Text( "<empty>" )
+    private static LocalizableText emptyIndicator;
+    
+    static
+    {
+        LocalizableText.init( CheckBoxListPropertyEditorRenderer.class );
+    }
+
     private Table table;
     private CheckboxTableViewer tableViewer;
     private ElementType memberType;
@@ -615,7 +624,7 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
         
             if( this.value.length() == 0 )
             {
-                label = Resources.emptyIndicator;
+                label = emptyIndicator.text();
             }
             else
             {
@@ -782,16 +791,6 @@ public class CheckBoxListPropertyEditorRenderer extends ListPropertyEditorRender
                                               final PropertyEditorPart part )
         {
             return new CheckBoxListPropertyEditorRenderer( context, part );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String emptyIndicator;
-        
-        static
-        {
-            initializeMessages( CheckBoxListPropertyEditorRenderer.class.getName(), Resources.class );
         }
     }
     

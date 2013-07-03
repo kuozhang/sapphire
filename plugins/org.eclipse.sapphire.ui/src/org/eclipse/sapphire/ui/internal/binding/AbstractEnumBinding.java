@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.ui.internal.binding;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Control;
@@ -23,6 +24,14 @@ import org.eclipse.swt.widgets.Control;
 
 public abstract class AbstractEnumBinding extends AbstractBinding
 {
+    @Text( "<value not set>" )
+    private static LocalizableText nullValueLabel;
+    
+    static
+    {
+        LocalizableText.init( AbstractEnumBinding.class );
+    }
+
     protected Enum<?>[] enumValues;
     
     public AbstractEnumBinding( final PropertyEditorPart editor,
@@ -90,7 +99,7 @@ public abstract class AbstractEnumBinding extends AbstractBinding
         if( newSelection == this.enumValues.length )
         {
             final String newValueString = value.text( true );
-            final String label = ( newValueString == null ? Resources.nullValueLabel : newValueString );
+            final String label = ( newValueString == null ? nullValueLabel.text() : newValueString );
 
             createMalformedItem( label );
         }
@@ -110,18 +119,4 @@ public abstract class AbstractEnumBinding extends AbstractBinding
     protected abstract void createMalformedItem( String label );
     protected abstract void removeMalformedItem();
     
-    protected static final class Resources
-        
-        extends NLS
-        
-    {
-        public static String nullValueLabel;
-    
-        static
-        {
-            initializeMessages( AbstractEnumBinding.class.getName(), 
-                                Resources.class );
-        }
-    }
-
 }

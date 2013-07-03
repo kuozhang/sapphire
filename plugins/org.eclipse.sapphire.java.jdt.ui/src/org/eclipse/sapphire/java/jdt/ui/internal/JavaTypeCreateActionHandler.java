@@ -51,9 +51,11 @@ import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
@@ -63,7 +65,6 @@ import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
@@ -80,6 +81,20 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditorActionHandler
 {
+    @Text( "Java Convention Violation" )
+    private static LocalizableText discourageDialogTitle;
+    
+    @Text( "The use of the default package is discouraged. Do you want to proceed?" )
+    private static LocalizableText discourageDefaultPackage;
+    
+    @Text( "Type name is discourage. By convention, Java type names should start with an upper case letter. Do you want to proceed?" )
+    private static LocalizableText discourageLowerCase;
+
+    static 
+    {
+        LocalizableText.init( JavaTypeCreateActionHandler.class );
+    }
+
     private final JavaTypeKind kind;
     
     public JavaTypeCreateActionHandler( final JavaTypeKind kind )
@@ -138,7 +153,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         if( javaTypeName.pkg() == null )
         {
-            if( ! MessageDialog.openConfirm( context.getShell(), Resources.discourageDialogTitle, Resources.discourageDefaultPackage ) )
+            if( ! MessageDialog.openConfirm( context.getShell(), discourageDialogTitle.text(), discourageDefaultPackage.text() ) )
             {
                 return null;
             }
@@ -146,7 +161,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         if( ! Character.isUpperCase( javaTypeName.simple().charAt( 0 ) ) )
         {
-            if( ! MessageDialog.openConfirm( context.getShell(), Resources.discourageDialogTitle, Resources.discourageLowerCase ) )
+            if( ! MessageDialog.openConfirm( context.getShell(), discourageDialogTitle.text(), discourageLowerCase.text() ) )
             {
                 return null;
             }
@@ -466,18 +481,6 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         }
         
         protected abstract boolean evaluate( JavaTypeConstraintService javaTypeConstraintService );
-    }
-
-    private static final class Resources extends NLS 
-    {
-        public static String discourageDialogTitle;
-        public static String discourageDefaultPackage;
-        public static String discourageLowerCase;
-
-        static 
-        {
-            initializeMessages( JavaTypeCreateActionHandler.class.getName(), Resources.class );
-        }
     }
     
 }

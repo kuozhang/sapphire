@@ -12,8 +12,9 @@
 package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SourceEditorService;
@@ -29,6 +30,14 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
 
 public final class ShowInSourceActionAssistContributor extends PropertyEditorAssistContributor
 {
+    @Text( "Show in source" )
+    private static LocalizableText action;
+    
+    static
+    {
+        LocalizableText.init( ShowInSourceActionAssistContributor.class );
+    }
+
     public ShowInSourceActionAssistContributor()
     {
         setId( ID_SHOW_IN_SOURCE_ACTION_CONTRIBUTOR );
@@ -77,7 +86,7 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
         final Property property = property0;
         final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
         
-        contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.action ) + "</a></p>" );
+        contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( action.text() ) + "</a></p>" );
         
         contribution.link
         (
@@ -93,16 +102,6 @@ public final class ShowInSourceActionAssistContributor extends PropertyEditorAss
         
         final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
         section.addContribution( contribution.create() );
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String action;
-        
-        static
-        {
-            initializeMessages( ShowInSourceActionAssistContributor.class.getName(), Resources.class );
-        }
     }
     
 }

@@ -19,7 +19,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.util.SortedSetFactory;
 
 /**
@@ -31,7 +32,18 @@ public final class Status
     public static final String TYPE_MISC_OK = "Sapphire.Miscellaneous.Ok";
     public static final String TYPE_MISC_PROBLEM = "Sapphire.Miscellaneous.Problem";
     
-    private static final Status OK_STATUS = new Status( Severity.OK, TYPE_MISC_OK, Resources.defaultOkMessage, null, SortedSetFactory.<Status>empty() );
+    @Text( "error" )
+    private static LocalizableText defaultErrorMessage;
+    
+    @Text( "ok" )
+    private static LocalizableText defaultOkMessage;
+
+    static
+    {
+        LocalizableText.init( Status.class );
+    }
+
+    private static final Status OK_STATUS = new Status( Severity.OK, TYPE_MISC_OK, defaultOkMessage.text(), null, SortedSetFactory.<Status>empty() );
     
     public static Status createOkStatus()
     {
@@ -54,7 +66,7 @@ public final class Status
         
         if( message == null )
         {
-            message = Resources.defaultErrorMessage;
+            message = defaultErrorMessage.text();
         }
         
         return createErrorStatus( message, exception );
@@ -408,17 +420,6 @@ public final class Status
             }
             
             return result;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String defaultErrorMessage;
-        public static String defaultOkMessage;
-
-        static
-        {
-            initializeMessages( Status.class.getName(), Resources.class );
         }
     }
     

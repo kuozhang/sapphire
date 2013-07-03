@@ -66,11 +66,12 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
@@ -135,7 +136,6 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -167,6 +167,38 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public final class MasterDetailsEditorPage extends SapphireEditorFormPage implements ISapphireEditorActionContributor
 {
+    @Text( "Additional {0} problems not shown..." )
+    private static LocalizableText problemsOverflowMessage;
+    
+    @Text( "two" )
+    private static LocalizableText two;
+    
+    @Text( "three" )
+    private static LocalizableText three;
+    
+    @Text( "four" )
+    private static LocalizableText four;
+    
+    @Text( "five" )
+    private static LocalizableText five;
+    
+    @Text( "six" )
+    private static LocalizableText six;
+    
+    @Text( "seven" )
+    private static LocalizableText seven;
+    
+    @Text( "eight" )
+    private static LocalizableText eight;
+    
+    @Text( "nine" )
+    private static LocalizableText nine;
+    
+    static
+    {
+        LocalizableText.init( MasterDetailsEditorPage.class );
+    }
+
     private RootSection mainSection;
     private ContentOutline contentOutlinePage;
     private IPartListener2 partListener;
@@ -406,7 +438,9 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             separator.setLayoutData( gdhfill() );
                             separator.setBackground( bgcolor );
                             
-                            final Text stack = new Text( composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL );
+                            final org.eclipse.swt.widgets.Text stack 
+                                = new org.eclipse.swt.widgets.Text( composite, SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL );
+                            
                             stack.setLayoutData( gdfill() );
                             stack.setBackground( bgcolor );
                             
@@ -519,14 +553,14 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     
     private Control findFirstFocusableControl( final Control control )
     {
-        if( control instanceof Text || control instanceof Combo || control instanceof Link ||
+        if( control instanceof Combo || control instanceof Link ||
             control instanceof List<?> || control instanceof Table || control instanceof Tree )
         {
             return control;
         }
-        else if( control instanceof Text )
+        else if( control instanceof org.eclipse.swt.widgets.Text )
         {
-            if( ( ( (Text) control ).getStyle() & SWT.READ_ONLY ) == 0 )
+            if( ( ( (org.eclipse.swt.widgets.Text) control ).getStyle() & SWT.READ_ONLY ) == 0 )
             {
                 return control;
             }
@@ -795,7 +829,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 
                 if( count > 10 )
                 {
-                    final String msg = NLS.bind( Resources.problemsOverflowMessage, numberToString( count - 9 ) );
+                    final String msg = problemsOverflowMessage.format( numberToString( count - 9 ) );
                     final String imageKey = ( validation.severity() == org.eclipse.sapphire.modeling.Status.Severity.ERROR ? "error" : "warning" );
                     buffer.append( "<br/><li style=\"image\" value=\"" + imageKey + "\">" + msg + "</li>" );
                 }
@@ -811,14 +845,14 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             {
                 switch( number )
                 {
-                    case 2  : return Resources.two;
-                    case 3  : return Resources.three;
-                    case 4  : return Resources.four;
-                    case 5  : return Resources.five;
-                    case 6  : return Resources.six;
-                    case 7  : return Resources.seven;
-                    case 8  : return Resources.eight;
-                    case 9  : return Resources.nine;
+                    case 2  : return two.text();
+                    case 3  : return three.text();
+                    case 4  : return four.text();
+                    case 5  : return five.text();
+                    case 6  : return six.text();
+                    case 7  : return seven.text();
+                    case 8  : return eight.text();
+                    case 9  : return nine.text();
                     default : return String.valueOf( number );
                 }
             }
@@ -2063,24 +2097,6 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         public void run()
         {
             this.tree.update( this.element, null );
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String problemsOverflowMessage;
-        public static String two;
-        public static String three;
-        public static String four;
-        public static String five;
-        public static String six;
-        public static String seven;
-        public static String eight;
-        public static String nine;
-        
-        static
-        {
-            initializeMessages( MasterDetailsEditorPage.class.getName(), Resources.class );
         }
     }
     

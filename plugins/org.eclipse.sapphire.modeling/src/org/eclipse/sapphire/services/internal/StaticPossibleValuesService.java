@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import java.text.MessageFormat;
 import java.util.Set;
 
 import org.eclipse.sapphire.PropertyDef;
@@ -18,7 +19,6 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -63,7 +63,7 @@ public final class StaticPossibleValuesService extends PossibleValuesService
     @Override
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
     }
     
     @Override

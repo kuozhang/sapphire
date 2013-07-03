@@ -15,8 +15,9 @@ package org.eclipse.sapphire.ui.def.internal;
 import java.lang.reflect.Field;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -30,6 +31,14 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public final class SapphireUiDefMethods
 {
+    @Text( "Part \"{0}\" is not of type \"{1}\" as expected." )
+    private static LocalizableText doesNotImplement;
+    
+    static
+    {
+        LocalizableText.init( SapphireUiDefMethods.class );
+    }
+
     public static PartDef getPartDef( final ISapphireUiDef rootdef,
                                       final String id,
                                       final boolean searchImportedDefinitions,
@@ -43,7 +52,7 @@ public final class SapphireUiDefMethods
                 {
                     if( expectedType != null && ! expectedType.isAssignableFrom( def.getClass() ) )
                     {
-                        final String msg = Resources.bind( Resources.doesNotImplement, id, expectedType.getName() );
+                        final String msg = doesNotImplement.format( id, expectedType.getName() );
                         SapphireUiFrameworkPlugin.logError( msg );
                         
                         return null;
@@ -161,16 +170,6 @@ public final class SapphireUiDefMethods
         }
         
         return property;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String doesNotImplement;
-    
-        static
-        {
-            initializeMessages( SapphireUiDefMethods.class.getName(), Resources.class );
-        }
     }
     
 }

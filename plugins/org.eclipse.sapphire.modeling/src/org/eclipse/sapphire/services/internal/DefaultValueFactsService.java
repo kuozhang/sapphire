@@ -15,10 +15,11 @@ import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.get
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.SensitiveData;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,6 +33,17 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class DefaultValueFactsService extends FactsService
 {
+    @Text( "Default value is {0}." )
+    private static LocalizableText statement;
+    
+    @Text( "Has default value." )
+    private static LocalizableText statementForSensitive;
+    
+    static
+    {
+        LocalizableText.init( DefaultValueFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -42,11 +54,11 @@ public final class DefaultValueFactsService extends FactsService
         {
             if( property.definition().hasAnnotation( SensitiveData.class ) )
             {
-                facts.add( Resources.statementForSensitive );
+                facts.add( statementForSensitive.text() );
             }
             else
             {
-                facts.add( NLS.bind( Resources.statement, defaultValue ) );
+                facts.add( statement.format( defaultValue ) );
             }
         }
     }
@@ -57,17 +69,6 @@ public final class DefaultValueFactsService extends FactsService
         public boolean applicable( final ServiceContext context )
         {
             return ( context.find( ValueProperty.class ) != null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String statement;
-        public static String statementForSensitive;
-        
-        static
-        {
-            initializeMessages( DefaultValueFactsService.class.getName(), Resources.class );
         }
     }
     

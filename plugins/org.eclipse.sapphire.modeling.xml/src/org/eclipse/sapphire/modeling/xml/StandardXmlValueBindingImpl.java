@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
@@ -22,6 +23,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 public final class StandardXmlValueBindingImpl extends XmlValueBindingImpl
 {
+    @Text( "{0}.{1} : {2}" )
+    private static LocalizableText failure; 
+    
+    static
+    {
+        LocalizableText.init( StandardXmlValueBindingImpl.class );
+    }
+
     private XmlPath path;
     private boolean treatExistanceAsValue;
     private String valueWhenPresent;
@@ -113,7 +122,7 @@ public final class StandardXmlValueBindingImpl extends XmlValueBindingImpl
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, property.element().type().getSimpleName(), property.name(), e.getMessage() );
+            final String msg = failure.format( property.element().type().getSimpleName(), property.name(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }
@@ -187,16 +196,6 @@ public final class StandardXmlValueBindingImpl extends XmlValueBindingImpl
         }
         
         return null;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String failure; 
-        
-        static
-        {
-            initializeMessages( StandardXmlValueBindingImpl.class.getName(), Resources.class );
-        }
     }
     
 }

@@ -22,8 +22,9 @@ import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.reflowOnResize;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.swt.SapphireTextPopup;
 import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
@@ -44,8 +45,16 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 public final class LabelPart extends SapphirePart
 {
-    private final static String BREAK_TOKEN = "###brk###";
+    private static final String BREAK_TOKEN = "###brk###";
     
+    @Text( "More details..." )
+    private static LocalizableText moreDetails;
+    
+    static
+    {
+        LocalizableText.init( LabelPart.class );
+    }
+
     private SapphireFormText text;
     private String labelExtendedContent;
     private FunctionResult labelFunctionResult;
@@ -152,7 +161,7 @@ public final class LabelPart extends SapphirePart
                 buf.append(" ");
             }
             buf.append( "<a href=\"action\" nowrap=\"true\">");
-            buf.append( Resources.moreDetails );
+            buf.append( moreDetails );
             buf.append( "</a>" );
             
             this.labelExtendedContent = displayDescription + description.substring( index + BREAK_TOKEN.length(), description.length() );
@@ -192,16 +201,6 @@ public final class LabelPart extends SapphirePart
             final SapphireTextPopup popup = new SapphireTextPopup( this.text.getShell(), position );
             popup.setText( this.labelExtendedContent );
             popup.open();
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String moreDetails;
-        
-        static
-        {
-            initializeMessages( LabelPart.class.getName(), Resources.class );
         }
     }
 

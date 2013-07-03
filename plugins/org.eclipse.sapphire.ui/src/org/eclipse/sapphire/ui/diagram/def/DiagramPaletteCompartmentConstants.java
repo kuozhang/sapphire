@@ -9,7 +9,8 @@
 
 package org.eclipse.sapphire.ui.diagram.def;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -17,21 +18,20 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public class DiagramPaletteCompartmentConstants 
 {
-	public static final String CONNECTIONS_COMPARTMENT_ID = "Sapphire.Diagram.Palette.Connections";
+    @Text( "connections" )
+    private static LocalizableText connectionsCompartmentLabel;
+    
+    @Text( "objects" )
+    private static LocalizableText nodesCompartmentLabel;
+    
+    static
+    {
+        LocalizableText.init( DiagramPaletteCompartmentConstants.class );
+    }
+
+    public static final String CONNECTIONS_COMPARTMENT_ID = "Sapphire.Diagram.Palette.Connections";
 	public static final String NODES_COMPARTMENT_ID = "Sapphire.Diagram.Palette.Nodes";
-	public static final String CONNECTIONS_COMPARTMENT_LABEL = Resources.connectionsCompartmentLabel;
-	public static final String NODES_COMPARTMENT_LABEL = Resources.nodesCompartmentLabel;
-	
-	private static final class Resources extends NLS
-	{
-		public static String connectionsCompartmentLabel;
-		public static String nodesCompartmentLabel;
-		
-	    static
-	    {
-	        initializeMessages( DiagramPaletteCompartmentConstants.class.getName(), Resources.class );
-	    }
-		
-	}
+	public static final String CONNECTIONS_COMPARTMENT_LABEL = connectionsCompartmentLabel.text();
+	public static final String NODES_COMPARTMENT_LABEL = nodesCompartmentLabel.text();
 	
 }

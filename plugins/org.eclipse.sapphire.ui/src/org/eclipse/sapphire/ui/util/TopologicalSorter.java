@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 
 /**
  * Topological sort implementation. Useful for sorting entities in dependency order or for
@@ -40,6 +41,14 @@ public class TopologicalSorter<T>
 {
     private static final String BEFORE_PREFIX = "before:";
     private static final String AFTER_PREFIX = "after:";
+
+    @Text( "Cycle detected: {0}" )
+    private static LocalizableText cycleDetectedMessage; 
+    
+    static
+    {
+        LocalizableText.init( TopologicalSorter.class );
+    }
     
     private Map<String,Entity> entities = new LinkedHashMap<String,Entity>();
     private List<CycleListener> cycleListeners = new ArrayList<CycleListener>();
@@ -405,7 +414,7 @@ public class TopologicalSorter<T>
         @Override
         public void handleCycle( final List<Entity> cycle )
         {
-            this.stream.println( NLS.bind( Resources.cycleDetectedMessage, convertToString( cycle ) ) );
+            this.stream.println( cycleDetectedMessage.format( convertToString( cycle ) ) );
         }
     }
     
@@ -446,22 +455,12 @@ public class TopologicalSorter<T>
         @Override
         public String getMessage()
         {
-            return NLS.bind( Resources.cycleDetectedMessage, convertToString( this.cycle ) );
+            return cycleDetectedMessage.format( convertToString( this.cycle ) );
         }
         
         public List<Entity> getCycle()
         {
             return this.cycle;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String cycleDetectedMessage; 
-    
-        static
-        {
-            initializeMessages( TopologicalSorter.class.getName(), Resources.class );
         }
     }
 

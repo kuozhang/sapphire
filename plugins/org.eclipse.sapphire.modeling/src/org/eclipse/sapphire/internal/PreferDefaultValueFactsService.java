@@ -15,10 +15,11 @@ import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.get
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PreferDefaultValue;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,6 +33,14 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class PreferDefaultValueFactsService extends FactsService
 {
+    @Text( "Recommended value is {0}." )
+    private static LocalizableText fact;
+    
+    static
+    {
+        LocalizableText.init( PreferDefaultValueFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -40,7 +49,7 @@ public final class PreferDefaultValueFactsService extends FactsService
         
         if( defaultValue != null )
         {
-            facts.add( NLS.bind( Resources.fact, defaultValue ) );
+            facts.add( fact.format( defaultValue ) );
         }
     }
     
@@ -57,16 +66,6 @@ public final class PreferDefaultValueFactsService extends FactsService
             }
             
             return false;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String fact;
-        
-        static
-        {
-            initializeMessages( PreferDefaultValueFactsService.class.getName(), Resources.class );
         }
     }
     

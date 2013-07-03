@@ -27,12 +27,14 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -47,7 +49,6 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
@@ -90,6 +91,17 @@ public final class PropertyEditorPart extends FormComponentPart
         FACTORIES.add( new DefaultListPropertyEditorRenderer.Factory() );
     }
     
+    @Text( "Property editor's property reference path \"{0}\" is invalid." )
+    private static LocalizableText invalidPath;
+    
+    @Text( "Child property path \"{1}\" is invalid for \"{0}\"." )
+    private static LocalizableText invalidChildPropertyPath;
+    
+    static
+    {
+        LocalizableText.init( PropertyEditorPart.class );
+    }
+
     private Property property;
     private List<ModelPath> childPropertyPaths;
     private Map<Element,Map<ModelPath,PropertyEditorPart>> childPropertyEditors;
@@ -111,7 +123,7 @@ public final class PropertyEditorPart extends FormComponentPart
         
         if( this.property == null )
         {
-            throw new RuntimeException( NLS.bind( Resources.invalidPath, propertyEditorPartDef.getProperty().text() ) );
+            throw new RuntimeException( invalidPath.format( propertyEditorPartDef.getProperty().text() ) );
         }
         
         // Read the property to ensure that initial events are broadcast and avoid being surprised
@@ -191,7 +203,7 @@ public final class PropertyEditorPart extends FormComponentPart
                     
                     if( invalid )
                     {
-                        final String msg = NLS.bind( Resources.invalidChildPropertyPath, this.property.name(), childPropertyPath.toString() );
+                        final String msg = invalidChildPropertyPath.format( this.property.name(), childPropertyPath.toString() );
                         SapphireUiFrameworkPlugin.logError( msg );
                     }
                     else
@@ -746,17 +758,6 @@ public final class PropertyEditorPart extends FormComponentPart
         }
         
         super.dispose();
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String invalidPath;
-        public static String invalidChildPropertyPath;
-        
-        static
-        {
-            initializeMessages( PropertyEditorPart.class.getName(), Resources.class );
-        }
     }
     
 }

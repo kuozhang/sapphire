@@ -25,11 +25,12 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.LayeredElementBindingImpl;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -40,6 +41,17 @@ import org.eclipse.sapphire.services.PossibleTypesService;
 
 public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
 {
+    @Text( "{0}.{1} : {2}" )
+    private static LocalizableText failure;
+    
+    @Text( "Element name must be specified in @XmlElementBinding.Mapping annotation." )
+    private static LocalizableText mustSpecifyElementNameMsg; 
+    
+    static
+    {
+        LocalizableText.init( StandardXmlElementBindingImpl.class );
+    }
+
     private PossibleTypesService possibleTypesService;
     private Listener possibleTypesServiceListener;
     private XmlPath path;
@@ -134,7 +146,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
                             
                             if( mappingElementName.length() == 0 )
                             {
-                                throw new RuntimeException( Resources.mustSpecifyElementNameMsg );
+                                throw new RuntimeException( mustSpecifyElementNameMsg.text() );
                             }
 
                             this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
@@ -152,7 +164,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, element.type().getSimpleName(), property.name(), e.getMessage() );
+            final String msg = failure.format( element.type().getSimpleName(), property.name(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }
@@ -308,17 +320,6 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
         if( this.possibleTypesService != null )
         {
             this.possibleTypesService.detach( this.possibleTypesServiceListener );
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String failure;
-        public static String mustSpecifyElementNameMsg; 
-        
-        static
-        {
-            initializeMessages( StandardXmlElementBindingImpl.class.getName(), Resources.class );
         }
     }
     

@@ -28,9 +28,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,6 +49,14 @@ import org.xml.sax.InputSource;
 
 public final class XmlDocumentSchemaParser
 {
+    @Text( "Failed while parsing XML Schema located at \"{0}\"." )
+    private static LocalizableText parseFailed;
+    
+    static
+    {
+        LocalizableText.init( XmlDocumentSchemaParser.class );
+    }
+
     public static XmlDocumentSchema parse( final URL url,
                                            final Resolver resolver )
     {
@@ -554,7 +563,7 @@ public final class XmlDocumentSchemaParser
         }
         catch( Exception e )
         {
-            final String message = NLS.bind( Resources.parseFailed, url.toString() );
+            final String message = parseFailed.format( url.toString() );
             LoggingService.log( Status.createErrorStatus( message, e ) );
         }
         
@@ -723,16 +732,6 @@ public final class XmlDocumentSchemaParser
         public Iterator<Element> iterator() 
         {
             return this;
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String parseFailed;
-        
-        static
-        {
-            initializeMessages( XmlDocumentSchemaParser.class.getName(), Resources.class );
         }
     }
 

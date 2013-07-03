@@ -13,11 +13,12 @@ package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
@@ -29,6 +30,17 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public abstract class VersionCompatibilityValidationService extends ValidationService
 {
+    @Text( "Not compatible with version {0} of {1}." )
+    private static LocalizableText notCompatibleWithVersionMessage;
+    
+    @Text( "Version constraint exists, but no version constraint target was found." )
+    private static LocalizableText versionConstraintTargetNotFoundMessage;
+    
+    static
+    {
+        LocalizableText.init( VersionCompatibilityValidationService.class );
+    }
+
     private MasterVersionCompatibilityService versionCompatibilityService;
     private Listener versionCompatibilityServiceListener;
     
@@ -70,11 +82,11 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
             
             if( version == null )
             {
-                message = Resources.versionConstraintTargetNotFoundMessage;
+                message = versionConstraintTargetNotFoundMessage.text();
             }
             else
             {
-                message = Resources.bind( Resources.notCompatibleWithVersionMessage, version.toString(), versioned );
+                message = notCompatibleWithVersionMessage.format( version.toString(), versioned );
             }
             
             return Status.createErrorStatus( message );
@@ -91,17 +103,6 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
         if( this.versionCompatibilityService != null )
         {
             this.versionCompatibilityService.detach( this.versionCompatibilityServiceListener );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String notCompatibleWithVersionMessage;
-        public static String versionConstraintTargetNotFoundMessage;
-        
-        static
-        {
-            initializeMessages( VersionCompatibilityValidationService.class.getName(), Resources.class );
         }
     }
 

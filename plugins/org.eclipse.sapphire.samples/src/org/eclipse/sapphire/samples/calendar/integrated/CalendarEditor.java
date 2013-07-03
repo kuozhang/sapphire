@@ -14,8 +14,9 @@ package org.eclipse.sapphire.samples.calendar.integrated;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.samples.calendar.ICalendar;
 import org.eclipse.sapphire.samples.calendar.integrated.internal.CalendarResource;
@@ -36,6 +37,14 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public final class CalendarEditor extends SapphireEditor
 {
+    @Text( "Contacts" )
+    private static LocalizableText contactsPageName;
+    
+    static
+    {
+        LocalizableText.init( CalendarEditor.class );
+    }
+
     private StructuredTextEditor calendarSourceEditor;
     private StructuredTextEditor contactsSourceEditor;
     
@@ -104,7 +113,7 @@ public final class CalendarEditor extends SapphireEditor
         (
             this, this.modelContacts,
             DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).page(),
-            Resources.contactsPageName
+            contactsPageName.text()
         );
         
         addPage( 1, this.contactsDesignPage );
@@ -138,16 +147,6 @@ public final class CalendarEditor extends SapphireEditor
     public ContactRepository getContactRepository()
     {
         return this.modelContacts;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String contactsPageName;
-        
-        static
-        {
-            initializeMessages( CalendarEditor.class.getName(), Resources.class );
-        }
     }
     
 }

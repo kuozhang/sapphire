@@ -35,7 +35,9 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyVisitor;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.FileResourceStore;
@@ -44,7 +46,6 @@ import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.XmlAttribute;
 import org.eclipse.sapphire.modeling.xml.XmlComment;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
@@ -72,6 +73,14 @@ public final class CreateNormalizedXmlSchemaOpMethods
 {
     private static final String NS_SCHEMA = "http://www.w3.org/2001/XMLSchema";
 
+    @Text( "Creating normalized XML schema file..." )
+    private static LocalizableText executeTaskName;
+    
+    static
+    {
+        LocalizableText.init( CreateNormalizedXmlSchemaOpMethods.class );
+    }
+
     public static Status execute( final CreateNormalizedXmlSchemaOp operation,
                                   ProgressMonitor monitor )
     {
@@ -80,7 +89,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
             monitor = new ProgressMonitor();
         }
         
-        monitor.beginTask( Resources.executeTaskName, 2 );
+        monitor.beginTask( executeTaskName.text(), 2 );
         
         try
         {
@@ -1215,16 +1224,6 @@ public final class CreateNormalizedXmlSchemaOpMethods
             {
                 return 3;
             }
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String executeTaskName;
-        
-        static
-        {
-            initializeMessages( CreateNormalizedXmlSchemaOpMethods.class.getName(), Resources.class );
         }
     }
     

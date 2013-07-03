@@ -16,8 +16,9 @@ import static org.eclipse.sapphire.modeling.el.internal.FunctionUtils.isDecimalS
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Arithmetic unary minus function. 
@@ -27,6 +28,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public final class ArithmeticNegationFunction extends Function
 {
+    @Text( "Cannot apply arithmetic negation operator to {0} type." )
+    private static LocalizableText cannotApplyMessage;
+    
+    static
+    {
+        LocalizableText.init( ArithmeticNegationFunction.class );
+    }
+
     public static ArithmeticNegationFunction create( final Function operand )
     {
         final ArithmeticNegationFunction function = new ArithmeticNegationFunction();
@@ -116,20 +125,10 @@ public final class ArithmeticNegationFunction extends Function
                 }
                 else
                 {
-                    throw new FunctionException( NLS.bind( Resources.cannotApplyMessage, a.getClass().getName() ) );
+                    throw new FunctionException( cannotApplyMessage.format( a.getClass().getName() ) );
                 }
             }
         };
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String cannotApplyMessage;
-        
-        static
-        {
-            initializeMessages( ArithmeticNegationFunction.class.getName(), Resources.class );
-        }
     }
 
 }

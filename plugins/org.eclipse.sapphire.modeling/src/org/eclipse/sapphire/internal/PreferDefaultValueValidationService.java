@@ -15,14 +15,15 @@ import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.get
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PreferDefaultValue;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -33,6 +34,14 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class PreferDefaultValueValidationService extends ValidationService
 {
+    @Text( "{0} should be {1}." )
+    private static LocalizableText message;
+    
+    static
+    {
+        LocalizableText.init( PreferDefaultValueValidationService.class );
+    }
+
     private Listener listener;
     
     @Override
@@ -64,8 +73,8 @@ public final class PreferDefaultValueValidationService extends ValidationService
             
             if( def != null && ! def.equals( text ) )
             {
-                final String message = NLS.bind( Resources.message, value.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ), def );
-                return Status.createWarningStatus( message );
+                final String msg = message.format( value.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ), def );
+                return Status.createWarningStatus( msg );
             }
         }
         
@@ -96,16 +105,6 @@ public final class PreferDefaultValueValidationService extends ValidationService
             }
             
             return false;
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String message;
-        
-        static
-        {
-            initializeMessages( PreferDefaultValueValidationService.class.getName(), Resources.class );
         }
     }
     

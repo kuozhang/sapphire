@@ -24,13 +24,14 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.InitialValueServiceData;
@@ -43,6 +44,26 @@ import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 
 public final class CreateWorkspaceFileOpServices
 {
+    @Text( "Project \"{0}\" does not exist or is not accessible." )
+    private static LocalizableText projectDoesNotExist;
+    
+    @Text( "File \"{0}\" already exists." )
+    private static LocalizableText fileExists;
+    
+    @Text( "File extension should be \"{0}\"." )
+    private static LocalizableText invalidFileExtensionOne;
+    
+    @Text( "File extension should be \"{0}\" or \"{1}\"." )
+    private static LocalizableText invalidFileExtensionTwo;
+    
+    @Text( "File extension should be one of \"{0}\"." )
+    private static LocalizableText invalidFileExtensionMultiple;
+
+    static
+    {
+        LocalizableText.init( CreateWorkspaceFileOpServices.class );
+    }
+
     public CreateWorkspaceFileOpServices() {}
     
     public static final class FolderValidationService extends ValidationService
@@ -60,7 +81,7 @@ public final class CreateWorkspaceFileOpServices
                 
                 if( resource == null || ! ( resource instanceof IProject && resource.isAccessible() ) )
                 {
-                    final String msg = NLS.bind( Resources.projectDoesNotExist, projectName );
+                    final String msg = projectDoesNotExist.format( projectName );
                     return Status.createErrorStatus( msg );
                 }
             }
@@ -180,11 +201,11 @@ public final class CreateWorkspaceFileOpServices
                                 
                                 if( count == 1 )
                                 {
-                                    message = NLS.bind( Resources.invalidFileExtensionOne, extensions.get( 0 ) );
+                                    message = invalidFileExtensionOne.format( extensions.get( 0 ) );
                                 }
                                 else if( count == 2 )
                                 {
-                                    message = NLS.bind( Resources.invalidFileExtensionTwo, extensions.get( 0 ), extensions.get( 1 ) );
+                                    message = invalidFileExtensionTwo.format( extensions.get( 0 ), extensions.get( 1 ) );
                                 }
                                 else
                                 {
@@ -200,7 +221,7 @@ public final class CreateWorkspaceFileOpServices
                                         buf.append( ext );
                                     }
                                     
-                                    message = NLS.bind( Resources.invalidFileExtensionMultiple, buf.toString() ); 
+                                    message = invalidFileExtensionMultiple.format( buf.toString() ); 
                                 }
                                 
                                 return Status.createWarningStatus( message );
@@ -215,27 +236,12 @@ public final class CreateWorkspaceFileOpServices
                 if( fileHandle != null && fileHandle.exists() && 
                     operation.getOverwriteExistingFile().content() == false )
                 {
-                    final String msg = NLS.bind( Resources.fileExists, fileName );
+                    final String msg = fileExists.format( fileName );
                     return Status.factoryForLeaf().severity( Status.Severity.ERROR ).type( PROBLEM_FILE_EXISTS ).message( msg ).create();
                 }
             }
             
             return Status.createOkStatus();
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String projectDoesNotExist;
-        public static String fileExists;
-        public static String invalidFileExtensionOne;
-        public static String invalidFileExtensionTwo;
-        public static String invalidFileExtensionMultiple;
-
-        
-        static
-        {
-            initializeMessages( CreateWorkspaceFileOpServices.class.getName(), Resources.class );
         }
     }
     

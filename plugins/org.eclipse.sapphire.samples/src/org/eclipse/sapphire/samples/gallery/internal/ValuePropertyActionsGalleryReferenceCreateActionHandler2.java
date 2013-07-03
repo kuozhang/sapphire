@@ -11,12 +11,13 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
+import java.text.MessageFormat;
+
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGallery;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGalleryEntity;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -59,7 +60,7 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler2 exte
                     }
                     else if( isEntityDefined( trimmed ) )
                     {
-                        return NLS.bind( "Entity \"{0}\" already exists.", trimmed );
+                        return MessageFormat.format( "Entity \"{0}\" already exists.", trimmed );
                     }
                 }
                 

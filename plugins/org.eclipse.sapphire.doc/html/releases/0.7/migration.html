@@ -79,6 +79,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ModelElementList">ModelElementList</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
   <li><a href="#ModelProperty">ModelProperty</a></li>
+  <li><a href="#NLS">NLS</a></li>
   <li><a href="#PossibleValuesService">PossibleValuesService</a></li>
   <li><a href="#PropertyContentEvent">PropertyContentEvent</a></li>
   <li><a href="#PropertyEnablementEvent">PropertyEnablementEvent</a></li>
@@ -1453,6 +1454,58 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">property.</span>name()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="NLS">NLS</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public final class Resources</span> extends NLS 
+<span class="unaffected">{
+    public static</span> String <span class="unaffected">title;
+    public static</span> String <span class="unaffected">message;
+
+    static 
+    {</span>
+        initializeMessages<span class="unaffected">(</span> Resources.class.getName(), <span class="unaffected">Resources.class );
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public final class Resources 
+{
+    public static</span> LocalizableText <span class="unaffected">title;
+    public static</span> LocalizableText <span class="unaffected">message;
+
+    static 
+    {</span>
+        LocalizableText.init<span class="unaffected">( Resources.class );
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">String text = Resources.title;</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">String text = Resources.title</span>.text()<span class="unaffected">;</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">String text =</span> NLS.bind( <span class="unaffected">Resources.message</span>, <span class="unaffected">x, y</span> )<span class="unaffected">;</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">String text = Resources.message</span>.format( <span class="unaffected">x, y</span> )<span class="unaffected">;</span></code></pre>
     </td>
   </tr>
 </table>

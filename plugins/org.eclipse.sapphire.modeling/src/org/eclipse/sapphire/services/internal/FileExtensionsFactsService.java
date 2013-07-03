@@ -14,8 +14,9 @@ package org.eclipse.sapphire.services.internal;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -30,6 +31,23 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class FileExtensionsFactsService extends FactsService
 {
+    @Text( "Must have \"{0}\" file extension." )
+    private static LocalizableText statementForOne;
+    
+    @Text( "Must have either \"{0}\" or \"{1}\" file extension." )
+    private static LocalizableText statementForTwo;
+    
+    @Text( "Must have either \"{0}\", \"{1}\" or \"{2}\" file extension." )
+    private static LocalizableText statementForThree;
+    
+    @Text( "Must have one of these file extensions: {0}." )
+    private static LocalizableText statementForMany;
+    
+    static
+    {
+        LocalizableText.init( FileExtensionsFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -41,15 +59,15 @@ public final class FileExtensionsFactsService extends FactsService
         {
             if( count == 1 )
             {
-                facts.add( NLS.bind( Resources.statementForOne, extensions.get( 0 ) ) );
+                facts.add( statementForOne.format( extensions.get( 0 ) ) );
             }
             else if( count == 2 )
             {
-                facts.add( NLS.bind( Resources.statementForTwo, extensions.get( 0 ), extensions.get( 1 ) ) );
+                facts.add( statementForTwo.format( extensions.get( 0 ), extensions.get( 1 ) ) );
             }
             else if( count == 3 )
             {
-                facts.add( NLS.bind( Resources.statementForThree, extensions.get( 0 ), extensions.get( 1 ), extensions.get( 2 ) ) );
+                facts.add( statementForThree.format( extensions.get( 0 ), extensions.get( 1 ), extensions.get( 2 ) ) );
             }
             else
             {
@@ -67,7 +85,7 @@ public final class FileExtensionsFactsService extends FactsService
                     buf.append( '"' );
                 }
                 
-                facts.add( NLS.bind( Resources.statementForMany, buf.toString() ) );
+                facts.add( statementForMany.format( buf.toString() ) );
             }
         }
     }
@@ -79,19 +97,6 @@ public final class FileExtensionsFactsService extends FactsService
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( FileExtensionsService.class ) != null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String statementForOne;
-        public static String statementForTwo;
-        public static String statementForThree;
-        public static String statementForMany;
-        
-        static
-        {
-            initializeMessages( FileExtensionsFactsService.class.getName(), Resources.class );
         }
     }
     

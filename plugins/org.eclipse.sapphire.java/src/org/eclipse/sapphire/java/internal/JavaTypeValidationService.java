@@ -16,8 +16,10 @@ import java.util.Set;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
@@ -26,7 +28,6 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -38,6 +39,38 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class JavaTypeValidationService extends ValidationService
 {
+    @Text( "Class {0} does not implement or extend {1}." )
+    private static LocalizableText classDoesNotImplementOrExtend;
+    
+    @Text( "Interface {0} does not extend {1}." )
+    private static LocalizableText interfaceDoesNotExtend;
+    
+    @Text( "Class {0} does not implement or extend one of [{1}]." )
+    private static LocalizableText classDoesNotImplementOrExtendOneOf;
+    
+    @Text( "Interface {0} does not extend one of [{1}]." )
+    private static LocalizableText interfaceDoesNotExtendOneOf;
+    
+    @Text( "Type {0} is an abstract class, which is not allowed for {1}." )
+    private static LocalizableText abstractClassNotAllowed;
+    
+    @Text( "Type {0} is a class, which is not allowed for {1}." )
+    private static LocalizableText classNotAllowed;
+    
+    @Text( "Type {0} is an interface, which is not allowed for {1}." )
+    private static LocalizableText interfaceNotAllowed;
+    
+    @Text( "Type {0} is an annotation, which is not allowed for {1}." )
+    private static LocalizableText annotationNotAllowed;
+    
+    @Text( "Type {0} is an enum, which is not allowed for {1}." )
+    private static LocalizableText enumNotAllowed;
+    
+    static
+    {
+        LocalizableText.init( JavaTypeValidationService.class );
+    }
+
     @Override
     protected void init()
     {
@@ -97,7 +130,7 @@ public final class JavaTypeValidationService extends ValidationService
                     if( ! kinds.contains( JavaTypeKind.CLASS ) )
                     {
                         final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
-                        final String msg = Resources.bind( Resources.classNotAllowed, val, label );
+                        final String msg = classNotAllowed.format( val, label );
                         return Status.createErrorStatus( msg );
                     }
                     
@@ -108,7 +141,7 @@ public final class JavaTypeValidationService extends ValidationService
                     if( ! kinds.contains( JavaTypeKind.ABSTRACT_CLASS ) )
                     {
                         final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
-                        final String msg = Resources.bind( Resources.abstractClassNotAllowed, val, label );
+                        final String msg = abstractClassNotAllowed.format( val, label );
                         return Status.createErrorStatus( msg );
                     }
                     
@@ -119,7 +152,7 @@ public final class JavaTypeValidationService extends ValidationService
                     if( ! kinds.contains( JavaTypeKind.INTERFACE ) )
                     {
                         final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
-                        final String msg = Resources.bind( Resources.interfaceNotAllowed, val, label );
+                        final String msg = interfaceNotAllowed.format( val, label );
                         return Status.createErrorStatus( msg );
                     }
                     
@@ -130,7 +163,7 @@ public final class JavaTypeValidationService extends ValidationService
                     if( ! kinds.contains( JavaTypeKind.ANNOTATION ) )
                     {
                         final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
-                        final String msg = Resources.bind( Resources.annotationNotAllowed, val, label );
+                        final String msg = annotationNotAllowed.format( val, label );
                         return Status.createErrorStatus( msg );
                     }
                     
@@ -141,7 +174,7 @@ public final class JavaTypeValidationService extends ValidationService
                     if( ! kinds.contains( JavaTypeKind.ENUM ) )
                     {
                         final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
-                        final String msg = Resources.bind( Resources.enumNotAllowed, val, label );
+                        final String msg = enumNotAllowed.format( val, label );
                         return Status.createErrorStatus( msg );
                     }
                     
@@ -161,8 +194,8 @@ public final class JavaTypeValidationService extends ValidationService
                     {
                         if( ! type.isOfType( baseType ) )
                         {
-                            final String template = ( type.kind() == JavaTypeKind.INTERFACE ? Resources.interfaceDoesNotExtend : Resources.classDoesNotImplementOrExtend );
-                            final String msg = Resources.bind( template, val, baseType );
+                            final LocalizableText template = ( type.kind() == JavaTypeKind.INTERFACE ? interfaceDoesNotExtend : classDoesNotImplementOrExtend );
+                            final String msg = template.format( val, baseType );
                             return Status.createErrorStatus( msg );
                         }
                     }
@@ -194,8 +227,8 @@ public final class JavaTypeValidationService extends ValidationService
                             list.append( baseType );
                         }
                         
-                        final String template = ( type.kind() == JavaTypeKind.INTERFACE ? Resources.interfaceDoesNotExtendOneOf : Resources.classDoesNotImplementOrExtendOneOf );
-                        final String msg = Resources.bind( template, val, list.toString() );
+                        final LocalizableText template = ( type.kind() == JavaTypeKind.INTERFACE ? interfaceDoesNotExtendOneOf : classDoesNotImplementOrExtendOneOf );
+                        final String msg = template.format( val, list.toString() );
                         return Status.createErrorStatus( msg );
                     }
                 }
@@ -223,24 +256,6 @@ public final class JavaTypeValidationService extends ValidationService
             }
             
             return false;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String classDoesNotImplementOrExtend;
-        public static String interfaceDoesNotExtend;
-        public static String classDoesNotImplementOrExtendOneOf;
-        public static String interfaceDoesNotExtendOneOf;
-        public static String abstractClassNotAllowed;
-        public static String classNotAllowed;
-        public static String interfaceNotAllowed;
-        public static String annotationNotAllowed;
-        public static String enumNotAllowed;
-        
-        static
-        {
-            initializeMessages( JavaTypeValidationService.class.getName(), Resources.class );
         }
     }
     

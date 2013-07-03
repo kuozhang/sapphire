@@ -16,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -39,6 +40,56 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class JavaTypeConstraintFactsService extends FactsService
 {
+    @Text( "a concrete class" )
+    private static LocalizableText termConcreteClass;
+    
+    @Text( "an abstract class" )
+    private static LocalizableText termAbstractClass;
+    
+    @Text( "an interface" )
+    private static LocalizableText termInterface;
+    
+    @Text( "an annotation" )
+    private static LocalizableText termAnnotation;
+    
+    @Text( "an enumeration" )
+    private static LocalizableText termEnumeration;
+    
+    @Text( "Must be {0}." )
+    private static LocalizableText statementKindOne;
+    
+    @Text( "Must be {0} or {1}." )
+    private static LocalizableText statementKindTwo;
+    
+    @Text( "Must be {0}, {1} or {2}." )
+    private static LocalizableText statementKindThree;
+    
+    @Text( "Must be {0}, {1}, {2} or {3}." )
+    private static LocalizableText statementKindFour;
+    
+    @Text( "Must {0} {1}." )
+    private static LocalizableText statementTypeOne;
+    
+    @Text( "Must implement or extend one of: {0}." )
+    private static LocalizableText statementTypeOneOf;
+    
+    @Text( "Must implement or extend all: {0}." )
+    private static LocalizableText statementTypeAll;
+    
+    @Text( "implement" )
+    private static LocalizableText verbImplement;
+    
+    @Text( "extend" )
+    private static LocalizableText verbExtend;
+    
+    @Text( "implement or extend" )
+    private static LocalizableText verbImplementOrExtend;        
+    
+    static
+    {
+        LocalizableText.init( JavaTypeConstraintFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -52,19 +103,19 @@ public final class JavaTypeConstraintFactsService extends FactsService
         {
             if( kinds.size() == 1 )
             {
-                facts.add( NLS.bind( Resources.statementKindOne, term( kinds.get( 0 ) ) ) );
+                facts.add( statementKindOne.format( term( kinds.get( 0 ) ) ) );
             }
             else if( kinds.size() == 2 )
             {
-                facts.add( NLS.bind( Resources.statementKindTwo, term( kinds.get( 0 ) ), term( kinds.get( 1 ) ) ) );
+                facts.add( statementKindTwo.format( term( kinds.get( 0 ) ), term( kinds.get( 1 ) ) ) );
             }
             else if( kinds.size() == 3 )
             {
-                facts.add( NLS.bind( Resources.statementKindThree, term( kinds.get( 0 ) ), term( kinds.get( 1 ) ), term( kinds.get( 2 ) ) ) );
+                facts.add( statementKindThree.format( term( kinds.get( 0 ) ), term( kinds.get( 1 ) ), term( kinds.get( 2 ) ) ) );
             }
             else if( kinds.size() == 4 )
             {
-                facts.add( NLS.bind( Resources.statementKindFour, term( kinds.get( 0 ) ), term( kinds.get( 1 ) ), term( kinds.get( 2 ) ), term( kinds.get( 3 ) ) ) );
+                facts.add( statementKindFour.format( term( kinds.get( 0 ) ), term( kinds.get( 1 ) ), term( kinds.get( 2 ) ), term( kinds.get( 3 ) ) ) );
             }
         }
         
@@ -75,7 +126,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
             if( types.size() == 1 )
             {
                 final String typeName = types.get( 0 );
-                String verb = Resources.verbImplementOrExtend;
+                String verb = verbImplementOrExtend.text();
                 
                 final ReferenceService referenceService = property.service( ReferenceService.class );
                 
@@ -98,7 +149,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
                         
                         if( k == JavaTypeKind.CLASS || k == JavaTypeKind.ABSTRACT_CLASS )
                         {
-                            verb = Resources.verbExtend;
+                            verb = verbExtend.text();
                         }
                         else if( k == JavaTypeKind.INTERFACE )
                         {
@@ -119,17 +170,17 @@ public final class JavaTypeConstraintFactsService extends FactsService
                             
                             if( allowsInterface && ! allowsClass )
                             {
-                                verb = Resources.verbExtend;
+                                verb = verbExtend.text();
                             }
                             else if( allowsClass && ! allowsInterface )
                             {
-                                verb = Resources.verbImplement;
+                                verb = verbImplement.text();
                             }
                         }
                     }
                 }
                 
-                facts.add( NLS.bind( Resources.statementTypeOne, verb, typeName ) );
+                facts.add( statementTypeOne.format( verb, typeName ) );
             }
             else
             {
@@ -149,11 +200,11 @@ public final class JavaTypeConstraintFactsService extends FactsService
                 
                 if( behavior == JavaTypeConstraintBehavior.AT_LEAST_ONE )
                 {
-                    facts.add( NLS.bind( Resources.statementTypeOneOf, buf.toString() ) );
+                    facts.add( statementTypeOneOf.format( buf.toString() ) );
                 }
                 else if( behavior == JavaTypeConstraintBehavior.ALL )
                 {
-                    facts.add( NLS.bind( Resources.statementTypeAll, buf.toString() ) );
+                    facts.add( statementTypeAll.format( buf.toString() ) );
                 }
                 else
                 {
@@ -167,11 +218,11 @@ public final class JavaTypeConstraintFactsService extends FactsService
     {
         switch( kind )
         {
-            case CLASS:           return Resources.termConcreteClass;
-            case ABSTRACT_CLASS:  return Resources.termAbstractClass;
-            case INTERFACE:       return Resources.termInterface;
-            case ANNOTATION:      return Resources.termAnnotation;
-            case ENUM:            return Resources.termEnumeration;
+            case CLASS:           return termConcreteClass.text();
+            case ABSTRACT_CLASS:  return termAbstractClass.text();
+            case INTERFACE:       return termInterface.text();
+            case ANNOTATION:      return termAnnotation.text();
+            case ENUM:            return termEnumeration.text();
             default:              throw new IllegalStateException();
         }
     }
@@ -183,30 +234,6 @@ public final class JavaTypeConstraintFactsService extends FactsService
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( JavaTypeConstraintService.class ) != null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String termConcreteClass;
-        public static String termAbstractClass;
-        public static String termInterface;
-        public static String termAnnotation;
-        public static String termEnumeration;
-        public static String statementKindOne;
-        public static String statementKindTwo;
-        public static String statementKindThree;
-        public static String statementKindFour;
-        public static String statementTypeOne;
-        public static String statementTypeOneOf;
-        public static String statementTypeAll;
-        public static String verbImplement;
-        public static String verbExtend;
-        public static String verbImplementOrExtend;        
-        
-        static
-        {
-            initializeMessages( JavaTypeConstraintFactsService.class.getName(), Resources.class );
         }
     }
     

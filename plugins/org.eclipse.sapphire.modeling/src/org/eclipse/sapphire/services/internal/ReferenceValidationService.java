@@ -13,14 +13,15 @@ package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,6 +33,14 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class ReferenceValidationService extends ValidationService
 {
+    @Text( "Could not resolve {0} \"{1}\"." )
+    private static LocalizableText message;
+    
+    static
+    {
+        LocalizableText.init( ReferenceValidationService.class );
+    }
+
     private ReferenceService referenceService;
     private Listener referenceServiceListener;
     
@@ -69,7 +78,7 @@ public final class ReferenceValidationService extends ValidationService
             final ValueProperty property = value.definition();
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
             final String str = value.text();
-            final String msg = NLS.bind( Resources.message, label, str );
+            final String msg = message.format( label, str );
             return Status.createErrorStatus( msg );
         }
         
@@ -94,16 +103,6 @@ public final class ReferenceValidationService extends ValidationService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( Reference.class ) && property.hasAnnotation( MustExist.class ) );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String message;
-        
-        static
-        {
-            initializeMessages( ReferenceValidationService.class.getName(), Resources.class );
         }
     }
     

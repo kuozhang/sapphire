@@ -21,8 +21,9 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
@@ -44,6 +45,14 @@ import org.eclipse.ui.IFileEditorInput;
 
 public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 {
+    @Text( "Save as Image" )
+    private static LocalizableText saveAsImageMessage;
+
+    static
+    {
+        LocalizableText.init( SaveAsImageDiagramActionHandler.class );
+    }
+
     @Override
     protected Object run( final SapphireRenderingContext context )
     {
@@ -80,7 +89,7 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 
             dialog.setFilterExtensions( new String[] { "*.png" } );
 
-            dialog.setText( Resources.saveAsImageMessage );
+            dialog.setText( saveAsImageMessage.text() );
 
             dialog.setOverwrite( true );
 
@@ -145,16 +154,6 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
         }
 
         return null;
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String saveAsImageMessage;
-
-        static
-        {
-            initializeMessages( SaveAsImageDiagramActionHandler.class.getName(), Resources.class );
-        }
     }
 
 }

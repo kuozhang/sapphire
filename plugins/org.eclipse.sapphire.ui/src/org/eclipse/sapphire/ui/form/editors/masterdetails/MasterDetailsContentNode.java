@@ -32,10 +32,12 @@ import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
@@ -47,7 +49,6 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartValidationEvent;
@@ -85,6 +86,17 @@ public final class MasterDetailsContentNode
 
     private static final ImageData IMG_LEAF_NODE
         = ImageData.readFromClassLoader( MasterDetailsContentNode.class, "LeafNode.png" ).required();
+
+    @Text( "Could not resolve node \"{0}\"." )
+    private static LocalizableText couldNotResolveNode;
+    
+    @Text( "Could not resolve section = \"{0}\"." )
+    private static LocalizableText couldNotResolveSection;
+    
+    static
+    {
+        LocalizableText.init( MasterDetailsContentNode.class );
+    }
 
     private MasterDetailsContentOutline contentTree;
     private MasterDetailsContentNodeDef definition;
@@ -204,7 +216,7 @@ public final class MasterDetailsContentNode
                 
                 if( sectionDefinition == null )
                 {
-                    final String msg = NLS.bind( Resources.couldNotResolveSection, sectionReference.getSection().text() );
+                    final String msg = couldNotResolveSection.format( sectionReference.getSection().text() );
                     throw new RuntimeException( msg );
                 }
                 
@@ -254,7 +266,7 @@ public final class MasterDetailsContentNode
                 
                 if( entry == null )
                 {
-                    final String msg = NLS.bind( Resources.couldNotResolveNode, inc.getPart() );
+                    final String msg = couldNotResolveNode.format( inc.getPart() );
                     throw new RuntimeException( msg );
                 }
 
@@ -1022,17 +1034,6 @@ public final class MasterDetailsContentNode
         public MasterDetailsContentNode part()
         {
             return (MasterDetailsContentNode) super.part();
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String couldNotResolveNode;
-        public static String couldNotResolveSection;
-        
-        static
-        {
-            initializeMessages( MasterDetailsContentNode.class.getName(), Resources.class );
         }
     }
     

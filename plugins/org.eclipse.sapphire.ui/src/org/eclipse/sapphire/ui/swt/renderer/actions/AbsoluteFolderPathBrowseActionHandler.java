@@ -14,11 +14,12 @@ package org.eclipse.sapphire.ui.swt.renderer.actions;
 import java.io.File;
 
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -33,6 +34,14 @@ public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionH
 {
     public static final String ID = "Sapphire.Browse.Folder.Absolute";
     
+    @Text( "absolute fol&der path" )
+    private static LocalizableText label;
+
+    static 
+    {
+        LocalizableText.init( AbsoluteFolderPathBrowseActionHandler.class );
+    }
+
     @Override
     public void init( final SapphireAction action,
                       final ActionHandlerDef def )
@@ -40,7 +49,7 @@ public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionH
         super.init( action, def );
 
         setId( ID );
-        setLabel( Resources.label );
+        setLabel( label.text() );
         addImage( ImageData.readFromClassLoader( AbsoluteFolderPathBrowseActionHandler.class, "Folder.png" ).required() );
     }
 
@@ -74,14 +83,4 @@ public class AbsoluteFolderPathBrowseActionHandler extends SapphireBrowseActionH
         return dialog.open();
     }
     
-    private static final class Resources extends NLS 
-    {
-        public static String label;
-
-        static 
-        {
-            initializeMessages( AbsoluteFolderPathBrowseActionHandler.class.getName(), Resources.class );
-        }
-    }
-
 }

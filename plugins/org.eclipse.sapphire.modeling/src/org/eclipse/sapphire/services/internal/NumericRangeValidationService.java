@@ -11,14 +11,15 @@
 
 package org.eclipse.sapphire.services.internal;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.ValueKeyword;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -31,6 +32,17 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class NumericRangeValidationService extends ValidationService
 {
+    @Text( "{0} is smaller than the minimum allowed value ({1})." )
+    private static LocalizableText smallerThanMinimumMessage;
+    
+    @Text( "{0} is larger than the maximum allowed value ({1})." )
+    private static LocalizableText largerThanMaxiumMessage;
+
+    static
+    {
+        LocalizableText.init( NumericRangeValidationService.class );
+    }
+
     private Comparable min;
     private Comparable max;
     
@@ -71,13 +83,13 @@ public final class NumericRangeValidationService extends ValidationService
             
             if( this.min != null && val.compareTo( this.min ) < 0 )
             {
-                final String msg = NLS.bind( Resources.smallerThanMinimumMessage, val, normalizeForDisplay( property, this.min ) );
+                final String msg = smallerThanMinimumMessage.format( val, normalizeForDisplay( property, this.min ) );
                 return Status.createErrorStatus( msg );
             }
             
             if( this.max != null && val.compareTo( this.max ) > 0 )
             {
-                final String msg = NLS.bind( Resources.largerThanMaxiumMessage, val, normalizeForDisplay( property, this.max ) );
+                final String msg = largerThanMaxiumMessage.format( val, normalizeForDisplay( property, this.max ) );
                 return Status.createErrorStatus( msg );                
             }
         }
@@ -107,17 +119,6 @@ public final class NumericRangeValidationService extends ValidationService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( NumericRange.class ) && Number.class.isAssignableFrom( property.getTypeClass() ) );
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String smallerThanMinimumMessage;
-        public static String largerThanMaxiumMessage;
-
-        static
-        {
-            initializeMessages( NumericRangeValidationService.class.getName(), Resources.class );
         }
     }
 

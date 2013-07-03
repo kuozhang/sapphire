@@ -11,11 +11,12 @@
 
 package org.eclipse.sapphire.ui.internal;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PartFunctionContext;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 
@@ -30,6 +31,14 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 
 public final class StateFunction extends Function
 {
+    @Text( "Editor page not found." )
+    private static LocalizableText editorPageNotFound;
+    
+    static
+    {
+        LocalizableText.init( StateFunction.class );
+    }
+
     @Override
     public String name()
     {
@@ -53,22 +62,12 @@ public final class StateFunction extends Function
                 
                 if( page == null )
                 {
-                    throw new FunctionException( Resources.editorPageNotFound );
+                    throw new FunctionException( editorPageNotFound.text() );
                 }
                 
                 return page.state();
             }
         };
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String editorPageNotFound;
-        
-        static
-        {
-            initializeMessages( StateFunction.class.getName(), Resources.class );
-        }
     }
     
 }

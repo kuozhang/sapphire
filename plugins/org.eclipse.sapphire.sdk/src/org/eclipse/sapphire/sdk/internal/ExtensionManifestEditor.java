@@ -14,7 +14,8 @@ package org.eclipse.sapphire.sdk.internal;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -29,6 +30,14 @@ import org.eclipse.ui.PartInitException;
 
 public final class ExtensionManifestEditor extends SapphireEditorForXml
 {
+    @Text( "Summary" )
+    private static LocalizableText summaryPageTitle;
+    
+    static 
+    {
+        LocalizableText.init( ExtensionManifestEditor.class, ExtensionManifestEditor.class.getName() + "Ext" );
+    }
+
     private Browser browser;
     
     public ExtensionManifestEditor()
@@ -48,7 +57,7 @@ public final class ExtensionManifestEditor extends SapphireEditorForXml
         this.browser = new Browser( getContainer(), SWT.NONE );
         
         addPage( 2, this.browser );
-        setPageText( 2, Resources.summaryPageTitle );
+        setPageText( 2, summaryPageTitle.text() );
     }
     
     @Override
@@ -64,16 +73,6 @@ public final class ExtensionManifestEditor extends SapphireEditorForXml
         }
         
         super.pageChange( newPageIndex );
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String summaryPageTitle;
-    
-        static 
-        {
-            initializeMessages( ExtensionManifestEditor.class.getName() + "Ext", Resources.class );
-        }
     }
     
 }

@@ -18,14 +18,15 @@ import java.util.Map;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Determines the size of a collection, a map, an array or a string.
@@ -35,6 +36,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public final class SizeFunction extends Function
 {
+    @Text( "Function Size cannot be applied to a {0} object." )
+    private static LocalizableText unsupportedTypeMessage;
+    
+    static
+    {
+        LocalizableText.init( SizeFunction.class );
+    }
+
     @Override
     public String name()
     {
@@ -110,7 +119,7 @@ public final class SizeFunction extends Function
                     return ( (String) this.operand ).length();
                 }
 
-                final String msg = NLS.bind( Resources.unsupportedTypeMessage, this.operand.getClass().getName() );
+                final String msg = unsupportedTypeMessage.format( this.operand.getClass().getName() );
                 throw new FunctionException( msg );
             }
             
@@ -128,16 +137,6 @@ public final class SizeFunction extends Function
                 this.listener = null;
             }
         };
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String unsupportedTypeMessage;
-        
-        static
-        {
-            initializeMessages( SizeFunction.class.getName(), Resources.class );
-        }
     }
 
 }

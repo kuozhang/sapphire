@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Thrown if a function evaluation fails for any reason.
@@ -20,11 +21,16 @@ import org.eclipse.sapphire.modeling.util.NLS;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class FunctionException
-
-    extends RuntimeException
-    
+public class FunctionException extends RuntimeException
 {
+    @Text( "Unexpected exception encountered while executing expression language function." )
+    private static LocalizableText unexpectedException;
+    
+    static
+    {
+        LocalizableText.init( FunctionException.class );
+    }
+
     private static final long serialVersionUID = 1L;
     
     private final Status status;
@@ -43,22 +49,12 @@ public class FunctionException
     
     public FunctionException( final Throwable throwable )
     {
-        this( Status.createErrorStatus( Resources.unexpectedException, throwable ) );
+        this( Status.createErrorStatus( unexpectedException.text(), throwable ) );
     }
     
     public Status status()
     {
         return this.status;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String unexpectedException;
-        
-        static
-        {
-            initializeMessages( FunctionException.class.getName(), Resources.class );
-        }
     }
     
 }

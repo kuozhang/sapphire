@@ -23,13 +23,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FileName;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.platform.PathBridge;
 import org.eclipse.sapphire.platform.StatusBridge;
 
@@ -39,6 +40,14 @@ import org.eclipse.sapphire.platform.StatusBridge;
 
 public final class CreateWorkspaceFileOpMethods
 {
+    @Text( "Creating file..." )
+    private static LocalizableText executeTaskName;
+    
+    static
+    {
+        LocalizableText.init( CreateWorkspaceFileOpMethods.class );
+    }
+    
     public static IFile getFileHandle( final CreateWorkspaceFileOp operation )
     {
         final Path folderPath = operation.getFolder().content();
@@ -62,7 +71,7 @@ public final class CreateWorkspaceFileOpMethods
             monitor = new ProgressMonitor();
         }
         
-        monitor.beginTask( Resources.executeTaskName, 2 );
+        monitor.beginTask( executeTaskName.text(), 2 );
         
         try
         {
@@ -136,16 +145,6 @@ public final class CreateWorkspaceFileOpMethods
             
             final IFolder iFolder = (IFolder) container;
             iFolder.create( true, true, null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String executeTaskName;
-        
-        static
-        {
-            initializeMessages( CreateWorkspaceFileOpMethods.class.getName(), Resources.class );
         }
     }
     

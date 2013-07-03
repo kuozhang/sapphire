@@ -14,12 +14,13 @@ package org.eclipse.sapphire.internal;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.RequiredConstraintService;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -30,6 +31,14 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class RequiredConstraintValidationService extends ValidationService
 {
+    @Text( "{0} must be specified." )
+    private static LocalizableText message;
+    
+    static
+    {
+        LocalizableText.init( RequiredConstraintValidationService.class );
+    }
+
     private Property property;
     private RequiredConstraintService requiredConstraintService;
     private Listener listener;
@@ -63,9 +72,8 @@ public final class RequiredConstraintValidationService extends ValidationService
         }
         else
         {
-            final String label = this.property.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
-            final String message = NLS.bind( Resources.message, label );
-            return Status.createErrorStatus( message );
+            final String msg = message.format( this.property.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ) );
+            return Status.createErrorStatus( msg );
         }
     }
     
@@ -101,16 +109,6 @@ public final class RequiredConstraintValidationService extends ValidationService
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( RequiredConstraintService.class ) != null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String message;
-        
-        static
-        {
-            initializeMessages( RequiredConstraintValidationService.class.getName(), Resources.class );
         }
     }
 

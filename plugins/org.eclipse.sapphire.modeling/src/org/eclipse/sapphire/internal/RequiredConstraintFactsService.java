@@ -15,10 +15,11 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.RequiredConstraintService;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -32,6 +33,14 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class RequiredConstraintFactsService extends FactsService
 {
+    @Text( "Must be specified." )
+    private static LocalizableText statement;
+    
+    static
+    {
+        LocalizableText.init( RequiredConstraintFactsService.class );
+    }
+
     private Property property;
     private RequiredConstraintService requiredConstraintService;
     private Listener listener;
@@ -75,7 +84,7 @@ public final class RequiredConstraintFactsService extends FactsService
             
             if( applicable )
             {
-                facts.add( Resources.statement );
+                facts.add( statement.text() );
             }
         }
     }
@@ -98,16 +107,6 @@ public final class RequiredConstraintFactsService extends FactsService
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( RequiredConstraintService.class ) != null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String statement;
-        
-        static
-        {
-            initializeMessages( RequiredConstraintFactsService.class.getName(), Resources.class );
         }
     }
     

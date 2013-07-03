@@ -15,8 +15,9 @@ import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.get
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -31,6 +32,14 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class InitialValueFactsService extends FactsService
 {
+    @Text( "Initial value is {0}." )
+    private static LocalizableText statement;
+    
+    static
+    {
+        LocalizableText.init( InitialValueFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -42,7 +51,7 @@ public final class InitialValueFactsService extends FactsService
         if( value != null && value.trim().length() > 0 )
         {
             final String valueLabel = getValueLabel( property, value );
-            facts.add( NLS.bind( Resources.statement, valueLabel ) );
+            facts.add( statement.format( valueLabel ) );
         }
     }
     
@@ -53,16 +62,6 @@ public final class InitialValueFactsService extends FactsService
         {
             final Property property = context.find( Property.class );
             return ( property != null && property.service( InitialValueService.class ) != null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String statement;
-        
-        static
-        {
-            initializeMessages( InitialValueFactsService.class.getName(), Resources.class );
         }
     }
     

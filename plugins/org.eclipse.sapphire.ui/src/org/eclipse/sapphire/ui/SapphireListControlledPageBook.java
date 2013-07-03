@@ -22,9 +22,10 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 import org.eclipse.sapphire.util.IdentityHashSet;
@@ -38,6 +39,14 @@ import org.eclipse.swt.widgets.Display;
 
 public final class SapphireListControlledPageBook extends PageBookPart
 {
+    @Text( "Page book's property reference path \"{0}\" is invalid." )
+    private static LocalizableText invalidPath;
+
+    static
+    {
+        LocalizableText.init( SapphireListControlledPageBook.class );
+    }
+
     private Element element;
     private ListProperty property;
 
@@ -70,12 +79,12 @@ public final class SapphireListControlledPageBook extends PageBookPart
 
                 if ( i + 1 != n )
                 {
-                    throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+                    throw new RuntimeException( invalidPath.format( pathString ) );
                 }
             }
             else
             {
-                throw new RuntimeException( NLS.bind( Resources.invalidPath, pathString ) );
+                throw new RuntimeException( invalidPath.format( pathString ) );
             }
         }
         
@@ -233,16 +242,6 @@ public final class SapphireListControlledPageBook extends PageBookPart
         }
         
         return null;
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String invalidPath;
-
-        static
-        {
-            initializeMessages( SapphireListControlledPageBook.class.getName(), Resources.class );
-        }
     }
 
 }

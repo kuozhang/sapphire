@@ -27,12 +27,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Result;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionException;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.util.ListFactory;
@@ -41,7 +42,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -51,6 +51,20 @@ import org.xml.sax.InputSource;
 
 public final class SapphireModelingExtensionSystem
 {
+    @Text( "Function \"{0}\" is undefined." )
+    private static LocalizableText undefinedFunctionMessage;
+    
+    @Text( "Function \"{0}\" does not support {1} operands." )
+    private static LocalizableText undefinedFunctionMessageExt;
+    
+    @Text( "Function \"{0}\" does not support one operand." )
+    private static LocalizableText undefinedFunctionMessageExt1;
+    
+    static
+    {
+        LocalizableText.init( SapphireModelingExtensionSystem.class );
+    }
+
     private static final String EL_CONDITION = "condition";
     private static final String EL_CONTEXT = "context";
     private static final String EL_FUNCTION = "function";
@@ -93,15 +107,15 @@ public final class SapphireModelingExtensionSystem
             
             if( operands.length == 1 )
             {
-                throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt1, name ) );
+                throw new FunctionException( undefinedFunctionMessageExt1.format( name ) );
             }
             else
             {
-                throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessageExt, name, operands.length ) );
+                throw new FunctionException( undefinedFunctionMessageExt.format( name, operands.length ) );
             }
         }
         
-        throw new FunctionException( NLS.bind( Resources.undefinedFunctionMessage, name ) );
+        throw new FunctionException( undefinedFunctionMessage.format( name ) );
     }
     
     public static Function createFunctionNoEx( final String name,
@@ -258,9 +272,9 @@ public final class SapphireModelingExtensionSystem
         {
             final Node node = nodes.item( i );
     
-            if( node instanceof Text )
+            if( node instanceof org.w3c.dom.Text )
             {
-                buf.append( ( (Text) node ).getData() );
+                buf.append( ( (org.w3c.dom.Text) node ).getData() );
             }
         }
     
@@ -425,18 +439,6 @@ public final class SapphireModelingExtensionSystem
             }
 
             return function;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String undefinedFunctionMessage;
-        public static String undefinedFunctionMessageExt;
-        public static String undefinedFunctionMessageExt1;
-        
-        static
-        {
-            initializeMessages( SapphireModelingExtensionSystem.class.getName(), Resources.class );
         }
     }
 

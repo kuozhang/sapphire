@@ -12,19 +12,28 @@
 package org.eclipse.sapphire.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class CorruptedResourceExceptionInterceptorImpl
-
-    extends CorruptedResourceExceptionInterceptor
-    
+public class CorruptedResourceExceptionInterceptorImpl extends CorruptedResourceExceptionInterceptor
 {
+    @Text( "Operation Failed" )
+    private static LocalizableText malformedFileDialogTitle;
+    
+    @Text( "This file appears to be malformed. Do you want a fresh start?" )
+    private static LocalizableText malformedFileDialogMsg;
+
+    static 
+    {
+        LocalizableText.init( CorruptedResourceExceptionInterceptorImpl.class );
+    }
+
     private final Shell shell;
     
     public CorruptedResourceExceptionInterceptorImpl( final Shell shell )
@@ -36,8 +45,7 @@ public class CorruptedResourceExceptionInterceptorImpl
     public boolean shouldAttemptRepair()
     {
         final boolean fixMalformedDescriptor
-            = MessageDialog.openQuestion( this.shell, Resources.malformedFileDialogTitle, 
-                                          Resources.malformedFileDialogMsg );
+            = MessageDialog.openQuestion( this.shell, malformedFileDialogTitle.text(), malformedFileDialogMsg.text() );
         
         return fixMalformedDescriptor;
     }
@@ -45,21 +53,6 @@ public class CorruptedResourceExceptionInterceptorImpl
     protected final Shell getShell()
     {
         return this.shell;
-    }
-    
-    private static final class Resources 
-    
-        extends NLS
-        
-    {
-        public static String malformedFileDialogTitle;
-        public static String malformedFileDialogMsg;
-    
-        static 
-        {
-            initializeMessages( CorruptedResourceExceptionInterceptorImpl.class.getName(), 
-                                Resources.class );
-        }
     }
     
 }

@@ -14,12 +14,13 @@ package org.eclipse.sapphire.services;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,6 +28,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public class UniqueValueValidationService extends ValidationService
 {
+    @Text( "Unique {0} required. Another occurrence of \"{1}\" was found." )
+    private static LocalizableText message; 
+    
+    static
+    {
+        LocalizableText.init( UniqueValueValidationService.class );
+    }
+
     @Override
     public Status validate()
     {
@@ -37,7 +46,7 @@ public class UniqueValueValidationService extends ValidationService
             final ValueProperty property = value.definition();
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
             final String str = value.text();
-            final String msg = NLS.bind( Resources.message, label, str );
+            final String msg = message.format( label, str );
             return Status.createErrorStatus( msg );
         }
         
@@ -74,16 +83,6 @@ public class UniqueValueValidationService extends ValidationService
         }
         
         return true;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String message; 
-        
-        static
-        {
-            initializeMessages( UniqueValueValidationService.class.getName(), Resources.class );
-        }
     }
     
 }

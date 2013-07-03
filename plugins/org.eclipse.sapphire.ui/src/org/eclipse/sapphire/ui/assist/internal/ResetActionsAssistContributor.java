@@ -13,9 +13,10 @@ package org.eclipse.sapphire.ui.assist.internal;
 
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -31,6 +32,17 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
 
 public final class ResetActionsAssistContributor extends PropertyEditorAssistContributor
 {
+    @Text( "Restore default value" )
+    private static LocalizableText restoreDefaultValue;
+    
+    @Text( "Clear" )
+    private static LocalizableText clear;
+    
+    static
+    {
+        LocalizableText.init( ResetActionsAssistContributor.class );
+    }
+
     public ResetActionsAssistContributor()
     {
         setId( ID_RESET_ACTIONS_CONTRIBUTOR );
@@ -70,7 +82,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
             final boolean isBooleanType = property.definition().getTypeClass().equals( Boolean.class );
             
             final String actionText
-                = ( hasDefaultValue || isBooleanType ? Resources.restoreDefaultValue : Resources.clear );
+                = ( hasDefaultValue || isBooleanType ? restoreDefaultValue.text() : clear.text() );
             
             final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
             
@@ -95,7 +107,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
         {
             final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
             
-            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( clear.text() ) + "</a></p>" );
             
             contribution.link
             (
@@ -116,7 +128,7 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
         {
             final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
             
-            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.clear ) + "</a></p>" );
+            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( clear.text() ) + "</a></p>" );
             
             contribution.link
             (
@@ -132,17 +144,6 @@ public final class ResetActionsAssistContributor extends PropertyEditorAssistCon
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
             section.addContribution( contribution.create() );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String restoreDefaultValue;
-        public static String clear;
-        
-        static
-        {
-            initializeMessages( ResetActionsAssistContributor.class.getName(), Resources.class );
         }
     }
     

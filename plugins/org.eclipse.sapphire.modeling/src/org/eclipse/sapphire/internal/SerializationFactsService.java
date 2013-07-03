@@ -13,9 +13,10 @@ package org.eclipse.sapphire.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Serialization;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -29,16 +30,24 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class SerializationFactsService extends FactsService
 {
+    @Text( "Conforms to {0}" )
+    private static LocalizableText fact;
+    
+    static
+    {
+        LocalizableText.init( SerializationFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
         final Serialization serialization = context( ValueProperty.class ).getAnnotation( Serialization.class );
         
-        facts.add( NLS.bind( Resources.fact, serialization.primary() ) );
+        facts.add( fact.format( serialization.primary() ) );
         
         for( final String alternative : serialization.alternative() )
         {
-            facts.add( NLS.bind( Resources.fact, alternative ) );
+            facts.add( fact.format( alternative ) );
         }
     }
     
@@ -49,16 +58,6 @@ public final class SerializationFactsService extends FactsService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( Serialization.class ) );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String fact;
-        
-        static
-        {
-            initializeMessages( SerializationFactsService.class.getName(), Resources.class );
         }
     }
     

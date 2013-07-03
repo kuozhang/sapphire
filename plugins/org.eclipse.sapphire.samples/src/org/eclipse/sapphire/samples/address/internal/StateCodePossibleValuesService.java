@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.samples.address.internal;
 
+import java.text.MessageFormat;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.address.Address;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodeRepository;
 import org.eclipse.sapphire.services.PossibleValuesService;
@@ -38,7 +38,7 @@ public final class StateCodePossibleValuesService extends PossibleValuesService
     @Override
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( "\"{0}\" is not a valid state postal code for the specified city and ZIP code.", invalidValue );
+        return MessageFormat.format( "\"{0}\" is not a valid state postal code for the specified city and ZIP code.", invalidValue );
     }
 
     @Override

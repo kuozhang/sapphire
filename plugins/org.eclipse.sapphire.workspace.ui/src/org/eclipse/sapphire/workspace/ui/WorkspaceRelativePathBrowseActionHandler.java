@@ -16,8 +16,9 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Path;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler;
@@ -29,13 +30,21 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class WorkspaceRelativePathBrowseActionHandler extends RelativePathBrowseActionHandler
 {
+    @Text( "&workspace relative path" )
+    private static LocalizableText label;
+
+    static 
+    {
+        LocalizableText.init( WorkspaceRelativePathBrowseActionHandler.class );
+    }
+
     @Override
     public void init( final SapphireAction action,
                       final ActionHandlerDef def )
     {
         super.init( action, def );
         
-        setLabel( Resources.label );
+        setLabel( label.text() );
         addImage( ImageData.readFromClassLoader( WorkspaceRelativePathBrowseActionHandler.class, "Project.png" ).required() );
     }
 
@@ -94,16 +103,6 @@ public final class WorkspaceRelativePathBrowseActionHandler extends RelativePath
         }
         
         return null;
-    }
-
-    private static final class Resources extends NLS 
-    {
-        public static String label;
-
-        static 
-        {
-            initializeMessages( WorkspaceRelativePathBrowseActionHandler.class.getName(), Resources.class );
-        }
     }
 
 }

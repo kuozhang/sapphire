@@ -19,8 +19,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
@@ -32,6 +33,17 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 public final class JavaTypeJumpActionHandler extends SapphireJumpActionHandler
 {
     public static final String ID = "Sapphire.Jump.Java.Type";
+
+    @Text( "Type Not Found" )
+    private static LocalizableText couldNotFindTypeDialogTitle;
+    
+    @Text( "Could not find {0} on project classpath." )
+    private static LocalizableText couldNotFindTypeDialogMessage;
+
+    static 
+    {
+        LocalizableText.init( JavaTypeJumpActionHandler.class );
+    }
     
     public JavaTypeJumpActionHandler()
     {
@@ -73,8 +85,8 @@ public final class JavaTypeJumpActionHandler extends SapphireJumpActionHandler
                 }
                 else 
                 {
-                    final String message = NLS.bind( Resources.couldNotFindTypeDialogMessage, typeName );
-                    MessageDialog.openInformation( context.getShell(), Resources.couldNotFindTypeDialogTitle, message );
+                    final String message = couldNotFindTypeDialogMessage.format( typeName );
+                    MessageDialog.openInformation( context.getShell(), couldNotFindTypeDialogTitle.text(), message );
                 }
             } 
             catch( CoreException e ) 
@@ -127,17 +139,6 @@ public final class JavaTypeJumpActionHandler extends SapphireJumpActionHandler
         }
         
         return type;
-    }
-
-    private static final class Resources extends NLS 
-    {
-        public static String couldNotFindTypeDialogTitle;
-        public static String couldNotFindTypeDialogMessage;
-
-        static 
-        {
-            initializeMessages( JavaTypeJumpActionHandler.class.getName(), Resources.class );
-        }
     }
     
 }

@@ -33,10 +33,11 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.ConditionalPart;
 import org.eclipse.sapphire.ui.FormPart;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -61,6 +62,20 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
 {
     public static final String ID = "Sapphire.Restore.Defaults";
     
+    @Text( "Restore Defaults" )
+    private static LocalizableText dialogTitle;
+    
+    @Text( "Confirm properties that should be reset to their default state. Properties that are not checked will not be modified." )
+    private static LocalizableText dialogMessage;
+    
+    @Text( "All properties in this section are presently in their default state." )
+    private static LocalizableText nothingToDoMessage;
+
+    static 
+    {
+        LocalizableText.init( RestoreDefaultsActionHandler.class );
+    }
+    
     public RestoreDefaultsActionHandler()
     {
         setId( ID );
@@ -84,7 +99,7 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         
         if( properties.isEmpty() )
         {
-            MessageDialog.openInformation( context.getShell(), Resources.dialogTitle, Resources.nothingToDoMessage );
+            MessageDialog.openInformation( context.getShell(), dialogTitle.text(), nothingToDoMessage.text() );
         }
         else
         {
@@ -185,12 +200,12 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
         @Override
         protected Control createDialogArea( final Composite parent )
         {
-            getShell().setText( Resources.dialogTitle );
+            getShell().setText( dialogTitle.text() );
             
             final Composite composite = (Composite) super.createDialogArea( parent );
             
             final Label messageLabel = new Label( composite, SWT.WRAP );
-            messageLabel.setText( Resources.dialogMessage );
+            messageLabel.setText( dialogMessage.text() );
             messageLabel.setLayoutData( gdwhint( gdhfill(), 300 ) );
             
             final CheckboxTableViewer tableViewer = CheckboxTableViewer.newCheckList( composite, SWT.BORDER );
@@ -295,18 +310,6 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
             tableViewer.setInput( this );
             
             return composite;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String dialogTitle;
-        public static String dialogMessage;
-        public static String nothingToDoMessage;
-
-        static 
-        {
-            initializeMessages( RestoreDefaultsActionHandler.class.getName(), Resources.class );
         }
     }
     

@@ -36,11 +36,13 @@ import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
@@ -49,7 +51,6 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.CompositeDef;
@@ -94,6 +95,23 @@ import org.eclipse.swt.widgets.Display;
 
 public abstract class SapphirePart implements ISapphirePart
 {
+    @Text( "Failed while instantiating {0} class." )
+    private static LocalizableText failedToInstantiate;
+    
+    @Text( "Class {0} does not extend the required Listener class." )
+    private static LocalizableText doesNotExtend;
+    
+    @Text( "Could not resolve form part include \"{0}\"." )
+    private static LocalizableText couldNotResolveInclude;
+    
+    @Text( "Could not resolve section \"{0}\"." )
+    private static LocalizableText couldNotResolveSection;
+    
+    static
+    {
+        LocalizableText.init( SapphirePart.class );
+    }
+
     private ISapphirePart parent;
     private Element modelElement;
     protected PartDef definition;
@@ -146,7 +164,7 @@ public abstract class SapphirePart implements ISapphirePart
                 }
                 catch( Exception e )
                 {
-                    final String msg = NLS.bind( Resources.failedToInstantiate, listenerClass.name() );
+                    final String msg = failedToInstantiate.format( listenerClass.name() );
                     logError( msg, e );
                 }
                 
@@ -158,7 +176,7 @@ public abstract class SapphirePart implements ISapphirePart
                     }
                     else
                     {
-                        final String msg = NLS.bind( Resources.doesNotExtend, listenerClass.name() );
+                        final String msg = doesNotExtend.format( listenerClass.name() );
                         logError( msg );
                     }
                 }
@@ -1135,7 +1153,7 @@ public abstract class SapphirePart implements ISapphirePart
             
             if( def == null )
             {
-                final String msg = NLS.bind( Resources.couldNotResolveSection, ref.getSection().text() );
+                final String msg = couldNotResolveSection.format( ref.getSection().text() );
                 throw new IllegalArgumentException( msg );
             }
             else
@@ -1167,7 +1185,7 @@ public abstract class SapphirePart implements ISapphirePart
             
             if( def == null )
             {
-                final String msg = NLS.bind( Resources.couldNotResolveInclude, inc.getPart().text() );
+                final String msg = couldNotResolveInclude.format( inc.getPart().text() );
                 throw new IllegalArgumentException( msg );
             }
             else
@@ -1229,19 +1247,6 @@ public abstract class SapphirePart implements ISapphirePart
         part.init( parent, element, def, partParams );
         
         return part;
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String failedToInstantiate;
-        public static String doesNotExtend;
-        public static String couldNotResolveInclude;
-        public static String couldNotResolveSection;
-        
-        static
-        {
-            initializeMessages( SapphirePart.class.getName(), Resources.class );
-        }
     }
     
 }

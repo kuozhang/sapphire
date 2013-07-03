@@ -30,13 +30,14 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ActuatorDef;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.ImageReference;
@@ -62,6 +63,14 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 public final class ActuatorPart extends SapphirePart
 {
+    @Text( "Actuator label not specified" )
+    private static LocalizableText labelNotSpecified;
+    
+    static
+    {
+        LocalizableText.init( ActuatorPart.class );
+    }
+
     private SapphireAction action;
     private String actionId;
     private Listener actionListener;
@@ -483,7 +492,7 @@ public final class ActuatorPart extends SapphirePart
             keyboardActionPresentation.attach( text );
             
             String label = label( CapitalizationType.FIRST_WORD_ONLY );
-            label = ( label == null ? Resources.labelNotSpecified : label );
+            label = ( label == null ? labelNotSpecified.text() : label );
             
             final StringBuilder buf = new StringBuilder();
             buf.append( "<form><p vspace=\"false\"><a href=\"action\" nowrap=\"true\">" );
@@ -606,16 +615,6 @@ public final class ActuatorPart extends SapphirePart
         public EnablementChangedEvent( final SapphirePart part )
         {
             super( part );
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String labelNotSpecified;
-        
-        static
-        {
-            initializeMessages( ActuatorPart.class.getName(), Resources.class );
         }
     }
 

@@ -27,11 +27,12 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.LayeredListPropertyBinding;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.util.ListFactory;
@@ -43,6 +44,17 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
 {
+    @Text( "{0}.{1} : {2}" )
+    private static LocalizableText failure;
+    
+    @Text( "Element name must be specified in @XmlListBinding.Mapping annotation." )
+    private static LocalizableText mustSpecifyElementNameMsg; 
+    
+    static
+    {
+        LocalizableText.init( StandardXmlListBindingImpl.class );
+    }
+
     private PossibleTypesService possibleTypesService;
     private Listener possibleTypesServiceListener;
     protected XmlPath path;
@@ -67,7 +79,7 @@ public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
                 }
                 catch( Exception e )
                 {
-                    final String msg = NLS.bind( Resources.failure, property.element().type().getSimpleName(), property.name(), e.getMessage() );
+                    final String msg = failure.format( property.element().type().getSimpleName(), property.name(), e.getMessage() );
                     LoggingService.log( Status.createErrorStatus( msg ) );
                 }
             }
@@ -81,7 +93,7 @@ public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
         }
         catch( Exception e )
         {
-            final String msg = NLS.bind( Resources.failure, property.element().type().getSimpleName(), property.name(), e.getMessage() );
+            final String msg = failure.format( property.element().type().getSimpleName(), property.name(), e.getMessage() );
             throw new RuntimeException( msg, e );
         }
     }
@@ -127,7 +139,7 @@ public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
                         
                         if( mappingElementName.length() == 0 )
                         {
-                            throw new RuntimeException( Resources.mustSpecifyElementNameMsg );
+                            throw new RuntimeException( mustSpecifyElementNameMsg.text() );
                         }
 
                         this.xmlElementNames[ i ] = createQualifiedName( mappingElementName, xmlNamespaceResolver );
@@ -292,17 +304,6 @@ public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
         if( this.possibleTypesService != null )
         {
             this.possibleTypesService.detach( this.possibleTypesServiceListener );
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String failure;
-        public static String mustSpecifyElementNameMsg; 
-        
-        static
-        {
-            initializeMessages( StandardXmlListBindingImpl.class.getName(), Resources.class );
         }
     }
     

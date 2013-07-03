@@ -22,10 +22,11 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdwhint;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
 import org.eclipse.sapphire.ui.def.HtmlPanelDef;
 import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
@@ -46,6 +47,14 @@ public final class HtmlPanelPart extends FormComponentPart
     private static final String FRAGMENT_HEADER = "<html><head><style>" + FRAGMENT_STYLE + "</style></head><body>";
     private static final String FRAGMENT_FOOTER = "</body></html>";
     
+    @Text( "Could not initialize embedded browser." )
+    private static LocalizableText couldNotInitializeBrowserMessage;
+
+    static 
+    {
+        LocalizableText.init( HtmlPanelPart.class );
+    }
+
     private HtmlPanelDef def;
     private FunctionResult contentFunctionResult;
     private FunctionResult urlFunctionResult;
@@ -217,18 +226,8 @@ public final class HtmlPanelPart extends FormComponentPart
         catch( SWTError e )
         {
             final SapphireFormText text = new SapphireFormText( context.getComposite(), style );
-            text.setText( Resources.couldNotInitializeBrowserMessage, false, false );
+            text.setText( couldNotInitializeBrowserMessage.text(), false, false );
             text.setLayoutData( gd );
-        }
-    }
-    
-    private static final class Resources extends NLS 
-    {
-        public static String couldNotInitializeBrowserMessage;
-
-        static 
-        {
-            initializeMessages( HtmlPanelPart.class.getName(), Resources.class );
         }
     }
     

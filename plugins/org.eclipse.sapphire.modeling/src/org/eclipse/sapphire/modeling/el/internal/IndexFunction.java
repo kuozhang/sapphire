@@ -15,13 +15,14 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Determines the index of a model element within its parent list. 
@@ -31,6 +32,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public final class IndexFunction extends Function
 {
+    @Text( "Cannot determine index if parent is not a list." )
+    private static LocalizableText parentNotListMessage;
+    
+    static
+    {
+        LocalizableText.init( IndexFunction.class );
+    }
+
     @Override
     public String name()
     {
@@ -95,7 +104,7 @@ public final class IndexFunction extends Function
                         this.list = null;
                     }
                     
-                    throw new FunctionException( Resources.parentNotListMessage );
+                    throw new FunctionException( parentNotListMessage.text() );
                 }
             }
 
@@ -113,16 +122,6 @@ public final class IndexFunction extends Function
                 this.listener = null;
             }
         };
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String parentNotListMessage;
-        
-        static
-        {
-            initializeMessages( IndexFunction.class.getName(), Resources.class );
-        }
     }
     
 }

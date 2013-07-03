@@ -11,7 +11,8 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
@@ -20,11 +21,16 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ActionsSectionAssistContributor
-
-    extends PropertyEditorAssistContributor
-    
+public final class ActionsSectionAssistContributor extends PropertyEditorAssistContributor
 {
+    @Text( "Actions" )
+    private static LocalizableText sectionLabel;
+    
+    static
+    {
+        LocalizableText.init( ActionsSectionAssistContributor.class );
+    }
+
     public ActionsSectionAssistContributor()
     {
         setId( ID_ACTIONS_SECTION_CONTRIBUTOR );
@@ -35,21 +41,7 @@ public final class ActionsSectionAssistContributor
     public void contribute( final PropertyEditorAssistContext context )
     {
         final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
-        section.setLabel( Resources.sectionLabel );
+        section.setLabel( sectionLabel.text() );
     }
-    
 
-    private static final class Resources
-    
-        extends NLS
-    
-    {
-        public static String sectionLabel;
-        
-        static
-        {
-            initializeMessages( ActionsSectionAssistContributor.class.getName(), Resources.class );
-        }
-    }
-    
 }

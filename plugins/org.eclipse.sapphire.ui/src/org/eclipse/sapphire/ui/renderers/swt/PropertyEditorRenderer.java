@@ -33,11 +33,12 @@ import java.util.Set;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -71,6 +72,17 @@ public abstract class PropertyEditorRenderer
 {
     private static final String RELATED_CONTENT_WIDTH = "sapphire.related.content.width";
     
+    @Text( "actions for {0}" )
+    private static LocalizableText actionsContextLabel;
+    
+    @Text( "(deprecated)" )
+    private static LocalizableText deprecatedLabelText;
+
+    static
+    {
+        LocalizableText.init( PropertyEditorRenderer.class );
+    }
+
     protected final SapphireRenderingContext context;
     private final PropertyEditorPart part;
     protected PropertyEditorAssistDecorator decorator;
@@ -94,7 +106,7 @@ public abstract class PropertyEditorRenderer
         this.controls = new HashSet<Control>();
         this.actions = part.getActions( part.getActionContext() );
         this.actionPresentationManager = new SapphireActionPresentationManager( this.context, this.actions );
-        this.actionPresentationManager.setLabel( NLS.bind( Resources.actionsContextLabel, property().definition().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
+        this.actionPresentationManager.setLabel( actionsContextLabel.format( property().definition().getLabel( true, CapitalizationType.NO_CAPS, false ) ) );
         this.actionPresentationKeyboard = new SapphireKeyboardActionPresentation( this.actionPresentationManager );
         
         this.part.attach
@@ -503,7 +515,7 @@ public abstract class PropertyEditorRenderer
     protected final Control createDeprecationMarker( final Composite parent )
     {
         final Label label = new Label( parent, SWT.NONE );
-        label.setText( Resources.deprecatedLabelText );
+        label.setText( deprecatedLabelText.text() );
         addControl( label );
         label.setForeground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
         
@@ -600,17 +612,6 @@ public abstract class PropertyEditorRenderer
         }
         
         this.onDisposeOperations.clear();
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String actionsContextLabel;
-        public static String deprecatedLabelText;
-    
-        static
-        {
-            initializeMessages( PropertyEditorRenderer.class.getName(), Resources.class );
-        }
     }
     
 }

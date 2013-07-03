@@ -13,11 +13,12 @@ package org.eclipse.sapphire.services.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -31,6 +32,17 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class ValidFileSystemResourceTypeFactsService extends FactsService
 {
+    @Text( "Must be a file." )
+    private static LocalizableText statementForFile;
+    
+    @Text( "Must be a folder." )
+    private static LocalizableText statementForFolder;
+    
+    static
+    {
+        LocalizableText.init( ValidFileSystemResourceTypeFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -39,11 +51,11 @@ public final class ValidFileSystemResourceTypeFactsService extends FactsService
         
         if( type == FileSystemResourceType.FILE )
         {
-            facts.add( Resources.statementForFile );
+            facts.add( statementForFile.text() );
         }
         else if( type == FileSystemResourceType.FOLDER )
         {
-            facts.add( Resources.statementForFolder );
+            facts.add( statementForFolder.text() );
         }
         else
         {
@@ -58,17 +70,6 @@ public final class ValidFileSystemResourceTypeFactsService extends FactsService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( ValidFileSystemResourceType.class ) );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String statementForFile;
-        public static String statementForFolder;
-        
-        static
-        {
-            initializeMessages( ValidFileSystemResourceTypeFactsService.class.getName(), Resources.class );
         }
     }
     

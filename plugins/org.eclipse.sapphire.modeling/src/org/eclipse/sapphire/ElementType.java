@@ -32,7 +32,6 @@ import org.eclipse.sapphire.modeling.annotations.Listeners;
 import org.eclipse.sapphire.modeling.internal.MemoryResource;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.internal.ElementMetaModelServiceContext;
@@ -47,6 +46,14 @@ import org.eclipse.sapphire.util.SortedSetFactory;
 
 public final class ElementType extends ModelMetadataItem
 {
+    @Text( "{0} : Could not instantiate implementation class." )
+    private static LocalizableText cannotInstantiate; 
+    
+    static
+    {
+        LocalizableText.init( ElementType.class );
+    }
+
     private static final Comparator<PropertyDef> PROPERTY_COMPARATOR = new Comparator<PropertyDef>()
     {
         public int compare( final PropertyDef x, final PropertyDef y )
@@ -198,14 +205,14 @@ public final class ElementType extends ModelMetadataItem
             }
             catch( Exception e )
             {
-                final String msg = NLS.bind( Resources.cannotInstantiate, getSimpleName() );
+                final String msg = cannotInstantiate.format( getSimpleName() );
                 throw new RuntimeException( msg, e );
             }
             
             return element;                
         }
         
-        final String msg = NLS.bind( Resources.cannotInstantiate, getSimpleName() );
+        final String msg = cannotInstantiate.format( getSimpleName() );
         throw new RuntimeException( msg );
     }
 
@@ -556,16 +563,6 @@ public final class ElementType extends ModelMetadataItem
     protected static abstract class ModelPropertyInitListener
     {
         public abstract void propertyInitialized( final PropertyDef property );
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String cannotInstantiate; 
-        
-        static
-        {
-            initializeMessages( ElementType.class.getName(), Resources.class );
-        }
     }
     
 }

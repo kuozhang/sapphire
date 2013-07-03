@@ -20,7 +20,8 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.Map;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.xml.dtd.internal.DtdParserImpl;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 
@@ -32,6 +33,14 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 
 public final class DtdParser
 {
+    @Text( "Failed while parsing DTD located at \"{0}\"." )
+    private static LocalizableText parseFailed;
+    
+    static
+    {
+        LocalizableText.init( DtdParser.class );
+    }
+
     public static XmlDocumentSchema parse( final URL url )
     {
         InputStream in = null;
@@ -43,7 +52,7 @@ public final class DtdParser
         }
         catch( Exception e )
         {
-            final String message = NLS.bind( Resources.parseFailed, url );
+            final String message = parseFailed.format( url );
             throw new RuntimeException( message, e );
         }
         finally
@@ -88,7 +97,7 @@ public final class DtdParser
         }
         catch( Exception e )
         {
-            final String message = NLS.bind( Resources.parseFailed, "##string##" );
+            final String message = parseFailed.format( "##string##" );
             throw new RuntimeException( message, e );
         }
     }
@@ -100,16 +109,6 @@ public final class DtdParser
             content = content.replace( "%" + entity.getKey() + ";", entity.getValue() );
         }
         return content;
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String parseFailed;
-        
-        static
-        {
-            initializeMessages( DtdParser.class.getName(), Resources.class );
-        }
     }
 
 }

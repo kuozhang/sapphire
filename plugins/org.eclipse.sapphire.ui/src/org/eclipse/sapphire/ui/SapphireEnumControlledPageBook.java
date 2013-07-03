@@ -17,11 +17,12 @@ import java.lang.reflect.Field;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PageBookExtDef;
 
@@ -32,6 +33,23 @@ import org.eclipse.sapphire.ui.def.PageBookExtDef;
 
 public final class SapphireEnumControlledPageBook extends PageBookPart
 {
+    @Text( "Page book's property reference path \"{0}\" is invalid." )
+    private static LocalizableText invalidPathMsg;
+    
+    @Text( "Page book key \"{0}\" is invalid. Class \"{1}\" could not be resolved." )
+    private static LocalizableText invalidPageKeyClassNotResolvedMsg;
+    
+    @Text( "Page book key \"{0}\" is invalid. Class \"{1}\" does not match property type." )
+    private static LocalizableText invalidPageKeyClassNotMatchedMsg;
+    
+    @Text( "Page book key \"{0}\" is invalid. Enum item \"{2}\" could not be resolved in {1}.")
+    private static LocalizableText invalidPageKeyEnumItemMsg;
+
+    static
+    {
+        LocalizableText.init( SapphireEnumControlledPageBook.class );
+    }
+
     private Property property;
     private Listener listener;
     
@@ -62,12 +80,12 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
                 
                 if( this.property == null || i + 1 != n )
                 {
-                    throw new RuntimeException( NLS.bind( Resources.invalidPathMsg, pathStringSubstituted ) );
+                    throw new RuntimeException( invalidPathMsg.format( pathStringSubstituted ) );
                 }
             }
             else
             {
-                throw new RuntimeException( NLS.bind( Resources.invalidPathMsg, pathStringSubstituted ) );
+                throw new RuntimeException( invalidPathMsg.format( pathStringSubstituted ) );
             }
         }
         
@@ -109,12 +127,12 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
             
             if( specifiedEnumType == null )
             {
-                throw new RuntimeException( NLS.bind( Resources.invalidPageKeyClassNotResolvedMsg, panelKeyString, className ) );
+                throw new RuntimeException( invalidPageKeyClassNotResolvedMsg.format( panelKeyString, className ) );
             }
             
             if( specifiedEnumType != enumType )
             {
-                throw new RuntimeException( NLS.bind( Resources.invalidPageKeyClassNotMatchedMsg, panelKeyString, className ) );
+                throw new RuntimeException( invalidPageKeyClassNotMatchedMsg.format( panelKeyString, className ) );
             }
         }
         
@@ -131,7 +149,7 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
         
         if( field == null )
         {
-            throw new RuntimeException( NLS.bind( Resources.invalidPageKeyEnumItemMsg, panelKeyString, enumType.getSimpleName(), enumItemName ) );
+            throw new RuntimeException( invalidPageKeyEnumItemMsg.format( panelKeyString, enumType.getSimpleName(), enumItemName ) );
         }
         
         try
@@ -160,19 +178,6 @@ public final class SapphireEnumControlledPageBook extends PageBookPart
         if( this.listener != null )
         {
             this.property.detach( this.listener );
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String invalidPathMsg;
-        public static String invalidPageKeyClassNotResolvedMsg;
-        public static String invalidPageKeyClassNotMatchedMsg;
-        public static String invalidPageKeyEnumItemMsg;
-
-        static
-        {
-            initializeMessages( SapphireEnumControlledPageBook.class.getName(), Resources.class );
         }
     }
     

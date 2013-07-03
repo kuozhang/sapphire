@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Thrown by DefinitionLoader when attempting to use a definition that has validation errors.
@@ -24,6 +25,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public final class InvalidDefinitionException extends RuntimeException
 {
+    @Text( "Sapphire user interface definition has failed validation." )
+    private static LocalizableText message;
+    
+    static
+    {
+        LocalizableText.init( InvalidDefinitionException.class );
+    }
+
     private final Status validation;
     
     public InvalidDefinitionException( final Status validation )
@@ -49,17 +58,7 @@ public final class InvalidDefinitionException extends RuntimeException
     @Override
     public String toString()
     {
-        return Resources.message + " " + this.validation.message();
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String message;
-        
-        static
-        {
-            initializeMessages( InvalidDefinitionException.class.getName(), Resources.class );
-        }
+        return message + " " + this.validation.message();
     }
     
 }

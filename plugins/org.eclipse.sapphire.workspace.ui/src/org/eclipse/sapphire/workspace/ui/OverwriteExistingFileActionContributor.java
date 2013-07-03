@@ -13,7 +13,8 @@ package org.eclipse.sapphire.workspace.ui;
 
 import static org.eclipse.sapphire.workspace.CreateWorkspaceFileOp.PROBLEM_FILE_EXISTS;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
@@ -26,6 +27,14 @@ import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 
 public final class OverwriteExistingFileActionContributor extends PropertyEditorAssistContributor
 {
+    @Text( "Overwrite existing file" )
+    private static LocalizableText action;
+    
+    static
+    {
+        LocalizableText.init( OverwriteExistingFileActionContributor.class );
+    }
+
     @Override
     public void contribute( final PropertyEditorAssistContext context )
     {
@@ -35,7 +44,7 @@ public final class OverwriteExistingFileActionContributor extends PropertyEditor
         {
             final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
             
-            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( Resources.action ) + "</a></p>" );
+            contribution.text( "<p><a href=\"action\" nowrap=\"true\">" + escapeForXml( action.text() ) + "</a></p>" );
             
             contribution.link
             (
@@ -51,16 +60,6 @@ public final class OverwriteExistingFileActionContributor extends PropertyEditor
             
             final PropertyEditorAssistSection section = context.getSection( SECTION_ID_ACTIONS );
             section.addContribution( contribution.create() );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String action;
-        
-        static
-        {
-            initializeMessages( OverwriteExistingFileActionContributor.class.getName(), Resources.class );
         }
     }
     

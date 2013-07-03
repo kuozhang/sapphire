@@ -14,8 +14,9 @@ package org.eclipse.sapphire.modeling.el;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * Greater than or equal comparison function. 
@@ -25,6 +26,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public final class GreaterThanOrEqualFunction extends Function
 {
+    @Text( "Cannot apply greater than or equal operator to {0} and {1} types." )
+    private static LocalizableText cannotApplyMessage;
+    
+    static
+    {
+        LocalizableText.init( GreaterThanOrEqualFunction.class );
+    }
+
     public static GreaterThanOrEqualFunction create( final Function a,
                                                      final Function b )
     {
@@ -124,20 +133,10 @@ public final class GreaterThanOrEqualFunction extends Function
                 }
                 else
                 {
-                    throw new FunctionException( NLS.bind( Resources.cannotApplyMessage, a.getClass().getName(), b.getClass().getName() ) );
+                    throw new FunctionException( cannotApplyMessage.format( a.getClass().getName(), b.getClass().getName() ) );
                 }
             }
         };
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String cannotApplyMessage;
-        
-        static
-        {
-            initializeMessages( GreaterThanOrEqualFunction.class.getName(), Resources.class );
-        }
     }
 
 }

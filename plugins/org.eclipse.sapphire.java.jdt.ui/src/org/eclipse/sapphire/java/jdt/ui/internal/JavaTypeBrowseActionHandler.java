@@ -19,11 +19,12 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -38,6 +39,17 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 
 public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandler
 {
+    @Text( "Select" )
+    private static LocalizableText select;
+    
+    @Text( "Java type kind \"{0}\" is not recognized." )
+    private static LocalizableText typeKindNotRecognized;
+
+    static 
+    {
+        LocalizableText.init( JavaTypeBrowseActionHandler.class );
+    }
+
     public static final String ID = "Sapphire.Browse.Java.Type";
     public static final String PARAM_KINDS = "kinds";
     
@@ -89,7 +101,7 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
                 }
                 else
                 {
-                    final String msg = NLS.bind( Resources.typeKindNotRecognized, kindString );
+                    final String msg = typeKindNotRecognized.format( kindString );
                     SapphireUiFrameworkPlugin.logError( msg );
                 }
             }
@@ -144,7 +156,7 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
                 = JavaUI.createTypeDialog( context.getShell(), null, project, browseDialogStyle, false );
             
             final String title = property.definition().getLabel( true, CapitalizationType.TITLE_STYLE, false );
-            dlg.setTitle(Resources.select + title);
+            dlg.setTitle(select + title);
             
             if (dlg.open() == SelectionDialog.OK) {
                 Object results[] = dlg.getResult();
@@ -158,17 +170,6 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
         }
         
         return null;
-    }
-
-    private static final class Resources extends NLS 
-    {
-        public static String select;
-        public static String typeKindNotRecognized;
-
-        static 
-        {
-            initializeMessages( JavaTypeBrowseActionHandler.class.getName(), Resources.class );
-        }
     }
 
 }

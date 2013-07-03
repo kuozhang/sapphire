@@ -13,8 +13,9 @@ package org.eclipse.sapphire.workspace.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -29,10 +30,18 @@ import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 public final class WorkspaceRelativePathFactsService extends FactsService
 {
+    @Text( "Must be a workspace relative path." )
+    private static LocalizableText statement;
+    
+    static
+    {
+        LocalizableText.init( WorkspaceRelativePathFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        facts.add( Resources.statement );
+        facts.add( statement.text() );
     }
     
     public static final class Condition extends ServiceCondition
@@ -42,16 +51,6 @@ public final class WorkspaceRelativePathFactsService extends FactsService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && property.hasAnnotation( WorkspaceRelativePath.class ) );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String statement;
-        
-        static
-        {
-            initializeMessages( WorkspaceRelativePathFactsService.class.getName(), Resources.class );
         }
     }
     

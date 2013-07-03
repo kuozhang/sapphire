@@ -22,7 +22,8 @@ import java.util.List;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceColors;
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -73,6 +74,17 @@ public final class HyperlinkTable
                                                    final int column );
     }
     
+    @Text( "Select Jump Destination" )
+    private static LocalizableText jumpDialogTitle;
+    
+    @Text( "Where do you want to jump to?" )
+    private static LocalizableText jumpDialogPrompt;
+
+    static
+    {
+        LocalizableText.init( HyperlinkTable.class );
+    }
+
     private static final Point IMAGE_OFFSET_PRIMARY_COLUMN;
     private static final Point IMAGE_OFFSET_SECONDARY_COLUMN;
     private static final Point TEXT_OFFSET_PRIMARY_COLUMN;
@@ -346,13 +358,13 @@ public final class HyperlinkTable
                     @Override
                     protected Control createDialogArea( final Composite parent )
                     {
-                        getShell().setText( Resources.jumpDialogTitle );
+                        getShell().setText( jumpDialogTitle.text() );
                         
                         final Composite composite = (Composite) super.createDialogArea( parent );
                         
                         final Label prompt = new Label( composite, SWT.WRAP );
                         prompt.setLayoutData( gdwhint( gdhfill(), 300 ) );
-                        prompt.setText( Resources.jumpDialogPrompt );
+                        prompt.setText( jumpDialogPrompt.text() );
                         
                         final SelectionListener listener = new SelectionAdapter()
                         {
@@ -487,17 +499,6 @@ public final class HyperlinkTable
     {
         final int count = table.getColumnCount();
         return ( count == 0 ? 1 : count );
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String jumpDialogTitle;
-        public static String jumpDialogPrompt;
-    
-        static
-        {
-            initializeMessages( HyperlinkTable.class.getName(), Resources.class );
-        }
     }
     
 }

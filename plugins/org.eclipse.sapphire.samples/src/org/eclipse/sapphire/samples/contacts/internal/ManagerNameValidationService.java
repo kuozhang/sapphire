@@ -11,8 +11,9 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -20,19 +21,17 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public final class ManagerNameValidationService extends ConnectionNameValidationService
 {
+    @Text( "Cannot be your own manager." )
+    private static LocalizableText cannotBeYourOwnManager;
+    
+    static
+    {
+        LocalizableText.init( ManagerNameValidationService.class );
+    }
+
     protected Status createErrorStatus()
     {
-        return Status.createErrorStatus( Resources.cannotBeYourOwnManager );
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String cannotBeYourOwnManager;
-        
-        static
-        {
-            initializeMessages( ManagerNameValidationService.class.getName(), Resources.class );
-        }
+        return Status.createErrorStatus( cannotBeYourOwnManager.text() );
     }
     
 }

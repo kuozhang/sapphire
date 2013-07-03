@@ -14,9 +14,10 @@ package org.eclipse.sapphire.services.internal;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -30,6 +31,20 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class CountConstraintFactsService extends FactsService
 {
+    @Text( "Must have at least one." )
+    private static LocalizableText atLeastOneStatement;
+    
+    @Text( "Must have at least {0} items." )
+    private static LocalizableText minCountStatement;
+    
+    @Text( "Must have at most {0} items." )
+    private static LocalizableText maxCountStatement;
+    
+    static
+    {
+        LocalizableText.init( CountConstraintFactsService.class );
+    }
+
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -39,16 +54,16 @@ public final class CountConstraintFactsService extends FactsService
         
         if( min == 1 )
         {
-            facts.add( Resources.atLeastOneStatement );
+            facts.add( atLeastOneStatement.text() );
         }
         else if( min > 1 ) 
         {
-            facts.add( NLS.bind( Resources.minCountStatement, min ) );
+            facts.add( minCountStatement.format( min ) );
         }
         
         if( max < Integer.MAX_VALUE ) 
         {
-            facts.add( NLS.bind( Resources.maxCountStatement, max ) );
+            facts.add( maxCountStatement.format( max ) );
         }
     }
     
@@ -66,18 +81,6 @@ public final class CountConstraintFactsService extends FactsService
             }
             
             return false;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String atLeastOneStatement;
-        public static String minCountStatement;
-        public static String maxCountStatement;
-        
-        static
-        {
-            initializeMessages( CountConstraintFactsService.class.getName(), Resources.class );
         }
     }
     

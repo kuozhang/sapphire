@@ -16,12 +16,13 @@ import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,6 +30,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public class ModelElementFunctionContext extends FunctionContext
 {
+    @Text( "Index {0} is outside the bounds of the collection." )
+    private static LocalizableText indexOutOfBounds;
+    
+    static
+    {
+        LocalizableText.init( ModelElementFunctionContext.class );
+    }
+
     private final Element element;
     private final LocalizationService localizationService;
     
@@ -130,7 +139,7 @@ public class ModelElementFunctionContext extends FunctionContext
                         }
                         else
                         {
-                            throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
+                            throw new FunctionException( indexOutOfBounds.format( index ) );
                         }
                     }
                 };
@@ -222,15 +231,5 @@ public class ModelElementFunctionContext extends FunctionContext
         
         protected abstract Object evaluate();
     };
-    
-    private static final class Resources extends NLS
-    {
-        public static String indexOutOfBounds;
-        
-        static
-        {
-            initializeMessages( ModelElementFunctionContext.class.getName(), Resources.class );
-        }
-    }
     
 }

@@ -13,12 +13,13 @@ package org.eclipse.sapphire.services.internal;
 
 import java.io.File;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PathValidationService;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -30,6 +31,14 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class RelativePathValidationService extends PathValidationService
 {
+    @Text( "Relative path \"{0}\" could not be resolved." )
+    private static LocalizableText couldNotResolveRelative;
+    
+    static
+    {
+        LocalizableText.init( RelativePathValidationService.class );
+    }
+
     @Override
     public Status validate()
     {
@@ -42,7 +51,7 @@ public final class RelativePathValidationService extends PathValidationService
             
             if( absolutePath == null )
             {
-                final String message = Resources.bind( LocalResources.couldNotResolveRelative, path.toString() );
+                final String message = couldNotResolveRelative.format( path.toString() );
                 return Status.createErrorStatus( message );
             }
             else
@@ -59,7 +68,7 @@ public final class RelativePathValidationService extends PathValidationService
                         }
                         else
                         {
-                            final String message = NLS.bind( Resources.pathIsNotFile, absolutePath.toPortableString() );
+                            final String message = pathIsNotFile.format( absolutePath.toPortableString() );
                             return Status.createErrorStatus( message );
                         }
                     }
@@ -67,7 +76,7 @@ public final class RelativePathValidationService extends PathValidationService
                     {
                         if( ! absolutePathFile.isDirectory() )
                         {
-                            final String message = NLS.bind( Resources.pathIsNotFolder, absolutePath.toPortableString() );
+                            final String message = pathIsNotFolder.format( absolutePath.toPortableString() );
                             return Status.createErrorStatus( message );
                         }
                     }
@@ -80,17 +89,17 @@ public final class RelativePathValidationService extends PathValidationService
             {
                 if( this.validResourceType == FileSystemResourceType.FILE )
                 {
-                    final String message = Resources.bind( Resources.fileMustExist, path.toString() );
+                    final String message = fileMustExist.format( path.toString() );
                     return Status.createErrorStatus( message );
                 }
                 else if( this.validResourceType == FileSystemResourceType.FOLDER )
                 {
-                    final String message = Resources.bind( Resources.folderMustExist, path.toString() );
+                    final String message = folderMustExist.format( path.toString() );
                     return Status.createErrorStatus( message );
                 }
                 else
                 {
-                    final String message = Resources.bind( Resources.resourceMustExist, path.toString() );
+                    final String message = resourceMustExistMessage.format( path.toString() );
                     return Status.createErrorStatus( message );
                 }
             }
@@ -106,16 +115,6 @@ public final class RelativePathValidationService extends PathValidationService
         {
             final Property property = context.find( Property.class );
             return ( property != null && Path.class.isAssignableFrom( property.definition().getTypeClass() ) && property.service( RelativePathService.class ) != null );
-        }
-    }
-    
-    private static final class LocalResources extends NLS
-    {
-        public static String couldNotResolveRelative;
-        
-        static
-        {
-            initializeMessages( RelativePathValidationService.class.getName(), LocalResources.class );
         }
     }
     

@@ -47,7 +47,7 @@ public final class Result<T>
     
     public T required()
     {
-        if( this.object == null )
+        if( this.exception != null )
         {
             throw this.exception;
         }

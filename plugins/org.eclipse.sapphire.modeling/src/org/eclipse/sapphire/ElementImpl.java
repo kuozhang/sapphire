@@ -31,7 +31,6 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.EqualityService;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.Service;
@@ -48,6 +47,17 @@ import org.eclipse.sapphire.util.SortedSetFactory;
 
 public abstract class ElementImpl implements Element
 {
+    @Text( "{0} element is already disposed." )
+    private static LocalizableText elementAlreadyDisposed;
+    
+    @Text( "Path \"{1}\" is invalid for {0}." )
+    private static LocalizableText illegalPathException;
+    
+    static
+    {
+        LocalizableText.init( ElementImpl.class );
+    }
+
     private static final Comparator<Property> PROPERTY_INSTANCE_COMPARATOR = new Comparator<Property>()
     {
         public int compare( final Property x, final Property y )
@@ -991,20 +1001,14 @@ public abstract class ElementImpl implements Element
     {
         if( disposed() )
         {
-            final String msg = NLS.bind( Resources.elementAlreadyDisposed, this.type.getSimpleName() );
+            final String msg = elementAlreadyDisposed.format( this.type.getSimpleName() );
             throw new IllegalStateException( msg );
         }
     }
     
     private final IllegalArgumentException createIllegalPathException( final ModelPath path )
     {
-        final String message = NLS.bind
-        (
-            Resources.illegalPathException,
-            this.type.getModelElementClass().getName(),
-            path.toString()
-        );
-        
+        final String message = illegalPathException.format( this.type.getModelElementClass().getName(), path.toString() );
         return new IllegalArgumentException( message );
     }
     
@@ -1063,17 +1067,6 @@ public abstract class ElementImpl implements Element
         }
         
         return value;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String elementAlreadyDisposed;
-        public static String illegalPathException;
-        
-        static
-        {
-            initializeMessages( ElementImpl.class.getName(), Resources.class );
-        }
     }
     
 }

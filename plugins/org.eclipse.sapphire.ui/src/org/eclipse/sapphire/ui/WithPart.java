@@ -33,17 +33,18 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.def.FormDef;
@@ -73,6 +74,20 @@ import org.eclipse.swt.widgets.Label;
 
 public final class WithPart extends PageBookPart
 {
+    @Text( "None" )
+    private static LocalizableText noneSelection;
+    
+    @Text( "No additional properties are currently available." )
+    private static LocalizableText noAdditionalPropertiesMessage;
+    
+    @Text( "Enable {0}" )
+    private static LocalizableText enableElementLabel; 
+    
+    static
+    {
+        LocalizableText.init( WithPart.class );
+    }
+
     private static FormDef defaultPageDef;
     
     private ModelPath path;
@@ -136,7 +151,7 @@ public final class WithPart extends PageBookPart
             final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
             final FormDef form = (FormDef) root.getPartDefs().insert( FormDef.TYPE );
             final ISapphireLabelDef label = (ISapphireLabelDef) form.getContent().insert( ISapphireLabelDef.TYPE );
-            label.setText( Resources.noAdditionalPropertiesMessage );
+            label.setText( noAdditionalPropertiesMessage.text() );
             
             defaultPageDef = form;
         }
@@ -238,7 +253,7 @@ public final class WithPart extends PageBookPart
                         
                         if( masterCheckBoxText == null )
                         {
-                            masterCheckBoxText = NLS.bind( Resources.enableElementLabel, type.getLabel( true, CapitalizationType.NO_CAPS, false ) ); 
+                            masterCheckBoxText = enableElementLabel.format( type.getLabel( true, CapitalizationType.NO_CAPS, false ) ); 
                         }
                         
                         final Button masterCheckBox = new Button( innerTypeSelectorComposite, SWT.CHECK );
@@ -307,7 +322,7 @@ public final class WithPart extends PageBookPart
                         final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( context, innerTypeSelectorComposite, false );
                         radioButtonsGroup.setLayoutData( gdhfill() );
                         
-                        final Button noneButton = radioButtonsGroup.addRadioButton( Resources.noneSelection );
+                        final Button noneButton = radioButtonsGroup.addRadioButton( noneSelection.text() );
                         decorator.addEditorControl( noneButton );
                         actionPresentationKeyboard.attach( noneButton );
                         context.setHelp( noneButton, property.element(), property.definition() );
@@ -404,7 +419,7 @@ public final class WithPart extends PageBookPart
                         actionPresentationKeyboard.attach( combo );
                         context.setHelp( combo, property.element(), property.definition() );
                         
-                        combo.add( Resources.noneSelection );
+                        combo.add( noneSelection.text() );
                         
                         final Map<ElementType,Integer> typeToIndex = new HashMap<ElementType,Integer>();
                         final Map<Integer,ElementType> indexToType = new HashMap<Integer,ElementType>();
@@ -660,7 +675,7 @@ public final class WithPart extends PageBookPart
             {
                 final SapphireFormText text = new SapphireFormText( context.getComposite(), SWT.NONE );
                 text.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
-                text.setText( Resources.noAdditionalPropertiesMessage, false, false );
+                text.setText( noAdditionalPropertiesMessage.text(), false, false );
             }
         }
         
@@ -717,18 +732,6 @@ public final class WithPart extends PageBookPart
         public String toString()
         {
             return this.text;
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String noneSelection;
-        public static String noAdditionalPropertiesMessage;
-        public static String enableElementLabel; 
-        
-        static
-        {
-            initializeMessages( WithPart.class.getName(), Resources.class );
         }
     }
 

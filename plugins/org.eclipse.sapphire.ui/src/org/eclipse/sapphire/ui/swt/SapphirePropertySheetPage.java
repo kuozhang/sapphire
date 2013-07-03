@@ -24,9 +24,10 @@ import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPagePart;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
@@ -61,6 +62,14 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 
 public final class SapphirePropertySheetPage implements IPropertySheetPage
 {
+    @Text( "No Properties" )
+    private static LocalizableText noProperties;
+    
+    static
+    {
+        LocalizableText.init( SapphirePropertySheetPage.class );
+    }
+
     private PropertiesViewContributionPart part;
     private Composite composite;
     private Font noPropertiesFont;
@@ -112,7 +121,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             
             final Label label = new Label( labelComposite, SWT.CENTER );
             label.setLayoutData( gdhalign( gdhfill(), SWT.CENTER ) );
-            label.setText( Resources.noProperties );
+            label.setText( noProperties.text() );
             
             final Label spacerRight = new Label( labelComposite, SWT.NONE );
             spacerRight.setLayoutData( gdvfill() );
@@ -343,16 +352,6 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             
             this.noPropertiesFontColor.dispose();
             this.noPropertiesFontColor = null;
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String noProperties;
-        
-        static
-        {
-            initializeMessages( SapphirePropertySheetPage.class.getName(), Resources.class );
         }
     }
 

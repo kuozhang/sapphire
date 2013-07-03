@@ -13,11 +13,12 @@ package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -28,6 +29,20 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class CountConstraintValidationService extends ValidationService
 {
+    @Text( "At least {1} {0} must be specified." )
+    private static LocalizableText countConstraintTooFew;
+    
+    @Text( "At least one {0} must be specified." )
+    private static LocalizableText countConstraintTooFewAtLeastOne;
+    
+    @Text( "Cannot specify more than {1} {0} items." )
+    private static LocalizableText countConstraintTooMany;
+    
+    static
+    {
+        LocalizableText.init( CountConstraintValidationService.class );
+    }
+
     private CountConstraint constraint;
     
     @Override
@@ -49,21 +64,27 @@ public final class CountConstraintValidationService extends ValidationService
         {
             if( this.constraint.min() == 1 )
             {
-                message = Resources.bind( Resources.countConstraintTooFewAtLeastOne, 
-                                          context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ) );
+                message = countConstraintTooFewAtLeastOne.format
+                (
+                    context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false )
+                );
             }
             else
             {
-                message = Resources.bind( Resources.countConstraintTooFew, 
-                                          context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
-                                          String.valueOf( this.constraint.min() ) );
+                message = countConstraintTooFew.format
+                ( 
+                    context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
+                    this.constraint.min()
+                );
             }
         }
         else if( count > this.constraint.max() )
         {
-            message = Resources.bind( Resources.countConstraintTooMany,
-                                      context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
-                                      String.valueOf( this.constraint.max() ) );
+            message = countConstraintTooMany.format
+            (
+                context( PropertyDef.class ).getType().getLabel( true, CapitalizationType.NO_CAPS, false ), 
+                this.constraint.max()
+            );
         }
         
         if( message == null )
@@ -86,16 +107,4 @@ public final class CountConstraintValidationService extends ValidationService
         }
     }
     
-    private static final class Resources extends NLS
-    {
-        public static String countConstraintTooFew;
-        public static String countConstraintTooFewAtLeastOne;
-        public static String countConstraintTooMany;
-        
-        static
-        {
-            initializeMessages( CountConstraintValidationService.class.getName(), Resources.class );
-        }
-    }
-
 }

@@ -13,10 +13,11 @@ package org.eclipse.sapphire.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionConstraint;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -30,6 +31,17 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class VersionCompatibilityFactsService extends FactsService
 {
+    @Text( "For {0} {1}" )
+    private static LocalizableText forVersionsFact;
+    
+    @Text( "Since {0} {1}" )
+    private static LocalizableText sinceVersionFact;
+    
+    static
+    {
+        LocalizableText.init( VersionCompatibilityFactsService.class );
+    }
+    
     @Override
     protected void facts( final SortedSet<String> facts )
     {
@@ -58,11 +70,11 @@ public final class VersionCompatibilityFactsService extends FactsService
                 
                 if( since != null )
                 {
-                    facts.add( NLS.bind( Resources.sinceVersionFact, versioned, since ) );
+                    facts.add( sinceVersionFact.format( versioned, since ) );
                 }
                 else
                 {
-                    facts.add( NLS.bind( Resources.forVersionsFact, versioned, constraint ) );
+                    facts.add( forVersionsFact.format( versioned, constraint ) );
                 }
             }
         }
@@ -91,17 +103,6 @@ public final class VersionCompatibilityFactsService extends FactsService
         public boolean applicable( final ServiceContext context )
         {
             return ( findDeclarativeVersionCompatibilityService( context.find( Property.class ) ) != null );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String forVersionsFact;
-        public static String sinceVersionFact;
-        
-        static
-        {
-            initializeMessages( VersionCompatibilityFactsService.class.getName(), Resources.class );
         }
     }
     

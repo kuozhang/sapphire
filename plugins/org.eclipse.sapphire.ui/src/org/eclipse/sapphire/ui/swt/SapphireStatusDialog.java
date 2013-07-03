@@ -31,8 +31,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -57,6 +58,29 @@ import org.eclipse.ui.PlatformUI;
 
 public final class SapphireStatusDialog extends Dialog
 {
+    @Text( "Error" )
+    private static LocalizableText errorDialogTitle;
+    
+    @Text( "Warning" )
+    private static LocalizableText warningDialogTitle;
+    
+    @Text( "Problems" )
+    private static LocalizableText problemsDialogTitle;
+    
+    @Text( "[error]" )
+    private static LocalizableText errorMessagePrefix;
+    
+    @Text( "[warning]" )
+    private static LocalizableText warningMessagePrefix;
+    
+    @Text( "Copy" )
+    private static LocalizableText copyMenuItemLabel;
+    
+    static
+    {
+        LocalizableText.init( SapphireStatusDialog.class );
+    }
+
     private final Status status;
     private TreeViewer treeViewer;
     private Tree tree;
@@ -75,11 +99,11 @@ public final class SapphireStatusDialog extends Dialog
         {
             if( status.severity() == Status.Severity.ERROR )
             {
-                MessageDialog.openError( shell, Resources.errorDialogTitle, status.message() );
+                MessageDialog.openError( shell, errorDialogTitle.text(), status.message() );
             }
             else
             {
-                MessageDialog.openWarning( shell, Resources.warningDialogTitle, status.message() );
+                MessageDialog.openWarning( shell, warningDialogTitle.text(), status.message() );
             }
         }
         else
@@ -92,7 +116,7 @@ public final class SapphireStatusDialog extends Dialog
     
     protected Control createDialogArea( final Composite parent )
     {
-        getShell().setText( Resources.problemsDialogTitle );
+        getShell().setText( problemsDialogTitle.text() );
         
         final Composite composite = (Composite) super.createDialogArea( parent );
         composite.setLayout( glspacing( glayout( 2, 10, 10 ), 10 ) );
@@ -251,7 +275,7 @@ public final class SapphireStatusDialog extends Dialog
         this.tree.setMenu( menu );
         
         final MenuItem copyMenuItem = new MenuItem( menu, SWT.PUSH );
-        copyMenuItem.setText( Resources.copyMenuItem );
+        copyMenuItem.setText( copyMenuItemLabel.text() );
         copyMenuItem.setImage( sharedImages.getImage( ISharedImages.IMG_TOOL_COPY ) );
         
         copyMenuItem.addSelectionListener
@@ -298,7 +322,7 @@ public final class SapphireStatusDialog extends Dialog
                 buf.append( nl );
             }
             
-            buf.append( st.severity() == Status.Severity.ERROR ? Resources.errorMessagePrefix : Resources.warningMessagePrefix );
+            buf.append( st.severity() == Status.Severity.ERROR ? errorMessagePrefix : warningMessagePrefix );
             buf.append( ' ' );
             buf.append( st.message() );
         }
@@ -310,24 +334,6 @@ public final class SapphireStatusDialog extends Dialog
             final Clipboard clipboard = new Clipboard( this.tree.getDisplay() );
             final TextTransfer textTransfer = TextTransfer.getInstance();
             clipboard.setContents( new Object[] { text }, new Transfer[] { textTransfer } );
-        }
-    }
-    
-    private static final class Resources
-    
-        extends NLS
-        
-    {
-        public static String errorDialogTitle;
-        public static String warningDialogTitle;
-        public static String problemsDialogTitle;
-        public static String errorMessagePrefix;
-        public static String warningMessagePrefix;
-        public static String copyMenuItem;
-        
-        static
-        {
-            initializeMessages( SapphireStatusDialog.class.getName(), Resources.class );
         }
     }
     

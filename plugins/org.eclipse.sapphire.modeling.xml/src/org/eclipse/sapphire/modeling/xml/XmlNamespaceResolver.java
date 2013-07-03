@@ -13,7 +13,8 @@ package org.eclipse.sapphire.modeling.xml;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,6 +22,14 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public abstract class XmlNamespaceResolver
 {
+    @Text( "Could not resolve namespace for {0} node name." )
+    private static LocalizableText couldNotResolveNamespace; 
+    
+    static
+    {
+        LocalizableText.init( XmlNamespaceResolver.class );
+    }
+
     public abstract String resolve( final String prefix );
     
     public final QName createQualifiedName( final String name )
@@ -43,21 +52,11 @@ public abstract class XmlNamespaceResolver
             
         if( prefix.length() != 0 && ( namespace == null || namespace.length() == 0 ) )
         {
-            final String msg = NLS.bind( Resources.couldNotResolveNamespace, name );
+            final String msg = couldNotResolveNamespace.format( name );
             throw new IllegalArgumentException( msg );
         }
         
         return new QName( namespace, localName, prefix );
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String couldNotResolveNamespace; 
-        
-        static
-        {
-            initializeMessages( XmlNamespaceResolver.class.getName(), Resources.class );
-        }
     }
     
 }

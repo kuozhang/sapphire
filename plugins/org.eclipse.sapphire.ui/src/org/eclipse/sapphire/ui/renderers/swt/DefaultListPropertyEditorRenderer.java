@@ -76,10 +76,12 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -94,7 +96,6 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ImageService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValueImageService;
@@ -159,6 +160,14 @@ import org.eclipse.swt.widgets.ToolBar;
 
 public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRenderer
 {
+    @Text( "<empty>" )
+    private static LocalizableText emptyRowIndicator;
+    
+    static
+    {
+        LocalizableText.init( DefaultListPropertyEditorRenderer.class );
+    }
+
     private boolean exposeAddAction;
     private boolean exposeDeleteAction;
     private Map<Element,TableRow> rows;
@@ -1439,7 +1448,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             {
                 if( this.columnHandler.isEmptyTextLabelDesired( element ) )
                 {
-                    label = Resources.emptyRowIndicator;
+                    label = emptyRowIndicator.text();
                 }
                 else
                 {
@@ -2295,16 +2304,6 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
             {
                 this.imageService.detach( this.listener );
             }
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String emptyRowIndicator;
-        
-        static
-        {
-            initializeMessages( DefaultListPropertyEditorRenderer.class.getName(), Resources.class );
         }
     }
     

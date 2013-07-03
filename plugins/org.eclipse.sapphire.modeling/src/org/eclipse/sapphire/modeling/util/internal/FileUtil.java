@@ -13,9 +13,10 @@ package org.eclipse.sapphire.modeling.util.internal;
 
 import java.io.File;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.StatusException;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,13 +24,24 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public final class FileUtil
 {
+    @Text( "Failed to create directory \"{0}\"." )
+    private static LocalizableText failedToCreateDirectory;
+    
+    @Text( "Location \"{0}\" is a file." )
+    private static LocalizableText locationIsFile;
+    
+    static
+    {
+        LocalizableText.init( FileUtil.class );
+    }
+
     public static void mkdirs( final File f ) throws StatusException
     {
         if( f.exists() )
         {
             if( f.isFile() )
             {
-                final String msg = NLS.bind( Resources.locationIsFile, f.getAbsolutePath() );
+                final String msg = locationIsFile.format( f.getAbsolutePath() );
                 throw new StatusException( Status.createErrorStatus( msg ) );
             }
         }
@@ -41,20 +53,9 @@ public final class FileUtil
             
             if( ! isSuccessful )
             {
-                final String msg = NLS.bind( Resources.failedToCreateDirectory, f.getAbsolutePath() );
+                final String msg = failedToCreateDirectory.format( f.getAbsolutePath() );
                 throw new StatusException( Status.createErrorStatus( msg ) );
             }
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String failedToCreateDirectory;
-        public static String locationIsFile;
-        
-        static
-        {
-            initializeMessages( FileUtil.class.getName(), Resources.class );
         }
     }
 

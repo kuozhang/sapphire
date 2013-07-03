@@ -26,12 +26,13 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -39,6 +40,23 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public abstract class FunctionResult
 {
+    @Text( "Cannot convert {0} to {1}." )
+    private static LocalizableText cannotCastMessage;
+    
+    @Text( "Function {0} missing operand {1}." )
+    private static LocalizableText missingOperandMessage;
+    
+    @Text( "Function {0} does not accept nulls in position {1}." )
+    private static LocalizableText operandNullMessage;
+    
+    @Text( "Function {0} expects {2} in position {1}, but {3} was found. A conversion was not possible." )
+    private static LocalizableText operandWrongTypeMessage;
+    
+    static
+    {
+        LocalizableText.init( FunctionResult.class );
+    }
+
     private final Function function;
     private final FunctionContext context;
     private final List<FunctionResult> operands;
@@ -137,7 +155,7 @@ public abstract class FunctionResult
         }
         else
         {
-            throw new FunctionException( NLS.bind( Resources.missingOperandMessage, getClass().getName(), String.valueOf( position ) ) );
+            throw new FunctionException( missingOperandMessage.format( getClass().getName(), String.valueOf( position ) ) );
         }
     }
     
@@ -152,13 +170,13 @@ public abstract class FunctionResult
         }
         catch( FunctionException e )
         {
-            final String msg = NLS.bind( Resources.operandWrongTypeMessage, function().name(), position, type.getName(), operand.getClass().getName() );
+            final String msg = operandWrongTypeMessage.format( function().name(), position, type.getName(), operand.getClass().getName() );
             throw new FunctionException( msg );
         }
         
         if( operandTyped == null && ! nullable )
         {
-            final String msg = NLS.bind( Resources.operandNullMessage, function().name(), position );
+            final String msg = operandNullMessage.format( function().name(), position );
             throw new FunctionException( msg );
         }
         
@@ -406,7 +424,7 @@ public abstract class FunctionResult
                 }
                 else if( obj instanceof Boolean )
                 {
-                    throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                    throw new FunctionException( cannotCastMessage.format( obj.getClass().getName(), type.getName() ) );
                 }
                 
                 if( obj.getClass() == type )
@@ -498,7 +516,7 @@ public abstract class FunctionResult
                     }
                 }
     
-                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                throw new FunctionException( cannotCastMessage.format( obj.getClass().getName(), type.getName() ) );
             }
             else if( type == Character.class )
             {
@@ -517,7 +535,7 @@ public abstract class FunctionResult
                 }
                 else if( obj instanceof Boolean )
                 {
-                    throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                    throw new FunctionException( cannotCastMessage.format( obj.getClass().getName(), type.getName() ) );
                 }
                 else if( obj instanceof Number )
                 {
@@ -528,7 +546,7 @@ public abstract class FunctionResult
                     return type.cast( ( (String) obj ).charAt( 0 ) );
                 }
     
-                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                throw new FunctionException( cannotCastMessage.format( obj.getClass().getName(), type.getName() ) );
             }
             else if( type == Boolean.class )
             {
@@ -550,7 +568,7 @@ public abstract class FunctionResult
                     return type.cast( Boolean.valueOf( (String) obj ) );
                 }
     
-                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                throw new FunctionException( cannotCastMessage.format( obj.getClass().getName(), type.getName() ) );
             }
             else if( List.class.isAssignableFrom( type ) )
             {
@@ -641,7 +659,7 @@ public abstract class FunctionResult
                     }
                 }
                 
-                throw new FunctionException( NLS.bind( Resources.cannotCastMessage, obj.getClass().getName(), type.getName() ) );
+                throw new FunctionException( cannotCastMessage.format( obj.getClass().getName(), type.getName() ) );
             }
         }
         catch( FunctionException e )
@@ -730,19 +748,6 @@ public abstract class FunctionResult
         else
         {
             return a.equals( b );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String cannotCastMessage;
-        public static String missingOperandMessage;
-        public static String operandNullMessage;
-        public static String operandWrongTypeMessage;
-        
-        static
-        {
-            initializeMessages( FunctionResult.class.getName(), Resources.class );
         }
     }
     

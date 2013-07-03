@@ -19,8 +19,9 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.osgi.BundleBasedContext;
 import org.eclipse.sapphire.ui.SapphireEditor;
@@ -37,6 +38,14 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class SapphireEditorForXml extends SapphireEditor implements IExecutableExtension
 {
+    @Text( "Source" )
+    private static LocalizableText sourcePageTitle;
+    
+    static 
+    {
+        LocalizableText.init( SapphireEditorForXml.class );
+    }
+
     private ElementType type;
     private DefinitionLoader.Reference<EditorPageDef> definition;
     private StructuredTextEditor sourcePage;
@@ -107,7 +116,7 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
         this.sourcePage.setEditorPart( this );
         
         final int index = addPage( this.sourcePage, getEditorInput() );
-        setPageText( index, Resources.sourcePageTitle );
+        setPageText( index, sourcePageTitle.text() );
     }
     
     @Override
@@ -137,16 +146,6 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
         this.definition = null;
         this.sourcePage = null;
         this.formPage = null;
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String sourcePageTitle;
-    
-        static 
-        {
-            initializeMessages( SapphireEditorForXml.class.getName(), Resources.class );
-        }
     }
 
 }

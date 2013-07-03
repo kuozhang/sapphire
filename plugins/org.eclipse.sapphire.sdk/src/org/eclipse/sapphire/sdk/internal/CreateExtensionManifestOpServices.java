@@ -21,12 +21,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.sdk.CreateExtensionManifestOp;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.InitialValueServiceData;
@@ -38,6 +39,14 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class CreateExtensionManifestOpServices
 {
+    @Text( "Sapphire extension manifest should be placed in a META-INF folder under a Java source folder. Folder \"{0}\" is invalid." )
+    private static LocalizableText invalidFolder;  
+    
+    static
+    {
+        LocalizableText.init( CreateExtensionManifestOpServices.class );
+    }
+
     private CreateExtensionManifestOpServices() {}
     
     public static final class FolderValidationService extends ValidationService
@@ -69,7 +78,7 @@ public final class CreateExtensionManifestOpServices
                             
                             if( ! pathRelativeToSourceFolder.equals( new org.eclipse.core.runtime.Path( "META-INF" ) ) )
                             {
-                                final String msg = NLS.bind( Resources.invalidFolder, path.toPortableString() );
+                                final String msg = invalidFolder.format( path.toPortableString() );
                                 return Status.createWarningStatus( msg );
                             }
                         }
@@ -77,7 +86,7 @@ public final class CreateExtensionManifestOpServices
                         
                     if( ! locatedInSourceFolder )
                     {
-                        final String msg = NLS.bind( Resources.invalidFolder, path.toPortableString() );
+                        final String msg = invalidFolder.format( path.toPortableString() );
                         return Status.createWarningStatus( msg );
                     }
                 }
@@ -135,16 +144,6 @@ public final class CreateExtensionManifestOpServices
             {
                 context( CreateExtensionManifestOp.class ).property( CreateExtensionManifestOp.PROP_CONTEXT ).detach( this.listener );
             }
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String invalidFolder;  
-        
-        static
-        {
-            initializeMessages( CreateExtensionManifestOpServices.class.getName(), Resources.class );
         }
     }
     

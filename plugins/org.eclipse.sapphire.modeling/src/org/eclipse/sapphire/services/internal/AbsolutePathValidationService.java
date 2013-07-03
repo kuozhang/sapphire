@@ -49,7 +49,7 @@ public final class AbsolutePathValidationService extends PathValidationService
                     }
                     else
                     {
-                        final String message = Resources.bind( Resources.pathIsNotFile, path.toString() );
+                        final String message = pathIsNotFile.format( path.toString() );
                         return Status.createErrorStatus( message );
                     }
                 }
@@ -57,7 +57,7 @@ public final class AbsolutePathValidationService extends PathValidationService
                 {
                     if( ! f.isDirectory() )
                     {
-                        final String message = Resources.bind( Resources.pathIsNotFolder, path.toString() );
+                        final String message = pathIsNotFolder.format( path.toString() );
                         return Status.createErrorStatus( message );
                     }
                 }
@@ -68,17 +68,17 @@ public final class AbsolutePathValidationService extends PathValidationService
                 {
                     if( this.validResourceType == FileSystemResourceType.FILE )
                     {
-                        final String message = Resources.bind( Resources.fileMustExist, path.toString() );
+                        final String message = fileMustExist.format( path.toString() );
                         return Status.createErrorStatus( message );
                     }
                     else if( this.validResourceType == FileSystemResourceType.FOLDER )
                     {
-                        final String message = Resources.bind( Resources.folderMustExist, path.toString() );
+                        final String message = folderMustExist.format( path.toString() );
                         return Status.createErrorStatus( message );
                     }
                     else
                     {
-                        final String message = Resources.bind( Resources.resourceMustExist, path.toString() );
+                        final String message = resourceMustExistMessage.format( path.toString() );
                         return Status.createErrorStatus( message );
                     }
                 }

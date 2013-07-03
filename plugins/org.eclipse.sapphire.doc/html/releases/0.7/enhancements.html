@@ -16,6 +16,30 @@
 <head>
   <title>Enhancements in Sapphire 0.7</title>
   <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code-compare 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+    .unaffected
+    {
+      color: #888888
+    }
+    .comment
+    {
+      color: #006600;
+      font-style: italic
+    }
+  </style>
 </head>
 
 <body>
@@ -28,6 +52,7 @@
     <li><a href="#Key-OnDemandElementCompilation">On-Demand Element Compilation</a></li>
     <li><a href="#Key-ConsolidatedConversions">Consolidated Conversions</a></li>
     <li><a href="#Key-ExtensiblePersistentState">Extensible Persistent State</a></li>
+    <li><a href="#Key-ImprovedJavaLocalization">Improved Localization for Java Code</a></li>
   </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
@@ -479,6 +504,99 @@ that references the CatalogItemImage() function.</p>
         &lt;image></font>${ CatalogItemImage() }<font color="#888888">&lt;/image>
     &lt;/case>
 &lt;/node-factory></font></code></pre>
+
+
+<h2><a name="Key-ImprovedJavaLocalization">Improved Localization for Java Code</a></h2>
+
+<p>Within Java code, such as an implementation of a service, Sapphire has previously relied on the NLS class copied 
+from Eclipse platform. The developer experience has been improved.</p>
+
+<ul>
+
+  <li><p>The static fields holding localizable text are able to exist in any class, not just a dedicated resource bundle class.</p></li>
+  
+  <li><p>Formatting messages using localizable text as a template is more fluid.</p>
+  
+  <p><code>Resources.message.format( x, y )</code> &nbsp;vs &nbsp;<code>NLS.bind( Resources.message, x, y )</code></p>
+  
+  <li><p>The original text can be specified using an annotation, concentrating text closer to the point of use and avoiding
+  numerous problems associated with maintaining text in discrete resource files. When time comes to do the translation, an
+  annotation processor or a similar build system can be used to extract text into resource files. Only the translated versions
+  of the resource files need to be distributed. The original text will be read from the annotations at runtime.</p></li>
+  
+</ul>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code-compare"><code><span class="unaffected">public class Validator
+{
+    public String validate( Integer value, Integer max )
+    {
+        if( value == null )
+        {
+            return</span> Resources.<span class="unaffected">mustBeSpecifiedMessage;
+        }
+        else if( max != null && value.intValue() > max.intValue() )
+        {
+            return</span> NLS.bind( Resources.<span class="unaffected">mustNobeLargerThanMessage</span>, <span class="unaffected">max</span> )<span class="unaffected">;
+        }
+
+        return null;
+    }</span>
+
+    private static final class Resources extends NLS 
+    {
+        public <span class="unaffected">static</span> String <span class="unaffected">mustBeSpecifiedMessage;</span>
+        public <span class="unaffected">static</span> String <span class="unaffected">mustNotBeLargerThanMessage;
+
+        static 
+        {</span>
+            initializeMessages( Validator.class.getName(), Resources.class );
+        <span class="unaffected">}</span>
+    }
+<span class="unaffected">}</span>
+
+<span class="comment"># Content of Validator.properties file</span>
+
+mustBeSpecifiedMessage = <span class="unaffected">Value must be specified.</span>
+mustNotBeLargerThanMessage = <span class="unaffected">Value must not be larger than {0}.</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code-compare"><code><span class="unaffected">public class Validator
+{</span>
+    @Text( "<span class="unaffected">Value must be specified.</span>" )
+    private <span class="unaffected">static</span> LocalizableText <span class="unaffected">mustBeSpecifiedMessage;</span>
+
+    @Text( "<span class="unaffected">Value must not be larger than {0}.</span>" )
+    private <span class="unaffected">static</span> LocalizableText <span class="unaffected">mustNotBeLargerThanMessage;</span>
+
+    <span class="unaffected">static
+    {</span>
+        LocalizableText.init( Validator.class );
+    <span class="unaffected">}
+
+    public String validate( Integer value, Integer max )
+    {
+        if( value == null )
+        {
+            return mustBeSpecifiedMessage</span>.text()<span class="unaffected">;
+        }
+        else if( max != null && value.intValue() > max.intValue() )
+        {
+            return mustNotBeLargerThanMessage</span>.format( <span class="unaffected">max</span> )<span class="unaffected">;
+        }
+
+        return null;
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="Core"><a name="Core-Element">Element</a></a></h2>

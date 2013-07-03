@@ -15,9 +15,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
@@ -29,6 +30,14 @@ import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 public final class SapphireActionPresentationManager
 {
+    @Text( "actions" )
+    private static LocalizableText defaultLabel;
+    
+    static
+    {
+        LocalizableText.init( SapphireActionPresentationManager.class );
+    }
+
     private String label;
     private final SapphireRenderingContext context;
     private final SapphireActionGroup actions;
@@ -38,7 +47,7 @@ public final class SapphireActionPresentationManager
     public SapphireActionPresentationManager( final SapphireRenderingContext context,
                                               final SapphireActionGroup actions )
     {
-        this.label = Resources.defaultLabel;
+        this.label = defaultLabel.text();
         this.context = context;
         this.actions = actions;
         this.presentations = new ArrayList<SapphireActionPresentation>();
@@ -54,7 +63,7 @@ public final class SapphireActionPresentationManager
     {
         if( label == null )
         {
-            this.label = Resources.defaultLabel;
+            this.label = defaultLabel.text();
         }
         else
         {
@@ -99,16 +108,6 @@ public final class SapphireActionPresentationManager
             {
                 SapphireUiFrameworkPlugin.log( e );
             }
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String defaultLabel;
-    
-        static
-        {
-            initializeMessages( SapphireActionPresentationManager.class.getName(), Resources.class );
         }
     }
     

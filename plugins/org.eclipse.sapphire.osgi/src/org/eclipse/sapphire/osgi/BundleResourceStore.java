@@ -18,11 +18,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.StandardLocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.osgi.framework.Bundle;
 
 /**
@@ -31,6 +32,14 @@ import org.osgi.framework.Bundle;
 
 public class BundleResourceStore extends UrlResourceStore
 {
+    @Text( "Could not find resource \"{1}\" in bundle \"{0}\"." )
+    private static LocalizableText couldNotFindBundleResource;
+    
+    static
+    {
+        LocalizableText.init( BundleResourceStore.class );
+    }
+
     private final String bundleId;
     private final String path;
     private Bundle bundle;
@@ -131,7 +140,7 @@ public class BundleResourceStore extends UrlResourceStore
         
         if( url == null && throwExceptionOnNotFound )
         {
-            final String msg = NLS.bind( Resources.couldNotFindBundleResource, bundleId, path );
+            final String msg = couldNotFindBundleResource.format( bundleId, path );
             throw new IllegalArgumentException( msg );
         }
         
@@ -156,16 +165,6 @@ public class BundleResourceStore extends UrlResourceStore
         }
 
         return super.adapt( adapterType );
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String couldNotFindBundleResource;
-        
-        static
-        {
-            initializeMessages( BundleResourceStore.class.getName(), Resources.class );
-        }
     }
 
 }

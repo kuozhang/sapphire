@@ -13,13 +13,14 @@ package org.eclipse.sapphire.ui.internal;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEnablementEvent;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.ui.PartFunctionContext;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -33,6 +34,14 @@ import org.eclipse.sapphire.ui.SapphirePart;
 
 public final class PropertyEditorEnabledFunction extends Function
 {
+    @Text( "Context property editor not found." )
+    private static LocalizableText contextPropertyEditorNotFound;
+    
+    static
+    {
+        LocalizableText.init( PropertyEditorEnabledFunction.class );
+    }
+
     @Override
     public String name()
     {
@@ -88,17 +97,7 @@ public final class PropertyEditorEnabledFunction extends Function
             }
         }
         
-        throw new FunctionException( Resources.contextPropertyEditorNotFound );
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String contextPropertyEditorNotFound;
-        
-        static
-        {
-            initializeMessages( PropertyEditorEnabledFunction.class.getName(), Resources.class );
-        }
+        throw new FunctionException( contextPropertyEditorNotFound.text() );
     }
     
 }

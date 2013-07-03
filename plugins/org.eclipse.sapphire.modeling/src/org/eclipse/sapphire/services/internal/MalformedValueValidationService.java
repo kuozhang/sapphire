@@ -12,12 +12,13 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.localization.LocalizationSystem;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -28,6 +29,14 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class MalformedValueValidationService extends ValidationService
 {
+    @Text( "\"{1}\" is not a valid {0}." )
+    private static LocalizableText cannotParseValueMessage;
+    
+    static
+    {
+        LocalizableText.init( MalformedValueValidationService.class );
+    }
+
     private String valueTypeName;
     
     @Override
@@ -43,7 +52,7 @@ public final class MalformedValueValidationService extends ValidationService
                 this.valueTypeName = LocalizationSystem.service( type ).label( type, CapitalizationType.NO_CAPS, false );
             }
             
-            final String msg = NLS.bind( Resources.cannotParseValueMessage, this.valueTypeName, value.text() );
+            final String msg = cannotParseValueMessage.format( this.valueTypeName, value.text() );
             return Status.createErrorStatus( msg );
         }
         else
@@ -59,16 +68,6 @@ public final class MalformedValueValidationService extends ValidationService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && ! String.class.isAssignableFrom( property.getTypeClass() ) );
-        }
-    }
-
-    private static final class Resources extends NLS
-    {
-        public static String cannotParseValueMessage;
-    
-        static
-        {
-            initializeMessages( MalformedValueValidationService.class.getName(), Resources.class );
         }
     }
     

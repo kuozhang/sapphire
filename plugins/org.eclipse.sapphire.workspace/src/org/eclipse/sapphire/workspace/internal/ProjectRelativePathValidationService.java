@@ -13,10 +13,11 @@ package org.eclipse.sapphire.workspace.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -28,6 +29,14 @@ import org.eclipse.sapphire.workspace.ProjectRelativePath;
 
 public final class ProjectRelativePathValidationService extends ValidationService
 {
+    @Text( "No context project found." )
+    private static LocalizableText message;
+    
+    static
+    {
+        LocalizableText.init( ProjectRelativePathValidationService.class );
+    }
+    
     @Override
     public Status validate()
     {
@@ -39,7 +48,7 @@ public final class ProjectRelativePathValidationService extends ValidationServic
             
             if( project == null )
             {
-                return Status.createErrorStatus( Resources.message );
+                return Status.createErrorStatus( message.text() );
             }
         }
         
@@ -53,16 +62,6 @@ public final class ProjectRelativePathValidationService extends ValidationServic
         {
             final ValueProperty property = context.find( ValueProperty.class );
             return ( property != null && Path.class.isAssignableFrom( property.getTypeClass() ) && property.hasAnnotation( ProjectRelativePath.class ) );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String message;
-        
-        static
-        {
-            initializeMessages( ProjectRelativePathValidationService.class.getName(), Resources.class );
         }
     }
     

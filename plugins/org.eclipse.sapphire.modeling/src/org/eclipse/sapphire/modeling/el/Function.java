@@ -13,7 +13,8 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
-import org.eclipse.sapphire.modeling.util.NLS;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -22,6 +23,14 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public abstract class Function
 {
+    @Text( "Function {0} missing operand {1}." )
+    private static LocalizableText missingOperandMessage;
+    
+    static
+    {
+        LocalizableText.init( Function.class );
+    }
+
     private Object origin;
     private boolean originInitialized;
     private List<Function> operands = ListFactory.empty();
@@ -85,7 +94,7 @@ public abstract class Function
         }
         else
         {
-            throw new FunctionException( NLS.bind( Resources.missingOperandMessage, getClass().getName(), String.valueOf( position ) ) );
+            throw new FunctionException( missingOperandMessage.format( getClass().getName(), String.valueOf( position ) ) );
         }
     }
     
@@ -188,16 +197,6 @@ public abstract class Function
             }
             
             buf.append( ')' );
-        }
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String missingOperandMessage;
-        
-        static
-        {
-            initializeMessages( Function.class.getName(), Resources.class );
         }
     }
     

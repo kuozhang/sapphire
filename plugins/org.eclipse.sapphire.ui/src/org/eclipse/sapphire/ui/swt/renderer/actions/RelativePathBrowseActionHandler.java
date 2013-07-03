@@ -38,14 +38,15 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -76,6 +77,14 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     public static final String PARAM_EXTENSIONS = "extensions";
     public static final String PARAM_LEADING_SLASH = "leading-slash";
     
+    @Text( "&relative path" )
+    private static LocalizableText label;
+
+    static 
+    {
+        LocalizableText.init( RelativePathBrowseActionHandler.class );
+    }
+
     private FileExtensionsService fileExtensionService;
     private List<String> staticFileExtensionsList;
     private FileSystemResourceType type;
@@ -88,7 +97,7 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
         super.init( action, def );
 
         setId( ID );
-        setLabel( Resources.label );
+        setLabel( label.text() );
         addImage( IMG_FILE );
         
         final Property property = property();
@@ -904,16 +913,6 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
             {
                 return 1;
             }
-        }
-    }
-    
-    private static final class Resources extends NLS 
-    {
-        public static String label;
-
-        static 
-        {
-            initializeMessages( RelativePathBrowseActionHandler.class.getName(), Resources.class );
         }
     }
 

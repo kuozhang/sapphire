@@ -21,10 +21,11 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,6 +33,20 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public abstract class AggregateFunction extends Function
 {
+    @Text( "Property {0}.{1} could not be found." )
+    private static LocalizableText missingProperty;
+    
+    @Text( "Property {0}.{1} is not a value property." )
+    private static LocalizableText notValueProperty;
+    
+    @Text( "Element type {0} does not contain a value property." )
+    private static LocalizableText noValueProperties;
+    
+    static
+    {
+        LocalizableText.init( AggregateFunction.class );
+    }
+
     protected static abstract class AggregateFunctionResult extends FunctionResult
     {
         private Element lastListParentElement;
@@ -67,12 +82,12 @@ public abstract class AggregateFunction extends Function
                         
                         if( prop == null )
                         {
-                            throw new FunctionException( NLS.bind( Resources.missingProperty, listEntryType.getSimpleName(), listEntryPropertyName ) );
+                            throw new FunctionException( missingProperty.format( listEntryType.getSimpleName(), listEntryPropertyName ) );
                         }
                         
                         if( ! ( prop instanceof ValueProperty ) )
                         {
-                            throw new FunctionException( NLS.bind( Resources.notValueProperty, listEntryType.getSimpleName(), listEntryPropertyName ) );
+                            throw new FunctionException( notValueProperty.format( listEntryType.getSimpleName(), listEntryPropertyName ) );
                         }
                     
                         listEntryProperty = (ValueProperty) prop;
@@ -92,7 +107,7 @@ public abstract class AggregateFunction extends Function
                         
                         if( prop == null )
                         {
-                            throw new FunctionException( NLS.bind( Resources.noValueProperties, listEntryType.getSimpleName() ) );
+                            throw new FunctionException( noValueProperties.format( listEntryType.getSimpleName() ) );
                         }
                         
                         listEntryProperty = prop;
@@ -161,16 +176,4 @@ public abstract class AggregateFunction extends Function
         }
     }
     
-    private static final class Resources extends NLS
-    {
-        public static String missingProperty;
-        public static String notValueProperty;
-        public static String noValueProperties;
-        
-        static
-        {
-            initializeMessages( AggregateFunction.class.getName(), Resources.class );
-        }
-    }
-
 }

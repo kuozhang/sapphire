@@ -11,15 +11,17 @@
 
 package org.eclipse.sapphire.services;
 
+import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.util.Comparators;
 import org.eclipse.sapphire.util.Filters;
 import org.eclipse.sapphire.util.SetFactory;
@@ -31,6 +33,14 @@ import org.eclipse.sapphire.util.SortedSetFactory;
 
 public abstract class PossibleValuesService extends Service
 {
+    @Text( "\"{0}\" is not among possible values for {1}." )
+    private static LocalizableText defaultInvalidValueMessage;
+    
+    static
+    {
+        LocalizableText.init( PossibleValuesService.class );
+    }
+    
     private final String invalidValueMessageTemplate;
     private final Status.Severity invalidValueSeverity;
     private final boolean caseSensitive;
@@ -43,7 +53,7 @@ public abstract class PossibleValuesService extends Service
     {
         if( invalidValueMessageTemplate == null || invalidValueMessageTemplate.length() == 0 )
         {
-            this.invalidValueMessageTemplate = Resources.defaultInvalidValueMessage;
+            this.invalidValueMessageTemplate = defaultInvalidValueMessage.text();
         }
         else
         {
@@ -81,7 +91,7 @@ public abstract class PossibleValuesService extends Service
     
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
     }
     
     public Status.Severity getInvalidValueSeverity( final String invalidValue )
@@ -104,16 +114,6 @@ public abstract class PossibleValuesService extends Service
     public boolean ordered()
     {
         return this.ordered;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String defaultInvalidValueMessage;
-        
-        static
-        {
-            initializeMessages( PossibleValuesService.class.getName(), Resources.class );
-        }
     }
     
 }

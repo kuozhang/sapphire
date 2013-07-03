@@ -17,10 +17,11 @@ import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -28,12 +29,29 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public class FunctionContext
 {
+    @Text( "Property \"{0}\" is undefined." )
+    private static LocalizableText undefinedPropertyMessage;
+    
+    @Text( "Property \"{0}\" is undefined for {1} objects." )
+    private static LocalizableText undefinedPropertyMessageExt;
+    
+    @Text( "Cannot read properties from null object." )
+    private static LocalizableText cannotReadPropertiesFromNull;
+    
+    @Text( "Index {0} is outside the bounds of the collection." )
+    private static LocalizableText indexOutOfBounds;
+    
+    static
+    {
+        LocalizableText.init( FunctionContext.class );
+    }
+
     public FunctionResult property( final Object element,
                                     final String name )
     {
         if( element == null )
         {
-            throw new FunctionException( Resources.cannotReadPropertiesFromNull );
+            throw new FunctionException( cannotReadPropertiesFromNull.text() );
         }
         else
         {
@@ -106,7 +124,7 @@ public class FunctionContext
                                         }
                                         else
                                         {
-                                            throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
+                                            throw new FunctionException( indexOutOfBounds.format( index ) );
                                         }
                                     }
                                 };
@@ -141,7 +159,7 @@ public class FunctionContext
                                         }
                                         else
                                         {
-                                            throw new FunctionException( NLS.bind( Resources.indexOutOfBounds, index ) );
+                                            throw new FunctionException( indexOutOfBounds.format( index ) );
                                         }
                                     }
                                 };
@@ -169,7 +187,7 @@ public class FunctionContext
         
         if( element == FunctionContext.this )
         {
-            throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessage, name ) );
+            throw new FunctionException( undefinedPropertyMessage.format( name ) );
         }
         else
         {
@@ -185,7 +203,7 @@ public class FunctionContext
                 type = cl.getName();
             }
             
-            throw new FunctionException( NLS.bind( Resources.undefinedPropertyMessageExt, name, type ) );
+            throw new FunctionException( undefinedPropertyMessageExt.format( name, type ) );
         }
     }
     
@@ -198,19 +216,6 @@ public class FunctionContext
     public LocalizationService getLocalizationService()
     {
         return SourceLanguageLocalizationService.INSTANCE;
-    }
-    
-    private static final class Resources extends NLS
-    {
-        public static String undefinedPropertyMessage;
-        public static String undefinedPropertyMessageExt;
-        public static String cannotReadPropertiesFromNull;
-        public static String indexOutOfBounds;
-        
-        static
-        {
-            initializeMessages( FunctionContext.class.getName(), Resources.class );
-        }
     }
     
 }

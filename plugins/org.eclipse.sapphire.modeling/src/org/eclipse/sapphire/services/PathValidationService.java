@@ -15,13 +15,14 @@ import java.util.List;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.modeling.util.NLS;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -29,6 +30,35 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public abstract class PathValidationService extends ValidationService
 {
+    @Text( "Folder \"{0}\" does not exist." )
+    protected static LocalizableText folderMustExist;
+    
+    @Text( "File \"{0}\" does not exist.")
+    protected static LocalizableText fileMustExist;
+    
+    @Text( "File or folder \"{0}\" does not exist." )
+    protected static LocalizableText resourceMustExistMessage;
+    
+    @Text( "Resource at location \"{0}\" is not a file." )
+    protected static LocalizableText pathIsNotFile;
+    
+    @Text( "Resource at location \"{0}\" is not a folder." )
+    protected static LocalizableText pathIsNotFolder;
+    
+    @Text( "File \"{0}\" has an invalid extension. Only \"{1}\" extension is allowed." )
+    protected static LocalizableText invalidFileExtensionOne;
+    
+    @Text( "File \"{0}\" has an invalid extension. Only extensions \"{1}\" and \"{2}\" are allowed." )
+    protected static LocalizableText invalidFileExtensionTwo;
+    
+    @Text( "File \"{0}\" has an invalid extension. Only extensions from \"{1}\" list are allowed." )
+    protected static LocalizableText invalidFileExtensionMultiple;
+    
+    static
+    {
+        LocalizableText.init( PathValidationService.class );
+    }
+
     protected boolean resourceMustExist;
     protected FileSystemResourceType validResourceType;
     private FileExtensionsService fileExtensionsService;
@@ -109,11 +139,11 @@ public abstract class PathValidationService extends ValidationService
                         
                         if( count == 1 )
                         {
-                            message = NLS.bind( Resources.invalidFileExtensionOne, trimmedFileName, extensions.get( 0 ) );
+                            message = invalidFileExtensionOne.format( trimmedFileName, extensions.get( 0 ) );
                         }
                         else if( count == 2 )
                         {
-                            message = NLS.bind( Resources.invalidFileExtensionTwo, trimmedFileName, extensions.get( 0 ), extensions.get( 1 ) );
+                            message = invalidFileExtensionTwo.format( trimmedFileName, extensions.get( 0 ), extensions.get( 1 ) );
                         }
                         else
                         {
@@ -129,7 +159,7 @@ public abstract class PathValidationService extends ValidationService
                                 buf.append( ext );
                             }
                             
-                            message = NLS.bind( Resources.invalidFileExtensionMultiple, trimmedFileName, buf.toString() ); 
+                            message = invalidFileExtensionMultiple.format( trimmedFileName, buf.toString() ); 
                         }
                         
                         return Status.createErrorStatus( message );
@@ -139,23 +169,6 @@ public abstract class PathValidationService extends ValidationService
         }
         
         return Status.createOkStatus();
-    }
-    
-    protected static final class Resources extends NLS
-    {
-        public static String folderMustExist;
-        public static String fileMustExist;
-        public static String resourceMustExist;
-        public static String pathIsNotFile;
-        public static String pathIsNotFolder;
-        public static String invalidFileExtensionOne;
-        public static String invalidFileExtensionTwo;
-        public static String invalidFileExtensionMultiple;
-        
-        static
-        {
-            initializeMessages( PathValidationService.class.getName(), Resources.class );
-        }
     }
     
 }
