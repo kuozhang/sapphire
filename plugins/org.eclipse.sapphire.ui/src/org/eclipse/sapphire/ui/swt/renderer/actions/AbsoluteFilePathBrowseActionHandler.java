@@ -39,7 +39,7 @@ public class AbsoluteFilePathBrowseActionHandler extends SapphireBrowseActionHan
     public static final String PARAM_EXTENSIONS = "extensions";
     
     @Text( "absolute &file path" )
-    public static LocalizableText label;
+    private static LocalizableText label;
 
     static 
     {
