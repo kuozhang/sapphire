@@ -393,4 +393,20 @@
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
   
+  <!-- 
+    ***********************
+    * Office Space Sample *
+    ***********************
+  -->
+  
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      id="org.eclipse.sapphire.samples.officespace.OfficeSpaceEditor"
+      class="org.eclipse.sapphire.samples.officespace.OfficeSpaceEditor"
+      default="true"
+      filenames="officespace.xml"
+      name="Office Space Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
+  </extension>
+
 </plugin>

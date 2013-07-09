@@ -64,7 +64,6 @@ public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler
 	{
 	    final Element element = this.factory.getModelElementList().insert( this.type );
 		final ShapePart shapePart = this.factory.getShapePart( element );
-		this.nodePart.addShape(shapePart);
 		SapphireDiagramEditorPagePart diagramPart = this.nodePart.nearest(SapphireDiagramEditorPagePart.class);
 		if (shapePart.isEditable())
 		{
