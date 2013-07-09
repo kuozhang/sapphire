@@ -124,7 +124,9 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		IFigure parentFigure = parentPresentation.getFigure();
 		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePresentation, 
 				parentPresentation.getLayout());
-		parentFigure.add(child, layoutConstraint, index);
+		// find the offset for figure in presentation without an editpart
+		int offset = ShapeUtil.getPresentationCount(parentPresentation, shapePresentation);
+		parentFigure.add(child, layoutConstraint, index + offset);
 	}
 	
 	@Override

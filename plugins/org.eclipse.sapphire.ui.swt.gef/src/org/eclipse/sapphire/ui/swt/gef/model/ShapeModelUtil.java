@@ -57,7 +57,7 @@ public class ShapeModelUtil
 			}
 			if (shapeModel instanceof ContainerShapeModel)
 			{
-				activeChildren.addAll(collectActiveChildrenRecursively((ContainerShapeModel)shapeModel));
+				activeChildren.add(shapeModel);
 			}
 		}
 		return activeChildren;

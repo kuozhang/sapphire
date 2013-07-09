@@ -33,7 +33,10 @@ import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
+import org.eclipse.sapphire.ui.swt.gef.policies.ContainerShapeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.ShapeLabelDirectEditPolicy;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -57,8 +60,43 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		{
 			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ShapeLabelDirectEditPolicy());
 		}
+		// Delegate selection to the host
+		if (!model.getShapePresentation().getPart().isActive()) {
+			installEditPolicy(EditPolicy.LAYOUT_ROLE, new ContainerShapeEditPolicy(model));
+		}
 	}
 	
+	@Override
+	protected void addChildVisual(EditPart childEditPart, int index) 
+	{
+		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+		if (child == null)
+			return;
+		
+		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
+		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
+		ContainerShapePresentation parentPresentation = getParentContainer(shapePresentation);
+		IFigure parentFigure = parentPresentation.getFigure();
+		Object layoutConstraint = ShapeUtil.getLayoutConstraint(shapePresentation, 
+				parentPresentation.getLayout());
+		// find the offset for figure in presentation without an editpart
+		int offset = ShapeUtil.getPresentationCount(parentPresentation, shapePresentation);
+		parentFigure.add(child, layoutConstraint, index + offset);
+	}
+	
+	@Override
+	protected void removeChildVisual(EditPart childEditPart) 
+	{
+		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
+		if (child == null)
+			return;
+		
+		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
+		ContainerShapePresentation parentPresentation = getParentContainer(shapeModel.getShapePresentation());
+		IFigure parentFigure = parentPresentation.getFigure();
+		parentFigure.remove(child);		
+	}
+
 	@Override
 	protected List<ShapeModel> getModelChildren() 
 	{

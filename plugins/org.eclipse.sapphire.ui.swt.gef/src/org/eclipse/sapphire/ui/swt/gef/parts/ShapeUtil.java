@@ -57,8 +57,8 @@ public class ShapeUtil {
 			ShapeLayoutDef layoutDef = containerPresentation.getLayout();
 			for (ShapePresentation childShapePresentation : containerPresentation.getChildren())
 			{
-				if (!childShapePresentation.getPart().isActive())
-				{
+				if (!(childShapePresentation instanceof ContainerShapePresentation) && 
+					!childShapePresentation.getPart().isActive()) {
 					IFigure childFigure = createFigureForShape(childShapePresentation, resourceCache, configManager);
 					if (childFigure != null)
 					{
@@ -72,11 +72,10 @@ public class ShapeUtil {
 							figure.add(childFigure);
 						}
 					}
-				} else {
-					if (childShapePresentation instanceof ShapeFactoryPresentation) {
-						ShapeFactoryPresentation shapeFactoryPresentation = (ShapeFactoryPresentation)childShapePresentation;
-						shapeFactoryPresentation.setIndex(figure.getChildren().size());
-					}
+				}
+				if (childShapePresentation instanceof ShapeFactoryPresentation) {
+					ShapeFactoryPresentation shapeFactoryPresentation = (ShapeFactoryPresentation)childShapePresentation;
+					shapeFactoryPresentation.setIndex(figure.getChildren().size());
 				}
 			}
 		}
@@ -117,13 +116,17 @@ public class ShapeUtil {
 		else if (shapePresentation instanceof LineShapePresentation)
 		{
 			LineShapePresentation linePresentation = (LineShapePresentation)shapePresentation;
-			figure = new OrthogonalLineFigure(linePresentation, resourceCache);
+			if (linePresentation.visible())
+			{
+				figure = new OrthogonalLineFigure(linePresentation, resourceCache);
+			}
 		}
 		else if (shapePresentation instanceof RectanglePresentation)
 		{
 			RectanglePresentation rectPresentation = (RectanglePresentation)shapePresentation;
 			figure = new RectangleFigure(rectPresentation, resourceCache, configManager);
 		}
+		
 		shapePresentation.setFigure(figure);
 		return figure;
 	}
@@ -182,11 +185,11 @@ public class ShapeUtil {
 			}
 			else
 			{
+				SapphireStackLayoutConstraint constraint = null;
 				if (childShapePresentation.getLayoutConstraint() != null)
 				{
 					SequenceLayoutConstraintDef constraintDef = 
 							(SequenceLayoutConstraintDef)childShapePresentation.getLayoutConstraint();
-					SapphireStackLayoutConstraint constraint = null;
 					if (constraintDef != null)
 					{
 						constraint = new SapphireStackLayoutConstraint(
@@ -197,12 +200,8 @@ public class ShapeUtil {
 								constraintDef.getLeftMargin().content(),
 								constraintDef.getRightMargin().content());
 					}
-					else
-					{
-						constraint = new SapphireStackLayoutConstraint();
-					}
-					layoutConstraint = constraint;
-				}				
+				}	
+				layoutConstraint = constraint != null ? constraint : new SapphireStackLayoutConstraint();
 			}
 		}
 		return layoutConstraint;
@@ -226,4 +225,17 @@ public class ShapeUtil {
 		return alignment;
 	}
 	
+	public static int getPresentationCount(ContainerShapePresentation parentPresentation, ShapePresentation shapePresentation) {
+		int count = 0;
+		for (ShapePresentation sp : parentPresentation.getChildren()) {
+			if (shapePresentation.equals(sp)) {
+				return count;
+			}
+			if (!(sp instanceof ContainerShapePresentation)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 }
