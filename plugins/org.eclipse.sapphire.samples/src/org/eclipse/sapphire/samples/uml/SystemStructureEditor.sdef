@@ -36,9 +36,16 @@
                         <content>
                             <shape-factory>
                                 <case>
+                                    <rectangle>
+                                        <content>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                                             </text>
+                                        </content>
+                                        <sequence-layout>
+                                            <margin>0</margin>
+                                        </sequence-layout>
+                                    </rectangle>
                                 </case>
                                 <property>Fields</property>
                             </shape-factory>
@@ -49,6 +56,7 @@
                         <sequence-layout-constraint>
                             <expand-horizontally>true</expand-horizontally>
                         </sequence-layout-constraint>
+                        <visible-when>${ Fields.Size &gt; 0 }</visible-when>
                     </rectangle>                </content>
                 <sequence-layout>
                     <margin>0</margin>
