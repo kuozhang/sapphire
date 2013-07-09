@@ -106,16 +106,6 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		return returnedModelChildren;
 	}
 	
-	@Override
-	protected void addChildVisual(EditPart childEditPart, int index) 
-	{
-		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
-		if (child != null)
-		{
-			getContentPane().add(child, index);
-		}
-	}
-	
 	public ContainerShapeModel getCastedModel() 
 	{
 		return (ContainerShapeModel)getModel();
