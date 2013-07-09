@@ -85,8 +85,11 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
     public Set<String> getActionContexts()
     {
         Set<String> contextSet = new HashSet<String>();
-    	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE);
-    	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_SHAPE_HIDDEN);
+        if (isActive())
+        {
+        	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE);
+        	contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_SHAPE_HIDDEN);
+        }
         return contextSet;    	
     }
 	
@@ -101,7 +104,7 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
     	return Collections.emptyList();
     }
     
-	public DiagramNodePart getNodePart() 
+	protected DiagramNodePart getNodePart() 
 	{
 		DiagramNodePart nodePart = null;
 		ISapphirePart part = this;

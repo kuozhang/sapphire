@@ -1612,6 +1612,42 @@
                 <with>
                     <default-panel>
                         <content>
+                            <label>
+                                <text>A layout cell cannot be smaller than the minimum size of the shape that it contains. The cell can be bigger than the maximum size of the shape that it contains only if the cell is allowed to expand. Explicit minimum and maximum sizing that does not respect these rules will be ignored. All sizes include margins.</text>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                            </label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MinWidth</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MinHeight</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MaxWidth</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>MaxHeight</property>
+                            </property-editor>
+                            <spacer></spacer>
+                            <label>
+                                <text>The initial size of the layout cell, within the range specified by the minimum and maximum sizes.</text>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                            </label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>Width</property>
+                            </property-editor>
+                            <property-editor>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
+                                <property>Height</property>
+                            </property-editor>
+                            <spacer></spacer>
                             <label>Margins provide extra space in the layout cell around the contained shape.</label>
                             <spacer></spacer>
                             <include>MarginsForm</include>
@@ -1620,6 +1656,7 @@
                             </spacer>
                             <label>
                                 <text>By default, the layout cell conforms to the size of the shape that it contains. This behavior can be overridden to allow the cell to expand beyond the size of its contained shape. Note that in certain cases, the cell will expand regardless of these settings. For instance, in a vertical sequence, all cells have to be at least as wide as the minimum width of the widest shape.</text>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
                             </label>
                             <spacer></spacer>
                             <property-editor>
@@ -1628,6 +1665,7 @@
                                     <value>leading.label</value>
                                 </hint>
                                 <property>ExpandHorizontally</property>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
                             </property-editor>
                             <property-editor>
                                 <hint>
@@ -1635,6 +1673,7 @@
                                     <value>leading.label</value>
                                 </hint>
                                 <property>ExpandVertically</property>
+                                <visible-when>${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') &amp;&amp; parent().parent().Layout.Orientation != 'stacked'}</visible-when>
                             </property-editor>
                             <spacer></spacer>
                             <label>If a layout cell is larger than the shape that it contains, the alignment of the shape within the cell can be controlled.</label>
@@ -1647,34 +1686,6 @@
                                 <style>Sapphire.PropertyEditor.PopUpListField</style>
                                 <property>VerticalAlignment</property>
                             </property-editor>                        
-                            <spacer></spacer>                        
-                            <label>
-                                <text>A layout cell cannot be smaller than the minimum size of the shape that it contains. The cell can be bigger than the maximum size of the shape that it contains only if the cell is allowed to expand. Explicit minimum and maximum sizing that does not respect these rules will be ignored. All sizes include margins.</text>
-                            </label>
-                            <spacer></spacer>
-                            <property-editor>
-                                <property>MinWidth</property>
-                            </property-editor>
-                            <property-editor>
-                                <property>MinHeight</property>
-                            </property-editor>
-                            <property-editor>
-                                <property>MaxWidth</property>
-                            </property-editor>
-                            <property-editor>
-                                <property>MaxHeight</property>
-                            </property-editor>
-                            <spacer></spacer>
-                            <label>
-                                <text>The initial size of the layout cell, within the range specified by the minimum and maximum sizes.</text>
-                            </label>
-                            <spacer></spacer>
-                            <property-editor>
-                                <property>Width</property>
-                            </property-editor>
-                            <property-editor>
-                                <property>Height</property>
-                            </property-editor>
                         </content>
                     </default-panel>
                     <path>SequenceLayoutConstraint</path>

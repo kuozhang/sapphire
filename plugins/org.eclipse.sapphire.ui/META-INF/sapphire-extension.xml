@@ -31,7 +31,6 @@
         <context>Sapphire.EditorPage.Outline.Node</context>
         <context>Sapphire.Diagram.Editor</context>
         <context>Sapphire.Diagram.Node</context>
-        <context>Sapphire.Diagram.Node.Shape</context>
         <label>${ Handlers.Size == 1 ? Concat( &quot;add &quot;, Handlers[ 0 ].Label ) : &quot;add&quot; }</label>
         <image>org/eclipse/sapphire/ui/actions/Add.png</image>
         <group>Sapphire.AddDeleteGroup</group>
@@ -549,7 +548,7 @@
         <impl>org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddShapeFactory</impl>
         <description>Creates an add action handler for every shape factory.</description>
         <context>Sapphire.Diagram.Node</context>
-        <context>Sapphire.Diagram.Node.Shape</context>
+        <condition>org.eclipse.sapphire.ui.diagram.actions.internal.DiagramNodeAddShapeFactoryCondition</condition>        
     </action-handler-factory>
     <presentation-style>
         <id>Sapphire.Actuator.Link</id>

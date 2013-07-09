@@ -40,6 +40,7 @@ public interface LayoutConstraintDef extends MarginPresentation
     @Type( base = Integer.class )
     @Label( standard = "width" )
     @XmlBinding( path = "width" )
+    @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_WIDTH = new ValueProperty( TYPE, "Width" );
     
@@ -52,6 +53,7 @@ public interface LayoutConstraintDef extends MarginPresentation
     @Type( base = Integer.class )
     @Label( standard = "height" )
     @XmlBinding( path = "height" )
+    @Enablement( expr = "${InstanceOf(parent().parent(), 'org.eclipse.sapphire.ui.diagram.shape.def.ContainerShapeDef') && parent().parent().Layout.Orientation != 'stacked'}" )
     
     ValueProperty PROP_HEIGHT = new ValueProperty( TYPE, "Height" );
     

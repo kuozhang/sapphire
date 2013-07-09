@@ -45,18 +45,8 @@ public class DiagramNodeAddShapeFactory extends SapphireActionHandlerFactory
 	public List<SapphireActionHandler> create() 
 	{
         final ListFactory<SapphireActionHandler> handlers = ListFactory.start();
-        ShapePart shapePart = null;
-        DiagramNodePart nodePart = null;
-        if (getPart() instanceof DiagramNodePart)
-        {
-        	nodePart = (DiagramNodePart)getPart();
-        	shapePart = nodePart.getShapePart();
-        }
-        else if (getPart() instanceof ShapePart )
-        {
-        	shapePart = (ShapePart)getPart();
-        	nodePart = shapePart.getNodePart();
-        }
+        DiagramNodePart nodePart = (DiagramNodePart)getPart();
+        ShapePart shapePart = nodePart.getShapePart();
         List<ShapeFactoryPart> shapeFactories = new ArrayList<ShapeFactoryPart>();
         if (shapePart instanceof ShapeFactoryPart)
         {

@@ -211,7 +211,12 @@ public class DiagramNodePart
         this.shapePart.dispose();
         
     }
-        
+    
+    public void addShape(ShapePart shapePart)
+    {
+    	notifyShapeAdd(shapePart);
+    }
+    
     private void notifyShapeUpdate(ShapePart shapePart)
     {
 		Set<SapphirePartListener> listeners = this.getListeners();

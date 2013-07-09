@@ -15,11 +15,8 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -66,16 +63,6 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		ContainerShapeModel containerModel = getCastedModel();
 		returnedModelChildren.addAll(ShapeModelUtil.collectActiveChildrenRecursively(containerModel));
 		return returnedModelChildren;
-	}
-	
-	@Override
-	protected void addChildVisual(EditPart childEditPart, int index) 
-	{
-		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
-		if (child != null)
-		{
-			getContentPane().add(child, index);
-		}
 	}
 	
 	public ContainerShapeModel getCastedModel() 
