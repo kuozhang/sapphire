@@ -80,7 +80,7 @@ import org.w3c.dom.NodeList;
 
 @SuppressWarnings( "restriction" )
 
-public final class XmlEditorResourceStore extends XmlResourceStore
+public class XmlEditorResourceStore extends XmlResourceStore
 {
     private SapphireEditor sapphireEditor;
     private StructuredTextEditor sourceEditor;
