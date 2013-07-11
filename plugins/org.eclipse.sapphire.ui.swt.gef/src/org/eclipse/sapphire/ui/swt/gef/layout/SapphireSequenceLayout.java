@@ -564,33 +564,37 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			availableBounds = new Rectangle(x + marginInset.left, y + marginInset.top, 
 					clientArea.width - marginInset.left - marginInset.right, availableBoundHeight);
 			
-			if (getMinorExpand(constraint)) {
-				if (child instanceof RectangleFigure) {
-					newBounds.x += marginInset.left;
-					newBounds.width = clientArea.width - marginInset.left - marginInset.right;
-				} else {
-					int adjust = clientArea.width - width - marginInset.left - marginInset.right;
-					if (adjust <= 0)
-						adjust = 0;
-					else {
-						
-						switch (getMinorAlignment(constraint)) {
-						case SWT.TOP:
-						case SWT.LEFT:
-							adjust = 0;
-							break;
-						case SWT.CENTER:
-							adjust = (adjust + 1) >> 1;
-							break;
-						default:
-							break;   
-						}
-					}
-					newBounds.x += adjust + marginInset.left;
+			if (getMinorExpand(constraint) && (child instanceof RectangleFigure)) 
+			{
+				newBounds.x += marginInset.left;
+				newBounds.width = clientArea.width - marginInset.left - marginInset.right;
+			} 
+			else 
+			{
+				// Honor alignment if there is extra space. It's consistent with how the direct cell
+				// editor locator places direct editor cell when direct editing text. 
+				// Shenxue - based on discussion with Ling 7/10/2013
+				int adjust = clientArea.width - width - marginInset.left - marginInset.right;
+				if (adjust <= 0)
+				{
+					adjust = 0;
 				}
-			}
-			else {
-				newBounds.x += marginInset.left;				
+				else 
+				{
+					switch (getMinorAlignment(constraint)) 
+					{
+					case SWT.TOP:
+					case SWT.LEFT:
+						adjust = 0;
+						break;
+					case SWT.CENTER:
+						adjust = (adjust + 1) >> 1;
+						break;
+					default:
+						break;   
+					}
+				}
+				newBounds.x += adjust + marginInset.left;
 			}
 			child.setBounds(transposer.t(newBounds));
 			
