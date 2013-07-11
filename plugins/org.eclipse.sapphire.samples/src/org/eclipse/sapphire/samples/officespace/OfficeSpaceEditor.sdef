@@ -41,6 +41,7 @@
                         <sequence-layout-constraint>
                             <margin>5</margin>
                             <expand-horizontally>true</expand-horizontally>
+                            <horizontal-alignment>center</horizontal-alignment>
                         </sequence-layout-constraint>
                     </text>
                     <rectangle>

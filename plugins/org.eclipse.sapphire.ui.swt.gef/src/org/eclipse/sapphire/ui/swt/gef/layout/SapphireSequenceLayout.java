@@ -541,7 +541,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 						offset = extraHeights[i];
 						break;
 					default:
-					    throw new IllegalStateException();
+					    break;
 					}
 					newBounds = new Rectangle(x, y + marginInset.top + offset, prefWidth, prefHeight);
 				}

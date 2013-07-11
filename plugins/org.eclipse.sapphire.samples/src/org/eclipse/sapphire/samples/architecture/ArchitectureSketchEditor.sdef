@@ -67,6 +67,9 @@
                   <content>
                     <image>
 	                  <path>Architecture.png</path>
+                                <sequence-layout-constraint>
+                                    <horizontal-alignment>center</horizontal-alignment>
+                                </sequence-layout-constraint>
                     </image>
                     <validation-marker>
                      <size>small</size>

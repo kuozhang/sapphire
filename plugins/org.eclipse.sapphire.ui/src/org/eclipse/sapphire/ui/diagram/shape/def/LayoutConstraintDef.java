@@ -65,7 +65,7 @@ public interface LayoutConstraintDef extends MarginPresentation
     @Label( standard = "horizontal alignment")
     @Localizable
     @XmlBinding( path = "horizontal-alignment" )
-    @DefaultValue( text = "center" )
+    @DefaultValue( text = "left" )
     
     ValueProperty PROP_HORIZONTAL_ALIGNMENT = new ValueProperty( TYPE, "HorizontalAlignment" );
     
