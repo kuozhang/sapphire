@@ -101,19 +101,29 @@ public class DiagramNodeModel extends DiagramModelBase {
 	}
 
 	public void handleUpdateShapeVisibility(ShapePart shapePart) {
-		firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
+ 		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
+		if (parentModel.equals(getShapeModel())) {
+			if (getShapeModel() instanceof ContainerShapeModel) {
+				((ContainerShapeModel)getShapeModel()).refreshChildren();
+			}
+			firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
+		} else if (parentModel instanceof ContainerShapeModel) {
+			((ContainerShapeModel)parentModel).handleVisibilityChange(shapePart);
+		}
 	}
 
 	public void handleAddShape(ShapePart shapePart) {
 		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
-		assert(parentModel instanceof ShapeFactoryModel);
-		((ShapeFactoryModel)parentModel).handleAddShape(shapePart);
+		if (parentModel instanceof ShapeFactoryModel) {
+			((ShapeFactoryModel)parentModel).handleAddShape(shapePart);
+		}
 	}
 
 	public void handleDeleteShape(ShapePart shapePart) {
 		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
-		assert(parentModel instanceof ShapeFactoryModel);
-		((ShapeFactoryModel)parentModel).handleDeleteShape(shapePart);
+		if (parentModel instanceof ShapeFactoryModel) {
+			((ShapeFactoryModel)parentModel).handleDeleteShape(shapePart);
+		}
 	}
 
 	public void handleReorderShapes(ShapeFactoryPart shapeFactory) {

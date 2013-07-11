@@ -36,15 +36,17 @@ public class ShapeFactoryModel extends ShapeModel
 		super(nodeModel, parent, presentation);
 		this.shapeFactoryPresentation = presentation;
 		children = new ArrayList<ShapeModel>();
-		for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
+		if (this.shapeFactoryPresentation.getPart().visible()) 
 		{
-			ShapeModel childModel = ShapeModelFactory.createShapeModel(nodeModel, this, shapePresentation);
-        	if (childModel != null)
-        	{        		
-        		this.children.add(childModel);
-        	}        				
+			for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
+			{
+				ShapeModel childModel = ShapeModelFactory.createShapeModel(nodeModel, this, shapePresentation);
+	        	if (childModel != null)
+	        	{        		
+	        		this.children.add(childModel);
+	        	}        				
+			}
 		}
-
 	}
 	
 	public void handleAddShape(ShapePart shapePart) 
@@ -68,16 +70,19 @@ public class ShapeFactoryModel extends ShapeModel
 	public void refreshChildren()
 	{
 		this.shapeFactoryPresentation.refreshChildren();
-		this.children.clear();
-		children = new ArrayList<ShapeModel>();
-		for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
+		List<ShapeModel> refreshedChildren = new ArrayList<ShapeModel>();
+		if (this.shapeFactoryPresentation.getPart().visible()) 
 		{
-			ShapeModel childModel = ShapeModelFactory.createShapeModel(getNodeModel(), this, shapePresentation);
-        	if (childModel != null)
-        	{        		
-        		this.children.add(childModel);
-        	}        				
-		}		
+			for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
+			{
+				ShapeModel childModel = ShapeModelFactory.createShapeModel(getNodeModel(), this, shapePresentation);
+	        	if (childModel != null)
+	        	{        		
+	        		refreshedChildren.add(childModel);
+	        	}        				
+			}
+		}
+		children = refreshedChildren;
 	}
 	
 	public List<ShapeModel> getChildren()

@@ -88,7 +88,10 @@ public class ShapeUtil {
 		if (shapePresentation instanceof TextPresentation)
 		{
 			TextPresentation textPresentation = (TextPresentation)shapePresentation;
-			figure = new TextFigure(resourceCache, textPresentation);
+			if (textPresentation.visible())
+			{
+				figure = new TextFigure(resourceCache, textPresentation);
+			}
 		}
 		else if (shapePresentation instanceof ImagePresentation)
 		{
@@ -133,6 +136,10 @@ public class ShapeUtil {
 	
 	public static boolean updateFigureForShape(ShapePresentation updateShape, DiagramResourceCache resourceCache, DiagramConfigurationManager configManager)
 	{
+		if (updateShape == null || updateShape instanceof ContainerShapePresentation) {
+			return false;
+		}
+		
 		IFigure updateFigure = updateShape.getFigure();
 		IFigure containerFigure = updateShape.getParentFigure();
 		if (updateShape.visible()) 
@@ -145,7 +152,6 @@ public class ShapeUtil {
 				if (updateFigure != null) 
 				{
 					// first delete it
-					//index = findIndex(containerFigure, updateFigure);
 					containerFigure.remove(updateFigure);
 				}
 				// add it

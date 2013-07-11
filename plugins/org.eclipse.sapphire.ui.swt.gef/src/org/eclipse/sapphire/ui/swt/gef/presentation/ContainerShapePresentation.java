@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
@@ -22,6 +23,7 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ContainerShapePresentation extends ShapePresentation 
@@ -33,18 +35,28 @@ public class ContainerShapePresentation extends ShapePresentation
 			DiagramConfigurationManager configManager)
 	{
 		super(parent, containerShapePart, configManager);
-		
+
 		this.children = new ArrayList<ShapePresentation>();
 		ShapePresentation childPresentation = null;
 		for (ShapePart shapePart : containerShapePart.getChildren())
 		{
-			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
-			this.children.add(childPresentation);
-			if (childPresentation instanceof ValidationMarkerPresentation)
+			if (canAddShapePart(shapePart))
 			{
-				this.validationMarker = (ValidationMarkerPresentation)childPresentation;
+				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
+				this.children.add(childPresentation);
+				if (childPresentation instanceof ValidationMarkerPresentation)
+				{
+					this.validationMarker = (ValidationMarkerPresentation)childPresentation;
+				}
 			}
 		}
+	}
+	
+	protected boolean canAddShapePart(ShapePart shapePart) {
+		if (shapePart instanceof ContainerShapePart) {
+			return shapePart.visible();
+		}
+		return true;
 	}
 	
 	public List<ShapePresentation> getChildren()
@@ -97,6 +109,33 @@ public class ContainerShapePresentation extends ShapePresentation
 		}
 	}
 	
+	public void refreshChildren()
+	{
+		List<ShapePresentation> refreshedChildren = new ArrayList<ShapePresentation>();
+		ContainerShapePart containerShapePart = (ContainerShapePart)this.getPart();
+		for (ShapePart shapePart : containerShapePart.getChildren())
+		{
+			if (canAddShapePart(shapePart))
+			{
+				ShapePresentation childPresentation = getChildShapePresentation(shapePart);
+				if (childPresentation == null) {
+					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getConfigurationManager());
+				}
+				refreshedChildren.add(childPresentation);
+			}
+		}		
+		this.children = refreshedChildren;
+	}
+	
+	private ShapePresentation getChildShapePresentation(ShapePart shapePart) {
+		for (ShapePresentation presentation : getChildren()) {
+			if (presentation.getPart() == shapePart) {
+				return presentation;
+			}
+		}
+		return null; 
+	}
+
 	@Override
 	public void refreshVisuals()
 	{

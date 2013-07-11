@@ -170,6 +170,10 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		{
 			performDirectEdit();
 		}
+		else if (ContainerShapeModel.SHAPE_VISIBILITY_UPDATES.equals(prop)) 
+		{
+			refresh();
+		}		
 	}
 
 	private List<TextPart> getTextParts()

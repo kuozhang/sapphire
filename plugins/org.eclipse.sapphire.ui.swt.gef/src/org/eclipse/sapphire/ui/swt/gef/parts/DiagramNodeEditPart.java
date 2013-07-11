@@ -283,6 +283,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	private void updateShapeVisibility(ShapePart shapePart) 
 	{
 		updateShape(shapePart);
+		refresh();
 	}
 	
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {

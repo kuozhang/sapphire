@@ -29,6 +29,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class TextPart extends ShapePart 
@@ -63,28 +64,32 @@ public class TextPart extends ShapePart
             }
         );
         this.property = FunctionUtil.getFunctionProperty(this.modelElement, this.functionResult);
-        this.propertyListener = new Listener()
+        if (this.property != null)
         {
-            @Override
-            public void handle( final Event event )
+            this.propertyListener = new Listener()
             {
-                if( event instanceof PropertyValidationEvent )
+                @Override
+                public void handle( final Event event )
                 {
-                    runOnDisplayThread
-                    (
-                        new Runnable()
-                        {
-                            public void run()
+                    if( event instanceof PropertyValidationEvent )
+                    {
+                        runOnDisplayThread
+                        (
+                            new Runnable()
                             {
-                                refreshValidation();
+                                public void run()
+                                {
+                                    refreshValidation();
+                                }
                             }
-                        }
-                    );
+                        );
+                    }
                 }
-            }
-        };
+            };
+            
+            this.property.attach(this.propertyListener);        
+        }
         
-        this.property.attach(this.propertyListener);        
         this.setEditable(!(this.textFunction instanceof Literal));
     }
 	
@@ -96,7 +101,10 @@ public class TextPart extends ShapePart
         {
             this.functionResult.dispose();
         }
-        this.property.detach( this.propertyListener );
+        if (this.property != null)
+        {
+        	this.property.detach( this.propertyListener );
+        }
     }
 	
     @Override

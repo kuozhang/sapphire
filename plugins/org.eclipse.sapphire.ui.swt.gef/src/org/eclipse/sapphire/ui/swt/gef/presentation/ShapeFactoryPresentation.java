@@ -40,11 +40,14 @@ public class ShapeFactoryPresentation extends ShapePresentation
 		super(parent, shapeFactoryPart, configManager);
 		
 		this.children = new ArrayList<ShapePresentation>();
-		ShapePresentation childPresentation = null;
-		for (ShapePart shapePart : shapeFactoryPart.getChildren())
+		if (shapeFactoryPart.visible())
 		{
-			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
-			this.children.add(childPresentation);
+			ShapePresentation childPresentation = null;
+			for (ShapePart shapePart : shapeFactoryPart.getChildren())
+			{
+				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
+				this.children.add(childPresentation);
+			}
 		}
 		if (shapeFactoryPart.getSeparator() != null)
 		{
@@ -60,18 +63,31 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	
 	public void refreshChildren()
 	{
-		this.children.clear();
-		List<ShapePart> children = new ArrayList<ShapePart>();
+		List<ShapePresentation> refreshedChildren = new ArrayList<ShapePresentation>();
 		ShapeFactoryPart shapeFactoryPart = (ShapeFactoryPart)this.getPart();
-		children.addAll(shapeFactoryPart.getChildren());
-		ShapePresentation childPresentation = null;
-		for (ShapePart shapePart : children)
+		if (shapeFactoryPart.visible())
 		{
-			childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getConfigurationManager());
-			this.children.add(childPresentation);
-		}		
+			for (ShapePart shapePart : shapeFactoryPart.getChildren())
+			{
+				ShapePresentation childPresentation = getChildShapePresentation(shapePart);
+				if (childPresentation == null) {
+					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getConfigurationManager());
+				}
+				refreshedChildren.add(childPresentation);
+			}		
+		}
+		this.children = refreshedChildren;
 	}
 	
+	private ShapePresentation getChildShapePresentation(ShapePart shapePart) {
+		for (ShapePresentation presentation : getChildren()) {
+			if (presentation.getPart() == shapePart) {
+				return presentation;
+			}
+		}
+		return null; 
+	}
+
 	public ShapePresentation getSeparator()
 	{
 		return this.separator;

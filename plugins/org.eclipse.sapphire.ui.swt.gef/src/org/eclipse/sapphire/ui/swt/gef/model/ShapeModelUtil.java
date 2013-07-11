@@ -51,11 +51,7 @@ public class ShapeModelUtil
 		for (ShapeModel shapeModel : modelChildren)
 		{
 			ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
-			if (shapePart.isActive())
-			{
-				activeChildren.add(shapeModel);
-			}
-			if (shapeModel instanceof ContainerShapeModel)
+			if (shapePart.isActive() || shapeModel instanceof RectangleModel)
 			{
 				activeChildren.add(shapeModel);
 			}
