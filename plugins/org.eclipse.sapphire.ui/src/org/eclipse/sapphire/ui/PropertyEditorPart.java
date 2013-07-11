@@ -91,7 +91,7 @@ public final class PropertyEditorPart extends FormComponentPart
         FACTORIES.add( new DefaultListPropertyEditorRenderer.Factory() );
     }
     
-    @Text( "Property editor's property reference path \"{0}\" is invalid." )
+    @Text( "Property editor''s property reference path \"{0}\" is invalid." )
     private static LocalizableText invalidPath;
     
     @Text( "Child property path \"{1}\" is invalid for \"{0}\"." )
