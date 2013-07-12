@@ -119,11 +119,12 @@ public final class PropertyEditorPart extends FormComponentPart
         final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
         final PropertyEditorDef propertyEditorPartDef = (PropertyEditorDef) this.definition;
         
-        this.property = getModelElement().property( new ModelPath( propertyEditorPartDef.getProperty().text() ) );
+        final String propertyEditorPath = substituteParams( propertyEditorPartDef.getProperty().text() );
+        this.property = getModelElement().property( new ModelPath( propertyEditorPath ) );
         
         if( this.property == null )
         {
-            throw new RuntimeException( invalidPath.format( propertyEditorPartDef.getProperty().text() ) );
+            throw new RuntimeException( invalidPath.format( propertyEditorPath ) );
         }
         
         // Read the property to ensure that initial events are broadcast and avoid being surprised
