@@ -107,8 +107,11 @@ public class DiagramNodeModel extends DiagramModelBase {
 				((ContainerShapeModel)getShapeModel()).refreshChildren();
 			}
 			firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
-		} else if (parentModel instanceof ContainerShapeModel) {
-			((ContainerShapeModel)parentModel).handleVisibilityChange(shapePart);
+		} else {
+			ContainerShapeModel containerModel = ShapeModelUtil.getNearestContainerModel(parentModel);
+			if (containerModel != null) {
+				containerModel.handleVisibilityChange(shapePart);
+			}
 		}
 	}
 

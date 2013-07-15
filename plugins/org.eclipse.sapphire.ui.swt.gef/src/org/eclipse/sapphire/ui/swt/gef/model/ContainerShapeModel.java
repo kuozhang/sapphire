@@ -85,6 +85,6 @@ public class ContainerShapeModel extends ShapeModel
 		
 	public void handleVisibilityChange(ShapePart shapePart) {
 		refreshChildren();
-		firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, null);
+		firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
 	}
 }

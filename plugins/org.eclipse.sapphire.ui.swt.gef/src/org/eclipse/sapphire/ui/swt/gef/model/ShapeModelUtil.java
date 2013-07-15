@@ -93,6 +93,21 @@ public class ShapeModelUtil
 		return null;
 	}
 	
+	public static ContainerShapeModel getNearestContainerModel(ShapeModel shapeModel)
+	{
+		if (shapeModel instanceof ContainerShapeModel)
+		{
+			return (ContainerShapeModel)shapeModel;
+		}
+		ShapeModel parentModel = shapeModel.getParent();
+		while (!(parentModel instanceof ContainerShapeModel) && parentModel != null)
+		{
+			parentModel = parentModel.getParent();
+		}
+		return (ContainerShapeModel)parentModel;
+	}
+	
+	
 	public static ShapePresentation getChildShapePresentation(ShapePresentation parent, ShapePart shapePart)
 	{
 		if (parent.getPart().equals(shapePart))

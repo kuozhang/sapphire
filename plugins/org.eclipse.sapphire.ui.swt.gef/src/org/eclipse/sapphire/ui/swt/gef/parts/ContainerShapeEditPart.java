@@ -26,6 +26,7 @@ import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
@@ -172,7 +173,17 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		}
 		else if (ContainerShapeModel.SHAPE_VISIBILITY_UPDATES.equals(prop)) 
 		{
-			refresh();
+			Object obj = evt.getNewValue();
+			if (obj instanceof ShapePart) 
+			{
+				ShapePart shapePart = (ShapePart)obj;
+				ShapePresentation parentPresentation = getCastedModel().getShapePresentation();
+				ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(parentPresentation, shapePart);
+				ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getNodeModel().getDiagramModel().getResourceCache(),
+						getConfigurationManager());
+				
+				refresh();
+			}
 		}		
 	}
 
