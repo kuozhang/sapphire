@@ -268,7 +268,7 @@ public abstract class SapphirePart implements ISapphirePart
                             }
                         };
                      
-                        Display.getDefault().asyncExec( notifyOfUpdateOperation );
+                        Display.getDefault().syncExec( notifyOfUpdateOperation );
                     }
                 }
             );

@@ -21,6 +21,7 @@ import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
@@ -76,10 +77,10 @@ public class ShapeFactoryPart extends ShapePart
         }
         
         // Add listeners
-        this.shapePropertyListener = new FilteredListener<PropertyEvent>()
+        this.shapePropertyListener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            protected void handleTypedEvent( final PropertyEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 handleModelPropertyChange( event );
             }
