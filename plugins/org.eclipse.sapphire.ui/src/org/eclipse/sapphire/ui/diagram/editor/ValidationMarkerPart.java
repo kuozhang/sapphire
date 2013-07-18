@@ -15,7 +15,6 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
@@ -30,24 +29,23 @@ public class ValidationMarkerPart extends ShapePart
 {
 	private ValidationMarkerDef markerDef;
     private Listener validationListener;
+    private SapphirePart containerParent;
 
 	@Override
     protected void init()
     {
         super.init();
         this.markerDef = (ValidationMarkerDef)super.definition;
-        SapphirePart parentPart = (SapphirePart)getParentPart();
-        parentPart.attach
-        (
-            new FilteredListener<PartValidationEvent>()
+        this.containerParent = getContainerParent();
+        this.validationListener = new FilteredListener<PartValidationEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( PartValidationEvent event )
             {
-                @Override
-                protected void handleTypedEvent( PartValidationEvent event )
-                {
-                	refreshValidation();
-                }
+            	broadcast(new ValidationMarkerContentEvent(ValidationMarkerPart.this));
             }
-        );
+        };
+        this.containerParent.attach(this.validationListener);
     }
 	
 	
@@ -55,12 +53,10 @@ public class ValidationMarkerPart extends ShapePart
     {
     	return this.markerDef.getSize().content();
     }
-        
-    @Override
-    protected Status computeValidation()
+            
+    public Status content()
     {
-    	ISapphirePart parentPart = getContainerParent();
-    	return parentPart.validation();
+    	return this.containerParent.validation();
     }
 
 	public SapphirePart getContainerParent() {
@@ -76,7 +72,7 @@ public class ValidationMarkerPart extends ShapePart
 	@Override
 	public void dispose() {
 		if (this.validationListener != null) {
-	        getContainerParent().detach(this.validationListener);
+	        this.containerParent.detach(this.validationListener);
 	        this.validationListener = null;
 		}
 		super.dispose();

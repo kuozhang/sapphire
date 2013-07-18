@@ -63,7 +63,7 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		}
 		// Delegate selection to the host
 		if (!model.getShapePresentation().getPart().isActive()) {
-			installEditPolicy(EditPolicy.LAYOUT_ROLE, new ContainerShapeEditPolicy(model));
+			installEditPolicy(EditPolicy.LAYOUT_ROLE, new ContainerShapeEditPolicy());
 		}
 	}
 	

@@ -17,7 +17,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.ContainerShapeEditPart;
 
 /**
@@ -26,10 +25,8 @@ import org.eclipse.sapphire.ui.swt.gef.parts.ContainerShapeEditPart;
 
 public class ContainerShapeEditPolicy extends XYLayoutEditPolicy {
 	
-	private ContainerShapeModel model;
 
-	public ContainerShapeEditPolicy(ContainerShapeModel model) {
-		this.model = model;
+	public ContainerShapeEditPolicy() {
 	}
 	
 	@Override
@@ -40,7 +37,7 @@ public class ContainerShapeEditPolicy extends XYLayoutEditPolicy {
 	@Override
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 		if (child instanceof ContainerShapeEditPart) {
-			return new ContainerShapeEditPolicy(((ContainerShapeEditPart)child).getCastedModel());
+			return new ContainerShapeEditPolicy();
 		} else {
 			return new NonResizableEditPolicy();
 		}
