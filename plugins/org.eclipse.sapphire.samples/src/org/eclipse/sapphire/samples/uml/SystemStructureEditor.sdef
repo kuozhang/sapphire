@@ -30,6 +30,7 @@
                         <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                         <sequence-layout-constraint>
                             <margin>5</margin>
+                            <horizontal-alignment>center</horizontal-alignment>
                         </sequence-layout-constraint>
                     </text>
                     <rectangle>
@@ -85,6 +86,39 @@
                                         <content>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                            </text>
+                                            <text>
+                                                <content>(</content>
+                                            </text>
+                                            <shape-factory>
+                                                <property>Parameters</property>
+                                                <case>
+                                                    <rectangle>
+                                                        <sequence-layout>
+                                                            <margin>0</margin>
+                                                            <orientation>horizontal</orientation>
+                                                        </sequence-layout>
+                                                        <content>
+                                                            <text>
+                                                                <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                                            </text>
+                                                            <text>
+                                                                <content>:</content>
+                                                            </text>
+                                                            <text>
+                                                                <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
+                                                            </text>
+                                                        </content>
+                                                    </rectangle>
+                                                </case>
+                                                <separator>
+                                                    <text>
+                                                        <content>,</content>
+                                                    </text>
+                                                </separator>
+                                            </shape-factory>
+                                            <text>
+                                                <content>)</content>
                                             </text>
                                         </content>
                                     </rectangle>
