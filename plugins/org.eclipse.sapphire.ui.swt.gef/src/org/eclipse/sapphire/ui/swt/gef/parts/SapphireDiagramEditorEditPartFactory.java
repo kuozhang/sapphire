@@ -19,6 +19,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ImageModel;
+import org.eclipse.sapphire.ui.swt.gef.model.LineShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.RectangleModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeFactoryModel;
 import org.eclipse.sapphire.ui.swt.gef.model.TextModel;
@@ -68,6 +69,9 @@ public class SapphireDiagramEditorEditPartFactory implements EditPartFactory {
 		}
 		if (model instanceof ImageModel) {
 			return new ImageEditPart(this.configManager);
+		}
+		if (model instanceof LineShapeModel) {
+			return new LineShapeEditPart(this.configManager);
 		}
 		if (model instanceof ValidationMarkerModel) {
 			return new ValidationMarkerEditPart(this.configManager);

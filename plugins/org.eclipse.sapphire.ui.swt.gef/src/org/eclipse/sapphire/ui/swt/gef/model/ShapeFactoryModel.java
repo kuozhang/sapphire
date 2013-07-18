@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.model;
@@ -21,11 +22,13 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ShapeFactoryModel extends ShapeModel 
 {
 	private List<ShapeModel> children;
+	private List<ShapeModel> separators;
 	private ShapeFactoryPresentation shapeFactoryPresentation;
 	public final static String SHAPE_ADD = "SHAPE_ADD";
 	public final static String SHAPE_DELETE = "SHAPE_DELETE";
@@ -38,15 +41,40 @@ public class ShapeFactoryModel extends ShapeModel
 		children = new ArrayList<ShapeModel>();
 		if (this.shapeFactoryPresentation.getPart().visible()) 
 		{
-			for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
+			List<ShapePresentation> presentations = this.shapeFactoryPresentation.getChildren();
+			int size = presentations.size();
+			for (int i = 0; i < size; i++)
 			{
+				ShapePresentation shapePresentation = presentations.get(i);
 				ShapeModel childModel = ShapeModelFactory.createShapeModel(nodeModel, this, shapePresentation);
-	        	if (childModel != null)
-	        	{        		
-	        		this.children.add(childModel);
-	        	}        				
+				assert childModel != null;
+	        	this.children.add(childModel);
+	        	
+	        	ShapeModel separatorModel = getSeparatorModel(nodeModel, i);
+	        	if (separatorModel != null && i < (size - 1)) {
+	        		this.children.add(separatorModel);
+	        	}
 			}
+			
 		}
+	}
+	
+	private ShapeModel getSeparatorModel(DiagramNodeModel nodeModel, int index) {
+		ShapePresentation separatorPresentation = this.shapeFactoryPresentation.getSeparator();
+		if (separatorPresentation != null) {
+			if (separators == null) {
+				separators = new ArrayList<ShapeModel>();
+			}
+			int size = separators.size();
+			if (index + 1 > size) {
+				for (int i = size; i < index + 1; i++) {
+					ShapeModel separatorModel = ShapeModelFactory.createShapeModel(nodeModel, this, separatorPresentation);
+					separators.add(separatorModel);
+				}
+			}
+			return separators.get(index);
+		}
+		return null;
 	}
 	
 	public void handleAddShape(ShapePart shapePart) 
@@ -73,18 +101,39 @@ public class ShapeFactoryModel extends ShapeModel
 		List<ShapeModel> refreshedChildren = new ArrayList<ShapeModel>();
 		if (this.shapeFactoryPresentation.getPart().visible()) 
 		{
-			for (ShapePresentation shapePresentation : this.shapeFactoryPresentation.getChildren())
+			List<ShapePresentation> presentations = this.shapeFactoryPresentation.getChildren();
+			int size = presentations.size();
+			for (int i = 0; i < size; i++)
 			{
-				ShapeModel childModel = ShapeModelFactory.createShapeModel(getNodeModel(), this, shapePresentation);
-	        	if (childModel != null)
-	        	{        		
-	        		refreshedChildren.add(childModel);
-	        	}        				
+				ShapePresentation shapePresentation = presentations.get(i);
+
+				// find existing ShapeModel
+				ShapeModel childModel = getChildShapeModel(shapePresentation);
+				if (childModel == null) 
+				{
+					childModel = ShapeModelFactory.createShapeModel(getNodeModel(), this, shapePresentation);
+				}
+				assert childModel != null;
+        		refreshedChildren.add(childModel);
+
+        		ShapeModel separatorModel = getSeparatorModel(getNodeModel(), i);
+	        	if (separatorModel != null && i < (size - 1)) {
+	        		refreshedChildren.add(separatorModel);
+	        	}
 			}
 		}
 		children = refreshedChildren;
 	}
 	
+	private ShapeModel getChildShapeModel(ShapePresentation shapePresentation) {
+		for (ShapeModel model : getChildren()) {
+			if (model.getShapePresentation().getPart() == shapePresentation.getPart()) {
+				return model;
+			}
+		}
+		return null;
+	}
+
 	public List<ShapeModel> getChildren()
 	{
 		return this.children;

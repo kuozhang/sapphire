@@ -13,11 +13,8 @@
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -31,7 +28,6 @@ public class ShapeFactoryPresentation extends ShapePresentation
 {
 	private List<ShapePresentation> children;
 	private ShapePresentation separator;
-	private Map<ShapePresentation, IFigure> separatorMap;
 	private int index;
 	
 	public ShapeFactoryPresentation(ShapePresentation parent, ShapeFactoryPart shapeFactoryPart,
@@ -52,7 +48,6 @@ public class ShapeFactoryPresentation extends ShapePresentation
 		if (shapeFactoryPart.getSeparator() != null)
 		{
 			this.separator = ShapePresentationFactory.createShapePresentation(this, shapeFactoryPart.getSeparator(), configManager);
-			this.separatorMap = new HashMap<ShapePresentation, IFigure>();
 		}
 	}
 
@@ -91,28 +86,6 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	public ShapePresentation getSeparator()
 	{
 		return this.separator;
-	}
-	
-	public void addSeparatorFigure(ShapePresentation child, IFigure fig)
-	{
-		if (this.separatorMap != null) {
-			this.separatorMap.put(child, fig);
-		}
-	}
-	
-	public void removeSeparatorFigure(ShapePresentation child)
-	{
-		if (this.separatorMap != null) {
-			this.separatorMap.remove(child);
-		}
-	}
-	
-	public IFigure getSeparatorFigure(ShapePresentation child)
-	{
-		if (this.separatorMap != null) {
-			return this.separatorMap.get(child);
-		}
-		return null;
 	}
 	
 	public int getIndex() {

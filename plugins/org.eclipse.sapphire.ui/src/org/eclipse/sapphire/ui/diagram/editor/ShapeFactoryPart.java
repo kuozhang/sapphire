@@ -345,7 +345,10 @@ public class ShapeFactoryPart extends ShapePart
 	        	ShapeFactoryCaseDef shapeFactoryCase = getShapeFactoryCase(newShape);
 				
 		    	ShapePart shapePart = createShapePart(shapeFactoryCase, newShape);
-		    	this.children.add(shapePart);
+		    	int newIndex = newList.indexOf(newShape);
+		    	int size = this.children.size();
+		    	int index = (newIndex == -1 || newIndex > size) ? size : newIndex;
+		    	this.children.add(index, shapePart);
 		    	broadcast(new ShapeAddEvent(shapePart));
 			}
     	}    	

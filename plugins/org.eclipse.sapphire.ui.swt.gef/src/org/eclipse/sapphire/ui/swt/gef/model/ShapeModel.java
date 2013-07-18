@@ -7,12 +7,14 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.model;
 
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.LineShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapeFactoryPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
@@ -21,6 +23,7 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ShapeModel extends DiagramModelBase 
@@ -95,6 +98,10 @@ public class ShapeModel extends DiagramModelBase
         	else if (shapePresentation instanceof ImagePresentation)
         	{
         		childModel = new ImageModel(nodeModel, parent, (ImagePresentation)shapePresentation);
+        	}
+        	else if (shapePresentation instanceof LineShapePresentation)
+        	{
+        		childModel = new LineShapeModel(nodeModel, parent, (LineShapePresentation)shapePresentation);
         	}
         	else if (shapePresentation instanceof ValidationMarkerPresentation)
         	{

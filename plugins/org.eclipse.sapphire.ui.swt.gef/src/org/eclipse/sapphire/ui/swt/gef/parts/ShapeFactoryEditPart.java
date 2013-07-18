@@ -71,12 +71,7 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
 		
 		ShapeFactoryPresentation factory = (ShapeFactoryPresentation)getCastedModel().getShapePresentation();
-		int newIndex = index;
-		if (factory.getSeparator() != null)
-		{
-			newIndex = index * 2;
-		}
-		newIndex += factory.getIndex();
+		int newIndex = index + factory.getIndex();
 		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
 		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
 		ContainerShapePresentation parentPresentation = getParentContainer(shapePresentation);
@@ -84,19 +79,6 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 				parentPresentation.getLayout());
 		IFigure parentFigure = parentPresentation.getFigure();
 		parentFigure.add(child, layoutConstraint, newIndex);
-		
-		if (factory.getSeparator() != null && index < getModelChildren().size() - 1)
-		{
-			// Add separator figure to the parent container
-			IFigure separatorFig = ShapeUtil.createFigureForShape(factory.getSeparator(), 
-					getNodeEditPart().getCastedModel().getDiagramModel().getResourceCache(),
-					getConfigurationManager());
-			Object separatorConstraint = ShapeUtil.getLayoutConstraint(factory.getSeparator(), 
-					parentPresentation.getLayout());
-			parentFigure.add(separatorFig, separatorConstraint, newIndex + 1);
-			factory.addSeparatorFigure(shapePresentation, separatorFig);
-		}
-		
 	}
 	
 	/**
@@ -110,15 +92,6 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 		IFigure child = ((GraphicalEditPart) childEditPart).getFigure();
 		IFigure parentFig = getContentPane();
 		parentFig.remove(child);
-		ShapeFactoryPresentation factory = (ShapeFactoryPresentation)getCastedModel().getShapePresentation();
-		ShapeModel shapeModel = (ShapeModel)childEditPart.getModel();
-		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
-		IFigure separatorFig = factory.getSeparatorFigure(shapePresentation);
-		if (separatorFig != null)
-		{
-			parentFig.remove(separatorFig);
-			factory.removeSeparatorFigure(shapePresentation);
-		}		
 	}
 	
 	@Override
@@ -148,7 +121,6 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 		{
 			refreshChildren();
 		}
-		
 	}	
 	
 }
