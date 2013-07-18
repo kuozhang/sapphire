@@ -41,9 +41,16 @@
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                                             </text>
+                                            <text>
+                                                <content>:</content>
+                                            </text>
+                                            <text>
+                                                <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
+                                            </text>
                                         </content>
                                         <sequence-layout>
                                             <margin>0</margin>
+                                            <orientation>horizontal</orientation>
                                         </sequence-layout>
                                     </rectangle>
                                 </case>
@@ -57,6 +64,33 @@
                             <expand-horizontally>true</expand-horizontally>
                         </sequence-layout-constraint>
                         <visible-when>${ Fields.Size &gt; 0 }</visible-when>
+                    </rectangle>
+                    <rectangle>
+                        <visible-when>${ Methods.Size &gt; 0 }</visible-when>
+                        <sequence-layout-constraint>
+                            <expand-horizontally>true</expand-horizontally>
+                        </sequence-layout-constraint>
+                        <top-border>
+                            <weight>1</weight>
+                        </top-border>
+                        <content>
+                            <shape-factory>
+                                <property>Methods</property>
+                                <case>
+                                    <rectangle>
+                                        <sequence-layout>
+                                            <margin>0</margin>
+                                            <orientation>horizontal</orientation>
+                                        </sequence-layout>
+                                        <content>
+                                            <text>
+                                                <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                            </text>
+                                        </content>
+                                    </rectangle>
+                                </case>
+                            </shape-factory>
+                        </content>
                     </rectangle>                </content>
                 <sequence-layout>
                     <margin>0</margin>
