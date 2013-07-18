@@ -83,7 +83,7 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
 	    	List<ISapphirePart> selectedParts = diagramPart.getSelections();
 	    	for (ISapphirePart selectedPart : selectedParts)
 	    	{
-	    		if (selectedPart instanceof DiagramNodePart ||
+	    		if (selectedPart instanceof DiagramNodePart || selectedPart instanceof ShapePart ||
 	    				(selectedPart instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
 	    		{
 	    			enabled = true;
@@ -129,7 +129,12 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
                 {
                     DiagramNodePart nodePart = (DiagramNodePart)selectedPart;
                     deleteNode(nodePart);
-                }        		
+                }
+                else if (selectedPart instanceof ShapePart)
+                {
+                    ShapePart shapePart = (ShapePart)selectedPart;
+                    deleteShapePart(shapePart);                	
+                }
         	}
         }
         return null;
