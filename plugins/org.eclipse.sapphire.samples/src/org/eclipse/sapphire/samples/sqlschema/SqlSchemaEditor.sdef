@@ -62,6 +62,7 @@
                                     <bold></bold>
                                 </font>
                                 <truncatable>false</truncatable>
+                                <color>#333399</color>
                             </text>
                         </content>
                         <sequence-layout-constraint>
@@ -119,6 +120,7 @@
                                                 	<horizontal-alignment>left</horizontal-alignment>
                                                 	<right-margin>10</right-margin>                                                    
                                                 </sequence-layout-constraint>
+                                                <color>#333399</color>
                                             </text>
                                             <text>
                                                 <content>${Type.Text == null ? &quot;&lt;type&gt;&quot; : Type.Text}</content>
@@ -128,6 +130,7 @@
                                                 	<horizontal-alignment>right</horizontal-alignment>                                                	
                                                     <right-margin>10</right-margin>
                                                 </sequence-layout-constraint>
+                                                <color>#333399</color>
                                             </text>
                                         </content>
                                         <sequence-layout-constraint>
@@ -213,6 +216,7 @@
             <endpoint2>
                 <type>arrow</type>
             </endpoint2>
+            <line-color>#333399</line-color>
         </connection>
         <id>DiagramPage</id>
         <page-name>schema</page-name>

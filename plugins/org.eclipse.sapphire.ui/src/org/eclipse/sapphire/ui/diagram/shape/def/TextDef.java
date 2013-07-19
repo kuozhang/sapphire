@@ -55,7 +55,7 @@ public interface TextDef extends ShapeDef
     
     @Type( base = Color.class )
     @Label( standard = "color")
-    @DefaultValue( text = "#333399" )
+    @DefaultValue( text = "black" )
     @XmlBinding( path = "color")
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
