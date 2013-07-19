@@ -110,6 +110,11 @@ public class TextPart extends ShapePart
     @Override
     protected Status computeValidation()
     {
+        if( this.property == null )
+        {
+            return Status.createOkStatus();
+        }
+        
     	return this.property.validation();
     }
     
