@@ -94,8 +94,6 @@
                                             <validation-marker>
                                                 <size>small</size>
                                                 <sequence-layout-constraint>
-                                                    <width>7</width>
-                                                    <height>8</height>
                                                     <expand-vertically>true</expand-vertically>
                                                     <right-margin>3</right-margin>
                                                     <min-width>7</min-width>
@@ -108,8 +106,6 @@
                                                 <path>${IsPrimaryKey ? &quot;key.gif&quot; : null}</path>
                                                 <sequence-layout-constraint>
                                                     <right-margin>8</right-margin>
-                                                    <width>16</width>
-                                                    <height>16</height>
                                                     <min-width>16</min-width>
                                                     <min-height>16</min-height>
                                                     <max-width>16</max-width>
