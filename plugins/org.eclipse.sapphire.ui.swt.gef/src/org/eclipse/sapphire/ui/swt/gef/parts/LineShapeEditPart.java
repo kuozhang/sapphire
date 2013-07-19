@@ -24,11 +24,8 @@ public class LineShapeEditPart extends ShapeEditPart
 		super(configManager);
 	}
 
-//	@Override
-//	protected IFigure createFigure() 
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
+	@Override
+	public boolean isSelectable() {
+		return false;
+	}
 }

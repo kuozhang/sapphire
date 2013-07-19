@@ -34,7 +34,6 @@ import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
-import org.eclipse.sapphire.ui.swt.gef.policies.ContainerShapeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.ShapeLabelDirectEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
@@ -61,12 +60,17 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		{
 			installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ShapeLabelDirectEditPolicy());
 		}
-		// Delegate selection to the host
-		if (!model.getShapePresentation().getPart().isActive()) {
-			installEditPolicy(EditPolicy.LAYOUT_ROLE, new ContainerShapeEditPolicy());
-		}
 	}
 	
+	@Override
+	public boolean isSelectable() {
+		ContainerShapeModel model = getCastedModel();
+		if (model.getShapePresentation().getPart().isActive()) {
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	protected void addChildVisual(EditPart childEditPart, int index) 
 	{

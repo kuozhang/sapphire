@@ -33,6 +33,7 @@ public class ShapePresentation
 	private ShapePart shapePart;
 	private DiagramConfigurationManager configManager;
 	private IFigure figure;
+	private boolean separator = false;
 	
 	public ShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)
 	{
@@ -122,7 +123,15 @@ public class ShapePresentation
 	{
 	}
 	
-    public static final class ShapePresentationFactory
+    public boolean isSeparator() {
+		return separator;
+	}
+
+	public void setSeparator(boolean separator) {
+		this.separator = separator;
+	}
+
+	public static final class ShapePresentationFactory
     {
     	public static ShapePresentation createShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)
     	{

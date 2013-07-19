@@ -30,6 +30,7 @@ import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -76,6 +77,12 @@ public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
 		int candidate = -1;
 		for (int i = 0; i < children.size(); i++) {
 			EditPart child = (EditPart) children.get(i);
+			if (child instanceof ShapeEditPart) {
+				ShapePresentation presentation = ((ShapeEditPart)child).getShapePresentation();
+				if (presentation.isSeparator()) {
+					continue;
+				}
+			}
 			Rectangle rect = transposer
 					.t(getAbsoluteBounds(((GraphicalEditPart) child)));
 			if (rect.y > rowBottom) {

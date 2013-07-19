@@ -48,6 +48,7 @@ public class ShapeFactoryPresentation extends ShapePresentation
 		if (shapeFactoryPart.getSeparator() != null)
 		{
 			this.separator = ShapePresentationFactory.createShapePresentation(this, shapeFactoryPart.getSeparator(), configManager);
+			this.separator.setSeparator(true);
 		}
 	}
 
