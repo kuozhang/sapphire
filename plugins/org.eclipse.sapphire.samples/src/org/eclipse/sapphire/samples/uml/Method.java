@@ -39,6 +39,16 @@ public interface Method extends Element
     Value<String> getName();
     void setName( String value );
     
+    // *** ReturnType ***
+    
+    @Label( standard = "return type" )
+    @Required
+    
+    ValueProperty PROP_RETURN_TYPE = new ValueProperty( TYPE, "ReturnType" );
+    
+    Value<String> getReturnType();
+    void setReturnType( String value );
+    
     // *** Parameters ***
     
     @Type( base = Parameter.class )

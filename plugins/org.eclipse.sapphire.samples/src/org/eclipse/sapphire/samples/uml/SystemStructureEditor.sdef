@@ -41,12 +41,15 @@
                                         <content>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                                <color>black</color>
                                             </text>
                                             <text>
                                                 <content>:</content>
+                                                <color>#B97D69</color>
                                             </text>
                                             <text>
                                                 <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
+                                                <color>#B97D69</color>
                                             </text>
                                         </content>
                                         <sequence-layout>
@@ -82,43 +85,73 @@
                                         <sequence-layout>
                                             <margin>0</margin>
                                             <orientation>horizontal</orientation>
+                                            <spacing>0</spacing>
                                         </sequence-layout>
                                         <content>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                                <color>black</color>
                                             </text>
-                                            <text>
-                                                <content>(</content>
-                                            </text>
-                                            <shape-factory>
-                                                <property>Parameters</property>
-                                                <case>
-                                                    <rectangle>
-                                                        <sequence-layout>
-                                                            <margin>0</margin>
-                                                            <orientation>horizontal</orientation>
-                                                        </sequence-layout>
-                                                        <content>
-                                                            <text>
-                                                                <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
-                                                            </text>
-                                                            <text>
-                                                                <content>:</content>
-                                                            </text>
-                                                            <text>
-                                                                <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
-                                                            </text>
-                                                        </content>
-                                                    </rectangle>
-                                                </case>
-                                                <separator>
+                                            <rectangle>
+                                                <sequence-layout>
+                                                    <spacing>0</spacing>
+                                                    <orientation>horizontal</orientation>
+                                                    <margin>0</margin>
+                                                </sequence-layout>
+                                                <content>
                                                     <text>
-                                                        <content>,</content>
+                                                        <content>(</content>
+                                                        <color>black</color>
                                                     </text>
-                                                </separator>
-                                            </shape-factory>
+                                                    <shape-factory>
+                                                        <case>
+                                                            <rectangle>
+                                                                <content>
+                                                                    <text>
+                                                                        <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
+                                                                        <color>black</color>
+                                                                    </text>
+                                                                    <text>
+                                                                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                                                        <color>black</color>
+                                                                    </text>
+                                                                </content>
+                                                                <sequence-layout>
+                                                                    <margin>0</margin>
+                                                                    <orientation>horizontal</orientation>
+                                                                </sequence-layout>
+                                                                <sequence-layout-constraint>
+                                                                    <left-margin>5</left-margin>
+                                                                </sequence-layout-constraint>
+                                                            </rectangle>
+                                                        </case>
+                                                        <property>Parameters</property>
+                                                        <separator>
+                                                            <text>
+                                                                <content>,</content>
+                                                            </text>
+                                                        </separator>
+                                                    </shape-factory>
+                                                    <text>
+                                                        <content>)</content>
+                                                        <sequence-layout-constraint>
+                                                            <left-margin>5</left-margin>
+                                                        </sequence-layout-constraint>
+                                                        <color>black</color>
+                                                    </text>
+                                                </content>
+                                                <visible-when>${ Parameters.Size &gt; 0 }</visible-when>
+                                            </rectangle>
                                             <text>
-                                                <content>)</content>
+                                                <content>:</content>
+                                                <color>#B97D69</color>
+                                                <sequence-layout-constraint>
+                                                    <horizontal-margin>5</horizontal-margin>
+                                                </sequence-layout-constraint>
+                                            </text>
+                                            <text>
+                                                <content>${ ReturnType == null ? &quot;&lt;type&gt;&quot; : ReturnType }</content>
+                                                <color>#B97D69</color>
                                             </text>
                                         </content>
                                     </rectangle>
