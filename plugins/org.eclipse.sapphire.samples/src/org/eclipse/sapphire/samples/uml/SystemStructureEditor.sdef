@@ -32,6 +32,10 @@
                             <margin>5</margin>
                             <horizontal-alignment>center</horizontal-alignment>
                         </sequence-layout-constraint>
+                        <color>black</color>
+                        <font>
+                            <size>12</size>
+                        </font>
                     </text>
                     <rectangle>
                         <content>
@@ -88,6 +92,12 @@
                                             <spacing>0</spacing>
                                         </sequence-layout>
                                         <content>
+                                            <validation-marker>
+                                                <size>small</size>
+                                                <sequence-layout-constraint>
+                                                    <right-margin>5</right-margin>
+                                                </sequence-layout-constraint>
+                                            </validation-marker>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                                                 <color>black</color>
@@ -107,13 +117,20 @@
                                                         <case>
                                                             <rectangle>
                                                                 <content>
+                                                                    <validation-marker>
+                                                                        <size>small</size>
+                                                                    </validation-marker>
                                                                     <text>
-                                                                        <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
                                                                         <color>black</color>
+                                                                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                                                                     </text>
                                                                     <text>
-                                                                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
-                                                                        <color>black</color>
+                                                                        <color>#B97D69</color>
+                                                                        <content>:</content>
+                                                                    </text>
+                                                                    <text>
+                                                                        <color>#B97D69</color>
+                                                                        <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
                                                                     </text>
                                                                 </content>
                                                                 <sequence-layout>
