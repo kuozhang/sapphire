@@ -15,8 +15,10 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
+import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -45,5 +47,42 @@ public interface Field extends Element
     
     Value<String> getType();
     void setType( String value );
+    
+    // *** Accessibility ***
+    
+    @Type( base = Accessibility.class )
+    @Label( standard = "accessibility" )
+    @DefaultValue( text = "public" )
+    
+    ValueProperty PROP_ACCESSIBILITY = new ValueProperty( TYPE, "Accessibility" );
+    
+    Value<Accessibility> getAccessibility();
+    void setAccessibility( String value );
+    void setAccessibility( Accessibility value );
+    
+    // *** Static ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "static" )
+    @DefaultValue( text = "false" )
+    
+    ValueProperty PROP_STATIC = new ValueProperty( TYPE, "Static" );
+    
+    Value<Boolean> getStatic();
+    void setStatic( String value );
+    void setStatic( Boolean value );
+    
+    // *** Final ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "final" )
+    @DefaultValue( text = "false" )
+    
+    ValueProperty PROP_FINAL = new ValueProperty( TYPE, "Final" );
+    
+    Value<Boolean> getFinal();
+    
+    void setFinal( String value );
+    void setFinal( Boolean value );
     
 }

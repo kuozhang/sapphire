@@ -43,6 +43,44 @@
                                 <case>
                                     <rectangle>
                                         <content>
+                                            <rectangle>
+                                                <sequence-layout>
+                                                    <orientation>stacked</orientation>
+                                                    <margin>0</margin>
+                                                </sequence-layout>
+                                                <content>
+                                                    <image>
+                                                        <path>${ Accessibility == &quot;public&quot; ? &quot;Public.png&quot; : ( Accessibility == &quot;package-protected&quot; ? &quot;PackageProtected.png&quot; : ( Accessibility == &quot;protected&quot; ? &quot;Protected.png&quot; : &quot;Private.png&quot; ) ) }</path>
+                                                    </image>
+                                                    <rectangle>
+                                                        <sequence-layout-constraint>
+                                                            <horizontal-alignment>right</horizontal-alignment>
+                                                            <vertical-alignment>top</vertical-alignment>
+                                                        </sequence-layout-constraint>
+                                                        <sequence-layout>
+                                                            <spacing>0</spacing>
+                                                            <margin>0</margin>
+                                                            <orientation>horizontal</orientation>
+                                                        </sequence-layout>
+                                                        <content>
+                                                            <image>
+                                                                <path>Static.png</path>
+                                                                <visible-when>${ Static }</visible-when>
+                                                            </image>
+                                                            <image>
+                                                                <path>Final.png</path>
+                                                                <visible-when>${ Final }</visible-when>
+                                                            </image>
+                                                        </content>
+                                                    </rectangle>
+                                                    <validation-marker>
+                                                        <size>small</size>
+                                                        <sequence-layout-constraint>
+                                                            <vertical-alignment>bottom</vertical-alignment>
+                                                        </sequence-layout-constraint>
+                                                    </validation-marker>
+                                                </content>
+                                            </rectangle>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                                                 <color>black</color>
@@ -92,12 +130,59 @@
                                             <spacing>0</spacing>
                                         </sequence-layout>
                                         <content>
-                                            <validation-marker>
-                                                <size>small</size>
+                                            <rectangle>
                                                 <sequence-layout-constraint>
                                                     <right-margin>5</right-margin>
                                                 </sequence-layout-constraint>
-                                            </validation-marker>
+                                                <sequence-layout>
+                                                    <orientation>stacked</orientation>
+                                                    <margin>0</margin>
+                                                </sequence-layout>
+                                                <content>
+                                                    <image>
+                                                        <path>${ Accessibility == &quot;public&quot; ? &quot;Public.png&quot; : ( Accessibility == &quot;package-protected&quot; ? &quot;PackageProtected.png&quot; : ( Accessibility == &quot;protected&quot; ? &quot;Protected.png&quot; : &quot;Private.png&quot; ) ) }</path>
+                                                    </image>
+                                                    <rectangle>
+                                                        <sequence-layout-constraint>
+                                                            <horizontal-alignment>right</horizontal-alignment>
+                                                            <vertical-alignment>top</vertical-alignment>
+                                                        </sequence-layout-constraint>
+                                                        <sequence-layout>
+                                                            <spacing>0</spacing>
+                                                            <margin>0</margin>
+                                                            <orientation>horizontal</orientation>
+                                                        </sequence-layout>
+                                                        <content>
+                                                            <image>
+                                                                <path>Abstract.png</path>
+                                                                <visible-when>${ Abstract }</visible-when>
+                                                            </image>
+                                                            <image>
+                                                                <path>Static.png</path>
+                                                                <visible-when>${ Static }</visible-when>
+                                                            </image>
+                                                            <image>
+                                                                <path>Final.png</path>
+                                                                <visible-when>${ Final }</visible-when>
+                                                            </image>
+                                                        </content>
+                                                    </rectangle>
+                                                    <image>
+                                                        <path>Overrides.png</path>
+                                                        <visible-when>${ Overrides }</visible-when>
+                                                        <sequence-layout-constraint>
+                                                            <horizontal-alignment>right</horizontal-alignment>
+                                                            <vertical-alignment>bottom</vertical-alignment>
+                                                        </sequence-layout-constraint>
+                                                    </image>
+                                                    <validation-marker>
+                                                        <size>small</size>
+                                                        <sequence-layout-constraint>
+                                                            <vertical-alignment>bottom</vertical-alignment>
+                                                        </sequence-layout-constraint>
+                                                    </validation-marker>
+                                                </content>
+                                            </rectangle>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                                                 <color>black</color>
