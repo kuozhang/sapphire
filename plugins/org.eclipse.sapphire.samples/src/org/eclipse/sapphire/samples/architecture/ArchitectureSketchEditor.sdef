@@ -99,7 +99,6 @@
                     <vertical-alignment>center</vertical-alignment>
                     <expand-horizontally>true</expand-horizontally>
                   </sequence-layout-constraint>
-                        <color>#333399</color>
                 </text>
               </content>
             </rectangle>
@@ -177,7 +176,6 @@
             <endpoint2>
                 <type>arrow</type>
             </endpoint2>
-            <line-color>#333399</line-color>
         </connection>
         <properties-view>
             <page>

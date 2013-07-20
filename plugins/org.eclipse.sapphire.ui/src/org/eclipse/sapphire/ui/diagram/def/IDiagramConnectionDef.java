@@ -163,7 +163,7 @@ public interface IDiagramConnectionDef extends PartDef
     @Type( base = Color.class )
     @Label( standard = "line color")
     @XmlBinding( path = "line-color")
-    @DefaultValue( text = "black" )
+    @DefaultValue( text = "#333399" )
     
     ValueProperty PROP_LINE_COLOR = new ValueProperty( TYPE, "LineColor" );
     

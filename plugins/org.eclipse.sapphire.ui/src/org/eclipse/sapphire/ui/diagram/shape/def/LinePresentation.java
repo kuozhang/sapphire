@@ -37,7 +37,7 @@ public interface LinePresentation extends Element
     
     @Type( base = Color.class )
     @Label( standard = "color")
-    @DefaultValue( text = "black" )
+    @DefaultValue( text = "#000000" )
     @XmlBinding( path = "color")
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
