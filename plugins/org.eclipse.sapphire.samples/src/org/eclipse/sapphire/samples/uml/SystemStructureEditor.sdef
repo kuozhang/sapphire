@@ -26,16 +26,28 @@
                     <weight>1</weight>
                 </border>
                 <content>
-                    <text>
-                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                    <rectangle>
+                        <sequence-layout>
+                            <margin>0</margin>
+                            <orientation>horizontal</orientation>
+                            <spacing>2</spacing>
+                        </sequence-layout>
+                        <content>
+                            <validation-marker></validation-marker>
+                            <text>
+                                <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                                <font>
+                                    <size>12</size>
+                                </font>
+                                <sequence-layout-constraint>
+                                    <margin>5</margin>
+                                </sequence-layout-constraint>
+                            </text>
+                        </content>
                         <sequence-layout-constraint>
-                            <margin>5</margin>
                             <horizontal-alignment>center</horizontal-alignment>
                         </sequence-layout-constraint>
-                        <font>
-                            <size>12</size>
-                        </font>
-                    </text>
+                    </rectangle>
                     <rectangle>
                         <content>
                             <shape-factory>
