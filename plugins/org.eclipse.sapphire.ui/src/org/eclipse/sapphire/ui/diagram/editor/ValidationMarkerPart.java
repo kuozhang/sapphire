@@ -60,9 +60,12 @@ public class ValidationMarkerPart extends ShapePart
     }
 
 	public SapphirePart getContainerParent() {
+		// Go up in the Sapphire part hierarchy until a parent part with different model element
+		// or until the diagram node part. The validation marker should indicate validation problems
+		// associated with the corresponding model element.
 		SapphirePart part = this;
 		SapphirePart parentPart = (SapphirePart)getParentPart();
-		while (!(parentPart instanceof DiagramNodePart || parentPart instanceof ShapeFactoryPart)) {
+		while (!(parentPart instanceof DiagramNodePart || parentPart.getLocalModelElement() != getLocalModelElement())) {
 			part = parentPart;
 			parentPart = (SapphirePart)parentPart.getParentPart();
 		}

@@ -24,7 +24,10 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.LineShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
@@ -169,6 +172,22 @@ public class ShapeFactoryPart extends ShapePart
         return null;
     }
 
+    @Override
+    protected Status computeValidation()
+    {
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+
+        for( SapphirePart child : this.children )
+        {
+        	if (!(child instanceof ValidationMarkerPart))
+        	{
+        		factory.merge( child.validation() );
+        	}
+        }
+        
+        return factory.create();
+    }
+
     private ShapeFactoryCaseDef getShapeFactoryCase( final Element element )
 	{
         for( ShapeFactoryCaseDef shapeFactoryCaseDef : this.shapeFactoryDef.getCases() )
@@ -285,7 +304,19 @@ public class ShapeFactoryPart extends ShapePart
                     	broadcast(event);
                     }
                  }
-            );            
+            );
+            shapePart.attach
+            (
+                new FilteredListener<PartValidationEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( PartValidationEvent event )
+                    {
+                    	refreshValidation();
+                    }
+                }
+            );
+            
             
     	}
     	return shapePart;

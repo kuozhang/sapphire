@@ -37,7 +37,7 @@
                 </sequence-layout>
                 <content>
                     <text>
-                        <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
+                        <content>${ Name == null ? &quot;&lt;building&gt;&quot; : Name }</content>
                         <sequence-layout-constraint>
                             <margin>5</margin>
                             <expand-horizontally>true</expand-horizontally>
@@ -67,9 +67,29 @@
                                             <expand-horizontally>true</expand-horizontally>
                                         </sequence-layout-constraint>                                    
                                         <content>
-                                            <text>
-                                                <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
-                                            </text>
+                                            <rectangle>
+                                                <sequence-layout>
+                                                    <orientation>horizontal</orientation>
+                                                    <spacing>0</spacing>
+                                                    <margin>0</margin>
+                                                </sequence-layout>
+                                                <content>
+                                                    <validation-marker>
+                                                        <size>small</size>
+                                                    </validation-marker>
+                                                    <text>
+                                                        <content>${ Name == null ? &quot;&lt;floor&gt;&quot; : Name }</content>
+                                                        <sequence-layout-constraint>
+                                                            <expand-horizontally>true</expand-horizontally>
+                                                            <expand-vertically>true</expand-vertically>
+                                                            <horizontal-alignment>center</horizontal-alignment>
+                                                        </sequence-layout-constraint>
+                                                    </text>
+                                                </content>
+                                                <sequence-layout-constraint>
+                                                    <expand-horizontally>true</expand-horizontally>
+                                                </sequence-layout-constraint>
+                                            </rectangle>
                                             <rectangle>
                                                 <top-border>
                                                     <weight>1</weight>
