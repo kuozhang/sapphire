@@ -30,7 +30,7 @@
                         <sequence-layout>
                             <margin>0</margin>
                             <orientation>horizontal</orientation>
-                            <spacing>2</spacing>
+                            <spacing>0</spacing>
                         </sequence-layout>
                         <content>
                             <validation-marker></validation-marker>
