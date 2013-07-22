@@ -879,18 +879,23 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			DiagramNodePart nodePart = node.getModelPart();
 			ctx = new DiagramRenderingContext(nodePart, this);
 			getConfigurationManager().getDiagramRenderingContextCache().put(nodePart, ctx);
-			
-			for (ShapePart shapePart : nodePart.getShapePart().getActiveChildren())
-			{
-				ctx = new DiagramRenderingContext(shapePart, this);
-				getConfigurationManager().getDiagramRenderingContextCache().put(shapePart, ctx);				
-			}
+			addChildrenRenderingContext(nodePart.getShapePart());
 		}
 		List<DiagramConnectionModel> conns = this.diagramModel.getConnections();
 		for (DiagramConnectionModel conn : conns)
 		{
 			ctx = new DiagramRenderingContext(conn.getModelPart(), this);
 			getConfigurationManager().getDiagramRenderingContextCache().put(conn.getModelPart(), ctx);
+		}
+	}
+	
+	private void addChildrenRenderingContext(ShapePart parentShapePart) {
+		for (ShapePart shapePart : parentShapePart.getActiveChildren())
+		{
+			DiagramRenderingContext ctx = new DiagramRenderingContext(shapePart, this);
+			getConfigurationManager().getDiagramRenderingContextCache().put(shapePart, ctx);
+			
+			addChildrenRenderingContext(shapePart);
 		}
 	}
 	
