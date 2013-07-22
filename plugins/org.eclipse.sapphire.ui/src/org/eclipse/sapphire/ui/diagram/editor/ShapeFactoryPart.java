@@ -357,6 +357,7 @@ public class ShapeFactoryPart extends ShapePart
     		}
     		this.children.clear();
     		this.children.addAll(newChildren);
+    		refreshValidation();
     		broadcast(new ShapeReorderEvent(this));
     	}
     	else
@@ -368,6 +369,7 @@ public class ShapeFactoryPart extends ShapePart
 				{
 					shapePart.dispose();
 					this.children.remove(shapePart);
+					refreshValidation();
 					broadcast(new ShapeDeleteEvent(shapePart));
 				}
 			}    	    	
@@ -380,6 +382,7 @@ public class ShapeFactoryPart extends ShapePart
 		    	int size = this.children.size();
 		    	int index = (newIndex == -1 || newIndex > size) ? size : newIndex;
 		    	this.children.add(index, shapePart);
+		    	refreshValidation();
 		    	broadcast(new ShapeAddEvent(shapePart));
 			}
     	}    	
