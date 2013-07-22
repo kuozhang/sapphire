@@ -43,7 +43,8 @@
             <tool-palette-label>highway route</tool-palette-label>
             <endpoint2>
                 <type>arrow</type>
-            </endpoint2>        
+            </endpoint2>
+            <line-color>#333399</line-color>        
         </connection>
         <node>
             <id>locations</id>
@@ -71,6 +72,7 @@
                     <horizontal-alignment>center</horizontal-alignment>
                     <expand-horizontally>true</expand-horizontally>
                   </sequence-layout-constraint>
+                  <color>#333399</color>
                 </text>
               </content>
             </rectangle>
