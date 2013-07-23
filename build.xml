@@ -564,6 +564,23 @@
         <not><isset property="findbugs.output"/></not>
         <then>
 
+          <if>
+            <and>
+              <not><isset property="findbugs.location"/></not>
+              <isset property="env.FINDBUGS"/>
+            </and>
+            <then>
+              <var name="findbugs.location" value="${env.FINDBUGS}"/>
+            </then>
+          </if>
+
+          <if>
+            <not><isset property="findbugs.location"/></not>
+            <then>
+              <fail message="Could not locate FindBugs. Specify either findbugs.location property or FINDBUGS environment variable."/>
+            </then>
+          </if>
+
           <build-repository/>
 
           <property name="findbugs.output" value="${build.dir}/findbugs"/>
