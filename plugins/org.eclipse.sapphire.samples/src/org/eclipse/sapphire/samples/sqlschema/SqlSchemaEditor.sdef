@@ -97,10 +97,6 @@
                                                 <sequence-layout-constraint>
                                                     <expand-vertically>true</expand-vertically>
                                                     <right-margin>3</right-margin>
-                                                    <min-width>7</min-width>
-                                                    <min-height>8</min-height>
-                                                    <max-width>7</max-width>
-                                                    <max-height>8</max-height>
                                                 </sequence-layout-constraint>
                                             </validation-marker>
                                             <spacer>
