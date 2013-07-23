@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.layout;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.ui.def.VerticalAlignment;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class SapphireStackLayout extends AbstractLayout 
@@ -35,13 +37,15 @@ public class SapphireStackLayout extends AbstractLayout
 	@Override
 	protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) 
 	{
-		List children = container.getChildren();
-		if (children.size() > 0)
+		Dimension size = new Dimension(wHint, hHint);
+		for (Object child : container.getChildren())
 		{
-			IFigure firstChild = (IFigure)children.get(0);
-			return firstChild.getPreferredSize().getCopy();
+			IFigure childFigure = (IFigure)child;
+			Dimension childSize = childFigure.getPreferredSize();
+			size.width = Math.max(size.width, childSize.width);
+			size.height = Math.max(size.height, childSize.height);
 		}
-		return null;
+		return size;
 	}
 
 	/**
@@ -63,23 +67,17 @@ public class SapphireStackLayout extends AbstractLayout
 		{
 			return;
 		}
-		Dimension clientSize = parent.getClientArea().getSize();
-		Point offset = getOrigin(parent);
-		IFigure base = (IFigure)children.get(0);
-		Dimension baseSize = base.getPreferredSize();
-		Point baseOffset = getOffset(clientSize, baseSize, (SapphireStackLayoutConstraint)getConstraint(base));
-		Rectangle bounds = new Rectangle(baseOffset.x, baseOffset.y, baseSize.width, baseSize.height);
-		bounds = bounds.getTranslated(offset);
-		base.setBounds(bounds);
 		
-		for (int i = 1; i < children.size(); i++)
+		Dimension baseSize = parent.getClientArea().getSize();
+		Point offset = getOrigin(parent);
+		
+		for (int i = 0; i < children.size(); i++)
 		{
 			IFigure child = (IFigure)children.get(i);
 			Dimension childSize = child.getPreferredSize();
 			SapphireStackLayoutConstraint constraint = (SapphireStackLayoutConstraint)getConstraint(child);
 			Point childOffset = getOffset(baseSize, childSize, constraint);
-			Rectangle childBounds = new Rectangle(childOffset.x + baseOffset.x, childOffset.y + baseOffset.y, 
-					childSize.width, childSize.height);
+			Rectangle childBounds = new Rectangle(childOffset.x, childOffset.y, childSize.width, childSize.height);
 			childBounds = childBounds.getTranslated(offset);
 			child.setBounds(childBounds);
 		}
