@@ -45,6 +45,17 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
     }
 
 	@Override
+	public boolean isSelectable() {
+		ShapeModel shapeModel = (ShapeModel)getModel();
+		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
+		if (shapePresentation.isSeparator()) {
+			return false;
+		}
+		
+		return super.isSelectable();
+	}
+
+	@Override
 	public void activate() 
 	{
 		if (!isActive()) 
