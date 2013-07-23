@@ -83,7 +83,7 @@ public class ValidationMarkerPart extends ShapePart
 	@Override
 	public void dispose() {
 		if (this.validationListener != null) {
-	        this.detach(this.validationListener);
+	        this.containerParent.detach(this.validationListener);
 	        this.validationListener = null;
 		}
 		super.dispose();
