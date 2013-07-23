@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.internal;
@@ -42,12 +43,14 @@ import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 {
     private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
 	private static final String DIAGRAM_DEFAULT_GROUP = "Diagram.Default";
+	private static final String DIAGRAM_DELETE_ALL_BEND_POINTS = "Sapphire.Diagram.DeleteAllBendPoints";
 	
     private SapphireDiagramEditor editor;
 	private Map<SapphireActionSystemPart,ActionSystemPartBridge> cache = Collections.emptyMap();
@@ -112,6 +115,11 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 		        continue;
 		    }
 		    
+		    if (skipMultipleConnectionAction(selection, context, action)) 
+		    {
+		    	continue;
+		    }
+		    
 	        final String groupId = action.getGroup();
 	        
 	        if( ( currentGroupId != null && groupId == null ) || 
@@ -174,6 +182,21 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 		this.cache = updatedCache;
 	}
 	
+	private boolean skipMultipleConnectionAction(final List<ISapphirePart> selection, final String context, final SapphireAction action) {
+		if (SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS.equals(context)) {
+			if (DIAGRAM_DELETE_ALL_BEND_POINTS.equals(action.getId())) {
+				for (ISapphirePart part : selection) {
+		            if(part instanceof DiagramConnectionPart) {
+		            	return false;
+		            }
+				}
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
     @Override
     public void dispose()
     {
