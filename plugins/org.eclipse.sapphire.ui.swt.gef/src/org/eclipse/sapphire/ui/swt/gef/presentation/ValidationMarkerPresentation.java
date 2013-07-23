@@ -262,7 +262,16 @@ public class ValidationMarkerPresentation extends ShapePresentation
 			public void mousePressed(MouseEvent me)
 			{
 				me.consume();
-				openAssistDialog();
+                Display.getDefault().asyncExec
+                (
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+            				openAssistDialog();
+                        }
+                    }
+                );
 			}
 
 		});		
@@ -285,7 +294,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
             
             final PropertyEditorAssistDialog dialog = new PropertyEditorAssistDialog( getConfigurationManager().getDiagramEditor().getEditorSite().getShell(), 
             		swtPosition, this.assistContext );
-            
+
             dialog.open();
         }
 	}
