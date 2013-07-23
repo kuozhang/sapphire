@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ShapeEditPart extends AbstractGraphicalEditPart 
@@ -46,9 +48,8 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 
 	@Override
 	public boolean isSelectable() {
-		ShapeModel shapeModel = (ShapeModel)getModel();
-		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
-		if (shapePresentation.isSeparator()) {
+		ShapePresentation shapePresentation = getShapePresentation();
+		if (shapePresentation != null && shapePresentation.isSeparator()) {
 			return false;
 		}
 		
@@ -118,9 +119,12 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	
 	public ShapePresentation getShapePresentation()
 	{
-		ShapeModel shapeModel = (ShapeModel)getModel();
-		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
-		return shapePresentation;
+		if (getModel() instanceof ShapeModel) {
+			ShapeModel shapeModel = (ShapeModel)getModel();
+			ShapePresentation shapePresentation = shapeModel.getShapePresentation();
+			return shapePresentation;
+		}
+		return null;
 	}
 	
 	protected ContainerShapePresentation getParentContainer(ShapePresentation shapePresentation)

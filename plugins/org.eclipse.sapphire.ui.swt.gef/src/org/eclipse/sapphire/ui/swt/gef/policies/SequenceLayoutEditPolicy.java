@@ -79,7 +79,7 @@ public abstract class SequenceLayoutEditPolicy extends OrderedLayoutEditPolicy {
 			EditPart child = (EditPart) children.get(i);
 			if (child instanceof ShapeEditPart) {
 				ShapePresentation presentation = ((ShapeEditPart)child).getShapePresentation();
-				if (presentation.isSeparator()) {
+				if (presentation != null && presentation.isSeparator()) {
 					continue;
 				}
 			}
