@@ -8,24 +8,47 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [376266] Diagram delete all connection bend points action should be available in multi-select mode
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireActionHandler 
 {
-    
+	@Override
+	public void init(SapphireAction action, ActionHandlerDef def) {
+		super.init(action, def);
+
+        final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
+        page.attach
+        (
+            new FilteredListener<SelectionChangedEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final SelectionChangedEvent event )
+                {
+                    broadcast( new EnablementChangedEvent() );
+                }
+            }
+        );
+	}
+
     @Override
     public boolean isEnabled()
     {
