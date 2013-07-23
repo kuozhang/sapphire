@@ -34,6 +34,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryCaseDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SpacerDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 import org.eclipse.sapphire.util.CollectionsUtil;
 
@@ -89,6 +90,8 @@ public class ShapeFactoryPart extends ShapePart
             }
         };
         this.modelElement.attach(this.shapePropertyListener, this.propertyName);
+        
+        refreshValidation();
         
     }
 	
@@ -234,6 +237,10 @@ public class ShapeFactoryPart extends ShapePart
     	else if (shapeDef instanceof ShapeFactoryDef)
     	{
     		shapePart = new ShapeFactoryPart();
+    	}
+    	else if (shapeDef instanceof SpacerDef)
+    	{
+    		shapePart = new SpacerPart();
     	}
     	if (shapePart != null)
     	{

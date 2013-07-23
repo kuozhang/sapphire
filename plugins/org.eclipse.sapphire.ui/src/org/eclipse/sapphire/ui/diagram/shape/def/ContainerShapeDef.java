@@ -57,7 +57,8 @@ public interface ContainerShapeDef extends ShapeDef
 			ValidationMarkerDef.class, 
 		    RectangleDef.class,
 		    LineShapeDef.class,
-		    ShapeFactoryDef.class
+		    ShapeFactoryDef.class,
+		    SpacerDef.class
 		}
 	)
 	
@@ -74,7 +75,8 @@ public interface ContainerShapeDef extends ShapeDef
 	        @XmlListBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
 	        @XmlListBinding.Mapping( element = "rectangle", type = RectangleDef.class ),
 	        @XmlListBinding.Mapping( element = "line", type = LineShapeDef.class ),
-	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class )
+	        @XmlListBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class ),
+	        @XmlListBinding.Mapping( element = "spacer", type = SpacerDef.class )
 	    }
 	)	
 	

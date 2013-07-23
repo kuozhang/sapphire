@@ -15,6 +15,9 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
@@ -80,10 +83,66 @@ public class ValidationMarkerPart extends ShapePart
 	@Override
 	public void dispose() {
 		if (this.validationListener != null) {
-	        this.containerParent.detach(this.validationListener);
+	        this.detach(this.validationListener);
 	        this.validationListener = null;
 		}
 		super.dispose();
 	}
+		
+	@Override
+    protected Function initVisibleWhenFunction()
+    {
+		final Function function = new Function()
+        {
+            @Override
+            public String name()
+            {
+                return "ValidationMarkerVisibleWhen";
+            }
+
+			@Override
+			public FunctionResult evaluate(FunctionContext context) 
+			{				
+		        return new FunctionResult( this, context )
+		        {
+					private Listener validationListener;
+					
+                    @Override
+                    protected void init()
+                    {
+                        this.validationListener = new FilteredListener<ValidationMarkerContentEvent>()
+                        {
+                        	@Override
+                            protected void handleTypedEvent( ValidationMarkerContentEvent event )
+                            {
+                        		refresh();
+                            }
+                        };
+                    	
+                        ValidationMarkerPart.this.attach(this.validationListener);
+                    }
+                    
+		            @Override
+		            protected Object evaluate()
+		            {
+		            	Status status = content(); //getLocalModelElement().validation();
+		            	return !status.ok();
+		            }
+
+		            @Override
+                    public void dispose()
+                    {
+                        super.dispose();
+                        
+                        ValidationMarkerPart.this.detach(this.validationListener);
+                    }
+		            
+		        };
+			}
+        };
+        function.init();
+        return function;
+    }	
+    
 	
 }

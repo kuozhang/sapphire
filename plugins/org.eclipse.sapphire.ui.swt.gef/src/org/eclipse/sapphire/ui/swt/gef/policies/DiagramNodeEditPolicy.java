@@ -30,6 +30,7 @@ import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.swt.SWT;
 
 /**
@@ -95,8 +96,8 @@ public class DiagramNodeEditPolicy extends GraphicalNodeEditPolicy {
 		PolylineConnection connection = new DummyPolylineConnection(hostFigure);
 		connection.setLineWidth(2);
 		connection.setLineStyle(SWT.LINE_DASH);
-		if (hostFigure instanceof NodeFigure) {
-			DiagramResourceCache cache = ((NodeFigure)hostFigure).getDiagramResourceCache();
+		if (getHost() instanceof DiagramNodeEditPart) {
+			DiagramResourceCache cache = ((DiagramNodeEditPart)getHost()).getCastedModel().getDiagramModel().getResourceCache();
 			connection.setForegroundColor(cache.getColor(DUMMY_CONNECTION_FOREGROUND));
 		}
 		return connection;

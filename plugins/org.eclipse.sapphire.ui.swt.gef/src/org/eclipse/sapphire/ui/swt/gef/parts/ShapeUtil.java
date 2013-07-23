@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.RectangleFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.SapphireImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.SpacerFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayoutConstraint;
 import org.eclipse.sapphire.ui.swt.gef.layout.SapphireStackLayoutConstraint;
@@ -37,6 +38,7 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.LineShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapeFactoryPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.SpacerPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ValidationMarkerPresentation;
 
@@ -114,7 +116,10 @@ public class ShapeUtil {
 		else if (shapePresentation instanceof ValidationMarkerPresentation)
 		{
 			ValidationMarkerPresentation markerPresentation = (ValidationMarkerPresentation)shapePresentation;
-			figure = markerPresentation.getFigure();
+			if (markerPresentation.visible())
+			{
+				figure = markerPresentation.getValidationMarkerFigure();
+			}
 		}
 		else if (shapePresentation instanceof LineShapePresentation)
 		{
@@ -128,6 +133,14 @@ public class ShapeUtil {
 		{
 			RectanglePresentation rectPresentation = (RectanglePresentation)shapePresentation;
 			figure = new RectangleFigure(rectPresentation, resourceCache, configManager);
+		}
+		else if (shapePresentation instanceof SpacerPresentation)
+		{
+			SpacerPresentation spacerPresentation = (SpacerPresentation)shapePresentation;
+			if (spacerPresentation.visible())
+			{
+				figure = new SpacerFigure(spacerPresentation);
+			}
 		}
 		
 		shapePresentation.setFigure(figure);

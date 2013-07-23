@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
@@ -86,8 +87,8 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	}
 	
     private SwtResourceCache imageCache;
-	private SmoothImageFigure imageFigure;
 	private PropertyEditorAssistContext assistContext;
+	private IFigure validationMarkerFigure;
 	private Status problem;
 	private final List<PropertyEditorAssistContributor> contributors;
 	private Listener validationListener;
@@ -98,8 +99,6 @@ public class ValidationMarkerPresentation extends ShapePresentation
 		super(parent, validationMarkerPart, configManager);
 		DiagramNodePart nodePart = validationMarkerPart.nearest(DiagramNodePart.class);
 		this.imageCache = nodePart.getSwtResourceCache();
-		this.imageFigure = new SmoothImageFigure();
-		setFigure(this.imageFigure);
 		
 		this.contributors = new ArrayList<PropertyEditorAssistContributor>();
 		
@@ -170,9 +169,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
             }
         };
         getValidationMarkerPart().attach(this.validationListener);
-        		
-		addMouseListener();
-		
+        				
 		refresh();
 	}
 
@@ -231,22 +228,35 @@ public class ValidationMarkerPresentation extends ShapePresentation
 				}
 			}
 		}
-		this.imageFigure.setImage(image);
+		if (image != null)
+		{
+			this.validationMarkerFigure = new SmoothImageFigure(image);
+			addMouseListener();
+		}
+		else 
+		{
+			this.validationMarkerFigure = null;
+		}
+	}
+	
+	public IFigure getValidationMarkerFigure()
+	{
+		return this.validationMarkerFigure;
 	}
 	
 	private void addMouseListener()
 	{
-		this.imageFigure.addMouseMotionListener(new MouseMotionListener.Stub() 
+		this.validationMarkerFigure.addMouseMotionListener(new MouseMotionListener.Stub() 
 		{
 			@Override
 			public void mouseEntered(MouseEvent me) 
 			{
-				ValidationMarkerPresentation.this.imageFigure.setCursor( Display.getCurrent().getSystemCursor( SWT.CURSOR_HAND ) );
+				validationMarkerFigure.setCursor( Display.getCurrent().getSystemCursor( SWT.CURSOR_HAND ) );
 			}
 
 		});
 		
-		this.imageFigure.addMouseListener(new MouseListener.Stub()
+		this.validationMarkerFigure.addMouseListener(new MouseListener.Stub()
 		{
 			@Override
 			public void mousePressed(MouseEvent me)
@@ -266,10 +276,10 @@ public class ValidationMarkerPresentation extends ShapePresentation
         	// hide the context menu pad
         	getConfigurationManager().getDiagramEditor().getContextButtonManager().hideContextButtonsInstantly();
         	        	
-            final org.eclipse.draw2d.geometry.Rectangle decoratorControlBounds = this.imageFigure.getBounds().getCopy();
+            final org.eclipse.draw2d.geometry.Rectangle decoratorControlBounds = getFigure().getBounds().getCopy();
             org.eclipse.draw2d.geometry.Point draw2dPosition = new org.eclipse.draw2d.geometry.Point( decoratorControlBounds.x + decoratorControlBounds.width + 2, decoratorControlBounds.y + 2 );
             FigureCanvas canvas = getConfigurationManager().getDiagramEditor().getFigureCanvas();
-            this.imageFigure.translateToAbsolute(draw2dPosition);
+            getFigure().translateToAbsolute(draw2dPosition);
             Point swtPosition = new Point(draw2dPosition.x, draw2dPosition.y);
             swtPosition = canvas.getDisplay().map(canvas, null, swtPosition);
             

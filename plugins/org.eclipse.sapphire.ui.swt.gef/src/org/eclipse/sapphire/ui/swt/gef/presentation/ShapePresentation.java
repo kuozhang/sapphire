@@ -17,6 +17,7 @@ import org.eclipse.sapphire.ui.diagram.editor.LinePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.SpacerPart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
@@ -159,6 +160,10 @@ public class ShapePresentation
         	else if (shapePart instanceof ShapeFactoryPart)
         	{
         		shapePresentation = new ShapeFactoryPresentation(parent, (ShapeFactoryPart)shapePart, configManager);        		
+        	}
+        	else if (shapePart instanceof SpacerPart)
+        	{
+        		shapePresentation = new SpacerPresentation(parent, (SpacerPart)shapePart, configManager);
         	}
     		return shapePresentation;
     	}

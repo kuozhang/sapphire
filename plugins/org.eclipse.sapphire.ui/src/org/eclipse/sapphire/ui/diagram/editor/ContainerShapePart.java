@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeFactoryDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SpacerDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
 
@@ -89,6 +90,10 @@ public class ContainerShapePart extends ShapePart
         		childPart = new ShapeFactoryPart();
         		childPart.setActive(true);
         		this.shapeFactoryParts.add((ShapeFactoryPart)childPart);
+        	}
+        	else if (shape instanceof SpacerDef) 
+        	{
+        		childPart = new SpacerPart();
         	}
         	if (childPart != null)
         	{
@@ -175,7 +180,8 @@ public class ContainerShapePart extends ShapePart
                 
         	}
         	index++;
-        }
+        }       
+        refreshValidation();
     }
 	
     @Override
