@@ -1701,6 +1701,7 @@
             <image>${ Image() }</image>
             <node-include>DiagramShapeLayoutConstraintNode</node-include>
             <node-include>ActionsOverallNode</node-include>
+            <node-include>PropertiesViewContributionNode</node-include>
             <section>
                 <label>presentation</label>
                 <content>
@@ -1745,6 +1746,7 @@
             <image>${ Image() }</image>
             <node-include>DiagramShapeLayoutConstraintNode</node-include>
             <node-include>ActionsOverallNode</node-include>
+            <node-include>PropertiesViewContributionNode</node-include>
         </case>
         <case>
             <model-element-type>ValidationMarkerDef</model-element-type>
@@ -1791,7 +1793,7 @@
                     </with>
                 </content>
             </section>
-            <node-include>DiagramShapeLayoutConstraintNode</node-include>
+            <node-include>DiagramShapeLayoutConstraintNode</node-include>            
             <node>
                 <label>layout</label>
                 <section>
@@ -1899,6 +1901,7 @@
                 <image>${ &quot;Content.png&quot; }</image>
             </node>
             <node-include>ActionsOverallNode</node-include>
+            <node-include>PropertiesViewContributionNode</node-include>
             <image>${ Image() }</image>
         </case>
         <case>
@@ -1987,6 +1990,7 @@
                 </node-include>
                 <image>Separator.png</image>
             </node>
+            <node-include>PropertiesViewContributionNode</node-include>
         </case>
         <case>
             <model-element-type>SpacerDef</model-element-type>
