@@ -101,17 +101,13 @@
                                             </validation-marker>
                                             <spacer>
                                                 <sequence-layout-constraint>
-                                                    <width>7</width>
-                                                    <height>8</height>
-                                                    <min-width>7</min-width>
+                                                    <min-width>10</min-width>
                                                     <min-height>8</min-height>
-                                                    <max-width>7</max-width>
+                                                    <max-width>10</max-width>
                                                     <max-height>8</max-height>
-                                                    <right-margin>3</right-margin>
                                                 </sequence-layout-constraint>
                                                 <visible-when>${ Name.Validation.Severity == 'ok' }</visible-when>
                                             </spacer>
-                                            
                                             <image>
                                                 <path>key.gif</path>
                                                 <sequence-layout-constraint>
@@ -121,15 +117,12 @@
                                             </image>
                                             <spacer>
                                                 <sequence-layout-constraint>
-                                                    <width>16</width>
-                                                    <height>16</height>
-                                                    <min-width>16</min-width>
+                                                    <min-width>24</min-width>
                                                     <min-height>16</min-height>
-                                                    <max-width>16</max-width>
+                                                    <max-width>24</max-width>
                                                     <max-height>16</max-height>
-                                                    <right-margin>8</right-margin>
                                                 </sequence-layout-constraint>
-                                                <visible-when>${!IsPrimaryKey}</visible-when>
+                                                <visible-when>${ ! IsPrimaryKey }</visible-when>
                                             </spacer>
                                             <text>
                                                 <content>${ Name == null ? &quot;&lt;column&gt;&quot; : Name }:</content>

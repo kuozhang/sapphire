@@ -70,7 +70,8 @@ public interface ShapeFactoryCaseDef extends Element
 			ValidationMarkerDef.class, 
 		    RectangleDef.class,
 		    LineShapeDef.class,
-		    ShapeFactoryDef.class
+		    ShapeFactoryDef.class,
+		    SpacerDef.class
 		}
 	)
 	
@@ -85,7 +86,8 @@ public interface ShapeFactoryCaseDef extends Element
 	        @XmlElementBinding.Mapping( element = "validation-marker", type = ValidationMarkerDef.class ),
 	        @XmlElementBinding.Mapping( element = "rectangle", type = RectangleDef.class ),
 	        @XmlElementBinding.Mapping( element = "line", type = LineShapeDef.class ),
-	        @XmlElementBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class )
+	        @XmlElementBinding.Mapping( element = "shape-factory", type = ShapeFactoryDef.class ),
+	        @XmlElementBinding.Mapping( element = "spacer", type = SpacerDef.class )
 	    }
 	)	
 	

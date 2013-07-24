@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 
 /**
@@ -19,6 +20,7 @@ import org.eclipse.sapphire.modeling.annotations.Label;
  */
 
 @Label( standard = "spacer" )
+@Image( path = "SpacerDef.png" )
 
 public interface SpacerDef extends ShapeDef 
 {

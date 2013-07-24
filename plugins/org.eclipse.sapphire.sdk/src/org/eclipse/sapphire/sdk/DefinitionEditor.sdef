@@ -1988,6 +1988,17 @@
                 <image>Separator.png</image>
             </node>
         </case>
+        <case>
+            <model-element-type>SpacerDef</model-element-type>
+            <label>Spacer</label>
+            <image>${ Image() }</image>
+            <section>
+                <content>
+                    <property-editor>VisibleWhen</property-editor>
+                </content>
+            </section>
+            <node-include>DiagramShapeLayoutConstraintNode</node-include>
+        </case>
     </node-factory>
     <form>
         <content>
