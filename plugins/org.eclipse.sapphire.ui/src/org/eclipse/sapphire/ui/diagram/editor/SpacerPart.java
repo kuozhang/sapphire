@@ -24,21 +24,24 @@ public class SpacerPart extends ShapePart
 	public Point getSize()
 	{
 		LayoutConstraintDef constraint = getLayoutConstraint();
-		Point size = new Point(constraint.getWidth().content(), constraint.getHeight().content());
+		Point size = new Point(constraint.getWidth().content() != null ? constraint.getWidth().content() : -1, 
+								constraint.getHeight().content() != null ? constraint.getHeight().content() : -1);
 		return size;
 	}
 	
 	public Point getMinimumSize()
 	{
 		SequenceLayoutConstraintDef constraint = (SequenceLayoutConstraintDef)getLayoutConstraint();
-		Point size = new Point(constraint.getMinWidth().content(), constraint.getMinHeight().content());
+		Point size = new Point(constraint.getMinWidth().content() != null ? constraint.getMinWidth().content() : -1, 
+								constraint.getMinHeight().content() != null ? constraint.getMinHeight().content() : -1);
 		return size;
 	}
 	
 	public Point getMaximumSize()
 	{
 		SequenceLayoutConstraintDef constraint = (SequenceLayoutConstraintDef)getLayoutConstraint();
-		Point size = new Point(constraint.getMaxWidth().content(), constraint.getMaxHeight().content());
+		Point size = new Point(constraint.getMaxWidth().content() != null ? constraint.getMaxWidth().content() : -1, 
+								constraint.getMaxHeight().content() != null ? constraint.getMaxHeight().content() : -1);
 		return size;
 	}
 }

@@ -275,8 +275,11 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
 		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, textPart);
 		TextFigure textFigure = (TextFigure)shapePresentation.getFigure();
-		textFigure.setText(((TextPresentation)shapePresentation).getContent());		
-		refreshNodeBounds();
+		if (textFigure != null)
+		{
+			textFigure.setText(((TextPresentation)shapePresentation).getContent());		
+			refreshNodeBounds();
+		}
 	}
 	
 	

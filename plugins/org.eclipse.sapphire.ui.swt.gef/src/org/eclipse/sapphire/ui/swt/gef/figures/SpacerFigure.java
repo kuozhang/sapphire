@@ -56,7 +56,13 @@ public class SpacerFigure extends Figure
 	public Dimension getPreferredSize(int w, int h) 
 	{
 		Point size = this.spacerPresentation.getSize();
-		Dimension d = new Dimension(size.getX(), size.getY());
+		Point minSize = this.spacerPresentation.getMinimunSize();
+		Point maxSize = this.spacerPresentation.getMaximumSize();
+		int w2 = size.getX() != -1 ? size.getX() : 
+				(minSize.getX() != -1 ? minSize.getX() : (maxSize.getX() != -1 ? maxSize.getX() : -1));
+		int h2 = size.getY() != -1 ? size.getY() : 
+			(minSize.getY() != -1 ? minSize.getY() : (maxSize.getY() != -1 ? maxSize.getY() : -1));
+		Dimension d = new Dimension(w2, h2);
 		return d;
 	}
 

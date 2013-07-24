@@ -24,7 +24,6 @@ public class ImagePart extends ShapePart
 {
 	private ImageDef imageDef;
 	private Element modelElement;
-	private FunctionResult imagePathFunction;
 	private FunctionResult imageDataFunctionResult;
 
 	@Override
@@ -33,22 +32,7 @@ public class ImagePart extends ShapePart
         super.init();
         this.imageDef = (ImageDef)super.definition;
         this.modelElement = getModelElement();
-        
-        this.imagePathFunction = initExpression
-        ( 
-            this.modelElement,
-            this.imageDef.getPath().content(),
-            String.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                	broadcast(new ShapeUpdateEvent(ImagePart.this));
-                }
-            }
-        );
-        
+                
         this.imageDataFunctionResult = initExpression
         ( 
             this.modelElement,
@@ -70,10 +54,6 @@ public class ImagePart extends ShapePart
     public void dispose()
     {
         super.dispose();
-        if (this.imagePathFunction != null)
-        {
-            this.imagePathFunction.dispose();
-        }
         if (this.imageDataFunctionResult != null)
         {
             this.imageDataFunctionResult.dispose();
@@ -88,15 +68,5 @@ public class ImagePart extends ShapePart
         }
         return null;        
     }
- 
-    public String getImagePath()
-    {
-    	String path = null;
-    	if (this.imagePathFunction != null)
-    	{
-    		path = (String)this.imagePathFunction.value();
-    	}
-    	return path;
-    }
-    
+     
 }
