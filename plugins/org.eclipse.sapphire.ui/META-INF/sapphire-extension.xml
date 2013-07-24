@@ -171,6 +171,7 @@
         <location>after:Sapphire.ShowNextWarning</location>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
     </action>
     <action>
         <id>Sapphire.Restore.Defaults</id>
@@ -446,6 +447,7 @@
         <description>Shows the model element associated with a given diagram node in the corresponding source editor.</description>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Connection</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
         <condition>org.eclipse.sapphire.ui.diagram.actions.internal.DiagramShowInSourceActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
