@@ -217,6 +217,9 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
     {
     	Element shapeModel = shapePart.getLocalModelElement();
     	ElementList<?> list = (ElementList<?>) shapeModel.parent();
-        list.remove(shapeModel);    	
+    	if (!list.disposed())
+    	{
+    		list.remove(shapeModel);
+    	}
     }
 }
