@@ -1354,7 +1354,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	public void setDirectEditingActive(boolean directEditingActive) 
 	{
 		this.directEditingActive = directEditingActive;
-		//getContextButtonManager().hideContextButtonsInstantly();
+		getContextButtonManager().hideContextButtonsInstantly();
 	}
 	
 	private void configureDiagramHeading()

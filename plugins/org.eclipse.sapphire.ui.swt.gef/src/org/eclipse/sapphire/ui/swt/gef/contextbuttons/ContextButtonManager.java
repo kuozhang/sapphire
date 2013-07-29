@@ -327,22 +327,16 @@ public class ContextButtonManager {
 
 	public void refresh()
 	{
-        Display.getDefault().asyncExec
-        (
-            new Runnable()
-            {
-                public void run()
-                {
-                    refreshInternal();
-                }
-            }
-        );
-		
+		refreshInternal();
 	}
 	
 	private void refreshInternal() 
 	{
 		hideContextButtonsInstantly();
+		if (getEditor().isDirectEditingActive())
+		{
+			return;
+		}
 		List<ISapphirePart> selectedParts = this.getEditor().getSelectedParts();
 		if (selectedParts.size() == 0)
 		{
