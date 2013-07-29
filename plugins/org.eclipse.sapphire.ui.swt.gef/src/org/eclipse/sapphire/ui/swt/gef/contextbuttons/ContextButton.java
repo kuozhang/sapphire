@@ -23,17 +23,18 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.EditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.ActuatorPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.DefaultActionImage;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
@@ -199,15 +200,6 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	 */
 	public final SapphireDiagramEditor getEditor() {
 		return getContextButtonPad().getEditor();
-	}
-
-	/**
-	 * Returns the {@link EditPart} for which the context button is displayed.
-	 * 
-	 * @return The {@link EditPart} for which the context button is displayed.
-	 */
-	public final EditPart getEditPart() {
-		return getContextButtonPad().getEditPart();
 	}
 
 	/**
@@ -487,7 +479,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 			
 		}
 
-		getEditor().getContextButtonManager().hideContextButtonsInstantly();
+		getEditor().getContextButtonManager().refresh();		
 	}
 
 	/**
@@ -556,10 +548,13 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	
 	private void executeActionHandler(SapphireActionHandler handler)
 	{
-		DiagramNodePart nodePart = this.contextButtonPad.getNodePart();
-        DiagramRenderingContext context =
-                getEditor().getConfigurationManager().getDiagramRenderingContextCache().get(nodePart);
-        handler.execute(context);		
+		List<ISapphirePart> sapphireParts = this.contextButtonPad.getSapphireParts();
+		for (ISapphirePart part : sapphireParts)
+		{
+	        DiagramRenderingContext context =
+	                getEditor().getConfigurationManager().getDiagramRenderingContextCache().get(part);
+	        handler.execute(context);
+		}
 	}
 
 	public double getCurrentTransparency() {

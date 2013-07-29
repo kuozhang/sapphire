@@ -432,7 +432,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         return this.selections;
     }
     
-    public void setSelections(final List<ISapphirePart> selections)
+    public void setSelections(final List<ISapphirePart> selections, boolean force)
     {
     	boolean selectionChanged = false;
     	if (this.selections.size() != selections.size())
@@ -443,7 +443,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	{
     		selectionChanged = true;
     	}
-    	if (selectionChanged)
+    	if (selectionChanged || force)
     	{
 	    	this.selections.clear();
 	    	this.selections.addAll(selections);

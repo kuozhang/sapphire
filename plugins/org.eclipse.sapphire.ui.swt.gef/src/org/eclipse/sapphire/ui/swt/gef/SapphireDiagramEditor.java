@@ -750,15 +750,16 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 					this.selectedEditParts = editPartList;
 					if (!this.isSelectionFromPagePart)
 					{
-						getPart().setSelections(partList);
+						getPart().setSelections(partList, false);
 					}
 					updateKeyHandler();
 					
-					// [Bug 380728] Floating toolbar appears on a node when multiple nodes are selected
-					if (partList.size() > 1 || !(partList.get(0) instanceof DiagramNodePart))
-					{
-						this.contextButtonManager.hideContextButtonsInstantly();
-					}
+//					// [Bug 380728] Floating toolbar appears on a node when multiple nodes are selected
+//					if (partList.size() > 1 || !(partList.get(0) instanceof DiagramNodePart))
+//					{
+//						this.contextButtonManager.hideContextButtonsInstantly();
+//					}
+					this.contextButtonManager.refresh();
 				}				
 			}
 		}
@@ -1353,7 +1354,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	public void setDirectEditingActive(boolean directEditingActive) 
 	{
 		this.directEditingActive = directEditingActive;
-		getContextButtonManager().hideContextButtonsInstantly();
+		//getContextButtonManager().hideContextButtonsInstantly();
 	}
 	
 	private void configureDiagramHeading()

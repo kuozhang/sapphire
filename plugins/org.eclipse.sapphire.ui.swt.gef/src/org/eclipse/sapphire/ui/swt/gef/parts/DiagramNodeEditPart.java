@@ -35,6 +35,7 @@ import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
@@ -155,6 +156,12 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 		
 		return returnedModelChildren;
+	}
+	
+	@Override
+	public SapphirePart getSapphirePart()
+	{
+		return getCastedModel().getSapphirePart();
 	}
 	
 	private void performDirectEdit() 

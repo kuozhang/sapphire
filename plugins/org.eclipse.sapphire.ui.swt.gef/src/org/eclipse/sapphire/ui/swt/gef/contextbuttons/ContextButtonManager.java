@@ -17,29 +17,34 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.normalizeToEmptyString
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.MouseEvent;
-import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
-import org.eclipse.gef.Tool;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
-import org.eclipse.gef.tools.AbstractConnectionCreationTool;
-import org.eclipse.gef.tools.CreationTool;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * The context button manager shows and hides the context button pad. Mostly
@@ -53,6 +58,7 @@ import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 public class ContextButtonManager {
 	
 	private static final String DIAGRAM_NODE_DEFAULT_ACTION = "Sapphire.Diagram.Node.Default";
+	private static final String DIAGRAM_DELETE_ALL_BEND_POINTS = "Sapphire.Diagram.DeleteAllBendPoints";
 	/**
 	 * The context button pad is not shown, when the zoom level is below this
 	 * minimum value.
@@ -72,16 +78,11 @@ public class ContextButtonManager {
 	private Map<IFigure, EditPart> figure2EditPart = new HashMap<IFigure, EditPart>();
 
 	/**
-	 * The currently active figure as described in {@link #getActiveFigure()}.
-	 */
-	private IFigure activeFigure;
-
-	/**
 	 * The currently active figure as described in
 	 * {@link #getActiveContextButtonPad()}.
 	 */
 	private ContextButtonPad activeContextButtonPad;
-
+	
 	// ============================= listener =================================
 
 	/**
@@ -94,48 +95,14 @@ public class ContextButtonManager {
 		}
 	};
 
-	/**
-	 * The mouse motion listener is registered on the relevant figures. It calls
-	 * {@link #showContextButtonsInstantly()} when the mouse enters the figure.
-	 */
-	private MouseMotionListener mouseMotionListener = new MouseMotionListener.Stub() {
-		@Override
-		public void mouseEntered(MouseEvent me) {
-			reactOnMouse(me);
+	private FigureListener figureListener = new FigureListener()
+	{
+		public void figureMoved(IFigure source)
+		{
+			refresh();
 		}
-
-		@Override
-		public void mouseMoved(MouseEvent me) {
-			reactOnMouse(me);
-		}
-
-		private void reactOnMouse(MouseEvent me) {
-			SapphireDiagramEditor ed = getEditor();
-			
-			// TODO Evaluate whether we should allow context pad to show when the 
-			// editor is in direct edit mode.
-			// We should not show the context buttons if the editor is in direct editor mode.
-			// Context button pad interferes with the keyboard events.
-			if (ed.isDirectEditingActive()) {
-				return;
-			}
-			
-			// Bug 380728 - Floating toolbar appears on a node when multiple nodes are selected 
-			if (ed.getSelectedParts().size() > 1) {
-				return;
-			}
-				
-			Tool activeTool = ed.getEditDomain().getActiveTool();
-			if (activeTool instanceof CreationTool || activeTool instanceof AbstractConnectionCreationTool) {
-				return;
-			}
-
-			Object source = me.getSource();
-			showContextButtonsInstantly((IFigure) source, me.getLocation());
-		}
-
 	};
-
+	
 	// ============================ constructor ===============================
 
 	/**
@@ -179,33 +146,6 @@ public class ContextButtonManager {
 	}
 
 	/**
-	 * Sets the active figure and context button pad. A figure is called active,
-	 * when a context button pad is currently active (shown) for this figure.
-	 * There can only be one active figure and context button pad at a time.
-	 * Figure and context button pad are either both null or both not null.
-	 * 
-	 * @param activeFigure
-	 *            The figure to set active.
-	 * @param activeContextButtonPad
-	 *            The context button pad to set active.
-	 */
-	private void setActive(IFigure activeFigure, ContextButtonPad activeContextButtonPad) {
-		this.activeFigure = activeFigure;
-		this.activeContextButtonPad = activeContextButtonPad;
-	}
-
-	/**
-	 * Returns the active figure as described in
-	 * {@link #setActive(IFigure, ContextButtonPad)}.
-	 * 
-	 * @return The active figure as described in
-	 *         {@link #setActive(IFigure, ContextButtonPad)}.
-	 */
-	private IFigure getActiveFigure() {
-		return activeFigure;
-	}
-
-	/**
 	 * Returns the active context button pad as described in
 	 * {@link #setActive(IFigure, ContextButtonPad)}.
 	 * 
@@ -214,6 +154,11 @@ public class ContextButtonManager {
 	 */
 	private ContextButtonPad getActiveContextButtonPad() {
 		return activeContextButtonPad;
+	}
+	
+	private void setActiveContextButtonPad(ContextButtonPad contextButtonPad)
+	{
+		this.activeContextButtonPad = contextButtonPad;
 	}
 
 	// =================== interface IContextButtonManager ====================
@@ -226,7 +171,7 @@ public class ContextButtonManager {
 	public void register(GraphicalEditPart graphicalEditPart) {
 		getFigure2EditPart().put(graphicalEditPart.getFigure(), graphicalEditPart);
 
-		graphicalEditPart.getFigure().addMouseMotionListener(mouseMotionListener);
+		graphicalEditPart.getFigure().addFigureListener(figureListener);
 	}
 
 	/**
@@ -236,13 +181,9 @@ public class ContextButtonManager {
 	 * Typically this method is called, when an edit-part is deactivated.
 	 */
 	public void deRegister(GraphicalEditPart graphicalEditPart) {
-		if (graphicalEditPart.getFigure().equals(getActiveFigure())) {
-			hideContextButtonsInstantly();
-		}
-
 		getFigure2EditPart().remove(graphicalEditPart.getFigure());
 
-		graphicalEditPart.getFigure().removeMouseMotionListener(mouseMotionListener);
+		graphicalEditPart.getFigure().removeFigureListener(figureListener);
 	}
 
 	/**
@@ -256,105 +197,8 @@ public class ContextButtonManager {
 						.getRootEditPart();
 				IFigure feedbackLayer = rootEditPart.getLayer(LayerConstants.HANDLE_LAYER);
 				feedbackLayer.remove(getActiveContextButtonPad());
-				setActive(null, null);
+				setActiveContextButtonPad(null);
 			}
-		}
-	}
-
-	/**
-	 * Returns true, if for the given figure a replacement of the context button
-	 * pad is required. For example it returns false, if there is already a
-	 * context button pad shown for this figure or if the mouse is still on the
-	 * context button pad, and it returns true, if there is currently no context
-	 * button pad.
-	 * 
-	 * @param figure
-	 *            The figure which to check.
-	 * @return true, if for the given figure a replacement of the context button
-	 *         pad is required.
-	 */
-	private boolean replaceContextButtonPad(IFigure figure) {
-		// requires new context buttons, if there is no active figure
-		if (getActiveFigure() == null) {
-			return true;
-		}
-
-		// requires no changed context buttons, if the given figure equals
-		// the active figure
-		if (figure.equals(getActiveFigure()))
-			return false;
-
-		// requires changed context buttons, if the given figure is a child of
-		// the active figure (otherwise children would not have context buttons
-		// when the mouse moves from parent to child -- see next check)
-		IFigure parent = figure.getParent();
-		while (parent != null) {
-			if (parent.equals(getActiveFigure()))
-				return true;
-			parent = parent.getParent();
-		}
-
-		// requires no (new) context buttons, if the the mouse is still in the
-		// sensitive area of the active context button pad
-		if (getActiveContextButtonPad() != null) {
-			if (getActiveContextButtonPad().isMouseInOverlappingArea()) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Shows the context button pad for the given figure, but only if
-	 * {@link #replaceContextButtonPad(IFigure)} return true and the zoom-level
-	 * is at least {@link #MINIMUM_ZOOM_LEVEL}.
-	 * 
-	 * @param figure
-	 *            The figure for which to show the context button pad.
-	 * @param mouse
-	 *            The current location of the mouse.
-	 */
-	private void showContextButtonsInstantly(IFigure figure, Point mouse) {
-		if (!replaceContextButtonPad(figure))
-			return;
-
-		synchronized (this) {
-			hideContextButtonsInstantly();
-
-			// determine zoom level
-			ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart) getEditor().getGraphicalViewer().getRootEditPart();
-			double zoom = rootEditPart.getZoomManager().getZoom();
-			if (zoom < MINIMUM_ZOOM_LEVEL) {
-				return;
-			}
-
-			EditPart activeEditPart = getFigure2EditPart().get(figure);
-			if (!(activeEditPart instanceof DiagramNodeEditPart)) {
-				return;
-			}
-			
-			DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)activeEditPart;
-			ContextButtonPadData contextButtonPadData = getContextButtonPad(nodeEditPart);
-			
-			
-			if (contextButtonPadData.getRightContextButtons().size() == 0
-					&& contextButtonPadData.getTopContextButtons().size() == 0) {					
-				return; // no context buttons to show
-			}
-
-			if (!contextButtonPadData.getPadLocation().contains(mouse.x, mouse.y)) {
-				return; // mouse outside area of context button pad
-			}
-
-			IContextButtonPadDeclaration declaration = new StandardContextButtonPadDeclaration(contextButtonPadData);
-
-			// create context button pad and add to handle layer
-			ContextButtonPad contextButtonPad = new ContextButtonPad(declaration, zoom, getEditor(), activeEditPart);
-			setActive(figure, contextButtonPad);
-
-			IFigure feedbackLayer = rootEditPart.getLayer(LayerConstants.HANDLE_LAYER);
-			feedbackLayer.add(contextButtonPad);
 		}
 	}
 
@@ -362,8 +206,8 @@ public class ContextButtonManager {
 	 * Is called when the zoom-level changes and hides the context buttons.
 	 */
 	private void handleZoomChanged() {
-		hideContextButtonsInstantly();
-
+		//hideContextButtonsInstantly();
+		refresh();
 		// It would be possible to show a new context button pad, depending
 		// on the new mouse location. But to avoid problems we skip this.
 		// The scenario, that the zoom changes when context buttons are
@@ -371,31 +215,52 @@ public class ContextButtonManager {
 	}
 	
 	/**
-	 * Split the node part actions into two sets: one set to be displayed along the 
+	 * Split the shape part actions into two sets: one set to be displayed along the 
 	 * top edge, another set to be displayed along the right and bottom edge. Honor 
 	 * actions groups when splitting actions.
 	 * 
 	 * @param nodeEditPart node edit part
 	 * @return ContextButtonPadData in which the actions are splitted into two sets
 	 */
-	private ContextButtonPadData getContextButtonPad(DiagramNodeEditPart nodeEditPart) 
+	private ContextButtonPadData getContextButtonPad(List<GraphicalEditPart> editParts) 
 	{
-		ContextButtonPadData contextButtonPadData = new ContextButtonPadData();
+		ContextButtonPadData contextButtonPadData = new ContextButtonPadData();		
+		DiagramNodeEditPart nodeEditPart = ((ShapeEditPart)editParts.get(0)).getNodeEditPart();
 		org.eclipse.draw2d.geometry.Rectangle bounds = nodeEditPart.getFigure().getBounds();
 		Point loc = bounds.getLocation();
 		Point botRight = bounds.getBottomRight();
 		contextButtonPadData.getPadLocation().set(loc.x, loc.y,
 				botRight.x - loc.x, botRight.y - loc.y);
-		
-		DiagramNodePart nodePart = nodeEditPart.getCastedModel().getModelPart();
-		SapphireActionGroup actionGroup = nodePart.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_NODE);
+				
+		SapphireActionGroup actionGroup = null;
+		if (editParts.size() == 1)
+		{
+			ShapeEditPart shapeEditPart = (ShapeEditPart)editParts.get(0);
+			if (shapeEditPart instanceof DiagramNodeEditPart)
+			{
+				DiagramNodePart nodePart = nodeEditPart.getCastedModel().getModelPart();
+				actionGroup = nodePart.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_NODE);
+			}
+			else 
+			{
+				ShapePart shapePart = (ShapePart)((ShapeModel)shapeEditPart.getModel()).getSapphirePart();
+				actionGroup = shapePart.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE);
+			}
+		}
+		else
+		{
+			SapphireDiagramEditorPagePart pagePart = getEditor().getPart();
+			actionGroup = pagePart.getActions(SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS);
+		}
+		 
 		List<SapphireAction> originalActions = actionGroup.getActions();		
 		
 		// Filter out the "default" action and actions without active handlers
 		List<SapphireAction> actions = new ArrayList<SapphireAction>(originalActions.size());
 		for (SapphireAction action : originalActions)
 		{
-			if (!(action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION)) && action.getActiveHandlers().size() > 0)
+			if (!(action.getId().equals(DIAGRAM_NODE_DEFAULT_ACTION) || action.getId().equals(DIAGRAM_DELETE_ALL_BEND_POINTS)) 
+					&& action.getActiveHandlers().size() > 0)
 			{
 				actions.add(action);
 			}
@@ -460,4 +325,71 @@ public class ContextButtonManager {
 		return contextButtonPadData;
 	}
 
+	public void refresh()
+	{
+        Display.getDefault().asyncExec
+        (
+            new Runnable()
+            {
+                public void run()
+                {
+                    refreshInternal();
+                }
+            }
+        );
+		
+	}
+	
+	private void refreshInternal() 
+	{
+		hideContextButtonsInstantly();
+		List<ISapphirePart> selectedParts = this.getEditor().getSelectedParts();
+		if (selectedParts.size() == 0)
+		{
+			return;			
+		}
+		Set<DiagramNodePart> selectedNodes = new HashSet<DiagramNodePart>();
+		for (ISapphirePart part : selectedParts)
+		{
+			if (part instanceof DiagramConnectionPart || part instanceof SapphireDiagramEditorPagePart) 
+			{
+				// Don't display context pad if the selection includes connections
+				return;
+			}
+			DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
+			if (!(selectedNodes.contains(nodePart)))
+			{
+				selectedNodes.add(nodePart);
+			}
+		}
+		// Don't display context pad if the selection includes multiple nodes
+		if (selectedNodes.size() > 1)
+		{
+			return;
+		}
+		
+		// determine zoom level
+		ScalableFreeformRootEditPart rootEditPart = (ScalableFreeformRootEditPart) getEditor().getGraphicalViewer().getRootEditPart();
+		double zoom = rootEditPart.getZoomManager().getZoom();
+		if (zoom < MINIMUM_ZOOM_LEVEL) {
+			return;
+		}
+
+		ContextButtonPadData contextButtonPadData = getContextButtonPad(getEditor().getSelectedEditParts());
+		
+		
+		if (contextButtonPadData.getRightContextButtons().size() == 0
+				&& contextButtonPadData.getTopContextButtons().size() == 0) {					
+			return; // no context buttons to show
+		}
+
+		IContextButtonPadDeclaration declaration = new StandardContextButtonPadDeclaration(contextButtonPadData);
+
+		// create context button pad and add to handle layer
+		ContextButtonPad contextButtonPad = new ContextButtonPad(declaration, zoom, getEditor(), getEditor().getSelectedParts());
+		setActiveContextButtonPad(contextButtonPad);
+		IFigure feedbackLayer = rootEditPart.getLayer(LayerConstants.HANDLE_LAYER);
+		feedbackLayer.add(contextButtonPad);
+	}
+	
 }

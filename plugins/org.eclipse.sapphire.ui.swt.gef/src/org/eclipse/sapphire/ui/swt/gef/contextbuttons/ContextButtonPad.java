@@ -18,20 +18,13 @@ import java.util.List;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.XYLayout;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.IContextButtonPadDeclaration.PadStyle;
-import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Path;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -83,7 +76,7 @@ public class ContextButtonPad extends Shape {
 	 */
 	private EditPart editPart;
 	
-	private DiagramNodePart nodePart;
+	private List<ISapphirePart> sapphireParts;
 
 	private Path pathOuterLine;
 
@@ -101,41 +94,6 @@ public class ContextButtonPad extends Shape {
 
 	private long animationDuration = DEFAULT_ANIMATION_DURATION;
 
-	// ============================= listener =================================
-
-	/**
-	 * The mouse move listener hides the context button pad, when the mouse
-	 * leaves the 'mouse relevant' area of the context button pad (see
-	 * {@link #isMouseInOverlappingArea()}).
-	 */
-	private MouseMoveListener mouseMoveListener = new MouseMoveListener() {
-		public void mouseMove(MouseEvent e) {
-			if (!isMouseInOverlappingArea()) {
-				getEditor().getContextButtonManager().hideContextButtonsInstantly();
-			}
-		}
-	};
-
-	/**
-	 * The mouse track listener hides the context button pad, when the mouse
-	 * leaves the diagram control (e.g. when the mouse goes to the top-menu or
-	 * other views/editors).
-	 */
-	private MouseTrackListener mouseTrackListener = new MouseTrackAdapter() {
-		@Override
-		public void mouseExit(MouseEvent e) {
-			// TODO: discuss with Christian
-			// This functionality will hide the context button pad, whenever the mouse leaves the
-			// diagram control (e.g. when the mouse goes to the top-menu or other views/editors).
-			// Unfortunately tooltips are also other controls, so the context button pad would
-			// be hidden, if the mouse is on the tooltip of the shape or of the buttons.
-			// Both behaviors are reasonable, but for now we decided not to hide the
-			// context button pad when the mouse leaves the control
-
-			// getContextButtonManager().hideContextButtonsInstantly();
-		}
-	};
-
 	// ============================ constructors ==============================
 
 	/**
@@ -151,13 +109,15 @@ public class ContextButtonPad extends Shape {
 	 * @param editPart
 	 *            The edit-part as described in {@link #getEditPart()}.
 	 */
-	public ContextButtonPad(IContextButtonPadDeclaration declaration, double zoomLevel, SapphireDiagramEditor editor, EditPart editPart) {
+	public ContextButtonPad(IContextButtonPadDeclaration declaration, double zoomLevel, SapphireDiagramEditor editor, 
+						List<ISapphirePart> sapphireParts) 
+	{
 		this.declaration = declaration;
 		this.zoomLevel = zoomLevel;
 		this.editor = editor;
-		this.editPart = editPart;
-		DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)editPart;
-		this.nodePart = nodeEditPart.getCastedModel().getModelPart();
+		//this.editPart = editPart;
+		this.sapphireParts = new ArrayList<ISapphirePart>();
+		this.sapphireParts.addAll(sapphireParts);
 
 		initialize();
 	}
@@ -212,8 +172,8 @@ public class ContextButtonPad extends Shape {
 		return editPart;
 	}
 
-	public final DiagramNodePart getNodePart() {
-		return this.nodePart;
+	public final List<ISapphirePart> getSapphireParts() {
+		return this.sapphireParts;
 	}
 	
 	// =========================== initialization =============================
@@ -470,45 +430,6 @@ public class ContextButtonPad extends Shape {
 		return target;
 	}
 
-	// =========================== event handling =============================
-
-	/**
-	 * Registers the listeners, when the context button pad is shown (when it is
-	 * added to its parent).
-	 */
-	@Override
-	public void addNotify() {
-		super.addNotify();
-
-		Control control = getEditor().getGraphicalViewer().getControl();
-		control.addMouseMoveListener(mouseMoveListener);
-		control.addMouseTrackListener(mouseTrackListener);
-
-		// TODO: discuss with Christian
-		// If the animation is running, then dragging the shape does not work
-		// correctly. The dragging is interrupted, when the context button pad
-		// disappears.
-		// It is still unclear why this happens.
-		// Workaround: switch off animation or set a very short animation time
-		// Another problem is, that the pad sometimes (rarely) flickers,
-		// which becomes more visible with short animation times.
-
-		// doAnimation();
-	}
-
-	/**
-	 * Deregisters the listeners, when the context button pad is hidden (when it
-	 * is removed from its parent).
-	 */
-	@Override
-	public void removeNotify() {
-		Control control = getEditor().getGraphicalViewer().getControl();
-		control.removeMouseMoveListener(mouseMoveListener);
-		control.removeMouseTrackListener(mouseTrackListener);
-
-		super.removeNotify();
-	}
-
 	// ============================== painting ================================
 
 	/**
@@ -620,27 +541,6 @@ public class ContextButtonPad extends Shape {
 	}
 
 	// ========================== helper methods ==============================
-
-	/**
-	 * Returns true, if the mouse is in the overlapping area of the context
-	 * button pad. The overlapping area is the union of all overlapping
-	 * rectangles (see
-	 * {@link IContextButtonPadDeclaration#getOverlappingContainmentRectangles()}
-	 * ).
-	 */
-	public boolean isMouseInOverlappingArea() {
-		// determine mouse location in correct coordinates
-		Point editorMouseLocation = new Point(getEditor().getMouseLocation());
-		Point viewPortMouseLocation = getEditor().calculateRealMouseLocation(editorMouseLocation);
-		Point mouseLocation = viewPortMouseLocation.scale(getZoomLevel());
-		// hide if mouse location outside overlapping containment rectangles
-		boolean containsPointOverlapping = containsPointOverlapping(mouseLocation.x, mouseLocation.y);
-		if (!containsPointOverlapping) {
-			getEditor().getContextButtonManager().hideContextButtonsInstantly();
-			return true;
-		}
-		return containsPointOverlapping;
-	}
 
 	/**
 	 * Returns true, if the given point is contained inside one of the visible

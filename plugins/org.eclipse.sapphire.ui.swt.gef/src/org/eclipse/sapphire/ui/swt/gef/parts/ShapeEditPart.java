@@ -18,6 +18,7 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
@@ -115,6 +116,16 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 			parent = parent.getParent();
 		}
 		return (DiagramNodeEditPart)parent;
+	}
+	
+	public SapphirePart getSapphirePart()
+	{
+		if (getModel() instanceof ShapeModel) 
+		{
+			ShapeModel shapeModel = (ShapeModel)getModel();
+			return shapeModel.getSapphirePart();
+		}
+		return null;		
 	}
 	
 	public ShapePresentation getShapePresentation()
