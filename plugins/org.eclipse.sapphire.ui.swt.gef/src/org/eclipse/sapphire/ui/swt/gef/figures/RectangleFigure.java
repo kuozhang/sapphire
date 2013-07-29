@@ -114,19 +114,29 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			{
 				boolean isVertical = ((GradientBackgroundDef)bg).isVertical().content();
 				ElementList<GradientSegmentDef> segments = ((GradientBackgroundDef)bg).getGradientSegments();
+				Color backgroundStart = null;
+				Color backgrounEnd = null;
 				if (segments.size() == 0)
 				{
-					graphics.setForegroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
-					graphics.setBackgroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_START));
+					backgrounEnd = resourceCache.getColor(DEFAULT_BACKGROUND_END);
+					backgroundStart = resourceCache.getColor(DEFAULT_BACKGROUND_START);
+				}
+				else if (segments.size() == 1)
+				{
+					GradientSegmentDef segment0 = segments.get(0);
+					backgrounEnd = resourceCache.getColor(segment0.getColor().content());
+					backgroundStart = backgrounEnd;
 				}
 				else
 				{
 					GradientSegmentDef segment0 = segments.get(0);
 					GradientSegmentDef segment1 = segments.get(1);
-					graphics.setForegroundColor(resourceCache.getColor(segment0.getColor().content()));
-					graphics.setBackgroundColor(resourceCache.getColor(segment1.getColor().content()));
+					backgrounEnd = resourceCache.getColor(segment0.getColor().content());
+					backgroundStart = resourceCache.getColor(segment1.getColor().content());
 				}
 				
+				graphics.setForegroundColor(backgrounEnd);
+				graphics.setBackgroundColor(backgroundStart);
 				graphics.fillGradient(fillRectangle.x, fillRectangle.y, fillRectangle.width, fillRectangle.height, isVertical);
 			}
 			

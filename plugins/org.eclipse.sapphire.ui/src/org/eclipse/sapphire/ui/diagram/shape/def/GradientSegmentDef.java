@@ -49,7 +49,6 @@ public interface GradientSegmentDef extends Element
     
     @Type( base = Integer.class )
     @Label( standard = "extent" )
-    @Required
     @XmlBinding( path = "extent" )
     @NumericRange( min = "0", max = "100")
     
