@@ -11,6 +11,7 @@
  *    Konstantin Komissarchik - [342775] Support EL in MasterDetailsTreeNodeDef.ImagePath
  *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -398,6 +399,11 @@ public class DiagramNodePart
     	else if (shape instanceof RectangleDef)
     	{
     		this.shapePart = new RectanglePart();
+    	}
+    	
+    	if (definition.getSelectionPresentation() != null)
+    	{
+    		this.shapePart.setSelectionPresentation(definition.getSelectionPresentation());
     	}
         this.shapePart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
                 

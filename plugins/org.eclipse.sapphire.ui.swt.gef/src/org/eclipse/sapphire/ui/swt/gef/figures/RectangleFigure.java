@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.figures;
@@ -18,6 +19,7 @@ import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ui.diagram.shape.def.BackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientBackgroundDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.GradientSegmentDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
@@ -33,11 +35,11 @@ import org.eclipse.swt.graphics.Path;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class RectangleFigure extends ContainerShapeFigure implements IShapeFigure
 {	
-	private static final org.eclipse.sapphire.Color SELECTED_BACKGROUND = new org.eclipse.sapphire.Color(0xAC, 0xD2, 0xF4);
     private static final org.eclipse.sapphire.Color DEFAULT_BACKGROUND_START = new org.eclipse.sapphire.Color(0xFF, 0xFF, 0xFF);
     private static final org.eclipse.sapphire.Color DEFAULT_BACKGROUND_END = new org.eclipse.sapphire.Color(0xD4, 0xE7, 0xF8);
 	
@@ -73,7 +75,14 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 	@Override
 	protected void fillShape(Graphics graphics) 
 	{
-		BackgroundDef bg = this.rectPresentation.getBackground();
+		BackgroundDef bg = null;
+		if (selected) {
+			SelectionPresentation selectionPresentation = this.rectPresentation.getSelectionPresentation();
+			bg = (selectionPresentation != null) ? selectionPresentation.getBackground().content() : null;
+		} else {
+			bg = this.rectPresentation.getBackground();
+		}
+		
 		if (bg != null)
 		{
 			final Color foregroundSave = graphics.getForegroundColor();
@@ -88,45 +97,37 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 				graphics.clipPath(path);
 			}
 			
-			if (selected) 
+			if (bg instanceof SolidBackgroundDef)
 			{
-				graphics.setBackgroundColor(resourceCache.getColor(SELECTED_BACKGROUND));
+				org.eclipse.sapphire.Color color = ((SolidBackgroundDef)bg).getColor().content();
+				if (color != null)
+				{
+					graphics.setBackgroundColor(resourceCache.getColor(color));
+				}
+				else
+				{
+					graphics.setBackgroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
+				}
 				graphics.fillRectangle(fillRectangle);
-			} 
-			else 
+			}
+			else if (bg instanceof GradientBackgroundDef)
 			{
-				if (bg instanceof SolidBackgroundDef)
+				boolean isVertical = ((GradientBackgroundDef)bg).isVertical().content();
+				ElementList<GradientSegmentDef> segments = ((GradientBackgroundDef)bg).getGradientSegments();
+				if (segments.size() == 0)
 				{
-					org.eclipse.sapphire.Color color = ((SolidBackgroundDef)bg).getColor().content();
-					if (color != null)
-					{
-						graphics.setBackgroundColor(resourceCache.getColor(color));
-					}
-					else
-					{
-						graphics.setBackgroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
-					}
-					graphics.fillRectangle(fillRectangle);
+					graphics.setForegroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
+					graphics.setBackgroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_START));
 				}
-				else if (bg instanceof GradientBackgroundDef)
+				else
 				{
-					boolean isVertical = ((GradientBackgroundDef)bg).isVertical().content();
-					ElementList<GradientSegmentDef> segments = ((GradientBackgroundDef)bg).getGradientSegments();
-					if (segments.size() == 0)
-					{
-						graphics.setForegroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_END));
-						graphics.setBackgroundColor(resourceCache.getColor(DEFAULT_BACKGROUND_START));
-					}
-					else
-					{
-						GradientSegmentDef segment0 = segments.get(0);
-						GradientSegmentDef segment1 = segments.get(1);
-						graphics.setForegroundColor(resourceCache.getColor(segment0.getColor().content()));
-						graphics.setBackgroundColor(resourceCache.getColor(segment1.getColor().content()));
-					}
-					
-					graphics.fillGradient(fillRectangle.x, fillRectangle.y, fillRectangle.width, fillRectangle.height, isVertical);
+					GradientSegmentDef segment0 = segments.get(0);
+					GradientSegmentDef segment1 = segments.get(1);
+					graphics.setForegroundColor(resourceCache.getColor(segment0.getColor().content()));
+					graphics.setBackgroundColor(resourceCache.getColor(segment1.getColor().content()));
 				}
+				
+				graphics.fillGradient(fillRectangle.x, fillRectangle.y, fillRectangle.width, fillRectangle.height, isVertical);
 			}
 			
 			graphics.setForegroundColor(foregroundSave);

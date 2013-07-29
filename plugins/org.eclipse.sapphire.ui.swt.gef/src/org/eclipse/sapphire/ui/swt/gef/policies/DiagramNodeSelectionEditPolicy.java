@@ -18,6 +18,8 @@ import java.util.List;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.handles.AbstractHandle;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
+import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.IShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
@@ -46,8 +48,17 @@ public class DiagramNodeSelectionEditPolicy extends NonResizableEditPolicy {
 		List<AbstractHandle> list = new ArrayList<AbstractHandle>();
 		GraphicalEditPart owner = (GraphicalEditPart) getHost();
 		DiagramResourceCache resourceCache = ((DiagramNodeEditPart)owner).getCastedModel().getDiagramModel().getResourceCache();
-		list.add(new SapphireSurroundingHandle(owner, ((DiagramNodeEditPart)owner).getConfigurationManager(),
-				resourceCache, isDragAllowed()));
+		SelectionPresentation selectionPresentation = ((DiagramNodeEditPart)owner).getCastedModel().getShapeModel().getShapePresentation().getSelectionPresentation();
+		SapphireSurroundingHandle selectionHandle = new SapphireSurroundingHandle(owner, ((DiagramNodeEditPart)owner).getConfigurationManager(),
+				resourceCache, isDragAllowed());
+		if (selectionPresentation != null)
+		{
+			selectionHandle.setLineInset(selectionPresentation.getInset().content());
+			selectionHandle.setLineWidth(selectionPresentation.getWeight().content());
+			selectionHandle.setLineStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().content()));
+			selectionHandle.setLineColor(selectionPresentation.getColor().content());
+		}
+		list.add(selectionHandle);
 		return list;
 	}
 	

@@ -7,10 +7,13 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
@@ -19,9 +22,11 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 @Label( standard = "selection presentation" )
@@ -62,4 +67,30 @@ public interface SelectionPresentation extends LinePresentation
     void setInset( String value );
     void setInset( Integer value );        
     
+    // *** Background ***
+    
+    @Type
+    ( 
+        base = BackgroundDef.class, 
+        possible = 
+        { 
+            SolidBackgroundDef.class, 
+            GradientBackgroundDef.class
+        }
+    )    
+    @Label( standard = "background" )
+    @XmlElementBinding
+    ( 
+    	path = "background",
+        mappings = 
+        {
+            @XmlElementBinding.Mapping( element = "color", type = SolidBackgroundDef.class ),
+            @XmlElementBinding.Mapping( element = "gradient", type = GradientBackgroundDef.class )
+        }
+    )
+    
+    ElementProperty PROP_BACKGROUND = new ElementProperty( TYPE, "Background" );
+    
+    ElementHandle<BackgroundDef> getBackground();
+
 }

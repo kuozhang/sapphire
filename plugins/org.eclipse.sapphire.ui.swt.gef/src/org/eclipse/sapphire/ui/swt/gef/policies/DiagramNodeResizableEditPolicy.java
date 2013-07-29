@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.swt.gef.policies;
 
 import java.util.List;
 
-import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
@@ -26,7 +25,11 @@ import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.handles.ResizableHandleKit;
 import org.eclipse.gef.handles.ResizeHandle;
 import org.eclipse.gef.tools.ResizeTracker;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
+import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
+import org.eclipse.sapphire.ui.swt.gef.figures.IShapeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -42,17 +45,31 @@ public class DiagramNodeResizableEditPolicy extends ResizableEditPolicy
 		this.resourceCache = resourceCache;
 	}
 	
+	private SelectionPresentation getSelectionPresentation() {
+		DiagramNodeEditPart owner = (DiagramNodeEditPart) getHost();
+		return owner.getCastedModel().getShapeModel().getShapePresentation().getSelectionPresentation();
+	}
+	
+	private Color getOutlineColor() {
+		SelectionPresentation selectionPresentation = getSelectionPresentation();
+		if (selectionPresentation != null) {
+			return resourceCache.getColor(selectionPresentation.getColor().content());
+		} else {
+			return resourceCache.getOutlineColor();
+		}
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void createResizeHandle(List handles, int direction) {
 		if ((getResizeDirections() & direction) == direction) {
 			ResizeHandle handle = new ResizeHandle((GraphicalEditPart) getHost(), direction) {
 				@Override
 				protected Color getBorderColor() {
-					return (isPrimary()) ? ColorConstants.white : resourceCache.getOutlineColor();
+					return (isPrimary()) ? ColorConstants.white : getOutlineColor();
 				}
 				@Override
 				protected Color getFillColor() {
-					return (isPrimary()) ? resourceCache.getOutlineColor() : ColorConstants.white;
+					return (isPrimary()) ? getOutlineColor() : ColorConstants.white;
 				}
 			};
 			handle.setDragTracker(getResizeTracker(direction));
@@ -71,7 +88,13 @@ public class DiagramNodeResizableEditPolicy extends ResizableEditPolicy
 			MoveHandle moveHandle = new MoveHandle((GraphicalEditPart) getHost());
 			moveHandle.setDragTracker(getDragTracker());
 			moveHandle.setCursor(Cursors.SIZEALL);
-			Border border = new LineBorder(resourceCache.getOutlineColor(), 1, Graphics.LINE_DASH);
+			LineBorder border = new LineBorder(resourceCache.getOutlineColor(), 1, Graphics.LINE_DASH);
+			SelectionPresentation selectionPresentation = getSelectionPresentation();
+			if (selectionPresentation != null) {
+				border.setColor(resourceCache.getColor(selectionPresentation.getColor().content()));
+				border.setStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().content()));
+				border.setWidth(selectionPresentation.getWeight().content());
+			}
 			moveHandle.setBorder(border);
 			handles.add(moveHandle);
 		} else {
@@ -88,6 +111,61 @@ public class DiagramNodeResizableEditPolicy extends ResizableEditPolicy
 	protected ResizeTracker getResizeTracker(int direction) 
 	{
 		return new DiagramNodeResizeTracker((GraphicalEditPart) getHost(), direction);
+	}
+
+	private IShapeFigure getNodeFigure() 
+	{
+		DiagramNodeEditPart part = (DiagramNodeEditPart) getHost();
+		if (part.getFigure() instanceof IShapeFigure)
+		{
+			return ((IShapeFigure) part.getFigure());
+		}
+		return null;
+	}
+
+	@Override
+	protected void showFocus() {
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setFocus(true);
+		}
+	}
+
+	@Override
+	protected void hideSelection() 
+	{
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setSelected(false);
+			shapeFigure.setFocus(false);
+			removeSelectionHandles();
+		}
+	}
+
+	@Override
+	protected void showPrimarySelection() 
+	{
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setSelected(true);
+			shapeFigure.setFocus(true);
+			addSelectionHandles();
+		}
+	}
+
+	@Override
+	protected void showSelection() 
+	{
+		IShapeFigure shapeFigure = getNodeFigure();
+		if (shapeFigure != null)
+		{
+			shapeFigure.setSelected(true);
+			shapeFigure.setFocus(false);
+			addSelectionHandles();
+		}
 	}
 	
 }

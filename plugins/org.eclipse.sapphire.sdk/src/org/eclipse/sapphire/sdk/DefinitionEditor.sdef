@@ -1417,6 +1417,32 @@
                         <node-include>PropertiesViewContributionNode</node-include>
                         <node>
                             <label>shape</label>
+		                    <section>
+		                        <content>
+		                            <with>
+		                                <default-panel>
+		                                    <content>
+		                                        <include>LinePresentationForm</include>
+		                                    </content>
+		                                </default-panel>
+		                                <path>SelectionPresentation</path>
+		                            </with>                        
+		                        </content>
+		                        <label>selection border</label>
+		                    </section>
+		                    <section>
+		                        <content>
+		                            <with>
+		                                <default-panel>
+		                                    <content>
+		                                        <include>BackgroundForm</include>
+		                                    </content>
+		                                </default-panel>
+		                                <path>SelectionPresentation</path>
+		                            </with>                        
+		                        </content>
+		                        <label>selection background</label>
+		                    </section>
                             <node-include>
                                 <param>
                                     <name>Property</name>
@@ -1961,6 +1987,19 @@
                         </content>
                         <label>selection border</label>
                     </section>
+                    <section>
+                        <content>
+                            <with>
+                                <default-panel>
+                                    <content>
+                                        <include>BackgroundForm</include>
+                                    </content>
+                                </default-panel>
+                                <path>SelectionPresentation</path>
+                            </with>                        
+                        </content>
+                        <label>selection background</label>
+                    </section>
                     <model-element-type>ShapeFactoryCaseDef</model-element-type>
                     <node-include>
                         <param>
@@ -2011,6 +2050,28 @@
             <property-editor>Style</property-editor>
         </content>
         <id>LinePresentationForm</id>
+    </form>
+    <form>
+        <content>
+            <with>
+                <label>background</label>
+                <panel>
+                    <content>
+                        <property-editor>Color</property-editor>
+                    </content>
+                    <key>SolidBackgroundDef</key>
+                </panel>
+                <panel>
+                    <content>
+                        <property-editor>GradientSegments</property-editor>
+                        <property-editor>Vertical</property-editor>
+                    </content>
+                    <key>GradientBackgroundDef</key>
+                </panel>
+                <path>Background</path>
+            </with>
+        </content>
+        <id>BackgroundForm</id>
     </form>
     <form>
         <id>MarginsForm</id>

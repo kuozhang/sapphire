@@ -50,6 +50,13 @@
             <id>locations</id>
             <width>100</width>
             <height>30</height>
+            <selection-presentation>
+		        <background>
+			        <color>
+				        <Color>#ACD2F4</Color>
+			        </color>
+		        </background>
+            </selection-presentation>
             <rectangle>
               <corner-radius>8</corner-radius>
               <border>

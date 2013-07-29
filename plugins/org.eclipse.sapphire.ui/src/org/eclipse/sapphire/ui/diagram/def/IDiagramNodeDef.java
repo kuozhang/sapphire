@@ -9,6 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.def;
@@ -17,6 +18,7 @@ import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Value;
@@ -44,6 +46,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
+import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
@@ -198,4 +201,15 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, IProperties
     ListProperty PROP_EMBEDDED_CONNECTIONS = new ListProperty( TYPE, "EmbeddedConnections" );
     
     ElementList<IDiagramExplicitConnectionBindingDef> getEmbeddedConnections();
+    
+    // *** SelectionPresentation ***
+    
+    @Type( base = SelectionPresentation.class )
+    @Label( standard = "selection presentation" )
+    @XmlBinding( path = "selection-presentation" )
+
+    ImpliedElementProperty PROP_SELECTION_PRESENTATION = new ImpliedElementProperty( TYPE, "SelectionPresentation" );
+    
+    SelectionPresentation getSelectionPresentation();
+
 }
