@@ -79,7 +79,8 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 		if (selected) {
 			SelectionPresentation selectionPresentation = this.rectPresentation.getSelectionPresentation();
 			bg = (selectionPresentation != null) ? selectionPresentation.getBackground().content() : null;
-		} else {
+		}
+		if (bg == null) {
 			bg = this.rectPresentation.getBackground();
 		}
 		
