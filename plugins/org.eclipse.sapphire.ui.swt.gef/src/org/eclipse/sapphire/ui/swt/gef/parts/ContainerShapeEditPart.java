@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -37,9 +39,11 @@ import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 import org.eclipse.sapphire.ui.swt.gef.policies.ShapeLabelDirectEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.tools.ContainerDragEditPartsTracker;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ContainerShapeEditPart extends ShapeEditPart 
@@ -217,6 +221,11 @@ public class ContainerShapeEditPart extends ShapeEditPart
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public DragTracker getDragTracker(Request request) {
+		return new ContainerDragEditPartsTracker(this);
 	}
 	
 }
