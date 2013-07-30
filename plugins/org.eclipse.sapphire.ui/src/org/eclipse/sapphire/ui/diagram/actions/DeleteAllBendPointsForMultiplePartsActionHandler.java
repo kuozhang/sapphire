@@ -20,8 +20,10 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -31,6 +33,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireActionHandler 
 {
+	@SuppressWarnings("deprecation")
 	@Override
 	public void init(SapphireAction action, ActionHandlerDef def) {
 		super.init(action, def);
@@ -47,6 +50,18 @@ public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireAc
                 }
             }
         );
+        
+        page.addListener(new SapphireDiagramPartListener() {
+        	@Override
+			public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event) {
+                broadcast( new EnablementChangedEvent() );
+			}
+        	
+			@Override
+		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event) {
+                broadcast( new EnablementChangedEvent() );
+		    }
+        });
 	}
 
     @Override
