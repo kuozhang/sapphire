@@ -73,7 +73,7 @@ public class DiagramNodeModel extends DiagramModelBase {
 		if (shapePart instanceof ContainerShapePart)
 		{
 			ContainerShapePart containerShapePart = (ContainerShapePart)shapePart;
-			List<TextPart> textParts = containerShapePart.getTextParts();
+			List<TextPart> textParts = ShapePart.getContainedTextParts(containerShapePart);
 			if (!textParts.isEmpty())
 			{
 				return textParts.get(0).getContent();

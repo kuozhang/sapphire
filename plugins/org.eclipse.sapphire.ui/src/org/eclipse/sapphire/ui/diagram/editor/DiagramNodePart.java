@@ -18,6 +18,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
@@ -173,6 +174,19 @@ public class DiagramNodePart
     public ShapePart getShapePart()
     {
     	return this.shapePart;
+    }
+    
+    public List<TextPart> getContainedTextParts()
+    {    	
+    	ShapePart shapePart = getShapePart();
+    	if (shapePart instanceof TextPart)
+    	{
+    		return Collections.singletonList((TextPart)shapePart);
+    	}
+    	else
+    	{
+    		return ShapePart.getContainedTextParts(shapePart);
+    	}
     }
     
     @Override

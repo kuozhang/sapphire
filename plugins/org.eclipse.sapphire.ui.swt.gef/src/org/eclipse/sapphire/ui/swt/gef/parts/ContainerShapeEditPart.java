@@ -173,7 +173,14 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		String prop = evt.getPropertyName();
 		if (prop.equals(ShapeModel.SHAPE_START_EDITING))
 		{
-			performDirectEdit();
+			if (evt.getNewValue() instanceof TextPart)
+			{
+				performDirectEdit((TextPart)evt.getNewValue());
+			}
+			else
+			{
+				performDirectEdit();
+			}
 		}
 		else if (ContainerShapeModel.SHAPE_VISIBILITY_UPDATES.equals(prop)) 
 		{
@@ -193,10 +200,8 @@ public class ContainerShapeEditPart extends ShapeEditPart
 
 	private List<TextPart> getTextParts()
 	{
-		List<TextPart> textParts = new ArrayList<TextPart>();
 		ContainerShapePart containerPart = (ContainerShapePart)getCastedModel().getSapphirePart();
-		textParts.addAll(containerPart.getTextParts());
-		return textParts;		
+		return (ShapePart.getContainedTextParts(containerPart));
 	}
 	
 	private TextPart getTextPart(Point mouseLocation)

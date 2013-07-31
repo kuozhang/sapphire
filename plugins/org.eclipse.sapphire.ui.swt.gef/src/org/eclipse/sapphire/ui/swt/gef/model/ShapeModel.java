@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.ui.swt.gef.model;
 
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.LineShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;
@@ -61,9 +62,9 @@ public class ShapeModel extends DiagramModelBase
 		return this.nodeModel;
 	}
 	
-	public void handleDirectEditing()
+	public void handleDirectEditing(ShapePart shapePart)
 	{
-		firePropertyChange(SHAPE_START_EDITING, null, null);
+		firePropertyChange(SHAPE_START_EDITING, null, shapePart);
 	}
 	
     @SuppressWarnings( "unchecked" )

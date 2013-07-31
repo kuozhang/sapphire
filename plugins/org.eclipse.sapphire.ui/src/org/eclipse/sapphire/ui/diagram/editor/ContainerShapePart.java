@@ -206,6 +206,7 @@ public class ContainerShapePart extends ShapePart
 		return this.containerShapeDef.getLayout();
 	}
 	
+	@Override
 	public List<ShapePart> getChildren()
 	{
 		return this.children;
@@ -225,25 +226,11 @@ public class ContainerShapePart extends ShapePart
 	{
 		return this.validationMarkerPart;
 	}
-	
-	public List<TextPart> getTextParts()
-	{
-		List<TextPart> textParts = new ArrayList<TextPart>();
-		textParts.addAll(this.textParts);
-		for (ShapePart shapePart : getChildren())
-		{
-			if (shapePart instanceof ContainerShapePart)
-			{
-				textParts.addAll(((ContainerShapePart)shapePart).getTextParts());
-			}
-		}
-		return textParts;
-	}
-	
+		
 	@Override
 	public boolean isEditable()
 	{
-		List<TextPart> textParts = getTextParts();
+		List<TextPart> textParts = getContainedTextParts(this);
 		for (TextPart textPart : textParts)
 		{
 			if (textPart.isEditable())

@@ -55,7 +55,7 @@ public class DiagramDirectEditActionHandler extends SapphireActionHandler
 					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
 					DiagramNodeModel nodeModel = model.getDiagramNodeModel(nodePart);
 					ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
-					shapeModel.handleDirectEditing();
+					shapeModel.handleDirectEditing((ShapePart)part);
 				}
 				else if (part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart))
 				{

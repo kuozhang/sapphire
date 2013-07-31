@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -101,7 +102,30 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
     	return Collections.emptyList();
     }
     
-	public DiagramNodePart getNodePart() 
+    public List<ShapePart> getChildren()
+    {
+    	return Collections.emptyList();
+    }
+    
+    public static List<TextPart> getContainedTextParts(ShapePart shapePart)
+    {
+    	List<TextPart> containedTextParts = new ArrayList<TextPart>();
+		for (ShapePart childPart : shapePart.getChildren())
+		{
+			if (childPart instanceof TextPart)
+			{
+				containedTextParts.add((TextPart)childPart);
+			}
+			else if (childPart instanceof ContainerShapePart || childPart instanceof ShapeFactoryPart)
+			{
+				containedTextParts.addAll(getContainedTextParts(childPart));
+			}
+		}
+    	
+    	return containedTextParts;
+    }
+
+    public DiagramNodePart getNodePart() 
 	{
 		DiagramNodePart nodePart = null;
 		ISapphirePart part = this;

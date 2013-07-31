@@ -23,7 +23,6 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
@@ -104,7 +103,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 	@Override
 	protected CellEditor createCellEditorOn(Composite composite) 
 	{
-		return new TextCellEditor(composite, SWT.CENTER);
+		return new DiagramTextCellEditor(this.textPart, composite, SWT.CENTER);
 	}
 
 	private void disposeScaledFont() {
@@ -176,6 +175,11 @@ public class NodeDirectEditManager extends DirectEditManager {
 		super.handleValueChanged();
 	}
 
+	public TextPart getTextPart()
+	{
+		return this.textPart;
+	}
+	
 	private void restoreSavedActions(IActionBars actionBars) {
 		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
 		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);

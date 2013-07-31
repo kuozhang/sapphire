@@ -17,8 +17,13 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -28,9 +33,11 @@ public class DiagramComboBoxCellEditor extends ComboBoxCellEditor
 {
 	private Property property;
 	private CCombo combo;
+	private TextPart textPart;
 	
-	public DiagramComboBoxCellEditor(Composite parent, Property property)
+	public DiagramComboBoxCellEditor(TextPart textPart, Composite parent, Property property)
 	{
+		this.textPart = textPart;
 		this.property = property;
 		create(parent);
 		this.combo = (CCombo)getControl();
@@ -65,5 +72,28 @@ public class DiagramComboBoxCellEditor extends ComboBoxCellEditor
             return this.combo.getItem(index);
         }
     }
+    
+    /* (non-Javadoc)
+     * Method declared on CellEditor.
+     */
+    protected Control createControl(Composite parent) 
+    {
+    	CCombo comboBox = (CCombo)super.createControl(parent);
+    	comboBox.addTraverseListener(new TraverseListener()
+    	{
+    		@Override
+    		public void keyTraversed(TraverseEvent e) 
+    		{
+    	        if (e.detail == SWT.TRAVERSE_TAB_NEXT) 
+    	        {
+    	        	TraverseUtil.gotoNextTextPart(textPart);
+    	        }
+    		}
+    		
+    	});
+
+    	return comboBox;
+    }
+    
 	
 }

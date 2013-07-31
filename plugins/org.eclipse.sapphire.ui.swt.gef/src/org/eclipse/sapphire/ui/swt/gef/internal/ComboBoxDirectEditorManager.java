@@ -46,7 +46,7 @@ public class ComboBoxDirectEditorManager extends NodeDirectEditManager
 	@Override
 	protected CellEditor createCellEditorOn(Composite composite) 
 	{        
-		this.comboCellEditor = new DiagramComboBoxCellEditor(composite, this.property);
+		this.comboCellEditor = new DiagramComboBoxCellEditor(getTextPart(), composite, this.property);
 		return comboCellEditor;
 	}
 	

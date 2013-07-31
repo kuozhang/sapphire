@@ -366,7 +366,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 		else if (shapePart instanceof ContainerShapePart)
 		{
-			List<TextPart> textParts = ((ContainerShapePart)shapePart).getTextParts();
+			List<TextPart> textParts = ShapePart.getContainedTextParts(shapePart);
 			for (TextPart textPart : textParts)
 			{
 				TextFigure textFigure = (TextFigure)getPartFigure(textPart);
@@ -382,17 +382,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	private List<TextPart> getTextParts()
 	{
 		DiagramNodePart nodePart = getCastedModel().getModelPart();
-		ShapePart shapePart = nodePart.getShapePart();
-		List<TextPart> textParts = new ArrayList<TextPart>();
-		if (shapePart instanceof TextPart)
-		{
-			textParts.add((TextPart)shapePart);
-		}
-		else if (shapePart instanceof ContainerShapePart)
-		{
-			textParts.addAll(((ContainerShapePart)shapePart).getTextParts());
-		}
-		return textParts;
+		return nodePart.getContainedTextParts();
 	}
 		
 }

@@ -124,7 +124,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -1134,6 +1133,14 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			//viewer.getControl().forceFocus();
 			
 			GraphicalEditPart editpart = getGraphicalEditPart(part);
+			boolean useParent = false;
+			ISapphirePart parentPart = null;
+			if (editpart == null && part instanceof ShapePart)
+			{
+				parentPart = part.getParentPart();
+				editpart = getGraphicalEditPart(parentPart);
+				useParent = true;
+			}
 			if (editpart != null) 
 			{
 				// Force a layout first.
@@ -1153,8 +1160,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 					{
 						viewer.select(editpart);
 						DiagramNodeModel nodeModel = getDiagramModel().getDiagramNodeModel(nodePart);
-						ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
-						shapeModel.handleDirectEditing();
+						ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), 
+								useParent ? (ShapePart)parentPart : (ShapePart)part);
+						shapeModel.handleDirectEditing((ShapePart)part);
 					}
 				}
 				else if (part instanceof DiagramConnectionPart)

@@ -95,6 +95,7 @@ public class ShapeFactoryPart extends ShapePart
         
     }
 	
+	@Override
 	public List<ShapePart> getChildren()
 	{
 		return this.children;
