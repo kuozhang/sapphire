@@ -152,7 +152,7 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	{
 		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(
 				getNodeEditPart().getCastedModel().getShapePresentation(), shapePart);
-		return shapePresentation.getFigure();
+		return shapePresentation != null ? shapePresentation.getFigure() : null;
 		
 	}
 	
