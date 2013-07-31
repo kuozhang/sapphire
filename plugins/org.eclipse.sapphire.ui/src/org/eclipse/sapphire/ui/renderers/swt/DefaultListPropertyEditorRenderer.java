@@ -81,6 +81,7 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
@@ -88,6 +89,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.annotations.FixedOrderList;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -546,7 +548,65 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                     
                     if( row == null )
                     {
-                        row = new TableRow( element );
+                        ImageProvider imageProvider = null;
+                        
+                        final ImageService imageService = element.service( ImageService.class );
+                        
+                        if( imageService != null )
+                        {
+                            imageProvider = new ImageProvider()
+                            {
+                                private Listener imageServiceListener;
+                                
+                                @Override
+                                public ImageData image()
+                                {
+                                    if( this.imageServiceListener == null )
+                                    {
+                                        this.imageServiceListener = new Listener()
+                                        {
+                                            @Override
+                                            public void handle( final Event event )
+                                            {
+                                                update( row() );
+                                            }
+                                        };
+                                        
+                                        imageService.attach( this.imageServiceListener );
+                                    }
+                                    
+                                    return imageService.image();
+                                }
+
+                                @Override
+                                public void dispose()
+                                {
+                                    if( this.imageServiceListener != null )
+                                    {
+                                        imageService.detach( this.imageServiceListener );
+                                    }
+                                }
+                            };
+                        }
+                        else if( getColumnCount() == 1 )
+                        {
+                            final Value<?> value = (Value<?>) element.property( getColumnHandler( 0 ).property() );
+                            final ValueImageService valueImageService = value.service( ValueImageService.class );
+                            
+                            if( valueImageService != null )
+                            {
+                                imageProvider = new ImageProvider()
+                                {
+                                    @Override
+                                    public ImageData image()
+                                    {
+                                        return valueImageService.provide( value.text() );
+                                    }
+                                };
+                            }
+                        }
+                        
+                        row = new TableRow( element, imageProvider );
                     }
                     
                     rows.put( element, row );
@@ -1407,7 +1467,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
     }
 
-    private class DefaultColumnLabelProvider extends ColumnLabelProvider
+    private final class DefaultColumnLabelProvider extends ColumnLabelProvider
     {
         private final ColumnHandler columnHandler;
         
@@ -1464,33 +1524,7 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         {
             if( this.columnHandler.isElementImageDesired() )
             {
-                final TableRow row = (TableRow) obj;
-                
-                Image image = row.image();
-                
-                if( image == null )
-                {
-                    final Element element = row.element();
-                    final Value<?> value = this.columnHandler.property( element );
-                    
-                    ImageData imageData = null;
-                    
-                    try
-                    {
-                        imageData = value.service( ValueImageService.class ).provide( value.text() );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                    }
-                    
-                    if( imageData != null )
-                    {
-                        image = getPart().getSwtResourceCache().image( imageData, element.validation().severity() );
-                    }
-                }
-                
-                return image;
+                return ( (TableRow) obj ).image();
             }
             else
             {
@@ -2251,33 +2285,40 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         }
     }
     
+    private abstract class ImageProvider
+    {
+        private TableRow row;
+        
+        public final void init( final TableRow row )
+        {
+            this.row = row;
+        }
+        
+        protected final TableRow row()
+        {
+            return this.row;
+        }
+        
+        public abstract ImageData image();
+        public void dispose() {}
+    }
+    
     private final class TableRow
     {
         private final Element element;
-        private final ImageService imageService;
-        private final org.eclipse.sapphire.Listener listener;
+        private final ImageProvider imageProvider;
+        private Listener validationListener;
+        private Status.Severity validationSeverity;
         
-        public TableRow( final Element element )
+        public TableRow( final Element element, final ImageProvider imageProvider )
         {
             this.element = element;
-            this.imageService = element.service( ImageService.class );
             
-            if( this.imageService == null )
+            this.imageProvider = imageProvider;
+            
+            if( this.imageProvider != null )
             {
-                this.listener = null;
-            }
-            else
-            {
-                this.listener = new org.eclipse.sapphire.Listener()
-                {
-                    @Override
-                    public void handle( final org.eclipse.sapphire.Event event )
-                    {
-                        update( TableRow.this );
-                    }
-                };
-                
-                this.imageService.attach( this.listener );
+                this.imageProvider.init( this );
             }
         }
         
@@ -2288,21 +2329,64 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         
         public Image image()
         {
-            if( this.imageService == null )
+            final ImageData image;
+            
+            if( this.imageProvider == null )
+            {
+                image = null;
+            }
+            else
+            {
+                image = this.imageProvider.image();
+            }
+            
+            if( image == null )
             {
                 return null;
             }
             else
             {
-                return getPart().getSwtResourceCache().image( this.imageService.image(), this.element.validation().severity() );
+                if( this.validationListener == null )
+                {
+                    this.validationListener = new FilteredListener<PropertyValidationEvent>()
+                    {
+                        @Override
+                        protected void handleTypedEvent( final PropertyValidationEvent event )
+                        {
+                            refreshValidation();
+                        }
+                    };
+                    
+                    this.element.attach( this.validationListener, "*" );
+                    
+                    this.validationSeverity = this.element.validation().severity();
+                }
+                
+                return getPart().getSwtResourceCache().image( image, this.validationSeverity );
+            }
+        }
+        
+        private void refreshValidation()
+        {
+            final Status.Severity freshValidationSeverity = this.element.validation().severity();
+            
+            if( this.validationSeverity != freshValidationSeverity )
+            {
+                this.validationSeverity = freshValidationSeverity;
+                update( this );
             }
         }
         
         public void dispose()
         {
-            if( this.imageService != null )
+            if( this.imageProvider != null )
             {
-                this.imageService.detach( this.listener );
+                this.imageProvider.dispose();
+            }
+            
+            if( this.validationListener != null )
+            {
+                this.element.detach( this.validationListener, "*" );
             }
         }
     }
