@@ -34,6 +34,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
+import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
@@ -108,6 +109,7 @@ public interface FunctionDef extends Element
     
     @Type( base = Signature.class )
     @Label( standard = "signature" )
+    @XmlElementBinding( path = "" )
     
     @Documentation
     (
