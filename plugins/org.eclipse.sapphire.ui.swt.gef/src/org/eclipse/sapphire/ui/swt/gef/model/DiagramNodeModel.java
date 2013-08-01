@@ -167,6 +167,10 @@ public class DiagramNodeModel extends DiagramModelBase {
 		firePropertyChange(NODE_START_EDITING, null, null);
 	}
 	
+	public void handleStartEditing(ShapePart shapePart) {
+		firePropertyChange(NODE_START_EDITING, null, shapePart);
+	}
+
 	@Override
 	public String toString() {
 		return getLabel();

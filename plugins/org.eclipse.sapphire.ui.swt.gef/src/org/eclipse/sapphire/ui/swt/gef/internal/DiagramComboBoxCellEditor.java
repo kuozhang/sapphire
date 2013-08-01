@@ -11,12 +11,15 @@
 
 package org.eclipse.sapphire.ui.swt.gef.internal;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -34,10 +37,15 @@ public class DiagramComboBoxCellEditor extends ComboBoxCellEditor
 	private Property property;
 	private CCombo combo;
 	private TextPart textPart;
+	private DiagramNodePart nodePart;
+	private SapphireDiagramEditorPagePart pagePart;
+	private List<DiagramNodePart> sortedNodes = null;
 	
 	public DiagramComboBoxCellEditor(TextPart textPart, Composite parent, Property property)
 	{
 		this.textPart = textPart;
+		this.nodePart = textPart.nearest(DiagramNodePart.class);
+		this.pagePart = textPart.nearest(SapphireDiagramEditorPagePart.class);
 		this.property = property;
 		create(parent);
 		this.combo = (CCombo)getControl();
@@ -86,7 +94,16 @@ public class DiagramComboBoxCellEditor extends ComboBoxCellEditor
     		{
     	        if (e.detail == SWT.TRAVERSE_TAB_NEXT) 
     	        {
-    	        	TraverseUtil.gotoNextTextPart(textPart);
+    	        	TextPart nextTextPart = TraverseUtil.getNextTextPartInSameNode(textPart);
+    	        	if (nextTextPart == null)
+    	        	{
+    	        		List<DiagramNodePart> sortedNodes = getSortedNodes();
+    	        		nextTextPart = TraverseUtil.getTextPartInNextNode(sortedNodes, nodePart);
+    	        	}
+    	        	if (nextTextPart != null)
+    	        	{
+    	        		pagePart.selectAndDirectEdit(nextTextPart);
+    	        	}
     	        }
     		}
     		
@@ -95,5 +112,13 @@ public class DiagramComboBoxCellEditor extends ComboBoxCellEditor
     	return comboBox;
     }
     
+    private List<DiagramNodePart> getSortedNodes()
+    {
+    	if (this.sortedNodes == null)
+    	{
+    		this.sortedNodes = TraverseUtil.getSortedNodeParts(this.pagePart);
+    	}
+    	return this.sortedNodes;
+    }
 	
 }

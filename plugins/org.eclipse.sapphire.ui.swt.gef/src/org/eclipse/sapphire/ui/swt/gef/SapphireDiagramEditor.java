@@ -1133,13 +1133,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			//viewer.getControl().forceFocus();
 			
 			GraphicalEditPart editpart = getGraphicalEditPart(part);
-			boolean useParent = false;
 			ISapphirePart parentPart = null;
-			if (editpart == null && part instanceof ShapePart)
+			ISapphirePart thisPart = part;
+			while (editpart == null || !editpart.isSelectable())
 			{
-				parentPart = part.getParentPart();
+				parentPart = thisPart.getParentPart();				
 				editpart = getGraphicalEditPart(parentPart);
-				useParent = true;
+				thisPart = parentPart;
 			}
 			if (editpart != null) 
 			{
@@ -1152,18 +1152,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 				}
 				else if (part instanceof ShapePart)
 				{
-					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
-					DiagramNodeEditPart nodeEditPart = (DiagramNodeEditPart)getGraphicalEditPart(nodePart);
-					org.eclipse.draw2d.geometry.Rectangle partBounds = editpart.getFigure().getBounds();
-					org.eclipse.draw2d.geometry.Rectangle nodeBounds = nodeEditPart.getFigure().getBounds();
-					if (nodeBounds.contains(partBounds))
-					{
-						viewer.select(editpart);
-						DiagramNodeModel nodeModel = getDiagramModel().getDiagramNodeModel(nodePart);
-						ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), 
-								useParent ? (ShapePart)parentPart : (ShapePart)part);
-						shapeModel.handleDirectEditing((ShapePart)part);
-					}
+					viewer.select(editpart);
+					getDiagramModel().handleDirectEditing((ShapePart)part);
 				}
 				else if (part instanceof DiagramConnectionPart)
 				{

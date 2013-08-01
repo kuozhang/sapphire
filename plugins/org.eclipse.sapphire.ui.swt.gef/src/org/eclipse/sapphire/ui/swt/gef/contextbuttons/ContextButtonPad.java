@@ -19,7 +19,6 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.EditPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.IContextButtonPadDeclaration.PadStyle;
@@ -70,11 +69,6 @@ public class ContextButtonPad extends Shape {
 	 * The editor as described in {@link #getEditor()}.
 	 */
 	private SapphireDiagramEditor editor;
-
-	/**
-	 * The edit-part as described in {@link #getEditPart()}.
-	 */
-	private EditPart editPart;
 	
 	private List<ISapphirePart> sapphireParts;
 
@@ -106,8 +100,8 @@ public class ContextButtonPad extends Shape {
 	 *            The zoom-level as described in {@link #getZoomLevel()}.
 	 * @param editor
 	 *            The editor as described in {@link #getEditor()}.
-	 * @param editPart
-	 *            The edit-part as described in {@link #getEditPart()}.
+	 * @param sapphireParts
+	 *            The sapphire parts
 	 */
 	public ContextButtonPad(IContextButtonPadDeclaration declaration, double zoomLevel, SapphireDiagramEditor editor, 
 						List<ISapphirePart> sapphireParts) 
@@ -115,7 +109,6 @@ public class ContextButtonPad extends Shape {
 		this.declaration = declaration;
 		this.zoomLevel = zoomLevel;
 		this.editor = editor;
-		//this.editPart = editPart;
 		this.sapphireParts = new ArrayList<ISapphirePart>();
 		this.sapphireParts.addAll(sapphireParts);
 
@@ -159,21 +152,6 @@ public class ContextButtonPad extends Shape {
 	 */
 	public final SapphireDiagramEditor getEditor() {
 		return editor;
-	}
-
-	/**
-	 * Returns the edit-part for which the context button pad is showing. It is
-	 * used by the context buttons, which work on/with the edit-part. It is set
-	 * in the constructor and not changed afterwards.
-	 * 
-	 * @return The editor, which can be used to access the environment.
-	 */
-	public final EditPart getEditPart() {
-		return editPart;
-	}
-
-	public final List<ISapphirePart> getSapphireParts() {
-		return this.sapphireParts;
 	}
 	
 	// =========================== initialization =============================
@@ -568,6 +546,10 @@ public class ContextButtonPad extends Shape {
 			}
 		}
 		return ret;
+	}
+
+	public final List<ISapphirePart> getSapphireParts() {
+		return this.sapphireParts;
 	}
 
 	/**

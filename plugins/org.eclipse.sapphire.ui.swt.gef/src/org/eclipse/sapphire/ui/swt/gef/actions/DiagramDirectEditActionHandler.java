@@ -52,10 +52,12 @@ public class DiagramDirectEditActionHandler extends SapphireActionHandler
 				}
 				else if (part instanceof ShapePart)
 				{
-					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
-					DiagramNodeModel nodeModel = model.getDiagramNodeModel(nodePart);
-					ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
-					shapeModel.handleDirectEditing((ShapePart)part);
+					model.handleDirectEditing((ShapePart)part);
+//					DiagramNodePart nodePart = part.nearest(DiagramNodePart.class);
+//					
+//					DiagramNodeModel nodeModel = model.getDiagramNodeModel(nodePart);
+//					ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
+//					shapeModel.handleDirectEditing((ShapePart)part);
 				}
 				else if (part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart))
 				{

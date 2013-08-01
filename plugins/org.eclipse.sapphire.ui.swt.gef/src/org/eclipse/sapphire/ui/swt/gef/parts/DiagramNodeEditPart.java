@@ -347,7 +347,17 @@ public class DiagramNodeEditPart extends ShapeEditPart
 				updateShapeVisibility((ShapePart)obj);
 			}		
 		} else if (DiagramNodeModel.NODE_START_EDITING.equals(prop)) {
-			performDirectEdit();
+			if (evt.getNewValue() == null) {
+				performDirectEdit();
+			} else if (evt.getNewValue() instanceof TextPart) {
+				performDirectEdit((TextPart)evt.getNewValue());
+			} else if (evt.getNewValue() instanceof ShapePart) {
+				ShapePart container = (ShapePart)evt.getNewValue();
+				List<TextPart> textParts = ShapePart.getContainedTextParts(container);
+				if (!textParts.isEmpty()) {
+					performDirectEdit(textParts.get(0));
+				}
+			}
 		}
 	}
 	

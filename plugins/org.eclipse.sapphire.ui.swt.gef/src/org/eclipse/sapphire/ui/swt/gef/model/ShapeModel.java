@@ -62,11 +62,6 @@ public class ShapeModel extends DiagramModelBase
 		return this.nodeModel;
 	}
 	
-	public void handleDirectEditing(ShapePart shapePart)
-	{
-		firePropertyChange(SHAPE_START_EDITING, null, shapePart);
-	}
-	
     @SuppressWarnings( "unchecked" )
     public final <T> T nearest( final Class<T> partType )
     {

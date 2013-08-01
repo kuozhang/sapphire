@@ -27,6 +27,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
@@ -117,6 +118,15 @@ public class DiagramModel extends DiagramModelBase {
 		DiagramNodeModel nodeModel = getDiagramNodeModel(nodePart);
 		if (nodeModel != null) {
 			nodeModel.handleStartEditing();
+		}
+	}
+
+	public void handleDirectEditing(ShapePart shapePart) 
+	{
+		DiagramNodePart nodePart = shapePart.nearest(DiagramNodePart.class);
+		DiagramNodeModel nodeModel = getDiagramNodeModel(nodePart);
+		if (nodeModel != null) {
+			nodeModel.handleStartEditing(shapePart);
 		}
 	}
 

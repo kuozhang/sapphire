@@ -11,7 +11,11 @@
 
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.internal.TraverseUtil;
 import org.eclipse.swt.SWT;
@@ -28,11 +32,16 @@ import org.eclipse.swt.widgets.Text;
 public class DiagramTextCellEditor extends TextCellEditor 
 {
 	private TextPart textPart;
+	private DiagramNodePart nodePart;
+	private SapphireDiagramEditorPagePart pagePart;
+	private List<DiagramNodePart> sortedNodes = null;
 	
 	public DiagramTextCellEditor(TextPart textPart, Composite parent, int style) 
 	{
 		super(parent, style);
-		this.textPart = textPart;		
+		this.textPart = textPart;
+		this.nodePart = textPart.nearest(DiagramNodePart.class);
+		this.pagePart = textPart.nearest(SapphireDiagramEditorPagePart.class);
 	}
 	
     /* (non-Javadoc)
@@ -48,11 +57,29 @@ public class DiagramTextCellEditor extends TextCellEditor
     		{
     	        if (e.detail == SWT.TRAVERSE_TAB_NEXT) 
     	        {
-    	        	TraverseUtil.gotoNextTextPart(textPart);
+    	        	TextPart nextTextPart = TraverseUtil.getNextTextPartInSameNode(textPart);
+    	        	if (nextTextPart == null)
+    	        	{
+    	        		List<DiagramNodePart> sortedNodes = getSortedNodes();
+    	        		nextTextPart = TraverseUtil.getTextPartInNextNode(sortedNodes, nodePart);
+    	        	}
+    	        	if (nextTextPart != null)
+    	        	{
+    	        		pagePart.selectAndDirectEdit(nextTextPart);
+    	        	}
     	        }
     		}
     		
     	});
     	return text;
+    }
+    
+    private List<DiagramNodePart> getSortedNodes()
+    {
+    	if (this.sortedNodes == null)
+    	{
+    		this.sortedNodes = TraverseUtil.getSortedNodeParts(this.pagePart);
+    	}
+    	return this.sortedNodes;
     }
 }
