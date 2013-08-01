@@ -119,7 +119,7 @@ public final class TextFunctionTests extends TestExpr
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
-            assertEquals( "Function Text expects org.eclipse.sapphire.Value in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+            assertEquals( "Function Text( java.lang.String ) is undefined.", st.message() );
         }
         finally
         {

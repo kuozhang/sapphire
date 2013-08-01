@@ -18,4 +18,29 @@
         <name>test:factorial</name>
         <impl>org.eclipse.sapphire.tests.modeling.el.FactorialFunction</impl>
     </function>
+    <function>
+        <name>SapphireTests:OverloadedFunction</name>
+        <impl>org.eclipse.sapphire.tests.modeling.el.functions.overloaded.OverLoadedFunctionForAnything</impl>
+    </function>
+    <function>
+        <name>SapphireTests:OverloadedFunction</name>
+        <signature>
+            <parameter>java.math.BigInteger</parameter>
+        </signature>
+        <impl>org.eclipse.sapphire.tests.modeling.el.functions.overloaded.OverLoadedFunctionForBigInteger</impl>
+    </function>
+    <function>
+        <name>SapphireTests:OverloadedFunction</name>
+        <signature>
+            <parameter>java.lang.Number</parameter>
+        </signature>
+        <impl>org.eclipse.sapphire.tests.modeling.el.functions.overloaded.OverLoadedFunctionForNumber</impl>
+    </function>
+    <function>
+        <name>SapphireTests:OverloadedFunction</name>
+        <impl>org.eclipse.sapphire.tests.modeling.el.functions.overloaded.OverLoadedFunctionForDate</impl>
+        <signature>
+            <parameter>java.util.Date</parameter>
+        </signature>
+    </function>
 </extension>

@@ -32,6 +32,12 @@ public abstract class TestExpr extends SapphireTestCase
         super( name );
     }
     
+    protected static void testForExpectedValue( final String expr,
+                                                final Object expected )
+    {
+        testForExpectedValue( new FunctionContext(), expr, expected );
+    }
+    
     protected static void testForExpectedValue( final FunctionContext context,
                                                 final String expr,
                                                 final Object expected )

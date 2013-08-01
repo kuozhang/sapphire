@@ -75,7 +75,7 @@
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
     <li><a href="#ExpressionLanguage-FunctionsAsProperties">Functions as Properties</a></li>
-    <li><a href="#ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></li>
+    <li><a href="#ExpressionLanguage-OverloadedFunctions">Overloaded Functions</a></li>
     <li><a href="#ExpressionLanguage-UseForValidation">Use for Validation</a></li>
     <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
     <li><a href="#ExpressionLanguage-ContentFunction">Content Function</a></li>
@@ -1032,29 +1032,47 @@ precedence than properties. If a conflict with a property is encountered, functi
 <pre class="source-code"><code>${ PurchaseOrder.Entries.Size }</code></pre>
 
 
-<h2><a name="ExpressionLanguage-OperandScopedFunctions">Operand-Scoped Function</a></h2>
+<h2><a name="ExpressionLanguage-OverloadedFunctions">Overloaded Functions in EL</a></h2>
 
-<p>Sapphire EL functions are registered by name and the same function can take an arbitrary number of operands. In certain
-cases, it is useful to direct different operand counts to different implementations. To that end, it is now possible to
-constraint which operand counts a particular function definition applies to. Absent the constraint, a function definition
-still applies to all operand counts.</p>
+<p>Previously, a Sapphire EL function implementations always applied to any parameter signature, regardless of arity or
+parameter types. That option remains, but in certain cases, it is more useful to have a different function implementation
+for different situations.</p>
+
+<p>Function implementations can now specify their signature and are matched based on how closely they match actual
+parameters. Implementations with a declared signature are considered first.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
+<p style="margin-left: 20px;">Without a signature, the following example function will be called for any parameter signature. The
+implementation is responsible for throwing FunctionException if it is unable to deal with a particular signature.</p>
+
 <pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     &lt;function>
-        &lt;name>Enabled&lt;/name></font>
-        &lt;operand-count>1&lt;/operand-count>
-        &lt;operand-count>2&lt;/operand-count>
-        <font color="#888888">&lt;impl>org.eclipse.sapphire.modeling.el.EnabledFunction&lt;/impl>
+        &lt;name>Increment&lt;/name>
+        &lt;impl>org.eclipse.sapphire.examples.IncrementFunction&lt;/impl>
+    &lt;/function>
+&lt;/extension></font></code></pre>
+
+<p style="margin-left: 20px;">With signatures specified, these next two example functions will only be called when
+the signature matches their declaration. Sapphire will handle picking the correct implementation and rejecting invalid signatures.</p>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
+    &lt;function>
+        &lt;name>Increment&lt;/name></font>
+        &lt;signature>
+            &lt;parameter>java.math.BigInteger&lt;/parameter>
+        &lt;/signature>
+        <font color="#888888">&lt;impl>org.eclipse.sapphire.examples.IncrementFunctionForInteger&lt;/impl>
     &lt;/function>
 &lt;/extension></font></code></pre>
 
 <pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension">
     &lt;function>
-        &lt;name>Enabled&lt;/name></font>
-        &lt;operand-count>0&lt;/operand-count>
-        <font color="#888888">&lt;impl>org.eclipse.sapphire.ui.internal.PropertyEditorEnabledFunction&lt;/impl>
+        &lt;name>Increment&lt;/name></font>
+        &lt;signature>
+            &lt;parameter>java.math.BigDecimal&lt;/parameter>
+        &lt;/signature>
+        <font color="#888888">&lt;impl>org.eclipse.sapphire.examples.IncrementFunctionForDecimal&lt;/impl>
     &lt;/function>
 &lt;/extension></font></code></pre>
 

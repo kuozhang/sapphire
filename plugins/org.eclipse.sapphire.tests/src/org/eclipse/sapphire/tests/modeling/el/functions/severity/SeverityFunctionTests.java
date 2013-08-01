@@ -105,7 +105,7 @@ public final class SeverityFunctionTests extends TestExpr
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
-            assertEquals( "Function Severity expects org.eclipse.sapphire.modeling.Status in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+            assertEquals( "Function Severity( java.lang.String ) is undefined.", st.message() );
         }
         finally
         {

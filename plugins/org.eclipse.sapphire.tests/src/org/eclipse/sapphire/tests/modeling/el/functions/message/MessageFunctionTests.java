@@ -106,7 +106,7 @@ public final class MessageFunctionTests extends TestExpr
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
-            assertEquals( "Function Message expects org.eclipse.sapphire.modeling.Status in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+            assertEquals( "Function Message( java.lang.String ) is undefined.", st.message() );
         }
         finally
         {

@@ -92,19 +92,36 @@
                             <label>function</label>
                             <content>
                                 <property-editor>Name</property-editor>
-                                <property-editor>
-                                    <hint>
-                                        <name>show.header</name>
-                                        <value>false</value>
-                                    </hint>
-                                    <property>OperandCounts</property>
-                                </property-editor>
                                 <property-editor>ImplClass</property-editor>
                                 <property-editor>
                                     <property>Description</property>
                                     <height>75</height>
                                 </property-editor>
                             </content>
+                        </section>
+                        <section>
+                            <label>signature</label>
+                            <content>
+                                <with>
+                                    <path>Signature</path>
+                                    <label>specify function signature</label>
+                                    <panel>
+                                        <key>FunctionDef$Signature</key>
+                                        <content>
+                                            <property-editor>
+                                                <property>Parameters</property>
+                                                <show-label>false</show-label>
+                                                <span>true</span>
+                                                <hint>
+                                                    <name>show.header</name>
+                                                    <value>false</value>
+                                                </hint>
+                                            </property-editor>
+                                        </content>
+                                    </panel>
+                                </with>
+                            </content>
+                            <description>A function can be restricted to apply to a specific parameter signature. If not restricted, the function will apply to any number of parameters of arbitrary type.</description>
                         </section>
                     </case>
                 </node-factory>

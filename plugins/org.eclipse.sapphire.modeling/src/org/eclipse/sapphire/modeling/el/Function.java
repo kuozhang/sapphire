@@ -33,7 +33,13 @@ public abstract class Function
 
     private Object origin;
     private boolean originInitialized;
+    private List<Class<?>> signature;
     private List<Function> operands = ListFactory.empty();
+    
+    public final void initSignature( final List<Class<?>> signature )
+    {
+        this.signature = signature;
+    }
     
     public final void init( final Function... operands )
     {
@@ -79,6 +85,11 @@ public abstract class Function
     public int precedence()
     {
         return 1;
+    }
+    
+    public final List<Class<?>> signature()
+    {
+        return this.signature;
     }
     
     public final List<Function> operands()

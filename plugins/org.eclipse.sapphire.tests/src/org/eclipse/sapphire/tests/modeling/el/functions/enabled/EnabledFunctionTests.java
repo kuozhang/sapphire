@@ -102,7 +102,7 @@ public final class EnabledFunctionTests extends TestExpr
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
-            assertEquals( "Function Enabled expects org.eclipse.sapphire.Property in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+            assertEquals( "Function Enabled( java.lang.String ) is undefined.", st.message() );
         }
         finally
         {

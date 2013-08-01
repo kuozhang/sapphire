@@ -12,7 +12,9 @@
 package org.eclipse.sapphire.sdk.extensibility;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.ReferenceValue;
@@ -26,8 +28,6 @@ import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -35,7 +35,6 @@ import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -62,44 +61,64 @@ public interface FunctionDef extends Element
     Value<String> getName();
     void setName( String value );
     
-    // *** OperandCounts ***
+    // *** Signature ***
     
-    @Label( standard = "operand count" )
+    @Label( standard = "signature" )
+    @XmlBinding( path = "signature" )
     
-    interface OperandCount extends Element
+    interface Signature extends Element
     {
-        ElementType TYPE = new ElementType( OperandCount.class );
+        ElementType TYPE = new ElementType( Signature.class );
         
-        // *** Count ***
+        // *** Parameters ***
         
-        @Type( base = Integer.class )
-        @Label( standard = "operand count" )
-        @Required
-        @NoDuplicates
-        @NumericRange( min = "0" )
-        @XmlBinding( path = "" )
+        @Label( standard = "parameter" )
+        @XmlBinding( path = "parameter" )
         
-        ValueProperty PROP_COUNT = new ValueProperty( TYPE, "Count" );
+        interface Parameter extends Element
+        {
+            ElementType TYPE = new ElementType( Parameter.class );
+            
+            // *** Type ***
+            
+            @Type( base = JavaTypeName.class )
+            @Reference( target = JavaType.class )
+            @Label( standard = "parameter type" )
+            @Required
+            @MustExist
+            @XmlBinding( path = "" )
+            
+            @Documentation( content = "The function parameter type." )
+
+            ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
+            
+            ReferenceValue<JavaTypeName,JavaType> getType();
+            void setType( String value );
+            void setType( JavaTypeName value );
+        }
         
-        Value<Integer> getCount();
-        void setCount( String value );
-        void setCount( Integer value );
+        @Type( base = Parameter.class )
+        @Label( standard = "parameters" )
+        @XmlListBinding( path = "" )
+        
+        ListProperty PROP_PARAMETERS = new ListProperty( TYPE, "Parameters" );
+        
+        ElementList<Parameter> getParameters();
     }
     
-    @Type( base = OperandCount.class )
-    @Label( standard = "operand counts" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "operand-count", type = OperandCount.class ) )
+    @Type( base = Signature.class )
+    @Label( standard = "signature" )
     
     @Documentation
     (
-        content = "A function can be restricted to apply only to a specified number of operands. If not restricted, the function will " +
-                  "apply for any number of operands. The function is responsible for throwing a FunctionExeption during evaluation " +
-                  "if a problem with the operands is detected."
+        content = "A function can be restricted to apply to a specific parameter signature. If not restricted, the function will " +
+                  "apply for any number of parameters. The function is responsible for throwing a FunctionExeption during evaluation " +
+                  "if a problem with the parameters is detected."
     )
     
-    ListProperty PROP_OPERAND_COUNTS = new ListProperty( TYPE, "OperandCounts" );
+    ElementProperty PROP_SIGNATURE = new ElementProperty( TYPE, "Signature" );
     
-    ElementList<OperandCount> getOperandCounts();
+    ElementHandle<Signature> getSignature();
     
     // *** Description ***
     
@@ -107,7 +126,7 @@ public interface FunctionDef extends Element
     @Label( standard = "description" )
     @Localizable
     @Whitespace( collapse = true )
-    @XmlValueBinding( path = "description" )
+    @XmlBinding( path = "description" )
     
     @Documentation( content = "Provides detailed information about the function. The " +
                               "description should be in the form of properly capitalized and punctuated sentences." )

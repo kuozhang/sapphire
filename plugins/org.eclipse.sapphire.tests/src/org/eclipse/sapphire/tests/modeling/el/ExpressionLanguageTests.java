@@ -13,15 +13,12 @@ package org.eclipse.sapphire.tests.modeling.el;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
-import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.functions.FunctionTests;
@@ -95,7 +92,7 @@ public final class ExpressionLanguageTests
             suite.addTest( new ExpressionLanguageTests( "composite" + String.valueOf( i ) ) );
         }
         
-        for( int i = 1; i <= 3; i++ )
+        for( int i = 1; i <= 2; i++ )
         {
             suite.addTest( new ExpressionLanguageTests( "functions" + String.valueOf( i ) ) );
         }
@@ -338,82 +335,10 @@ public final class ExpressionLanguageTests
 
     public void functions1()
     {
-        final FunctionContext context = new FunctionContext()
-        {
-            @Override
-            public Function function( final String name,
-                                      final List<Function> operands )
-            {
-                Function function = null;
-                
-                if( name.equals( "eclipse:add" ) )
-                {
-                    function = new Function()
-                    {
-                        @Override
-                        public String name()
-                        {
-                            return "eclipse:add";
-                        }
-
-                        @Override
-                        public FunctionResult evaluate( final FunctionContext context )
-                        {
-                            return new FunctionResult( this, context )
-                            {
-                                @Override
-                                protected Object evaluate()
-                                {
-                                    return cast( operand( 0 ), BigInteger.class ).add( cast( operand( 1 ), BigInteger.class ) );
-                                }
-                            };
-                        }
-                    };
-                }
-                else if( name.equals( "subtract" ) )
-                {
-                    function = new Function()
-                    {
-                        @Override
-                        public String name()
-                        {
-                            return "subtract";
-                        }
-
-                        @Override
-                        public FunctionResult evaluate( final FunctionContext context )
-                        {
-                            return new FunctionResult( this, context )
-                            {
-                                @Override
-                                protected Object evaluate()
-                                {
-                                    return cast( operand( 0 ), BigInteger.class ).subtract( cast( operand( 1 ), BigInteger.class ) );
-                                }
-                            };
-                        }
-                    };
-                }
-                
-                if( function != null )
-                {
-                    function.init( operands.toArray( new Function[ operands.size() ] ) );
-                    return function;
-                }
-                
-                return super.function( name, operands );
-            }
-        };
-        
-        test( "${ 3 + eclipse:add( 4, 5 ) + subtract( 6, 7 ) + subtract( eclipse:add( 8 + 9, 10 + 11 ), 12 + 13 ) }", new BigInteger( "24" ), context ); 
-    }
-    
-    public void functions2()
-    {
         test( "${ test:factorial( 7 ) }", new BigInteger( "5040" ) );
     }
     
-    public void functions3()
+    public void functions2()
     {
         test( "${ test:factorial( 15 + 5 ) }", new BigInteger( "2432902008176640000" ) );
     }

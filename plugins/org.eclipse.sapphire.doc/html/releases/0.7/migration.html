@@ -66,6 +66,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ElementValidationEvent">ElementValidationEvent</a></li>
   <li><a href="#EnabledFunction">Enabled Function</a></li>
   <li><a href="#Event">Event</a></li>
+  <li><a href="#FunctionContext">FunctionContext</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#ImageData">ImageData</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
@@ -733,6 +734,32 @@ public class FilteringListenerWrapper extends Listener
         return hashcode;
     }
 }</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FunctionContext">FunctionContext</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><span class="unaffected">public ExampleFunctionContext extends FunctionContext
+{</span>
+    @Override
+    public Function function( String name, List&lt;Function> arguments )
+    {
+        ...
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+      <span class="comment">Functions should be contributed through Sapphire extension system. Contributing a function
+      in a FunctionContext implementation is no longer supported.</span>
     </td>
   </tr>
 </table>

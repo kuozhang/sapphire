@@ -671,74 +671,103 @@
     </service>
     <function>
         <name>Text</name>
-        <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.TextFunction</impl>
         <description>Returns the text of a value, taking into account the default, if applicable.</description>
+        <signature>
+            <parameter>org.eclipse.sapphire.Value</parameter>
+        </signature>
     </function>
     <function>
         <name>Content</name>
-        <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.ContentFunction</impl>
         <description>Returns the content of a value or a transient. For value properties, the default is taken into account, if applicable.</description>
+        <signature>
+            <parameter>org.eclipse.sapphire.Property</parameter>
+        </signature>
     </function>
     <function>
         <name>Size</name>
-        <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.SizeFunction</impl>
         <description>Determines the size of a collection, a map, an array or a string.</description>
+        <signature>
+            <parameter>java.lang.Object</parameter>
+        </signature>
     </function>
     <function>
         <description>Returns the validation result of a property.</description>
         <impl>org.eclipse.sapphire.modeling.el.internal.ValidationFunction</impl>
         <name>Validation</name>
-        <operand-count>1</operand-count>
+        <signature>
+            <parameter>org.eclipse.sapphire.Property</parameter>
+        </signature>
     </function>
     <function>
         <name>Severity</name>
-        <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.SeverityFunction</impl>
         <description>Returns the severity of a validation result.</description>
+        <signature>
+            <parameter>org.eclipse.sapphire.modeling.Status</parameter>
+        </signature>
     </function>
     <function>
         <name>Message</name>
-        <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.MessageFunction</impl>
         <description>Returns the message from a validation result.</description>
+        <signature>
+            <parameter>org.eclipse.sapphire.modeling.Status</parameter>
+        </signature>
     </function>
     <function>
         <name>Enabled</name>
-        <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.EnabledFunction</impl>
         <description>Returns the enablement of a property.</description>
+        <signature>
+            <parameter>org.eclipse.sapphire.Property</parameter>
+        </signature>
     </function>
     <function>
         <name>Fragment</name>
-        <operand-count>3</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.FragmentFunction</impl>
         <description>Returns a fragment of a string. The fragment starts at the index specified by the second argument and extends to the character before the index specified by the third argument. The length of the fragment is end index minus start index. A negative start index is normalized to zero. A start index exceeding the length of the input is normalized to the length of the input. An end index exceeding the length of the input is normalized to the length of the input. An end index that is smaller than the start index is normalized to the start index.</description>
+        <signature>
+            <parameter>java.lang.String</parameter>
+            <parameter>java.lang.Integer</parameter>
+            <parameter>java.lang.Integer</parameter>
+        </signature>
     </function>
     <function>
         <name>Head</name>
-        <operand-count>2</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.HeadFunction</impl>
         <description>Returns a fragment of a string starting at the beginning and not exceeding the specified length. A negative fragment length is normalized to zero. A fragment length exceeding the length of the input is normalized to the length of the input.</description>
+        <signature>
+            <parameter>java.lang.String</parameter>
+            <parameter>java.lang.Integer</parameter>
+        </signature>
     </function>
     <function>
         <name>Tail</name>
-        <operand-count>2</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.TailFunction</impl>
         <description>Returns a fragment of a string starting at the end and not exceeding the specified length. A negative fragment length is normalized to zero. A fragment length exceeding the length of the input is normalized to the length of the input.</description>
+        <signature>
+            <parameter>java.lang.String</parameter>
+            <parameter>java.lang.Integer</parameter>
+        </signature>
     </function>
     <function>
         <name>Matches</name>
-        <operand-count>2</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.MatchesFunction</impl>
         <description>Determines whether a string matches a regular expression. The full semantics are specified by Java's String.matches() function.</description>
+        <signature>
+            <parameter>java.lang.String</parameter>
+            <parameter>java.lang.String</parameter>
+        </signature>
     </function>
     <function>
         <name>Index</name>
-        <operand-count>1</operand-count>
         <impl>org.eclipse.sapphire.modeling.el.internal.IndexFunction</impl>
         <description>Determines the index of a model element within its parent list.</description>
+        <signature>
+            <parameter>org.eclipse.sapphire.Element</parameter>
+        </signature>
     </function>
 </extension>

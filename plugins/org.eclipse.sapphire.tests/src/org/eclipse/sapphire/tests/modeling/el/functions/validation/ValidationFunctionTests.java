@@ -105,7 +105,7 @@ public final class ValidationFunctionTests extends TestExpr
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
-            assertEquals( "Function Validation expects org.eclipse.sapphire.Property in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+            assertEquals( "Function Validation( java.lang.String ) is undefined.", st.message() );
         }
         finally
         {

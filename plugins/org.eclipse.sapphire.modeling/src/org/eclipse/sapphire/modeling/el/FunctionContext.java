@@ -178,14 +178,26 @@ public class FunctionContext
             }
         }
         
-        final Function f = SapphireModelingExtensionSystem.createFunctionNoEx( name, new Function[] { Literal.create( element ) } );
-        
-        if( f != null )
+        if( element == this )
         {
-            return f.evaluate( this );
+            if( ! SapphireModelingExtensionSystem.functions( name, 0 ).isEmpty() )
+            {
+                final Function f = new DeferredFunction( name );
+                f.init( new Function[ 0 ] );
+                return f.evaluate( this );
+            }
+        }
+        else
+        {
+            if( ! SapphireModelingExtensionSystem.functions( name, 1 ).isEmpty() )
+            {
+                final Function f = new DeferredFunction( name );
+                f.init( new Function[] { Literal.create( element ) } );
+                return f.evaluate( this );
+            }
         }
         
-        if( element == FunctionContext.this )
+        if( element == this )
         {
             throw new FunctionException( undefinedPropertyMessage.format( name ) );
         }
@@ -205,12 +217,6 @@ public class FunctionContext
             
             throw new FunctionException( undefinedPropertyMessageExt.format( name, type ) );
         }
-    }
-    
-    public Function function( final String name,
-                              final List<Function> arguments )
-    {
-        return SapphireModelingExtensionSystem.createFunction( name, arguments.toArray( new Function[ arguments.size() ] ) );
     }
     
     public LocalizationService getLocalizationService()

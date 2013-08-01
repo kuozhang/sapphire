@@ -133,7 +133,7 @@ public final class ContentFunctionTests extends TestExpr
             final Status st = fr.status();
             
             assertEquals( Status.Severity.ERROR, st.severity() );
-            assertEquals( "Function Content expects org.eclipse.sapphire.Property in position 0, but java.lang.String was found. A conversion was not possible.", st.message() );
+            assertEquals( "Function Content( java.lang.String ) is undefined.", st.message() );
         }
         finally
         {

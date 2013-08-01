@@ -27,13 +27,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.sapphire.Context;
-import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Result;
-import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.util.ListFactory;
@@ -51,20 +48,6 @@ import org.xml.sax.InputSource;
 
 public final class SapphireModelingExtensionSystem
 {
-    @Text( "Function \"{0}\" is undefined." )
-    private static LocalizableText undefinedFunctionMessage;
-    
-    @Text( "Function \"{0}\" does not support {1} operands." )
-    private static LocalizableText undefinedFunctionMessageExt;
-    
-    @Text( "Function \"{0}\" does not support one operand." )
-    private static LocalizableText undefinedFunctionMessageExt1;
-    
-    static
-    {
-        LocalizableText.init( SapphireModelingExtensionSystem.class );
-    }
-
     private static final String EL_CONDITION = "condition";
     private static final String EL_CONTEXT = "context";
     private static final String EL_FUNCTION = "function";
@@ -72,9 +55,10 @@ public final class SapphireModelingExtensionSystem
     private static final String EL_IMPL = "impl";
     private static final String EL_IMPLEMENTATION = "implementation";
     private static final String EL_NAME = "name";
-    private static final String EL_OPERAND_COUNT = "operand-count";
     private static final String EL_OVERRIDES = "overrides";
+    private static final String EL_PARAMETER = "parameter";
     private static final String EL_SERVICE = "service";
+    private static final String EL_SIGNATURE = "signature";
     
     private static boolean initialized = false;
     private static List<ServiceExtension> serviceExtensions;
@@ -85,60 +69,26 @@ public final class SapphireModelingExtensionSystem
         initialize();
         return serviceExtensions;
     }
-
-    public static Function createFunction( final String name,
-                                           final Function... operands )
-    {
-        initialize();
-
-        final List<FunctionFactory> factories = functionFactories.get( name.toLowerCase() );
-
-        if( factories != null )
-        {
-            for( FunctionFactory factory : factories )
-            {
-                final Function function = factory.create( operands );
-                
-                if( function != null )
-                {
-                    return function;
-                }
-            }
-            
-            if( operands.length == 1 )
-            {
-                throw new FunctionException( undefinedFunctionMessageExt1.format( name ) );
-            }
-            else
-            {
-                throw new FunctionException( undefinedFunctionMessageExt.format( name, operands.length ) );
-            }
-        }
-        
-        throw new FunctionException( undefinedFunctionMessage.format( name ) );
-    }
     
-    public static Function createFunctionNoEx( final String name,
-                                               final Function... operands )
+    public static List<Function> functions( final String name, final int arity )
     {
         initialize();
 
         final List<FunctionFactory> factories = functionFactories.get( name.toLowerCase() );
+        final ListFactory<Function> functions = ListFactory.start();
 
         if( factories != null )
         {
             for( FunctionFactory factory : factories )
             {
-                final Function function = factory.create( operands );
-                
-                if( function != null )
+                if( factory.signature() == null || factory.signature().size() == arity )
                 {
-                    return function;
+                    functions.add( factory.create() );
                 }
             }
         }
         
-        return null;
+        return functions.result();
     }
     
     private static synchronized void initialize()
@@ -173,8 +123,8 @@ public final class SapphireModelingExtensionSystem
                                 if( elname.equals( EL_SERVICE ) )
                                 {
                                     final String id = value( el, EL_ID ).required();
-                                    final Set<String> contexts = values( el, EL_CONTEXT );
-                                    final Set<String> overrides = values( el, EL_OVERRIDES );
+                                    final Set<String> contexts = SetFactory.unmodifiable( values( el, EL_CONTEXT ) );
+                                    final Set<String> overrides = SetFactory.unmodifiable( values( el, EL_OVERRIDES ) );
                                     
                                     final Class<? extends Service> implementation = context.findClass( value( el, EL_IMPLEMENTATION ).required() );
                                     
@@ -195,12 +145,46 @@ public final class SapphireModelingExtensionSystem
                                 {
                                     final String name = value( el, EL_NAME ).required().toLowerCase();
                                     final Class<? extends Function> impl = context.findClass( value( el, EL_IMPL ).required() );
-                                    final Set<Integer> compatibleOperandCounts = integers( el, EL_OPERAND_COUNT );
+                                    
+                                    final Element signatureElement = element( el, EL_SIGNATURE ).optional();
+                                    final List<Class<?>> signature;
+                                    
+                                    if( signatureElement == null )
+                                    {
+                                        signature = null;
+                                    }
+                                    else
+                                    {
+                                        final ListFactory<Class<?>> parameters = ListFactory.start();
+                                        
+                                        for( String string : values( signatureElement, EL_PARAMETER ) )
+                                        {
+                                            final Class<?> parameter;
+                                            
+                                            try
+                                            {
+                                                parameter = context.findClass( string );
+                                            }
+                                            catch( IllegalArgumentException e )
+                                            {
+                                                throw new InvalidExtensionException();
+                                            }
+                                            
+                                            if( parameter == null )
+                                            {
+                                                throw new InvalidExtensionException();
+                                            }
+                                            
+                                            parameters.add( parameter );
+                                        }
+                                        
+                                        signature = parameters.result();
+                                    }
                                     
                                     final ListFactory<FunctionFactory> factories = ListFactory.start();
                                     
                                     factories.add( functionFactories.get( name ) );
-                                    factories.add( new FunctionFactory( impl, compatibleOperandCounts ) );
+                                    factories.add( new FunctionFactory( impl, signature ) );
                                     
                                     functionFactories.put( name, factories.result() );
                                 }
@@ -283,30 +267,19 @@ public final class SapphireModelingExtensionSystem
     
     private static Result<String> value( final Element element, final String valueElementName )
     {
-        final NodeList nodes = element.getChildNodes();
-
-        for( int i = 0, n = nodes.getLength(); i < n; i++ )
+        final Element el = element( element, valueElementName ).optional();
+        
+        if( el != null )
         {
-            final Node node = nodes.item( i );
-
-            if( node instanceof Element )
-            {
-                final Element el = (Element) node;
-
-                if( valueElementName.equals( el.getLocalName() ) )
-                {
-                    return success( value( el ) );
-                }
-            }
+            return success( value( el ) );
         }
         
         return failure( new InvalidExtensionException() );
     }
 
-    private static Set<String> values( final Element root,
-                                       final String entryElementName )
+    private static List<String> values( final Element root, final String entryElementName )
     {
-        final SetFactory<String> factory = SetFactory.start();
+        final ListFactory<String> factory = ListFactory.start();
         final NodeList nodes = root.getChildNodes();
     
         for( int i = 0, n = nodes.getLength(); i < n; i++ )
@@ -327,28 +300,26 @@ public final class SapphireModelingExtensionSystem
         return factory.result();
     }
     
-    private static Set<Integer> integers( final Element root,
-                                          final String entryElementName )
+    private static Result<Element> element( final Element element, final String childElementName )
     {
-        final SetFactory<Integer> factory = SetFactory.start();
-        
-        for( String string : values( root, entryElementName ) )
+        final NodeList nodes = element.getChildNodes();
+
+        for( int i = 0, n = nodes.getLength(); i < n; i++ )
         {
-            final int integer;
-            
-            try
+            final Node node = nodes.item( i );
+
+            if( node instanceof Element )
             {
-                integer = Integer.parseInt( string );
+                final Element el = (Element) node;
+
+                if( childElementName.equals( el.getLocalName() ) )
+                {
+                    return success( el );
+                }
             }
-            catch( NumberFormatException e )
-            {
-                throw new InvalidExtensionException();
-            }
-            
-            factory.add( integer );
         }
         
-        return factory.result();
+        return failure( new InvalidExtensionException() );
     }
 
     public static final class InvalidExtensionException extends RuntimeException
@@ -407,34 +378,36 @@ public final class SapphireModelingExtensionSystem
     {
         private final Class<? extends Function> functionClass;
         private boolean functionInstantiationFailed;
-        private final Set<Integer> compatibleOperandCounts;
+        private final List<Class<?>> signature;
 
         public FunctionFactory( final Class<? extends Function> functionClass,
-                                final Set<Integer> compatibleOperandCounts )
+                                final List<Class<?>> signature )
         {
             this.functionClass = functionClass;
-            this.compatibleOperandCounts = compatibleOperandCounts;
+            this.signature = signature;
+        }
+        
+        public List<Class<?>> signature()
+        {
+            return this.signature;
         }
 
-        public Function create( final Function... operands )
+        public Function create()
         {
             Function function = null;
 
             if( ! this.functionInstantiationFailed )
             {
-                if( this.compatibleOperandCounts.isEmpty() || this.compatibleOperandCounts.contains( operands.length ) )
+                try
                 {
-                    try
-                    {
-                        function = this.functionClass.newInstance();
-                        function.init( operands );
-                    }
-                    catch( Exception e )
-                    {
-                        LoggingService.log( e );
-                        function = null;
-                        this.functionInstantiationFailed = true;
-                    }
+                    function = this.functionClass.newInstance();
+                    function.initSignature( this.signature );
+                }
+                catch( Exception e )
+                {
+                    LoggingService.log( e );
+                    function = null;
+                    this.functionInstantiationFailed = true;
                 }
             }
 
