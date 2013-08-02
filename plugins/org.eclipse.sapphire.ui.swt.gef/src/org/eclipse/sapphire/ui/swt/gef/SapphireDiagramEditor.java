@@ -1133,13 +1133,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			//viewer.getControl().forceFocus();
 			
 			GraphicalEditPart editpart = getGraphicalEditPart(part);
-			ISapphirePart parentPart = null;
-			ISapphirePart thisPart = part;
-			while (editpart == null || !editpart.isSelectable())
+			ISapphirePart parentPart = part.getParentPart();
+			while ((editpart == null || !editpart.isSelectable()) && parentPart != null)
 			{
-				parentPart = thisPart.getParentPart();				
 				editpart = getGraphicalEditPart(parentPart);
-				thisPart = parentPart;
+				parentPart = parentPart.getParentPart();
 			}
 			if (editpart != null) 
 			{
