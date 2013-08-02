@@ -352,6 +352,7 @@
     <attribute name="build.id"/>
     <attribute name="eclipse"/>
     <attribute name="feature"/>
+  	<attribute name="warnings" default="false"/>
     <element name="java-args" optional="true" implicit="true"/>
     <sequential>
 
@@ -377,7 +378,10 @@
           overwrite="true"/>
 
       <if>
-        <isset property="warn"/>
+      	<and>
+      	  <istrue value="@{warnings}"/>
+          <istrue value="${warnings}"/>
+      	</and>
         <then>
           <property name="pde.build.compiler.arg" value=""/>
         </then>

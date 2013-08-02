@@ -100,7 +100,7 @@
           <!-- Stage 2 -->
 
           <with-target-platform configuration="${configuration.recommended}">
-            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.everything" eclipse="${.target.platform}" root.dir="${root.dir}"/>
+            <pde-build build.id="${DSTAMP}" feature="org.eclipse.sapphire.everything" eclipse="${.target.platform}" root.dir="${root.dir}" warnings="true"/>
           </with-target-platform>
 
           <unzip src="${build.dir}/org.eclipse.sapphire.everything-${DSTAMP}.zip" dest="${build.dir}/repository">
