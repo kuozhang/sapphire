@@ -593,6 +593,12 @@
         <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.ProblemsTraversalServiceCondition</condition>
     </service>
     <function>
+        <name>Part</name>
+        <impl>org.eclipse.sapphire.ui.internal.PartFunction</impl>
+        <description>Returns the context part.</description>
+        <signature></signature>
+    </function>
+    <function>
         <name>Enabled</name>
         <impl>org.eclipse.sapphire.ui.internal.PropertyEditorEnabledFunction</impl>
         <description>Determines if the property associated with the property editor is enabled. Can only be used in the context of a property editor.</description>
