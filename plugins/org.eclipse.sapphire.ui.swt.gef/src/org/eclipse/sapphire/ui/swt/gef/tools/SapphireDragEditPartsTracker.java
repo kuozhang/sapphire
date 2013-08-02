@@ -21,11 +21,11 @@ import org.eclipse.swt.SWT;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class ContainerDragEditPartsTracker extends DragEditPartsTracker {
+public class SapphireDragEditPartsTracker extends DragEditPartsTracker {
 	
 	private final static String LAST_EDIT_PART = "LAST_EDIT_PART";
 
-	public ContainerDragEditPartsTracker(EditPart sourceEditPart) {
+	public SapphireDragEditPartsTracker(EditPart sourceEditPart) {
 		super(sourceEditPart);
 	}
 

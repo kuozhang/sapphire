@@ -12,7 +12,10 @@
 package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.Request;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.tools.SapphireDragEditPartsTracker;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -32,4 +35,9 @@ public class ImageEditPart extends ShapeEditPart
 		return null;
 	}
 
+	@Override
+	public DragTracker getDragTracker(Request request) {
+		return new SapphireDragEditPartsTracker(this);
+	}
+	
 }

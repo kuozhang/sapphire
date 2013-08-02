@@ -155,5 +155,5 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		return shapePresentation != null ? shapePresentation.getFigure() : null;
 		
 	}
-	
+			
 }

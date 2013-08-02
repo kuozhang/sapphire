@@ -39,7 +39,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 import org.eclipse.sapphire.ui.swt.gef.policies.ShapeLabelDirectEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
-import org.eclipse.sapphire.ui.swt.gef.tools.ContainerDragEditPartsTracker;
+import org.eclipse.sapphire.ui.swt.gef.tools.SapphireDragEditPartsTracker;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -222,10 +222,10 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		}
 		return null;
 	}
-
+	
 	@Override
 	public DragTracker getDragTracker(Request request) {
-		return new ContainerDragEditPartsTracker(this);
-	}
+		return new SapphireDragEditPartsTracker(this);
+	}	
 	
 }

@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import java.beans.PropertyChangeEvent;
 
+import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
@@ -27,6 +28,7 @@ import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.TextModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.ShapeLabelDirectEditPolicy;
+import org.eclipse.sapphire.ui.swt.gef.tools.SapphireDragEditPartsTracker;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -104,6 +106,11 @@ public class TextEditPart extends ShapeEditPart
 				manager.show();
 			}
 		}
+	}
+	
+	@Override
+	public DragTracker getDragTracker(Request request) {
+		return new SapphireDragEditPartsTracker(this);
 	}
 	
 }
