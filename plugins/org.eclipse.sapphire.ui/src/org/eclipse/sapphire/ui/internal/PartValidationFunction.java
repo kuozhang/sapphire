@@ -80,6 +80,11 @@ public final class PartValidationFunction extends Function
                     }
                 }
                 
+                if( p == null )
+                {
+                    throw new IllegalStateException();
+                }
+                
                 return p.validation();
             }
             
