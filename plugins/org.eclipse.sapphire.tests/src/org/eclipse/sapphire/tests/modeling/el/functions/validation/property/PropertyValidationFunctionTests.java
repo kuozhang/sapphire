@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.el.functions.validation;
+package org.eclipse.sapphire.tests.modeling.el.functions.validation.property;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -22,14 +22,14 @@ import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 /**
- * Tests Validation function.
+ * Tests Validation function for properties.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ValidationFunctionTests extends TestExpr
+public final class PropertyValidationFunctionTests extends TestExpr
 {
-    private ValidationFunctionTests( final String name )
+    private PropertyValidationFunctionTests( final String name )
     {
         super( name );
     }
@@ -38,11 +38,11 @@ public final class ValidationFunctionTests extends TestExpr
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "ValidationFunctionTests" );
+        suite.setName( "PropertyValidationFunctionTests" );
 
-        suite.addTest( new ValidationFunctionTests( "testValidationFunction" ) );
-        suite.addTest( new ValidationFunctionTests( "testValidationFunctionNull" ) );
-        suite.addTest( new ValidationFunctionTests( "testValidationFunctionWrongType" ) );
+        suite.addTest( new PropertyValidationFunctionTests( "testValidationFunction" ) );
+        suite.addTest( new PropertyValidationFunctionTests( "testValidationFunctionNull" ) );
+        suite.addTest( new PropertyValidationFunctionTests( "testValidationFunctionWrongType" ) );
         
         return suite;
     }

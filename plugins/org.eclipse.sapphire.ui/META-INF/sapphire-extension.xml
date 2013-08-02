@@ -599,6 +599,14 @@
         <signature></signature>
     </function>
     <function>
+        <description>Returns the validation result of a part.</description>
+        <impl>org.eclipse.sapphire.ui.internal.PartValidationFunction</impl>
+        <name>Validation</name>
+        <signature>
+            <parameter>org.eclipse.sapphire.ui.SapphirePart</parameter>
+        </signature>
+    </function>
+    <function>
         <name>Enabled</name>
         <impl>org.eclipse.sapphire.ui.internal.PropertyEditorEnabledFunction</impl>
         <description>Determines if the property associated with the property editor is enabled. Can only be used in the context of a property editor.</description>

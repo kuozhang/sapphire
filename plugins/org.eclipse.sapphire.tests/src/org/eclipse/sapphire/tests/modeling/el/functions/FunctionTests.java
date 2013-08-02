@@ -28,7 +28,8 @@ import org.eclipse.sapphire.tests.modeling.el.functions.severity.SeverityFunctio
 import org.eclipse.sapphire.tests.modeling.el.functions.size.SizeFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.tail.TailFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.text.TextFunctionTests;
-import org.eclipse.sapphire.tests.modeling.el.functions.validation.ValidationFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.validation.part.PartValidationFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.validation.property.PropertyValidationFunctionTests;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -60,7 +61,8 @@ public final class FunctionTests extends TestCase
         suite.addTest( SizeFunctionTests.suite() );
         suite.addTest( TailFunctionTests.suite() );
         suite.addTest( TextFunctionTests.suite() );
-        suite.addTest( ValidationFunctionTests.suite() );
+        suite.addTest( PartValidationFunctionTests.suite() );
+        suite.addTest( PropertyValidationFunctionTests.suite() );
         
         return suite;
     }

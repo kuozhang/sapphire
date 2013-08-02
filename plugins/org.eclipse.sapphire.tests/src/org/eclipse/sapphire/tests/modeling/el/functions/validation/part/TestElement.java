@@ -9,13 +9,13 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.el.functions.validation;
+package org.eclipse.sapphire.tests.modeling.el.functions.validation.part;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.annotations.Required;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -25,14 +25,13 @@ public interface TestElement extends Element
 {
     ElementType TYPE = new ElementType( TestElement.class );
     
-    // *** IntegerValue ***
+    // *** Value ***
     
-    @Type( base = Integer.class )
-
-    ValueProperty PROP_INTEGER_VALUE = new ValueProperty( TYPE, "IntegerValue" );
+    @Required
     
-    Value<Integer> getIntegerValue();
-    void setIntegerValue( String value );
-    void setIntegerValue( Integer value );
+    ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    
+    Value<String> getValue();
+    void setValue( String value );
 
 }
