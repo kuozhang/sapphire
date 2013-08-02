@@ -106,7 +106,7 @@
                                                     <max-width>10</max-width>
                                                     <max-height>8</max-height>
                                                 </sequence-layout-constraint>
-                                                <visible-when>${ Name.Validation.Severity == 'ok' }</visible-when>
+                                                <visible-when>${Part.Parent.Validation.Severity == 'ok' }</visible-when>
                                             </spacer>
                                             <image>
                                                 <path>key.gif</path>
