@@ -60,20 +60,23 @@ public final class PartValidationFunction extends Function
                         }
                         
                         this.part = p;
-                        
-                        if( this.listener == null )
+                   
+                        if( this.part != null )
                         {
-                            this.listener = new FilteredListener<PartValidationEvent>()
+                            if( this.listener == null )
                             {
-                                @Override
-                                protected void handleTypedEvent( final PartValidationEvent event )
+                                this.listener = new FilteredListener<PartValidationEvent>()
                                 {
-                                    refresh();
-                                }
-                            };
+                                    @Override
+                                    protected void handleTypedEvent( final PartValidationEvent event )
+                                    {
+                                        refresh();
+                                    }
+                                };
+                            }
+                            
+                            this.part.attach( this.listener );
                         }
-                        
-                        this.part.attach( this.listener );
                     }
                 }
                 
