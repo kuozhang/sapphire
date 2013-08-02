@@ -80,7 +80,7 @@ public final class PartValidationFunction extends Function
                     }
                 }
                 
-                return this.part.validation();
+                return p.validation();
             }
             
             @Override
