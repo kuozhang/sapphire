@@ -23,6 +23,7 @@ import org.eclipse.sapphire.tests.modeling.el.functions.index.IndexFunctionTests
 import org.eclipse.sapphire.tests.modeling.el.functions.matches.MatchesFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.message.MessageFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.overloaded.OverloadedFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.parent.part.PartParentFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.part.PartFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.severity.SeverityFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.size.SizeFunctionTests;
@@ -56,6 +57,7 @@ public final class FunctionTests extends TestCase
         suite.addTest( MatchesFunctionTests.suite() );
         suite.addTest( MessageFunctionTests.suite() );
         suite.addTest( OverloadedFunctionTests.suite() );
+        suite.addTest( PartParentFunctionTests.suite() );
         suite.addTest( PartFunctionTests.suite() );
         suite.addTest( SeverityFunctionTests.suite() );
         suite.addTest( SizeFunctionTests.suite() );

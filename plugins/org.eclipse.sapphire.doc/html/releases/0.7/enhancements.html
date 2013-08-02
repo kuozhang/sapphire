@@ -85,6 +85,7 @@
     <li><a href="#ExpressionLanguage-IndexFunction">Index Function</a></li>
     <li><a href="#ExpressionLanguage-MatchesFunction">Matches Function</a></li>
     <li><a href="#ExpressionLanguage-MessageFunction">Message Function</a></li>
+    <li><a href="#ExpressionLanguage-ParentFunction">Parent Function</a></li>
     <li><a href="#ExpressionLanguage-PartFunction">Part Function</a></li>
     <li><a href="#ExpressionLanguage-SeverityFunction">Severity Function</a></li>
     <li><a href="#ExpressionLanguage-SizeFunction">Size Function</a></li>
@@ -1204,13 +1205,23 @@ ${ Head( "abcdef", 3 ) }</code></pre>
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation.Message }</code></pre>
 
 
+<h2><a name="ExpressionLanguage-ParentFunction">Parent Function</a></h2>
+
+<p>Returns the parent of the given part. An implementation of this function for model elements was added in an earlier release.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ Part.Parent<font color="#888888">.Validation.Severity</font> }</code></pre>
+<pre class="source-code"><code>${ Part.Parent.Parent<font color="#888888">.Validation.Severity</font> }</code></pre>
+
+
 <h2><a name="ExpressionLanguage-PartFunction">Part Function</a></h2>
 
 <p>Returns the context part.</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
-<pre class="source-code"><code>${ Part.Validation.Severity }</code></pre>
+<pre class="source-code"><code>${ Part<font color="#888888">.Validation.Severity</font> }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-SeverityFunction">Severity Function</a></h2>

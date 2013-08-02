@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition>
+    <dialog>
+        <label>test dialog</label>
+        <content>
+            <group>
+                <content>
+                    <property-editor>Value</property-editor>
+                </content>
+            </group>
+        </content>
+    </dialog>
+</definition>
