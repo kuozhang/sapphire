@@ -20,6 +20,7 @@ import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -29,6 +30,7 @@ import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.ui.diagram.def.ConnectionEndpointType;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -71,9 +73,25 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 	@Override
 	protected IFigure createFigure() {
 		PolylineConnection connection = new DiagramConnectionFigure();
-		connection.setTargetDecoration(new PolygonDecoration());
-		updateStyle(connection);
+		IDiagramConnectionDef def = getCastedModel().getModelPart().getConnectionDef();
 		
+		ConnectionEndpointType type1 = ConnectionEndpointType.NONE;
+		if (def.getEndpoint1() != null) {
+			type1 = def.getEndpoint1().getType().content();
+		}
+		if (type1.equals(ConnectionEndpointType.ARROW)) {
+			connection.setSourceDecoration(new PolygonDecoration());
+		}
+		
+		ConnectionEndpointType type2 = ConnectionEndpointType.NONE;
+		if (def.getEndpoint2() != null) {
+			type2 = def.getEndpoint2().getType().content();
+		}
+		if (type2.equals(ConnectionEndpointType.ARROW)) {
+			connection.setTargetDecoration(new PolygonDecoration());
+		}
+
+		updateStyle(connection);
 		return connection;
 	}
 	

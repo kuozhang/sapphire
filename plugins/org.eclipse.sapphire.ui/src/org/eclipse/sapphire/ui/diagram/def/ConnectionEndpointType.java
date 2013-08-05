@@ -28,16 +28,6 @@ public enum ConnectionEndpointType
     @Label( standard = "arrow" )
     @EnumSerialization( primary = "arrow" )
     
-    ARROW,
-    
-    @Label( standard = "circle" )
-    @EnumSerialization( primary = "circle" )
-    
-    CIRCLE,
-    
-    @Label( standard = "ellipse" )
-    @EnumSerialization( primary = "ellipse" )
-    
-    ELLIPSE
+    ARROW
     
 }
