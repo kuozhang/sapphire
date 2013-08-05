@@ -17,6 +17,8 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -39,6 +41,31 @@ public interface Entity extends Element
     Value<String> getName();
     void setName( String value );
     
+    // *** Kind ***
+    
+    enum Kind
+    {
+        @Label( standard = "class" )
+        @EnumSerialization( primary = "class" )
+        
+        CLASS,
+        
+        @Label( standard = "interface" )
+        @EnumSerialization( primary = "interface" )
+        
+        INTERFACE
+    }
+    
+    @Type( base = Kind.class )
+    @Label( standard = "kind" )
+    @DefaultValue( text = "class" )
+    
+    ValueProperty PROP_KIND = new ValueProperty( TYPE, "Kind" );
+    
+    Value<Kind> getKind();
+    void setKind( String value );
+    void setKind( Kind value );
+    
     // *** Fields ***
     
     @Type( base = Field.class )
@@ -56,5 +83,14 @@ public interface Entity extends Element
     ListProperty PROP_METHODS = new ListProperty( TYPE, "Methods" );
     
     ElementList<Method> getMethods();
+    
+    // *** ExtendedEntities ***
+    
+    @Type( base = EntityRef.class )
+    @Label( standard = "extended entities" )
+    
+    ListProperty PROP_EXTENDED_ENTITIES = new ListProperty( TYPE, "ExtendedEntities" );
+    
+    ElementList<EntityRef> getExtendedEntities();
     
 }

@@ -33,7 +33,23 @@
                             <spacing>0</spacing>
                         </sequence-layout>
                         <content>
-                            <validation-marker></validation-marker>
+                            <rectangle>
+                                <content>
+                                    <image>
+                                        <path>${ Kind == &quot;class&quot; ? &quot;Class.png&quot; : &quot;Interface.png&quot; }</path>
+                                    </image>
+                                    <validation-marker>
+                                        <size>small</size>
+                                        <sequence-layout-constraint>
+                                            <vertical-alignment>bottom</vertical-alignment>
+                                        </sequence-layout-constraint>
+                                    </validation-marker>
+                                </content>
+                                <sequence-layout>
+                                    <margin>0</margin>
+                                    <orientation>stacked</orientation>
+                                </sequence-layout>
+                            </rectangle>
                             <text>
                                 <content>${ Name == null ? &quot;&lt;name&gt;&quot; : Name }</content>
                                 <font>
@@ -108,6 +124,35 @@
                                             <margin>0</margin>
                                             <orientation>horizontal</orientation>
                                         </sequence-layout>
+                                        <properties-view>
+                                            <page>
+                                                <label>field</label>
+                                                <content>
+                                                    <property-editor>Name</property-editor>
+                                                    <property-editor>Type</property-editor>
+                                                    <property-editor>
+                                                        <visible-when>${ Enabled }</visible-when>
+                                                        <property>Accessibility</property>
+                                                    </property-editor>
+                                                    <property-editor>
+                                                        <hint>
+                                                            <name>checkbox.layout</name>
+                                                            <value>leading.label</value>
+                                                        </hint>
+                                                        <property>Static</property>
+                                                        <visible-when>${ Enabled }</visible-when>
+                                                    </property-editor>
+                                                    <property-editor>
+                                                        <hint>
+                                                            <name>checkbox.layout</name>
+                                                            <value>leading.label</value>
+                                                        </hint>
+                                                        <property>Final</property>
+                                                        <visible-when>${ Enabled }</visible-when>
+                                                    </property-editor>
+                                                </content>
+                                            </page>
+                                        </properties-view>
                                     </rectangle>
                                 </case>
                                 <property>Fields</property>
@@ -232,6 +277,15 @@
                                                                 <sequence-layout-constraint>
                                                                     <left-margin>5</left-margin>
                                                                 </sequence-layout-constraint>
+                                                                <properties-view>
+                                                                    <page>
+                                                                        <label>parameter</label>
+                                                                        <content>
+                                                                            <property-editor>Name</property-editor>
+                                                                            <property-editor>Type</property-editor>
+                                                                        </content>
+                                                                    </page>
+                                                                </properties-view>
                                                             </rectangle>
                                                         </case>
                                                         <property>Parameters</property>
@@ -262,6 +316,47 @@
                                                 <color>#B97D69</color>
                                             </text>
                                         </content>
+                                        <properties-view>
+                                            <page>
+                                                <label>method</label>
+                                                <content>
+                                                    <property-editor>Name</property-editor>
+                                                    <property-editor>ReturnType</property-editor>
+                                                    <property-editor>
+                                                        <scale-vertically>true</scale-vertically>
+                                                        <property>Parameters</property>
+                                                    </property-editor>
+                                                    <property-editor>
+                                                        <visible-when>${ Enabled }</visible-when>
+                                                        <property>Accessibility</property>
+                                                    </property-editor>
+                                                    <property-editor>
+                                                        <hint>
+                                                            <name>checkbox.layout</name>
+                                                            <value>leading.label</value>
+                                                        </hint>
+                                                        <property>Static</property>
+                                                        <visible-when>${ Enabled }</visible-when>
+                                                    </property-editor>
+                                                    <property-editor>
+                                                        <hint>
+                                                            <name>checkbox.layout</name>
+                                                            <value>leading.label</value>
+                                                        </hint>
+                                                        <property>Abstract</property>
+                                                        <visible-when>${ Enabled }</visible-when>
+                                                    </property-editor>
+                                                    <property-editor>
+                                                        <hint>
+                                                            <name>checkbox.layout</name>
+                                                            <value>leading.label</value>
+                                                        </hint>
+                                                        <property>Final</property>
+                                                        <visible-when>${ Enabled }</visible-when>
+                                                    </property-editor>
+                                                </content>
+                                            </page>
+                                        </properties-view>
                                     </rectangle>
                                 </case>
                             </shape-factory>
@@ -276,10 +371,36 @@
             <id>Entity</id>
             <property>Entities</property>
             <tool-palette-label>entity</tool-palette-label>
+            <properties-view>
+                <page>
+                    <label>entity</label>
+                    <content>
+                        <property-editor>Name</property-editor>
+                        <property-editor>Kind</property-editor>
+                    </content>
+                </page>
+            </properties-view>
+            <connection-binding>
+                <connection-id>Extends</connection-id>
+                <property>ExtendedEntities</property>
+                <instance-id>${ Entity }</instance-id>
+                <endpoint2>
+                    <property>Entity</property>
+                    <value>${ Name }</value>
+                </endpoint2>
+            </connection-binding>
         </node>
         <element-type>org.eclipse.sapphire.samples.uml.System</element-type>
         <page-name>diagram</page-name>
         <page-header-text>diagram</page-header-text>
         <id>DiagramPage</id>
+        <connection>
+            <id>Extends</id>
+            <line-style>dash</line-style>
+            <tool-palette-label>extends</tool-palette-label>
+            <endpoint1>
+                <type>arrow</type>
+            </endpoint1>
+        </connection>
     </diagram-page>
 </definition>

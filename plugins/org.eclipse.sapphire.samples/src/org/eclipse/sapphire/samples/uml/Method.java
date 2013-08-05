@@ -18,6 +18,7 @@ import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -64,6 +65,7 @@ public interface Method extends Element
     @Type( base = Accessibility.class )
     @Label( standard = "accessibility" )
     @DefaultValue( text = "public" )
+    @Enablement( expr = "${ Parent.Kind == 'class' }" )
     
     ValueProperty PROP_ACCESSIBILITY = new ValueProperty( TYPE, "Accessibility" );
     
@@ -76,6 +78,7 @@ public interface Method extends Element
     @Type( base = Boolean.class )
     @Label( standard = "static" )
     @DefaultValue( text = "false" )
+    @Enablement( expr = "${ Parent.Kind == 'class' }" )
     
     ValueProperty PROP_STATIC = new ValueProperty( TYPE, "Static" );
     
@@ -88,6 +91,7 @@ public interface Method extends Element
     @Type( base = Boolean.class )
     @Label( standard = "abstract" )
     @DefaultValue( text = "false" )
+    @Enablement( expr = "${ Parent.Kind == 'class' }" )
     
     ValueProperty PROP_ABSTRACT = new ValueProperty( TYPE, "Abstract" );
     
@@ -100,6 +104,7 @@ public interface Method extends Element
     @Type( base = Boolean.class )
     @Label( standard = "final" )
     @DefaultValue( text = "false" )
+    @Enablement( expr = "${ Parent.Kind == 'class' }" )
     
     ValueProperty PROP_FINAL = new ValueProperty( TYPE, "Final" );
     
