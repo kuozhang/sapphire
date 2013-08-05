@@ -76,7 +76,7 @@
                      <sequence-layout-constraint>
                        <horizontal-alignment>left</horizontal-alignment>
                        <vertical-alignment>bottom</vertical-alignment>
-                       <horizontal-margin>5</horizontal-margin>
+                       <horizontal-margin>14</horizontal-margin>
                        <vertical-margin>12</vertical-margin>
                      </sequence-layout-constraint>
                     </validation-marker>                    
@@ -86,8 +86,8 @@
                       <sequence-layout-constraint>
                         <horizontal-alignment>right</horizontal-alignment>
                         <vertical-alignment>bottom</vertical-alignment>
-                        <horizontal-margin>2</horizontal-margin>
                         <vertical-margin>7</vertical-margin>
+                                    <horizontal-margin>11</horizontal-margin>
                       </sequence-layout-constraint>
                     </image>
                   </content>
