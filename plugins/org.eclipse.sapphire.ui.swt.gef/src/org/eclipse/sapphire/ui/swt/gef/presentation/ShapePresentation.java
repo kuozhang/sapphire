@@ -91,7 +91,7 @@ public class ShapePresentation
 	
 	public IFigure getNodeFigure()
 	{
-		IFigure parentFigure = null;
+		IFigure parentFigure = getFigure();
 		ShapePresentation parentPresentation = getParent();
 		while (parentPresentation != null)
 		{

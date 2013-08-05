@@ -51,8 +51,12 @@ public class TextFigure extends Label implements IShapeFigure
 	public Rectangle getAvailableArea() {
 		IFigure nodeFigure = this.textPresentation.getNodeFigure();
 		Rectangle nodeBounds = nodeFigure.getBounds();
-		return new Rectangle(this.availableArea.x + nodeBounds.x, this.availableArea.y + nodeBounds.y,
-				this.availableArea.width, this.availableArea.height);
+		if (this.availableArea != null) {
+			return new Rectangle(this.availableArea.x + nodeBounds.x, this.availableArea.y + nodeBounds.y,
+					this.availableArea.width, this.availableArea.height);
+		} else {
+			return nodeBounds;
+		}
 	}
 
 	public void setAvailableArea(Rectangle availableArea) {
