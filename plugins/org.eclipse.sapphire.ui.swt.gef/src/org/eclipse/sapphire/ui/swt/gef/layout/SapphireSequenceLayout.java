@@ -253,6 +253,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 	public Dimension calculateMaximumSize(IFigure container) {
 		List children = container.getChildren();
+		if (children.isEmpty()) {
+			return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+		}
 		Dimension maxSize = calculateChildrenMaximumSize(children);
 		Insets marginInsets = transposer.t(this.marginInsets);
 		if (maxSize.height < Integer.MAX_VALUE) {
