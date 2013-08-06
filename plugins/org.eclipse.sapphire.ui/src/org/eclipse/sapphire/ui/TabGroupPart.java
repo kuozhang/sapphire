@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TabItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TabGroupPart extends SapphirePart
+public final class TabGroupPart extends FormComponentPart
 {
     private List<TabGroupPagePart> pages;
     
@@ -81,14 +81,17 @@ public final class TabGroupPart extends SapphirePart
     {
         return (TabGroupDef) super.definition();
     }
+    
+    public List<TabGroupPagePart> pages()
+    {
+        return this.pages;
+    }
 
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final boolean scaleVertically = definition().getScaleVertically().content();
-    
         final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
-        tabGroup.setLayoutData( gdhindent( gdhspan( ( scaleVertically ? gdfill() : gdhfill() ), 2 ), 9 ) );
+        tabGroup.setLayoutData( gdhindent( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ), 9 ) );
         
         for( final TabGroupPagePart page : this.pages )
         {
