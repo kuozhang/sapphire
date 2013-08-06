@@ -24,10 +24,14 @@ import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.osgi.BundleBasedContext;
+import org.eclipse.sapphire.ui.FormEditorPage;
 import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.sapphire.ui.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
+import org.eclipse.sapphire.ui.def.FormEditorPageDef;
 import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -49,7 +53,7 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
     private ElementType type;
     private DefinitionLoader.Reference<EditorPageDef> definition;
     private StructuredTextEditor sourcePage;
-    private MasterDetailsEditorPage formPage;
+    private SapphireEditorFormPage formPage;
     
     public SapphireEditorForXml( final ElementType type,
                                  final DefinitionLoader.Reference<EditorPageDef> definition )
@@ -122,7 +126,17 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
     @Override
     protected void createFormPages() throws PartInitException
     {
-        this.formPage = new MasterDetailsEditorPage( this, getModelElement(), this.definition );
+        final EditorPageDef def = this.definition.resolve();
+        
+        if( def instanceof MasterDetailsEditorPageDef )
+        {
+            this.formPage = new MasterDetailsEditorPage( this, getModelElement(), this.definition );
+        }
+        else if( def instanceof FormEditorPageDef )
+        {
+            this.formPage = new FormEditorPage( this, getModelElement(), this.definition );
+        }
+        
         addPage( 0, this.formPage );
     }
 
