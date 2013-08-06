@@ -15,8 +15,6 @@ import java.util.List;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
-import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutOrientation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
@@ -31,16 +29,12 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 public class ContainerShapeFigure extends Shape 
 {
 	private ContainerShapePresentation containerShapePresentation;
-	private Element model;
-	private int validationMarkerIndex;
 	private ShapeLayoutDef layout;
 	
 	public ContainerShapeFigure(ContainerShapePresentation containerShapePresentation, DiagramResourceCache resourceCache,
 			DiagramConfigurationManager configManager)
 	{
 		this.containerShapePresentation = containerShapePresentation;
-		this.validationMarkerIndex = this.containerShapePresentation.getValidationMarkerIndex();
-		this.model = this.containerShapePresentation.getPart().getLocalModelElement();
 		this.layout = this.containerShapePresentation.getLayout();
 	}
 	
@@ -58,17 +52,6 @@ public class ContainerShapeFigure extends Shape
 
 	}
 
-	public boolean showValidationMarker()
-	{
-		boolean show = false;
-		if (this.validationMarkerIndex != -1)
-		{
-			Status status = this.model.validation();		
-			show =  status.severity() != Status.Severity.OK;
-		}
-		return show;
-	}
-	
 	public boolean isHorizontalSequenceLayout()
 	{		
 		if (this.layout instanceof SequenceLayoutDef)

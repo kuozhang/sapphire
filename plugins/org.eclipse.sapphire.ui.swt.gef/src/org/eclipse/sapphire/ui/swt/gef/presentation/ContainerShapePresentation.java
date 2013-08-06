@@ -69,16 +69,6 @@ public class ContainerShapePresentation extends ShapePresentation
 		return (ContainerShapePart)getPart();
 	}
 	
-	public boolean containsValidationMarker()
-	{
-		return getContainerShapePart().containsValidationMarker();
-	}
-	
-	public int getValidationMarkerIndex()
-	{
-		return getContainerShapePart().getValidationMarkerIndex();
-	}
-
 	public ValidationMarkerSize getValidationMarkerSize()
 	{
 		ValidationMarkerSize size = null;

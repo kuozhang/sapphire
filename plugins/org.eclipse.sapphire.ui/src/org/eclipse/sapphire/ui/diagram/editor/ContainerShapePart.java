@@ -41,9 +41,7 @@ public class ContainerShapePart extends ShapePart
 	private ContainerShapeDef containerShapeDef;
 	private Element modelElement;	
 	private List<ShapePart> children;
-	private int validationMarkerIndex = -1;
 	private ValidationMarkerPart validationMarkerPart;
-	private List<TextPart> textParts;
 	private List<ShapeFactoryPart> shapeFactoryParts;
 
 	@Override
@@ -55,17 +53,14 @@ public class ContainerShapePart extends ShapePart
         
         // create children parts
         this.children = new ArrayList<ShapePart>();
-        this.textParts = new ArrayList<TextPart>();
         this.shapeFactoryParts = new ArrayList<ShapeFactoryPart>();
         
-        int index = 0;        
         for (ShapeDef shape : this.containerShapeDef.getContent())
         {
         	ShapePart childPart = null;
         	if (shape instanceof TextDef)
         	{
     	        childPart = new TextPart();
-    	        this.textParts.add((TextPart)childPart);
         	}
         	else if (shape instanceof ImageDef)
         	{
@@ -74,7 +69,6 @@ public class ContainerShapePart extends ShapePart
         	else if (shape instanceof ValidationMarkerDef)
         	{
         		this.validationMarkerPart = new ValidationMarkerPart();
-        		this.validationMarkerIndex = index;
         		childPart = this.validationMarkerPart;
         	}
         	else if (shape instanceof LineShapeDef)
@@ -179,7 +173,6 @@ public class ContainerShapePart extends ShapePart
                 );        		
                 
         	}
-        	index++;
         }       
         refreshValidation();
     }
@@ -211,17 +204,7 @@ public class ContainerShapePart extends ShapePart
 	{
 		return this.children;
 	}
-	
-	public boolean containsValidationMarker()
-	{
-		return this.validationMarkerIndex != -1;
-	}
-	
-	public int getValidationMarkerIndex()
-	{
-		return this.validationMarkerIndex;
-	}
-	
+		
 	public ValidationMarkerPart getValidationMarkerPart()
 	{
 		return this.validationMarkerPart;
