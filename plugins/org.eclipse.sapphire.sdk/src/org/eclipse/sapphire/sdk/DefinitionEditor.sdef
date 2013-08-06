@@ -1058,7 +1058,7 @@
             <image>${ Image() }</image>
             <section>
                 <content>
-                    <label>Present content organized into multipe tabbed panels.</label>
+                    <property-editor>ScaleVertically</property-editor>
                 </content>
             </section>
             <node-factory>
