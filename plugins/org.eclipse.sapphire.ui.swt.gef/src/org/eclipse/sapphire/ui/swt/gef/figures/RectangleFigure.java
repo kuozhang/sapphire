@@ -65,7 +65,7 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			}
 			else 
 			{
-				SapphireStackLayout sapphireStackLayout = new SapphireStackLayout();
+				SapphireStackLayout sapphireStackLayout = new SapphireStackLayout((SequenceLayoutDef)this.layout);
 				this.setLayoutManager(sapphireStackLayout);
 			}
 		}

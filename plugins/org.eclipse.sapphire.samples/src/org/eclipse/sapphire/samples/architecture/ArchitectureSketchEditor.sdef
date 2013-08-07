@@ -47,7 +47,6 @@
         </action-handler>
         <node>
             <instance-id>${ Name }</instance-id>
-            <width>70</width>
             <rectangle>
               <corner-radius>8</corner-radius>
               <sequence-layout>
@@ -57,12 +56,14 @@
               <content>
                 <rectangle>
                   <sequence-layout-constraint>
-                    <expand-horizontally>true</expand-horizontally>
+                    <expand-horizontally>false</expand-horizontally>
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>top</vertical-alignment>
                   </sequence-layout-constraint>
                   <sequence-layout>
                     <orientation>stacked</orientation>
+                            <margin>0</margin>
+                            <margin-horizontal>5</margin-horizontal>
                   </sequence-layout>
                   <content>
                     <image>
@@ -76,7 +77,7 @@
                      <sequence-layout-constraint>
                        <horizontal-alignment>left</horizontal-alignment>
                        <vertical-alignment>bottom</vertical-alignment>
-                       <margin-horizontal>14</margin-horizontal>
+                       <margin-horizontal>5</margin-horizontal>
                        <margin-vertical>12</margin-vertical>
                      </sequence-layout-constraint>
                     </validation-marker>                    
@@ -87,7 +88,7 @@
                         <horizontal-alignment>right</horizontal-alignment>
                         <vertical-alignment>bottom</vertical-alignment>
                         <margin-vertical>7</margin-vertical>
-                        <margin-horizontal>11</margin-horizontal>
+                        <margin-horizontal>2</margin-horizontal>
                       </sequence-layout-constraint>
                     </image>
                   </content>
@@ -169,6 +170,7 @@
                     </content>
                 </page>
             </properties-view>
+            <width>70</width>
         </node>
         <page-header-text>Architecture (Sapphire Sample)</page-header-text>
         <connection>

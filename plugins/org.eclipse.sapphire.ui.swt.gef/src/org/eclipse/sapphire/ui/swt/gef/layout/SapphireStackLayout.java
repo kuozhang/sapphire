@@ -20,10 +20,12 @@ import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
+import org.eclipse.sapphire.ui.diagram.shape.def.SequenceLayoutDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -34,18 +36,22 @@ public class SapphireStackLayout extends AbstractLayout
 {
 	private Map<IFigure, Object> constraints = new HashMap<IFigure, Object>();
 	
+	private Insets marginInsets;
+	
+	public SapphireStackLayout(SequenceLayoutDef def)
+	{
+		this.marginInsets = LayoutUtil.calculateMargin(def);
+	}
+	
 	@Override
 	protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) 
 	{
-		Dimension size = new Dimension(wHint, hHint);
-		for (Object child : container.getChildren())
-		{
-			IFigure childFigure = (IFigure)child;
-			Dimension childSize = childFigure.getPreferredSize();
-			size.width = Math.max(size.width, childSize.width);
-			size.height = Math.max(size.height, childSize.height);
-		}
-		return size; 	
+		Insets insets = container.getInsets();
+		Dimension size = getStackedChildrenSize(container.getChildren());
+		size.width += this.marginInsets.left + this.marginInsets.right;
+		size.height += this.marginInsets.top + this.marginInsets.bottom;
+		return size.expand(insets.getWidth(), insets.getHeight())
+				.union(getBorderPreferredSize(container));
 	}
 
 	/**
@@ -68,8 +74,10 @@ public class SapphireStackLayout extends AbstractLayout
 		{
 			return;
 		}
-		Dimension baseSize = parent.getClientArea().getSize();
+		Dimension baseSize = getStackedChildrenSize(children);
 		Point offset = getOrigin(parent);
+		offset.x += this.marginInsets.left;
+		offset.y += this.marginInsets.top;
 		
 		for (int i = 0; i < children.size(); i++)
 		{
@@ -147,5 +155,18 @@ public class SapphireStackLayout extends AbstractLayout
 			offsetY = (baseSize.height - childSize.height + 1) >> 1;
 		}
 		return new Point(offsetX, offsetY);
+	}
+	
+	private Dimension getStackedChildrenSize(List children)
+	{
+		Dimension size = new Dimension(0, 0);
+		for (Object child : children)
+		{
+			IFigure childFigure = (IFigure)child;
+			Dimension childSize = childFigure.getPreferredSize();
+			size.width = Math.max(size.width, childSize.width);
+			size.height = Math.max(size.height, childSize.height);
+		}
+		return size;
 	}
 }
