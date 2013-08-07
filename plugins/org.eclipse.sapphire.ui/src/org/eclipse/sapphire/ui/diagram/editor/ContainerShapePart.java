@@ -213,7 +213,7 @@ public class ContainerShapePart extends ShapePart
 	@Override
 	public boolean isEditable()
 	{
-		List<TextPart> textParts = getContainedTextParts(this);
+		List<TextPart> textParts = getContainedShapeParts(this, TextPart.class);
 		for (TextPart textPart : textParts)
 		{
 			if (textPart.isEditable())

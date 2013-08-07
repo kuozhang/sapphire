@@ -28,6 +28,7 @@ import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -140,6 +141,14 @@ public class ContainerShapeEditPart extends ShapeEditPart
 			{
 				performDirectEdit(textPart);
 			}
+			else
+			{
+				ImagePart imagePart = getImagePart(pt);
+				if (imagePart != null)
+				{
+					invokeDoubleTapAction(imagePart);					
+				}
+			}
 		}
 		else
 		{
@@ -149,7 +158,7 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		
 	private void performDirectEdit() 
 	{
-		List<TextPart> textParts = getTextParts();
+		List<TextPart> textParts = getContainedTextParts();
 		if (!textParts.isEmpty())
 		{
 			performDirectEdit(textParts.get(0));
@@ -202,27 +211,21 @@ public class ContainerShapeEditPart extends ShapeEditPart
 		}		
 	}
 
-	private List<TextPart> getTextParts()
+	@Override
+	protected List<TextPart> getContainedTextParts()
 	{
 		ContainerShapePart containerPart = (ContainerShapePart)getCastedModel().getSapphirePart();
-		return (ShapePart.getContainedTextParts(containerPart));
+		return (ShapePart.getContainedShapeParts(containerPart, TextPart.class));
 	}
 	
-	private TextPart getTextPart(Point mouseLocation)
+	@Override
+	protected List<ImagePart> getContainedImageParts()
 	{
-		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
-		List<TextPart> textParts = getTextParts();
-		for (TextPart textPart : textParts)
-		{
-			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
-			if (textFigure != null && textFigure.getBounds().contains(realLocation))
-			{
-				return textPart;
-			}
-		}
-		return null;
+		ContainerShapePart containerPart = (ContainerShapePart)getCastedModel().getSapphirePart();
+		return (ShapePart.getContainedShapeParts(containerPart, ImagePart.class));
 	}
-	
+
+
 	@Override
 	public DragTracker getDragTracker(Request request) {
 		return new SapphireDragEditPartsTracker(this);

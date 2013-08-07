@@ -36,8 +36,8 @@ import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -166,7 +166,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	
 	private void performDirectEdit() 
 	{
-		List<TextPart> textParts = getTextParts();
+		List<TextPart> textParts = getContainedTextParts();
 		if (!textParts.isEmpty())
 		{
 			performDirectEdit(textParts.get(0));
@@ -209,14 +209,22 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			}
 			else
 			{
-				Command cmd = new DoubleClickNodeCommand(this, getCastedModel().getModelPart());
-				// If executing the command from edit domain's command stack, we'd get an 
-				// invalid cursor before the double click cmd is executed.
-				// Bypassing the command stack
-				//this.getViewer().getEditDomain().getCommandStack().execute(cmd);
-				if (cmd.canExecute())
+				ImagePart imagePart = getImagePart(pt);
+				if (imagePart != null && !imagePart.getAction(DOUBLE_TAB_ACTION).getActiveHandlers().isEmpty())
 				{
-					cmd.execute();
+					invokeDoubleTapAction(imagePart);
+				}
+				else
+				{
+					Command cmd = new DoubleClickNodeCommand(this, getCastedModel().getModelPart());
+					// If executing the command from edit domain's command stack, we'd get an 
+					// invalid cursor before the double click cmd is executed.
+					// Bypassing the command stack
+					//this.getViewer().getEditDomain().getCommandStack().execute(cmd);
+					if (cmd.canExecute())
+					{
+						cmd.execute();
+					}
 				}
 			}
 		}
@@ -353,7 +361,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 				performDirectEdit((TextPart)evt.getNewValue());
 			} else if (evt.getNewValue() instanceof ShapePart) {
 				ShapePart container = (ShapePart)evt.getNewValue();
-				List<TextPart> textParts = ShapePart.getContainedTextParts(container);
+				List<TextPart> textParts = ShapePart.getContainedShapeParts(container, TextPart.class);
 				if (!textParts.isEmpty()) {
 					performDirectEdit(textParts.get(0));
 				}
@@ -361,38 +369,19 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		}
 	}
 	
-	public TextPart getTextPart(Point mouseLocation)
-	{
-		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
-		DiagramNodePart nodePart = getCastedModel().getModelPart();
-		ShapePart shapePart = nodePart.getShapePart();
-		if (shapePart instanceof TextPart)
-		{
-			TextFigure textFigure = (TextFigure)getPartFigure(shapePart);
-			if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
-			{
-				return (TextPart)shapePart;
-			}
-		}
-		else if (shapePart instanceof ContainerShapePart)
-		{
-			List<TextPart> textParts = ShapePart.getContainedTextParts(shapePart);
-			for (TextPart textPart : textParts)
-			{
-				TextFigure textFigure = (TextFigure)getPartFigure(textPart);
-				if (textFigure != null && textFigure.getTextBounds().contains(realLocation))
-				{
-					return textPart;
-				}
-			}
-		}
-		return null;
-	}
-	
-	private List<TextPart> getTextParts()
+	@Override
+	protected List<TextPart> getContainedTextParts()
 	{
 		DiagramNodePart nodePart = getCastedModel().getModelPart();
 		return nodePart.getContainedTextParts();
 	}
+	
+	@Override
+	protected List<ImagePart> getContainedImageParts()
+	{
+		DiagramNodePart nodePart = getCastedModel().getModelPart();
+		return nodePart.getContainedImageParts();
 		
+	}
+	
 }

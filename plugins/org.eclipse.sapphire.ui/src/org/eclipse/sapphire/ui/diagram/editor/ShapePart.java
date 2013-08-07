@@ -107,22 +107,23 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
     	return Collections.emptyList();
     }
     
-    public static List<TextPart> getContainedTextParts(ShapePart shapePart)
+    @SuppressWarnings( "unchecked" )
+    public static <T extends ShapePart> List<T> getContainedShapeParts(ShapePart shapePart, Class<T> shapeType)
     {
-    	List<TextPart> containedTextParts = new ArrayList<TextPart>();
+    	List<T> containedShapeParts = new ArrayList<T>();
 		for (ShapePart childPart : shapePart.getChildren())
 		{
-			if (childPart instanceof TextPart)
+			if (shapeType.isAssignableFrom(childPart.getClass()))
 			{
-				containedTextParts.add((TextPart)childPart);
+				containedShapeParts.add((T) childPart);
 			}
 			else if (childPart instanceof ContainerShapePart || childPart instanceof ShapeFactoryPart)
 			{
-				containedTextParts.addAll(getContainedTextParts(childPart));
+				containedShapeParts.addAll(getContainedShapeParts(childPart, shapeType));
 			}
 		}
     	
-    	return containedTextParts;
+    	return containedShapeParts;
     }
 
     public DiagramNodePart getNodePart() 

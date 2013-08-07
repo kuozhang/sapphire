@@ -14,17 +14,26 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ImageFigure;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -34,6 +43,7 @@ import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 public class ShapeEditPart extends AbstractGraphicalEditPart 
 			implements IConfigurationManagerHolder, PropertyChangeListener
 {
+	protected static final String DOUBLE_TAB_ACTION = "Sapphire.Diagram.DoubleTap";
 	
 	private DiagramConfigurationManager configManager;
 
@@ -155,5 +165,65 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		return shapePresentation != null ? shapePresentation.getFigure() : null;
 		
 	}
+	
+	protected void invokeDoubleTapAction(final ShapePart shapePart)
+	{
+		List<SapphireActionHandler> actionHandlers = shapePart.getAction(DOUBLE_TAB_ACTION).getActiveHandlers();	
+		if (!actionHandlers.isEmpty())
+		{
+			final SapphireActionHandler firstHandler = actionHandlers.get(0);
+            Display.getDefault().asyncExec
+            (
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        firstHandler.execute(getConfigurationManager().getDiagramRenderingContextCache().get(shapePart));
+                    }
+                }
+            );
+			
+		}
+	}
+	protected List<TextPart> getContainedTextParts()
+	{
+		return Collections.EMPTY_LIST;
+	}
+	
+	protected List<ImagePart> getContainedImageParts()
+	{
+		return Collections.EMPTY_LIST;
+	}
+
+	protected TextPart getTextPart(Point mouseLocation)
+	{
+		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
+		List<TextPart> textParts = getContainedTextParts();
+		for (TextPart textPart : textParts)
+		{
+			TextFigure textFigure = (TextFigure)getPartFigure(textPart);
+			if (textFigure != null && textFigure.getBounds().contains(realLocation))
+			{
+				return textPart;
+			}
+		}
+		return null;
+	}
+	
+	protected ImagePart getImagePart(Point mouseLocation)
+	{
+		Point realLocation = this.getConfigurationManager().getDiagramEditor().calculateRealMouseLocation(mouseLocation);
+		List<ImagePart> imageParts = getContainedImageParts();
+		for (ImagePart imagePart : imageParts)
+		{
+			ImageFigure imageFigure = (ImageFigure)getPartFigure(imagePart);
+			if (imageFigure != null && imageFigure.getBounds().contains(realLocation))
+			{
+				return imagePart;
+			}
+		}
+		return null;
+	}
+	
 			
 }

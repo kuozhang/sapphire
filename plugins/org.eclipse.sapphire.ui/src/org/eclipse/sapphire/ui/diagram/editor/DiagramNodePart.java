@@ -185,10 +185,22 @@ public class DiagramNodePart
     	}
     	else
     	{
-    		return ShapePart.getContainedTextParts(shapePart);
+    		return ShapePart.getContainedShapeParts(shapePart, TextPart.class);
     	}
     }
     
+    public List<ImagePart> getContainedImageParts()
+    {    	
+    	ShapePart shapePart = getShapePart();
+    	if (shapePart instanceof ImagePart)
+    	{
+    		return Collections.singletonList((ImagePart)shapePart);
+    	}
+    	else
+    	{
+    		return ShapePart.getContainedShapeParts(shapePart, ImagePart.class);
+    	}
+    }
     @Override
     public void render(SapphireRenderingContext context)
     {

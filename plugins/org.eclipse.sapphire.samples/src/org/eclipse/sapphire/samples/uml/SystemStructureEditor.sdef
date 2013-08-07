@@ -14,6 +14,12 @@
 -->
 
 <definition>
+    <import>
+        <package>org.eclipse.sapphire.samples.uml</package>
+        <package>org.eclipse.sapphire.samples.uml.internal</package>
+        <package>org.eclipse.sapphire.ui.diagram.actions</package>
+    </import>
+
     <diagram-page>
         <node>
             <rectangle>
@@ -37,6 +43,10 @@
                                 <content>
                                     <image>
                                         <path>${ Kind == &quot;class&quot; ? &quot;Class.png&quot; : &quot;Interface.png&quot; }</path>
+                                        <action-handler>
+                                            <action>Sapphire.Diagram.DoubleTap</action>
+                                            <impl>ToggleEntityKindActionHandler</impl>
+                                        </action-handler>
                                     </image>
                                     <validation-marker>
                                         <size>small</size>
