@@ -21,6 +21,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
+import org.eclipse.sapphire.ui.def.MarginPresentation;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 
 /**

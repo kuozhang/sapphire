@@ -28,12 +28,6 @@
                 <sequence-layout>
                     <spacing>0</spacing>
                     <margin>0</margin>
-                    <horizontal-margin>0</horizontal-margin>
-                    <vertical-margin>0</vertical-margin>
-                    <top-margin>0</top-margin>
-                    <bottom-margin>0</bottom-margin>
-                    <left-margin>0</left-margin>
-                    <right-margin>0</right-margin>
                 </sequence-layout>
                 <content>
                     <text>

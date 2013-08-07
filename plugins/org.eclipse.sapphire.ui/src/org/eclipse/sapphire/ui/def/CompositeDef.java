@@ -15,15 +15,10 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.CompositeMarginLeftRightDefaultValueProvider;
-import org.eclipse.sapphire.ui.def.internal.CompositeMarginTopBottomDefaultValueProvider;
-import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultValueProvider;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,7 +27,7 @@ import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultVal
 @Label( standard = "composite" )
 @XmlBinding( path = "composite" )
 
-public interface CompositeDef extends FormDef
+public interface CompositeDef extends FormDef, MarginPresentation
 {
     ElementType TYPE = new ElementType( CompositeDef.class );
     
@@ -111,88 +106,10 @@ public interface CompositeDef extends FormDef
     void setScrollHorizontally( String value );
     void setScrollHorizontally( Boolean value );
     
-    // *** MarginLeft ***
+    // *** Margin ***
     
-    @Type( base = Integer.class )
-    @Label( standard = "left margin" )
-    @XmlBinding( path = "margin-left" )
-    @Service( impl = CompositeMarginLeftRightDefaultValueProvider.class )
-    @DependsOn( "MarginWidth" )
+    @DefaultValue( text = "${ ScrollVertically || ScrollHorizontally ? 10 : 0 }")
     
-    ValueProperty PROP_MARGIN_LEFT = new ValueProperty( TYPE, "MarginLeft" );
+    ValueProperty PROP_MARGIN = new ValueProperty( TYPE, MarginPresentation.PROP_MARGIN );
     
-    Value<Integer> getMarginLeft();
-    void setMarginLeft( String value );
-    void setMarginLeft( Integer value );
-    
-    // *** MarginRight ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "right margin" )
-    @XmlBinding( path = "margin-right" )
-    @Service( impl = CompositeMarginLeftRightDefaultValueProvider.class )
-    @DependsOn( "MarginWidth" )
-    
-    ValueProperty PROP_MARGIN_RIGHT = new ValueProperty( TYPE, "MarginRight" );
-    
-    Value<Integer> getMarginRight();
-    void setMarginRight( String value );
-    void setMarginRight( Integer value );
-    
-    // *** MarginTop ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "top margin" )
-    @XmlBinding( path = "margin-top" )
-    @Service( impl = CompositeMarginTopBottomDefaultValueProvider.class )
-    @DependsOn( "MarginHeight" )
-    
-    ValueProperty PROP_MARGIN_TOP = new ValueProperty( TYPE, "MarginTop" );
-    
-    Value<Integer> getMarginTop();
-    void setMarginTop( String value );
-    void setMarginTop( Integer value );
-    
-    // *** MarginBottom ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "bottom margin" )
-    @XmlBinding( path = "margin-bottom" )
-    @Service( impl = CompositeMarginTopBottomDefaultValueProvider.class )
-    @DependsOn( "MarginHeight" )
-    
-    ValueProperty PROP_MARGIN_BOTTOM = new ValueProperty( TYPE, "MarginBottom" );
-    
-    Value<Integer> getMarginBottom();
-    void setMarginBottom( String value );
-    void setMarginBottom( Integer value );
-    
-    // *** MarginWidth ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "margin width" )
-    @XmlBinding( path = "margin-width" )
-    @Service( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
-    @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
-    
-    ValueProperty PROP_MARGIN_WIDTH = new ValueProperty( TYPE, "MarginWidth" );
-    
-    Value<Integer> getMarginWidth();
-    void setMarginWidth( String value );
-    void setMarginWidth( Integer value );
-    
-    // *** MarginHeight ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "margin height" )
-    @XmlBinding( path = "margin-height" )
-    @Service( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
-    @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
-    
-    ValueProperty PROP_MARGIN_HEIGHT = new ValueProperty( TYPE, "MarginHeight" );
-    
-    Value<Integer> getMarginHeight();
-    void setMarginHeight( String value );
-    void setMarginHeight( Integer value );
-
 }

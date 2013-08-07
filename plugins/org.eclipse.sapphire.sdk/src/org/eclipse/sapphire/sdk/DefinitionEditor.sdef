@@ -287,13 +287,7 @@
             <property-editor>Width</property-editor>
             <property-editor>Height</property-editor>
             <spacer></spacer>
-            <property-editor>MarginWidth</property-editor>
-            <property-editor>MarginHeight</property-editor>
-            <spacer />
-            <property-editor>MarginLeft</property-editor>
-            <property-editor>MarginRight</property-editor>
-            <property-editor>MarginTop</property-editor>
-            <property-editor>MarginBottom</property-editor>
+            <include>MarginsForm</include>
             <spacer />
             <property-editor>BackgroundColor</property-editor>
             <spacer />
@@ -2077,12 +2071,14 @@
         <id>MarginsForm</id>
         <content>
             <property-editor>Margin</property-editor>
-            <property-editor>HorizontalMargin</property-editor>
-            <property-editor>VerticalMargin</property-editor>
-            <property-editor>TopMargin</property-editor>
-            <property-editor>BottomMargin</property-editor>
-            <property-editor>LeftMargin</property-editor>
-            <property-editor>RightMargin</property-editor>
+            <spacer></spacer>
+            <property-editor>MarginVertical</property-editor>
+            <property-editor>MarginHorizontal</property-editor>
+            <spacer></spacer>
+            <property-editor>MarginTop</property-editor>
+            <property-editor>MarginBottom</property-editor>
+            <property-editor>MarginLeft</property-editor>
+            <property-editor>MarginRight</property-editor>
         </content>
     </form>
 

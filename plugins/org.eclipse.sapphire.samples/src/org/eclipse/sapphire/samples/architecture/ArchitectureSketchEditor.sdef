@@ -76,8 +76,8 @@
                      <sequence-layout-constraint>
                        <horizontal-alignment>left</horizontal-alignment>
                        <vertical-alignment>bottom</vertical-alignment>
-                       <horizontal-margin>14</horizontal-margin>
-                       <vertical-margin>12</vertical-margin>
+                       <margin-horizontal>14</margin-horizontal>
+                       <margin-vertical>12</margin-vertical>
                      </sequence-layout-constraint>
                     </validation-marker>                    
                     <image>
@@ -86,8 +86,8 @@
                       <sequence-layout-constraint>
                         <horizontal-alignment>right</horizontal-alignment>
                         <vertical-alignment>bottom</vertical-alignment>
-                        <vertical-margin>7</vertical-margin>
-                                    <horizontal-margin>11</horizontal-margin>
+                        <margin-vertical>7</margin-vertical>
+                        <margin-horizontal>11</margin-horizontal>
                       </sequence-layout-constraint>
                     </image>
                   </content>

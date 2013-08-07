@@ -10,7 +10,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.shape.def;
+package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
@@ -43,82 +43,82 @@ public interface MarginPresentation extends Element
     void setMargin( String value );
     void setMargin( Integer value );
     
-    // *** HorizontalMargin ***
-    
-    @Type( base = Integer.class )
-    @Label( standard = "horizontal margin" )
-    @XmlBinding( path = "horizontal-margin" )
-    @DefaultValue( text = "${ Margin }" )
-    
-    ValueProperty PROP_HORIZONTAL_MARGIN = new ValueProperty( TYPE, "HorizontalMargin" );
-    
-    Value<Integer> getHorizontalMargin();
-    void setHorizontalMargin( String value );
-    void setHorizontalMargin( Integer value );
-    
-    // *** VerticalMargin ***
+    // *** MarginVertical ***
     
     @Type( base = Integer.class )
     @Label( standard = "vertical margin" )
-    @XmlBinding( path = "vertical-margin" )
+    @XmlBinding( path = "margin-vertical" )
     @DefaultValue( text = "${ Margin }" )
     
-    ValueProperty PROP_VERTICAL_MARGIN = new ValueProperty( TYPE, "VerticalMargin" );
+    ValueProperty PROP_MARGIN_VERTICAL = new ValueProperty( TYPE, "MarginVertical" );
     
-    Value<Integer> getVerticalMargin();
-    void setVerticalMargin( String value );
-    void setVerticalMargin( Integer value );
+    Value<Integer> getMarginVertical();
+    void setMarginVertical( String value );
+    void setMarginVertical( Integer value );
+
+    // *** MarginHorizontal ***
     
-    // *** TopMargin ***
+    @Type( base = Integer.class )
+    @Label( standard = "horizontal margin" )
+    @XmlBinding( path = "margin-horizontal" )
+    @DefaultValue( text = "${ Margin }" )
+    
+    ValueProperty PROP_MARGIN_HORIZONTAL = new ValueProperty( TYPE, "MarginHorizontal" );
+    
+    Value<Integer> getMarginHorizontal();
+    void setMarginHorizontal( String value );
+    void setMarginHorizontal( Integer value );
+
+    // *** MarginTop ***
     
     @Type( base = Integer.class )
     @Label( standard = "top margin" )
-    @XmlBinding( path = "top-margin" )
-    @DefaultValue( text = "${ VerticalMargin }" )
+    @XmlBinding( path = "margin-top" )
+    @DefaultValue( text = "${ MarginVertical }" )
     
-    ValueProperty PROP_TOP_MARGIN = new ValueProperty( TYPE, "TopMargin" );
+    ValueProperty PROP_MARGIN_TOP = new ValueProperty( TYPE, "MarginTop" );
     
-    Value<Integer> getTopMargin();
-    void setTopMargin( String value );
-    void setTopMargin( Integer value );
+    Value<Integer> getMarginTop();
+    void setMarginTop( String value );
+    void setMarginTop( Integer value );
     
-    // *** BottomMargin ***
+    // *** MarginBottom ***
     
     @Type( base = Integer.class )
     @Label( standard = "bottom margin" )
-    @XmlBinding( path = "bottom-margin" )
-    @DefaultValue( text = "${ VerticalMargin }" )
+    @XmlBinding( path = "margin-bottom" )
+    @DefaultValue( text = "${ MarginVertical }" )
     
-    ValueProperty PROP_BOTTOM_MARGIN = new ValueProperty( TYPE, "BottomMargin" );
+    ValueProperty PROP_MARGIN_BOTTOM = new ValueProperty( TYPE, "MarginBottom" );
     
-    Value<Integer> getBottomMargin();
-    void setBottomMargin( String value );
-    void setBottomMargin( Integer value );
+    Value<Integer> getMarginBottom();
+    void setMarginBottom( String value );
+    void setMarginBottom( Integer value );
 
-    // *** LeftMargin ***
+    // *** MarginLeft ***
     
     @Type( base = Integer.class )
     @Label( standard = "left margin" )
-    @XmlBinding( path = "left-margin" )
-    @DefaultValue( text = "${ HorizontalMargin }" )
+    @XmlBinding( path = "margin-left" )
+    @DefaultValue( text = "${ MarginHorizontal }" )
     
-    ValueProperty PROP_LEFT_MARGIN = new ValueProperty( TYPE, "LeftMargin" );
+    ValueProperty PROP_MARGIN_LEFT = new ValueProperty( TYPE, "MarginLeft" );
     
-    Value<Integer> getLeftMargin();
-    void setLeftMargin( String value );
-    void setLeftMargin( Integer value );
+    Value<Integer> getMarginLeft();
+    void setMarginLeft( String value );
+    void setMarginLeft( Integer value );
     
-    // *** RightMargin ***
+    // *** MarginRight ***
     
     @Type( base = Integer.class )
     @Label( standard = "right margin" )
-    @XmlBinding( path = "right-margin" )
-    @DefaultValue( text = "${ HorizontalMargin }" )
+    @XmlBinding( path = "margin-right" )
+    @DefaultValue( text = "${ MarginHorizontal }" )
     
-    ValueProperty PROP_RIGHT_MARGIN = new ValueProperty( TYPE, "RightMargin" );
+    ValueProperty PROP_MARGIN_RIGHT = new ValueProperty( TYPE, "MarginRight" );
     
-    Value<Integer> getRightMargin();
-    void setRightMargin( String value );
-    void setRightMargin( Integer value );
+    Value<Integer> getMarginRight();
+    void setMarginRight( String value );
+    void setMarginRight( Integer value );
     
 }

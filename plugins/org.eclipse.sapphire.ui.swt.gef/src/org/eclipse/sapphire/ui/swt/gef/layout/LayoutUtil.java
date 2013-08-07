@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.layout;
 
 import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.sapphire.ui.diagram.shape.def.MarginPresentation;
+import org.eclipse.sapphire.ui.def.MarginPresentation;
 
 /**
  * 
@@ -25,10 +25,10 @@ public class LayoutUtil {
 	}
 
 	public static Insets calculateMargin(MarginPresentation def) {
-		final int top = def.getTopMargin().content();
-		final int bottom = def.getBottomMargin().content();
-		final int left = def.getLeftMargin().content();
-		final int right = def.getRightMargin().content();
+		final int top = def.getMarginTop().content();
+		final int bottom = def.getMarginBottom().content();
+		final int left = def.getMarginLeft().content();
+		final int right = def.getMarginRight().content();
 	
 		return new Insets(top, left, bottom, right);
 	}

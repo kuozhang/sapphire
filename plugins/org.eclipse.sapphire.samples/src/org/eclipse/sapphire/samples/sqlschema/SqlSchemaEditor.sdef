@@ -96,7 +96,7 @@
                                                 <size>small</size>
                                                 <sequence-layout-constraint>
                                                     <expand-vertically>true</expand-vertically>
-                                                    <right-margin>3</right-margin>
+                                                    <margin-right>3</margin-right>
                                                 </sequence-layout-constraint>
                                             </validation-marker>
                                             <spacer>
@@ -111,7 +111,7 @@
                                             <image>
                                                 <path>key.gif</path>
                                                 <sequence-layout-constraint>
-                                                    <right-margin>8</right-margin>
+                                                    <margin-right>8</margin-right>
                                                 </sequence-layout-constraint>
                                                 <visible-when>${IsPrimaryKey}</visible-when>
                                             </image>
@@ -129,7 +129,7 @@
                                                 <truncatable>true</truncatable>
                                                 <sequence-layout-constraint>                            						
                                                 	<horizontal-alignment>left</horizontal-alignment>
-                                                	<right-margin>10</right-margin>                                                    
+                                                	<margin-right>10</margin-right>                                                    
                                                 </sequence-layout-constraint>
                                                 <color>#333399</color>
                                             </text>
@@ -139,7 +139,7 @@
                                                 <sequence-layout-constraint>
                             						<expand-horizontally>true</expand-horizontally>
                                                 	<horizontal-alignment>right</horizontal-alignment>                                                	
-                                                    <right-margin>10</right-margin>
+                                                    <margin-right>10</margin-right>
                                                 </sequence-layout-constraint>
                                                 <color>#333399</color>
                                             </text>
