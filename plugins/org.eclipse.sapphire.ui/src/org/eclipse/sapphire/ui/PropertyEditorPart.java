@@ -61,6 +61,7 @@ import org.eclipse.sapphire.ui.renderers.swt.DefaultListPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.DefaultValuePropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.EnumPropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.NamedValuesPropertyEditorRenderer;
+import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorPresentation;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
 import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
 import org.eclipse.sapphire.ui.renderers.swt.SlushBucketPropertyEditor;
@@ -109,7 +110,7 @@ public final class PropertyEditorPart extends FormComponentPart
     private List<SapphirePart> relatedContentParts;
     private Listener propertyValidationListener;
     private FunctionResult labelFunctionResult;
-    private PropertyEditorRenderer presentation;
+    private PropertyEditorPresentation presentation;
     
     @Override
     protected void init()
@@ -364,9 +365,18 @@ public final class PropertyEditorPart extends FormComponentPart
         return this.property;
     }
     
-    public PropertyEditorRenderer presentation()
+    public PropertyEditorPresentation presentation()
     {
         return this.presentation;
+    }
+    
+    /**
+     * Temporary API. Will be removed. Do not use.
+     */
+    
+    public void setPresentation( final PropertyEditorPresentation presentation )
+    {
+        this.presentation = presentation;
     }
     
     public List<ModelPath> getChildProperties()
@@ -424,6 +434,7 @@ public final class PropertyEditorPart extends FormComponentPart
             
             childPropertyEditorPart = new PropertyEditorPart();
             childPropertyEditorPart.init( this, element, childPropertyEditorDef, this.params );
+            childPropertyEditorPart.setPresentation( ( (PropertyEditorRenderer) this.presentation ).createChildPropertyEditorPresentation( childPropertyEditorPart ) );
             
             propertyEditorsForElement.put( property, childPropertyEditorPart );
         }
@@ -606,9 +617,9 @@ public final class PropertyEditorPart extends FormComponentPart
             }
         }
         
-        if( this.presentation != null )
+        if( this.presentation != null && this.presentation instanceof PropertyEditorRenderer )
         {
-            this.presentation.create( context.getComposite() );
+            ( (PropertyEditorRenderer) this.presentation ).create( context.getComposite() );
         }
         else
         {

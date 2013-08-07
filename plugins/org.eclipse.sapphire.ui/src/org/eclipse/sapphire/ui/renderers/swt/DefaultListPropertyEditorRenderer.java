@@ -1247,6 +1247,70 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
     }
     
     @Override
+    public PropertyEditorPresentation createChildPropertyEditorPresentation( final PropertyEditorPart part )
+    {
+        final Table table = this.table;
+        final Display display = table.getDisplay();
+        final Property property = part.property();
+        final Element element = property.element();
+        
+        ColumnHandler handler = null;
+        
+        for( final ColumnHandler h : this.columnHandlers )
+        {
+            if( element.property( h.property() ) == property )
+            {
+                handler = h;
+                break;
+            }
+        }
+        
+        if( handler == null )
+        {
+            throw new IllegalStateException();
+        }
+        
+        final int column = this.columnHandlers.indexOf( handler );
+        
+        return new PropertyEditorPresentation()
+        {
+            @Override
+            public Display display()
+            {
+                return display;
+            }
+
+            @Override
+            public Rectangle bounds()
+            {
+                Rectangle bounds = null;
+                
+                for( int i = 0, n = table.getItemCount(); i < n && bounds == null; i++ )
+                {
+                    final TableItem item = table.getItem( i );
+                    
+                    if( ( (TableRow) item.getData() ).element() == element )
+                    {
+                        bounds = item.getBounds( column );
+                    }
+                }
+                
+                if( bounds == null )
+                {
+                    throw new IllegalStateException();
+                }
+                else
+                {
+                    final Point position = table.toDisplay( bounds.x, bounds.y );
+                    bounds = new Rectangle( position.x, position.y, bounds.width, bounds.height );
+                }
+                
+                return bounds;
+            }
+        };
+    }
+    
+    @Override
     protected void handleChildPropertyEvent( final PropertyContentEvent event )
     {
         super.handleChildPropertyEvent( event );

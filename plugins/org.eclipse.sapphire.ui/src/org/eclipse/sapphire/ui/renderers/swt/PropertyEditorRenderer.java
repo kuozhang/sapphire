@@ -60,6 +60,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Sash;
@@ -68,7 +69,7 @@ import org.eclipse.swt.widgets.Sash;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PropertyEditorRenderer
+public abstract class PropertyEditorRenderer extends PropertyEditorPresentation
 {
     private static final String RELATED_CONTENT_WIDTH = "sapphire.related.content.width";
     
@@ -158,36 +159,29 @@ public abstract class PropertyEditorRenderer
         return this.actionPresentationManager;
     }
     
-    public Point getActionPopupPosition( final int width, final int height )
+    @Override
+    public final Rectangle bounds()
     {
-        if( this.mainPropertyEditorComposite != null )
-        {
-            final Rectangle propertyEditorBounds = this.mainPropertyEditorComposite.getBounds();
-            final Point propertyEditorPosition = this.mainPropertyEditorComposite.getParent().toDisplay( propertyEditorBounds.x, propertyEditorBounds.y );
-            
-            final int x = propertyEditorPosition.x - width + propertyEditorBounds.width;
-            final int y;
-            
-            if( this.mainPropertyEditorComposite.getDisplay().getBounds().height - ( propertyEditorPosition.y + propertyEditorBounds.height + 1 + height ) < 10 )
-            {
-                y = propertyEditorPosition.y - height - 1;
-            }
-            else
-            {
-                y = propertyEditorPosition.y + propertyEditorBounds.height + 1;
-            }
-            
-            return new Point( x, y );
-        }
-        else
-        {
-            return new Point( 200, 200 ); // TODO: Implement something better.
-        }
+        final Rectangle bounds = this.mainPropertyEditorComposite.getBounds();
+        final Point position = this.mainPropertyEditorComposite.getParent().toDisplay( bounds.x, bounds.y );
+        
+        return new Rectangle( position.x, position.y, bounds.width, bounds.height );
+    }
+    
+    @Override
+    public final Display display()
+    {
+        return this.mainPropertyEditorComposite.getDisplay();
     }
     
     protected boolean canScaleVertically()
     {
         return false;
+    }
+    
+    public PropertyEditorPresentation createChildPropertyEditorPresentation( final PropertyEditorPart part )
+    {
+        throw new UnsupportedOperationException();
     }
     
     public final void create( final Composite parent )
@@ -597,6 +591,7 @@ public abstract class PropertyEditorRenderer
         this.onDisposeOperations.add( op );
     }
     
+    @Override
     public final void dispose()
     {
         for( Runnable op : this.onDisposeOperations )
