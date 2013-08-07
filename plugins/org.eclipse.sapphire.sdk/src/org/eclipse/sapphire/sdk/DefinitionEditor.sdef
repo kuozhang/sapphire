@@ -919,9 +919,21 @@
                             <property-editor>BackgroundColor</property-editor>
                         </content>
                     </section>
+                    <section>
+                        <label>margins</label>
+                        <content>
+                            <include>MarginsForm</include>
+                        </content>
+                    </section>
                 </case>
             </node-factory>
             <node-include>ServicesNode</node-include>
+            <section>
+                <label>margins</label>
+                <content>
+                    <include>MarginsForm</include>
+                </content>
+            </section>
         </case>
 
         <case>

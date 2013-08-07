@@ -75,8 +75,20 @@ public final class SplitFormPart extends FormPart
     @Override
     public final void render( final SapphireRenderingContext context )
     {
-        final SashForm form = new SashForm( context.getComposite(), ( getOrientation() == Orientation.HORIZONTAL ? SWT.HORIZONTAL : SWT.VERTICAL ) | SWT.SMOOTH );
-        form.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
+        final int formMarginLeft = definition().getMarginLeft().content();
+        final int formMarginRight = definition().getMarginRight().content();
+        final int formMarginTop = definition().getMarginTop().content();
+        final int formMarginBottom = definition().getMarginBottom().content();
+        
+        final Composite formMarginsComposite = new Composite( context.getComposite(), SWT.NONE );
+        formMarginsComposite.setLayout( glayout( 1, formMarginLeft, formMarginRight, formMarginTop, formMarginBottom ) );
+        formMarginsComposite.setLayoutData( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
+        
+        formMarginsComposite.setBackground( getSwtResourceCache().color( getBackgroundColor() ) );
+        formMarginsComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
+        
+        final SashForm form = new SashForm( formMarginsComposite, ( getOrientation() == Orientation.HORIZONTAL ? SWT.HORIZONTAL : SWT.VERTICAL ) | SWT.SMOOTH );
+        form.setLayoutData( gdfill() );
         form.setBackground( getSwtResourceCache().color( getBackgroundColor() ) );
         form.setBackgroundMode( SWT.INHERIT_DEFAULT );
         
@@ -92,10 +104,11 @@ public final class SplitFormPart extends FormPart
             blockComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
             final SapphireRenderingContext blockContext = new SapphireRenderingContext( this, context, blockComposite );
             
-            final int rightMargin = ( i < blockPartsCount - 1 && getOrientation() == Orientation.HORIZONTAL ? 4 : 0 );
-            final int bottomMargin = ( i < blockPartsCount - 1 && getOrientation() == Orientation.VERTICAL ? 1 : 0 );
-            final int topMargin = ( i > 0 && getOrientation() == Orientation.VERTICAL ? 1 : 0 );
-            blockComposite.setLayout( glayout( 2, 0, rightMargin, topMargin, bottomMargin ) );
+            final int blockMarginLeft = block.definition().getMarginLeft().content();
+            final int blockMarginRight = block.definition().getMarginRight().content() + ( i < blockPartsCount - 1 && getOrientation() == Orientation.HORIZONTAL ? 4 : 0 );
+            final int blockMarginTop = block.definition().getMarginTop().content() + ( i > 0 && getOrientation() == Orientation.VERTICAL ? 1 : 0 );
+            final int blockMarginBottom = block.definition().getMarginBottom().content() + ( i < blockPartsCount - 1 && getOrientation() == Orientation.VERTICAL ? 1 : 0 );
+            blockComposite.setLayout( glayout( 2, blockMarginLeft, blockMarginRight, blockMarginTop, blockMarginBottom ) );
             
             block.render( blockContext );
             

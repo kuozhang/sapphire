@@ -26,7 +26,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @Label( standard = "split form block" )
 
-public interface SplitFormBlockDef extends FormDef
+public interface SplitFormBlockDef extends FormDef, MarginPresentation
 {
     ElementType TYPE = new ElementType( SplitFormBlockDef.class );
     

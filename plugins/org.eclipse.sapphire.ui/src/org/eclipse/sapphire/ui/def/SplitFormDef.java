@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 @Label( standard = "split form" )
 @XmlBinding( path = "split-form" )
 
-public interface SplitFormDef extends FormComponentDef
+public interface SplitFormDef extends FormComponentDef, MarginPresentation
 {
     ElementType TYPE = new ElementType( SplitFormDef.class );
     
