@@ -100,7 +100,7 @@ public final class WithPart extends PageBookPart
     {
         final WithDef def = (WithDef) this.definition;
         
-        this.path = new ModelPath( def.getPath().text() );
+        this.path = new ModelPath( substituteParams( def.getPath().text() ) );
         this.property = getModelElement().property( this.path );
         
         if( this.property == null )

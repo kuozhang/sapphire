@@ -37,7 +37,7 @@ public final class WithPartImplied extends FormPart
     {
         final WithDef def = (WithDef) this.definition;
         
-        this.path = new ModelPath( def.getPath().text() );
+        this.path = new ModelPath( substituteParams( def.getPath().text() ) );
         
         final Property property = getModelElement().property( this.path );
         

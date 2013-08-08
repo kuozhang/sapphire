@@ -1110,8 +1110,9 @@ public abstract class SapphirePart implements ISapphirePart
         }
         else if( definition instanceof WithDef )
         {
-            final Property property = element.property( ( (WithDef) definition ).getPath().content() );
-
+            final String path = ( (SapphirePart) parent ).substituteParams( ( (WithDef) definition ).getPath().text() );
+            final Property property = element.property( path );
+            
             if( property.definition() instanceof ImpliedElementProperty )
             {
                 part = new WithPartImplied();
