@@ -467,38 +467,12 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			extraHeight = 0;
 		} else if (expandCount > 0) {
 			int averageExtraHeight = extraHeight / expandCount;
-			int limitedExpansionCount = 0;
-			int limitedExpansionHeightTotal = 0;
-			for (int i = 0; i < numChildren; i++) {				
-				int prefHeight = prefSizes[i].height;
-				int maxHeight = maxSizes[i].height;
-				child = (IFigure) children.get(i);
-				SapphireSequenceLayoutConstraint constraint = constraints[i];
-				if (getMajorExpand(constraint) && maxHeight > SWT.DEFAULT && maxHeight < Integer.MAX_VALUE) {
-					// only limited expansion since the child figure has max size constraint.
-					if (maxHeight - prefHeight < averageExtraHeight) {
-						limitedExpansionCount++;
-						limitedExpansionHeightTotal += maxHeight - prefHeight;
-					}
-				}
-			}
-			int unlimitedExpansionAverage = limitedExpansionCount < expandCount ? 
-					(extraHeight - limitedExpansionHeightTotal) / (expandCount - limitedExpansionCount) : 0;
 
 			for (int i = 0; i < numChildren; i++) {				
-				int prefHeight = prefSizes[i].height;
-				int maxHeight = maxSizes[i].height;
 				child = (IFigure) children.get(i);
 				SapphireSequenceLayoutConstraint constraint = constraints[i];
 				if (getMajorExpand(constraint)) {
-					// only limited expansion
-					if (maxHeight > SWT.DEFAULT && maxHeight < Integer.MAX_VALUE && 
-							(maxHeight - prefHeight < averageExtraHeight)) {
-						extraHeights[i] = maxHeight - prefHeight;
-					}
-					else {
-						extraHeights[i] = unlimitedExpansionAverage;
-					}
+						extraHeights[i] = averageExtraHeight;
 				}
 				else {
 					extraHeights[i] = 0;
