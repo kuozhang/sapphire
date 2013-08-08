@@ -131,7 +131,12 @@ public final class CreateWorkspaceFileOpServices
             
             if( this.listener != null )
             {
-                context( CreateWorkspaceFileOp.class ).property( CreateWorkspaceFileOp.PROP_CONTEXT ).detach( this.listener );
+                final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+                
+                if( ! op.disposed() )
+                {
+                    op.property( CreateWorkspaceFileOp.PROP_CONTEXT ).detach( this.listener );
+                }
             }
         }
     }
