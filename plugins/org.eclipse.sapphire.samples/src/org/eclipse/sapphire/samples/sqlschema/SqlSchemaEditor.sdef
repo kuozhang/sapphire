@@ -178,7 +178,7 @@
                                     </rectangle>
                                     <selection-presentation>
                                         <weight>1</weight>
-                                        <inset>2</inset>
+                                        <offset>-2</offset>
                                     </selection-presentation>
                                 </case>
                                 <separator>

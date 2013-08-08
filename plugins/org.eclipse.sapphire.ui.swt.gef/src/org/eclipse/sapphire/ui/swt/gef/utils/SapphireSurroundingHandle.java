@@ -46,7 +46,7 @@ public class SapphireSurroundingHandle extends AbstractHandle
 {
 	private int lineWidth = 1;
 	
-	private int lineInset = 0;
+	private int lineOffset = 0;
 	
 	private int lineStyle = SWT.LINE_DASH;
 	
@@ -167,7 +167,7 @@ public class SapphireSurroundingHandle extends AbstractHandle
 
 		Rectangle r = new Rectangle(getBounds());
 		int zoom = this.configManager.getDiagramEditor().getPart().getZoomLevel();
-		int scaledInset = getLineInset() * zoom / 100;
+		int scaledInset = -getLineOffset() * zoom / 100;
 		r.shrink(scaledInset, scaledInset);
 		r = FigureUtil.getAdjustedRectangle(r, 1.0, getLineWidth());
 
@@ -191,14 +191,14 @@ public class SapphireSurroundingHandle extends AbstractHandle
 		this.lineWidth = lineWidth;
 	}
 
-	public int getLineInset()
+	public int getLineOffset()
 	{
-		return this.lineInset;
+		return this.lineOffset;
 	}
 	
-	public void setLineInset(int lineInset)
+	public void setLineOffset(int lineOffset)
 	{
-		this.lineInset = lineInset;
+		this.lineOffset = lineOffset;
 	}
 		
 	public void setLineStyle(int style)

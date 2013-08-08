@@ -1985,7 +1985,7 @@
                                 <default-panel>
                                     <content>
                                         <include>LinePresentationForm</include>
-                                        <property-editor>Inset</property-editor>
+                                        <property-editor>Offset</property-editor>
                                     </content>
                                 </default-panel>
                                 <path>SelectionPresentation</path>

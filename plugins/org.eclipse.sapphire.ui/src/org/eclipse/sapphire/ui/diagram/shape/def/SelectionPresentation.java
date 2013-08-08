@@ -53,19 +53,19 @@ public interface SelectionPresentation extends LinePresentation
     
     ValueProperty PROP_STYLE = new ValueProperty( TYPE, LinePresentation.PROP_STYLE );
     
-    // *** Inset ***
+    // *** Offset ***
     
     @Type( base = Integer.class )
-    @Label( standard = "inset" )
+    @Label( standard = "offset" )
     @DefaultValue( text = "0" )
-    @NumericRange( min = "0" )
-    @XmlBinding( path = "inset" )
+    @NumericRange( max = "0" )
+    @XmlBinding( path = "offset" )
     
-    ValueProperty PROP_INSET = new ValueProperty( TYPE, "Inset" );
+    ValueProperty PROP_OFFSET = new ValueProperty( TYPE, "Offset" );
     
-    Value<Integer> getInset();
-    void setInset( String value );
-    void setInset( Integer value );        
+    Value<Integer> getOffset();
+    void setOffset( String value );
+    void setOffset( Integer value );        
     
     // *** Background ***
     

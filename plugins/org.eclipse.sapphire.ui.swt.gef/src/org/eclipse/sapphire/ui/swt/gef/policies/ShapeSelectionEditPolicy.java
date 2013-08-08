@@ -55,7 +55,7 @@ public class ShapeSelectionEditPolicy extends NonResizableEditPolicy
 				resourceCache, isDragAllowed());
 		if (selectionPresentation != null)
 		{
-			selectionHandle.setLineInset(selectionPresentation.getInset().content());
+			selectionHandle.setLineOffset(selectionPresentation.getOffset().content());
 			selectionHandle.setLineWidth(selectionPresentation.getWeight().content());
 			selectionHandle.setLineStyle(FigureUtil.convertLineStyle(selectionPresentation.getStyle().content()));
 			selectionHandle.setLineColor(selectionPresentation.getColor().content());
