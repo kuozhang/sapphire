@@ -20,6 +20,7 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 
@@ -112,6 +113,12 @@ public class TextFigure extends Label implements IShapeFigure
 		labelSize.expand(insets.getWidth(), insets.getHeight());
 		minSize.union(labelSize);
 		return minSize;
+	}
+	
+	@Override
+	public Dimension getMaximumSize()
+	{
+		return calculateLabelSize(getTextUtilities().getTextExtents(getText(), getFont()));
 	}
 	
 	private int getSwtTextAlignment(HorizontalAlignment horizontalAlign)

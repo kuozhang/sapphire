@@ -122,27 +122,30 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		for (int i = 0; i < children.size(); i++) {
 			child = (IFigure) children.get(i);
 			childSize = transposer.t(getChildMaximumSize(child));
-			if (childSize.width == Integer.MAX_VALUE) {
+			Insets inset = new Insets();
+			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
+			if (constraint != null) {
+				inset = transposer.t(constraint.getMarginInset());
+				if (constraint.expandHorizontally) {
+					childSize.width = Integer.MAX_VALUE;
+				}
+				if (constraint.expandVertically) {
+					childSize.height = Integer.MAX_VALUE;
+				}
+			}
+			if (childSize.width < Integer.MAX_VALUE) {
+				width = Math.max(width, childSize.width + inset.left + inset.right);
+			}
+			else {
 				width = Integer.MAX_VALUE;
 			}
-			if (childSize.height == Integer.MAX_VALUE) {
-				height = Integer.MAX_VALUE;
-			}
-			if (width < Integer.MAX_VALUE || height < Integer.MAX_VALUE) {
-				Insets inset = new Insets();
-				SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
-				if (constraint != null) {
-					inset = transposer.t(constraint.getMarginInset());
-				}
+			if (childSize.height < Integer.MAX_VALUE ) {
 				if (height < Integer.MAX_VALUE) {
 					height += childSize.height + inset.top + inset.bottom;
 				}
-				if (width < Integer.MAX_VALUE) {
-					width = Math.max(width, childSize.width + inset.left + inset.right);
-				}				
 			}
 			else {
-				break;
+				height = Integer.MAX_VALUE;
 			}
 		}
 		return new Dimension(width, height);

@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.figures;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.ImageFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
@@ -35,4 +36,11 @@ public class SmoothImageFigure extends ImageFigure {
 		graphics.setAntialias(SWT.ON);
 		super.paintFigure(graphics);
 	}
+	
+	@Override
+	public Dimension getMaximumSize()
+	{
+		return getPreferredSize();
+	}
+	
 }

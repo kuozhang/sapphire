@@ -154,6 +154,11 @@ public class RectangleFigure extends ContainerShapeFigure implements IShapeFigur
 			SapphireSequenceLayout sapphireSequenceLayout = (SapphireSequenceLayout)this.getLayoutManager();
 			return sapphireSequenceLayout.calculateMaximumSize(this);
 		}
+		else if (this.getLayoutManager() instanceof SapphireStackLayout)
+		{
+			SapphireStackLayout sapphireStackLayout = (SapphireStackLayout)this.getLayoutManager();
+			return sapphireStackLayout.calculateMaximumSize(this);
+		}
 		else 
 		{
 			return super.getMaximumSize();

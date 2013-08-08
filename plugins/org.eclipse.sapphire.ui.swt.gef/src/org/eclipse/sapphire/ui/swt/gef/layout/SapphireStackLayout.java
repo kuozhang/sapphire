@@ -54,6 +54,10 @@ public class SapphireStackLayout extends AbstractLayout
 				.union(getBorderPreferredSize(container));
 	}
 
+	public Dimension calculateMaximumSize(IFigure container) 
+	{
+		return calculatePreferredSize(container, -1, -1);
+	}
 	/**
 	 * Returns the origin for the given figure.
 	 * 

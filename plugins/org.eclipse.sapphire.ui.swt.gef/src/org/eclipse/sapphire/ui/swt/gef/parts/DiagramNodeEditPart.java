@@ -128,6 +128,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		// find the offset for figure in presentation without an editpart
 		int offset = ShapeUtil.getPresentationCount(parentPresentation, shapePresentation);
 		parentFigure.add(child, layoutConstraint, index + offset);
+		refreshNodeBounds();
 	}
 	
 	@Override
