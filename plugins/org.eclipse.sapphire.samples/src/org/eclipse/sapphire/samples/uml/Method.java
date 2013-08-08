@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.samples.uml;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
@@ -27,7 +26,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Method extends Element
+public interface Method extends Accessible
 {
     ElementType TYPE = new ElementType( Method.class );
     
@@ -59,19 +58,6 @@ public interface Method extends Element
     ListProperty PROP_PARAMETERS = new ListProperty( TYPE, "Parameters" );
     
     ElementList<Parameter> getParameters();
-    
-    // *** Accessibility ***
-    
-    @Type( base = Accessibility.class )
-    @Label( standard = "accessibility" )
-    @DefaultValue( text = "public" )
-    @Enablement( expr = "${ Parent.Kind == 'class' }" )
-    
-    ValueProperty PROP_ACCESSIBILITY = new ValueProperty( TYPE, "Accessibility" );
-    
-    Value<Accessibility> getAccessibility();
-    void setAccessibility( String value );
-    void setAccessibility( Accessibility value );
     
     // *** Static ***
     

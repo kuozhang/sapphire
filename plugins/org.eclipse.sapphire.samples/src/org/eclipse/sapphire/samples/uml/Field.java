@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.samples.uml;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
@@ -25,7 +24,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface Field extends Element
+public interface Field extends Accessible
 {
     ElementType TYPE = new ElementType( Field.class );
     
@@ -48,19 +47,6 @@ public interface Field extends Element
     
     Value<String> getType();
     void setType( String value );
-    
-    // *** Accessibility ***
-    
-    @Type( base = Accessibility.class )
-    @Label( standard = "accessibility" )
-    @DefaultValue( text = "public" )
-    @Enablement( expr = "${ Parent.Kind == 'class' }" )
-    
-    ValueProperty PROP_ACCESSIBILITY = new ValueProperty( TYPE, "Accessibility" );
-    
-    Value<Accessibility> getAccessibility();
-    void setAccessibility( String value );
-    void setAccessibility( Accessibility value );
     
     // *** Static ***
     

@@ -14,11 +14,6 @@
 -->
 
 <definition>
-    <import>
-        <package>org.eclipse.sapphire.samples.uml</package>
-        <package>org.eclipse.sapphire.samples.uml.internal</package>
-        <package>org.eclipse.sapphire.ui.diagram.actions</package>
-    </import>
 
     <diagram-page>
         <node>
@@ -44,8 +39,8 @@
                                     <image>
                                         <path>${ Kind == &quot;class&quot; ? &quot;Class.png&quot; : &quot;Interface.png&quot; }</path>
                                         <action-handler>
-                                            <action>Sapphire.Diagram.DoubleTap</action>
-                                            <impl>ToggleEntityKindActionHandler</impl>
+                                            <action>Sapphire.DoubleTap</action>
+                                            <impl>org.eclipse.sapphire.samples.uml.internal.EntityKindDoubleTapActionHandler</impl>
                                         </action-handler>
                                     </image>
                                     <validation-marker>
@@ -88,6 +83,10 @@
                                                 <content>
                                                     <image>
                                                         <path>${ Accessibility == &quot;public&quot; ? &quot;Public.png&quot; : ( Accessibility == &quot;package-protected&quot; ? &quot;PackageProtected.png&quot; : ( Accessibility == &quot;protected&quot; ? &quot;Protected.png&quot; : &quot;Private.png&quot; ) ) }</path>
+                                                        <action-handler>
+                                                            <action>Sapphire.DoubleTap</action>
+                                                            <impl>org.eclipse.sapphire.samples.uml.internal.AccessibilityDoubleTapActionHandler</impl>
+                                                        </action-handler>
                                                     </image>
                                                     <rectangle>
                                                         <sequence-layout-constraint>
@@ -206,6 +205,10 @@
                                                 <content>
                                                     <image>
                                                         <path>${ Accessibility == &quot;public&quot; ? &quot;Public.png&quot; : ( Accessibility == &quot;package-protected&quot; ? &quot;PackageProtected.png&quot; : ( Accessibility == &quot;protected&quot; ? &quot;Protected.png&quot; : &quot;Private.png&quot; ) ) }</path>
+                                                        <action-handler>
+                                                            <action>Sapphire.DoubleTap</action>
+                                                            <impl>org.eclipse.sapphire.samples.uml.internal.AccessibilityDoubleTapActionHandler</impl>
+                                                        </action-handler>
                                                     </image>
                                                     <rectangle>
                                                         <sequence-layout-constraint>

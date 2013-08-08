@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
 public class ShapeEditPart extends AbstractGraphicalEditPart 
 			implements IConfigurationManagerHolder, PropertyChangeListener
 {
-	protected static final String DOUBLE_TAB_ACTION = "Sapphire.Diagram.DoubleTap";
+	protected static final String DOUBLE_TAB_ACTION = "Sapphire.DoubleTap";
 	
 	private DiagramConfigurationManager configManager;
 
@@ -187,12 +187,12 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	}
 	protected List<TextPart> getContainedTextParts()
 	{
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 	
 	protected List<ImagePart> getContainedImageParts()
 	{
-		return Collections.EMPTY_LIST;
+	    return Collections.emptyList();
 	}
 
 	protected TextPart getTextPart(Point mouseLocation)

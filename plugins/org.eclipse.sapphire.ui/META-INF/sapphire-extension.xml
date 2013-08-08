@@ -100,6 +100,10 @@
         <description>Shows the entity referenced by the property value. A common use is to open a file or another resource type referenced by a path held by the property.</description>
     </action>
     <action>
+        <id>Sapphire.DoubleTap</id>
+        <context>Sapphire.Diagram.Node.Shape.Hidden</context>
+    </action>
+    <action>
         <id>Sapphire.Move.Down</id>
         <context>Sapphire.ListPropertyEditor</context>
         <context>Sapphire.EditorPage.Outline.Node</context>

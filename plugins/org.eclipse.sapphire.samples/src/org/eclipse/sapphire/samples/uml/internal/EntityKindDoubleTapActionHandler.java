@@ -19,9 +19,8 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ToggleEntityKindActionHandler extends SapphireActionHandler 
+public final class EntityKindDoubleTapActionHandler extends SapphireActionHandler 
 {
-
 	@Override
 	protected Object run(SapphireRenderingContext context) 
 	{
