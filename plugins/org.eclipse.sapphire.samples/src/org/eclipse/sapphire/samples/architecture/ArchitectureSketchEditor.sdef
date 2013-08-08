@@ -98,6 +98,7 @@
                     <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>center</vertical-alignment>
                     <expand-horizontally>false</expand-horizontally>
+                            <max-width>60</max-width>
                   </sequence-layout-constraint>
                         <color>#333399</color>
                 </text>
