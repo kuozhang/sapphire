@@ -61,8 +61,10 @@ public class RectangleBorder extends AbstractBorder
 			float cornerWidth = cornerRadius;
 			float cornerHeight = cornerRadius;
 			// adjust corner for the inner path (formula found by experimenting)
-			cornerHeight = Math.max(1, cornerHeight - (w + cornerHeight / 64));
-			cornerWidth = Math.max(1, cornerWidth - (w + cornerWidth / 64));
+			if (cornerRadius > 0) {
+				cornerHeight = Math.max(1, cornerHeight - (w + cornerHeight / 64));
+				cornerWidth = Math.max(1, cornerWidth - (w + cornerWidth / 64));
+			}
 						
 			graphics.setLineWidth(borderDef.getWeight().content());
 			graphics.setForegroundColor(resourceCache.getColor(borderDef.getColor().content()));
