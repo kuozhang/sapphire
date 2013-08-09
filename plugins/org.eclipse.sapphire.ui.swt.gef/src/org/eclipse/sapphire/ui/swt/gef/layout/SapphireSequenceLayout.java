@@ -126,12 +126,6 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
 			if (constraint != null) {
 				inset = transposer.t(constraint.getMarginInset());
-				if (constraint.expandHorizontally) {
-					childSize.width = Integer.MAX_VALUE;
-				}
-				if (constraint.expandVertically) {
-					childSize.height = Integer.MAX_VALUE;
-				}
 			}
 			if (childSize.width < Integer.MAX_VALUE) {
 				width = Math.max(width, childSize.width + inset.left + inset.right);
@@ -343,6 +337,12 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	protected Dimension getChildMaximumSize(IFigure child) {
 		Dimension dimension = child.getMaximumSize().getCopy();
 		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
+		if (constraint.expandHorizontally) {
+			dimension.width = Integer.MAX_VALUE;
+		}
+		if (constraint.expandVertically) {
+			dimension.height = Integer.MAX_VALUE;
+		}
 		if (constraint.maxWidth > SWT.DEFAULT && constraint.maxWidth < Integer.MAX_VALUE ) {
 			dimension.width = constraint.maxWidth; 
 		}
