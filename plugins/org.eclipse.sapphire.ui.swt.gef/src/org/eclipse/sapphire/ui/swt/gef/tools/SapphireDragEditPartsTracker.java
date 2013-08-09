@@ -10,22 +10,11 @@
  ******************************************************************************/
 package org.eclipse.sapphire.ui.swt.gef.tools;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.draw2d.FigureUtilities;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.tools.DragEditPartsTracker;
-import org.eclipse.gef.util.EditPartUtilities;
-import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
-import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.swt.SWT;
 
 /**
@@ -40,7 +29,7 @@ public class SapphireDragEditPartsTracker extends DragEditPartsTracker {
 		super(sourceEditPart);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	protected void performSelection() {
 		if (hasSelectionOccurred())
 			return;
@@ -56,21 +45,33 @@ public class SapphireDragEditPartsTracker extends DragEditPartsTracker {
 
 			viewer.setProperty(LAST_EDIT_PART, getSourceEditPart());
 		} else if (getCurrentInput().isShiftKeyDown()) {
-			EditPart fromEditPart = (EditPart)viewer.getProperty(LAST_EDIT_PART);
-			if (sameNodeModel(fromEditPart, getSourceEditPart())) {
+			EditPart lastEditPart = (EditPart)viewer.getProperty(LAST_EDIT_PART);
+			if (sameParent(getSourceEditPart(), lastEditPart)) {
 				viewer.deselectAll();
 				
-				EditPart toEditPart = getSourceEditPart();
-				Rectangle fromRect = getRectangle(fromEditPart);
-				Rectangle toRect = getRectangle(toEditPart);
-				Rectangle rect = fromRect.getUnion(toRect);
-				
-				Collection editPartsToProcess = new HashSet();
-				editPartsToProcess.addAll(EditPartUtilities.getAllChildren(getNodeEditPart(fromEditPart)));
-				for (Iterator iterator = editPartsToProcess.iterator(); iterator.hasNext();) {
-					GraphicalEditPart editPart = (GraphicalEditPart) iterator.next();
-					if (editPart.isSelectable()	&& FigureUtilities.isNotFullyClipped(editPart.getFigure()) && isEditPartInRect(editPart, rect)) { 
-						viewer.appendSelection(editPart);
+				EditPart fromEditPart = null;
+				EditPart toEditPart = null;
+				for (Object child : getSourceEditPart().getParent().getChildren()) {
+					if (child instanceof EditPart) {
+						EditPart part = (EditPart)child;
+						if (part.isSelectable()) {
+							if (part.equals(getSourceEditPart()) || part.equals(lastEditPart)) {
+								if (fromEditPart == null) {
+									fromEditPart = part;
+									if (getSourceEditPart().equals(lastEditPart)) {
+										toEditPart = part;
+									}
+								} else if (toEditPart == null) {
+									toEditPart = part;
+								}
+							}
+							if (fromEditPart != null) {
+								viewer.appendSelection(part);
+							}
+							if (toEditPart != null) {
+								break;
+							}
+						}
 					}
 				}
 			} else {
@@ -86,43 +87,10 @@ public class SapphireDragEditPartsTracker extends DragEditPartsTracker {
 		}
 	}
 	
-	private boolean isEditPartInRect(EditPart editPart, Rectangle selectionRect) {
-		boolean included = false;
-		if (!(editPart instanceof ConnectionEditPart)) {
-			Rectangle rect = getRectangle(editPart);
-			included = selectionRect.contains(rect);
-		}
-		return included;
-	}
-	
-	private Rectangle getRectangle(EditPart editPart) {
-		if (editPart instanceof GraphicalEditPart) {
-			IFigure figure = ((GraphicalEditPart)editPart).getFigure();
-			Rectangle r = figure.getBounds().getCopy();
-			figure.translateToAbsolute(r);
-			return r;
-		}
-		return null;
-	}
-	
-	private boolean sameNodeModel(EditPart part1, EditPart part2) {
-		if (part1 != null && part2 != null) {
-			ShapeModel model1 = (ShapeModel)part1.getModel();
-			ShapeModel model2 = (ShapeModel)part2.getModel();
-			return model1.getNodeModel().equals(model2.getNodeModel());
+	private boolean sameParent(EditPart part, EditPart lastPart) {
+		if (part != null && lastPart != null) {
+			return part.getParent().equals(lastPart.getParent());
 		}
 		return false;
-	}
-	
-	private GraphicalEditPart getNodeEditPart(EditPart part) {
-		DiagramNodeModel nodeModel = ((ShapeModel)part.getModel()).getNodeModel();
-		EditPart parentEditPart = part;
-		while (parentEditPart != null) {
-			if (nodeModel.equals(parentEditPart.getModel())) {
-				return (GraphicalEditPart)parentEditPart;
-			}
-			parentEditPart = parentEditPart.getParent();
-		}
-		return (GraphicalEditPart) getCurrentViewer().getRootEditPart();
 	}
 }
