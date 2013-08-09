@@ -163,14 +163,10 @@ public class TextFigure extends Label implements IShapeFigure
 	@Override
 	public void setSelected(boolean b) 
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setFocus(boolean b) 
 	{
-		// TODO Auto-generated method stub
-		
 	}
 }

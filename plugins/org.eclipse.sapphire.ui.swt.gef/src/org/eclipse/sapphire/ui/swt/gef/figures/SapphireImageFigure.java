@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class SapphireImageFigure extends SmoothImageFigure 
+public class SapphireImageFigure extends SmoothImageFigure implements IShapeFigure
 {
 	public SapphireImageFigure(ImagePresentation imagePresentation, Image image)
 	{
@@ -65,6 +65,14 @@ public class SapphireImageFigure extends SmoothImageFigure
 				break;
 		}
 		return alignment;
+	}
+
+	@Override
+	public void setSelected(boolean b) {
+	}
+
+	@Override
+	public void setFocus(boolean b) {
 	}
 	
 }
