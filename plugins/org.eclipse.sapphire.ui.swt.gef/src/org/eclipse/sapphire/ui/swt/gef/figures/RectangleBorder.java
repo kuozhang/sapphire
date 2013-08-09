@@ -55,12 +55,8 @@ public class RectangleBorder extends AbstractBorder
 		if (this.hasUniformBorders && borderDef.getWeight().content() > 0)
 		{			
 			int w = borderDef.getWeight().content();
-			int inset = Math.max(1, w >> 1);
-			tempRect.x += inset;
-			tempRect.y += inset;
-			tempRect.width -= inset + inset;
-			tempRect.height -= inset + inset;
-			
+			tempRect = FigureUtil.getAdjustedRectangle(tempRect, 1.0, w);
+
 			int cornerRadius = this.rectPresentation.getCornerRadius();
 			float cornerWidth = cornerRadius;
 			float cornerHeight = cornerRadius;
@@ -74,7 +70,6 @@ public class RectangleBorder extends AbstractBorder
 			graphics.drawRoundRectangle(tempRect,
 					Math.max(0, (int)cornerWidth),
 					Math.max(0, (int)cornerHeight));
-			
 		}
 		else
 		{

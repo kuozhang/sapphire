@@ -22,6 +22,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.IContextButtonPadDeclaration.PadStyle;
+import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.widgets.Display;

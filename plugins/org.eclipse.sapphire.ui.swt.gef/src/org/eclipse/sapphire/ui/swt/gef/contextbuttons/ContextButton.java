@@ -36,6 +36,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -229,7 +230,6 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	/**
 	 * Paints the context button (lines, filling, image, ...).
 	 */
-	@SuppressWarnings("unused")
 	@Override
 	protected void paintFigure(Graphics graphics) {
 		int lw = ((int) (getPositionedContextButton().getLineWidth() * getZoomLevel()));

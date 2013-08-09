@@ -214,4 +214,28 @@ public class FigureUtil {
 		return swtStyle;
 	}
 	
+	public static Rectangle getAdjustedRectangle(Rectangle rectangle, double zoom, int lw) {
+		if (rectangle == null) {
+			return null;
+		}
+
+		Rectangle ret = new Rectangle(rectangle);
+
+		if (zoom != 1.0) {
+			ret.x = (int) (Math.floor(rectangle.x * zoom));
+			ret.y = (int) (Math.floor(rectangle.y * zoom));
+			ret.width = (int) (Math.floor(((rectangle.x + rectangle.width) * zoom))) - ret.x;
+			ret.height = (int) (Math.floor(((rectangle.y + rectangle.height) * zoom))) - ret.y;
+		}
+
+		int adjustmentTopLeft = lw / 2;
+		int adjustmentBottomRight = lw;
+		ret.x += adjustmentTopLeft;
+		ret.y += adjustmentTopLeft;
+		ret.width -= adjustmentBottomRight;
+		ret.height -= adjustmentBottomRight;
+
+		return ret;
+	}
+
 }

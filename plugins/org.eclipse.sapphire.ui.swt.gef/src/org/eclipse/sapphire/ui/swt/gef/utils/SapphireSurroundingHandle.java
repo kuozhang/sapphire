@@ -24,7 +24,7 @@ import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.contextbuttons.FigureUtil;
+import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
