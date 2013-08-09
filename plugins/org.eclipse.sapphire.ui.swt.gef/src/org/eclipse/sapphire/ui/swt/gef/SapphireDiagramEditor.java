@@ -853,7 +853,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	}
 	
 	private void postInit()
-	{						
+	{
+		// refresh node bounds
+		for (DiagramNodeModel node : this.diagramModel.getNodes())
+		{
+			node.handleMoveNode();
+		}
+
 		initRenderingContext();
 		initActions();
 		configureDiagramHeading();
