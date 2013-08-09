@@ -23,7 +23,6 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.gef.util.EditPartUtilities;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
@@ -33,10 +32,8 @@ import org.eclipse.swt.SWT;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class SapphireDragEditPartsTracker extends DragEditPartsTracker {
+public class SapphireDragEditPartsTracker extends SapphireNodeDragEditPartsTracker {
 	
-	private final static String LAST_EDIT_PART = "LAST_EDIT_PART";
-
 	public SapphireDragEditPartsTracker(EditPart sourceEditPart) {
 		super(sourceEditPart);
 	}
@@ -47,14 +44,17 @@ public class SapphireDragEditPartsTracker extends DragEditPartsTracker {
 			return;
 		setFlag(FLAG_SELECTION_PERFORMED, true);
 		EditPartViewer viewer = getCurrentViewer();
-		List selectedObjects = viewer.getSelectedEditParts();
+		List<EditPart> selectedObjects = viewer.getSelectedEditParts();
 
 		if (getCurrentInput().isModKeyDown(SWT.MOD1)) {
-			if (selectedObjects.contains(getSourceEditPart()))
+			if (selectedObjects.contains(getSourceEditPart())) {
 				viewer.deselect(getSourceEditPart());
-			else
+			} else {
 				viewer.appendSelection(getSourceEditPart());
-
+				
+				removeParentDuplicates(getSourceEditPart());
+				removeChildrenDuplicates(getSourceEditPart());
+			}
 			viewer.setProperty(LAST_EDIT_PART, getSourceEditPart());
 		} else if (getCurrentInput().isShiftKeyDown()) {
 			EditPart fromEditPart = (EditPart)viewer.getProperty(LAST_EDIT_PART);
@@ -92,6 +92,20 @@ public class SapphireDragEditPartsTracker extends DragEditPartsTracker {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
+	private void removeParentDuplicates(EditPart sourceEditPart) {
+		final EditPartViewer viewer = getCurrentViewer();
+		List selectedParts = viewer.getSelectedEditParts();
+		EditPart parent = sourceEditPart.getParent();
+		while (parent != null) {
+			if (selectedParts.contains(parent)) {
+				viewer.deselect(parent);
+				return;
+			}
+			parent = parent.getParent();
+		}
+	}
+
 	private void filterEditParts(List<EditPart> list, EditPart part1, EditPart part2) {
 		removeParent(list, part1);
 		removeParent(list, part2);

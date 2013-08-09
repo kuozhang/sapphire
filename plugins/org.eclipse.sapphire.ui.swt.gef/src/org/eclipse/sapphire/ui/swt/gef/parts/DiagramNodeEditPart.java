@@ -24,6 +24,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
+import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -57,6 +58,7 @@ import org.eclipse.sapphire.ui.swt.gef.policies.NodeLayoutEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
+import org.eclipse.sapphire.ui.swt.gef.tools.SapphireNodeDragEditPartsTracker;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -383,6 +385,11 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		DiagramNodePart nodePart = getCastedModel().getModelPart();
 		return nodePart.getContainedImageParts();
 		
+	}
+
+	@Override
+	public DragTracker getDragTracker(Request request) {
+		return new SapphireNodeDragEditPartsTracker(this);
 	}
 	
 }
