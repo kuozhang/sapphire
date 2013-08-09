@@ -44,7 +44,6 @@ import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The context button manager shows and hides the context button pad. Mostly

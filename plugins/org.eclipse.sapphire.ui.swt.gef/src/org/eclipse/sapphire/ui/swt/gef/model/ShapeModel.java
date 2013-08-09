@@ -13,7 +13,6 @@
 package org.eclipse.sapphire.ui.swt.gef.model;
 
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.LineShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.RectanglePresentation;

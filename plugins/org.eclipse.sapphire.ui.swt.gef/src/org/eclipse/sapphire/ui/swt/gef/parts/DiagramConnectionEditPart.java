@@ -20,7 +20,6 @@ import org.eclipse.draw2d.AbsoluteBendpoint;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
-import org.eclipse.draw2d.PolylineDecoration;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;

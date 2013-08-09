@@ -23,9 +23,6 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
-import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
-import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
-import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

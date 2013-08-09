@@ -26,7 +26,6 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.swt.gef.commands.CreateConnectionCommand;
 import org.eclipse.sapphire.ui.swt.gef.commands.ReconnectConnectionCommand;
 import org.eclipse.sapphire.ui.swt.gef.figures.DiagramConnectionFigure;
-import org.eclipse.sapphire.ui.swt.gef.figures.NodeFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
