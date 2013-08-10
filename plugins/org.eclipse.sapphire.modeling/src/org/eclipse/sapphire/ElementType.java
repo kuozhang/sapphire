@@ -172,26 +172,28 @@ public final class ElementType extends ModelMetadataItem
     
     @SuppressWarnings( "unchecked" )
     
-    public <T extends Element> T instantiate( final Property property,
-                                                    final Resource resource )
+    public <T extends Element> T instantiate( final Property property, final Resource resource )
     {
-        if( ! this.implClassLoaded )
+        synchronized( this )
         {
-            this.implClassLoaded = true;
-            
-            this.implClass = ElementClassLoaders.loadImplementationClass( this );
-            
-            try
+            if( ! this.implClassLoaded )
             {
-                this.implClassConstructor = this.implClass.getConstructor( Property.class, Resource.class );
-            }
-            catch( NoSuchMethodException e )
-            {
-                // todo: log a better message here
+                this.implClassLoaded = true;
                 
-                LoggingService.log( e );
+                this.implClass = ElementClassLoaders.loadImplementationClass( this );
                 
-                this.implClass = null;
+                try
+                {
+                    this.implClassConstructor = this.implClass.getConstructor( Property.class, Resource.class );
+                }
+                catch( NoSuchMethodException e )
+                {
+                    // todo: log a better message here
+                    
+                    LoggingService.log( e );
+                    
+                    this.implClass = null;
+                }
             }
         }
         
