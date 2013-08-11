@@ -80,6 +80,7 @@
     <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
     <li><a href="#ExpressionLanguage-ContentFunction">Content Function</a></li>
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
+    <li><a href="#ExpressionLanguage-EndsWithFunction">EndsWith Function</a></li>
     <li><a href="#ExpressionLanguage-FragmentFunction">Fragment Function</a></li>
     <li><a href="#ExpressionLanguage-HeadFunction">Head Function</a></li>
     <li><a href="#ExpressionLanguage-IndexFunction">Index Function</a></li>
@@ -1143,6 +1144,15 @@ enablement of the property editor part.</p>
     &lt;property>FormLoginPage&lt;/property>
     &lt;visible-when></font>${ Enabled() }<font color="#888888">&lt;/visible-when>
 &lt;/property-editor></font></code></pre>
+
+
+<h2><a name="ExpressionLanguage-EndsWithFunction">EndsWith Function</a></h2>
+
+<p>Tests if a string ends with the specified suffix.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ Path.EndsWith( ".png" ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-FragmentFunction">Fragment Function</a></h2>

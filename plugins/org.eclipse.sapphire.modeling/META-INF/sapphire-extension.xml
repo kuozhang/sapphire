@@ -507,6 +507,15 @@
         <description>Concatenates two or more strings into a single string. Particularly useful in contexts where composite expressions cannot be used, such as where the result of concatenation needs to feed into another function or operator.</description>
     </function>
     <function>
+        <name>EndsWith</name>
+        <impl>org.eclipse.sapphire.modeling.el.internal.EndsWithFunction</impl>
+        <description>Tests if a string ends with the specified suffix.</description>
+        <signature>
+            <parameter>java.lang.String</parameter>
+            <parameter>java.lang.String</parameter>
+        </signature>
+    </function>
+    <function>
         <description>Tests if a string starts with the specified prefix.</description>
         <impl>org.eclipse.sapphire.modeling.el.internal.StartsWithFunction</impl>
         <name>StartsWith</name>

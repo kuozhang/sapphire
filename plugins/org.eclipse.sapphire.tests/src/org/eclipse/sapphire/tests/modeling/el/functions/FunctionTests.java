@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.modeling.el.functions.content.ContentFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.enabled.EnabledFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.endswith.EndsWithFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.fragment.FragmentFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.head.HeadFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.index.IndexFunctionTests;
@@ -52,6 +53,7 @@ public final class FunctionTests extends TestCase
         
         suite.addTest( ContentFunctionTests.suite() );
         suite.addTest( EnabledFunctionTests.suite() );
+        suite.addTest( EndsWithFunctionTests.suite() );
         suite.addTest( FragmentFunctionTests.suite() );
         suite.addTest( HeadFunctionTests.suite() );
         suite.addTest( IndexFunctionTests.suite() );
