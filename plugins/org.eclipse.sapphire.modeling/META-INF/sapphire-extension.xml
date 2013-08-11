@@ -507,6 +507,15 @@
         <description>Concatenates two or more strings into a single string. Particularly useful in contexts where composite expressions cannot be used, such as where the result of concatenation needs to feed into another function or operator.</description>
     </function>
     <function>
+        <description>Tests if a string starts with the specified prefix.</description>
+        <impl>org.eclipse.sapphire.modeling.el.internal.StartsWithFunction</impl>
+        <name>StartsWith</name>
+        <signature>
+            <parameter>java.lang.String</parameter>
+            <parameter>java.lang.String</parameter>
+        </signature>
+    </function>
+    <function>
         <name>FirstSegment</name>
         <impl>org.eclipse.sapphire.modeling.el.FirstSegmentFunction</impl>
         <description>Breaks a string into segments using the provided separators and returns the first segment. If no separators are found in the string, the entire string is returned. This function takes two string operands. The first is the string to tokenize. The second is a sequence of characters that individually should be treated as valid separators.</description>

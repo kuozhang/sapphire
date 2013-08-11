@@ -89,6 +89,7 @@
     <li><a href="#ExpressionLanguage-PartFunction">Part Function</a></li>
     <li><a href="#ExpressionLanguage-SeverityFunction">Severity Function</a></li>
     <li><a href="#ExpressionLanguage-SizeFunction">Size Function</a></li>
+    <li><a href="#ExpressionLanguage-StartsWithFunction">StartsWith Function</a></li>
     <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
     <li><a href="#ExpressionLanguage-TailFunction">Tail Function</a></li>
     <li><a href="#ExpressionLanguage-TextFunction">Text Function</a></li>
@@ -1242,6 +1243,15 @@ ${ Head( "abcdef", 3 ) }</code></pre>
 <pre class="source-code"><code>${ PurchaseOrder.Entries.Size }
 ${ PurchaseOrder.BillingInformation.Name.Size }
 ${ Size( "abcdef" ) }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-StartsWithFunction">StartsWith Function</a></h2>
+
+<p>Tests if a string starts with the specified prefix.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>${ Path.StartsWith( ".." ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-StateFunction">State Function</a></h2>

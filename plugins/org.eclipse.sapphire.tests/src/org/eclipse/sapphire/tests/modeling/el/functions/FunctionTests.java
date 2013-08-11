@@ -27,6 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.functions.parent.part.PartParentFu
 import org.eclipse.sapphire.tests.modeling.el.functions.part.PartFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.severity.SeverityFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.size.SizeFunctionTests;
+import org.eclipse.sapphire.tests.modeling.el.functions.startswith.StartsWithFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.tail.TailFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.text.TextFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.validation.part.PartValidationFunctionTests;
@@ -61,6 +62,7 @@ public final class FunctionTests extends TestCase
         suite.addTest( PartFunctionTests.suite() );
         suite.addTest( SeverityFunctionTests.suite() );
         suite.addTest( SizeFunctionTests.suite() );
+        suite.addTest( StartsWithFunctionTests.suite() );
         suite.addTest( TailFunctionTests.suite() );
         suite.addTest( TextFunctionTests.suite() );
         suite.addTest( PartValidationFunctionTests.suite() );
