@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.tests.modeling.el.functions.absolute.AbsolutePathFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.content.ContentFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.enabled.EnabledFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.endswith.EndsWithFunctionTests;
@@ -51,6 +52,7 @@ public final class FunctionTests extends TestCase
         
         suite.setName( "FunctionTests" );
         
+        suite.addTest( AbsolutePathFunctionTests.suite() );
         suite.addTest( ContentFunctionTests.suite() );
         suite.addTest( EnabledFunctionTests.suite() );
         suite.addTest( EndsWithFunctionTests.suite() );

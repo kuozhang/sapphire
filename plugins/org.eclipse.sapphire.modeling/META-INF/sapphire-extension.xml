@@ -502,6 +502,14 @@
         <description>ConversionService implementation for String to Function conversions.</description>
     </service>
     <function>
+        <description>Returns the absolute path of a value for properties with a RelativePathService.</description>
+        <impl>org.eclipse.sapphire.modeling.el.internal.AbsolutePathFunction</impl>
+        <name>Absolute</name>
+        <signature>
+            <parameter>org.eclipse.sapphire.Value</parameter>
+        </signature>
+    </function>
+    <function>
         <name>Concat</name>
         <impl>org.eclipse.sapphire.modeling.el.ConcatFunction</impl>
         <description>Concatenates two or more strings into a single string. Particularly useful in contexts where composite expressions cannot be used, such as where the result of concatenation needs to feed into another function or operator.</description>
