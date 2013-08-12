@@ -260,7 +260,7 @@ public abstract class PageBookPart extends FormComponentPart
         
         final FormPart oldPage = this.currentPage;
         
-        if( this.childPartValidationListener != null )
+        if( oldPage != null && this.childPartValidationListener != null )
         {
             oldPage.detach( this.childPartValidationListener );
         }
