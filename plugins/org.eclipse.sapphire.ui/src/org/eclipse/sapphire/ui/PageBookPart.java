@@ -16,6 +16,8 @@ import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -49,8 +52,9 @@ public abstract class PageBookPart extends FormComponentPart
     private Map<Object,FormDef> pageDefs;
     private FormDef defaultPageDef;
     private FormPart currentPage;
+    private Map<PageCacheKey,FormPart> pages = Collections.synchronizedMap( new HashMap<PageCacheKey,FormPart>() );
     private boolean exposePageValidationState = false;
-    private Listener childPartListener = null;
+    private Listener childPartValidationListener = null;
     
     @Override
     protected void init()
@@ -254,23 +258,58 @@ public abstract class PageBookPart extends FormComponentPart
             throw new IllegalArgumentException();
         }
         
-        final FormPart pageToDispose = this.currentPage;
+        final FormPart oldPage = this.currentPage;
+        
+        if( this.childPartValidationListener != null )
+        {
+            oldPage.detach( this.childPartValidationListener );
+        }
 
         this.currentPage = null;
         
         if( pageDef != null )
         {
-            this.currentPage = createPagePart( modelElementForPage, pageDef );
+            final PageCacheKey key = new PageCacheKey( pageDef, modelElementForPage );
             
-            if( this.childPartListener != null )
+            this.currentPage = this.pages.get( key );
+            
+            if( this.currentPage == null )
             {
-                this.currentPage.attach( this.childPartListener );
+                this.currentPage = createPagePart( modelElementForPage, pageDef );
+                this.pages.put( key, this.currentPage );
+                
+                final Listener elementDisposeListener = new FilteredListener<ElementDisposeEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final ElementDisposeEvent event )
+                    {
+                        final FormPart page = PageBookPart.this.pages.remove( key );
+                        
+                        if( page != null )
+                        {
+                            page.dispose();
+                        }
+                    }
+                };
+                
+                modelElementForPage.attach( elementDisposeListener );
+                
+                final Listener pageDisposeListener = new FilteredListener<org.eclipse.sapphire.DisposeEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final org.eclipse.sapphire.DisposeEvent event )
+                    {
+                        modelElementForPage.detach( elementDisposeListener );
+                    }
+                };
+                
+                this.currentPage.attach( pageDisposeListener );
             }
-        }
-        
-        if( pageToDispose != null )
-        {
-            pageToDispose.dispose();
+            
+            if( this.childPartValidationListener != null )
+            {
+                this.currentPage.attach( this.childPartValidationListener );
+            }
         }
         
         refreshValidation();
@@ -310,7 +349,7 @@ public abstract class PageBookPart extends FormComponentPart
             
             if( this.exposePageValidationState == true )
             {
-                this.childPartListener = new FilteredListener<PartValidationEvent>()
+                this.childPartValidationListener = new FilteredListener<PartValidationEvent>()
                 {
                     @Override
                     protected void handleTypedEvent( PartValidationEvent event )
@@ -321,12 +360,12 @@ public abstract class PageBookPart extends FormComponentPart
                 
                 if( this.currentPage != null )
                 {
-                    this.currentPage.attach( this.childPartListener );
+                    this.currentPage.attach( this.childPartValidationListener );
                 }
             }
             else
             {
-                this.childPartListener = null;
+                this.childPartValidationListener = null;
             }
             
             refreshValidation();
@@ -338,10 +377,16 @@ public abstract class PageBookPart extends FormComponentPart
     {
         super.dispose();
         
-        if( this.currentPage != null )
+        for( final FormPart page : this.pages.values() )
         {
-            this.currentPage.dispose();
+            page.dispose();
         }
+        
+        this.pageDefs = null;
+        this.defaultPageDef = null;
+        this.currentPage = null;
+        this.pages = null;
+        this.childPartValidationListener = null;
     }
     
     public static final class PageChangedEvent extends PartEvent
@@ -387,6 +432,36 @@ public abstract class PageBookPart extends FormComponentPart
                 final Class<?> cl2 = ( (ClassBasedKey) obj ).cl;
                 return this.cl.isAssignableFrom( cl2 ) || cl2.isAssignableFrom( this.cl );
             }
+        }
+    }
+    
+    private static final class PageCacheKey
+    {
+        private final FormDef def;
+        private final Element element;
+        
+        public PageCacheKey( final FormDef def, final Element element )
+        {
+            this.def = def;
+            this.element = element;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return System.identityHashCode( this.def ) ^ System.identityHashCode( this.element );
+        }
+
+        @Override
+        public boolean equals( final Object obj )
+        {
+            if( obj instanceof PageCacheKey )
+            {
+                final PageCacheKey key = (PageCacheKey) obj;
+                return ( this.def == key.def && this.element == key.element );
+            }
+            
+            return false;
         }
     }
 
