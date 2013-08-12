@@ -28,6 +28,8 @@ import org.eclipse.sapphire.ui.def.SplitFormDef;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
@@ -39,6 +41,24 @@ import org.eclipse.swt.widgets.Control;
 
 public final class SplitFormPart extends FormPart
 {
+    private int[] weights;
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        final List<SplitFormBlockDef> blocks = definition().getBlocks();
+        final int count = blocks.size();
+        
+        this.weights = new int[ count ];
+        
+        for( int i = 0; i < count; i++ )
+        {
+            this.weights[ i ] = blocks.get( i ).getWeight().content();
+        }
+    }
+
     @Override
     protected List<SapphirePart> initChildParts()
     {
@@ -94,7 +114,6 @@ public final class SplitFormPart extends FormPart
         
         final List<SplitFormBlockPart> blockParts = getChildParts();
         final int blockPartsCount = blockParts.size();
-        final int[] weights = new int[ blockPartsCount ];
         
         for( int i = 0; i < blockPartsCount; i++ )
         {
@@ -142,6 +161,20 @@ public final class SplitFormPart extends FormPart
                 attachChildPartsListener( child, blockChildPartsListener );
             }
             
+            final int blockIndex = i;
+            
+            blockComposite.addControlListener
+            (
+                new ControlAdapter()
+                {
+                    @Override
+                    public void controlResized( final ControlEvent event )
+                    {
+                        SplitFormPart.this.weights[ blockIndex ] = ( getOrientation() == Orientation.HORIZONTAL ? blockComposite.getSize().x : blockComposite.getSize().y );
+                    }
+                }
+            );
+            
             blockComposite.addDisposeListener
             (
                 new DisposeListener()
@@ -152,11 +185,9 @@ public final class SplitFormPart extends FormPart
                     }
                 }
             );
-            
-            weights[ i ] = block.getWeight();
         }
         
-        form.setWeights( weights );
+        form.setWeights( this.weights );
     }
     
     private static void attachChildPartsListener( final SapphirePart part,

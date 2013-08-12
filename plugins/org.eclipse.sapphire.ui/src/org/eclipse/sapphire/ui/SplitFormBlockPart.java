@@ -26,16 +26,4 @@ public final class SplitFormBlockPart extends FormPart
         return (SplitFormBlockDef) super.definition();
     }
     
-    public int getWeight()
-    {
-        int weight = definition().getWeight().content();
-        
-        if( weight < 1 )
-        {
-            weight = 1;
-        }
-        
-        return weight;
-    }
-    
 }
