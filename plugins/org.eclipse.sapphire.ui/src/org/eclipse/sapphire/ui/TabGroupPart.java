@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.TabItem;
 public final class TabGroupPart extends FormComponentPart
 {
     private List<TabGroupPagePart> pages;
+    private TabGroupPagePart selection;
     
     @Override
     protected void init()
@@ -74,6 +75,7 @@ public final class TabGroupPart extends FormComponentPart
         }
         
         this.pages = pagesListFactory.result();
+        this.selection = this.pages.get( 0 );
     }
     
     @Override
@@ -86,19 +88,24 @@ public final class TabGroupPart extends FormComponentPart
     {
         return this.pages;
     }
+    
+    public TabGroupPagePart selection()
+    {
+        return this.selection;
+    }
 
     @Override
     public void render( final SapphireRenderingContext context )
     {
-        final TabFolder tabGroup = new TabFolder( context.getComposite(), SWT.TOP );
-        tabGroup.setLayoutData( gdhindent( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ), 9 ) );
+        final TabFolder tabFolderControl = new TabFolder( context.getComposite(), SWT.TOP );
+        tabFolderControl.setLayoutData( gdhindent( gdhspan( ( getScaleVertically() ? gdfill() : gdhfill() ), 2 ), 9 ) );
         
         for( final TabGroupPagePart page : this.pages )
         {
-            final Composite tabControl = new Composite( tabGroup, SWT.NONE );
+            final Composite tabControl = new Composite( tabFolderControl, SWT.NONE );
             tabControl.setLayout( glayout( 2, 1, 10, 10, 10 ) );
 
-            final TabItem tab = new TabItem( tabGroup, SWT.NONE );
+            final TabItem tab = new TabItem( tabFolderControl, SWT.NONE );
             tab.setText( page.getLabel() );
             tab.setControl( tabControl );
             
@@ -142,16 +149,18 @@ public final class TabGroupPart extends FormComponentPart
             page.render( new SapphireRenderingContext( page, context, tabControl ) );
         }
         
-        tabGroup.addSelectionListener
+        tabFolderControl.setSelection( this.pages.indexOf( this.selection ) );
+        
+        tabFolderControl.addSelectionListener
         (
             new SelectionAdapter()
             {
                 @Override
                 public void widgetSelected( final SelectionEvent event )
                 {
-                    final int tabGroupPageIndex = tabGroup.getSelectionIndex();
-                    final TabGroupPagePart tabGroupPagePart = TabGroupPart.this.pages.get( tabGroupPageIndex );;
-                    tabGroupPagePart.setFocus();
+                    final int tabGroupPageIndex = tabFolderControl.getSelectionIndex();
+                    TabGroupPart.this.selection = TabGroupPart.this.pages.get( tabGroupPageIndex );;
+                    TabGroupPart.this.selection.setFocus();
                 }
             }
         );
