@@ -62,6 +62,7 @@
                                 </font>
                                 <sequence-layout-constraint>
                                     <margin>5</margin>
+                                    <expand-horizontally>true</expand-horizontally>
                                 </sequence-layout-constraint>
                             </text>
                         </content>

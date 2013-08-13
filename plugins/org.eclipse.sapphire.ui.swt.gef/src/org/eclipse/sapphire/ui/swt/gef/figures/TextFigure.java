@@ -120,6 +120,12 @@ public class TextFigure extends Label implements IShapeFigure
 		return calculateLabelSize(getTextUtilities().getTextExtents(getText(), getFont()));
 	}
 	
+	@Override
+	public Dimension getPreferredSize(int wHint, int hHint) 
+	{
+		return calculateLabelSize(getTextUtilities().getTextExtents(getText(), getFont()));
+	}
+
 	private int getSwtTextAlignment(HorizontalAlignment horizontalAlign)
 	{
 		int alignment = PositionConstants.CENTER;

@@ -266,16 +266,19 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		
 		Dimension minSize = getFigure().getMinimumSize();
 		Dimension maxSize = getFigure().getMaximumSize();
-		int width = nb.getWidth() != -1 ? Math.max(minSize.width, nb.getWidth()) : -1;
-		int height = nb.getHeight() != -1 ? Math.max(minSize.height, nb.getHeight()) : -1;
-		if (width != -1 && maxSize.width < Integer.MAX_VALUE)
+		int width = nb.getWidth();
+		int height = nb.getHeight();
+		if (width != -1)
 		{
 			width = Math.min(width, maxSize.width);
+			width = Math.max(width, minSize.width);
 		}
 		if (height != -1 && maxSize.height < Integer.MAX_VALUE)
 		{
 			height = Math.min(height, maxSize.height);
-		}
+			height = Math.max(height, minSize.height);
+		}		
+		
 		Rectangle bounds = new Rectangle(nb.getX(), nb.getY(), width, height);
 		((GraphicalEditPart) getParent()).setLayoutConstraint(this,	getFigure(), bounds);		
 	}
