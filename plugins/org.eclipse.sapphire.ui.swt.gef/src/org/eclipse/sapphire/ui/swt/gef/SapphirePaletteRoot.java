@@ -40,6 +40,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.ui.swt.gef.tools.SapphireMarqueeSelectionTool;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -60,6 +61,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 	 * removed and new ones will be created by calling the corresponding
 	 * create-methods.
 	 */
+	@SuppressWarnings("unchecked")
 	public void updatePaletteEntries() 
 	{
 		// remove old entries
@@ -218,7 +220,9 @@ public class SapphirePaletteRoot extends PaletteRoot
 		setDefaultEntry(tool);
 
 		// Add a marquee tool to the group
-		group.add(new MarqueeToolEntry());
+		MarqueeToolEntry toolEntry = new MarqueeToolEntry();
+		toolEntry.setToolClass(SapphireMarqueeSelectionTool.class);
+		group.add(toolEntry);
 
 		return group;
 	}

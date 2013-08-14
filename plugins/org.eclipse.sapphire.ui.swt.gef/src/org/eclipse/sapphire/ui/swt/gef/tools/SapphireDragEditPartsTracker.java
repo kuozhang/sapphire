@@ -47,13 +47,15 @@ public class SapphireDragEditPartsTracker extends SapphireNodeDragEditPartsTrack
 		List<EditPart> selectedObjects = viewer.getSelectedEditParts();
 
 		if (getCurrentInput().isModKeyDown(SWT.MOD1)) {
-			if (selectedObjects.contains(getSourceEditPart())) {
-				viewer.deselect(getSourceEditPart());
+			EditPart deselectPart = getDeselectPart(selectedObjects, getSourceEditPart());
+			if (deselectPart != null) {
+				viewer.deselect(deselectPart);
 			} else {
-				viewer.appendSelection(getSourceEditPart());
-				
-				removeParentDuplicates(getSourceEditPart());
-				removeChildrenDuplicates(getSourceEditPart());
+				if (!isParentSelected(getSourceEditPart())) {
+					viewer.appendSelection(getSourceEditPart());
+					
+					removeChildrenDuplicates(getSourceEditPart());
+				}
 			}
 			viewer.setProperty(LAST_EDIT_PART, getSourceEditPart());
 		} else if (getCurrentInput().isShiftKeyDown()) {
@@ -93,17 +95,17 @@ public class SapphireDragEditPartsTracker extends SapphireNodeDragEditPartsTrack
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void removeParentDuplicates(EditPart sourceEditPart) {
+	private boolean isParentSelected(EditPart sourceEditPart) {
 		final EditPartViewer viewer = getCurrentViewer();
 		List selectedParts = viewer.getSelectedEditParts();
 		EditPart parent = sourceEditPart.getParent();
 		while (parent != null) {
 			if (selectedParts.contains(parent)) {
-				viewer.deselect(parent);
-				return;
+				return true;
 			}
 			parent = parent.getParent();
 		}
+		return false;
 	}
 
 	private void filterEditParts(List<EditPart> list, EditPart part1, EditPart part2) {

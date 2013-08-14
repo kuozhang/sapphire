@@ -38,8 +38,9 @@ public class SapphireNodeDragEditPartsTracker extends DragEditPartsTracker {
 		List<EditPart> selectedObjects = viewer.getSelectedEditParts();
 
 		if (getCurrentInput().isModKeyDown(SWT.MOD1)) {
-			if (selectedObjects.contains(getSourceEditPart())) {
-				viewer.deselect(getSourceEditPart());
+			EditPart deselectPart = getDeselectPart(selectedObjects, getSourceEditPart());
+			if (deselectPart != null) {
+				viewer.deselect(deselectPart);
 			} else {
 				viewer.appendSelection(getSourceEditPart());
 				removeChildrenDuplicates(getSourceEditPart());
@@ -55,6 +56,17 @@ public class SapphireNodeDragEditPartsTracker extends DragEditPartsTracker {
 
 			viewer.setProperty(LAST_EDIT_PART, getSourceEditPart());
 		}
+	}
+	
+	protected EditPart getDeselectPart(List<EditPart> selectedObjects, EditPart sourceEditPart) {
+		EditPart parent = sourceEditPart;
+		while (parent != null) {
+			if (selectedObjects.contains(parent)) {
+				return parent;
+			}
+			parent = parent.getParent();
+		}
+		return null;
 	}
 	
 	@SuppressWarnings("rawtypes")
