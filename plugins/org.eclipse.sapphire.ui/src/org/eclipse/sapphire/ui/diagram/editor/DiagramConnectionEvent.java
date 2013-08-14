@@ -7,18 +7,44 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramConnectionEvent extends DiagramPartEvent 
 {
-     public DiagramConnectionEvent(final DiagramConnectionPart part)
-     {
+    public static enum ConnectionEventType
+    {
+        ConnectionUpdate,
+        ConnectionEndpointUpdate,
+        ConnectionAdd,
+        ConnectionDelete,
+        ConnectionAddBendpoint,
+        ConnectionRemoveBendpoint,
+        ConnectionMoveBendpoint,
+        ConnectionResetBendpoint,
+        ConnectionMoveLabel
+    }
+    
+    private ConnectionEventType connectionEventType;
+
+	public DiagramConnectionEvent(final DiagramConnectionPart part)
+    {
          super(part);
-     }
+    }
+
+    public ConnectionEventType getConnectionEventType() {
+		return connectionEventType;
+	}
+
+	public void setConnectionEventType(ConnectionEventType connectionEventType) {
+		this.connectionEventType = connectionEventType;
+	}
+
 }

@@ -10,6 +10,7 @@
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [342775] Support EL in MasterDetailsTreeNodeDef.ImagePath
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -25,6 +26,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
@@ -51,6 +53,7 @@ import org.eclipse.sapphire.util.CollectionsUtil;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramConnectionTemplate extends SapphirePart
@@ -94,7 +97,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     private ListProperty modelProperty;
     protected ListProperty connListProperty;
     protected Listener modelPropertyListener;
-    protected SapphireDiagramPartListener connPartListener;
+    protected Listener connPartListener;
     protected Set<DiagramConnectionTemplateListener> templateListeners;
     // The model path specified in the sdef file
     private ModelPath originalEndpoint2Path;
@@ -123,8 +126,9 @@ public class DiagramConnectionTemplate extends SapphirePart
         
         this.propertyName = this.bindingDef.getProperty().content();
         this.modelProperty = (ListProperty) element.property(this.propertyName).definition();
+
+        initConnPartListener();
         
-        this.connPartListener = new ConnectionPartListener(); 
         this.templateListeners = new CopyOnWriteArraySet<DiagramConnectionTemplateListener>();
                     
         String endpt1PropStr = this.bindingDef.getEndpoint1().content().getProperty().content();
@@ -194,6 +198,43 @@ public class DiagramConnectionTemplate extends SapphirePart
             }
         };
         addModelListener();        
+    }
+    
+    protected void initConnPartListener() 
+    {
+        this.connPartListener = new Listener() {
+			@Override
+			public void handle(Event e) {
+                if (e instanceof DiagramConnectionEvent) {
+					DiagramConnectionEvent event = (DiagramConnectionEvent)e;
+					switch(event.getConnectionEventType()) {
+				    	case ConnectionUpdate:
+				            notifyConnectionUpdate(event);
+							break;
+				    	case ConnectionEndpointUpdate:
+				            notifyConnectionEndpointUpdate(event);
+				    		break;
+				    	case ConnectionAddBendpoint:
+				            notifyAddBendpoint(event);
+				    		break;
+				    	case ConnectionRemoveBendpoint:
+				            notifyRemoveBendpoint(event);
+				    		break;
+				    	case ConnectionMoveBendpoint:
+				            notifyMoveBendpoint(event);
+				    		break;
+				    	case ConnectionResetBendpoint:
+				            notifyResetBendpoints(event);
+				    		break;
+				    	case ConnectionMoveLabel:
+				            notifyMoveLabel(event);
+				    		break;
+				    	default:
+				    		break;
+			    	}
+				}
+			}
+        };
     }
     
     public String getConnectionId()
@@ -487,7 +528,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         addConnectionPart(srcNodeElement, connPart);
         connPart.init(this, connElement, this.connectionDef, 
                 Collections.<String,String>emptyMap());
-        connPart.addListener(this.connPartListener);
+        connPart.attach(this.connPartListener);
         return connPart;
     }
         
@@ -580,7 +621,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         // Handle newly created connections
         for (Element newConn : newConns)
         {                    
-            DiagramConnectionPart connPart = createNewConnectionPart(newConn, connListParent);
+            createNewConnectionPart(newConn, connListParent);
         }
         
     }
@@ -649,6 +690,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     public void disposeConnectionPart(DiagramConnectionPart connPart)
     {
     	connPart.dispose();
+    	connPart.detach(this.connPartListener);
         this.diagramConnections.remove(connPart);
     }
     
@@ -764,43 +806,4 @@ public class DiagramConnectionTemplate extends SapphirePart
         OneToMany
     }
     
-    protected class ConnectionPartListener extends SapphireDiagramPartListener 
-    {
-        @Override
-        public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
-        {
-            notifyConnectionUpdate(event);
-        }  
-        @Override
-        public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
-        {
-            notifyConnectionEndpointUpdate(event);
-        }            
-        @Override
-        public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
-        {
-            notifyAddBendpoint(event);
-        }            
-        @Override
-        public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
-        {
-            notifyRemoveBendpoint(event);
-        }            
-        @Override
-        public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
-        {
-            notifyMoveBendpoint(event);
-        }            
-        @Override
-        public void handleConnectionResetBendpointsEvent(final DiagramConnectionEvent event)
-        {
-            notifyResetBendpoints(event);
-        }            
-        @Override
-        public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
-        {
-            notifyMoveLabel(event);
-        }            
-        
-    };
 }

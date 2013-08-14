@@ -33,9 +33,10 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent.ShapeEventType;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
@@ -44,6 +45,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramNodePart 
@@ -241,79 +243,44 @@ public class DiagramNodePart
         
     private void notifyShapeUpdate(ShapePart shapePart)
     {
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
-				((SapphireDiagramPartListener)listener).handleShapeUpdateEvent(nue);
-			}
-		}    	
+		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
+    	this.broadcast(event);
     }
 
     private void notifyTextChange(ShapePart shapePart)
     {
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
-				((SapphireDiagramPartListener)listener).handleTextChangeEvent(nue);
-			}
-		}    	    	
+		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+    	event.setShapeEventType(ShapeEventType.TextChange);
+    	this.broadcast(event);
     }
+    
     private void notifyShapeVisibility(ShapePart shapePart)
     {
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
-				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(nue);
-			}
-		}    	
+		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
+    	this.broadcast(event);
     }
     
     private void notifyShapeAdd(ShapePart shapePart)
     {
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
-				((SapphireDiagramPartListener)listener).handleShapeAddEvent(nue);
-			}
-		}    	    	
+		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+    	event.setShapeEventType(ShapeEventType.ShapeAdd);
+    	this.broadcast(event);
     }
     
     private void notifyShapeDelete(ShapePart shapePart)
     {    	
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapePart);
-				((SapphireDiagramPartListener)listener).handleShapeDeleteEvent(nue);
-			}
-		}    	    	
+		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+    	event.setShapeEventType(ShapeEventType.ShapeDelete);
+    	this.broadcast(event);
     }
     
     private void notifyShapeReorder(ShapeFactoryPart shapeFactory)
     {
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramShapeEvent nue = new DiagramShapeEvent(this, shapeFactory);
-				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(nue);
-			}
-		}    	
+		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+    	event.setShapeEventType(ShapeEventType.ShapeReorder);
+    	this.broadcast(event);
     }
     
     public String getNodeTypeId()
@@ -390,15 +357,9 @@ public class DiagramNodePart
 	
 	private void notifyNodeMove()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramNodeEvent ne = new DiagramNodeEvent(this);
-				((SapphireDiagramPartListener)listener).handleNodeMoveEvent(ne);
-			}
-		}		
+		DiagramNodeEvent event = new DiagramNodeEvent(this);
+		event.setNodeEventType(NodeEventType.NodeMove);
+		this.broadcast(event);
 	}
 	
     public PropertiesViewContributionPart getPropertiesViewContribution()

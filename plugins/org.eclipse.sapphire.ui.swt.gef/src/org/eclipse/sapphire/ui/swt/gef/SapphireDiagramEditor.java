@@ -87,7 +87,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
@@ -157,7 +156,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     private DiagramLayoutPersistenceService layoutPersistenceService;
 	private PaletteRoot root;
     private DiagramModel diagramModel;
-    private SapphireDiagramPartListener diagramPartListener;
     private Listener layoutPersistenceServiceListener;
     private List<ISapphirePart> selectedParts = new ArrayList<ISapphirePart>();
     private List<GraphicalEditPart> selectedEditParts = null;
@@ -222,167 +220,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 
 		setEditDomain(new DefaultEditDomain(this));
 		
-		this.diagramPartListener = new SapphireDiagramPartListener() 
-        {
-			@Override
-		    public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
-		    {
-		        updateShapeVisibility((DiagramNodePart)event.getPart(), event.getShapePart());
-		    }
-
-			@Override
-		    public void handleShapeUpdateEvent(final DiagramShapeEvent event)
-		    {
-		        updateNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
-		    }
-			
-			@Override
-		    public void handleTextChangeEvent(final DiagramShapeEvent event)
-		    {
-		        changeText((DiagramNodePart)event.getPart(), event.getShapePart());
-		    }
-
-			@Override
-		    public void handleShapeAddEvent(final DiagramShapeEvent event)
-		    {
-		        addNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
-		    }
-
-            @Override
-		    public void handleShapeDeleteEvent(final DiagramShapeEvent event)
-		    {
-		        deleteNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
-		    }
-
-            @Override
-		    public void handleShapeReorderEvent(final DiagramShapeEvent event)
-		    {
-		        reorderShapes((DiagramNodePart)event.getPart(), (ShapeFactoryPart)event.getShapePart());
-		    }
-
-            @Override
-            public void handleNodeAddEvent(final DiagramNodeEvent event)
-            {
-                addNode((DiagramNodePart)event.getPart());
-            }
-            
-            @Override
-            public void handleNodeDeleteEvent(final DiagramNodeEvent event)
-            {
-                removeNode((DiagramNodePart)event.getPart());
-            }
-
-			@Override
-		    public void handleNodeMoveEvent(final DiagramNodeEvent event)
-		    {		    	
-		    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
-		    	moveNode(nodePart);
-		    }
-			
-			@Override
-			public void handleConnectionUpdateEvent(final DiagramConnectionEvent event)
-			{
-				updateConnection((DiagramConnectionPart)event.getPart());
-			}
-
-            @Override
-            public void handleConnectionEndpointEvent(final DiagramConnectionEvent event)
-            {
-                updateConnectionEndpoint((DiagramConnectionPart)event.getPart());
-            }
-
-            @Override
-            public void handleConnectionAddEvent(final DiagramConnectionEvent event)
-            {
-                addConnectionIfPossible((DiagramConnectionPart)event.getPart());
-            }
-
-			@Override
-			public void handleConnectionDeleteEvent(final DiagramConnectionEvent event)
-			{
-				removeConnection((DiagramConnectionPart)event.getPart());
-			}
-			
-			@Override
-		    public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
-		    {
-				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-		    	updateConnectionBendpoint(connPart);
-		    }
-
-			@Override
-		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
-		    {
-				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-		    	updateConnectionBendpoint(connPart);
-		    }
-			
-			@Override
-		    public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
-		    {
-				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-		    	updateConnectionBendpoint(connPart);
-		    }
-			
-			@Override
-		    public void handleConnectionResetBendpointsEvent(final DiagramConnectionEvent event)
-		    {
-				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-		    	updateConnectionBendpoint(connPart);
-		    }
-
-			@Override
-		    public void handleConnectionMoveLabelEvent(final DiagramConnectionEvent event)
-		    {
-				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-		    	updateConnectionMoveLabel(connPart);
-		    }
-
-			@Override
-		    public void handleDirectEditEvent(final DiagramPartEvent event)
-		    {
-		    	selectAndDirectEditPart(event.getPart());
-		    }
-			
-		    @Override
-			public void handleGridStateChangeEvent(final DiagramPageEvent event)
-			{
-				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, part.isGridVisible());
-				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, part.isGridVisible());
-				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING, 
-						new Dimension(part.getGridUnit(), part.getVerticalGridUnit()));
-				markEditorDirty();
-			}
-			
-			@Override
-			public void handleGuideStateChangeEvent(final DiagramPageEvent event)
-			{
-				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, Boolean.valueOf(part.isShowGuides()));
-				markEditorDirty();
-			}
-
-			@Override
-			public void handleDiagramUpdateEvent(final DiagramPageEvent event)
-			{
-				refreshPalette();
-			}
-			
-			@Override
-		    public void handleSelectAllEvent(final DiagramPageEvent event)
-		    {
-		    	selectAll();
-		    }
-		    
-			@Override
-		    public void handleSelectAllNodesEvent(final DiagramPageEvent event)
-		    {
-		    	selectAllNodes();
-		    }
-			
-		};
-		
-		this.part.addListener(this.diagramPartListener);
-		
 		this.part.attach
         (
             new Listener()
@@ -395,7 +232,27 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
                     	isSelectionFromPagePart = true;
                         selectParts(part.getSelections());
                         isSelectionFromPagePart = false;
-                    }
+                    } 
+                    else if ( event instanceof DiagramShapeEvent )
+                    {
+                    	handleDiagramShapeEvent((DiagramShapeEvent)event);
+	                } 
+                    else if ( event instanceof DiagramNodeEvent )
+	                {
+	                	handleDiagramNodeEvent((DiagramNodeEvent)event);
+	                } 
+                    else if ( event instanceof DiagramConnectionEvent )
+	                {
+	                	handleDiagramConnectionEvent((DiagramConnectionEvent)event);
+	                } 
+                    else if ( event instanceof DiagramPageEvent )
+	                {
+	                	handleDiagramPageEvent((DiagramPageEvent)event);
+	                } 
+                    else if ( event instanceof DiagramPartEvent )
+	                {
+	                	handleDiagramPartEvent((DiagramPartEvent)event);
+	                }
                 }
             }
         );
@@ -446,6 +303,124 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         this.part.attach( this.diagramEditorPagePartListener );
     }
     
+	private void handleDiagramShapeEvent(DiagramShapeEvent event) {
+    	switch(event.getShapeEventType()) {
+	    	case ShapeUpdate:
+		        updateNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
+	    		break;
+	    	case TextChange:
+		        changeText((DiagramNodePart)event.getPart(), event.getShapePart());
+	    		break;
+	    	case ShapeVisibilityUpdate:
+		        updateShapeVisibility((DiagramNodePart)event.getPart(), event.getShapePart());
+	    		break;
+	    	case ShapeAdd:
+		        addNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
+		        break;
+	    	case ShapeDelete:
+		        deleteNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
+		        break;
+	    	case ShapeReorder:
+		        reorderShapes((DiagramNodePart)event.getPart(), (ShapeFactoryPart)event.getShapePart());
+		        break;
+	    	default:
+	    		break;
+    	}
+	}
+
+    private void handleDiagramNodeEvent(DiagramNodeEvent event) {
+    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
+    	switch(event.getNodeEventType()) {
+	    	case NodeAdd:
+                addNode(nodePart);
+	    		break;
+	    	case NodeDelete:
+                removeNode(nodePart);
+    		break;
+	    	case NodeMove:
+		    	moveNode(nodePart);
+	    		break;
+	    	default:
+	    		break;
+    	}
+	}
+
+    protected void handleDiagramConnectionEvent(DiagramConnectionEvent event) {
+		DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+
+		switch(event.getConnectionEventType()) {
+	    	case ConnectionUpdate:
+				updateConnection(connPart);
+				break;
+	    	case ConnectionEndpointUpdate:
+                updateConnectionEndpoint(connPart);
+	    		break;
+	    	case ConnectionAdd:
+                addConnectionIfPossible(connPart);
+                break;
+	    	case ConnectionDelete:
+				removeConnection(connPart);
+	    		break;
+	    	case ConnectionAddBendpoint:
+		    	updateConnectionBendpoint(connPart);
+	    		break;
+	    	case ConnectionRemoveBendpoint:
+		    	updateConnectionBendpoint(connPart);
+	    		break;
+	    	case ConnectionMoveBendpoint:
+		    	updateConnectionBendpoint(connPart);
+	    		break;
+	    	case ConnectionResetBendpoint:
+		    	updateConnectionBendpoint(connPart);
+	    		break;
+	    	case ConnectionMoveLabel:
+		    	updateConnectionMoveLabel(connPart);
+	    		break;
+	    	default:
+	    		break;
+    	}
+	}
+
+    private void handleDiagramPageEvent(DiagramPageEvent event) {
+    	switch(event.getDiagramPageEventType()) {
+	    	case GridStateChange:
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, part.isGridVisible());
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, part.isGridVisible());
+				getGraphicalViewer().setProperty(SnapToGrid.PROPERTY_GRID_SPACING, 
+						new Dimension(part.getGridUnit(), part.getVerticalGridUnit()));
+				markEditorDirty();
+	    		break;
+	    	case GuideStateChange:
+				getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, Boolean.valueOf(part.isShowGuides()));
+				markEditorDirty();
+	    		break;
+	    	case DiagramChange:
+				refreshPalette();
+	    		break;   
+	    	case DiagramSave:
+	    		// Noop
+	    		break;
+	    	case SelectAll:
+		    	selectAll();
+    		break;
+	    	case SelectAllNodes:
+		    	selectAllNodes();
+	    		break;
+	    	default:
+	    		break;
+    	}
+	}
+
+    private void handleDiagramPartEvent(DiagramPartEvent event) {
+    	switch(event.getDiagramPartEventType()) {
+	    	case DirectEdit:
+		    	selectAndDirectEditPart(event.getPart());
+	    		break;
+	    	default:
+	    		break;
+    	}
+	}
+
     public IDiagramEditorPageDef getDiagramEditorPageDef()
     {
     	return (IDiagramEditorPageDef) this.definition.resolve();
@@ -1311,7 +1286,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		super.dispose();
 		
 		diagramModel.dispose();
-		part.removeListener(this.diagramPartListener);
 		
 		if (layoutPersistenceService != null)
 		{

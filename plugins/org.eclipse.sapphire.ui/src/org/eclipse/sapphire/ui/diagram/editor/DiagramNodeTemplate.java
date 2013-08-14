@@ -12,6 +12,7 @@
  *    Ling Hao - [44319] Image specification for diagram parts inconsistent with the rest of sdef 
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -26,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ListProperty;
@@ -47,6 +49,7 @@ import org.eclipse.sapphire.util.CollectionsUtil;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public final class DiagramNodeTemplate extends SapphirePart
@@ -99,7 +102,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 	private FunctionResult toolPaletteImageFunctionResult;
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
 	private Listener modelPropertyListener;
-	private SapphireDiagramPartListener nodePartListener;
+	private Listener nodePartListener;
 	private Set<DiagramNodeTemplateListener> listeners;	
 	private List<DiagramNodePart> diagramNodes;
 	    
@@ -125,50 +128,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
         this.modelElementType = this.definition.getElementType().resolve();
         
-        this.nodePartListener = new SapphireDiagramPartListener() 
-        {
-        	@Override
-            public void handleShapeVisibilityEvent(final DiagramShapeEvent event)
-            {
-        		notifyShapeVisibilityUpdate(event);
-            }
-
-        	@Override
-            public void handleShapeUpdateEvent(final DiagramShapeEvent event)
-            {
-                notifyShapeUpdate(event);
-            }
-        	
-        	@Override
-            public void handleTextChangeEvent(final DiagramShapeEvent event)
-            {
-                notifyTextChange(event);
-            }
-
-        	@Override
-            public void handleShapeAddEvent(final DiagramShapeEvent event)
-            {
-                notifyShapeAdd(event);
-            }
-        	
-        	@Override
-            public void handleShapeDeleteEvent(final DiagramShapeEvent event)
-            {
-                notifyShapeDelete(event);
-            }
-
-        	@Override
-            public void handleShapeReorderEvent(final DiagramShapeEvent event)
-            {
-                notifyShapeReorder(event);
-            }
-
-        	@Override
-	    	public void handleNodeMoveEvent(final DiagramNodeEvent event)
-	       	{
-        		notifyNodeMoveEvent(event);
-	       	}        	
-		};
+		initNodePartListener();
 		
     	ElementList<?> list = this.modelElement.property(this.modelProperty);
         for( Element listEntryModelElement : list )
@@ -212,6 +172,49 @@ public final class DiagramNodeTemplate extends SapphirePart
         };
         addModelListener();        
     }
+	
+	private void initNodePartListener() {
+        this.nodePartListener = new Listener() {
+			@Override
+			public void handle(Event e) {
+                if (e instanceof DiagramShapeEvent) {
+                	DiagramShapeEvent event = (DiagramShapeEvent)e;
+                	switch(event.getShapeEventType()) {
+        	    	case ShapeUpdate:
+                        notifyShapeUpdate(event);
+        	    		break;
+        	    	case TextChange:
+                        notifyTextChange(event);
+        	    		break;
+        	    	case ShapeVisibilityUpdate:
+                		notifyShapeVisibilityUpdate(event);
+        	    		break;
+        	    	case ShapeAdd:
+                        notifyShapeAdd(event);
+        		        break;
+        	    	case ShapeDelete:
+                        notifyShapeDelete(event);
+        		        break;
+        	    	case ShapeReorder:
+                        notifyShapeReorder(event);
+        		        break;
+        	    	default:
+        	    		break;
+            	}
+                } else if (e instanceof DiagramNodeEvent) {
+                	DiagramNodeEvent event = (DiagramNodeEvent)e;
+                	switch(event.getNodeEventType()) {
+		    	    	case NodeMove:
+		            		notifyNodeMoveEvent(event);
+		    	    		break;
+		    	    	default:
+		    	    		break;
+                	}
+				}
+			}
+        };
+		
+	}
     
     /*
      * We need to initialize all the node parts before we can initialize embedded connections.
@@ -379,6 +382,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 			{
 				notifyNodeDelete(nodePart);
 				nodePart.dispose();
+				nodePart.detach(this.nodePartListener);
 				this.diagramNodes.remove(nodePart);
 				if (this.embeddedConnTemplate != null)
 				{
@@ -423,7 +427,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         DiagramNodePart newNode = new DiagramNodePart();
         newNode.init(this, element, this.definition, 
                 Collections.<String,String>emptyMap());
-        newNode.addListener(this.nodePartListener);
+        newNode.attach(this.nodePartListener);
         this.diagramNodes.add(newNode);
         if (this.embeddedConnTemplate != null)
         {

@@ -7,22 +7,33 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphirePart.PartEvent;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramPartEvent
+public class DiagramPartEvent extends PartEvent
 {
+    public static enum DiagramPartEventType
+    {
+        DirectEdit
+    }
+
     private final ISapphirePart part;
+    private DiagramPartEventType diagramPartEventType;
     
     public DiagramPartEvent( final ISapphirePart part )
     {
+    	super((SapphirePart)part);
         this.part = part;
     }
     
@@ -30,5 +41,13 @@ public class DiagramPartEvent
     {
         return this.part;
     }
+
+	public DiagramPartEventType getDiagramPartEventType() {
+		return diagramPartEventType;
+	}
+
+	public void setDiagramPartEventType(DiagramPartEventType diagramPartEventType) {
+		this.diagramPartEventType = diagramPartEventType;
+	}
     
 }

@@ -7,17 +7,28 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramNodeEvent extends DiagramPartEvent 
 {
+    public static enum NodeEventType
+    {
+        NodeAdd,
+        NodeDelete,
+        NodeMove
+    }
 	    
+    private NodeEventType nodeEventType;
+
     public DiagramNodeEvent(final DiagramNodePart part)
     {
        super(part);
@@ -27,5 +38,13 @@ public class DiagramNodeEvent extends DiagramPartEvent
     {
        super(part);
     }
-    
+
+	public NodeEventType getNodeEventType() {
+		return nodeEventType;
+	}
+
+	public void setNodeEventType(NodeEventType nodeEventType) {
+		this.nodeEventType = nodeEventType;
+	}
+
 }

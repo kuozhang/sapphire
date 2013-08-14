@@ -11,6 +11,7 @@
  *    Konstantin Komissarchik - [342897] Integrate with properties view
  *    Konstantin Komissarchik - [342775] Support EL in MasterDetailsTreeNodeDef.ImagePath
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -38,16 +39,17 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramConnectionPart 
@@ -515,93 +517,51 @@ public class DiagramConnectionPart
         
     protected void notifyConnectionUpdate()
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionUpdateEvent(cue);
-            }
-        }
+    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+		event.setConnectionEventType(ConnectionEventType.ConnectionUpdate);
+    	this.broadcast(event);
     }
     
     protected void notifyConnectionEndpointUpdate()
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionEndpointEvent(cue);
-            }
-        }
+    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+		event.setConnectionEventType(ConnectionEventType.ConnectionEndpointUpdate);
+    	this.broadcast(event);
     }
     
     protected void notifyAddBendpoint()
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-            	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionAddBendpointEvent(event);
-            }
-        }    	
+    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+		event.setConnectionEventType(ConnectionEventType.ConnectionAddBendpoint);
+    	this.broadcast(event);
     }
     
     protected void notifyRemoveBendpoint()
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionRemoveBendpointEvent(cue);
-            }
-        }    	
+    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+		event.setConnectionEventType(ConnectionEventType.ConnectionRemoveBendpoint);
+    	this.broadcast(event);
     }
 
     protected void notifyMoveBendpoint()
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionMoveBendpointEvent(cue);
-            }
-        }    	
+    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+		event.setConnectionEventType(ConnectionEventType.ConnectionMoveBendpoint);
+    	this.broadcast(event);
     }
 
     protected void notifyResetBendpoints()
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-            	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(event);
-            }
-        }    	
+    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+		event.setConnectionEventType(ConnectionEventType.ConnectionResetBendpoint);
+    	this.broadcast(event);
     }
 
     protected void notifyMoveConnectionLabel()
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                DiagramConnectionEvent cue = new DiagramConnectionEvent(this);
-                ((SapphireDiagramPartListener)listener).handleConnectionMoveLabelEvent(cue);
-            }
-        }    	
+    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
+		event.setConnectionEventType(ConnectionEventType.ConnectionMoveLabel);
+    	this.broadcast(event);
     }
     
     public PropertiesViewContributionPart getPropertiesViewContribution()

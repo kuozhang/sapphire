@@ -10,6 +10,7 @@
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  *    Konstantin Komissarchik - [376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections in SapphireDiagramEditor
  *    Konstantin Komissarchik - [381233] IllegalStateException in ServiceContext when modifying xml in source editor in Architecture sample
+ *    Ling Hao - [383924]  Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.architecture.internal;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyEvent;
@@ -40,19 +42,19 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 import org.eclipse.sapphire.ui.diagram.layout.ConnectionHashKey;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPersistenceService 
 {
 	private ArchitectureSketch architecture;
-	private SapphireDiagramPartListener diagramPartListener;
+	private Listener diagramPartListener;
 	private Listener componentListener;	
 	private Listener componentDependencyListener;
 	private Map<String, DiagramNodeBounds> nodeBounds;
@@ -143,7 +145,7 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 	{
 		if (this.diagramPartListener != null)
 		{
-		    context( SapphireDiagramEditorPagePart.class ).removeListener(this.diagramPartListener);
+		    context( SapphireDiagramEditorPagePart.class ).detach(this.diagramPartListener);
 		}
 		if (this.componentListener != null)
 		{
@@ -231,18 +233,39 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 
 	private void addDiagramPartListener()
 	{
-		this.diagramPartListener = new SapphireDiagramPartListener() 
-		{
-			@Override
-            public void handleNodeAddEvent(final DiagramNodeEvent event)
+        this.diagramPartListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
             {
-				read((DiagramNodePart)event.getPart());
+                if ( event instanceof DiagramNodeEvent )
+                {
+                	handleDiagramNodeEvent((DiagramNodeEvent)event);
+                } 
+                else if ( event instanceof DiagramConnectionEvent )
+                {
+                	handleDiagramConnectionEvent((DiagramConnectionEvent)event);
+                } 
+                else if ( event instanceof DiagramPageEvent )
+                {
+                	handleDiagramPageEvent((DiagramPageEvent)event);
+                }
             }
-			
-			@Override
-		    public void handleNodeMoveEvent(final DiagramNodeEvent event)
-		    {
-				DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
+        };
+        
+        context( SapphireDiagramEditorPagePart.class ).attach( this.diagramPartListener );
+	}
+	
+    private void handleDiagramNodeEvent(DiagramNodeEvent event) {
+    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
+    	switch(event.getNodeEventType()) {
+	    	case NodeAdd:
+				read(nodePart);
+	    		break;
+	    	case NodeDelete:
+			    refreshDirtyState();
+    		break;
+	    	case NodeMove:
 				DiagramNodeBounds nodeBounds = nodePart.getNodeBounds();
 				
 				if (nodeBounds.isAutoLayout())
@@ -255,48 +278,32 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 				{
 					write((DiagramNodePart)event.getPart());
 				}
-		    }
-			
-			@Override
-		    public void handleNodeDeleteEvent(final DiagramNodeEvent event)
-			{
-			    refreshDirtyState();
-			}
-			
-			@Override
-	        public void handleConnectionAddEvent(final DiagramConnectionEvent event)
-			{
-				DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+	    		break;
+	    	default:
+	    		break;
+    	}
+	}
+
+    protected void handleDiagramConnectionEvent(DiagramConnectionEvent event) {
+		DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+
+		switch(event.getConnectionEventType()) {
+	    	case ConnectionAdd:
 				read(connPart);
-			}
-			
-			@Override
-			public void handleConnectionDeleteEvent(final DiagramConnectionEvent event)
-			{
+                break;
+	    	case ConnectionDelete:
 				refreshDirtyState();
-			}
-			
-			@Override
-			public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event)
-			{
-				write((DiagramConnectionPart)event.getPart());
-			}
-			
-			@Override
-		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event)
-		    {
-				write((DiagramConnectionPart)event.getPart());
-			}
-
-		    public void handleConnectionMoveBendpointEvent(final DiagramConnectionEvent event)
-		    {
-		    	write((DiagramConnectionPart)event.getPart());
-		    }
-
-		    @Override
-		    public void handleConnectionResetBendpointsEvent(final DiagramConnectionEvent event)
-		    {
-		    	DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+	    		break;
+	    	case ConnectionAddBendpoint:
+				write(connPart);
+	    		break;
+	    	case ConnectionRemoveBendpoint:
+				write(connPart);
+	    		break;
+	    	case ConnectionMoveBendpoint:
+				write(connPart);
+	    		break;
+	    	case ConnectionResetBendpoint:
 		    	DiagramConnectionBendPoints bendPoints = connPart.getConnectionBendpoints();
 		    	if (bendPoints.isAutoLayout())
 		    	{
@@ -318,31 +325,29 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
 		    			write((DiagramConnectionPart)event.getPart());
 		    		}
 		    	}
-		    }
-		    
-		    @Override
-			public void handleGridStateChangeEvent(final DiagramPageEvent event)
-			{
-		    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
-		    	setGridVisible(diagramPart.isGridVisible());
-			}
-			
-			@Override
-			public void handleGuideStateChangeEvent(final DiagramPageEvent event)
-			{
-		    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
-		    	setGuidesVisible(diagramPart.isShowGuides());
-			}
-			
-			@Override
-			public void handleDiagramSaveEvent(final DiagramPageEvent event)
-			{
-				doSave();
-			}
-						
-		};
-		context( SapphireDiagramEditorPagePart.class ).addListener(this.diagramPartListener);
+	    		break;
+	    	default:
+	    		break;
+    	}
 	}
+
+    private void handleDiagramPageEvent(DiagramPageEvent event) {
+    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
+    	switch(event.getDiagramPageEventType()) {
+	    	case GridStateChange:
+		    	setGridVisible(diagramPart.isGridVisible());
+	    		break;
+	    	case GuideStateChange:
+		    	setGuidesVisible(diagramPart.isShowGuides());
+	    		break;
+	    	case DiagramSave:
+				doSave();
+	    		break;
+	    	default:
+	    		break;
+    	}
+	}
+
 	
 	private void addModelListeners()
 	{

@@ -14,6 +14,7 @@
  *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [346172] Support zoom, print and save as image actions in the diagram editor
  *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -42,16 +43,20 @@ import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphirePartListener;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate.DiagramConnectionTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.DiagramImplicitConnectionTemplateListener;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventType;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent.DiagramPartEventType;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent.ShapeEventType;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
 import org.eclipse.sapphire.util.ListFactory;
 
@@ -701,312 +706,161 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     private void notifyShapeUpdate(DiagramShapeEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleShapeUpdateEvent(event);
-			}
-		}		
+    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
+    	this.broadcast(event);
 	}
 	
     private void notifyTextChange(DiagramShapeEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleTextChangeEvent(event);
-			}
-		}		
+    	event.setShapeEventType(ShapeEventType.TextChange);
+    	this.broadcast(event);
 	}
 
     private void notifyShapeVisibilityUpdate( DiagramShapeEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleShapeVisibilityEvent(event);
-			}
-		}		
+    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
+    	this.broadcast(event);
 	}
 
     private void notifyShapeAdd(DiagramShapeEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleShapeAddEvent(event);
-			}
-		}		
+    	event.setShapeEventType(ShapeEventType.ShapeAdd);
+    	this.broadcast(event);
 	}
 
     private void notifyShapeDelete(DiagramShapeEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleShapeDeleteEvent(event);
-			}
-		}		
+    	event.setShapeEventType(ShapeEventType.ShapeDelete);
+    	this.broadcast(event);
 	}
 
     private void notifyShapeReorder(DiagramShapeEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleShapeReorderEvent(event);
-			}
-		}		
+    	event.setShapeEventType(ShapeEventType.ShapeReorder);
+    	this.broadcast(event);
 	}
 
     private void notifyNodeAdd(DiagramNodePart nodePart)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
-				((SapphireDiagramPartListener)listener).handleNodeAddEvent(nue);
-			}
-		}
+		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
+		event.setNodeEventType(NodeEventType.NodeAdd);
+    	this.broadcast(event);
 	}
 	
 	private void notifyNodeDelete(DiagramNodePart nodePart)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramNodeEvent nue = new DiagramNodeEvent(nodePart);
-				((SapphireDiagramPartListener)listener).handleNodeDeleteEvent(nue);
-			}
-		}
+		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
+		event.setNodeEventType(NodeEventType.NodeDelete);
+    	this.broadcast(event);
 	}
 	
 	private void notifyNodeMove(DiagramNodeEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleNodeMoveEvent(event);
-			}
-		}
+		event.setNodeEventType(NodeEventType.NodeMove);
+    	this.broadcast(event);
 	}
 
 	private void notifyConnectionUpdate(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionUpdateEvent(event);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionUpdate);
+    	this.broadcast(event);
 	}
 	
 	private void notifyConnectionEndpointUpdate(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionEndpointEvent(event);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionEndpointUpdate);
+    	this.broadcast(event);
 	}
 
     private void notifyConnectionAdd(final DiagramConnectionEvent event)
     {
-        Set<SapphirePartListener> listeners = this.getListeners();
-        for(SapphirePartListener listener : listeners)
-        {
-            if (listener instanceof SapphireDiagramPartListener)
-            {
-                ((SapphireDiagramPartListener)listener).handleConnectionAddEvent(event);
-            }
-        }        
+		event.setConnectionEventType(ConnectionEventType.ConnectionAdd);
+    	this.broadcast(event);
     }
 
 	private void notifyConnectionDelete(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionDeleteEvent(event);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionDelete);
+    	this.broadcast(event);
 	}
 	
-	private void notifyConnectionAddBendpoint(final DiagramConnectionEvent cue)
+	private void notifyConnectionAddBendpoint(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionAddBendpointEvent(cue);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionAddBendpoint);
+    	this.broadcast(event);
 	}
 
 	private void notifyConnectionRemoveBendpoint(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionRemoveBendpointEvent(event);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionRemoveBendpoint);
+    	this.broadcast(event);
 	}
 
 	private void notifyConnectionMoveBendpoint(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionMoveBendpointEvent(event);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionMoveBendpoint);
+    	this.broadcast(event);
 	}
 	
 	private void notifyConnectionResetBendpoints(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionResetBendpointsEvent(event);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionResetBendpoint);
+    	this.broadcast(event);
 	}
 
 	private void notifyConnectionMoveLabel(final DiagramConnectionEvent event)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				((SapphireDiagramPartListener)listener).handleConnectionMoveLabelEvent(event);
-			}
-		}		
+		event.setConnectionEventType(ConnectionEventType.ConnectionMoveLabel);
+    	this.broadcast(event);
 	}
 
 	private void notifyDirectEdit(ISapphirePart part)
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPartEvent cue = new DiagramPartEvent(part);
-				((SapphireDiagramPartListener)listener).handleDirectEditEvent(cue);
-			}
-		}		
-
+		DiagramPartEvent event = new DiagramPartEvent(part);
+		event.setDiagramPartEventType(DiagramPartEventType.DirectEdit);
+    	this.broadcast(event);
 	}
 
 	private void notifyGridStateChange()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
-				((SapphireDiagramPartListener)listener).handleGridStateChangeEvent(pageEvent);
-			}
-		}		
+		DiagramPageEvent event = new DiagramPageEvent(this);
+		event.setDiagramPageEventType(DiagramPageEventType.GridStateChange);
+    	this.broadcast(event);
 	}
 	
 	private void notifyGuideStateChange()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
-				((SapphireDiagramPartListener)listener).handleGuideStateChangeEvent(pageEvent);
-			}
-		}		
+		DiagramPageEvent event = new DiagramPageEvent(this);
+		event.setDiagramPageEventType(DiagramPageEventType.GuideStateChange);
+    	this.broadcast(event);
 	}
 	
 	private void notifyDiagramChange()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
-				((SapphireDiagramPartListener)listener).handleDiagramUpdateEvent(pageEvent);
-			}
-		}		
+		DiagramPageEvent event = new DiagramPageEvent(this);
+		event.setDiagramPageEventType(DiagramPageEventType.DiagramChange);
+    	this.broadcast(event);
 	}
 	
 	private void notifyDiagramSave()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
-				((SapphireDiagramPartListener)listener).handleDiagramSaveEvent(pageEvent);
-			}
-		}		
+		DiagramPageEvent event = new DiagramPageEvent(this);
+		event.setDiagramPageEventType(DiagramPageEventType.DiagramSave);
+    	this.broadcast(event);
 	}
 	
 	private void notifySelectAll()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
-				((SapphireDiagramPartListener)listener).handleSelectAllEvent(pageEvent);
-			}
-		}				
+		DiagramPageEvent event = new DiagramPageEvent(this);
+		event.setDiagramPageEventType(DiagramPageEventType.SelectAll);
+    	this.broadcast(event);
 	}
 	
 	private void notifySelectAllNodes()
 	{
-		Set<SapphirePartListener> listeners = this.getListeners();
-		for(SapphirePartListener listener : listeners)
-		{
-			if (listener instanceof SapphireDiagramPartListener)
-			{
-				DiagramPageEvent pageEvent = new DiagramPageEvent(this);
-				((SapphireDiagramPartListener)listener).handleSelectAllNodesEvent(pageEvent);
-			}
-		}				
+		DiagramPageEvent event = new DiagramPageEvent(this);
+		event.setDiagramPageEventType(DiagramPageEventType.SelectAllNodes);
+    	this.broadcast(event);
 	}
 
 	// --------------------------------------------------------------------

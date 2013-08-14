@@ -8,18 +8,20 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [376266] Diagram delete all connection bend points action should be available in multi-select mode
- *    Ling Hao - [383924]  Flexible diagram node shapes
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,25 +32,32 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 public class DeleteAllBendPointsForConnectionActionHandler extends SapphireActionHandler 
 {
     
-	@SuppressWarnings("deprecation")
 	@Override
 	public void init(SapphireAction action, ActionHandlerDef def) {
 		super.init(action, def);
 
     	DiagramConnectionPart part = (DiagramConnectionPart) getPart();
-        part.addListener(new SapphireDiagramPartListener() {
-
+		part.attach(new Listener() {
 			@Override
-			public void handleConnectionAddBendpointEvent(DiagramConnectionEvent event) {
-                broadcast( new EnablementChangedEvent() );
-			}
+			public void handle(final Event e) {
+                if( e instanceof SelectionChangedEvent ) {
+                    broadcast( new EnablementChangedEvent() );
+                } else if (e instanceof DiagramConnectionEvent) {
+					DiagramConnectionEvent event = (DiagramConnectionEvent)e;
+					switch(event.getConnectionEventType()) {
+				    	case ConnectionAddBendpoint:
+			                broadcast( new EnablementChangedEvent() );
+				    		break;
+				    	case ConnectionRemoveBendpoint:
+			                broadcast( new EnablementChangedEvent() );
+				    		break;
+				    	default:
+				    		break;
+			    	}
+				}
 
-			@Override
-			public void handleConnectionRemoveBendpointEvent(DiagramConnectionEvent event) {
-                broadcast( new EnablementChangedEvent() );
 			}
-        	
-        });
+		});
 	}
 
 	@Override

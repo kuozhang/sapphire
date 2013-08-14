@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
@@ -39,6 +40,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
@@ -66,7 +68,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         this.propertyName = this.bindingDef.getProperty().content();
         this.connListProperty = (ListProperty)nodeProperty.getType().property(this.propertyName);
         
-        this.connPartListener = new ConnectionPartListener();
+        initConnPartListener();
         
         this.templateListeners = new CopyOnWriteArraySet<DiagramConnectionTemplateListener>();
         
@@ -226,7 +228,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         DiagramEmbeddedConnectionPart connPart = 
             new DiagramEmbeddedConnectionPart(this.bindingDef, srcNodeElement, this.endpointPath);
         connPart.init(this, connElement, this.connectionDef, Collections.<String,String>emptyMap());
-        connPart.addListener(this.connPartListener);
+        connPart.attach(this.connPartListener);
         addConnectionPart(srcNodeElement, connPart);
         return connPart;
     }
@@ -304,6 +306,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public void disposeConnectionPart(DiagramConnectionPart connPart)
     {
     	connPart.dispose();
+    	connPart.detach(this.connPartListener);
     	Collection<List<DiagramConnectionPart>> allConnParts = this.diagramConnectionMap.values();
     	for (List<DiagramConnectionPart> connParts : allConnParts)
     	{

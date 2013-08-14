@@ -13,7 +13,8 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
-import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -23,7 +24,6 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -33,35 +33,31 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramPartListener;
 
 public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireActionHandler 
 {
-	@SuppressWarnings("deprecation")
 	@Override
 	public void init(SapphireAction action, ActionHandlerDef def) {
 		super.init(action, def);
 
-        final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
-        page.attach
-        (
-            new FilteredListener<SelectionChangedEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( final SelectionChangedEvent event )
-                {
-                    broadcast( new EnablementChangedEvent() );
-                }
-            }
-        );
-        
-        page.addListener(new SapphireDiagramPartListener() {
-        	@Override
-			public void handleConnectionAddBendpointEvent(final DiagramConnectionEvent event) {
-                broadcast( new EnablementChangedEvent() );
-			}
-        	
+        SapphireDiagramEditorPagePart part = (SapphireDiagramEditorPagePart) getPart();
+		part.attach(new Listener() {
 			@Override
-		    public void handleConnectionRemoveBendpointEvent(final DiagramConnectionEvent event) {
-                broadcast( new EnablementChangedEvent() );
-		    }
-        });
+			public void handle(final Event e) {
+                if( e instanceof SelectionChangedEvent ) {
+                    broadcast( new EnablementChangedEvent() );
+                } else if (e instanceof DiagramConnectionEvent) {
+					DiagramConnectionEvent event = (DiagramConnectionEvent)e;
+					switch(event.getConnectionEventType()) {
+				    	case ConnectionAddBendpoint:
+			                broadcast( new EnablementChangedEvent() );
+				    		break;
+				    	case ConnectionRemoveBendpoint:
+			                broadcast( new EnablementChangedEvent() );
+				    		break;
+				    	default:
+				    		break;
+			    	}
+				}
+			}
+		});
 	}
 
     @Override

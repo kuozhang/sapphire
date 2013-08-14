@@ -7,19 +7,41 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
 public class DiagramPageEvent extends DiagramPartEvent 
 {
-	 public DiagramPageEvent(final SapphireDiagramEditorPagePart part)
-	 {
+    public static enum DiagramPageEventType
+    {
+    	GridStateChange,
+    	GuideStateChange,
+    	DiagramChange,
+    	DiagramSave,
+    	SelectAll,
+    	SelectAllNodes
+    }
+    
+    private DiagramPageEventType diagramPageEventType;
+
+    public DiagramPageEvent(final SapphireDiagramEditorPagePart part)
+	{
 		 super(part);
-	 }
+	}
+
+	public DiagramPageEventType getDiagramPageEventType() {
+		return diagramPageEventType;
+	}
+
+	public void setDiagramPageEventType(DiagramPageEventType diagramPageEventType) {
+		this.diagramPageEventType = diagramPageEventType;
+	}
 
 }
