@@ -35,6 +35,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -44,6 +45,7 @@ import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.SapphireImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
 import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
@@ -56,6 +58,7 @@ import org.eclipse.sapphire.ui.swt.gef.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLabelDirectEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLayoutEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
 import org.eclipse.sapphire.ui.swt.gef.tools.SapphireNodeDragEditPartsTracker;
@@ -287,8 +290,20 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	{
 		ShapePresentation nodePresentation = getCastedModel().getShapePresentation();
 		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(nodePresentation, shapePart);
-		ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache(),
-				getConfigurationManager());
+		if (nodePresentation.equals(shapePresentation) ) {
+			if (shapePresentation instanceof ImagePresentation) {
+				ImagePresentation imagePresentation = (ImagePresentation)shapePresentation;
+				ImagePart imagePart = imagePresentation.getImagePart();
+				DiagramNodePart nodePart = imagePart.nearest(DiagramNodePart.class);
+				final ImageData data = imagePresentation.getImage();
+				if (data != null) {   
+					((SapphireImageFigure)getFigure()).setImage(nodePart.getSwtResourceCache().image(data));
+				}
+			}
+		} else {
+			ShapeUtil.updateFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache(),
+					getConfigurationManager());
+		}
 	}
 	
 	private void changeText(TextPart textPart)

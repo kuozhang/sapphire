@@ -607,7 +607,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 		
 		diagramModel.handleRemoveNode(part);
-		getConfigurationManager().getDiagramRenderingContextCache().remove(part);
 	}
 
 	protected void addNode(DiagramNodePart part) {
@@ -615,8 +614,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			return;
 		}
 		
-		DiagramRenderingContext ctx = new DiagramRenderingContext(part, this);
-		getConfigurationManager().getDiagramRenderingContextCache().put(part, ctx);		
 		diagramModel.handleAddNode(part);
 	}
 	
@@ -648,10 +645,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			return;
 		}
 		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleUpdateShapeVisibility(shapePart);
-		}
+		diagramModel.handleUpdateShapeVisibility(part, shapePart);
 	}
 
 	protected void addNodeShape(DiagramNodePart part, ShapePart shapePart) 
