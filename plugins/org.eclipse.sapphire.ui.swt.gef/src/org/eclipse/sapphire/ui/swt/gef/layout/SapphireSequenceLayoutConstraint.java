@@ -118,18 +118,20 @@ public final class SapphireSequenceLayoutConstraint {
 	 */
 	public SapphireSequenceLayoutConstraint(SequenceLayoutConstraintDef def) {
 		if (def != null) {
-			this.widthHint = def.getWidth().content() != null ? def.getWidth().content() : -1;
-			this.heightHint = def.getHeight().content() != null ? def.getHeight().content() : -1;
-			this.maxWidth = def.getMaxWidth().content() != null ? def.getMaxWidth().content() : -1;
-			this.maxHeight = def.getMaxHeight().content() != null ? def.getMaxHeight().content() : -1;
-			this.minWidth = def.getMinWidth().content() != null ? def.getMinWidth().content() : -1;
-			this.minHeight = def.getMinHeight().content() != null ? def.getMinHeight().content() : -1;
-
 			this.horizontalAlignment = getSwtHorizontalAlignment(def.getHorizontalAlignment().content());
 			this.verticalAlignment = getSwtVerticalAlignment(def.getVerticalAlignment().content());
 			this.expandHorizontally = def.isExpandHorizontally().content();
 			this.expandVertically = def.isExpandVertically().content();
 			this.marginInsets = LayoutUtil.calculateMargin(def);
+
+			// cell sizes (min, max and preferred) should be after margins are applied. Substract margins in def, the margins will be added
+			// back in SapphireSequenceLayout
+			this.widthHint = def.getWidth().content() != null ? def.getWidth().content() - marginInsets.left - marginInsets.right : -1;
+			this.heightHint = def.getHeight().content() != null ? def.getHeight().content() - marginInsets.top - marginInsets.bottom : -1;
+			this.maxWidth = def.getMaxWidth().content() != null ? def.getMaxWidth().content() - marginInsets.left - marginInsets.right : -1;
+			this.maxHeight = def.getMaxHeight().content() != null ? def.getMaxHeight().content() - marginInsets.top - marginInsets.bottom : -1;
+			this.minWidth = def.getMinWidth().content() != null ? def.getMinWidth().content() - marginInsets.left - marginInsets.right : -1;
+			this.minHeight = def.getMinHeight().content() != null ? def.getMinHeight().content() - marginInsets.top - marginInsets.bottom : -1;
 		} else {
 			this.marginInsets = new Insets(0, 0, 0, 0);
 		}
