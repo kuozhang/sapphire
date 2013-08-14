@@ -273,7 +273,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 			width = Math.min(width, maxSize.width);
 			width = Math.max(width, minSize.width);
 		}
-		if (height != -1 && maxSize.height < Integer.MAX_VALUE)
+		if (height != -1)
 		{
 			height = Math.min(height, maxSize.height);
 			height = Math.max(height, minSize.height);
