@@ -353,6 +353,12 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                 try
                 {
                     DefaultListPropertyEditorRenderer.this.tableViewer.refresh();
+
+                    if( DefaultListPropertyEditorRenderer.this.table.isDisposed() )
+                    {
+                        return;
+                    }
+                    
                     DefaultListPropertyEditorRenderer.this.table.notifyListeners( SWT.Selection, null );
                     tableParentComposite.layout();
                 }
@@ -708,6 +714,12 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                 final TableRow row = DefaultListPropertyEditorRenderer.this.rows.get( newListElement );
                                 
                                 DefaultListPropertyEditorRenderer.this.tableViewer.setSelection( new StructuredSelection( row ), true );
+                                
+                                if( DefaultListPropertyEditorRenderer.this.table.isDisposed() )
+                                {
+                                    return;
+                                }
+                                
                                 DefaultListPropertyEditorRenderer.this.tableViewer.editElement( row, 0 );
                                 DefaultListPropertyEditorRenderer.this.table.notifyListeners( SWT.Selection, null );
                             }
@@ -1039,6 +1051,11 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
                                     newSelection.add( insertedElement );
                                     
                                     position++;
+                                }
+                                
+                                if( DefaultListPropertyEditorRenderer.this.table.isDisposed() )
+                                {
+                                    return;
                                 }
                                 
                                 DefaultListPropertyEditorRenderer.this.tableViewer.refresh();
