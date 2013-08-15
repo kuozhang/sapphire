@@ -41,9 +41,9 @@ public class SpacerFigure extends Figure
 	}
 
 	/**
-	 * @see IFigure#getMaximumSize(int, int)
+	 * @see IFigure#getMaximumSize()
 	 */
-	public Dimension getMaximumSize(int w, int h) 
+	public Dimension getMaximumSize() 
 	{
 		Point size = this.spacerPresentation.getMaximumSize();
 		Dimension d = new Dimension(size.getX(), size.getY());

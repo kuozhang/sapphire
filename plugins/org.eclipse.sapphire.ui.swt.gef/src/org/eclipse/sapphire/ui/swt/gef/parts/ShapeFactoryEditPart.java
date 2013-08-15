@@ -108,18 +108,11 @@ public class ShapeFactoryEditPart extends ShapeEditPart
 	public void propertyChange(PropertyChangeEvent evt) 
 	{
 		String prop = evt.getPropertyName();
-		if (prop.equals(ShapeFactoryModel.SHAPE_ADD))
+		if (prop.equals(ShapeFactoryModel.SHAPE_ADD) || prop.equals(ShapeFactoryModel.SHAPE_DELETE) 
+				|| prop.equals(ShapeFactoryModel.SHAPE_REORDER))
 		{
 			refreshChildren();
 			getNodeEditPart().refresh();
-		}
-		else if (prop.equals(ShapeFactoryModel.SHAPE_DELETE))
-		{
-			refreshChildren();
-		}
-		else if (prop.equals(ShapeFactoryModel.SHAPE_REORDER))
-		{
-			refreshChildren();
 		}
 	}	
 	

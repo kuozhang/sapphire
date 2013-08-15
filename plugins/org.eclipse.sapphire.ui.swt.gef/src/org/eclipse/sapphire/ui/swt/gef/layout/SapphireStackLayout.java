@@ -82,14 +82,14 @@ public class SapphireStackLayout extends AbstractLayout
 		Point offset = getOrigin(parent);
 		offset.x += this.marginInsets.left;
 		offset.y += this.marginInsets.top;	
-		// If the client space is larger than the combined image space, let's center
-		// the image space within the client space. 
-		// TODO we probably should have a specification in stack layout's definition.
-		Dimension clientSize = parent.getClientArea().getSize();
-		clientSize.width -= this.marginInsets.left + this.marginInsets.right;
-		clientSize.height -= this.marginInsets.top + this.marginInsets.bottom;
-		Point baseOffset = new Point((clientSize.width - baseSize.width + 1) >> 1,
-									(clientSize.height - baseSize.height + 1) >> 1);
+//		// If the client space is larger than the combined image space, let's center
+//		// the image space within the client space. 
+//		// TODO we probably should have a specification in stack layout's definition.
+//		Dimension clientSize = parent.getClientArea().getSize();
+//		clientSize.width -= this.marginInsets.left + this.marginInsets.right;
+//		clientSize.height -= this.marginInsets.top + this.marginInsets.bottom;
+//		Point baseOffset = new Point((clientSize.width - baseSize.width + 1) >> 1,
+//									(clientSize.height - baseSize.height + 1) >> 1);
 		
 		for (int i = 0; i < children.size(); i++)
 		{
@@ -97,8 +97,7 @@ public class SapphireStackLayout extends AbstractLayout
 			Dimension childSize = child.getPreferredSize();
 			SapphireStackLayoutConstraint constraint = (SapphireStackLayoutConstraint)getConstraint(child);
 			Point childOffset = getOffset(baseSize, childSize, constraint);
-			Rectangle childBounds = new Rectangle(childOffset.x + baseOffset.x, childOffset.y + baseOffset.y, 
-													childSize.width, childSize.height);
+			Rectangle childBounds = new Rectangle(childOffset.x, childOffset.y, childSize.width, childSize.height);
 			childBounds = childBounds.getTranslated(offset);
 			child.setBounds(childBounds);
 		}

@@ -121,7 +121,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		int height = 0, width = Integer.MAX_VALUE;
 		for (int i = 0; i < children.size(); i++) {
 			child = (IFigure) children.get(i);
-			childSize = transposer.t(getChildMaximumSize(child));
+			childSize = transposer.t(getChildCellMaximumSize(child));
 			Insets inset = new Insets();
 			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
 			if (constraint != null) {
@@ -251,9 +251,6 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 	public Dimension calculateMaximumSize(IFigure container) {
 		List children = container.getChildren();
-		if (children.isEmpty()) {
-			return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
-		}
 		Dimension maxSize = calculateChildrenMaximumSize(children);
 		Insets marginInsets = transposer.t(this.marginInsets);
 		if (maxSize.width < Integer.MAX_VALUE) {
@@ -335,7 +332,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		return dimension;
 	}
 
-	protected Dimension getChildMaximumSize(IFigure child) {
+	protected Dimension getChildCellMaximumSize(IFigure child) {
 		Dimension dimension = child.getMaximumSize().getCopy();
 		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
 		if (constraint.maxWidth > SWT.DEFAULT && constraint.maxWidth < Integer.MAX_VALUE ) {
@@ -401,7 +398,8 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 		Dimension prefSizes[] = new Dimension[numChildren];
 		Dimension minSizes[] = new Dimension[numChildren];
-		Dimension maxSizes[] = new Dimension[numChildren];
+		Dimension maxCellSizes[] = new Dimension[numChildren];
+		Dimension maxChildShapeSizes[] = new Dimension[numChildren];
 		int extraHeights[] = new int[numChildren];
 		
 		SapphireSequenceLayoutConstraint constraints[] = new SapphireSequenceLayoutConstraint[numChildren];
@@ -440,13 +438,16 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 			prefSizes[i] = transposer.t(getChildPreferredSize(child, wHint, hHint));
 			minSizes[i] = transposer.t(getChildMinimumSize(child, wHint, hHint));
-			maxSizes[i] = transposer.t(getChildMaximumSize(child));
+			maxCellSizes[i] = transposer.t(getChildCellMaximumSize(child));
+			maxChildShapeSizes[i] = transposer.t(child.getMaximumSize());
 			marginInsets[i] = transposer.t(constraint.getMarginInset());
 			
 			totalHeight += prefSizes[i].height;
 			totalMinHeight += minSizes[i].height;
 			totalMargin += marginInsets[i].top + marginInsets[i].bottom;
-			if (getMajorExpand(constraint)) {
+			// We need to expand the cell if the its constraint has "expand" bit on or
+			// one of the children has "expand" bit on
+			if (getMajorExpand(constraint) || maxChildShapeSizes[i].height == Integer.MAX_VALUE) {
 				expandCount++;
 			} 
 		}
@@ -464,7 +465,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			amntShrinkHeight = 0;
 		}
 		
-		if (extraHeight <= 0) {
+		if (extraHeight < 0) {
 			extraHeight = 0;
 		} else if (expandCount > 0) {
 			int averageExtraHeight = extraHeight / expandCount;
@@ -472,7 +473,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			for (int i = 0; i < numChildren; i++) {				
 				child = (IFigure) children.get(i);
 				SapphireSequenceLayoutConstraint constraint = constraints[i];
-				if (getMajorExpand(constraint)) {
+				if (getMajorExpand(constraint) || maxChildShapeSizes[i].height == Integer.MAX_VALUE) {
 						extraHeights[i] = averageExtraHeight;
 				}
 				else {
@@ -506,9 +507,12 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				amntShrinkHeight -= amntShrinkCurrentHeight;
 				prefMinSumHeight -= (prefHeight - minHeight);				
 			}			
-			else if (getMajorExpand(constraint)) {
+			else if (getMajorExpand(constraint) || maxChildShapeSizes[i].height == Integer.MAX_VALUE ) {
 				height += extraHeights[i];
-				if (child instanceof RectangleFigure) {
+				// If the expansion comes from child shape, let the child shape take up the extra space.
+				// Otherwise, the virtual cell takes up the extra space and we use its alignment to place
+				// the child shape
+				if (maxChildShapeSizes[i].height == Integer.MAX_VALUE) {
 					newBounds = new Rectangle(x, y + marginInset.top, prefWidth, height);
 				} else {
     				int offset = 0;
@@ -531,9 +535,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			}
 			availableBoundHeight = height;
 			
-			int width = Math.min(prefWidth,	maxSizes[i].width);
-			if (getMinorExpand(constraint) && (child instanceof RectangleFigure))
-				width = maxSizes[i].width;
+			int width = Math.min(prefWidth,	maxCellSizes[i].width);
+//			if (getMinorExpand(constraint) && (child instanceof RectangleFigure))
+//				width = maxSizes[i].width;
 			width = Math.max(minWidth, Math.min(clientArea.width, width));
 			newBounds.width = width;
 
@@ -545,7 +549,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			availableBounds = new Rectangle(x + marginInset.left, y + marginInset.top, 
 					clientArea.width - marginInset.left - marginInset.right, availableBoundHeight);
 			
-			if (getMinorExpand(constraint) && (child instanceof RectangleFigure)) 
+			if (maxChildShapeSizes[i].width == Integer.MAX_VALUE) 
 			{
 				newBounds.x += marginInset.left;
 				newBounds.width = clientArea.width - marginInset.left - marginInset.right;
@@ -646,9 +650,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	private void updateTransposerEnabledState() {
 		// enable transposer if the current orientation differs from the default
 		// orientation, disable it otherwise
-		transposer.setEnabled(isHorizontal()
-				&& getDefaultOrientation() == PositionConstants.VERTICAL
-				|| !isHorizontal()
-				&& getDefaultOrientation() == PositionConstants.HORIZONTAL);
+		transposer.setEnabled((isHorizontal()
+				&& getDefaultOrientation() == PositionConstants.VERTICAL)
+				|| (!isHorizontal()
+				&& getDefaultOrientation() == PositionConstants.HORIZONTAL));
 	}
 }

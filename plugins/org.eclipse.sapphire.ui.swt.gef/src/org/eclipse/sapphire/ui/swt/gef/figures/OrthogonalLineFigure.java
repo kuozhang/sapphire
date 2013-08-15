@@ -85,4 +85,16 @@ public class OrthogonalLineFigure extends Shape
 		}
 	}
 
+	@Override
+	public Dimension getMaximumSize()
+	{
+		if (this.linePresentation.isHorizontal())
+		{
+			return new Dimension(Integer.MAX_VALUE, this.linePresentation.getWeight());
+		}
+		else
+		{
+			return new Dimension(this.linePresentation.getWeight(), Integer.MAX_VALUE);
+		}
+	}
 }

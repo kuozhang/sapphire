@@ -128,6 +128,9 @@
                                             <text>
                                                 <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
                                                 <color>#B97D69</color>
+                                                <sequence-layout-constraint>
+                                                    <expand-horizontally>true</expand-horizontally>
+                                                </sequence-layout-constraint>
                                             </text>
                                         </content>
                                         <sequence-layout>
@@ -172,14 +175,14 @@
                             <weight>1</weight>
                         </top-border>
                         <sequence-layout-constraint>
-                            <expand-horizontally>true</expand-horizontally>
+                            <expand-horizontally>false</expand-horizontally>
                         </sequence-layout-constraint>
                         <visible-when>${ Fields.Size &gt; 0 }</visible-when>
                     </rectangle>
                     <rectangle>
                         <visible-when>${ Methods.Size &gt; 0 }</visible-when>
                         <sequence-layout-constraint>
-                            <expand-horizontally>true</expand-horizontally>
+                            <expand-horizontally>false</expand-horizontally>
                         </sequence-layout-constraint>
                         <top-border>
                             <weight>1</weight>
@@ -328,6 +331,9 @@
                                             <text>
                                                 <content>${ ReturnType == null ? &quot;&lt;type&gt;&quot; : ReturnType }</content>
                                                 <color>#B97D69</color>
+                                                <sequence-layout-constraint>
+                                                    <expand-horizontally>true</expand-horizontally>
+                                                </sequence-layout-constraint>
                                             </text>
                                         </content>
                                         <properties-view>

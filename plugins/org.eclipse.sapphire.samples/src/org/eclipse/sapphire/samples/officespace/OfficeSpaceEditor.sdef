@@ -44,7 +44,7 @@
                             <style>dot</style>
                         </top-border>
                         <sequence-layout-constraint>
-                            <expand-horizontally>true</expand-horizontally>
+                            <expand-horizontally>false</expand-horizontally>
                         </sequence-layout-constraint>
                         <content>
                             <shape-factory>
@@ -58,7 +58,7 @@
                                 <case>
                                     <rectangle>
                                         <sequence-layout-constraint>
-                                            <expand-horizontally>true</expand-horizontally>
+                                            <expand-horizontally>false</expand-horizontally>
                                         </sequence-layout-constraint>                                    
                                         <content>
                                             <rectangle>
@@ -81,7 +81,7 @@
                                                     </text>
                                                 </content>
                                                 <sequence-layout-constraint>
-                                                    <expand-horizontally>true</expand-horizontally>
+                                                    <expand-horizontally>false</expand-horizontally>
                                                 </sequence-layout-constraint>
                                             </rectangle>
                                             <rectangle>
@@ -94,12 +94,15 @@
                                                         <case>
                                                             <text>
                                                                 <content>${ Occupant == null ? &quot;&lt;occupant&gt;&quot; : Occupant}</content>
+                                                                <sequence-layout-constraint>
+                                                                    <expand-horizontally>true</expand-horizontally>
+                                                                </sequence-layout-constraint>
                                                             </text>
                                                         </case>
                                                     </shape-factory>
                                                 </content>
                                                 <sequence-layout-constraint>
-                                                    <expand-horizontally>true</expand-horizontally>
+                                                    <expand-horizontally>false</expand-horizontally>
                                                 </sequence-layout-constraint>
                                                 <border>
                                                     <weight>1</weight>
