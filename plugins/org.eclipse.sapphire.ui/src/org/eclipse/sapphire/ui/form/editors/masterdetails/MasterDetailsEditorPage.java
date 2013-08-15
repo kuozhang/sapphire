@@ -1079,7 +1079,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 {
                     final Element element = node.getModelElement();
                     
-                    if( element.parent().definition() instanceof ListProperty && node.controls( element ) )
+                    if( element.parent() instanceof ElementList && node.controls( element ) )
                     {
                         return true;
                     }
@@ -1210,7 +1210,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         {
                             final Element precedingElement = precedingNode.getModelElement();
                             
-                            if( precedingElement.parent().definition() instanceof ListProperty && precedingNode.controls( precedingElement ) )
+                            if( precedingElement.parent() instanceof ElementList && precedingNode.controls( precedingElement ) )
                             {
                                 ok = true;
                             }
@@ -1220,7 +1220,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         {
                             final Element trailingElement = trailingNode.getModelElement();
                             
-                            if( trailingElement.parent().definition() instanceof ListProperty && trailingNode.controls( trailingElement ) )
+                            if( trailingElement.parent() instanceof ElementList && trailingNode.controls( trailingElement ) )
                             {
                                 ok = true;
                             }
@@ -1280,7 +1280,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         final Element precedingElement = precedingNode.getModelElement();
                         
-                        if( precedingElement.parent().definition() instanceof ListProperty && ! precedingElement.parent().definition().isReadOnly() &&
+                        if( precedingElement.parent() instanceof ElementList && ! precedingElement.parent().definition().isReadOnly() &&
                             precedingNode.controls( precedingElement ) )
                         {
                             list = (ElementList<?>) precedingElement.parent();
@@ -1307,7 +1307,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         final Element trailingElement = trailingNode.getModelElement();
                         
-                        if( trailingElement.parent().definition() instanceof ListProperty && ! trailingElement.parent().definition().isReadOnly() &&
+                        if( trailingElement.parent() instanceof ElementList && ! trailingElement.parent().definition().isReadOnly() &&
                             trailingNode.controls( trailingElement ) )
                         {
                             list = (ElementList<?>) trailingElement.parent();
