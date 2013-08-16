@@ -31,7 +31,12 @@ public class DiagramNodeResizeTracker extends ResizeTracker
 
 	protected Dimension getMaximumSizeFor(ChangeBoundsRequest request) 
 	{
-		return getOwner().getFigure().getMaximumSize();
+		Dimension minSize = getOwner().getFigure().getMinimumSize();
+		Dimension maxSize = getOwner().getFigure().getMaximumSize();
+		int width = Math.max(maxSize.width, minSize.width);
+		int height =  Math.max(maxSize.height, minSize.height);		
+		
+		return new Dimension(width, height);
 	}
 
 	protected Dimension getMinimumSizeFor(ChangeBoundsRequest request) 

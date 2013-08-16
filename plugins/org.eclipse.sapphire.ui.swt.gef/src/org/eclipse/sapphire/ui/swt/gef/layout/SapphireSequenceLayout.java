@@ -335,17 +335,17 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	protected Dimension getChildCellMaximumSize(IFigure child) {
 		Dimension dimension = child.getMaximumSize().getCopy();
 		SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
-		if (constraint.maxWidth > SWT.DEFAULT && constraint.maxWidth < Integer.MAX_VALUE ) {
-			dimension.width = Math.min(constraint.maxWidth, dimension.width); 
-		}
-		if (constraint.maxHeight > SWT.DEFAULT && constraint.maxHeight < Integer.MAX_VALUE ) {
-			dimension.height = Math.min(constraint.maxHeight, dimension.height); 
-		}
 		if (constraint.expandHorizontally) {
 			dimension.width = Integer.MAX_VALUE;
 		}
 		if (constraint.expandVertically) {
 			dimension.height = Integer.MAX_VALUE;
+		}
+		if (constraint.maxWidth > SWT.DEFAULT && constraint.maxWidth < Integer.MAX_VALUE ) {
+			dimension.width = Math.min(constraint.maxWidth, dimension.width); 
+		}
+		if (constraint.maxHeight > SWT.DEFAULT && constraint.maxHeight < Integer.MAX_VALUE ) {
+			dimension.height = Math.min(constraint.maxHeight, dimension.height); 
 		}
 		return dimension;
 	}
@@ -447,7 +447,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			totalMargin += marginInsets[i].top + marginInsets[i].bottom;
 			// We need to expand the cell if the its constraint has "expand" bit on or
 			// one of the children has "expand" bit on
-			if (getMajorExpand(constraint) || maxChildShapeSizes[i].height == Integer.MAX_VALUE) {
+			if (getMajorExpand(constraint) || maxChildShapeSizes[i].height > prefSizes[i].height) {
 				expandCount++;
 			} 
 		}
@@ -465,21 +465,50 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			amntShrinkHeight = 0;
 		}
 		
-		if (extraHeight < 0) {
+		if (extraHeight <= 0) {
 			extraHeight = 0;
 		} else if (expandCount > 0) {
 			int averageExtraHeight = extraHeight / expandCount;
 
+			int limitedExpansionCount = 0;
+			int limitedExpansionHeightTotal = 0;
+			if (expandCount > 1) {
+				for (int i = 0; i < numChildren; i++) {				
+					int prefHeight = prefSizes[i].height;
+					int maxCellHeight = maxCellSizes[i].height;
+					child = (IFigure) children.get(i);
+					SapphireSequenceLayoutConstraint constraint = constraints[i];
+					if (getMajorExpand(constraint) || maxCellHeight > prefHeight) {
+						// only limited expansion since the child figure has max size constraint.
+						if (maxCellHeight - prefHeight < averageExtraHeight) {
+							limitedExpansionCount++;
+							limitedExpansionHeightTotal += maxCellHeight - prefHeight;
+						}
+					}
+				}				
+			}
+			int unlimitedExpansionAverage = limitedExpansionCount < expandCount ? 
+					(extraHeight - limitedExpansionHeightTotal) / (expandCount - limitedExpansionCount) : 0;
+
 			for (int i = 0; i < numChildren; i++) {				
+				int prefHeight = prefSizes[i].height;
+				int maxCellHeight = maxCellSizes[i].height;
 				child = (IFigure) children.get(i);
 				SapphireSequenceLayoutConstraint constraint = constraints[i];
-				if (getMajorExpand(constraint) || maxChildShapeSizes[i].height == Integer.MAX_VALUE) {
-						extraHeights[i] = averageExtraHeight;
+				if (getMajorExpand(constraint) || maxCellHeight > prefHeight) {
+					// only limited expansion
+					if (expandCount > 1 && (maxCellHeight - prefHeight < averageExtraHeight)) {
+						extraHeights[i] = maxCellHeight - prefHeight;
+					}
+					else {
+						extraHeights[i] = unlimitedExpansionAverage;
+					}
 				}
 				else {
 					extraHeights[i] = 0;
 				}
 			}					
+			
 		}
 		
 		y += margins.top;
@@ -507,12 +536,12 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				amntShrinkHeight -= amntShrinkCurrentHeight;
 				prefMinSumHeight -= (prefHeight - minHeight);				
 			}			
-			else if (getMajorExpand(constraint) || maxChildShapeSizes[i].height == Integer.MAX_VALUE ) {
+			else if (getMajorExpand(constraint) || maxChildShapeSizes[i].height > prefSizes[i].height ) {
 				height += extraHeights[i];
 				// If the expansion comes from child shape, let the child shape take up the extra space.
 				// Otherwise, the virtual cell takes up the extra space and we use its alignment to place
 				// the child shape
-				if (maxChildShapeSizes[i].height == Integer.MAX_VALUE) {
+				if (maxChildShapeSizes[i].height > prefSizes[i].height) {
 					newBounds = new Rectangle(x, y + marginInset.top, prefWidth, height);
 				} else {
     				int offset = 0;
@@ -549,7 +578,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			availableBounds = new Rectangle(x + marginInset.left, y + marginInset.top, 
 					clientArea.width - marginInset.left - marginInset.right, availableBoundHeight);
 			
-			if (maxChildShapeSizes[i].width == Integer.MAX_VALUE) 
+			if (maxChildShapeSizes[i].width > prefSizes[i].width) 
 			{
 				newBounds.x += marginInset.left;
 				newBounds.width = clientArea.width - marginInset.left - marginInset.right;
