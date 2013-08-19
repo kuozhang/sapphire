@@ -47,7 +47,7 @@ public final class AbsolutePathFunctionTests extends TestExpr
         return suite;
     }
     
-    public void testAbsolutePathFunction()
+    public void testAbsolutePathFunction() throws Exception
     {
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
@@ -59,7 +59,7 @@ public final class AbsolutePathFunctionTests extends TestExpr
             assertNull( fr.value() );
             
             element.setPath( "abc/file.txt" );
-            assertEquals( ( new Path( new File( "" ).getAbsolutePath() ) ).append( "abc/file.txt" ), fr.value() );
+            assertEquals( ( new Path( new File( "" ).getCanonicalPath() ) ).append( "abc/file.txt" ), fr.value() );
         }
         finally
         {
