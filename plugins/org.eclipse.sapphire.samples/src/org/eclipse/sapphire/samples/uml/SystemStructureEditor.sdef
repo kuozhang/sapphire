@@ -62,12 +62,12 @@
                                 </font>
                                 <sequence-layout-constraint>
                                     <margin>5</margin>
-                                    <expand-horizontally>true</expand-horizontally>
                                 </sequence-layout-constraint>
                             </text>
                         </content>
                         <sequence-layout-constraint>
                             <horizontal-alignment>center</horizontal-alignment>
+                            <expand-horizontally>true</expand-horizontally>
                         </sequence-layout-constraint>
                     </rectangle>
                     <rectangle>
@@ -128,9 +128,6 @@
                                             <text>
                                                 <content>${ Type == null ? &quot;&lt;type&gt;&quot; : Type }</content>
                                                 <color>#B97D69</color>
-                                                <sequence-layout-constraint>
-                                                    <expand-horizontally>true</expand-horizontally>
-                                                </sequence-layout-constraint>
                                             </text>
                                         </content>
                                         <sequence-layout>
@@ -166,6 +163,9 @@
                                                 </content>
                                             </page>
                                         </properties-view>
+                                        <sequence-layout-constraint>
+                                            <expand-horizontally>true</expand-horizontally>
+                                        </sequence-layout-constraint>
                                     </rectangle>
                                 </case>
                                 <property>Fields</property>
@@ -174,16 +174,10 @@
                         <top-border>
                             <weight>1</weight>
                         </top-border>
-                        <sequence-layout-constraint>
-                            <expand-horizontally>false</expand-horizontally>
-                        </sequence-layout-constraint>
                         <visible-when>${ Fields.Size &gt; 0 }</visible-when>
                     </rectangle>
                     <rectangle>
                         <visible-when>${ Methods.Size &gt; 0 }</visible-when>
-                        <sequence-layout-constraint>
-                            <expand-horizontally>false</expand-horizontally>
-                        </sequence-layout-constraint>
                         <top-border>
                             <weight>1</weight>
                         </top-border>
@@ -331,9 +325,6 @@
                                             <text>
                                                 <content>${ ReturnType == null ? &quot;&lt;type&gt;&quot; : ReturnType }</content>
                                                 <color>#B97D69</color>
-                                                <sequence-layout-constraint>
-                                                    <expand-horizontally>true</expand-horizontally>
-                                                </sequence-layout-constraint>
                                             </text>
                                         </content>
                                         <properties-view>
@@ -377,6 +368,9 @@
                                                 </content>
                                             </page>
                                         </properties-view>
+                                        <sequence-layout-constraint>
+                                            <expand-horizontally>true</expand-horizontally>
+                                        </sequence-layout-constraint>
                                     </rectangle>
                                 </case>
                             </shape-factory>
