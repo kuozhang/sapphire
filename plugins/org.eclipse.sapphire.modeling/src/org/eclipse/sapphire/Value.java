@@ -62,7 +62,7 @@ public class Value<T> extends Property
     {
         synchronized( root() )
         {
-            assertNotDisposed();
+            init();
     
             refreshContent( false );
             refreshDefaultContent( false );
@@ -80,7 +80,7 @@ public class Value<T> extends Property
             initialized = ( ( this.initialization & CONTENT_INITIALIZED ) != 0 ); 
         }
         
-        if( initialized || ( ! initialized && onlyIfNotInitialized ) )
+        if( ! initialized || ! onlyIfNotInitialized )
         {
             final ValueProperty p = definition();
             
@@ -156,7 +156,7 @@ public class Value<T> extends Property
             initialized = ( ( this.initialization & DEFAULT_CONTENT_INITIALIZED ) != 0 );
         }
         
-        if( initialized || ( ! initialized && onlyIfNotInitialized ) )
+        if( ! initialized || ! onlyIfNotInitialized )
         {
             final ValueProperty p = definition();
             

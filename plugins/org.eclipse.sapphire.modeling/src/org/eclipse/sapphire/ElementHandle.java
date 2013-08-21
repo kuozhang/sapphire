@@ -59,7 +59,7 @@ public final class ElementHandle<T extends Element> extends Property
     {
         synchronized( root() )
         {
-            assertNotDisposed();
+            init();
     
             refreshContent( false );
 
@@ -82,7 +82,7 @@ public final class ElementHandle<T extends Element> extends Property
             initialized = ( ( this.initialization & CONTENT_INITIALIZED ) != 0 ); 
         }
         
-        if( initialized || ( ! initialized && onlyIfNotInitialized ) )
+        if( ! initialized || ! onlyIfNotInitialized )
         {
             final ElementPropertyBinding binding = binding();
             final Resource resourceAfter = binding.read();

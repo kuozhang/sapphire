@@ -50,7 +50,7 @@ public final class Transient<T> extends Property
     {
         synchronized( root() )
         {
-            assertNotDisposed();
+            init();
     
             refreshEnablement( false );
             refreshValidation( false );

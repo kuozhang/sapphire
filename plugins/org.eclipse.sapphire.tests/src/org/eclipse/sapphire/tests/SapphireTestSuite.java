@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.tests.binding.list.LayeredListPropertyBindingTests;
 import org.eclipse.sapphire.tests.conversion.ConversionTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.misc.TestMisc;
@@ -40,6 +41,7 @@ public final class SapphireTestSuite extends TestCase
         
         suite.setName( "Sapphire" );
         
+        suite.addTest( LayeredListPropertyBindingTests.suite() );
         suite.addTest( ConversionTests.suite() );
         suite.addTest( TestMisc.suite() );
         suite.addTest( SapphireModelingFrameworkTests.suite() );

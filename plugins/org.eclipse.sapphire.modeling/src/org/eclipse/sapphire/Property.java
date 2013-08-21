@@ -144,7 +144,7 @@ public abstract class Property implements Observable
             initialized = ( ( this.initialization & ENABLEMENT_INITIALIZED ) != 0 );
         }
         
-        if( initialized || ( ! initialized && onlyIfNotInitialized ) )
+        if( ! initialized || ! onlyIfNotInitialized )
         {
             boolean after = true;
             
@@ -228,7 +228,7 @@ public abstract class Property implements Observable
             initialized = ( ( this.initialization & VALIDATION_INITIALIZED ) != 0 );
         }
         
-        if( initialized || ( ! initialized && onlyIfNotInitialized ) )
+        if( ! initialized || ! onlyIfNotInitialized )
         {
             final Status.CompositeStatusFactory freshValidationResultFactory = Status.factoryForComposite();
             

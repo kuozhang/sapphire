@@ -62,7 +62,7 @@ public final class ElementList<T extends Element> extends Property implements Li
     {
         synchronized( root() )
         {
-            assertNotDisposed();
+            init();
     
             refreshContent( false );
             
@@ -83,7 +83,7 @@ public final class ElementList<T extends Element> extends Property implements Li
     {
         boolean initialized = ( ( this.initialization & CONTENT_INITIALIZED ) != 0 );
         
-        if( initialized || ( ! initialized && onlyIfNotInitialized ) )
+        if( ! initialized || ! onlyIfNotInitialized )
         {
             final ListPropertyBinding binding = binding();
             final List<? extends Resource> freshResources = binding.read();
