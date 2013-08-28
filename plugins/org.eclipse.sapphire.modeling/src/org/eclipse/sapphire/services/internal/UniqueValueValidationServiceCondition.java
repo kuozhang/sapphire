@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -29,7 +29,7 @@ public final class UniqueValueValidationServiceCondition extends ServiceConditio
     {
         final ValueProperty property = context.find( ValueProperty.class );
         final Element element = context.find( Element.class );
-        return ( property != null && property.hasAnnotation( NoDuplicates.class ) && element.parent().definition() instanceof ListProperty );
+        return ( property != null && property.hasAnnotation( NoDuplicates.class ) && element.parent() instanceof ElementList );
     }
     
 }
