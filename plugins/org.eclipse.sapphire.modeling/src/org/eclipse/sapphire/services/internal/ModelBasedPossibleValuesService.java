@@ -22,7 +22,6 @@ import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyVisitor;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -172,8 +171,24 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         @Override
         public boolean applicable( final ServiceContext context )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            return ( property != null && property.hasAnnotation( PossibleValues.class ) && property.getAnnotation( PossibleValues.class ).property().length() > 0 );
+            final Value<?> property = context.find( Value.class );
+            
+            if( property != null )
+            {
+                final PossibleValues possibleValuesAnnotation = property.definition().getAnnotation( PossibleValues.class );
+                
+                if( possibleValuesAnnotation != null )
+                {
+                    final String path = possibleValuesAnnotation.property();
+                    
+                    if( path.length() > 0 && property.element().property( path ) != null )
+                    {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
         }
     }
     
