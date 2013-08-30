@@ -38,7 +38,7 @@ public final class UniqueValueTests extends SapphireTestCase
     {
         final TestSuite suite = new TestSuite();
         
-        suite.setName( "TestUniqueValuePerf" );
+        suite.setName( UniqueValueTests.class.getSimpleName() );
 
         suite.addTest( new UniqueValueTests( "testUniqueValue" ) );
         suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10" ) );
