@@ -11,12 +11,15 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
-import org.eclipse.sapphire.samples.contacts.ContactAddress;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.samples.contacts.Contact;
+import org.eclipse.sapphire.samples.contacts.ContactAddress;
 import org.eclipse.sapphire.samples.contacts.PhoneNumber;
 import org.eclipse.sapphire.samples.contacts.SendContactOp;
-import org.eclipse.sapphire.services.DerivedValueServiceData;
 import org.eclipse.sapphire.services.DerivedValueService;
+import org.eclipse.sapphire.services.DerivedValueServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,6 +27,21 @@ import org.eclipse.sapphire.services.DerivedValueService;
 
 public final class SendContactOpMessageBodyDerivedValueService extends DerivedValueService
 {
+    @Override
+    protected void initDerivedValueService()
+    {
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                refresh();
+            }
+        };
+        
+        context( SendContactOp.class ).attach( listener, SendContactOp.PROP_CONTACT );
+    }
+
     @Override
     protected DerivedValueServiceData compute()
     {

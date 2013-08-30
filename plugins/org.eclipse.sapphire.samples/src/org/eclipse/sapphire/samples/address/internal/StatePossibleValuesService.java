@@ -13,6 +13,9 @@ package org.eclipse.sapphire.samples.address.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.address.Address;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodeRepository;
@@ -22,23 +25,40 @@ import org.eclipse.sapphire.services.PossibleValuesService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CityNamePossibleValuesService extends PossibleValuesService
+public final class StatePossibleValuesService extends PossibleValuesService
 {
+    @Override
+    protected void init()
+    {
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                broadcast();
+            }
+        };
+        
+        final Address address = context( Address.class );
+        
+        address.attach( listener, Address.PROP_CITY );
+        address.attach( listener, Address.PROP_ZIP_CODE );
+    }
+
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
         final Address address = context( Address.class );
+        final String city = address.getCity().getText();
+        final String zip = address.getZipCode().getText();
         
-        final String zipCode = address.getZipCode().getText();
-        final String stateCode = address.getState().getText();
-        
-        values.addAll( ZipCodeRepository.getCities( zipCode, stateCode ) );
+        values.addAll( ZipCodeRepository.getStateCodes( zip, city ) );
     }
 
     @Override
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return NLS.bind( "\"{0}\" is not a valid city for the specified state and ZIP code.", invalidValue );
+        return NLS.bind( "\"{0}\" is not a valid state postal code for the specified city and ZIP code.", invalidValue );
     }
 
     @Override
@@ -46,5 +66,5 @@ public final class CityNamePossibleValuesService extends PossibleValuesService
     {
         return false;
     }
-
+    
 }

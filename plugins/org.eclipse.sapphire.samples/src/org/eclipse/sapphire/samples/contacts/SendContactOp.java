@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.TransientProperty;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -65,7 +64,6 @@ public interface SendContactOp extends IExecutableModelElement
     
     @Label( standard = "message body" )
     @Derived
-    @DependsOn( "Contact" )
     @Service( impl = SendContactOpMessageBodyDerivedValueService.class )
     
     ValueProperty PROP_MESSAGE_BODY = new ValueProperty( TYPE, "MessageBody" );

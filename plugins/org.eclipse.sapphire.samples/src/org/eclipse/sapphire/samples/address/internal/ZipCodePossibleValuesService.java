@@ -13,6 +13,9 @@ package org.eclipse.sapphire.samples.address.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.util.NLS;
 import org.eclipse.sapphire.samples.address.Address;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodeRepository;
@@ -25,12 +28,29 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 public final class ZipCodePossibleValuesService extends PossibleValuesService
 {
     @Override
+    protected void init()
+    {
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                broadcast();
+            }
+        };
+        
+        final Address address = context( Address.class );
+        
+        address.attach( listener, Address.PROP_CITY );
+        address.attach( listener, Address.PROP_STATE );
+    }
+
+    @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
         final Address address = context( Address.class );
-        
-        final String state = address.getState().getText();
         final String city = address.getCity().getText();
+        final String state = address.getState().getText();
         
         values.addAll( ZipCodeRepository.getZipCodes( state, city ) );
     }
@@ -41,10 +61,4 @@ public final class ZipCodePossibleValuesService extends PossibleValuesService
         return NLS.bind( "\"{0}\" is not a valid ZIP code for the specified city and state.", invalidValue );
     }
 
-    @Override
-    public boolean isCaseSensitive()
-    {
-        return false;
-    }
-    
 }

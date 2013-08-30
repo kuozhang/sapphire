@@ -15,13 +15,12 @@ import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.samples.address.internal.CityNamePossibleValuesService;
-import org.eclipse.sapphire.samples.address.internal.StateCodePossibleValuesService;
+import org.eclipse.sapphire.samples.address.internal.CityPossibleValuesService;
+import org.eclipse.sapphire.samples.address.internal.StatePossibleValuesService;
 import org.eclipse.sapphire.samples.address.internal.ZipCodePossibleValuesService;
 
 /**
@@ -48,8 +47,7 @@ public interface Address extends IModelElement
 
     @Label( standard = "city" )
     @Required
-    @Service( impl = CityNamePossibleValuesService.class )
-    @DependsOn( { "ZipCode", "State" } )
+    @Service( impl = CityPossibleValuesService.class )
 
     ValueProperty PROP_CITY = new ValueProperty( TYPE, "City" );
 
@@ -60,8 +58,7 @@ public interface Address extends IModelElement
 
     @Label( standard = "state" )
     @Required
-    @Service( impl = StateCodePossibleValuesService.class )
-    @DependsOn( { "ZipCode", "City" } )
+    @Service( impl = StatePossibleValuesService.class )
 
     ValueProperty PROP_STATE = new ValueProperty( TYPE, "State" );
 
@@ -73,7 +70,6 @@ public interface Address extends IModelElement
     @Label( standard = "ZIP code" )
     @Required
     @Service( impl = ZipCodePossibleValuesService.class )
-    @DependsOn( { "State", "City" } )
 
     ValueProperty PROP_ZIP_CODE = new ValueProperty( TYPE, "ZipCode" );
 
