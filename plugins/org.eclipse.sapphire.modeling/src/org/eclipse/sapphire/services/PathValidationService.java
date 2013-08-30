@@ -58,7 +58,7 @@ public abstract class PathValidationService extends ValidationService
                     @Override
                     public void handle( final Event event )
                     {
-                        element.refresh( property );
+                        broadcast();
                     }
                 }
             );
