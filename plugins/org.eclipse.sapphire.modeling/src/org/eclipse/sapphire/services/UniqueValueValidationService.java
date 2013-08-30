@@ -11,15 +11,21 @@
 
 package org.eclipse.sapphire.services;
 
+import org.eclipse.sapphire.Counter;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 
 /**
@@ -35,10 +41,37 @@ public class UniqueValueValidationService extends ValidationService
     {
         LocalizableText.init( UniqueValueValidationService.class );
     }
+    
+    private ModelPath path;
+    private Listener listener;
+    
+    @Override
+    protected void init()
+    {
+        final Element element = context( Element.class );
+        
+        this.path = new ModelPath( "#/" + context( PropertyDef.class ).name() );
+        
+        this.listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                if( event.property().element() != element )
+                {
+                    broadcast();
+                }
+            }
+        };
+        
+        element.attach( this.listener, this.path );
+    }
 
     @Override
     public Status validate()
     {
+        Counter.increment( UniqueValueValidationService.class );
+
         final Value<?> value = context( Value.class );
         
         if( isUniqueValue( value ) == false )
@@ -83,6 +116,12 @@ public class UniqueValueValidationService extends ValidationService
         }
         
         return true;
+    }
+
+    @Override
+    public void dispose()
+    {
+        context( Element.class ).detach( this.listener, this.path );
     }
     
 }

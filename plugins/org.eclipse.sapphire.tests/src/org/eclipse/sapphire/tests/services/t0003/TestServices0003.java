@@ -23,7 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.util.SetFactory;
 
 /**
- * Tests DependenciesService along with related @DependsOn and @NoDuplicates annotations.
+ * Tests DependenciesService along with the related @DependsOn annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
@@ -44,54 +44,10 @@ public final class TestServices0003
         
         suite.setName( "TestServices0003" );
 
-        suite.addTest( new TestServices0003( "testNoDuplicatesStandalone" ) );
-        suite.addTest( new TestServices0003( "testNoDuplicatesInElementProperty" ) );
-        suite.addTest( new TestServices0003( "testNoDuplicatesInImpliedElementProperty" ) );
-        suite.addTest( new TestServices0003( "testNoDuplicatesInListProperty" ) );
-        suite.addTest( new TestServices0003( "testNoDuplicatesAndDependsOn" ) );
         suite.addTest( new TestServices0003( "testCustom1" ) );
         suite.addTest( new TestServices0003( "testCustom2" ) );
         
         return suite;
-    }
-    
-    public void testNoDuplicatesStandalone() throws Exception
-    {
-        final TestModelItem item = TestModelItem.TYPE.instantiate();
-        
-        assertEquals( set(), dependencies( item.getName() ) );
-    }
-    
-    public void testNoDuplicatesInElementProperty() throws Exception
-    {
-        final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItem().content( true );
-        
-        assertEquals( set(), dependencies( item.getName() ) );
-    }
-    
-    public void testNoDuplicatesInImpliedElementProperty() throws Exception
-    {
-        final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItemImplied();
-        
-        assertEquals( set(), dependencies( item.getName() ) );
-    }
-    
-    public void testNoDuplicatesInListProperty() throws Exception
-    {
-        final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItems().insert();
-        
-        assertEquals( set( new ModelPath( "#/Name" ) ), dependencies( item.getName() ) );
-    }
-    
-    public void testNoDuplicatesAndDependsOn() throws Exception
-    {
-        final TestModel model = TestModel.TYPE.instantiate();
-        final TestModelItem item = model.getItems().insert();
-        
-        assertEquals( set( new ModelPath( "Name" ), new ModelPath( "#/Id" ) ), dependencies( item.getId() ) );
     }
     
     public void testCustom1() throws Exception

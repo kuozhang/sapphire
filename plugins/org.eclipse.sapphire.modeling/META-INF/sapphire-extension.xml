@@ -363,13 +363,6 @@
         <condition>org.eclipse.sapphire.services.internal.DeclarativeDependenciesService$Condition</condition>
     </service>
     <service>
-        <description>Implementation of DependenciesService that exposes implied dependencies specified by the @NoDuplicates annotation.</description>
-        <context>Sapphire.Property.Instance</context>
-        <id>Sapphire.DependenciesService.UniqueValue</id>
-        <implementation>org.eclipse.sapphire.services.internal.UniqueValueDependenciesService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.UniqueValueDependenciesService$Condition</condition>
-    </service>
-    <service>
         <id>Sapphire.ConversionService.ObjectToString</id>
         <description>ConversionService implementation for Object to String conversions that uses object's toString() method.</description>
         <implementation>org.eclipse.sapphire.internal.ObjectToStringConversionService</implementation>
