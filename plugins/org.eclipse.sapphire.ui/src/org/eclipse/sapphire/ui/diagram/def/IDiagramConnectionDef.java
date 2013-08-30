@@ -19,7 +19,6 @@ import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -106,7 +105,6 @@ public interface IDiagramConnectionDef extends PartDef
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "Sapphire.Diagram.Palette.Connections" )
     @Service( impl = ToolPaletteCompartmentPossibleValuesService.class )
-    @DependsOn("../PaletteCompartments/Id")
     @Enablement( expr = "${!ImplicitConnection}" )
     
     ValueProperty PROP_TOOL_PALETTE_COMPARTMENT = new ValueProperty( TYPE, "ToolPaletteCompartment" );

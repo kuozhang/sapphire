@@ -12,6 +12,9 @@ package org.eclipse.sapphire.ui.diagram.def.internal;
 import java.util.Set;
 
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
@@ -21,8 +24,25 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ToolPaletteCompartmentPossibleValuesService extends PossibleValuesService 
+public final class ToolPaletteCompartmentPossibleValuesService extends PossibleValuesService 
 {
+    private Listener listener;
+    
+    @Override
+    protected void init()
+    {
+        this.listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                broadcast();
+            }
+        };
+        
+        context( IDiagramEditorPageDef.class ).attach( this.listener, "PaletteCompartments/Id" );
+    }
+
 	@Override
 	protected void fillPossibleValues(Set<String> values) 
 	{
@@ -41,5 +61,17 @@ public class ToolPaletteCompartmentPossibleValuesService extends PossibleValuesS
 			}
 		}
 	}
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        if( this.listener != null )
+        {
+            context( IDiagramEditorPageDef.class ).detach( this.listener, "PaletteCompartments/Id" );
+            this.listener = null;
+        }
+    }
 
 }

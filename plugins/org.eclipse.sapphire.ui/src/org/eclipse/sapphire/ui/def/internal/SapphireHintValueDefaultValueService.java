@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
@@ -23,10 +25,19 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 public final class SapphireHintValueDefaultValueService extends DefaultValueService
 {
     @Override
-    public DefaultValueServiceData data()
+    protected void initDefaultValueService()
     {
-        refresh();
-        return super.data();
+        context( ISapphireHint.class ).getName().attach
+        (
+            new FilteredListener<PropertyContentEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    refresh();
+                }
+            }
+        );
     }
 
     @Override
