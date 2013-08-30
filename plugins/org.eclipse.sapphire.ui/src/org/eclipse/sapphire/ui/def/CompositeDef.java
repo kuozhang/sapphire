@@ -15,16 +15,11 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.internal.CompositeMarginLeftRightDefaultValueProvider;
-import org.eclipse.sapphire.ui.def.internal.CompositeMarginTopBottomDefaultValueProvider;
-import org.eclipse.sapphire.ui.def.internal.CompositeMarginWidthHeightDefaultValueProvider;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -117,8 +112,7 @@ public interface CompositeDef extends FormDef
     @Type( base = Integer.class )
     @Label( standard = "left margin" )
     @XmlBinding( path = "margin-left" )
-    @Service( impl = CompositeMarginLeftRightDefaultValueProvider.class )
-    @DependsOn( "MarginWidth" )
+    @DefaultValue( text = "${ MarginWidth }" )
     
     ValueProperty PROP_MARGIN_LEFT = new ValueProperty( TYPE, "MarginLeft" );
     
@@ -131,8 +125,7 @@ public interface CompositeDef extends FormDef
     @Type( base = Integer.class )
     @Label( standard = "right margin" )
     @XmlBinding( path = "margin-right" )
-    @Service( impl = CompositeMarginLeftRightDefaultValueProvider.class )
-    @DependsOn( "MarginWidth" )
+    @DefaultValue( text = "${ MarginWidth }" )
     
     ValueProperty PROP_MARGIN_RIGHT = new ValueProperty( TYPE, "MarginRight" );
     
@@ -145,8 +138,7 @@ public interface CompositeDef extends FormDef
     @Type( base = Integer.class )
     @Label( standard = "top margin" )
     @XmlBinding( path = "margin-top" )
-    @Service( impl = CompositeMarginTopBottomDefaultValueProvider.class )
-    @DependsOn( "MarginHeight" )
+    @DefaultValue( text = "${ MarginHeight }" )
     
     ValueProperty PROP_MARGIN_TOP = new ValueProperty( TYPE, "MarginTop" );
     
@@ -159,8 +151,7 @@ public interface CompositeDef extends FormDef
     @Type( base = Integer.class )
     @Label( standard = "bottom margin" )
     @XmlBinding( path = "margin-bottom" )
-    @Service( impl = CompositeMarginTopBottomDefaultValueProvider.class )
-    @DependsOn( "MarginHeight" )
+    @DefaultValue( text = "${ MarginHeight }" )
     
     ValueProperty PROP_MARGIN_BOTTOM = new ValueProperty( TYPE, "MarginBottom" );
     
@@ -173,8 +164,7 @@ public interface CompositeDef extends FormDef
     @Type( base = Integer.class )
     @Label( standard = "margin width" )
     @XmlBinding( path = "margin-width" )
-    @Service( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
-    @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
+    @DefaultValue( text = "${ ScrollVertically || ScrollHorizontally ? 10 : 0 }")
     
     ValueProperty PROP_MARGIN_WIDTH = new ValueProperty( TYPE, "MarginWidth" );
     
@@ -187,8 +177,7 @@ public interface CompositeDef extends FormDef
     @Type( base = Integer.class )
     @Label( standard = "margin height" )
     @XmlBinding( path = "margin-height" )
-    @Service( impl = CompositeMarginWidthHeightDefaultValueProvider.class )
-    @DependsOn( { "ScrollVertically", "ScrollHorizontally" } )
+    @DefaultValue( text = "${ ScrollVertically || ScrollHorizontally ? 10 : 0 }")
     
     ValueProperty PROP_MARGIN_HEIGHT = new ValueProperty( TYPE, "MarginHeight" );
     
