@@ -11,11 +11,16 @@
 
 package org.eclipse.sapphire.services;
 
+import org.eclipse.sapphire.Counter;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ModelElementList;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelProperty;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
@@ -27,9 +32,36 @@ import org.eclipse.sapphire.modeling.util.NLS;
 
 public class UniqueValueValidationService extends ValidationService
 {
+    private ModelPath path;
+    private Listener listener;
+    
+    @Override
+    protected void init()
+    {
+        final IModelElement element = context( IModelElement.class );
+        
+        this.path = new ModelPath( "#/" + context( ModelProperty.class ).getName() );
+        
+        this.listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                if( event.element() != element )
+                {
+                    broadcast();
+                }
+            }
+        };
+        
+        element.attach( this.listener, this.path );
+    }
+
     @Override
     public Status validate()
     {
+        Counter.increment( UniqueValueValidationService.class );
+        
         final Value<?> value = (Value<?>) context( IModelElement.class ).read( context( ModelProperty.class ) );
         
         if( isUniqueValue( value ) == false )
@@ -74,6 +106,12 @@ public class UniqueValueValidationService extends ValidationService
         }
         
         return true;
+    }
+
+    @Override
+    public void dispose()
+    {
+        context( IModelElement.class ).detach( this.listener, this.path );
     }
     
     private static final class Resources extends NLS

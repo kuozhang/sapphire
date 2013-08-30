@@ -20,6 +20,7 @@ import org.eclipse.sapphire.tests.misc.TestMisc;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
 import org.eclipse.sapphire.tests.services.ServicesTestSuite;
 import org.eclipse.sapphire.tests.ui.UiTestSuite;
+import org.eclipse.sapphire.tests.unique.UniqueValueTests;
 import org.eclipse.sapphire.tests.workspace.WorkspaceTestSuite;
 
 /**
@@ -45,6 +46,7 @@ public final class SapphireTestSuite extends TestCase
         suite.addTest( UiTestSuite.suite() );
         suite.addTest( WorkspaceTestSuite.suite() );
         suite.addTest( ServicesTestSuite.suite() );
+        suite.addTest( UniqueValueTests.suite() );
         
         return suite;
     }

@@ -17,7 +17,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Service;
 
 /**
@@ -32,8 +31,6 @@ public interface TestModelItem extends IModelElement
     
     // *** Name ***
     
-    @NoDuplicates
-    
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
     
     Value<String> getName();
@@ -41,7 +38,6 @@ public interface TestModelItem extends IModelElement
     
     // *** Id ***
     
-    @NoDuplicates
     @DependsOn( "Name" )
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
