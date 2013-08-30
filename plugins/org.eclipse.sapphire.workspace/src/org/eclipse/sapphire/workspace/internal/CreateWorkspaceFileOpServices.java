@@ -24,7 +24,6 @@ import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
-import org.eclipse.sapphire.modeling.ModelProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
@@ -71,12 +70,10 @@ public final class CreateWorkspaceFileOpServices
     
     public static final class FolderInitialValueService extends InitialValueService 
     {
-        private Listener listener;
-        
         @Override
         protected void initInitialValueService()
         {
-            this.listener = new FilteredListener<PropertyContentEvent>()
+            final Listener listener = new FilteredListener<PropertyContentEvent>()
             {
                 @Override
                 protected void handleTypedEvent( final PropertyContentEvent event )
@@ -85,7 +82,7 @@ public final class CreateWorkspaceFileOpServices
                 }
             };
             
-            context( CreateWorkspaceFileOp.class ).attach( this.listener, CreateWorkspaceFileOp.PROP_CONTEXT );
+            context( CreateWorkspaceFileOp.class ).attach( listener, CreateWorkspaceFileOp.PROP_CONTEXT );
         }
     
         @Override
@@ -102,43 +99,41 @@ public final class CreateWorkspaceFileOpServices
             
             return new InitialValueServiceData( resource == null ? null : resource.getFullPath().makeRelative().toPortableString() );
         }
-        
-        @Override
-        public void dispose()
-        {
-            super.dispose();
-            
-            if( this.listener != null )
-            {
-                context( CreateWorkspaceFileOp.class ).detach( this.listener, CreateWorkspaceFileOp.PROP_CONTEXT );
-            }
-        }
     }
     
     public static final class FileNameValidationService extends ValidationService
     {
-        private FileExtensionsService fileExtensionsService;
-        
         @Override
         protected void init()
         {
             super.init();
             
-            final IModelElement element = context( IModelElement.class );
-            final ModelProperty property = context( ModelProperty.class );
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
             
-            this.fileExtensionsService = element.service( property, FileExtensionsService.class );
-            
-            if( this.fileExtensionsService != null )
+            final Listener listener = new FilteredListener<PropertyContentEvent>()
             {
-                this.fileExtensionsService.attach
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    broadcast();
+                }
+            };
+            
+            op.attach( listener, CreateWorkspaceFileOp.PROP_FOLDER );
+            op.attach( listener, CreateWorkspaceFileOp.PROP_OVERWRITE_EXISTING_FILE );
+            
+            final FileExtensionsService fileExtensionsService = op.service( CreateWorkspaceFileOp.PROP_FILE_NAME, FileExtensionsService.class );
+            
+            if( fileExtensionsService != null )
+            {
+                fileExtensionsService.attach
                 (
                     new Listener()
                     {
                         @Override
                         public void handle( final Event event )
                         {
-                            element.refresh( property );
+                            broadcast();
                         }
                     }
                 );
@@ -148,7 +143,8 @@ public final class CreateWorkspaceFileOpServices
         @Override
         public Status validate()
         {
-            final Value<FileName> value = context( IModelElement.class ).read( context( ValueProperty.class ) );
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+            final Value<FileName> value = op.read( context( ValueProperty.class ) );
             final FileName fileName = value.getContent();
             
             if( fileName != null )
@@ -157,9 +153,11 @@ public final class CreateWorkspaceFileOpServices
                 
                 if( extension != null )
                 {
-                    if( this.fileExtensionsService != null )
+                    final FileExtensionsService fileExtensionsService = op.service( CreateWorkspaceFileOp.PROP_FILE_NAME, FileExtensionsService.class );
+                    
+                    if( fileExtensionsService != null )
                     {
-                        final List<String> extensions = this.fileExtensionsService.extensions();
+                        final List<String> extensions = fileExtensionsService.extensions();
                         final int count = extensions.size();
                         
                         if( count > 0 )
@@ -210,11 +208,9 @@ public final class CreateWorkspaceFileOpServices
                     }
                 }
                 
-                final CreateWorkspaceFileOp operation = value.nearest( CreateWorkspaceFileOp.class );
-                final IFile fileHandle = operation.getFileHandle();
+                final IFile fileHandle = op.getFileHandle();
                 
-                if( fileHandle != null && fileHandle.exists() && 
-                    operation.getOverwriteExistingFile().getContent() == false )
+                if( fileHandle != null && fileHandle.exists() && op.getOverwriteExistingFile().getContent() == false )
                 {
                     final String msg = NLS.bind( Resources.fileExists, fileName );
                     return Status.factoryForLeaf().severity( Status.Severity.ERROR ).type( PROBLEM_FILE_EXISTS ).message( msg ).create();
@@ -232,7 +228,6 @@ public final class CreateWorkspaceFileOpServices
         public static String invalidFileExtensionOne;
         public static String invalidFileExtensionTwo;
         public static String invalidFileExtensionMultiple;
-
         
         static
         {

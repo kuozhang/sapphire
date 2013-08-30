@@ -25,7 +25,6 @@ import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -76,7 +75,6 @@ public interface CreateWorkspaceFileOp extends IExecutableModelElement
     @Type( base = FileName.class )
     @Label( standard = "file na&me" )
     @Required
-    @DependsOn( { "Folder", "OverwriteExistingFile" } )
     @Service( impl = FileNameValidationService.class )
     
     ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, "FileName" );
