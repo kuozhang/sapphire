@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
@@ -243,22 +242,15 @@ public abstract class Property implements Observable
                     }
                 };
                 
-                for( ValidationService service : services( ValidationService.class ) )
+                for( final ValidationService service : services( ValidationService.class ) )
                 {
                     service.attach( listener );
                 }
             }
             
-            for( ValidationService service : services( ValidationService.class ) )
+            for( final ValidationService service : services( ValidationService.class ) )
             {
-                try
-                {
-                    freshValidationResultFactory.merge( service.validate() );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
+                freshValidationResultFactory.merge( service.validation() );
             }
             
             final Status freshValidationResult = freshValidationResultFactory.create();

@@ -22,13 +22,13 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
- * An abstract implementation of ValidationService that produces a validation error when a property 
- * or an element is not compatible with the version compatibility target. 
+ * An implementation of ValidationService that produces a validation error when a property 
+ * is not compatible with the version compatibility target yet contains data. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class VersionCompatibilityValidationService extends ValidationService
+public final class VersionCompatibilityValidationService extends ValidationService
 {
     @Text( "Not compatible with version {0} of {1}." )
     private static LocalizableText notCompatibleWithVersionMessage;
@@ -45,35 +45,26 @@ public abstract class VersionCompatibilityValidationService extends ValidationSe
     private Listener versionCompatibilityServiceListener;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
-        this.versionCompatibilityService = property().service( MasterVersionCompatibilityService.class );
+        this.versionCompatibilityService = context( Property.class ).service( MasterVersionCompatibilityService.class );
         
         this.versionCompatibilityServiceListener = new Listener()
         {
             @Override
             public void handle( final Event event )
             {
-                broadcast();
+                refresh();
             }
         };
         
         this.versionCompatibilityService.attach( this.versionCompatibilityServiceListener );
     }
     
-    protected abstract Property property();
-    
-    protected boolean problem()
-    {
-        return ( ! this.versionCompatibilityService.compatible() );
-    }
-
     @Override
-    public Status validate()
+    protected Status compute()
     {
-        if( problem() )
+        if( ! this.versionCompatibilityService.compatible() && ! context( Property.class ).empty() )
         {
             final String message;
             

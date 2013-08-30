@@ -46,7 +46,7 @@ public class UniqueValueValidationService extends ValidationService
     private Listener listener;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
         final Element element = context( Element.class );
         
@@ -59,7 +59,7 @@ public class UniqueValueValidationService extends ValidationService
             {
                 if( event.property().element() != element )
                 {
-                    broadcast();
+                    refresh();
                 }
             }
         };
@@ -68,7 +68,7 @@ public class UniqueValueValidationService extends ValidationService
     }
 
     @Override
-    public Status validate()
+    protected Status compute()
     {
         Counter.increment( UniqueValueValidationService.class );
 

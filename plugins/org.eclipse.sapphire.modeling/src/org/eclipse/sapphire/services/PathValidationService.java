@@ -64,10 +64,8 @@ public abstract class PathValidationService extends ValidationService
     private FileExtensionsService fileExtensionsService;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         final Property property = context( Property.class );
         
         this.resourceMustExist = property.definition().hasAnnotation( MustExist.class );
@@ -86,7 +84,7 @@ public abstract class PathValidationService extends ValidationService
                     @Override
                     public void handle( final Event event )
                     {
-                        broadcast();
+                        refresh();
                     }
                 }
             );

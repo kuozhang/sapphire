@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.ValidationService;
 public abstract class ConnectionNameValidationService extends ValidationService
 {
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final Value<?> value = context( Element.class ).property( context( ValueProperty.class ) );
         final String assistantName = value.text();

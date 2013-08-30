@@ -45,16 +45,14 @@ public final class PreferDefaultValueValidationService extends ValidationService
     private Listener listener;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -62,7 +60,7 @@ public final class PreferDefaultValueValidationService extends ValidationService
     }
 
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final Value<?> value = context( Value.class );
         

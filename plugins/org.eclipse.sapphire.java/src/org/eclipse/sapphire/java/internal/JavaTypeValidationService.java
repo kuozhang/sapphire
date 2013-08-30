@@ -72,10 +72,8 @@ public final class JavaTypeValidationService extends ValidationService
     }
 
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-
         final Property property = context( Property.class );
         final JavaTypeConstraintService javaTypeConstraintService = property.service( JavaTypeConstraintService.class );
         
@@ -88,7 +86,7 @@ public final class JavaTypeValidationService extends ValidationService
                     @Override
                     public void handle( final Event event )
                     {
-                        property.refresh();
+                        refresh();
                     }
                 }
             );
@@ -96,7 +94,7 @@ public final class JavaTypeValidationService extends ValidationService
     }
     
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final ReferenceValue<?,?> value = context( ReferenceValue.class );
         final JavaTypeConstraintService javaTypeConstraintService = value.service( JavaTypeConstraintService.class );

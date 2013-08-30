@@ -44,6 +44,7 @@ public final class UniqueValueTests extends SapphireTestCase
         suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10" ) );
         suite.addTest( new UniqueValueTests( "testUniqueValuePerformance100" ) );
         suite.addTest( new UniqueValueTests( "testUniqueValuePerformance1000" ) );
+        //suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10000" ) );
         
         return suite;
     }
@@ -80,13 +81,18 @@ public final class UniqueValueTests extends SapphireTestCase
         testUniqueValuePerformance( 1000 );
     }
     
+    public void testUniqueValuePerformance10000() throws Exception
+    {
+        testUniqueValuePerformance( 10000 );
+    }
+    
     private void testUniqueValuePerformance( final int entries ) throws Exception
     {
         final Counter counter = Counter.find( UniqueValueValidationService.class );
         
         final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore( generateTestData( entries ) );
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
-
+        
         counter.reset();
         
         final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
@@ -121,7 +127,7 @@ public final class UniqueValueTests extends SapphireTestCase
         }
         
         content.append( "</root>" );
-
+        
         return content.toString();
     }
 

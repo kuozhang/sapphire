@@ -102,6 +102,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#TypeCast">TypeCast</a></li>
   <li><a href="#UrlResolver">UrlResolver</a></li>
   <li><a href="#ValidationAggregationService">ValidationAggregationService</a></li>
+  <li><a href="#ValidationService">ValidationService</a></li>
   <li><a href="#Value">Value</a></li>
   <li><a href="#ValueBindingImpl">ValueBindingImpl</a></li>
   <li><a href="#ValueProperty">ValueProperty</a></li>
@@ -2149,6 +2150,62 @@ validation using Property.validation() API. The property manages the interaction
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">Status validation = property</span>.<span class="unaffected">validation()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValidationService">ValidationService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleValidationService extends ValidationService
+{
+    @Override
+    protected void</span> init<span class="unaffected">()
+    {</span>
+        super.init();
+
+        <span class="unaffected">...
+
+        <i>inside a listener</i>
+        {</span>
+            broadcast<span class="unaffected">();
+        }
+    }
+    
+    @Override</span>
+    public <span class="unaffected">Status</span> validate<span class="unaffected">()
+    {
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleValidationService extends ValidationService
+{
+    @Override
+    protected void</span> initValidationService<span class="unaffected">()
+    {
+        ...
+
+        <i>inside a listener</i>
+        {</span>
+            refresh<span class="unaffected">();
+        }
+    }
+    
+    @Override</span>
+    protected <span class="unaffected">Status</span> compute<span class="unaffected">()
+    {
+        ...
+    }
+}</span></code></pre>
     </td>
   </tr>
 </table>

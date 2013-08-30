@@ -44,10 +44,8 @@ public final class RequiredConstraintValidationService extends ValidationService
     private Listener listener;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         this.property = context( Property.class );
         this.requiredConstraintService = this.property.service( RequiredConstraintService.class );
         
@@ -56,7 +54,7 @@ public final class RequiredConstraintValidationService extends ValidationService
             @Override
             public void handle( final Event event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -64,7 +62,7 @@ public final class RequiredConstraintValidationService extends ValidationService
     }
 
     @Override
-    public final Status validate()
+    protected Status compute()
     {
         if( ! this.requiredConstraintService.required() || check() )
         {

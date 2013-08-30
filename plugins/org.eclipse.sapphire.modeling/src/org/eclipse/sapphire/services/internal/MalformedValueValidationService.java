@@ -40,7 +40,7 @@ public final class MalformedValueValidationService extends ValidationService
     private String valueTypeName;
     
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final Value<?> value = context( Element.class ).property( context( ValueProperty.class ) );
         

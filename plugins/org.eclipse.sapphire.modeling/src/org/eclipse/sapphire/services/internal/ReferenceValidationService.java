@@ -45,10 +45,8 @@ public final class ReferenceValidationService extends ValidationService
     private Listener referenceServiceListener;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         final Property property = context( Property.class );
         
         this.referenceService = property.service( ReferenceService.class );
@@ -60,7 +58,7 @@ public final class ReferenceValidationService extends ValidationService
                 @Override
                 public void handle( final Event event )
                 {
-                    broadcast();
+                    refresh();
                 }
             };
             
@@ -69,7 +67,7 @@ public final class ReferenceValidationService extends ValidationService
     }
 
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final ReferenceValue<?,?> value = context( ReferenceValue.class );
         

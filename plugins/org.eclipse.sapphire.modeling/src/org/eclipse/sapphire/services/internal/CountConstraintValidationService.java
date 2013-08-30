@@ -46,15 +46,13 @@ public final class CountConstraintValidationService extends ValidationService
     private CountConstraint constraint;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         this.constraint = context( PropertyDef.class ).getAnnotation( CountConstraint.class );
     }
 
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final ElementList<?> list = context( ElementList.class );
         final int count = list.size();

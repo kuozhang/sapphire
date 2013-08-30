@@ -38,7 +38,7 @@ public final class ProjectRelativePathValidationService extends ValidationServic
     }
     
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final Element element = context( Element.class );
         

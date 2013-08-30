@@ -21,7 +21,7 @@ import org.eclipse.sapphire.services.ValidationService;
 public final class DerivedValidationService extends ValidationService
 {
     @Override
-    public Status validate() 
+    protected Status compute() 
     {
         return Status.createErrorStatus( "derived" );
     }

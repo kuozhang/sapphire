@@ -1,5 +1,4 @@
 /******************************************************************************
- * Copyright (c) 2013 Oracle
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,10 +33,8 @@ public final class PossibleValuesValidationService extends ValidationService
     private Listener possibleValuesServiceListener;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         this.possibleValuesService = context( Property.class ).service( PossibleValuesService.class );
         
         if( this.possibleValuesService != null )
@@ -47,7 +44,7 @@ public final class PossibleValuesValidationService extends ValidationService
                 @Override
                 public void handle( final Event event )
                 {
-                    broadcast();
+                    refresh();
                 }
             };
             
@@ -56,7 +53,7 @@ public final class PossibleValuesValidationService extends ValidationService
     }
 
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final Element element = context( Element.class );
         final ValueProperty property = context( ValueProperty.class );

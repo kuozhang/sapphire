@@ -44,10 +44,8 @@ public final class DeclarativeValidationService extends ValidationService
     private List<Rule> rules;
     
     @Override
-    protected void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         final Element element = context( Element.class );
         final PropertyDef property = context( PropertyDef.class );
         
@@ -81,7 +79,7 @@ public final class DeclarativeValidationService extends ValidationService
             @Override
             public void handle( final Event event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -118,7 +116,7 @@ public final class DeclarativeValidationService extends ValidationService
     }
 
     @Override
-    public final Status validate()
+    protected Status compute()
     {
         final CompositeStatusFactory factory = Status.factoryForComposite();
         

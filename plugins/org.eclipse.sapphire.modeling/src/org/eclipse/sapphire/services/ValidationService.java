@@ -11,14 +11,42 @@
 
 package org.eclipse.sapphire.services;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ValidationService extends Service
+public abstract class ValidationService extends DataService<Status>
 {
-    public abstract Status validate();
+    @Override
+    protected final void initDataService()
+    {
+        context( Property.class ).attach
+        (
+            new FilteredListener<PropertyContentEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    refresh();
+                }
+            }
+        );
+        
+        initValidationService();
+    }
 
+    protected void initValidationService()
+    {
+    }
+    
+    public final Status validation()
+    {
+        return data();
+    }
+    
 }

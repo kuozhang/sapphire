@@ -22,7 +22,7 @@ import org.eclipse.sapphire.services.ValidationService;
 public final class TestValidationService extends ValidationService
 {
     @Override
-    public Status validate()
+    protected Status compute()
     {
         context( Element.class ).property( TestElement.PROP_VALUE ).enabled();
         

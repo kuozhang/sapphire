@@ -47,10 +47,8 @@ public final class NumericRangeValidationService extends ValidationService
     private Comparable max;
     
     @Override
-    protected final void init()
+    protected void initValidationService()
     {
-        super.init();
-        
         final PropertyDef property = context( PropertyDef.class );
         final Class<?> type = property.getTypeClass();
         final NumericRange rangeConstraintAnnotation = property.getAnnotation( NumericRange.class );
@@ -72,7 +70,7 @@ public final class NumericRangeValidationService extends ValidationService
     }
 
     @Override
-    public final Status validate()
+    protected Status compute()
     {
         final Value<Comparable> value = context( Value.class );
         final Comparable val = (Comparable) value.content( true );

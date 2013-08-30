@@ -68,7 +68,7 @@ public final class CreateWorkspaceFileOpServices
     public static final class FolderValidationService extends ValidationService
     {
         @Override
-        public Status validate()
+        protected Status compute()
         {
             final Value<Path> target = context( Element.class ).property( context( ValueProperty.class ) );
             final Path path = target.content();
@@ -125,10 +125,8 @@ public final class CreateWorkspaceFileOpServices
     public static final class FileNameValidationService extends ValidationService
     {
         @Override
-        protected void init()
+        protected void initValidationService()
         {
-            super.init();
-            
             final Value<?> value = context( Value.class );
             final CreateWorkspaceFileOp op = value.nearest( CreateWorkspaceFileOp.class );
 
@@ -137,7 +135,7 @@ public final class CreateWorkspaceFileOpServices
                 @Override
                 protected void handleTypedEvent( final PropertyContentEvent event )
                 {
-                    broadcast();
+                    refresh();
                 }
             };
             
@@ -155,7 +153,7 @@ public final class CreateWorkspaceFileOpServices
                         @Override
                         public void handle( final Event event )
                         {
-                            broadcast();
+                            refresh();
                         }
                     }
                 );
@@ -163,7 +161,7 @@ public final class CreateWorkspaceFileOpServices
         }
         
         @Override
-        public Status validate()
+        protected Status compute()
         {
             final Value<?> value = context( Value.class );
             final CreateWorkspaceFileOp op = value.nearest( CreateWorkspaceFileOp.class );

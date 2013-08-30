@@ -131,25 +131,13 @@
         <condition>org.eclipse.sapphire.services.internal.NumericRangeValidationService$Condition</condition>
     </service>
     <service>
-        <id>Sapphire.ValidationService.Element.Standard</id>
-        <context>Sapphire.Element.Instance</context>
-        <implementation>org.eclipse.sapphire.services.internal.StandardElementValidationService</implementation>
-    </service>
-    <service>
-        <context>Sapphire.Element.Instance</context>
-        <description>An implementation of ValidationService that produces a validation error when an element is directly contained by an element or a list property that is not compatible with the version compatibility target.</description>
-        <id>Sapphire.ValidationService.Property.VersionCompatibility.Element</id>
-        <implementation>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForElement</implementation>
-        <condition>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForElement$Condition</condition>
-    </service>
-    <service>
         <context>Sapphire.Property.Instance</context>
-        <id>Sapphire.ValidationService.Property.VersionCompatibility.Property</id>
+        <id>Sapphire.ValidationService.VersionCompatibility</id>
         <description>An implementation of ValidationService that produces a validation error when a property is not compatible with the version compatibility target yet contains data.</description>
-        <implementation>org.eclipse.sapphire.internal.VersionCompatibilityValidationServiceForProperty</implementation>
+        <implementation>org.eclipse.sapphire.internal.VersionCompatibilityValidationService</implementation>
     </service>
     <service>
-        <id>Sapphire.ValidationService.Property.PreferDefaultValue</id>
+        <id>Sapphire.ValidationService.PreferDefaultValue</id>
         <description>Implementation of ValidationService that produces a validation warning when property value doesn't match its default.</description>
         <context>Sapphire.Property.Instance</context>
         <implementation>org.eclipse.sapphire.internal.PreferDefaultValueValidationService</implementation>

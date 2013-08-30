@@ -52,7 +52,7 @@ public final class CreateExtensionManifestOpServices
     public static final class FolderValidationService extends ValidationService
     {
         @Override
-        public Status validate()
+        protected Status compute()
         {
             final Value<Path> target = context( Element.class ).property( context( ValueProperty.class ) );
             final Path path = target.content();

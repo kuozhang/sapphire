@@ -30,7 +30,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 public final class AbsolutePathValidationService extends PathValidationService
 {
     @Override
-    public Status validate()
+    protected Status compute()
     {
         final Value<?> value = context( Value.class );
         final Path path = (Path) value.content( false );
