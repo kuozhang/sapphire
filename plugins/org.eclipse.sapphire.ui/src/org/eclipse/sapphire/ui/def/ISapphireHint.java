@@ -16,7 +16,6 @@ import org.eclipse.sapphire.modeling.ModelElementType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -80,7 +79,6 @@ public interface ISapphireHint extends IModelElement
     @Label( standard = "value" )
     @Required
     @XmlBinding( path = "value" )
-    @DependsOn( value = "Name" )
     @Services( { @Service( impl = SapphireHintValueDefaultValueService.class ), @Service( impl = SapphireHintValuePossibleValuesService.class ) } )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );

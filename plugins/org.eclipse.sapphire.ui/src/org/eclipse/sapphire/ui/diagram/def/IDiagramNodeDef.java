@@ -27,7 +27,6 @@ import org.eclipse.sapphire.modeling.ReferenceValue;
 import org.eclipse.sapphire.modeling.Value;
 import org.eclipse.sapphire.modeling.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.modeling.annotations.GenerateImpl;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -118,7 +117,6 @@ public interface IDiagramNodeDef
     @XmlBinding( path = "tool-palette-compartment" )    
     @DefaultValue( text = "Sapphire.Diagram.Palette.Nodes" )
     @Service( impl = ToolPaletteCompartmentPossibleValuesService.class )
-    @DependsOn("../PaletteCompartments/Id")
     
     ValueProperty PROP_TOOL_PALETTE_COMPARTMENT = new ValueProperty( TYPE, "ToolPaletteCompartment" );
     

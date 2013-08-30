@@ -14,6 +14,8 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ActionDef;
@@ -29,6 +31,23 @@ import org.eclipse.sapphire.ui.def.PropertyEditorDef;
 
 public final class SapphireHintValuePossibleValuesService extends PossibleValuesService
 {
+    @Override
+    protected void init()
+    {
+        context( ISapphireHint.class ).attach
+        (
+            new FilteredListener<PropertyContentEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    broadcast();
+                }
+            },
+            ISapphireHint.PROP_NAME
+        );
+    }
+
     @Override
     protected void fillPossibleValues( final SortedSet<String> values )
     {
