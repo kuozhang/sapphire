@@ -69,13 +69,6 @@ public final class ElementValidationAggregationService extends ValidationAggrega
         return factory.create();
     }
     
-    @Override
-    public Status data()
-    {
-        refresh();
-        return super.data();
-    }
-
     public static final class Factory extends ServiceFactory
     {
         @Override

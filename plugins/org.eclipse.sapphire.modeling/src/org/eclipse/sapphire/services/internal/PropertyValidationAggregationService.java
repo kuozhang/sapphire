@@ -17,7 +17,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IModelElement;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelProperty;
-import org.eclipse.sapphire.modeling.PropertyEvent;
+import org.eclipse.sapphire.modeling.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -37,10 +37,10 @@ public final class PropertyValidationAggregationService extends ValidationAggreg
         final IModelElement element = context( IModelElement.class );
         final ModelProperty property = context( ModelProperty.class );
         
-        final Listener listener = new FilteredListener<PropertyEvent>()
+        final Listener listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
-            protected void handleTypedEvent( final PropertyEvent event )
+            protected void handleTypedEvent( final PropertyContentEvent event )
             {
                 refresh();
             }
@@ -85,13 +85,6 @@ public final class PropertyValidationAggregationService extends ValidationAggreg
         return factory.create();
     }
     
-    @Override
-    public Status data()
-    {
-        refresh();
-        return super.data();
-    }
-
     public static final class Factory extends ServiceFactory
     {
         @Override
