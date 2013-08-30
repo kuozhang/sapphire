@@ -58,7 +58,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void init()
     {
-        this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
+        this.nodeTemplate = (DiagramNodeTemplate)parent();
         this.diagramEditor = this.nodeTemplate.getDiagramEditorPart();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         

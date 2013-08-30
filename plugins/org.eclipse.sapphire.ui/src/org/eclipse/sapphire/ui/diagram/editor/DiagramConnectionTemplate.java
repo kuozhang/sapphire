@@ -44,7 +44,6 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
@@ -121,7 +120,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     {
         final Element element = getModelElement();
         
-        this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
+        this.diagramEditor = (SapphireDiagramEditorPagePart)parent();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         
         this.propertyName = this.bindingDef.getProperty().content();
@@ -717,12 +716,6 @@ public class DiagramConnectionTemplate extends SapphirePart
             connPart.dispose();
         }
     }
-    
-    @Override
-    public void render(SapphireRenderingContext context)
-    {
-        throw new UnsupportedOperationException();
-    }    
     
     protected void notifyConnectionUpdate(DiagramConnectionEvent event)
     {

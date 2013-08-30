@@ -110,7 +110,7 @@ public class ShapeModelUtil
 	
 	public static ShapePresentation getChildShapePresentation(ShapePresentation parent, ShapePart shapePart)
 	{
-		if (parent.getPart().equals(shapePart))
+		if (parent.part().equals(shapePart))
 		{
 			return parent;
 		}

@@ -26,13 +26,14 @@ public class ImagePresentation extends ShapePresentation
 		super(parent, imagePart, configManager);
 	}
 
-	public ImagePart getImagePart()
+	@Override
+	public ImagePart part()
 	{
-		return (ImagePart)getPart();
+		return (ImagePart) super.part();
 	}
 	
 	public ImageData getImage()
 	{
-		return getImagePart().getImage();
+		return part().getImage();
 	}
 }

@@ -27,39 +27,40 @@ public class RectanglePresentation extends ContainerShapePresentation
 		super(parent, rectanglePart, configManager);
 	}
 
-	public RectanglePart getRectanglePart()
+	@Override
+	public RectanglePart part()
 	{
-		return (RectanglePart)getPart();
+		return (RectanglePart) super.part();
 	}
 	
 	public BackgroundDef getBackground()
 	{
-		return getRectanglePart().getBackground();
+		return part().getBackground();
 	}
 	
 	public int getCornerRadius()
 	{
-		return getRectanglePart().getCornerRadius();
+		return part().getCornerRadius();
 	}
 	
 	public BorderComponent getTopBorder() 
 	{
-		return getRectanglePart().getTopBorder();
+		return part().getTopBorder();
 	}
 	
 	public BorderComponent getBottomBorder() 
 	{
-		return getRectanglePart().getBottomBorder();
+		return part().getBottomBorder();
 	}
 
 	public BorderComponent getLeftBorder() 
 	{
-		return getRectanglePart().getLeftBorder();
+		return part().getLeftBorder();
 	}
 	
 	public BorderComponent getRightBorder() 
 	{
-		return getRectanglePart().getRightBorder();
+		return part().getRightBorder();
 	}
 		
 }

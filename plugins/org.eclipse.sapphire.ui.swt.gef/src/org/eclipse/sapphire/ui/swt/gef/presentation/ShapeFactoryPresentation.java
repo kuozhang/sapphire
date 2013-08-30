@@ -60,7 +60,7 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	public void refreshChildren()
 	{
 		List<ShapePresentation> refreshedChildren = new ArrayList<ShapePresentation>();
-		ShapeFactoryPart shapeFactoryPart = (ShapeFactoryPart)this.getPart();
+		ShapeFactoryPart shapeFactoryPart = (ShapeFactoryPart) part();
 		if (shapeFactoryPart.visible())
 		{
 			for (ShapePart shapePart : shapeFactoryPart.getChildren())
@@ -77,7 +77,7 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	
 	private ShapePresentation getChildShapePresentation(ShapePart shapePart) {
 		for (ShapePresentation presentation : getChildren()) {
-			if (presentation.getPart() == shapePart) {
+			if (presentation.part() == shapePart) {
 				return presentation;
 			}
 		}

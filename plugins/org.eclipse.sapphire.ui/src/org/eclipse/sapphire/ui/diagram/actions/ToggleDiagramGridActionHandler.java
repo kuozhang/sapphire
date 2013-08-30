@@ -11,9 +11,9 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -37,7 +37,7 @@ public class ToggleDiagramGridActionHandler extends SapphireActionHandler
     }
     		
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run(Presentation context) 
 	{
 		SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)this.getPart();
 		boolean visible = !diagramPart.isGridVisible();

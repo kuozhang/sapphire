@@ -150,10 +150,10 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	
 	protected ContainerShapePresentation getParentContainer(ShapePresentation shapePresentation)
 	{
-		ShapePresentation parentPresentation = shapePresentation.getParent();
+		ShapePresentation parentPresentation = shapePresentation.parent();
 		while (!(parentPresentation instanceof ContainerShapePresentation) && parentPresentation != null)
 		{
-			parentPresentation = parentPresentation.getParent();
+			parentPresentation = parentPresentation.parent();
 		}
 		return (ContainerShapePresentation)parentPresentation;
 	}
@@ -182,7 +182,6 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
                     }
                 }
             );
-			
 		}
 	}
 	protected List<TextPart> getContainedTextParts()

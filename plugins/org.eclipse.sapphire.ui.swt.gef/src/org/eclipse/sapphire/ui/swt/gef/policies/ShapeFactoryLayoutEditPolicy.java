@@ -46,7 +46,7 @@ public class ShapeFactoryLayoutEditPolicy extends SequenceLayoutEditPolicy
 		}
 		ShapeEditPart toMove = (ShapeEditPart)child;
 		ShapePart toMovePart = (ShapePart)(((ShapeModel)toMove.getModel()).getSapphirePart());
-		ShapeFactoryPart factoryPart = (ShapeFactoryPart)toMovePart.getParentPart();
+		ShapeFactoryPart factoryPart = (ShapeFactoryPart)toMovePart.parent();
 		List<ShapePart> childShapes = factoryPart.getChildren();
 
 		if (!(after instanceof ShapeEditPart))

@@ -12,19 +12,17 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MessageBoxActionHandler
-
-    extends SapphireActionHandler
-    
+public final class MessageBoxActionHandler extends SapphireActionHandler
 {
     private String message;
     
@@ -38,9 +36,9 @@ public final class MessageBoxActionHandler
     }
     
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
-        MessageDialog.openInformation( context.getShell(), "Message", this.message );
+        MessageDialog.openInformation( ( (FormComponentPresentation) context ).shell(), "Message", this.message );
         return null;
     }
     

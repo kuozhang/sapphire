@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
 import org.eclipse.sapphire.ui.diagram.editor.LinePart;
 import org.eclipse.sapphire.ui.diagram.editor.RectanglePart;
@@ -23,35 +24,41 @@ import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ShapePresentation 
+public class ShapePresentation extends Presentation
 {
-	private ShapePresentation parent;
-	private ShapePart shapePart;
 	private DiagramConfigurationManager configManager;
 	private IFigure figure;
 	private boolean separator = false;
 	
 	public ShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)
 	{
-		this.parent = parent;
-		this.shapePart = shapePart;
+	    super( shapePart, parent );
+	    
 		this.configManager = configManager;
 	}
 	
-	public ShapePresentation getParent()
-	{
-		return this.parent;
-	}
-	
-	public ShapePart getPart()
-	{
-		return this.shapePart;
-	}
+	@Override
+    public ShapePart part()
+    {
+        return (ShapePart) super.part();
+    }
+    
+    @Override
+    public ShapePresentation parent()
+    {
+        return (ShapePresentation) super.parent();
+    }
+    
+    public SapphireDiagramEditor page()
+    {
+        return this.configManager.getDiagramEditor();
+    }
 	
 	public DiagramConfigurationManager getConfigurationManager()
 	{
@@ -76,7 +83,7 @@ public class ShapePresentation
 	public IFigure getParentFigure()
 	{
 		IFigure parentFigure = null;
-		ShapePresentation parentPresentation = getParent();
+		ShapePresentation parentPresentation = parent();
 		while (parentPresentation != null)
 		{
 			parentFigure = parentPresentation.getFigure();
@@ -84,7 +91,7 @@ public class ShapePresentation
 			{
 				break;
 			}
-			parentPresentation = parentPresentation.getParent();
+			parentPresentation = parentPresentation.parent();
 		}
 		return parentFigure;
 	}
@@ -92,31 +99,39 @@ public class ShapePresentation
 	public IFigure getNodeFigure()
 	{
 		IFigure parentFigure = getFigure();
-		ShapePresentation parentPresentation = getParent();
+		ShapePresentation parentPresentation = parent();
 		while (parentPresentation != null)
 		{
 			parentFigure = parentPresentation.getFigure();
-			parentPresentation = parentPresentation.getParent();
+			parentPresentation = parentPresentation.parent();
 		}
 		return parentFigure;		
 	}
 	
 	public LayoutConstraintDef getLayoutConstraint()
 	{
-		return this.shapePart.getLayoutConstraint();
+		return part().getLayoutConstraint();
 	}
 	
 	public boolean visible()
 	{
-		return this.shapePart.visible();
+		return part().visible();
 	}
 	
 	public SelectionPresentation getSelectionPresentation()
 	{
-		return this.shapePart.getSelectionPresentation();
-	}	
+		return part().getSelectionPresentation();
+	}
 	
-	public void dispose()
+	@Override
+    public void render()
+    {
+	    // Konstantin: The figure should be created here...
+	    
+	    throw new UnsupportedOperationException();
+    }
+
+    public void dispose()
 	{		
 	}
 	

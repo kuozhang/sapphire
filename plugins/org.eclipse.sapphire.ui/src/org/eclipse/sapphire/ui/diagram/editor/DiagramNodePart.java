@@ -25,15 +25,11 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
-import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
-import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
-import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent.ShapeEventType;
@@ -41,6 +37,9 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -51,7 +50,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 public class DiagramNodePart 
 
     extends SapphirePart
-    implements IPropertiesViewContributorPart
+    implements PropertiesViewContributorPart
     
 {
 	
@@ -71,7 +70,7 @@ public class DiagramNodePart
     protected void init()
     {
         super.init();
-        this.nodeTemplate = (DiagramNodeTemplate)getParentPart();
+        this.nodeTemplate = (DiagramNodeTemplate) parent();
         this.definition = (IDiagramNodeDef)super.definition;
         this.modelElement = getModelElement();
         
@@ -202,11 +201,6 @@ public class DiagramNodePart
     	{
     		return ShapePart.getContainedShapeParts(shapePart, ImagePart.class);
     	}
-    }
-    @Override
-    public void render(SapphireRenderingContext context)
-    {
-        throw new UnsupportedOperationException();
     }
 
     @Override

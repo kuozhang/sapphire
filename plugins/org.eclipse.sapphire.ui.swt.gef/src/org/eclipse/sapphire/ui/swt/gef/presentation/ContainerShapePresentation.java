@@ -64,9 +64,10 @@ public class ContainerShapePresentation extends ShapePresentation
 		return this.children;
 	}
 	
-	public ContainerShapePart getContainerShapePart()
+	@Override
+	public ContainerShapePart part()
 	{
-		return (ContainerShapePart)getPart();
+		return (ContainerShapePart) super.part();
 	}
 	
 	public ValidationMarkerSize getValidationMarkerSize()
@@ -86,7 +87,7 @@ public class ContainerShapePresentation extends ShapePresentation
 	
 	public ShapeLayoutDef getLayout()
 	{
-		return getContainerShapePart().getLayout();
+		return part().getLayout();
 	}
 	
 	@Override
@@ -102,7 +103,7 @@ public class ContainerShapePresentation extends ShapePresentation
 	public void refreshChildren()
 	{
 		List<ShapePresentation> refreshedChildren = new ArrayList<ShapePresentation>();
-		ContainerShapePart containerShapePart = (ContainerShapePart)this.getPart();
+		ContainerShapePart containerShapePart = part();
 		for (ShapePart shapePart : containerShapePart.getChildren())
 		{
 			if (canAddShapePart(shapePart))
@@ -119,7 +120,7 @@ public class ContainerShapePresentation extends ShapePresentation
 	
 	private ShapePresentation getChildShapePresentation(ShapePart shapePart) {
 		for (ShapePresentation presentation : getChildren()) {
-			if (presentation.getPart() == shapePart) {
+			if (presentation.part() == shapePart) {
 				return presentation;
 			}
 		}

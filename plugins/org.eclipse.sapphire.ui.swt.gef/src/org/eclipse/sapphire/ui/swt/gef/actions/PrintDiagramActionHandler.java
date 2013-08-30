@@ -13,8 +13,8 @@
 package org.eclipse.sapphire.ui.swt.gef.actions;
 
 import org.eclipse.gef.ui.actions.PrintAction;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
@@ -26,7 +26,7 @@ import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 public final class PrintDiagramActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         final DiagramRenderingContext diagramContext = (DiagramRenderingContext) context;
         final SapphireDiagramEditor diagramEditor = diagramContext.getDiagramEditor();

@@ -16,7 +16,7 @@ import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
-import org.eclipse.sapphire.ui.def.PropertyEditorDef;
+import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

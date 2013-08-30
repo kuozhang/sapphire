@@ -26,9 +26,27 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireUiDefMethods;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.forms.ActuatorDef;
+import org.eclipse.sapphire.ui.forms.CompositeDef;
+import org.eclipse.sapphire.ui.forms.DialogDef;
+import org.eclipse.sapphire.ui.forms.FormDef;
+import org.eclipse.sapphire.ui.forms.FormEditorPageDef;
+import org.eclipse.sapphire.ui.forms.GroupDef;
+import org.eclipse.sapphire.ui.forms.HtmlPanelDef;
+import org.eclipse.sapphire.ui.forms.LineSeparatorDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeFactoryDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.forms.DetailSectionDef;
+import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
+import org.eclipse.sapphire.ui.forms.SectionDef;
+import org.eclipse.sapphire.ui.forms.SplitFormDef;
+import org.eclipse.sapphire.ui.forms.StaticTextFieldDef;
+import org.eclipse.sapphire.ui.forms.TabGroupDef;
+import org.eclipse.sapphire.ui.forms.TextDef;
+import org.eclipse.sapphire.ui.forms.WhitespaceSeparatorDef;
+import org.eclipse.sapphire.ui.forms.WithDef;
+import org.eclipse.sapphire.ui.forms.WizardDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -89,15 +107,14 @@ public interface ISapphireUiDef extends Element
             PropertyEditorDef.class, 
             LineSeparatorDef.class,
             WhitespaceSeparatorDef.class,
-            ISapphireLabelDef.class,
-            ISapphireGroupDef.class,
+            TextDef.class,
+            GroupDef.class,
             WithDef.class,
-            ConditionalDef.class,
             CompositeDef.class,
             ActuatorDef.class,
             ISapphireCustomPartDef.class,
-            ISapphireStaticTextFieldDef.class,
-            PageBookExtDef.class,
+            StaticTextFieldDef.class,
+            DetailSectionDef.class,
             TabGroupDef.class,
             HtmlPanelDef.class,
             FormDef.class,

@@ -19,10 +19,10 @@ import junit.framework.TestSuite;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 import org.eclipse.sapphire.ui.PartFunctionContext;
-import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.def.DialogDef;
+import org.eclipse.sapphire.ui.forms.DialogDef;
+import org.eclipse.sapphire.ui.forms.DialogPart;
 
 /**
  * Tests Part function.
@@ -56,7 +56,7 @@ public final class PartFunctionTests extends TestExpr
         try
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartFunctionTests.class ).dialog();
-            final SapphirePart part = new SapphireDialogPart();
+            final SapphirePart part = new DialogPart();
             
             try
             {

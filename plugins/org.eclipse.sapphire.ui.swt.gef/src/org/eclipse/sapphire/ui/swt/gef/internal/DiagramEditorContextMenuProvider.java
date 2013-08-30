@@ -34,10 +34,10 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
-import org.eclipse.sapphire.ui.swt.ActionBridge;
-import org.eclipse.sapphire.ui.swt.ActionHandlerBridge;
-import org.eclipse.sapphire.ui.swt.ActionSystemPartBridge;
+import org.eclipse.sapphire.ui.forms.swt.presentation.ActionBridge;
+import org.eclipse.sapphire.ui.forms.swt.presentation.ActionHandlerBridge;
+import org.eclipse.sapphire.ui.forms.swt.presentation.ActionSystemPartBridge;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
@@ -104,7 +104,6 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 		    throw new IllegalStateException();
 		}
 		
-		final DiagramRenderingContext diagramRenderingContext = this.editor.getConfigurationManager().getDiagramRenderingContextCache().get( part );
 		final Map<SapphireActionSystemPart,ActionSystemPartBridge> updatedCache = new IdentityHashMap<SapphireActionSystemPart,ActionSystemPartBridge>();
 		String currentGroupId = null;
 		

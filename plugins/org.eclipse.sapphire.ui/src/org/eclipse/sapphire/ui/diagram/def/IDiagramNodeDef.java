@@ -40,7 +40,6 @@ import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
@@ -48,6 +47,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -55,7 +55,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 
 @Label( standard = "diagram node" )
 
-public interface IDiagramNodeDef extends PartDef, IDiagramDimension, IPropertiesViewContributorDef
+public interface IDiagramNodeDef extends PartDef, IDiagramDimension, PropertiesViewContributorDef
 {
     ElementType TYPE = new ElementType( IDiagramNodeDef.class );
     

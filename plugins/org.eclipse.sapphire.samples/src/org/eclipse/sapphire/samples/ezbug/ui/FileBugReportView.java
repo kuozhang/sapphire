@@ -11,12 +11,12 @@
 
 package org.eclipse.sapphire.samples.ezbug.ui;
 
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.samples.ezbug.FileBugReportOp;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.swt.SapphireForm;
+import org.eclipse.sapphire.ui.forms.swt.SapphireForm;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;

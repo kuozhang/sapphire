@@ -33,18 +33,17 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
-import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -55,7 +54,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionE
 public class DiagramConnectionPart 
 
     extends SapphirePart
-    implements IPropertiesViewContributorPart
+    implements PropertiesViewContributorPart
     
 {
 	protected DiagramConnectionTemplate connectionTemplate;
@@ -90,7 +89,7 @@ public class DiagramConnectionPart
 	
 	protected void initLabelId()
 	{
-    	this.connectionTemplate = (DiagramConnectionTemplate)getParentPart();
+    	this.connectionTemplate = (DiagramConnectionTemplate) parent();
         
         this.modelElement = getModelElement();
         
@@ -267,12 +266,6 @@ public class DiagramConnectionPart
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION);
         contextSet.add(SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION_HIDDEN);
         return contextSet;    	
-    }
-    
-    @Override
-    public void render(SapphireRenderingContext context)
-    {
-        throw new UnsupportedOperationException();
     }
     
     @Override

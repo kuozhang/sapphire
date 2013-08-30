@@ -53,10 +53,8 @@
                     <separator>
                         <label>description</label>
                     </separator>
-                    <switching-panel>
-                        <list-selection-controller>
-                            <property>Hardware</property>
-                        </list-selection-controller>
+                    <detail-section>
+                        <property>Hardware</property>
                         <panel>
                             <key>HardwareItem</key>
                             <content>
@@ -73,7 +71,7 @@
                                 <label>Select a hardware item above to view or edit description.</label>
                             </content>
                         </default-panel>
-                    </switching-panel>
+                    </detail-section>
                 </content>
             </composite>
         </content>

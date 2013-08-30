@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.tests.ui.def.t0001;
 
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 public final class TestActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         return null;
     }

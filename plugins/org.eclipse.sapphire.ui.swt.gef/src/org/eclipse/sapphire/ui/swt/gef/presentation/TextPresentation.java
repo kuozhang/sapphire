@@ -30,22 +30,22 @@ public class TextPresentation extends ShapePresentation
 	
 	public Color getTextColor()
 	{
-		return getTextPart().getTextColor();
+		return part().getTextColor();
 	}
 	
 	public String getContent()
 	{
-		return getTextPart().getContent();
+		return part().getContent();
 	}
 
 	public FontDef getFontDef()
 	{
-		return getTextPart().getFontDef();
+		return part().getFontDef();
 	}
 	
 	public boolean truncatable()
 	{
-		return getTextPart().truncatable();
+		return part().truncatable();
 	}
 	
 	@Override
@@ -55,12 +55,13 @@ public class TextPresentation extends ShapePresentation
 		if (this.getFigure() != null)
 		{
 			TextFigure textFigure = (TextFigure)getFigure();
-			textFigure.setText(getTextPart().getContent());
+			textFigure.setText(part().getContent());
 		}
 	}
 	
-	private TextPart getTextPart()
+	@Override
+	public TextPart part()
 	{
-		return (TextPart)this.getPart();
+		return (TextPart) super.part();
 	}
 }

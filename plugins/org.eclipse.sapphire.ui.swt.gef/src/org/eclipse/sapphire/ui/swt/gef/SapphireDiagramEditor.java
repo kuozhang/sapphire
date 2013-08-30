@@ -19,7 +19,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef;
 
-import static org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil.toImageDescriptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,10 +91,13 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
+import org.eclipse.sapphire.ui.forms.swt.presentation.ActionBridge;
+import org.eclipse.sapphire.ui.forms.swt.presentation.ActionSystemPartBridge;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.EditorPagePresentation;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpSystem;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireToolBarManagerActionPresentation;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.swt.ActionBridge;
-import org.eclipse.sapphire.ui.swt.ActionSystemPartBridge;
-import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
@@ -111,9 +114,6 @@ import org.eclipse.sapphire.ui.swt.gef.palette.DefaultFlyoutPalettePreferences;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireToolBarManagerActionPresentation;
-import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
@@ -473,14 +473,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 
 		diagramModel.removeConnection(connPart);
-		getConfigurationManager().getDiagramRenderingContextCache().remove(connPart);
 	}
 
 	private void addConnection(DiagramConnectionPart connPart)
 	{
 		diagramModel.addConnection(connPart);
-		DiagramRenderingContext ctx = new DiagramRenderingContext(connPart, this);
-		getConfigurationManager().getDiagramRenderingContextCache().put(connPart, ctx);
 	}
 	
 	protected void addConnectionIfPossible(DiagramConnectionPart connPart) {
@@ -629,8 +626,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			return;
 		}
 		
-		DiagramRenderingContext ctx = new DiagramRenderingContext(shapePart, this);
-		getConfigurationManager().getDiagramRenderingContextCache().put(shapePart, ctx);		
 		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
 		if (nodeModel != null) {
 			nodeModel.handleAddShape(shapePart);
@@ -649,7 +644,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		if (nodeModel != null) {
 			nodeModel.handleDeleteShape(shapePart);
 		}
-		getConfigurationManager().getDiagramRenderingContextCache().remove(shapePart);
 	}
 
 	protected void reorderShapes(DiagramNodePart part, ShapeFactoryPart shapeFactory)
@@ -735,8 +729,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	private void initActions()
 	{
-	    final DiagramRenderingContext diagramRenderingContext = getConfigurationManager().getDiagramRenderingContextCache().get( this.part );
-	    
 	    this.globalActions = new HashMap<String,ActionBridge>();
 		
 		final ActionBridge selectAllBridge = new ActionBridge( diagramRenderingContext, this.part.getAction( "Sapphire.Diagram.SelectAll" ) );
@@ -984,7 +976,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	            	if (context.getText() != null || (context.getRelatedTopics() != null && context.getRelatedTopics().length > 0))
 	            	{
 		                // determine a location in the upper right corner of the widget
-		                org.eclipse.swt.graphics.Point point = SapphireHelpSystem.computePopUpLocation(event.widget.getDisplay());
+		                org.eclipse.swt.graphics.Point point = HelpSystem.computePopUpLocation(event.widget.getDisplay());
 		                // display the help
 		                PlatformUI.getWorkbench().getHelpSystem().displayContext(context, point.x, point.y);
 	            	}
@@ -1108,11 +1100,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			//viewer.getControl().forceFocus();
 			
 			GraphicalEditPart editpart = getGraphicalEditPart(part);
-			ISapphirePart parentPart = part.getParentPart();
+			ISapphirePart parentPart = part.parent();
 			while ((editpart == null || !editpart.isSelectable()) && parentPart != null)
 			{
 				editpart = getGraphicalEditPart(parentPart);
-				parentPart = parentPart.getParentPart();
+				parentPart = parentPart.parent();
 			}
 			if (editpart != null) 
 			{

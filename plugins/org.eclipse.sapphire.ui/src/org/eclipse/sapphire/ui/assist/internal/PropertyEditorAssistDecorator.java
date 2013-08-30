@@ -27,20 +27,20 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.PartValidationEvent;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.def.PropertyEditorDef;
+import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
+import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
-import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -87,7 +87,6 @@ public final class PropertyEditorAssistDecorator
     
     private final SapphirePart part;
     private final Property property;
-    private final SapphireRenderingContext context;
     private final Label control;
     private Control primary;
     private PropertyEditorAssistContext assistContext;
@@ -101,20 +100,17 @@ public final class PropertyEditorAssistDecorator
     private final List<PropertyEditorAssistContributor> contributors;
     
     public PropertyEditorAssistDecorator( final PropertyEditorPart part,
-                                          final SapphireRenderingContext context,
                                           final Composite parent )
     {
-        this( part, part.property(), context, parent );
+        this( part, part.property(), parent );
     }
     
     public PropertyEditorAssistDecorator( final SapphirePart part,
                                           final Property property,
-                                          final SapphireRenderingContext context,
                                           final Composite parent )
     {
         this.part = part;
         this.property = property;
-        this.context = context;
         this.mouseOverEditorControl = false;
         this.mouseTrackListener = new EditorControlMouseTrackListener();
         
@@ -266,7 +262,7 @@ public final class PropertyEditorAssistDecorator
         this.assistActionHandler = new SapphireActionHandler()
         {
             @Override
-            protected Object run( final SapphireRenderingContext context )
+            protected Object run( final Presentation context )
             {
                 openAssistDialog();
                 return null;
@@ -328,14 +324,9 @@ public final class PropertyEditorAssistDecorator
         return this.control;
     }
     
-    public SapphireRenderingContext context()
-    {
-        return this.context;
-    }
-    
     public Shell shell()
     {
-        return this.context.getShell();
+        return this.control.getShell();
     }
     
     public SapphirePart part()
@@ -425,7 +416,7 @@ public final class PropertyEditorAssistDecorator
         
         if( this.property.enabled() )
         {
-            this.assistContext = new PropertyEditorAssistContext( this.part, this.context );
+            this.assistContext = new PropertyEditorAssistContext( this.part, shell() );
             this.problem = this.part.validation();
             
             for( PropertyEditorAssistContributor c : this.contributors )

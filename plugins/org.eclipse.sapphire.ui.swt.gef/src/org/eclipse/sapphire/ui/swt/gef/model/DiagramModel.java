@@ -29,7 +29,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 
 /**
@@ -102,9 +101,6 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	public void handleAddNode(DiagramNodePart nodePart) {
-		DiagramRenderingContext ctx = new DiagramRenderingContext(nodePart, getSapphireDiagramEditor());
-		getConfigurationManager().getDiagramRenderingContextCache().put(nodePart, ctx);		
-
 		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePart);
 		
 		Bounds bounds = nodePart.getNodeBounds();
@@ -158,12 +154,11 @@ public class DiagramModel extends DiagramModelBase {
 			nodes.remove(nodeModel);
 			firePropertyChange(NODE_REMOVED, null, nodePart);
 		}
-		getConfigurationManager().getDiagramRenderingContextCache().remove(nodePart);
 	}
 
 	public void handleUpdateShapeVisibility(final DiagramNodePart part, final ShapePart shapePart) {
 		DiagramNodeModel nodeModel = getDiagramNodeModel(part);
-		if (shapePart.getParentPart() instanceof DiagramNodePart) {
+		if (shapePart.parent() instanceof DiagramNodePart) {
 			// handle visibility at the node level
 			if (shapePart.visible()) {
 				if (nodeModel == null) {

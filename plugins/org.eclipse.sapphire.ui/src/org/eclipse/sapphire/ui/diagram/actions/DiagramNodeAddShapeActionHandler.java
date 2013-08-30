@@ -16,9 +16,9 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -60,7 +60,7 @@ public class DiagramNodeAddShapeActionHandler extends SapphireActionHandler
     }
 	
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run(Presentation context) 
 	{
 	    final Element element = this.factory.getModelElementList().insert( this.type );
 		final ShapePart shapePart = this.factory.getShapePart( element );

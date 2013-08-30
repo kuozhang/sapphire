@@ -272,12 +272,10 @@
     <form>
         <id>PartId</id>
         <content>
-            <if>
-                <condition>${ InstanceOf( Parent(), 'org.eclipse.sapphire.ui.def.ISapphireUiDef' ) }</condition>
-                <then>
-                    <property-editor>Id</property-editor>
-                </then>
-            </if>
+            <property-editor>
+                <property>Id</property>
+                <visible-when>${ InstanceOf( Parent(), 'org.eclipse.sapphire.ui.def.ISapphireUiDef' ) }</visible-when>
+            </property-editor>
         </content>
     </form>
     
@@ -326,7 +324,7 @@
         <property>@{Property}</property>
         
         <case>
-            <model-element-type>PropertyEditorDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.PropertyEditorDef</model-element-type>
             <label>${ Id == null ? ( Property == null ? "Property Editor" : Property ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -419,7 +417,7 @@
         </case>
         
         <case>
-            <model-element-type>SectionDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.SectionDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? &quot;Section&quot; : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -469,7 +467,7 @@
         </case>
         
         <case>
-            <model-element-type>SectionRef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.SectionRef</model-element-type>
             <label>${ Section == null ? &quot;&lt;section-ref&gt;&quot; : Section }</label>
             <section>
                 <label>section reference</label>
@@ -481,7 +479,7 @@
         </case>
 
         <case>
-            <model-element-type>LineSeparatorDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.LineSeparatorDef</model-element-type>
             <label>Line Separator</label>
             <image>${ Image() }</image>
             <section>
@@ -494,7 +492,7 @@
         </case>
 
         <case>
-            <model-element-type>WhitespaceSeparatorDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.WhitespaceSeparatorDef</model-element-type>
             <label>Whitespace Separator</label>
             <image>${ Image() }</image>
             <section>
@@ -507,8 +505,8 @@
         </case>
 
         <case>
-            <model-element-type>ISapphireLabelDef</model-element-type>
-            <label>Label</label>
+            <model-element-type>org.eclipse.sapphire.ui.forms.TextDef</model-element-type>
+            <label>Text</label>
             <image>${ Image() }</image>
             <section>
                 <content>
@@ -521,7 +519,7 @@
         </case>
         
         <case>
-            <model-element-type>ActuatorDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.ActuatorDef</model-element-type>
             <label>Actuator</label>
             <image>${ Image() }</image>
             <section>
@@ -569,7 +567,7 @@
         </case>
         
         <case>
-            <model-element-type>HtmlPanelDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.HtmlPanelDef</model-element-type>
             <label>HTML Panel</label>
             <image>${ Image() }</image>
             <section>
@@ -580,28 +578,23 @@
                         <span>true</span>
                     </property-editor>
                     <separator />
-                    <switching-panel>
-                        <enum-controller>
-                            <property>ContentSourceType</property>
-                        </enum-controller>
-                        <panel>
-                            <key>embedded</key>
-                            <content>
-                                <property-editor>
-                                    <property>Content</property>
-                                    <show-label>false</show-label>
-                                    <span>true</span>
-                                </property-editor>
-                                <property-editor>Fragment</property-editor>
-                            </content>
-                        </panel>
-                        <panel>
-                            <key>remote</key>
-                            <content>
-                                <property-editor>ContentUrl</property-editor>
-                            </content>
-                        </panel>
-                    </switching-panel>
+                    <form>
+                        <visible-when>${ ContentSourceType == "embedded" }</visible-when>
+                        <content>
+                            <property-editor>
+                                <property>Content</property>
+                                <show-label>false</show-label>
+                                <span>true</span>
+                            </property-editor>
+                            <property-editor>Fragment</property-editor>
+                        </content>
+                    </form>
+                    <form>
+                        <visible-when>${ ContentSourceType == "remote" }</visible-when>
+                        <content>
+                            <property-editor>ContentUrl</property-editor>
+                        </content>
+                    </form>
                 </content>
             </section>
             <section>
@@ -626,52 +619,9 @@
             </section>
             <node-include>ServicesNode</node-include>
         </case>
-        
-        <case>
-            <model-element-type>ConditionalDef</model-element-type>
-            <label>If</label>
-            <image>${ Image() }</image>
-            <section>
-                <label>If</label>
-                <content>
-                    <property-editor>Condition</property-editor>
-                </content>
-            </section>
-            <node>
-                <label>then</label>
-                <section>
-                    <content>
-                        <label>The content to show if the condition evaluates to true.</label>
-                    </content>
-                </section>
-                <node-include>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>ThenContent</value>
-                    </param>
-                </node-include>
-            </node>
-            <node>
-                <label>else</label>
-                <section>
-                    <content>
-                        <label>The content to show if the condition evaluates to false.</label>
-                    </content>
-                </section>
-                <node-include>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>ElseContent</value>
-                    </param>
-                </node-include>
-            </node>
-            <node-include>ServicesNode</node-include>
-        </case>
 
         <case>
-            <model-element-type>WizardDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.WizardDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Wizard" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -687,7 +637,7 @@
             <node-factory>
                 <property>Pages</property>
                 <case>
-                    <model-element-type>WizardPageDef</model-element-type>
+                    <model-element-type>org.eclipse.sapphire.ui.forms.WizardPageDef</model-element-type>
                     <label>${ Label == null ? "&lt;page&gt;" : Label }</label>
                     <section>
                         <label>Wizard Page</label>
@@ -724,7 +674,7 @@
         </case>
         
         <case>
-            <model-element-type>DialogDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.DialogDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Dialog" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -757,7 +707,7 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireGroupDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.GroupDef</model-element-type>
             <label>Group</label>
             <image>${ Image() }</image>
             <section>
@@ -786,7 +736,7 @@
         </case>
 
         <case>
-            <model-element-type>CompositeDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.CompositeDef</model-element-type>
             <label>${ Id == null ? "Composite" : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -816,7 +766,7 @@
         </case>
         
         <case>
-            <model-element-type>FormEditorPageDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.FormEditorPageDef</model-element-type>
             <label>${ Id == null ? "Form Editor Page" : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -846,7 +796,7 @@
         </case>
         
         <case>
-            <model-element-type>FormDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.FormDef</model-element-type>
             <label>${ Id == null ? &quot;Form&quot; : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1003,13 +953,12 @@
         </case>
 
         <case>
-            <model-element-type>PageBookExtDef</model-element-type>
-            <label>Page Book</label>
+            <model-element-type>org.eclipse.sapphire.ui.forms.DetailSectionDef</model-element-type>
+            <label>Detail Section</label>
             <image>${ Image() }</image>
             <section>
                 <content>
-                    <property-editor>ControlMethod</property-editor>
-                    <property-editor>ControlProperty</property-editor>
+                    <property-editor>Property</property-editor>
                     <property-editor>
                         <property>ScaleVertically</property>
                         <hint>
@@ -1059,7 +1008,7 @@
         </case>
         
         <case>
-            <model-element-type>TabGroupDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.TabGroupDef</model-element-type>
             <label>Tab Group</label>
             <image>${ Image() }</image>
             <section>
@@ -1091,7 +1040,7 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireStaticTextFieldDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.StaticTextFieldDef</model-element-type>
             <label>Static Text Field</label>
             <image>${ Image() }</image>
             <section>
@@ -1118,7 +1067,7 @@
         </case>
         
         <case>
-            <model-element-type>MasterDetailsContentNodeDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeDef</model-element-type>
             <label>${ Id == null ? ( Label == null ? "Content Outline Node" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1158,7 +1107,7 @@
         </case>
         
         <case>
-            <model-element-type>MasterDetailsContentNodeFactoryDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeFactoryDef</model-element-type>
             <label>${ Id == null ? ( Property == null ? &quot;Content Outline Node Factory&quot; : Property ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1210,7 +1159,7 @@
         </case>
         
         <case>
-            <model-element-type>MasterDetailsContentNodeInclude</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeInclude</model-element-type>
             <label>${ Part == null ? &quot;Content Outline Node Include&quot; : Part }</label>
             <image>${ Image() }</image>
             <section>
@@ -1224,7 +1173,7 @@
         </case>
         
         <case>
-            <model-element-type>MasterDetailsEditorPageDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef</model-element-type>
             <label>${ Id == null ? "Form Editor Page" : Id }</label>
             <image>${ Image() }</image>
             <section>

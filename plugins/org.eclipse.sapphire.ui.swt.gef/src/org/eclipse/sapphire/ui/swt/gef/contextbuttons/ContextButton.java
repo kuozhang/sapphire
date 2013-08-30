@@ -33,7 +33,7 @@ import org.eclipse.sapphire.ui.DefaultActionImage;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
@@ -549,8 +549,6 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		List<ISapphirePart> sapphireParts = this.contextButtonPad.getSapphireParts();
 		for (ISapphirePart part : sapphireParts)
 		{
-	        DiagramRenderingContext context =
-	                getEditor().getConfigurationManager().getDiagramRenderingContextCache().get(part);
 	        handler.execute(context);
 		}
 	}

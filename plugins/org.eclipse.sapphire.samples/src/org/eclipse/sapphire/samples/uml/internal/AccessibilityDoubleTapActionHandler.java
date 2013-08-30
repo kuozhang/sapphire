@@ -13,8 +13,8 @@ package org.eclipse.sapphire.samples.uml.internal;
 
 import org.eclipse.sapphire.samples.uml.Accessibility;
 import org.eclipse.sapphire.samples.uml.Accessible;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,7 +23,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 public final class AccessibilityDoubleTapActionHandler extends SapphireActionHandler 
 {
 	@Override
-	protected Object run( final SapphireRenderingContext context ) 
+	protected Object run( final Presentation context ) 
 	{
 		final Accessible accessible = (Accessible) getPart().getLocalModelElement();
 		final Accessibility accessibility = accessible.getAccessibility().content();

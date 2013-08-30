@@ -14,8 +14,8 @@ package org.eclipse.sapphire.ui.swt.gef.actions;
 import java.util.List;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -32,7 +32,7 @@ public class DiagramDirectEditActionHandler extends SapphireActionHandler
 {
 
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run( final Presentation context ) 
 	{
 		DiagramRenderingContext diagramContext = (DiagramRenderingContext)context;
 		SapphireDiagramEditor diagramEditor = diagramContext.getDiagramEditor();

@@ -909,10 +909,8 @@
                             <separator>
                                 <label>details</label>
                             </separator>
-                            <switching-panel>
-                                <list-selection-controller>
-                                    <property>Heterogeneous</property>
-                                </list-selection-controller>
+                            <detail-section>
+                                <property>Heterogeneous</property>
                                 <panel>
                                     <key>IChildElementWithEnum</key>
                                     <content>
@@ -938,7 +936,7 @@
                                         <label>Select a list item above to view or edit additional parameters.</label>
                                     </content>
                                 </default-panel>
-                            </switching-panel>
+                            </detail-section>
                         </content>
                     </section>
                     <node-factory>
@@ -1052,10 +1050,8 @@
                             <separator>
                                 <label>details</label>
                             </separator>
-                            <switching-panel>
-                                <list-selection-controller>
-                                    <property>List</property>
-                                </list-selection-controller>
+                            <detail-section>
+                                <property>List</property>
                                 <panel>
                                     <key>IChildElementWithEnum</key>
                                     <content>
@@ -1081,7 +1077,7 @@
                                         <label>Select a list item above to view or edit additional parameters.</label>
                                     </content>
                                 </default-panel>
-                            </switching-panel>
+                            </detail-section>
                         </content>
                     </section>
                 </node>
@@ -1836,39 +1832,6 @@
                 <property>SectionsGallery</property>
             </node>
             <node>
-                <property>ConditionalGallery</property>
-                <label>conditionals</label>
-                <section>
-                    <content>
-                        <property-editor>ShapeType</property-editor>
-                        <if>
-                            <condition>${ Radius.Enabled }</condition>
-                            <then>
-                                <property-editor>Radius</property-editor>
-                            </then>
-                        </if>
-                        <if>
-                            <condition>${ EdgeLength1.Enabled }</condition>
-                            <then>
-                                <property-editor>EdgeLength1</property-editor>
-                            </then>
-                        </if>
-                        <if>
-                            <condition>${ EdgeLength2.Enabled }</condition>
-                            <then>
-                                <property-editor>EdgeLength2</property-editor>
-                            </then>
-                        </if>
-                        <if>
-                            <condition>${ EdgeLength3.Enabled }</condition>
-                            <then>
-                                <property-editor>EdgeLength3</property-editor>
-                            </then>
-                        </if>
-                    </content>
-                </section>
-            </node>
-            <node>
                 <label>visible when</label>
                 <section>
                     <content>
@@ -2291,10 +2254,8 @@
                                             <separator>
                                                 <label>description</label>
                                             </separator>
-                                            <switching-panel>
-                                                <list-selection-controller>
-                                                    <property>List1</property>
-                                                </list-selection-controller>
+                                            <detail-section>
+                                                <property>List1</property>
                                                 <panel>
                                                     <key>SplitFormGalleryListEntry</key>
                                                     <content>
@@ -2310,7 +2271,7 @@
                                                         <label>Select an entry above to view or edit description.</label>
                                                     </content>
                                                 </default-panel>
-                                            </switching-panel>
+                                            </detail-section>
                                         </content>
                                     </composite>
                                 </content>
@@ -2386,10 +2347,8 @@
                         <separator>
                             <label>description</label>
                         </separator>
-                        <switching-panel>
-                            <list-selection-controller>
-                                <property>List1</property>
-                            </list-selection-controller>
+                        <detail-section>
+                            <property>List1</property>
                             <default-panel>
                                 <content>
                                     <label>Select an entry above to view or edit description.</label>
@@ -2407,7 +2366,7 @@
                                 </content>
                             </panel>
                             <scale-vertically>true</scale-vertically>
-                        </switching-panel>
+                        </detail-section>
                     </content>
                     <weight>3</weight>
                 </block>

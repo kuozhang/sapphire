@@ -34,7 +34,9 @@ import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
-import org.eclipse.sapphire.ui.util.SapphireHelpSystem;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpSystem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 
@@ -45,7 +47,7 @@ import org.eclipse.ui.IURIEditorInput;
 public class SapphireEditorPagePart
 
     extends SapphirePart
-    implements IPropertiesViewContributorPart
+    implements PropertiesViewContributorPart
     
 {
     private EditorPageState state;
@@ -192,7 +194,7 @@ public class SapphireEditorPagePart
             
             if( docdef != null )
             {
-                SapphireHelpSystem.getContext( docdef );
+                HelpSystem.getContext( docdef );
             }
         }
         
@@ -294,12 +296,6 @@ public class SapphireEditorPagePart
         {
             super( part );
         }
-    }
-
-    @Override
-    public void render( final SapphireRenderingContext context )
-    {
-        throw new UnsupportedOperationException();
     }
     
 }

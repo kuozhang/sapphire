@@ -21,7 +21,7 @@ import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContributor;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
-import org.eclipse.sapphire.ui.swt.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

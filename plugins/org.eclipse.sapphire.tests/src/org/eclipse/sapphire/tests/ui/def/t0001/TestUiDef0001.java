@@ -20,7 +20,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
 
 /**
  * Tests class resolution via import statements in the Sapphire UI Definition model.

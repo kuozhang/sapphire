@@ -18,11 +18,11 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 import org.eclipse.sapphire.ui.PartFunctionContext;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
-import org.eclipse.sapphire.ui.SapphireDialogPart;
-import org.eclipse.sapphire.ui.SapphireGroup;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.def.DialogDef;
+import org.eclipse.sapphire.ui.forms.DialogDef;
+import org.eclipse.sapphire.ui.forms.DialogPart;
+import org.eclipse.sapphire.ui.forms.GroupPart;
+import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 
 /**
  * Tests Parent function for parts.
@@ -55,14 +55,14 @@ public final class PartParentFunctionTests extends TestExpr
         try
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartParentFunctionTests.class ).dialog();
-            final SapphireDialogPart dialogPart = new SapphireDialogPart();
+            final DialogPart dialogPart = new DialogPart();
             
             try
             {
                 dialogPart.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
                 
-                final SapphireGroup groupPart = (SapphireGroup) dialogPart.getChildParts().get( 0 );
-                final PropertyEditorPart propertyEditorPart = (PropertyEditorPart) groupPart.getChildParts().get( 0 );
+                final GroupPart groupPart = (GroupPart) dialogPart.children().all().get( 0 );
+                final PropertyEditorPart propertyEditorPart = (PropertyEditorPart) groupPart.children().all().get( 0 );
                 
                 testForExpectedValue( new PartFunctionContext( propertyEditorPart, element ), "${ Part }", propertyEditorPart );
                 testForExpectedValue( new PartFunctionContext( propertyEditorPart, element ), "${ Part.Parent }", groupPart );

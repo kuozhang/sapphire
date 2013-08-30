@@ -24,8 +24,8 @@ import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.swt.SWT;
@@ -54,7 +54,7 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
     }
 
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         DiagramRenderingContext diagramContext = (DiagramRenderingContext) context;
         SapphireDiagramEditor diagramEditor = diagramContext.getDiagramEditor();

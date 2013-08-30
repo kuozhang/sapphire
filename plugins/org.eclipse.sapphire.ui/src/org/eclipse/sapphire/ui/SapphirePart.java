@@ -52,39 +52,57 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.ui.def.ActuatorDef;
-import org.eclipse.sapphire.ui.def.CompositeDef;
-import org.eclipse.sapphire.ui.def.ConditionalDef;
-import org.eclipse.sapphire.ui.def.DialogDef;
-import org.eclipse.sapphire.ui.def.FormDef;
-import org.eclipse.sapphire.ui.def.FormEditorPageDef;
-import org.eclipse.sapphire.ui.def.HtmlPanelDef;
-import org.eclipse.sapphire.ui.def.IFormPartInclude;
 import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
-import org.eclipse.sapphire.ui.def.ISapphireGroupDef;
-import org.eclipse.sapphire.ui.def.ISapphireLabelDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
-import org.eclipse.sapphire.ui.def.ISapphireStaticTextFieldDef;
-import org.eclipse.sapphire.ui.def.LineSeparatorDef;
-import org.eclipse.sapphire.ui.def.PageBookExtDef;
-import org.eclipse.sapphire.ui.def.PageBookPartControlMethod;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.def.PropertyEditorDef;
-import org.eclipse.sapphire.ui.def.SectionDef;
-import org.eclipse.sapphire.ui.def.SectionRef;
-import org.eclipse.sapphire.ui.def.SplitFormBlockDef;
-import org.eclipse.sapphire.ui.def.SplitFormDef;
-import org.eclipse.sapphire.ui.def.TabGroupDef;
-import org.eclipse.sapphire.ui.def.WhitespaceSeparatorDef;
-import org.eclipse.sapphire.ui.def.WithDef;
-import org.eclipse.sapphire.ui.def.WizardPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.forms.ActuatorDef;
+import org.eclipse.sapphire.ui.forms.ActuatorPart;
+import org.eclipse.sapphire.ui.forms.CompositeDef;
+import org.eclipse.sapphire.ui.forms.CompositePart;
+import org.eclipse.sapphire.ui.forms.DetailSectionDef;
+import org.eclipse.sapphire.ui.forms.DetailSectionPart;
+import org.eclipse.sapphire.ui.forms.DialogDef;
+import org.eclipse.sapphire.ui.forms.DialogPart;
+import org.eclipse.sapphire.ui.forms.FormComponentInclude;
+import org.eclipse.sapphire.ui.forms.FormDef;
+import org.eclipse.sapphire.ui.forms.FormEditorPageDef;
+import org.eclipse.sapphire.ui.forms.FormEditorPagePart;
+import org.eclipse.sapphire.ui.forms.FormPart;
+import org.eclipse.sapphire.ui.forms.GroupDef;
+import org.eclipse.sapphire.ui.forms.GroupPart;
+import org.eclipse.sapphire.ui.forms.HtmlPanelDef;
+import org.eclipse.sapphire.ui.forms.HtmlPanelPart;
+import org.eclipse.sapphire.ui.forms.LineSeparatorDef;
+import org.eclipse.sapphire.ui.forms.LineSeparatorPart;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart;
+import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
+import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.SectionDef;
+import org.eclipse.sapphire.ui.forms.SectionPart;
+import org.eclipse.sapphire.ui.forms.SectionRef;
+import org.eclipse.sapphire.ui.forms.SplitFormDef;
+import org.eclipse.sapphire.ui.forms.SplitFormPart;
+import org.eclipse.sapphire.ui.forms.SplitFormSectionDef;
+import org.eclipse.sapphire.ui.forms.SplitFormSectionPart;
+import org.eclipse.sapphire.ui.forms.StaticTextFieldDef;
+import org.eclipse.sapphire.ui.forms.StaticTextFieldPart;
+import org.eclipse.sapphire.ui.forms.TabGroupDef;
+import org.eclipse.sapphire.ui.forms.TabGroupPart;
+import org.eclipse.sapphire.ui.forms.TextDef;
+import org.eclipse.sapphire.ui.forms.TextPart;
+import org.eclipse.sapphire.ui.forms.WhitespaceSeparatorDef;
+import org.eclipse.sapphire.ui.forms.WhitespaceSeparatorPart;
+import org.eclipse.sapphire.ui.forms.WithDef;
+import org.eclipse.sapphire.ui.forms.WithImpliedPart;
+import org.eclipse.sapphire.ui.forms.WithPart;
+import org.eclipse.sapphire.ui.forms.WizardPageDef;
+import org.eclipse.sapphire.ui.forms.WizardPagePart;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
-import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -371,14 +389,12 @@ public abstract class SapphirePart implements ISapphirePart
         return null;
     }
 
-    public abstract void render( final SapphireRenderingContext context );
-    
     public PartDef definition()
     {
         return this.definition;
     }
     
-    public final ISapphirePart getParentPart()
+    public ISapphirePart parent()
     {
         return this.parent;
     }
@@ -1068,9 +1084,9 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new PropertyEditorPart();
         }
-        else if( definition instanceof ISapphireLabelDef )
+        else if( definition instanceof TextDef )
         {
-            part = new LabelPart();
+            part = new TextPart();
         }
         else if( definition instanceof LineSeparatorDef )
         {
@@ -1100,13 +1116,13 @@ public abstract class SapphirePart implements ISapphirePart
                 }
             }
         }
-        else if( definition instanceof ISapphireStaticTextFieldDef )
+        else if( definition instanceof StaticTextFieldDef )
         {
-            part = new SapphireStaticTextField();
+            part = new StaticTextFieldPart();
         }
-        else if( definition instanceof ISapphireGroupDef )
+        else if( definition instanceof GroupDef )
         {
-            part = new SapphireGroup();
+            part = new GroupPart();
         }
         else if( definition instanceof WithDef )
         {
@@ -1115,33 +1131,24 @@ public abstract class SapphirePart implements ISapphirePart
             
             if( property.definition() instanceof ImpliedElementProperty )
             {
-                part = new WithPartImplied();
+                part = new WithImpliedPart();
             }
             else
             {
                 part = new WithPart();
             }
         }
-        else if( definition instanceof PageBookExtDef )
+        else if( definition instanceof DetailSectionDef )
         {
-            final PageBookExtDef pageBookPartDef = (PageBookExtDef) definition;
-            
-            if( pageBookPartDef.getControlMethod().content() == PageBookPartControlMethod.ENUM_VALUE )
-            {
-                part = new SapphireEnumControlledPageBook();
-            }
-            else
-            {
-                part = new SapphireListControlledPageBook();
-            }
+            part = new DetailSectionPart();
         }
         else if( definition instanceof DialogDef )
         {
-            part = new SapphireDialogPart();
+            part = new DialogPart();
         }
         else if( definition instanceof WizardPageDef )
         {
-            part = new SapphireWizardPagePart();
+            part = new WizardPagePart();
         }
         else if( definition instanceof SectionDef )
         {
@@ -1175,13 +1182,9 @@ public abstract class SapphirePart implements ISapphirePart
                 return create( parent, element, def, partParams );
             }
         }
-        else if( definition instanceof CompositeDef )
+        else if( definition instanceof FormComponentInclude )
         {
-            part = new CompositePart();
-        }
-        else if( definition instanceof IFormPartInclude )
-        {
-            final IFormPartInclude inc = (IFormPartInclude) definition;
+            final FormComponentInclude inc = (FormComponentInclude) definition;
             def = inc.getPart().resolve();
             
             if( def == null )
@@ -1211,10 +1214,6 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new TabGroupPart();
         }
-        else if( definition instanceof ConditionalDef )
-        {
-            part = new ConditionalPart();
-        }
         else if( definition instanceof HtmlPanelDef )
         {
             part = new HtmlPanelPart();
@@ -1223,9 +1222,13 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new SplitFormPart();
         }
-        else if( definition instanceof SplitFormBlockDef )
+        else if( definition instanceof SplitFormSectionDef )
         {
-            part = new SplitFormBlockPart();
+            part = new SplitFormSectionPart();
+        }
+        else if( definition instanceof CompositeDef )
+        {
+            part = new CompositePart();
         }
         else if( definition instanceof FormDef )
         {

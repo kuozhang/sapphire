@@ -34,16 +34,12 @@ import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
-import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
@@ -58,6 +54,9 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventT
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent.DiagramPartEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent.ShapeEventType;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -410,12 +409,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     }
     
     @Override
-    public void render(SapphireRenderingContext context)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
     public Set<String> getActionContexts()
     {
         Set<String> contextSet = new HashSet<String>();
@@ -480,9 +473,9 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	        {
 	            propertiesViewContribution = this.propertiesViewContributionManager.getPropertiesViewContribution();
 	        }
-	        else if( selection instanceof IPropertiesViewContributorPart )
+	        else if( selection instanceof PropertiesViewContributorPart )
 	        {
-	            propertiesViewContribution = ( (IPropertiesViewContributorPart) selection ).getPropertiesViewContribution();
+	            propertiesViewContribution = ( (PropertiesViewContributorPart) selection ).getPropertiesViewContribution();
 	        }	        	        
         }
         if (propertiesViewContribution == null || !propertiesViewContribution.getLocalModelElement().disposed())

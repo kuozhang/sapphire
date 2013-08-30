@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -26,15 +25,15 @@ import org.eclipse.swt.widgets.Shell;
 public final class PropertyEditorAssistContext
 {
     private final SapphirePart part;
-    private final SapphireRenderingContext context;
+    private final Shell shell;
     private final LinkedHashMap<String,PropertyEditorAssistSection> sections; 
     private final Map<String,PropertyEditorAssistSection> sectionsReadOnly; 
     
     public PropertyEditorAssistContext( final SapphirePart part,
-                                        final SapphireRenderingContext context )
+                                        final Shell shell )
     {
         this.part = part;
-        this.context = context;
+        this.shell = shell;
         this.sections = new LinkedHashMap<String,PropertyEditorAssistSection>();
         this.sectionsReadOnly = Collections.unmodifiableMap( this.sections );
     }
@@ -44,14 +43,9 @@ public final class PropertyEditorAssistContext
         return this.part;
     }
         
-    public SapphireRenderingContext getUiContext()
-    {
-        return this.context;
-    }
-    
     public Shell getShell()
     {
-        return this.context.getShell();
+        return this.shell;
     }
     
     public boolean isEmpty()

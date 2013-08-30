@@ -40,7 +40,6 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
@@ -109,7 +108,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 	@Override
     public void init()
     {
-        this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
+        this.diagramEditor = (SapphireDiagramEditorPagePart)parent();
         this.modelElement = getModelElement();
         this.definition = (IDiagramNodeDef)super.definition;
         
@@ -339,12 +338,6 @@ public final class DiagramNodeTemplate extends SapphirePart
         this.listeners.remove( listener );
     }
     	
-	@Override
-	public void render(SapphireRenderingContext context)
-	{
-		throw new UnsupportedOperationException();
-	}	
-    
     private void handleModelPropertyChange(final PropertyEvent event)
     {
     	ElementList<?> tempList = (ElementList<?>) event.property();

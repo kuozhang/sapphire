@@ -28,29 +28,30 @@ public class LineShapePresentation extends ShapePresentation
 		super(parent, linePart, configManager);
 	}
 
-	public LinePart getLinePart()
+	@Override
+	public LinePart part()
 	{
-		return (LinePart)getPart();
+		return (LinePart) super.part();
 	}
 	
 	public boolean isHorizontal()
 	{
-		return getLinePart().getOrientation() == Orientation.HORIZONTAL;
+		return part().getOrientation() == Orientation.HORIZONTAL;
 	}
 	
 	public int getWeight()
 	{
-		return getLinePart().getWeight();
+		return part().getWeight();
 	}
 	
 	public Color getColor()
 	{
-		return getLinePart().getColor();
+		return part().getColor();
 	}
 	
 	public LineStyle getStyle()
 	{
-		return getLinePart().getStyle();
+		return part().getStyle();
 	}
 	
 }

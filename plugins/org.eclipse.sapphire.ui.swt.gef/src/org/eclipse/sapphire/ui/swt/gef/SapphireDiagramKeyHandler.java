@@ -28,8 +28,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentation;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 
@@ -114,7 +114,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 		}		
 		if (this.sapphireParts.size() == 1)
 		{
-	        ISapphirePart part = this.sapphirePart.getParentPart();
+	        ISapphirePart part = this.sapphirePart.parent();
 	        
 	        while( part != null )
 	        {
@@ -130,7 +130,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	                }
 	            }
 	            
-	            part = part.getParentPart();
+	            part = part.parent();
 	        }
 					
 			return parent != null && parent.keyPressed(event);
@@ -181,7 +181,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
     						{
     							public void run()
     							{
-    								handler.execute( manager.getContext() );
+    								handler.execute( manager.context() );
     							}
     						};
 	    

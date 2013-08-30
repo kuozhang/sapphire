@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
-import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -41,7 +41,7 @@ import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 @Label( standard = "diagram editor page" )
 @XmlBinding( path = "diagram-page" )
 
-public interface IDiagramEditorPageDef extends EditorPageDef, IPropertiesViewContributorDef
+public interface IDiagramEditorPageDef extends EditorPageDef, PropertiesViewContributorDef
 {
     ElementType TYPE = new ElementType( IDiagramEditorPageDef.class);
     

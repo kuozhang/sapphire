@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.listeners;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,32 +21,26 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 public abstract class PropertyEditorListener
 {
-    private SapphireRenderingContext context = null;
-    private Element element = null;
-    private PropertyDef property = null;
+    private PropertyEditorPresentation presentation = null;
     
-    public final void initialize( final SapphireRenderingContext context,
-                                  final Element element,
-                                  final PropertyDef property )
+    public final void initialize( final PropertyEditorPresentation presentation )
     {
-        this.context = context;
-        this.element = element;
-        this.property = property;
+        this.presentation = presentation;
     }
     
     public final Element getModelElement()
     {
-        return this.element;
+        return this.presentation.part().property().element();
     }
     
     public final PropertyDef getProperty()
     {
-        return this.property;
+        return this.presentation.part().property().definition();
     }
     
-    public final SapphireRenderingContext getUiContext()
+    public PropertyEditorPresentation presentation()
     {
-        return this.context;
+        return this.presentation;
     }
     
 }

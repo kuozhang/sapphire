@@ -15,8 +15,8 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gd;
-import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 
 import java.net.URI;
 import java.util.Collections;
@@ -44,15 +44,17 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPage;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.swt.MasterDetailsEditorPage;
+import org.eclipse.sapphire.ui.forms.swt.SapphireEditorFormPage;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.EditorPagePresentation;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphirePropertySheetPage;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.text.SapphireFormText;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.swt.EditorPagePresentation;
-import org.eclipse.sapphire.ui.swt.SapphirePropertySheetPage;
-import org.eclipse.sapphire.ui.swt.SwtResourceCache;
-import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -798,7 +800,7 @@ public abstract class SapphireEditor
     // ISapphirePart Methods
     // *********************
     
-    public ISapphirePart getParentPart()
+    public ISapphirePart parent()
     {
         return null;
     }
@@ -880,9 +882,9 @@ public abstract class SapphireEditor
             result = adapterType.cast( getAdapter( adapterType ) );
         }
 
-        if( result == null && getParentPart() != null )
+        if( result == null && parent() != null )
         {
-            result = getParentPart().adapt( adapterType );
+            result = parent().adapt( adapterType );
         }
 
         return result;

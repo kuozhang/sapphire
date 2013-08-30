@@ -16,7 +16,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.sapphire.samples.ezbug.FileBugReportOp;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.swt.SapphireWizard;
+import org.eclipse.sapphire.ui.forms.swt.SapphireWizard;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 

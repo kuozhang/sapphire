@@ -22,8 +22,8 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.PartFunctionContext;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 
 /**
  * Determines if the property associated with the property editor is enabled. Can only be used in the 

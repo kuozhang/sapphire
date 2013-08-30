@@ -187,16 +187,6 @@ public interface IGallery extends Element
     
     ISectionsGallery getSectionsGallery();
 
-    // *** ConditionalGallery ***
-    
-    @Type( base = ConditionalGallery.class )
-    @Label( standard = "conditional gallery" )
-    @XmlBinding( path = "conditional-gallery" )
-    
-    ImpliedElementProperty PROP_CONDITIONAL_GALLERY = new ImpliedElementProperty( TYPE, "ConditionalGallery" );
-    
-    ConditionalGallery getConditionalGallery();
-
     // *** VisibleWhenGallery ***
     
     @Type( base = VisibleWhenGallery.class )

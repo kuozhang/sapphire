@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.samples.gallery.ActuatorsGallery;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -22,9 +22,9 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 public final class ActuatorsGalleryDoubleTheNumberActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
-        final ActuatorsGallery element = (ActuatorsGallery) context.getPart().getModelElement();
+        final ActuatorsGallery element = (ActuatorsGallery) context.part().getModelElement();
         final int original = element.getNumber().content();
         final int doubled = original * 2;
         element.setNumber( doubled );

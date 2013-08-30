@@ -21,7 +21,7 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.swt.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.ui.swt.SwtResourceCache;
 
 public interface ISapphirePart
 {
-    ISapphirePart getParentPart();
+    ISapphirePart parent();
     <T> T nearest( final Class<T> partType );
     Element getModelElement();
     Element getLocalModelElement();

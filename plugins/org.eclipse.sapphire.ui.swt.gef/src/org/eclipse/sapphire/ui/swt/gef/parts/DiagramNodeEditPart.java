@@ -293,7 +293,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		if (nodePresentation.equals(shapePresentation) ) {
 			if (shapePresentation instanceof ImagePresentation) {
 				ImagePresentation imagePresentation = (ImagePresentation)shapePresentation;
-				ImagePart imagePart = imagePresentation.getImagePart();
+				ImagePart imagePart = imagePresentation.part();
 				DiagramNodePart nodePart = imagePart.nearest(DiagramNodePart.class);
 				final ImageData data = imagePresentation.getImage();
 				if (data != null) {   

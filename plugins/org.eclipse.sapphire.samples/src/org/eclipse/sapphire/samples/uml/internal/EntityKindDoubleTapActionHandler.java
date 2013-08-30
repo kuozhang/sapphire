@@ -12,8 +12,8 @@ package org.eclipse.sapphire.samples.uml.internal;
  ******************************************************************************/
 
 import org.eclipse.sapphire.samples.uml.Entity;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -22,7 +22,7 @@ import org.eclipse.sapphire.ui.SapphireRenderingContext;
 public final class EntityKindDoubleTapActionHandler extends SapphireActionHandler 
 {
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run( final Presentation context ) 
 	{
 		Entity entity = (Entity)getPart().getLocalModelElement();
 		if (entity.getKind().content() == Entity.Kind.CLASS)

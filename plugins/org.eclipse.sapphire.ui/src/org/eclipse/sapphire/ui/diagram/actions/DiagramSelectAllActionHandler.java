@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
@@ -23,9 +23,9 @@ public class DiagramSelectAllActionHandler extends SapphireActionHandler
 {
 
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run(Presentation context) 
 	{		
-		SapphireDiagramEditorPagePart editorPart = context.getPart().nearest(SapphireDiagramEditorPagePart.class);
+		SapphireDiagramEditorPagePart editorPart = context.part().nearest(SapphireDiagramEditorPagePart.class);
 		editorPart.selectAll();
 		return null;
 	}

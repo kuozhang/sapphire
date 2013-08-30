@@ -16,8 +16,8 @@ import java.net.URL;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.samples.map.Location;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -34,9 +34,9 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public final class LocationShowInWikipediaActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
-        final DiagramNodePart part = (DiagramNodePart) context.getPart();
+        final DiagramNodePart part = (DiagramNodePart) context.part();
         final Location location = (Location) part.getModelElement();
         final String locationName = location.getName().text();
 

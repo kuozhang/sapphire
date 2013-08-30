@@ -13,8 +13,8 @@ package org.eclipse.sapphire.samples;
 
 import java.net.URL;
 
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
@@ -27,7 +27,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public final class OpenSapphireWebSiteActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run(SapphireRenderingContext context) 
+    protected Object run( final Presentation context ) 
     {
         Display.getDefault().asyncExec(new Runnable() 
         {

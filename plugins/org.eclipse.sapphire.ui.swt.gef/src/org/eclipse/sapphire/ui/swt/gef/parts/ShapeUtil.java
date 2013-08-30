@@ -60,7 +60,7 @@ public class ShapeUtil {
 			for (ShapePresentation childShapePresentation : containerPresentation.getChildren())
 			{
 				if (!(childShapePresentation instanceof ContainerShapePresentation) && 
-					!childShapePresentation.getPart().isActive()) {
+					!childShapePresentation.part().isActive()) {
 					IFigure childFigure = createFigureForShape(childShapePresentation, resourceCache, configManager);
 					if (childFigure != null)
 					{
@@ -100,7 +100,7 @@ public class ShapeUtil {
 			ImagePresentation imagePresentation = (ImagePresentation)shapePresentation;
 			if (imagePresentation.visible()) 
 			{
-				ImagePart imagePart = imagePresentation.getImagePart();
+				ImagePart imagePart = imagePresentation.part();
 				DiagramNodePart nodePart = imagePart.nearest(DiagramNodePart.class);
 				final ImageData data = imagePresentation.getImage();
 				if (data != null) 
@@ -157,7 +157,7 @@ public class ShapeUtil {
 		IFigure containerFigure = updateShape.getParentFigure();
 		if (updateShape.visible()) 
 		{			
-			ContainerShapePresentation containerPresentation = (ContainerShapePresentation)updateShape.getParent();
+			ContainerShapePresentation containerPresentation = (ContainerShapePresentation)updateShape.parent();
 			// find the parent figure
 			if (containerFigure != null) 
 			{

@@ -78,7 +78,7 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
         return getPart().getModelElement();
     }
     
-    public final void execute( SapphireRenderingContext context )
+    public final void execute( final Presentation context )
     {
         if( getAction().getType() == SapphireActionType.TOGGLE )
         {
@@ -110,7 +110,7 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
         broadcast( new PostExecuteEvent( result ) );
     }
     
-    protected abstract Object run( SapphireRenderingContext context );
+    protected abstract Object run( Presentation context );
     
     public static class PreExecuteEvent extends Event
     {

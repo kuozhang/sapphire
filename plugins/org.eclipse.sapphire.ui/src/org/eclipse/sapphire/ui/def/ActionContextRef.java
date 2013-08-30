@@ -53,7 +53,6 @@ public interface ActionContextRef extends Element
             SapphireActionSystem.CONTEXT_LIST_PROPERTY_EDITOR,
             SapphireActionSystem.CONTEXT_FORM,
             SapphireActionSystem.CONTEXT_SECTION,
-            SapphireActionSystem.CONTEXT_LABEL,
             SapphireActionSystem.CONTEXT_VALUE_PROPERTY_EDITOR,
             SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR,
             SapphireActionSystem.CONTEXT_DIAGRAM_HEADER,

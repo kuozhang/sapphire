@@ -124,7 +124,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     
     public DiagramNodePart getSourceNodePart()
     {
-        SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)getParentPart().getParentPart().getParentPart();
+        SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)parent().parent().parent();
         return diagramPart.getDiagramNodePart(this.srcNodeModel);
     }
     

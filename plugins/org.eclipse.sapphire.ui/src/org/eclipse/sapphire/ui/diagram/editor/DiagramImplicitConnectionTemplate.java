@@ -29,7 +29,6 @@ import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
@@ -74,7 +73,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     @Override
     public void init()
     {
-        this.diagramEditor = (SapphireDiagramEditorPagePart)getParentPart();
+        this.diagramEditor = (SapphireDiagramEditorPagePart)parent();
         this.listEntryFunctionMap = new IdentityHashMap<Element, FunctionResult>();
         this.connectionDef = (IDiagramConnectionDef)super.definition();
         this.propertyName = this.bindingDef.getProperty().content();
@@ -248,12 +247,6 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
             }
         }
         return isRightType;
-    }
-    
-    @Override
-    public void render(SapphireRenderingContext context)
-    {
-        throw new UnsupportedOperationException();        
     }
     
     public void addTemplateListener( final DiagramImplicitConnectionTemplateListener listener )
