@@ -25,7 +25,6 @@ import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
-import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
@@ -92,12 +91,10 @@ public final class CreateWorkspaceFileOpServices
     
     public static final class FolderInitialValueService extends InitialValueService 
     {
-        private Listener listener;
-        
         @Override
         protected void initInitialValueService()
         {
-            this.listener = new FilteredListener<PropertyContentEvent>()
+            final Listener listener = new FilteredListener<PropertyContentEvent>()
             {
                 @Override
                 protected void handleTypedEvent( final PropertyContentEvent event )
@@ -106,7 +103,7 @@ public final class CreateWorkspaceFileOpServices
                 }
             };
             
-            context( CreateWorkspaceFileOp.class ).property( CreateWorkspaceFileOp.PROP_CONTEXT ).attach( this.listener );
+            context( CreateWorkspaceFileOp.class ).getContext().attach( listener );
         }
     
         @Override
@@ -123,47 +120,42 @@ public final class CreateWorkspaceFileOpServices
             
             return new InitialValueServiceData( resource == null ? null : resource.getFullPath().makeRelative().toPortableString() );
         }
-        
-        @Override
-        public void dispose()
-        {
-            super.dispose();
-            
-            if( this.listener != null )
-            {
-                final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-                
-                if( ! op.disposed() )
-                {
-                    op.property( CreateWorkspaceFileOp.PROP_CONTEXT ).detach( this.listener );
-                }
-            }
-        }
     }
     
     public static final class FileNameValidationService extends ValidationService
     {
-        private FileExtensionsService fileExtensionsService;
-        
         @Override
         protected void init()
         {
             super.init();
             
-            final Property property = context( Property.class );
-            
-            this.fileExtensionsService = property.service( FileExtensionsService.class );
-            
-            if( this.fileExtensionsService != null )
+            final Value<?> value = context( Value.class );
+            final CreateWorkspaceFileOp op = value.nearest( CreateWorkspaceFileOp.class );
+
+            final Listener listener = new FilteredListener<PropertyContentEvent>()
             {
-                this.fileExtensionsService.attach
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    broadcast();
+                }
+            };
+            
+            op.getFolder().attach( listener );
+            op.getOverwriteExistingFile().attach( listener );
+            
+            final FileExtensionsService fileExtensionsService = value.service( FileExtensionsService.class );
+            
+            if( fileExtensionsService != null )
+            {
+                fileExtensionsService.attach
                 (
                     new Listener()
                     {
                         @Override
                         public void handle( final Event event )
                         {
-                            property.refresh();
+                            broadcast();
                         }
                     }
                 );
@@ -174,6 +166,7 @@ public final class CreateWorkspaceFileOpServices
         public Status validate()
         {
             final Value<?> value = context( Value.class );
+            final CreateWorkspaceFileOp op = value.nearest( CreateWorkspaceFileOp.class );
             final FileName fileName = (FileName) value.content();
             
             if( fileName != null )
@@ -182,9 +175,11 @@ public final class CreateWorkspaceFileOpServices
                 
                 if( extension != null )
                 {
-                    if( this.fileExtensionsService != null )
+                    final FileExtensionsService fileExtensionsService = value.service( FileExtensionsService.class );
+                    
+                    if( fileExtensionsService != null )
                     {
-                        final List<String> extensions = this.fileExtensionsService.extensions();
+                        final List<String> extensions = fileExtensionsService.extensions();
                         final int count = extensions.size();
                         
                         if( count > 0 )
@@ -235,11 +230,9 @@ public final class CreateWorkspaceFileOpServices
                     }
                 }
                 
-                final CreateWorkspaceFileOp operation = value.element().nearest( CreateWorkspaceFileOp.class );
-                final IFile fileHandle = operation.getFileHandle();
+                final IFile fileHandle = op.getFileHandle();
                 
-                if( fileHandle != null && fileHandle.exists() && 
-                    operation.getOverwriteExistingFile().content() == false )
+                if( fileHandle != null && fileHandle.exists() && op.getOverwriteExistingFile().content() == false )
                 {
                     final String msg = fileExists.format( fileName );
                     return Status.factoryForLeaf().severity( Status.Severity.ERROR ).type( PROBLEM_FILE_EXISTS ).message( msg ).create();
