@@ -60,7 +60,7 @@
     <li><a href="#Core-Element">Element</a></li>
     <li><a href="#Core-ElementHandle">ElementHandle</a></li>
     <li><a href="#Core-ElementList">ElementList</a></li>
-    <li><a href="#Core-ModelElementType">ModelElementType</a></li>
+    <li><a href="#Core-ElementType">ElementType</a></li>
     <li><a href="#Core-PropertyInstance">PropertyInstance</a></li>
     <li><a href="#Core-ReferenceValue">ReferenceValue</a></li>
     <li><a href="#Core-RequiredConstraintService">RequiredConstraintService</a></li>
@@ -211,7 +211,7 @@ persistent state is also used for communication between the toggle and the item 
 
 <pre class="source-code"><code>public interface CatalogEditorPageState extends MasterDetailsEditorPageState
 {
-    ModelElementType TYPE = new ModelElementType( CatalogEditorPageState.class );
+    ElementType TYPE = new ElementType( CatalogEditorPageState.class );
 
     // *** ShowManufacturer ***
 
@@ -424,7 +424,7 @@ based on the manufacturer.</p>
 
             if( page != null )
             {
-                final IModelElement element = part.getLocalModelElement();
+                final Element element = part.getLocalModelElement();
 
                 if( element instanceof Item )
                 {
@@ -635,16 +635,16 @@ of the list and updates itself automatically. The index can also notify listener
 <p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
 copy individual properties is also available.</p>
 
-<pre class="source-code"><code><font color="#888888">IModelElement
+<pre class="source-code"><code><font color="#888888">Element
 {
-    void copy( IModelElement element )</font>
-    void copy( IModelElement element, ModelProperty property )
-    void copy( IModelElement element, String property )
+    void copy( Element element )</font>
+    void copy( Element element, ModelProperty property )
+    void copy( Element element, String property )
 <font color="#888888">}</font></code></pre>
 
 <p>Clear one property or all of them using the new methods.</p>
 
-<pre class="source-code"><code><font color="#888888">IModelElement
+<pre class="source-code"><code><font color="#888888">Element
 {</font>
     void clear()
     void clear( ModelProperty property )
@@ -655,7 +655,7 @@ copy individual properties is also available.</p>
 result of the lookup is a <a href="#Core-PropertyInstance">PropertyInstance</a> object that represents an instance of
 a property within an element.</p>
 
-<pre class="source-code"><code><font color="#888888">IModelElement
+<pre class="source-code"><code><font color="#888888">Element
 {</font>
     SortedSet&lt;PropertyInstance> <font color="#888888">properties()</font>
     PropertyInstance <font color="#888888">property( String</font> path <font color="#888888">)</font>
@@ -680,8 +680,8 @@ ElementHandle was the only one that had no API to retrieve the parent property.<
 {
     T element()
     T element( boolean createIfNecessary )
-    T element( boolean createIfNecessary, ModelElementType type )</font>
-    &lt;C extends IModelElement> C element( boolean createIfNecessary, Class&lt;C> cl )
+    T element( boolean createIfNecessary, ElementType type )</font>
+    &lt;C extends Element> C element( boolean createIfNecessary, Class&lt;C> cl )
 <font color="#888888">}</font></code></pre>
 
 <p>In certain situations, it is useful to be able to reference a fully typed ElementHandle class object. One such scenario
@@ -734,11 +734,11 @@ an unchecked cast warning. A method has been added to make it easy to reference 
 }</font></code></pre>
 
 
-<h2><a name="Core-ModelElementType">ModelElementType</a></h2>
+<h2><a name="Core-ElementType">ElementType</a></h2>
 
 <p>A property can now be looked up by a path. Previously, only lookup by name was available.</p>
 
-<pre class="source-code"><code><font color="#888888">ModelElementType
+<pre class="source-code"><code><font color="#888888">ElementType
 {
     &lt;T extends ModelProperty> T property( String</font> path <font color="#888888">)</font>
     &lt;T extends ModelProperty> T property( ModelPath path )
@@ -749,11 +749,11 @@ an unchecked cast warning. A method has been added to make it easy to reference 
 
 <p>The new PropertyInstance class represents an instance of a property within an element. Many of the operations
 performed on an element that require a property to be supplied can now be performed on the property instance.
-A property instance can found using methods on <a href="#Core-IModelElement">IModelElement</a>.</p>
+A property instance can found using methods on <a href="#Core-Element">Element</a>.</p>
 
 <pre class="source-code"><code>PropertyInstance
 {
-    IModelElement element()
+    Element element()
     ModelProperty property()
     &lt;T> T read()
     void write( Object content )
@@ -1458,15 +1458,15 @@ need to flatten the model or use workarounds, such as the page book details appr
 
 <pre class="source-code"><code>// *** Employees ***
 
-interface Employee extends IModelElement
+interface Employee extends Element
 {
-    ModelElementType TYPE = new ModelElementType( Employee.class );
+    ElementType TYPE = new ElementType( Employee.class );
 
     // *** Name ***
 
-    interface Name extends IModelElement
+    interface Name extends Element
     {
-        ModelElementType TYPE = new ModelElementType( Name.class );
+        ElementType TYPE = new ElementType( Name.class );
 
         // *** First ***
 
@@ -1491,9 +1491,9 @@ interface Employee extends IModelElement
 
     // *** Location ***
         
-    interface Location extends IModelElement
+    interface Location extends Element
     {
-        ModelElementType TYPE = new ModelElementType( Location.class );
+        ElementType TYPE = new ElementType( Location.class );
 
         // *** City ***
 
