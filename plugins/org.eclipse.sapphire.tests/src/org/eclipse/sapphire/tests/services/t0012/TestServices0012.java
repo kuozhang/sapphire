@@ -13,12 +13,10 @@ package org.eclipse.sapphire.tests.services.t0012;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests instantiation of services to ensure that only one instance of a particular service implementation is
@@ -29,21 +27,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestServices0012 extends SapphireTestCase
 {
-    private TestServices0012( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestServices0012" );
-
-        suite.addTest( new TestServices0012( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

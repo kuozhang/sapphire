@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0007;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests de-duplication of validation messages.
@@ -26,21 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0007 extends SapphireTestCase
 {
-    private TestModelingMisc0007( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0007" );
-
-        suite.addTest( new TestModelingMisc0007( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

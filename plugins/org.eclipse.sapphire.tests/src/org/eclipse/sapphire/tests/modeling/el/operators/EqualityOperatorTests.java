@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the equality operator.
@@ -20,96 +19,107 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EqualityOperatorTests extends OperatorTests
+public final class EqualityOperatorTests extends AbstractOperatorTests
 {
-    private EqualityOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "EqualityOperatorTests" );
-        
-        for( int i = 1; i <= 15; i++ )
-        {
-            suite.addTest( new EqualityOperatorTests( "testEqualityOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testEqualityOperator1()
     {
         test( "${ 3 == 3 }", true );
     }
+    
+    @Test
 
     public void testEqualityOperator2()
     {
         test( "${ 3 == 5 }", false );
     }
+    
+    @Test
 
     public void testEqualityOperator3()
     {
         test( "${ 3.2 == 3.2 }", true );
     }
+    
+    @Test
 
     public void testEqualityOperator4()
     {
         test( "${ 3.2 == 5 }", false );
     }
     
+    @Test
+    
     public void testEqualityOperator5()
     {
         test( "${ 'abc' == 'abc' }", true );
     }
+    
+    @Test
 
     public void testEqualityOperator6()
     {
         test( "${ 'abc' == 'xyz' }", false );
     }
     
+    @Test
+    
     public void testEqualityOperator7()
     {
         test( "${ 3 eq 3 }", true );
     }
+    
+    @Test
 
     public void testEqualityOperator8()
     {
         test( "${ 3 eq 5 }", false );
     }
+    
+    @Test
 
     public void testEqualityOperator9()
     {
         test( "${ 3.2 eq 3.2 }", true );
     }
+    
+    @Test
 
     public void testEqualityOperator10()
     {
         test( "${ 3.2 eq 5 }", false );
     }
     
+    @Test
+    
     public void testEqualityOperator11()
     {
         test( "${ 'abc' eq 'abc' }", true );
     }
+    
+    @Test
 
     public void testEqualityOperator12()
     {
         test( "${ 'abc' eq 'xyz' }", false );
     }
+    
+    @Test
 
     public void testEqualityOperator13()
     {
         test( "${ Integer3 == 7 }", false );
     }
+    
+    @Test
 
     public void testEqualityOperator14()
     {
         test( "${ 7 == Integer5 }", false );
     }
+    
+    @Test
     
     public void testEqualityOperator15()
     {

@@ -11,13 +11,11 @@
 
 package org.eclipse.sapphire.tests.java.jdt.t0002;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
+import org.junit.Test;
 
 /**
  * Tests correctness of type hierarchy reporting of JdtJavaTypeReferenceService.
@@ -25,26 +23,9 @@ import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestJavaJdt0002
-
-    extends JavaJdtTestCase
-    
+public final class TestJavaJdt0002 extends JavaJdtTestCase
 {
-    private TestJavaJdt0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "JavaJdt0002" );
-
-        suite.addTest( new TestJavaJdt0002( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

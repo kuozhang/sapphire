@@ -13,13 +13,11 @@ package org.eclipse.sapphire.tests.workspace.t0002;
 
 import java.util.SortedSet;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests operation of FactsService implementations.
@@ -29,28 +27,15 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestWorkspace0002 extends SapphireTestCase
 {
-    private TestWorkspace0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Workspace0002" );
-
-        suite.addTest( new TestWorkspace0002( "testProjectRelativePath" ) );
-        suite.addTest( new TestWorkspace0002( "testWorkspaceRelativePath" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testProjectRelativePath() throws Exception
     {
         test( TestRootElement.PROP_PROJECT_RELATIVE_PATH, "Must be a project relative path." );
     }
 
+    @Test
+    
     public void testWorkspaceRelativePath() throws Exception
     {
         test( TestRootElement.PROP_WORKSPACE_RELATIVE_PATH, "Must be a workspace relative path." );

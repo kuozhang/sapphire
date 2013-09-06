@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0015;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests code generator's handling of properties that have names the same as Java keywords.
@@ -24,21 +22,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0015 extends SapphireTestCase
 {
-    private TestModelingMisc0015( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0015" );
-
-        suite.addTest( new TestModelingMisc0015( "testKeywordProperties" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testKeywordProperties() throws Exception
     {

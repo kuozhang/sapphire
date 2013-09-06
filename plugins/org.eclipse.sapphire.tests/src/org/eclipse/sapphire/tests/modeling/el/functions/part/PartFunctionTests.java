@@ -13,9 +13,6 @@ package org.eclipse.sapphire.tests.modeling.el.functions.part;
 
 import java.util.Collections;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 import org.eclipse.sapphire.ui.PartFunctionContext;
@@ -23,6 +20,7 @@ import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.DialogDef;
+import org.junit.Test;
 
 /**
  * Tests Part function.
@@ -32,22 +30,7 @@ import org.eclipse.sapphire.ui.def.DialogDef;
 
 public final class PartFunctionTests extends TestExpr
 {
-    private PartFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "PartFunctionTests" );
-
-        suite.addTest( new PartFunctionTests( "testPartFunctionInPartContext" ) );
-        suite.addTest( new PartFunctionTests( "testPartFunctionInWrongContext" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testPartFunctionInPartContext()
     {
@@ -74,6 +57,8 @@ public final class PartFunctionTests extends TestExpr
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testPartFunctionInWrongContext()
     {

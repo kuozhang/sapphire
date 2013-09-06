@@ -15,9 +15,6 @@ import static org.eclipse.sapphire.util.StringUtil.UTF8;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
@@ -27,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
 import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests handling of XML Schema redefine directive.
@@ -36,22 +34,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestXmlXsd0001 extends SapphireTestCase
 {
-    private TestXmlXsd0001( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlXsd0001" );
-
-        suite.addTest( new TestXmlXsd0001( "testSchemaParsing" ) );
-        suite.addTest( new TestXmlXsd0001( "testInsertOrder" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSchemaParsing() throws Exception
     {
@@ -67,6 +50,8 @@ public final class TestXmlXsd0001 extends SapphireTestCase
         assertEquals( "ccc", ( (XmlElementDefinition) nestedContent.get( 2 ) ).getName().getLocalPart() );
         assertEquals( "ddd", ( (XmlElementDefinition) nestedContent.get( 3 ) ).getName().getLocalPart() );
     }
+    
+    @Test
     
     public void testInsertOrder() throws Exception
     {

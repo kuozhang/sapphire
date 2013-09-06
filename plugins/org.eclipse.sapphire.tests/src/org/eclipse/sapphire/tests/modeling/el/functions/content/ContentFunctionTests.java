@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.content;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Content function.
@@ -29,23 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class ContentFunctionTests extends TestExpr
 {
-    private ContentFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "ContentFunctionTests" );
-
-        suite.addTest( new ContentFunctionTests( "testContentFunction" ) );
-        suite.addTest( new ContentFunctionTests( "testContentFunctionNull" ) );
-        suite.addTest( new ContentFunctionTests( "testContentFunctionWrongType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testContentFunction()
     {
@@ -100,6 +82,8 @@ public final class ContentFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testContentFunctionNull()
     {
@@ -120,6 +104,8 @@ public final class ContentFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testContentFunctionWrongType()
     {

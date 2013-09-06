@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.services.t0005;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests EqualityService.
@@ -24,21 +22,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestServices0005 extends SapphireTestCase
 {
-    private TestServices0005( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestServices0005" );
-
-        suite.addTest( new TestServices0005( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

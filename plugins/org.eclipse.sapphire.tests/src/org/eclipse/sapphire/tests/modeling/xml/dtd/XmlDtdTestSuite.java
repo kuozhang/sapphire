@@ -11,40 +11,32 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.modeling.xml.dtd.t0001.TestXmlDtd0001;
 import org.eclipse.sapphire.tests.modeling.xml.dtd.t0002.TestXmlDtd0002;
 import org.eclipse.sapphire.tests.modeling.xml.dtd.t0003.TestXmlDtd0003;
 import org.eclipse.sapphire.tests.modeling.xml.dtd.t0004.TestEntityRefInAttList;
 import org.eclipse.sapphire.tests.modeling.xml.dtd.t0005.TestCatalogResolution;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlDtdTestSuite extends TestCase
-{
-    private XmlDtdTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "XmlDtdTestSuite" );
+@RunWith( Suite.class )
 
-        suite.addTest( TestXmlDtd0001.suite() );
-        suite.addTest( TestXmlDtd0002.suite() );
-        suite.addTest( TestXmlDtd0003.suite() );
-        suite.addTest( TestEntityRefInAttList.suite() );
-        suite.addTest( TestCatalogResolution.suite() );
-        
-        return suite;
+@SuiteClasses
+(
+    {
+        TestXmlDtd0001.class,
+        TestXmlDtd0002.class,
+        TestXmlDtd0003.class,
+        TestEntityRefInAttList.class,
+        TestCatalogResolution.class
     }
-    
+)
+
+public final class XmlDtdTestSuite
+{
 }

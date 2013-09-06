@@ -19,9 +19,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.sapphire.FileName;
@@ -40,6 +37,7 @@ import org.eclipse.sapphire.modeling.xml.XmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -51,88 +49,7 @@ import org.w3c.dom.Element;
 
 public final class ConversionTests extends SapphireTestCase
 {
-    private ConversionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "ConversionTests" );
-
-        suite.addTest( new ConversionTests( "testStringToBoolean" ) );
-        suite.addTest( new ConversionTests( "testBooleanToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToByte" ) );
-        suite.addTest( new ConversionTests( "testByteToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToShort" ) );
-        suite.addTest( new ConversionTests( "testShortToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToInteger" ) );
-        suite.addTest( new ConversionTests( "testIntegerToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToLong" ) );
-        suite.addTest( new ConversionTests( "testLongToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToFloat" ) );
-        suite.addTest( new ConversionTests( "testFloatToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToDouble" ) );
-        suite.addTest( new ConversionTests( "testDoubleToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToBigInteger" ) );
-        suite.addTest( new ConversionTests( "testBigIntegerToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToBigDecimal" ) );
-        suite.addTest( new ConversionTests( "testBigDecimalToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToEnum" ) );
-        suite.addTest( new ConversionTests( "testEnumToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToDate" ) );
-        suite.addTest( new ConversionTests( "testDateToString" ) );
-
-        suite.addTest( new ConversionTests( "testStringToFileName" ) );
-        suite.addTest( new ConversionTests( "testFileNameToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToPath" ) );
-        suite.addTest( new ConversionTests( "testPathToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToUri" ) );
-        suite.addTest( new ConversionTests( "testUriToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToUrl" ) );
-        suite.addTest( new ConversionTests( "testUrlToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToVersion" ) );
-        suite.addTest( new ConversionTests( "testVersionToString" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToVersionConstraint" ) );
-        suite.addTest( new ConversionTests( "testVersionConstraintToString" ) );
-        
-        suite.addTest( new ConversionTests( "testIFileToWorkspaceFileResourceStore" ) );
-        suite.addTest( new ConversionTests( "testIFileToByteArrayResourceStore" ) );
-        suite.addTest( new ConversionTests( "testIFileToResourceStore" ) );
-        
-        suite.addTest( new ConversionTests( "testIFileToRootXmlResource" ) );
-        suite.addTest( new ConversionTests( "testIFileToXmlResource" ) );
-        suite.addTest( new ConversionTests( "testIFileToResource" ) );
-        
-        suite.addTest( new ConversionTests( "testModelElementToDomDocument" ) );
-        suite.addTest( new ConversionTests( "testModelElementToDomElement" ) );
-        suite.addTest( new ConversionTests( "testModelElementToXmlElement" ) );
-
-        suite.addTest( new ConversionTests( "testXmlResourceToDomDocument" ) );
-        suite.addTest( new ConversionTests( "testXmlResourceToDomElement" ) );
-        suite.addTest( new ConversionTests( "testXmlResourceToXmlElement" ) );
-        
-        suite.addTest( new ConversionTests( "testStringToJavaIdentifier" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testStringToBoolean() throws Exception
     {
@@ -154,6 +71,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNull( service.convert( "1", Boolean.class ) );
         assertNull( service.convert( "abcdef", Boolean.class ) );
     }
+    
+    @Test
 
     public void testBooleanToString() throws Exception
     {
@@ -162,6 +81,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "true", service.convert( Boolean.TRUE, String.class ) );
         assertEquals( "false", service.convert( Boolean.FALSE, String.class ) );
     }
+    
+    @Test
     
     public void testStringToByte() throws Exception
     {
@@ -173,6 +94,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( Byte.valueOf( (byte) 47 ), service.convert( "47", Byte.class ) );
         assertEquals( Byte.valueOf( (byte) 127 ), service.convert( "127", Byte.class ) );
     }
+    
+    @Test
 
     public void testByteToString() throws Exception
     {
@@ -184,6 +107,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "47", service.convert( Byte.valueOf( (byte) 47 ), String.class ) );
         assertEquals( "127", service.convert( Byte.valueOf( (byte) 127 ), String.class ) );
     }
+    
+    @Test
     
     public void testStringToShort() throws Exception
     {
@@ -197,6 +122,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( Short.valueOf( (short) 127 ), service.convert( "127", Short.class ) );
         assertEquals( Short.valueOf( (short) 32767 ), service.convert( "32767", Short.class ) );
     }
+    
+    @Test
 
     public void testShortToString() throws Exception
     {
@@ -210,6 +137,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "127", service.convert( Short.valueOf( (short) 127 ), String.class ) );
         assertEquals( "32767", service.convert( Short.valueOf( (short) 32767 ), String.class ) );
     }
+    
+    @Test
 
     public void testStringToInteger() throws Exception
     {
@@ -225,6 +154,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( Integer.valueOf( 32767 ), service.convert( "32767", Integer.class ) );
         assertEquals( Integer.valueOf( 2147483647 ), service.convert( "2147483647", Integer.class ) );
     }
+    
+    @Test
 
     public void testIntegerToString() throws Exception
     {
@@ -240,6 +171,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "32767", service.convert( Integer.valueOf( 32767 ), String.class ) );
         assertEquals( "2147483647", service.convert( Integer.valueOf( 2147483647 ), String.class ) );
     }
+    
+    @Test
     
     public void testStringToLong() throws Exception
     {
@@ -257,6 +190,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( Long.valueOf( 2147483647L ), service.convert( "2147483647", Long.class ) );
         assertEquals( Long.valueOf( 9223372036854775807L ), service.convert( "9223372036854775807", Long.class ) );
     }
+    
+    @Test
 
     public void testLongToString() throws Exception
     {
@@ -275,6 +210,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "9223372036854775807", service.convert( Long.valueOf( 9223372036854775807L ), String.class ) );
     }
     
+    @Test
+    
     public void testStringToFloat() throws Exception
     {
         final MasterConversionService service = Sapphire.service( MasterConversionService.class );
@@ -283,6 +220,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( Float.valueOf( 0.0F ), service.convert( "0.0", Float.class ) );
         assertEquals( Float.valueOf( 15.773523F ), service.convert( "15.773523", Float.class ) );
     }
+    
+    @Test
 
     public void testFloatToString() throws Exception
     {
@@ -293,6 +232,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "15.773523", service.convert( Float.valueOf( 15.773523F ), String.class ) );
     }
     
+    @Test
+    
     public void testStringToDouble() throws Exception
     {
         final MasterConversionService service = Sapphire.service( MasterConversionService.class );
@@ -301,6 +242,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( Double.valueOf( 0.0D ), service.convert( "0.0", Double.class ) );
         assertEquals( Double.valueOf( 15.773523D ), service.convert( "15.773523", Double.class ) );
     }
+    
+    @Test
 
     public void testDoubleToString() throws Exception
     {
@@ -310,6 +253,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "0.0", service.convert( Double.valueOf( 0.0D ), String.class ) );
         assertEquals( "15.773523", service.convert( Double.valueOf( 15.773523D ), String.class ) );
     }
+    
+    @Test
     
     public void testStringToBigInteger() throws Exception
     {
@@ -329,6 +274,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( new BigInteger( "9223372036854775807" ), service.convert( "9223372036854775807", BigInteger.class ) );
         assertEquals( new BigInteger( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), service.convert( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", BigInteger.class ) );
     }
+    
+    @Test
 
     public void testBigIntegerToString() throws Exception
     {
@@ -348,6 +295,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "9223372036854775807", service.convert( new BigInteger( "9223372036854775807" ), String.class ) );
         assertEquals( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", service.convert( new BigInteger( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), String.class ) );
     }
+    
+    @Test
     
     public void testStringToBigDecimal() throws Exception
     {
@@ -369,6 +318,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( new BigDecimal( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), service.convert( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", BigDecimal.class ) );
         assertEquals( new BigDecimal( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807" ), service.convert( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807", BigDecimal.class ) );
     }
+    
+    @Test
 
     public void testBigDecimalToString() throws Exception
     {
@@ -390,6 +341,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807", service.convert( new BigDecimal( "92233720368547758079223372036854775807922337203685477580792233720368547758079223372036854775807" ), String.class ) );
         assertEquals( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807", service.convert( new BigDecimal( "922337203685477580792233720368547758079223372036854775807.92233720368547758079223372036854775807" ), String.class ) );
     }
+    
+    @Test
     
     public void testStringToEnum() throws Exception
     {
@@ -433,6 +386,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( ThreeChoiceAnswerCustomized.NO, service.convert( "false", ThreeChoiceAnswerCustomized.class ) );
         assertNull( service.convert( "fAlSe", ThreeChoiceAnswerCustomized.class ) );
     }
+    
+    @Test
 
     public void testEnumToString() throws Exception
     {
@@ -446,6 +401,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "maybe", service.convert( ThreeChoiceAnswerCustomized.MAYBE, String.class ) );
         assertEquals( "no", service.convert( ThreeChoiceAnswerCustomized.NO, String.class ) );
     }
+    
+    @Test
 
     public void testStringToDate() throws Exception
     {
@@ -471,6 +428,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( new SimpleDateFormat( "yyyy-MM-dd" ).parse( "2013-01-15" ), service.convert( "01/15/2013", Date.class ) );
         assertNull( service.convert( "2013-01-15", Date.class ) );
     }
+    
+    @Test
 
     public void testDateToString() throws Exception
     {
@@ -489,6 +448,8 @@ public final class ConversionTests extends SapphireTestCase
         service = element.property( DateConversionTestElement.PROP_DATE_2 ).service( MasterConversionService.class );
         assertEquals( "2013.01.15", service.convert( date, String.class ) );
     }
+    
+    @Test
 
     public void testStringToFileName() throws Exception
     {
@@ -499,6 +460,8 @@ public final class ConversionTests extends SapphireTestCase
         
         assertNull( service.convert( "folder/abc.txt", FileName.class ) );
     }
+    
+    @Test
 
     public void testFileNameToString() throws Exception
     {
@@ -507,6 +470,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "abc", service.convert( new FileName( "abc" ), String.class ) );
         assertEquals( "abc.txt", service.convert( new FileName( "abc.txt" ), String.class ) );
     }
+    
+    @Test
 
     public void testStringToPath() throws Exception
     {
@@ -517,6 +482,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( new Path( "folder/abc.txt" ), service.convert( "folder/abc.txt", Path.class ) );
         assertEquals( new Path( "x/y/z/folder/abc.txt" ), service.convert( "x/y/z/folder/abc.txt", Path.class ) );
     }
+    
+    @Test
 
     public void testPathToString() throws Exception
     {
@@ -527,6 +494,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "folder/abc.txt", service.convert( new Path( "folder/abc.txt" ), String.class ) );
         assertEquals( "x/y/z/folder/abc.txt", service.convert( new Path( "x/y/z/folder/abc.txt" ), String.class ) );
     }
+    
+    @Test
 
     public void testStringToUri() throws Exception
     {
@@ -537,6 +506,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( new URI( "relative/path/to/resource.txt" ), service.convert( "relative/path/to/resource.txt", URI.class ) );
         assertEquals( new URI( "../../../resource.txt" ), service.convert( "../../../resource.txt", URI.class ) );
     }
+    
+    @Test
 
     public void testUriToString() throws Exception
     {
@@ -547,6 +518,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "relative/path/to/resource.txt", service.convert( new URI( "relative/path/to/resource.txt" ), String.class ) );
         assertEquals( "../../../resource.txt", service.convert( new URI( "../../../resource.txt" ), String.class ) );
     }
+    
+    @Test
 
     public void testStringToUrl() throws Exception
     {
@@ -558,6 +531,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNull( service.convert( "relative/path/to/resource.txt", URL.class ) );
         assertNull( service.convert( "../../../resource.txt", URL.class ) );
     }
+    
+    @Test
 
     public void testUrlToString() throws Exception
     {
@@ -566,6 +541,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt", service.convert( new URL( "http://example.org/absolute/URI/with/absolute/path/to/resource.txt" ), String.class ) );
         assertEquals( "ftp://example.org/resource.txt", service.convert( new URL( "ftp://example.org/resource.txt" ), String.class ) );
     }
+    
+    @Test
 
     public void testStringToVersion() throws Exception
     {
@@ -579,6 +556,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNull( service.convert( "1..2", Version.class ) );
         assertNull( service.convert( "1.abc", Version.class ) );
     }
+    
+    @Test
 
     public void testVersionToString() throws Exception
     {
@@ -589,6 +568,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "1.2.3", service.convert( new Version( "1.2.3" ), String.class ) );
         assertEquals( "1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20", service.convert( new Version( "1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20" ), String.class ) );
     }
+    
+    @Test
 
     public void testStringToVersionConstraint() throws Exception
     {
@@ -604,6 +585,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNull( service.convert( "[1.2-3.4}", VersionConstraint.class ) );
     }
     
+    @Test
+    
     public void testVersionConstraintToString() throws Exception
     {
         final MasterConversionService service = Sapphire.service( MasterConversionService.class );
@@ -614,6 +597,8 @@ public final class ConversionTests extends SapphireTestCase
         assertEquals( "[1.2-3.4)", service.convert( new VersionConstraint( "[1.2-3.4)" ), String.class ) );
         assertEquals( "[1.2-3.4),[5.6", service.convert( new VersionConstraint( "[1.2-3.4),[5.6" ), String.class ) );
     }
+    
+    @Test
     
     public void testIFileToWorkspaceFileResourceStore() throws Exception
     {
@@ -639,6 +624,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNotNull( binFileStore );
     }
     
+    @Test
+    
     public void testIFileToByteArrayResourceStore() throws Exception
     {
         final MasterConversionService service = Sapphire.service( MasterConversionService.class );
@@ -662,6 +649,8 @@ public final class ConversionTests extends SapphireTestCase
         final ByteArrayResourceStore binFileStore = service.convert( binFile, ByteArrayResourceStore.class );
         assertNotNull( binFileStore );
     }
+    
+    @Test
 
     public void testIFileToResourceStore() throws Exception
     {
@@ -686,6 +675,8 @@ public final class ConversionTests extends SapphireTestCase
         final ResourceStore binFileStore = service.convert( binFile, ResourceStore.class );
         assertNotNull( binFileStore );
     }
+    
+    @Test
 
     public void testIFileToRootXmlResource() throws Exception
     {
@@ -704,6 +695,8 @@ public final class ConversionTests extends SapphireTestCase
         final RootXmlResource txtFileStore = service.convert( txtFile, RootXmlResource.class );
         assertNull( txtFileStore );
     }
+    
+    @Test
 
     public void testIFileToXmlResource() throws Exception
     {
@@ -722,6 +715,8 @@ public final class ConversionTests extends SapphireTestCase
         final XmlResource txtFileStore = service.convert( txtFile, XmlResource.class );
         assertNull( txtFileStore );
     }
+    
+    @Test
 
     public void testIFileToResource() throws Exception
     {
@@ -740,6 +735,8 @@ public final class ConversionTests extends SapphireTestCase
         final Resource txtFileStore = service.convert( txtFile, Resource.class );
         assertNull( txtFileStore );
     }
+    
+    @Test
     
     public void testModelElementToDomDocument() throws Exception
     {
@@ -761,6 +758,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNull( service.convert( elementNotOnXml, Document.class ) );
         assertNull( service.convert( elementNotOnXml.getList().insert(), Document.class ) );
     }
+    
+    @Test
 
     public void testModelElementToDomElement() throws Exception
     {
@@ -792,6 +791,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNull( service.convert( elementNotOnXml.getList().insert(), Element.class ) );
     }
     
+    @Test
+    
     public void testModelElementToXmlElement() throws Exception
     {
         final MasterConversionService service = Sapphire.service( MasterConversionService.class );
@@ -822,6 +823,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNull( service.convert( elementNotOnXml.getList().insert(), XmlElement.class ) );
     }
     
+    @Test
+    
     public void testXmlResourceToDomDocument() throws Exception
     {
         final MasterConversionService service = Sapphire.service( MasterConversionService.class );
@@ -835,6 +838,8 @@ public final class ConversionTests extends SapphireTestCase
         assertSame( document, xmlResource.getDomDocument() );
         assertSame( document, xmlResource.adapt( Document.class ) );
     }
+    
+    @Test
     
     public void testXmlResourceToDomElement() throws Exception
     {
@@ -862,6 +867,8 @@ public final class ConversionTests extends SapphireTestCase
         assertNotSame( childXmlElement, xmlElement );
     }
     
+    @Test
+    
     public void testXmlResourceToXmlElement() throws Exception
     {
         final MasterConversionService service = Sapphire.service( MasterConversionService.class );
@@ -887,6 +894,8 @@ public final class ConversionTests extends SapphireTestCase
         assertSame( childXmlElement, childXmlResource.adapt( XmlElement.class ) );
         assertNotSame( childXmlElement, xmlElement );
     }
+    
+    @Test
 
     public void testStringToJavaIdentifier() throws Exception
     {

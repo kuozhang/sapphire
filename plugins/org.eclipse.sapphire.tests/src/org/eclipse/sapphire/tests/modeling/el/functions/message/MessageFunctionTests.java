@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.message;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -21,6 +18,7 @@ import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 import org.eclipse.sapphire.tests.modeling.el.functions.severity.TestElement;
+import org.junit.Test;
 
 /**
  * Tests Message function.
@@ -30,23 +28,7 @@ import org.eclipse.sapphire.tests.modeling.el.functions.severity.TestElement;
 
 public final class MessageFunctionTests extends TestExpr
 {
-    private MessageFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "MessageFunctionTests" );
-
-        suite.addTest( new MessageFunctionTests( "testMessageFunction" ) );
-        suite.addTest( new MessageFunctionTests( "testMessageFunctionNull" ) );
-        suite.addTest( new MessageFunctionTests( "testMessageFunctionWrongType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testMessageFunction()
     {
@@ -73,6 +55,8 @@ public final class MessageFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testMessageFunctionNull()
     {
@@ -93,6 +77,8 @@ public final class MessageFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testMessageFunctionWrongType()
     {

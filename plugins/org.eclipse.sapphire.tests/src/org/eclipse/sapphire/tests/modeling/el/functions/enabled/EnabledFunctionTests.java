@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.enabled;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Enabled function.
@@ -29,23 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class EnabledFunctionTests extends TestExpr
 {
-    private EnabledFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "EnabledFunctionTests" );
-
-        suite.addTest( new EnabledFunctionTests( "testEnabledFunction" ) );
-        suite.addTest( new EnabledFunctionTests( "testEnabledFunctionNull" ) );
-        suite.addTest( new EnabledFunctionTests( "testEnabledFunctionWrongType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testEnabledFunction()
     {
@@ -69,6 +51,8 @@ public final class EnabledFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testEnabledFunctionNull()
     {
@@ -89,6 +73,8 @@ public final class EnabledFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testEnabledFunctionWrongType()
     {

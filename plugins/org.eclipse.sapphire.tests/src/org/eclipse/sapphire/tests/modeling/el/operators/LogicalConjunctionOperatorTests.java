@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the logical conjunction operator.
@@ -20,76 +19,79 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class LogicalConjunctionOperatorTests extends OperatorTests
+public final class LogicalConjunctionOperatorTests extends AbstractOperatorTests
 {
-    private LogicalConjunctionOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "LogicalConjunctionOperatorTests" );
-        
-        for( int i = 1; i <= 11; i++ )
-        {
-            suite.addTest( new LogicalConjunctionOperatorTests( "testLogicalConjunctionOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testLogicalConjunctionOperator1()
     {
         test( "${ true && true }", true );
     }
     
+    @Test
+    
     public void testLogicalConjunctionOperator2()
     {
         test( "${ true && false }", false );
     }
+    
+    @Test
     
     public void testLogicalConjunctionOperator3()
     {
         test( "${ false && true }", false );
     }
     
+    @Test
+    
     public void testLogicalConjunctionOperator4()
     {
         test( "${ false && false }", false );
     }
+    
+    @Test
     
     public void testLogicalConjunctionOperator5()
     {
         test( "${ true and true }", true );
     }
     
+    @Test
+    
     public void testLogicalConjunctionOperator6()
     {
         test( "${ true and false }", false );
     }
+    
+    @Test
     
     public void testLogicalConjunctionOperator7()
     {
         test( "${ false and true }", false );
     }
     
+    @Test
+    
     public void testLogicalConjunctionOperator8()
     {
         test( "${ false and false }", false );
     }
 
+    @Test
+    
     public void testLogicalConjunctionOperator9()
     {
         test( "${ BooleanTrue && true }", true );
     }
 
+    @Test
+    
     public void testLogicalConjunctionOperator10()
     {
         test( "${ true && BooleanFalse }", false );
     }
+    
+    @Test
     
     public void testLogicalConjunctionOperator11()
     {
@@ -97,4 +99,3 @@ public final class LogicalConjunctionOperatorTests extends OperatorTests
     }
 
 }
-

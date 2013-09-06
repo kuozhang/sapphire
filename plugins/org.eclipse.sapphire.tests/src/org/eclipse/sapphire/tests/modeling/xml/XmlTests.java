@@ -9,11 +9,11 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.misc;
+package org.eclipse.sapphire.tests.modeling.xml;
 
-import org.eclipse.sapphire.tests.misc.t0001.TestMisc0001;
-import org.eclipse.sapphire.tests.misc.t0002.TestMisc0002;
-import org.eclipse.sapphire.tests.misc.t0003.TestMisc0003;
+import org.eclipse.sapphire.tests.modeling.xml.binding.XmlBindingTestSuite;
+import org.eclipse.sapphire.tests.modeling.xml.dtd.XmlDtdTestSuite;
+import org.eclipse.sapphire.tests.modeling.xml.xsd.XmlXsdTestSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -27,12 +27,13 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses
 (
     {
-        TestMisc0001.class,
-        TestMisc0002.class,
-        TestMisc0003.class
+        XmlBindingTests.class,
+        XmlBindingTestSuite.class,
+        XmlDtdTestSuite.class,
+        XmlXsdTestSuite.class
     }
 )
 
-public final class TestMisc
+public final class XmlTests
 {
 }

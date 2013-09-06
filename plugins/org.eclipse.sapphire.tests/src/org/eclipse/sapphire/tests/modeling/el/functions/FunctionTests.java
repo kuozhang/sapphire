@@ -11,10 +11,6 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.modeling.el.functions.absolute.AbsolutePathFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.content.ContentFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.enabled.EnabledFunctionTests;
@@ -34,46 +30,42 @@ import org.eclipse.sapphire.tests.modeling.el.functions.tail.TailFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.text.TextFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.validation.part.PartValidationFunctionTests;
 import org.eclipse.sapphire.tests.modeling.el.functions.validation.property.PropertyValidationFunctionTests;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FunctionTests extends TestCase
-{
-    private FunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "FunctionTests" );
-        
-        suite.addTest( AbsolutePathFunctionTests.suite() );
-        suite.addTest( ContentFunctionTests.suite() );
-        suite.addTest( EnabledFunctionTests.suite() );
-        suite.addTest( EndsWithFunctionTests.suite() );
-        suite.addTest( FragmentFunctionTests.suite() );
-        suite.addTest( HeadFunctionTests.suite() );
-        suite.addTest( IndexFunctionTests.suite() );
-        suite.addTest( MatchesFunctionTests.suite() );
-        suite.addTest( MessageFunctionTests.suite() );
-        suite.addTest( OverloadedFunctionTests.suite() );
-        suite.addTest( PartParentFunctionTests.suite() );
-        suite.addTest( PartFunctionTests.suite() );
-        suite.addTest( SeverityFunctionTests.suite() );
-        suite.addTest( SizeFunctionTests.suite() );
-        suite.addTest( StartsWithFunctionTests.suite() );
-        suite.addTest( TailFunctionTests.suite() );
-        suite.addTest( TextFunctionTests.suite() );
-        suite.addTest( PartValidationFunctionTests.suite() );
-        suite.addTest( PropertyValidationFunctionTests.suite() );
-        
-        return suite;
-    }
+@RunWith( Suite.class )
 
+@SuiteClasses
+(
+    {
+        AbsolutePathFunctionTests.class,
+        ContentFunctionTests.class,
+        EnabledFunctionTests.class,
+        EndsWithFunctionTests.class,
+        FragmentFunctionTests.class,
+        HeadFunctionTests.class,
+        IndexFunctionTests.class,
+        MatchesFunctionTests.class,
+        MessageFunctionTests.class,
+        OverloadedFunctionTests.class,
+        PartParentFunctionTests.class,
+        PartFunctionTests.class,
+        SeverityFunctionTests.class,
+        SizeFunctionTests.class,
+        StartsWithFunctionTests.class,
+        TailFunctionTests.class,
+        TextFunctionTests.class,
+        PartValidationFunctionTests.class,
+        PropertyValidationFunctionTests.class
+    }
+)
+
+public final class FunctionTests
+{
 }
 

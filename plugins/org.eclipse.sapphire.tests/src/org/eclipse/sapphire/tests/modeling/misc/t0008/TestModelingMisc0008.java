@@ -13,12 +13,10 @@ package org.eclipse.sapphire.tests.modeling.misc.t0008;
 
 import java.util.Collections;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests behavior of ElementList when the list property is read-only.
@@ -28,31 +26,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0008 extends SapphireTestCase
 {
-    private TestModelingMisc0008( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0008" );
-
-        suite.addTest( new TestModelingMisc0008( "testAddNewElement1" ) );
-        suite.addTest( new TestModelingMisc0008( "testAddNewElement2" ) );
-        suite.addTest( new TestModelingMisc0008( "testAddNewElement3" ) );
-        suite.addTest( new TestModelingMisc0008( "testMoveUp" ) );
-        suite.addTest( new TestModelingMisc0008( "testMoveDown" ) );
-        suite.addTest( new TestModelingMisc0008( "testSwap" ) );
-        suite.addTest( new TestModelingMisc0008( "testRemove1" ) );
-        suite.addTest( new TestModelingMisc0008( "testRemove2" ) );
-        suite.addTest( new TestModelingMisc0008( "testRemoveAll" ) );
-        suite.addTest( new TestModelingMisc0008( "testRetainAll" ) );
-        suite.addTest( new TestModelingMisc0008( "testClear" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testAddNewElement1() throws Exception
     {
@@ -69,6 +43,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         catch( UnsupportedOperationException e ) {}
     }
 
+    @Test
+    
     public void testAddNewElement2() throws Exception
     {
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
@@ -84,6 +60,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         catch( UnsupportedOperationException e ) {}
     }
 
+    @Test
+    
     public void testAddNewElement3() throws Exception
     {
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
@@ -99,6 +77,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         catch( UnsupportedOperationException e ) {}
     }
 
+    @Test
+    
     public void testMoveUp() throws Exception
     {
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
@@ -114,6 +94,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         catch( UnsupportedOperationException e ) {}
     }
 
+    @Test
+    
     public void testMoveDown() throws Exception
     {
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
@@ -129,6 +111,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         catch( UnsupportedOperationException e ) {}
     }
 
+    @Test
+    
     public void testSwap() throws Exception
     {
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
@@ -144,6 +128,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         catch( UnsupportedOperationException e ) {}
     }
 
+    @Test
+    
     public void testRemove1() throws Exception
     {
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
@@ -159,6 +145,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         catch( UnsupportedOperationException e ) {}
     }
 
+    @Test
+    
     public void testRemove2() throws Exception
     {
         final RootXmlResource rootXmlResource = new RootXmlResource( new XmlResourceStore( loadResource( "TestData.xml" ) ) );
@@ -173,6 +161,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         }
         catch( UnsupportedOperationException e ) {}
     }
+    
+    @Test
 
     public void testRemoveAll() throws Exception
     {
@@ -188,6 +178,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         }
         catch( UnsupportedOperationException e ) {}
     }
+    
+    @Test
 
     public void testRetainAll() throws Exception
     {
@@ -203,6 +195,8 @@ public final class TestModelingMisc0008 extends SapphireTestCase
         }
         catch( UnsupportedOperationException e ) {}
     }
+    
+    @Test
 
     public void testClear() throws Exception
     {

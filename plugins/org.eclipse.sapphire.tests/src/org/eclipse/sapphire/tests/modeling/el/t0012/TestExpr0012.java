@@ -13,9 +13,6 @@ package org.eclipse.sapphire.tests.modeling.el.t0012;
 
 import java.math.BigDecimal;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -23,6 +20,7 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Min function.
@@ -32,24 +30,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class TestExpr0012 extends TestExpr
 {
-    private TestExpr0012( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0012" );
-
-        suite.addTest( new TestExpr0012( "testWithArray" ) );
-        suite.addTest( new TestExpr0012( "testWithList" ) );
-        suite.addTest( new TestExpr0012( "testWithSet" ) );
-        suite.addTest( new TestExpr0012( "testWithModelElementList" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testWithArray()
     {
@@ -68,6 +49,8 @@ public final class TestExpr0012 extends TestExpr
         testForExpectedValue( context, "${ Min( Collection ) }", new BigDecimal( "1" ) );
     }
     
+    @Test
+    
     public void testWithList()
     {
         FunctionContext context;
@@ -85,6 +68,8 @@ public final class TestExpr0012 extends TestExpr
         testForExpectedValue( context, "${ Min( Collection ) }", new BigDecimal( "1" ) );
     }
     
+    @Test
+    
     public void testWithSet()
     {
         FunctionContext context;
@@ -101,6 +86,8 @@ public final class TestExpr0012 extends TestExpr
         context = new TestFunctionContext( set( (Object) "1", 2, new BigDecimal( "3.5" ) ) );
         testForExpectedValue( context, "${ Min( Collection ) }", new BigDecimal( "1" ) );
     }
+    
+    @Test
 
     public void testWithModelElementList()
     {

@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0006;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests reporting of unresolvable namespace usage in list property binding.
@@ -24,27 +22,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlBinding0006
-
-    extends SapphireTestCase
-    
+public final class TestXmlBinding0006 extends SapphireTestCase
 {
-    private TestXmlBinding0006( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlBinding0006" );
-
-        suite.addTest( new TestXmlBinding0006( "testInMapping" ) );
-        suite.addTest( new TestXmlBinding0006( "testInPath" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testInMapping() throws Exception
     {
@@ -61,6 +41,8 @@ public final class TestXmlBinding0006
             assertEquals( e.getMessage(), "TestXmlBinding0006A.TestProperty : Could not resolve namespace for foo:abc node name." );
         }
     }
+    
+    @Test
 
     public void testInPath() throws Exception
     {

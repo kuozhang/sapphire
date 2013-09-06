@@ -13,11 +13,9 @@ package org.eclipse.sapphire.tests.modeling.misc.t0002;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.util.DependencySorter;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests the DependencySorter class.
@@ -25,33 +23,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestModelingMisc0002
-
-    extends SapphireTestCase
-    
+public final class TestModelingMisc0002 extends SapphireTestCase
 {
-    private TestModelingMisc0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0002" );
-
-        suite.addTest( new TestModelingMisc0002( "testNoItems" ) );
-        suite.addTest( new TestModelingMisc0002( "testOneItem" ) );
-        suite.addTest( new TestModelingMisc0002( "testMultipleUnrelatedItems" ) );
-        suite.addTest( new TestModelingMisc0002( "testSimpleDependency" ) );
-        suite.addTest( new TestModelingMisc0002( "testMultiLevelDependency" ) );
-        suite.addTest( new TestModelingMisc0002( "testCycleBreaking1" ) );
-        suite.addTest( new TestModelingMisc0002( "testCycleBreaking2" ) );
-        suite.addTest( new TestModelingMisc0002( "testCycleBreaking3" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testNoItems() throws Exception
     {
@@ -60,6 +34,8 @@ public final class TestModelingMisc0002
         
         assertEquals( 0, sorted.size() );
     }
+    
+    @Test
 
     public void testOneItem() throws Exception
     {
@@ -73,6 +49,8 @@ public final class TestModelingMisc0002
         assertEquals( 1, sorted.size() );
         assertTrue( sorted.contains( a ) );
     }
+    
+    @Test
 
     public void testMultipleUnrelatedItems() throws Exception
     {
@@ -94,6 +72,8 @@ public final class TestModelingMisc0002
         assertTrue( sorted.contains( b ) );
         assertTrue( sorted.contains( c ) );
     }
+    
+    @Test
 
     public void testSimpleDependency() throws Exception
     {
@@ -117,6 +97,8 @@ public final class TestModelingMisc0002
         assertTrue( sorted.contains( c ) );
         assertTrue( sorted.indexOf( c ) < sorted.indexOf( a ) );
     }
+    
+    @Test
 
     public void testMultiLevelDependency() throws Exception
     {
@@ -142,6 +124,8 @@ public final class TestModelingMisc0002
         assertTrue( sorted.indexOf( c ) < sorted.indexOf( b ) );
         assertTrue( sorted.indexOf( b ) < sorted.indexOf( a ) );
     }
+    
+    @Test
 
     public void testCycleBreaking1() throws Exception
     {
@@ -171,6 +155,8 @@ public final class TestModelingMisc0002
         assertTrue( sorted.contains( b ) );
         assertTrue( sorted.contains( c ) );
     }
+    
+    @Test
 
     public void testCycleBreaking2() throws Exception
     {
@@ -200,6 +186,8 @@ public final class TestModelingMisc0002
         assertTrue( sorted.contains( b ) );
         assertTrue( sorted.contains( c ) );
     }
+    
+    @Test
 
     public void testCycleBreaking3() throws Exception
     {

@@ -11,35 +11,24 @@
 
 package org.eclipse.sapphire.tests.ui.def;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.ui.def.t0001.TestUiDef0001;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@RunWith( Suite.class )
+
+@SuiteClasses
+(
+    {
+        TestUiDef0001.class
+    }
+)
+
 public final class UiDefTestSuite
-
-    extends TestCase
-    
 {
-    private UiDefTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "UiDef" );
-
-        suite.addTest( TestUiDef0001.suite() );
-        
-        return suite;
-    }
-    
 }

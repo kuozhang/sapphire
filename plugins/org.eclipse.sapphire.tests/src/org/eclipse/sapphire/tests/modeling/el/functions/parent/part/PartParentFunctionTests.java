@@ -13,9 +13,6 @@ package org.eclipse.sapphire.tests.modeling.el.functions.parent.part;
 
 import java.util.Collections;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 import org.eclipse.sapphire.ui.PartFunctionContext;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
@@ -23,6 +20,7 @@ import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphireGroup;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.DialogDef;
+import org.junit.Test;
 
 /**
  * Tests Parent function for parts.
@@ -32,21 +30,7 @@ import org.eclipse.sapphire.ui.def.DialogDef;
 
 public final class PartParentFunctionTests extends TestExpr
 {
-    private PartParentFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "PartParentFunctionTests" );
-
-        suite.addTest( new PartParentFunctionTests( "testPartParentFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testPartParentFunction()
     {

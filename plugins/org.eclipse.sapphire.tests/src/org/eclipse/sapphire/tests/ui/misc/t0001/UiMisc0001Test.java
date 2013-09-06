@@ -15,10 +15,8 @@ import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests for findSelectionPostDelete algorithm. 
@@ -35,21 +33,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class UiMisc0001Test extends SapphireTestCase
 {
-    private UiMisc0001Test( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "UiMisc0001" );
-
-        suite.addTest( new UiMisc0001Test( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

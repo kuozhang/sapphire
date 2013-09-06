@@ -12,13 +12,12 @@
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0011g;
 
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests association of XML element names with model element types.
@@ -28,21 +27,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestXmlBinding0011g extends SapphireTestCase
 {
-    private TestXmlBinding0011g( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlBinding0011g" );
-
-        suite.addTest( new TestXmlBinding0011g( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

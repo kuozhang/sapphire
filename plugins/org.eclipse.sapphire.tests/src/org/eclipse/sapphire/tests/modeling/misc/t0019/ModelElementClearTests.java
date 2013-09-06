@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0019;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests the Element.clear() methods.
@@ -24,26 +22,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class ModelElementClearTests extends SapphireTestCase
 {
-    private ModelElementClearTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "ModelElementClearTests" );
-
-        suite.addTest( new ModelElementClearTests( "testValuePropertyClear" ) );
-        suite.addTest( new ModelElementClearTests( "testTransientPropertyClear" ) );
-        suite.addTest( new ModelElementClearTests( "testElementPropertyClear" ) );
-        suite.addTest( new ModelElementClearTests( "testImpliedElementPropertyClear" ) );
-        suite.addTest( new ModelElementClearTests( "testListPropertyClear" ) );
-        suite.addTest( new ModelElementClearTests( "testAllPropertiesClear" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testValuePropertyClear()
     {
@@ -71,6 +50,8 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testTransientPropertyClear()
     {
@@ -94,6 +75,8 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testElementPropertyClear()
     {
@@ -117,6 +100,8 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testImpliedElementPropertyClear()
     {
@@ -140,6 +125,8 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testListPropertyClear()
     {
@@ -164,6 +151,8 @@ public final class ModelElementClearTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testAllPropertiesClear()
     {

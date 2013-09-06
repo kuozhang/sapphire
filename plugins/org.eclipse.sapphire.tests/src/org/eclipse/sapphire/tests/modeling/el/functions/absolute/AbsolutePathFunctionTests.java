@@ -13,15 +13,13 @@ package org.eclipse.sapphire.tests.modeling.el.functions.absolute;
 
 import java.io.File;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Absolute function for paths.
@@ -31,21 +29,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class AbsolutePathFunctionTests extends TestExpr
 {
-    private AbsolutePathFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "AbsolutePathFunctionTests" );
-
-        suite.addTest( new AbsolutePathFunctionTests( "testAbsolutePathFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testAbsolutePathFunction() throws Exception
     {

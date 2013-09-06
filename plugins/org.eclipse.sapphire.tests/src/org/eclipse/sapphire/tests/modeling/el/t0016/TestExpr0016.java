@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0016;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests UpperCase and LowerCase functions.
@@ -26,22 +24,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class TestExpr0016 extends TestExpr
 {
-    private TestExpr0016( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0016" );
-
-        suite.addTest( new TestExpr0016( "testUpperCaseFunction" ) );
-        suite.addTest( new TestExpr0016( "testLowerCaseFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testUpperCaseFunction()
     {
@@ -56,6 +39,8 @@ public final class TestExpr0016 extends TestExpr
         testForExpectedValue( context, "${ UpperCase( Value ) }", "TEST" );
         testForExpectedValue( context, "${ Value.UpperCase() }", "TEST" );
     }
+    
+    @Test
 
     public void testLowerCaseFunction()
     {

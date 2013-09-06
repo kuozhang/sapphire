@@ -17,9 +17,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
@@ -29,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
 import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests handling of XML Schema include directive.
@@ -39,23 +37,8 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 public final class TestXmlXsd0002 extends SapphireTestCase
 {   
     private final static String SCHEMA_LOCATION = "http://www.eclipse.org/sapphire/tests/xml/xsd/0002";
-    
-    private TestXmlXsd0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlXsd0002" );
 
-        suite.addTest( new TestXmlXsd0002( "testSchemaParsing" ) );
-        suite.addTest( new TestXmlXsd0002( "testInsertOrder" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSchemaParsing() throws Exception
     {
@@ -78,6 +61,8 @@ public final class TestXmlXsd0002 extends SapphireTestCase
         assertEquals( "bbb-2b", ( (XmlElementDefinition) childNestedContent.get( 1 ) ).getName().getLocalPart() );
         assertEquals( "ccc-2b", ( (XmlElementDefinition) childNestedContent.get( 2 ) ).getName().getLocalPart() );
     }
+    
+    @Test
     
     public void testInsertOrder() throws Exception
     {

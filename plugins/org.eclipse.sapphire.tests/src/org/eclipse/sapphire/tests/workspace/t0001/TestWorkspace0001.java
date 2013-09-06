@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.tests.workspace.t0001;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -24,6 +21,9 @@ import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.workspace.TestWorkspace;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests validation of Eclipse workspace and project relative paths.
@@ -40,28 +40,10 @@ public final class TestWorkspace0001 extends TestWorkspace
     private IProject b;
     private IFile baaaaa;
     
-    private TestWorkspace0001( final String name )
-    {
-        super( name );
-    }
+    @Before
     
-    public static Test suite()
+    public void before() throws Exception
     {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Workspace0001" );
-
-        suite.addTest( new TestWorkspace0001( "testWorkspaceRelativePath" ) );
-        suite.addTest( new TestWorkspace0001( "testProjectRelativePath" ) );
-        
-        return suite;
-    }
-    
-    @Override
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        
         this.a = createProject( "a" );
         this.aa = createFile( this.a, "a.txt" );
         this.ab = createFolder( this.a, "b" );
@@ -71,14 +53,15 @@ public final class TestWorkspace0001 extends TestWorkspace
         this.baaaaa = createFile( this.b, "a/a/a/a.txt" );
     }
 
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    
+    public void after() throws Exception
     {
-        super.tearDown();
-        
         deleteProject( "a" );
         deleteProject( "b" );
     }
+
+    @Test
     
     public void testWorkspaceRelativePath() throws Exception
     {
@@ -95,6 +78,8 @@ public final class TestWorkspace0001 extends TestWorkspace
         testValidationErrorNotFound( element, property, this.ab.getFile( "b.txt" ).getFullPath() );
         testValidationErrorNotResolved( element, property, this.b.getLocation() );
     }
+    
+    @Test
     
     public void testProjectRelativePath() throws Exception
     {

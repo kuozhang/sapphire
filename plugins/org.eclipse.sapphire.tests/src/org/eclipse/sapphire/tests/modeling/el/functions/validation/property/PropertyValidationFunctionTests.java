@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.validation.property;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Validation function for properties.
@@ -29,23 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class PropertyValidationFunctionTests extends TestExpr
 {
-    private PropertyValidationFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "PropertyValidationFunctionTests" );
-
-        suite.addTest( new PropertyValidationFunctionTests( "testValidationFunction" ) );
-        suite.addTest( new PropertyValidationFunctionTests( "testValidationFunctionNull" ) );
-        suite.addTest( new PropertyValidationFunctionTests( "testValidationFunctionWrongType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testValidationFunction()
     {
@@ -72,6 +54,8 @@ public final class PropertyValidationFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testValidationFunctionNull()
     {
@@ -92,6 +76,8 @@ public final class PropertyValidationFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testValidationFunctionWrongType()
     {

@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.properties.thisp;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests This property.
@@ -29,21 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class ThisPropertyTests extends TestExpr
 {
-    private ThisPropertyTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "ThisPropertyTests" );
-
-        suite.addTest( new ThisPropertyTests( "testThisProperty" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testThisProperty()
     {

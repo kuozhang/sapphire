@@ -13,14 +13,12 @@ package org.eclipse.sapphire.tests.java.t0003;
 
 import java.io.InputStream;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 import org.osgi.framework.Bundle;
 
 /**
@@ -33,23 +31,7 @@ public final class TestJava0003 extends SapphireTestCase
 {
     private static final String PACKAGE_NAME = "org.eclipse.sapphire.tests.java.t0003";
     
-    private TestJava0003( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Java0003" );
-
-        suite.addTest( new TestJava0003( "testTopLevel" ) );
-        suite.addTest( new TestJava0003( "testInner" ) );
-        suite.addTest( new TestJava0003( "testWithCustomContext" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testTopLevel()
     {
@@ -60,6 +42,8 @@ public final class TestJava0003 extends SapphireTestCase
 
         assertNotNull( type );
     }
+    
+    @Test
 
     public void testInner()
     {
@@ -70,6 +54,8 @@ public final class TestJava0003 extends SapphireTestCase
 
         assertNotNull( type );
     }
+    
+    @Test
     
     public void testWithCustomContext()
     {

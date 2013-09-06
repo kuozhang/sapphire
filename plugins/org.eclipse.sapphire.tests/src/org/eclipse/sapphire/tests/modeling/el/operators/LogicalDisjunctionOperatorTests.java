@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the logical disjunction operator.
@@ -20,76 +19,79 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class LogicalDisjunctionOperatorTests extends OperatorTests
+public final class LogicalDisjunctionOperatorTests extends AbstractOperatorTests
 {
-    private LogicalDisjunctionOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "LogicalDisjunctionOperatorTests" );
-        
-        for( int i = 1; i <= 11; i++ )
-        {
-            suite.addTest( new LogicalDisjunctionOperatorTests( "testLogicalDisjunctionOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testLogicalDisjunctionOperator1()
     {
         test( "${ true || true }", true );
     }
     
+    @Test
+    
     public void testLogicalDisjunctionOperator2()
     {
         test( "${ true || false }", true );
     }
+    
+    @Test
     
     public void testLogicalDisjunctionOperator3()
     {
         test( "${ false || true }", true );
     }
     
+    @Test
+    
     public void testLogicalDisjunctionOperator4()
     {
         test( "${ false || false }", false );
     }
+    
+    @Test
     
     public void testLogicalDisjunctionOperator5()
     {
         test( "${ true or true }", true );
     }
     
+    @Test
+    
     public void testLogicalDisjunctionOperator6()
     {
         test( "${ true or false }", true );
     }
+    
+    @Test
     
     public void testLogicalDisjunctionOperator7()
     {
         test( "${ false or true }", true );
     }
     
+    @Test
+    
     public void testLogicalDisjunctionOperator8()
     {
         test( "${ false or false }", false );
     }
+    
+    @Test
     
     public void testLogicalDisjunctionOperator9()
     {
         test( "${ BooleanTrue || true }", true );
     }
 
+    @Test
+    
     public void testLogicalDisjunctionOperator10()
     {
         test( "${ true || BooleanFalse }", true );
     }
+    
+    @Test
     
     public void testLogicalDisjunctionOperator11()
     {

@@ -12,14 +12,13 @@
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0009;
 
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests default XML binding. The test is repeated with and without the convention of using 'I' prefix
@@ -28,29 +27,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlBinding0009
-
-    extends SapphireTestCase
-    
+public final class TestXmlBinding0009 extends SapphireTestCase
 {
-    private TestXmlBinding0009( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlBinding0009" );
-
-        suite.addTest( new TestXmlBinding0009( "testDefaultBindingWrite1" ) );
-        suite.addTest( new TestXmlBinding0009( "testDefaultBindingWrite2" ) );
-        suite.addTest( new TestXmlBinding0009( "testDefaultBindingRead1" ) );
-        suite.addTest( new TestXmlBinding0009( "testDefaultBindingRead2" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testDefaultBindingWrite1() throws Exception
     {
@@ -92,6 +71,8 @@ public final class TestXmlBinding0009
         assertEqualsIgnoreNewLineDiffs( loadResource( "TestData.txt" ), result );
     }
     
+    @Test
+    
     public void testDefaultBindingWrite2() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
@@ -132,6 +113,8 @@ public final class TestXmlBinding0009
         assertEqualsIgnoreNewLineDiffs( loadResource( "TestData.txt" ), result );
     }
     
+    @Test
+    
     public void testDefaultBindingRead1() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore( loadResourceAsStream( "TestData.txt" ) );
@@ -148,6 +131,8 @@ public final class TestXmlBinding0009
         
         assertEquals( "ffff", ( (TestChildElementB) model.getElementPropertyA().content( false ) ).getValuePropertyB().text() );
     }
+    
+    @Test
 
     public void testDefaultBindingRead2() throws Exception
     {

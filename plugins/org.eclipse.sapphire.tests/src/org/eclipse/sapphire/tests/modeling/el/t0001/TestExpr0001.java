@@ -11,11 +11,9 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0001;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Parent and Root functions.
@@ -23,27 +21,9 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestExpr0001
-
-    extends TestExpr
-    
+public final class TestExpr0001 extends TestExpr
 {
-    private TestExpr0001( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0001" );
-
-        suite.addTest( new TestExpr0001( "testParentFunction" ) );
-        suite.addTest( new TestExpr0001( "testRootFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testParentFunction()
     {
@@ -62,6 +42,8 @@ public final class TestExpr0001
         testForExpectedValue( r_e_l, "${ Parent().Parent() }", r );
         testForExpectedValue( r_l_e, "${ Parent().Parent() }", r );
     }
+    
+    @Test
 
     public void testRootFunction()
     {

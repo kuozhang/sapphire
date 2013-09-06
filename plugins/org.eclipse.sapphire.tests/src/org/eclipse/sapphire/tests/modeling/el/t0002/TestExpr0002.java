@@ -14,13 +14,11 @@ package org.eclipse.sapphire.tests.modeling.el.t0002;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests using array notation to index into a list.
@@ -28,26 +26,9 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestExpr0002
-
-    extends TestExpr
-    
+public final class TestExpr0002 extends TestExpr
 {
-    private TestExpr0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0002" );
-
-        suite.addTest( new TestExpr0002( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test()
     {

@@ -11,11 +11,10 @@
 
 package org.eclipse.sapphire.tests.java.t0004;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests JavaTypeValidationService in context of StandardJavaTypeReferenceService.
@@ -23,46 +22,14 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class TestJava0004
-
-    extends SapphireTestCase
-    
+public class TestJava0004 extends SapphireTestCase
 {
     private TestElement element;
     
-    protected TestJava0004( final String name )
-    {
-        super( name );
-    }
+    @Before
     
-    public static Test suite()
+    public void setUp() throws Exception
     {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Java0004" );
-
-        suite.addTest( new TestJava0004( "testOptionalAnyType" ) );
-        suite.addTest( new TestJava0004( "testRequiredClass1" ) );
-        suite.addTest( new TestJava0004( "testRequiredClass2" ) );
-        suite.addTest( new TestJava0004( "testRequiredClass3" ) );
-        suite.addTest( new TestJava0004( "testRequiredClass4" ) );
-        suite.addTest( new TestJava0004( "testRequiredClass5" ) );
-        suite.addTest( new TestJava0004( "testRequiredClass6" ) );
-        suite.addTest( new TestJava0004( "testRequiredInterface1" ) );
-        suite.addTest( new TestJava0004( "testRequiredInterface2" ) );
-        suite.addTest( new TestJava0004( "testRequiredInterface3" ) );
-        suite.addTest( new TestJava0004( "testRequiredAnnotation1" ) );
-        suite.addTest( new TestJava0004( "testRequiredEnum1" ) );
-        suite.addTest( new TestJava0004( "testRequiredMixedType1" ) );
-        suite.addTest( new TestJava0004( "testRequiredMixedType2" ) );
-        
-        return suite;
-    }
-    
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        
         this.element = createTestElement();
     }
     
@@ -70,6 +37,8 @@ public class TestJava0004
     {
         return TestElement.TYPE.instantiate();
     }
+    
+    @Test
     
     public void testOptionalAnyType()
     {
@@ -87,6 +56,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS } )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredClass1()
     {
@@ -104,6 +75,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = "java.util.List" )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredClass2()
     {
@@ -122,6 +95,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = "java.util.AbstractList" )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredClass3()
     {
@@ -140,6 +115,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.ABSTRACT_CLASS }, type = { "java.util.AbstractList", "java.lang.Cloneable" } )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredClass4()
     {
@@ -158,6 +135,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = "java.util.AbstractList" )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredClass5()
     {
@@ -176,6 +155,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = JavaTypeKind.CLASS, type = { "java.util.List", "java.util.Map" }, behavior = JavaTypeConstraintBehavior.AT_LEAST_ONE )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredClass6()
     {
@@ -195,6 +176,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredInterface1()
     {
@@ -213,6 +196,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "java.util.List" )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredInterface2()
     {
@@ -232,6 +217,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = { "java.util.List", "java.lang.Cloneable" } )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredInterface3()
     {
@@ -251,6 +238,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = JavaTypeKind.ANNOTATION )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredAnnotation1()
     {
@@ -270,6 +259,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = JavaTypeKind.ENUM )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredEnum1()
     {
@@ -289,6 +280,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.INTERFACE } )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredMixedType1()
     {
@@ -308,6 +301,8 @@ public class TestJava0004
      * @JavaTypeConstraint( kind = { JavaTypeKind.CLASS, JavaTypeKind.INTERFACE, JavaTypeKind.ENUM } )
      * @MustExist
      */
+    
+    @Test
 
     public void testRequiredMixedType2()
     {

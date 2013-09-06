@@ -11,15 +11,14 @@
 
 package org.eclipse.sapphire.tests.unique;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Counter;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.services.UniqueValueValidationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Tests the unique value feature.
@@ -29,26 +28,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class UniqueValueTests extends SapphireTestCase
 {
-    private UniqueValueTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( UniqueValueTests.class.getSimpleName() );
-
-        suite.addTest( new UniqueValueTests( "testUniqueValue" ) );
-        suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10" ) );
-        suite.addTest( new UniqueValueTests( "testUniqueValuePerformance100" ) );
-        suite.addTest( new UniqueValueTests( "testUniqueValuePerformance1000" ) );
-        suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10000" ) );
-        suite.addTest( new UniqueValueTests( "testUniqueValuePerformance100000" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testUniqueValue() throws Exception
     {
@@ -67,25 +47,36 @@ public final class UniqueValueTests extends SapphireTestCase
         assertValidationOk( element );
     }
 
+    @Test
+    
     public void testUniqueValuePerformance10() throws Exception
     {
         testUniqueValuePerformance( 10 );
     }
 
+    @Test
+    
     public void testUniqueValuePerformance100() throws Exception
     {
         testUniqueValuePerformance( 100 );
     }
 
+    @Test
+    
     public void testUniqueValuePerformance1000() throws Exception
     {
         testUniqueValuePerformance( 1000 );
     }
     
+    @Test
+    
     public void testUniqueValuePerformance10000() throws Exception
     {
         testUniqueValuePerformance( 10000 );
     }
+    
+    @Test
+    @Ignore
     
     public void testUniqueValuePerformance100000() throws Exception
     {

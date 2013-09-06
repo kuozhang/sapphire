@@ -11,11 +11,9 @@
 
 package org.eclipse.sapphire.tests.misc.t0002;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests Version class.
@@ -25,28 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestMisc0002 extends SapphireTestCase
 {
-    private TestMisc0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestMisc0002" );
-
-        suite.addTest( new TestMisc0002( "testVersionFromString_Basic" ) );
-        suite.addTest( new TestMisc0002( "testVersionFromString_LongSegment" ) );
-        suite.addTest( new TestMisc0002( "testVersionFromString_InvalidFormat" ) );
-        suite.addTest( new TestMisc0002( "testVersionFromLong" ) );
-        suite.addTest( new TestMisc0002( "testVersionCanonicalization" ) );
-        suite.addTest( new TestMisc0002( "testVersionComparison" ) );
-        suite.addTest( new TestMisc0002( "testVersionEquals" ) );
-        suite.addTest( new TestMisc0002( "testVersionToString" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testVersionFromString_Basic()
     {
@@ -74,6 +51,8 @@ public final class TestMisc0002 extends SapphireTestCase
         assertEquals( list( 1l, 2l, 3l ), version.segments() );
     }
     
+    @Test
+    
     public void testVersionFromString_LongSegment()
     {
         final Version version = new Version( "1.2.3.201206260957" );
@@ -85,72 +64,71 @@ public final class TestMisc0002 extends SapphireTestCase
         assertEquals( 201206260957l, version.segment( 3 ) );
         assertEquals( list( 1l, 2l, 3l, 201206260957l ), version.segments() );
     }
+    
+    @Test( expected = IllegalArgumentException.class )
 
-    public void testVersionFromString_InvalidFormat()
+    public void testVersionFromString_InvalidFormat_1()
     {
-        try
-        {
-            new Version( null );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-        
-        try
-        {
-            new Version( "" );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-
-        try
-        {
-            new Version( ".1.2.3" );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-
-        try
-        {
-            new Version( "1.2.3." );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-
-        try
-        {
-            new Version( "1..2.3" );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-
-        try
-        {
-            new Version( "abc" );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-        
-        try
-        {
-            new Version( "1.2.abc" );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-
-        try
-        {
-            new Version( "1.2.v345" );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
-
-        try
-        {
-            new Version( "1.2.345abc" );
-            fail( "IllegalArgumentException not thrown." );
-        }
-        catch( IllegalArgumentException e ) {}
+        new Version( null );
     }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_2()
+    {
+        new Version( "" );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_3()
+    {
+        new Version( ".1.2.3" );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_4()
+    {
+        new Version( "1.2.3." );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_5()
+    {
+        new Version( "1..2.3" );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_6()
+    {
+        new Version( "abc" );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_7()
+    {
+        new Version( "1.2.abc" );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_8()
+    {
+        new Version( "1.2.v345" );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    
+    public void testVersionFromString_InvalidFormat_9()
+    {
+        new Version( "1.2.345abc" );
+    }
+    
+    @Test
     
     public void testVersionFromLong()
     {
@@ -168,6 +146,8 @@ public final class TestMisc0002 extends SapphireTestCase
         assertEquals( 201206260957l, version.segment( 0 ) );
         assertEquals( list( 201206260957l ), version.segments() );
     }
+    
+    @Test
     
     public void testVersionCanonicalization()
     {
@@ -197,6 +177,8 @@ public final class TestMisc0002 extends SapphireTestCase
         assertEquals( list( 1l, 2l, 3l ), version.segments() );
     }
     
+    @Test
+    
     public void testVersionComparison()
     {
         testVersionComparisonSame( new Version( 1 ), new Version( "1" ) );
@@ -223,6 +205,8 @@ public final class TestMisc0002 extends SapphireTestCase
         assertTrue( y.compareTo( x ) < 0 );
     }
     
+    @Test
+    
     public void testVersionEquals()
     {
         testVersionEquals( new Version( 1 ), new Version( "1" ) );
@@ -245,6 +229,8 @@ public final class TestMisc0002 extends SapphireTestCase
         assertFalse( x.equals( y ) );
         assertFalse( y.equals( x ) );
     }
+    
+    @Test
 
     public void testVersionToString()
     {

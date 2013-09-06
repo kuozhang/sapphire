@@ -13,8 +13,7 @@ package org.eclipse.sapphire.tests.modeling.el.operators;
 
 import java.math.BigInteger;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the modulo operator.
@@ -22,41 +21,30 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ModuloOperatorTests extends OperatorTests
+public final class ModuloOperatorTests extends AbstractOperatorTests
 {
-    private ModuloOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "ModuloOperatorTests" );
-        
-        for( int i = 1; i <= 4; i++ )
-        {
-            suite.addTest( new ModuloOperatorTests( "testModuloOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testModuloOperator1()
     {
         test( "${ 32 % 5 }", new BigInteger( "2" ) );
     }
     
+    @Test
+    
     public void testModuloOperator2()
     {
         test( "${ Integer3 % 2 }", new BigInteger( "1" ) );
     }
 
+    @Test
+    
     public void testModuloOperator3()
     {
         test( "${ 2 % Integer5 }", new BigInteger( "2" ) );
     }
+    
+    @Test
     
     public void testModuloOperator4()
     {

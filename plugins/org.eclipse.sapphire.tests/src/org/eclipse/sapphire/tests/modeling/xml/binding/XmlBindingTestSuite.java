@@ -11,10 +11,6 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0001.TestXmlBinding0001;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0002.TestXmlBinding0002;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0003.TestXmlBinding0003;
@@ -34,45 +30,41 @@ import org.eclipse.sapphire.tests.modeling.xml.binding.t0011f.TestXmlBinding0011
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0011g.TestXmlBinding0011g;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0011h.TestXmlBinding0011h;
 import org.eclipse.sapphire.tests.modeling.xml.binding.t0012.TestXmlBinding0012;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlBindingTestSuite extends TestCase
-{
-    private XmlBindingTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "XmlBinding" );
+@RunWith( Suite.class )
 
-        suite.addTest( TestXmlBinding0001.suite() );
-        suite.addTest( TestXmlBinding0002.suite() );
-        suite.addTest( TestXmlBinding0003.suite() );
-        suite.addTest( TestXmlBinding0004.suite() );
-        suite.addTest( TestXmlBinding0005.suite() );
-        suite.addTest( TestXmlBinding0006.suite() );
-        suite.addTest( TestXmlBinding0007.suite() );
-        suite.addTest( TestXmlBinding0008.suite() );
-        suite.addTest( TestXmlBinding0009.suite() );
-        suite.addTest( TestXmlBinding0010.suite() );
-        suite.addTest( TestXmlBinding0011a.suite() );
-        suite.addTest( TestXmlBinding0011b.suite() );
-        suite.addTest( TestXmlBinding0011c.suite() );
-        suite.addTest( TestXmlBinding0011d.suite() );
-        suite.addTest( TestXmlBinding0011e.suite() );
-        suite.addTest( TestXmlBinding0011f.suite() );
-        suite.addTest( TestXmlBinding0011g.suite() );
-        suite.addTest( TestXmlBinding0011h.suite() );
-        suite.addTest( TestXmlBinding0012.suite() );
-        
-        return suite;
+@SuiteClasses
+(
+    {
+        TestXmlBinding0001.class,
+        TestXmlBinding0002.class,
+        TestXmlBinding0003.class,
+        TestXmlBinding0004.class,
+        TestXmlBinding0005.class,
+        TestXmlBinding0006.class,
+        TestXmlBinding0007.class,
+        TestXmlBinding0008.class,
+        TestXmlBinding0009.class,
+        TestXmlBinding0010.class,
+        TestXmlBinding0011a.class,
+        TestXmlBinding0011b.class,
+        TestXmlBinding0011c.class,
+        TestXmlBinding0011d.class,
+        TestXmlBinding0011e.class,
+        TestXmlBinding0011f.class,
+        TestXmlBinding0011g.class,
+        TestXmlBinding0011h.class,
+        TestXmlBinding0012.class
     }
-    
+)
+
+public final class XmlBindingTestSuite
+{
 }

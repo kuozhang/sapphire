@@ -13,8 +13,7 @@ package org.eclipse.sapphire.tests.modeling.el.operators;
 
 import java.math.BigDecimal;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the division operator.
@@ -22,66 +21,65 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DivisionOperatorTests extends OperatorTests
+public final class DivisionOperatorTests extends AbstractOperatorTests
 {
-    private DivisionOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "DivisionOperatorTests" );
-        
-        for( int i = 1; i <= 9; i++ )
-        {
-            suite.addTest( new DivisionOperatorTests( "testDivisionOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testDivisionOperator1()
     {
         test( "${ 32 / 5 }", new BigDecimal( "6" ) );
     }
     
+    @Test
+    
     public void testDivisionOperator2()
     {
         test( "${ 322 / 5 / 7 }", new BigDecimal( "9" ) );
     }
+    
+    @Test
     
     public void testDivisionOperator3()
     {
         test( "${ 32.2 / 5 }", new BigDecimal( "6.4" ) );
     }
     
+    @Test
+    
     public void testDivisionOperator4()
     {
         test( "${ 32 div 5 }", new BigDecimal( "6" ) );
     }
+    
+    @Test
     
     public void testDivisionOperator5()
     {
         test( "${ 322 div 5 div 7 }", new BigDecimal( "9" ) );
     }
     
+    @Test
+    
     public void testDivisionOperator6()
     {
         test( "${ 32.2 div 5 }", new BigDecimal( "6.4" ) );
     }
+    
+    @Test
 
     public void testDivisionOperator7()
     {
         test( "${ Integer3 / 2 }", new Double( "1.5" ) );
     }
+    
+    @Test
 
     public void testDivisionOperator8()
     {
         test( "${ 2 / Integer5 }", new BigDecimal( "0" ) );
     }
+    
+    @Test
     
     public void testDivisionOperator9()
     {

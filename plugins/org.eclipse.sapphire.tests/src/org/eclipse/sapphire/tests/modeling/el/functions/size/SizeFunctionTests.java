@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.size;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Size function.
@@ -29,25 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class SizeFunctionTests extends TestExpr
 {
-    private SizeFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "SizeFunctionTests" );
-
-        suite.addTest( new SizeFunctionTests( "testSizeFunctionOnList" ) );
-        suite.addTest( new SizeFunctionTests( "testSizeFunctionOnValue" ) );
-        suite.addTest( new SizeFunctionTests( "testSizeFunctionOnString" ) );
-        suite.addTest( new SizeFunctionTests( "testSizeFunctionNull" ) );
-        suite.addTest( new SizeFunctionTests( "testSizeFunctionWrongType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSizeFunctionOnList()
     {
@@ -74,6 +54,8 @@ public final class SizeFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testSizeFunctionOnValue()
     {
@@ -97,6 +79,8 @@ public final class SizeFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testSizeFunctionOnString()
     {
@@ -113,6 +97,8 @@ public final class SizeFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testSizeFunctionNull()
     {
@@ -133,6 +119,8 @@ public final class SizeFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testSizeFunctionWrongType()
     {

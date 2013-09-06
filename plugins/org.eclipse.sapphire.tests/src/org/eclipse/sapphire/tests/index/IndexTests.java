@@ -13,9 +13,6 @@ package org.eclipse.sapphire.tests.index;
 
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Index;
 import org.eclipse.sapphire.Listener;
@@ -24,6 +21,7 @@ import org.eclipse.sapphire.tests.EventLog;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.tests.index.TestElement.ListEntry;
 import org.eclipse.sapphire.tests.index.TestElement.ListEntry.NestedListEntry;
+import org.junit.Test;
 
 /**
  * Tests the index feature.
@@ -33,39 +31,7 @@ import org.eclipse.sapphire.tests.index.TestElement.ListEntry.NestedListEntry;
 
 public final class IndexTests extends SapphireTestCase
 {
-    private IndexTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( IndexTests.class.getSimpleName() );
-
-        suite.addTest( new IndexTests( "testSingleIndex" ) );
-        suite.addTest( new IndexTests( "testMultipleIndexes" ) );
-        suite.addTest( new IndexTests( "testIndexEvents" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_ValueProperty_Null" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_ValueProperty_Foreign_1" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_ValueProperty_Foreign_2" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_ValueProperty_Disposed" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_String_Null" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_String_Unknown" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_String_Path" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_String_List" ) );
-        suite.addTest( new IndexTests( "testException_ElementList_Index_String_Disposed" ) );
-        suite.addTest( new IndexTests( "testException_Index_Element_Null" ) );
-        suite.addTest( new IndexTests( "testException_Index_Element_Disposed" ) );
-        suite.addTest( new IndexTests( "testException_Index_Elements_Null" ) );
-        suite.addTest( new IndexTests( "testException_Index_Elements_Disposed" ) );
-        suite.addTest( new IndexTests( "testException_Index_Attach_Null" ) );
-        suite.addTest( new IndexTests( "testException_Index_Attach_Disposed" ) );
-        suite.addTest( new IndexTests( "testException_Index_Detach_Null" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSingleIndex()
     {
@@ -114,6 +80,8 @@ public final class IndexTests extends SapphireTestCase
         }
     }
     
+    @Test
+    
     public void testMultipleIndexes()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -156,6 +124,8 @@ public final class IndexTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
     
     public void testIndexEvents()
     {
@@ -231,6 +201,8 @@ public final class IndexTests extends SapphireTestCase
      * Test {@link ElementList#index(ValueProperty)} with a null.
      */
     
+    @Test( expected = IllegalArgumentException.class )
+    
     public void testException_ElementList_Index_ValueProperty_Null()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -238,12 +210,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( (ValueProperty) null );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -255,6 +221,8 @@ public final class IndexTests extends SapphireTestCase
      * Test {@link ElementList#index(ValueProperty)} with a foreign property.
      */
     
+    @Test( expected = IllegalArgumentException.class )
+    
     public void testException_ElementList_Index_ValueProperty_Foreign_1()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -262,12 +230,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( TestElement.PROP_VALUE );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -279,6 +241,8 @@ public final class IndexTests extends SapphireTestCase
      * Test {@link ElementList#index(ValueProperty)} with a foreign property.
      */
     
+    @Test( expected = IllegalArgumentException.class )
+    
     public void testException_ElementList_Index_ValueProperty_Foreign_2()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -286,12 +250,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( NestedListEntry.PROP_VALUE );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -302,6 +260,8 @@ public final class IndexTests extends SapphireTestCase
     /**
      * Test {@link ElementList#index(ValueProperty)} when the list is disposed.
      */
+    
+    @Test( expected = IllegalStateException.class )
     
     public void testException_ElementList_Index_ValueProperty_Disposed()
     {
@@ -317,21 +277,14 @@ public final class IndexTests extends SapphireTestCase
             element.dispose();
         }
 
-        try
-        {
-            list.index( ListEntry.PROP_STRING_VALUE );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalStateException e )
-        {
-            // expected
-        }
+        list.index( ListEntry.PROP_STRING_VALUE );
     }
     
     /**
      * Test {@link ElementList#index(String)} with a null.
      */
+    
+    @Test( expected = IllegalArgumentException.class )
     
     public void testException_ElementList_Index_String_Null()
     {
@@ -340,12 +293,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( (String) null );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -357,6 +304,8 @@ public final class IndexTests extends SapphireTestCase
      * Test {@link ElementList#index(String)} with an unknown property.
      */
     
+    @Test( expected = IllegalArgumentException.class )
+    
     public void testException_ElementList_Index_String_Unknown()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -364,12 +313,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( "Value" );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -381,6 +324,8 @@ public final class IndexTests extends SapphireTestCase
      * Test {@link ElementList#index(String)} with a path.
      */
     
+    @Test( expected = IllegalArgumentException.class )
+    
     public void testException_ElementList_Index_String_Path()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -388,12 +333,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( "List/Value" );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -405,6 +344,8 @@ public final class IndexTests extends SapphireTestCase
      * Test {@link ElementList#index(String)} with a list property.
      */
     
+    @Test( expected = IllegalArgumentException.class )
+    
     public void testException_ElementList_Index_String_List()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -412,12 +353,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( "List" );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -428,6 +363,8 @@ public final class IndexTests extends SapphireTestCase
     /**
      * Test {@link ElementList#index(String)} when the list is disposed.
      */
+    
+    @Test( expected = IllegalStateException.class )
     
     public void testException_ElementList_Index_String_Disposed()
     {
@@ -443,21 +380,14 @@ public final class IndexTests extends SapphireTestCase
             element.dispose();
         }
 
-        try
-        {
-            list.index( ListEntry.PROP_STRING_VALUE );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalStateException e )
-        {
-            // expected
-        }
+        list.index( ListEntry.PROP_STRING_VALUE );
     }
     
     /**
      * Test {@link Index#element(String)} with a null.
      */
+    
+    @Test( expected = IllegalArgumentException.class )
     
     public void testException_Index_Element_Null()
     {
@@ -466,12 +396,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( ListEntry.PROP_STRING_VALUE ).element( null );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -482,6 +406,8 @@ public final class IndexTests extends SapphireTestCase
     /**
      * Test {@link Index#element(String)} when the list is disposed.
      */
+    
+    @Test( expected = IllegalStateException.class )
     
     public void testException_Index_Element_Disposed()
     {
@@ -497,21 +423,14 @@ public final class IndexTests extends SapphireTestCase
             element.dispose();
         }
 
-        try
-        {
-            index.element( "a" );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalStateException e )
-        {
-            // expected
-        }
+        index.element( "a" );
     }
     
     /**
      * Test {@link Index#elements(String)} with a null.
      */
+    
+    @Test( expected = IllegalArgumentException.class )
     
     public void testException_Index_Elements_Null()
     {
@@ -520,12 +439,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( ListEntry.PROP_STRING_VALUE ).elements( null );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -536,6 +449,8 @@ public final class IndexTests extends SapphireTestCase
     /**
      * Test {@link Index#elements(String)} when the list is disposed.
      */
+    
+    @Test( expected = IllegalStateException.class )
     
     public void testException_Index_Elements_Disposed()
     {
@@ -551,21 +466,14 @@ public final class IndexTests extends SapphireTestCase
             element.dispose();
         }
 
-        try
-        {
-            index.elements( "a" );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalStateException e )
-        {
-            // expected
-        }
+        index.elements( "a" );
     }
     
     /**
      * Test {@link Index#attach(Listener)} with a null.
      */
+    
+    @Test( expected = IllegalArgumentException.class )
     
     public void testException_Index_Attach_Null()
     {
@@ -574,12 +482,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( ListEntry.PROP_STRING_VALUE ).attach( null );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {
@@ -590,6 +492,8 @@ public final class IndexTests extends SapphireTestCase
     /**
      * Test {@link Index#attach(Listener)} when the list is disposed.
      */
+    
+    @Test( expected = IllegalStateException.class )
     
     public void testException_Index_Attach_Disposed()
     {
@@ -605,21 +509,14 @@ public final class IndexTests extends SapphireTestCase
             element.dispose();
         }
 
-        try
-        {
-            index.attach( new EventLog() );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalStateException e )
-        {
-            // expected
-        }
+        index.attach( new EventLog() );
     }
     
     /**
      * Test {@link Index#detach(Listener)} with a null.
      */
+    
+    @Test( expected = IllegalArgumentException.class )
     
     public void testException_Index_Detach_Null()
     {
@@ -628,12 +525,6 @@ public final class IndexTests extends SapphireTestCase
         try
         {
             element.getList().index( ListEntry.PROP_STRING_VALUE ).detach( null );
-            
-            fail( "Exception expected." );
-        }
-        catch( IllegalArgumentException e )
-        {
-            // expected
         }
         finally
         {

@@ -12,14 +12,13 @@
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0003;
 
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests DTD use in XML binding.
@@ -29,40 +28,29 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestXmlDtd0003 extends SapphireTestCase
 {
-    private TestXmlDtd0003( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlDtd0003" );
-
-        suite.addTest( new TestXmlDtd0003( "testPublic" ) );
-        suite.addTest( new TestXmlDtd0003( "testSystem" ) );
-        suite.addTest( new TestXmlDtd0003( "testError1" ) );
-        suite.addTest( new TestXmlDtd0003( "testError2" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testPublic() throws Exception
     {
         test( TestElementPublic.TYPE, "ExpectedPublic.txt" );
     }
     
+    @Test
+    
     public void testSystem() throws Exception
     {
         test( TestElementSystem.TYPE, "ExpectedSystem.txt" );
     }
+    
+    @Test
     
     public void testError1() throws Exception
     {
         test( TestElementError1.TYPE, "ExpectedError1.txt" );
     }
 
+    @Test
+    
     public void testError2() throws Exception
     {
         test( TestElementError1.TYPE, "ExpectedError2.txt" );

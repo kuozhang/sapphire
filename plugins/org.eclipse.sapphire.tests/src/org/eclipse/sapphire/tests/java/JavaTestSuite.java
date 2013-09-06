@@ -11,46 +11,34 @@
 
 package org.eclipse.sapphire.tests.java;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestSuite;
 import org.eclipse.sapphire.tests.java.t0001.TestJava0001;
 import org.eclipse.sapphire.tests.java.t0002.TestJava0002;
 import org.eclipse.sapphire.tests.java.t0003.TestJava0003;
 import org.eclipse.sapphire.tests.java.t0004.TestJava0004;
 import org.eclipse.sapphire.tests.java.t0005.TestJava0005;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@RunWith( Suite.class )
+
+@SuiteClasses
+(
+    {
+        TestJava0001.class,
+        TestJava0002.class,
+        TestJava0003.class,
+        TestJava0004.class,
+        TestJava0005.class,
+        JavaJdtTestSuite.class
+    }
+)
+
 public final class JavaTestSuite
-
-    extends TestCase
-    
 {
-    private JavaTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Java" );
-
-        suite.addTest( TestJava0001.suite() );
-        suite.addTest( TestJava0002.suite() );
-        suite.addTest( TestJava0003.suite() );
-        suite.addTest( TestJava0004.suite() );
-        suite.addTest( TestJava0005.suite() );
-        
-        suite.addTest( JavaJdtTestSuite.suite() );
-        
-        return suite;
-    }
-    
 }

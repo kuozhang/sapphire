@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0008;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests InstanceOf function.
@@ -24,34 +22,9 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestExpr0008
-
-    extends TestExpr
-    
+public final class TestExpr0008 extends TestExpr
 {
-    private TestExpr0008( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0008" );
-
-        suite.addTest( new TestExpr0008( "testLiteral1" ) );
-        suite.addTest( new TestExpr0008( "testLiteral2" ) );
-        suite.addTest( new TestExpr0008( "testLiteral3" ) );
-        suite.addTest( new TestExpr0008( "testValueProperty" ) );
-        suite.addTest( new TestExpr0008( "testElementProperty" ) );
-        suite.addTest( new TestExpr0008( "testNull1" ) );
-        suite.addTest( new TestExpr0008( "testNull2" ) );
-        suite.addTest( new TestExpr0008( "testNull3" ) );
-        suite.addTest( new TestExpr0008( "testUnknownType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testLiteral2()
     {
@@ -59,11 +32,15 @@ public final class TestExpr0008
         testForExpectedValue( context, "${ InstanceOf( 12345, 'java.math.BigInteger' ) }", true );
     }
 
+    @Test
+    
     public void testLiteral3()
     {
         final FunctionContext context = new FunctionContext();
         testForExpectedValue( context, "${ InstanceOf( 12345, 'java.lang.Number' ) }", true );
     }
+    
+    @Test
 
     public void testValueProperty()
     {
@@ -74,6 +51,8 @@ public final class TestExpr0008
         
         testForExpectedValue( context, "${ InstanceOf( Integer, 'java.lang.Integer' ) }", true );
     }
+    
+    @Test
     
     public void testElementProperty()
     {
@@ -92,6 +71,8 @@ public final class TestExpr0008
         
         testForExpectedValue( context, "${ InstanceOf( Element, 'org.eclipse.sapphire.tests.modeling.el.t0008.TestModelElementB' ) }", false );
     }
+    
+    @Test
 
     public void testNull1()
     {
@@ -99,23 +80,31 @@ public final class TestExpr0008
         testForExpectedValue( context, "${ InstanceOf( null, null ) }", false );
     }
     
+    @Test
+    
     public void testNull2()
     {
         final FunctionContext context = new FunctionContext();
         testForExpectedValue( context, "${ InstanceOf( 'x', null ) }", false );
     }
+    
+    @Test
 
     public void testNull3()
     {
         final FunctionContext context = new FunctionContext();
         testForExpectedValue( context, "${ InstanceOf( null, 'java.lang.String' ) }", false );
     }
+    
+    @Test
 
     public void testLiteral1()
     {
         final FunctionContext context = new FunctionContext();
         testForExpectedValue( context, "${ InstanceOf( 'x', 'java.lang.String' ) }", true );
     }
+    
+    @Test
 
     public void testUnknownType()
     {

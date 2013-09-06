@@ -13,8 +13,7 @@ package org.eclipse.sapphire.tests.modeling.el.operators;
 
 import java.math.BigInteger;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the empty operator.
@@ -22,31 +21,16 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ConditionalOperatorTests extends OperatorTests
+public final class ConditionalOperatorTests extends AbstractOperatorTests
 {
-    private ConditionalOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "ConditionalOperatorTests" );
-        
-        for( int i = 1; i <= 3; i++ )
-        {
-            suite.addTest( new ConditionalOperatorTests( "testConditionalOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testConditionalOperator1()
     {
         test( "${ true ? 3 : 5 }", new BigInteger( "3" ) );
     }
+    
+    @Test
     
     public void testConditionalOperator2()
     {
@@ -56,6 +40,8 @@ public final class ConditionalOperatorTests extends OperatorTests
     /**
      * Tests conditional operator in circumstances when evaluating unused branch would result in errors.
      */
+    
+    @Test
 
     public void testConditionalOperator3()
     {

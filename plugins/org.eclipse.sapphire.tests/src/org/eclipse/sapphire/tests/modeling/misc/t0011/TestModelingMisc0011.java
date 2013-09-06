@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0011;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests the @DependsOn annotation where the dependencies are between model elements held in a list.
@@ -26,22 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0011 extends SapphireTestCase
 {
-    private TestModelingMisc0011( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0011" );
-
-        suite.addTest( new TestModelingMisc0011( "testFromEmptyModel" ) );
-        suite.addTest( new TestModelingMisc0011( "testFromExistingModel" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testFromEmptyModel() throws Exception
     {
@@ -67,6 +50,8 @@ public final class TestModelingMisc0011 extends SapphireTestCase
         assertEquals( "456", y.getContent().text() );
         assertEquals( "456", z.getContent().text() );
     }
+    
+    @Test
 
     public void testFromExistingModel() throws Exception
     {

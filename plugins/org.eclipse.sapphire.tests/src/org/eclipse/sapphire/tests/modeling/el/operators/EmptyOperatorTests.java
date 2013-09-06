@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the empty operator.
@@ -20,41 +19,30 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EmptyOperatorTests extends OperatorTests
+public final class EmptyOperatorTests extends AbstractOperatorTests
 {
-    private EmptyOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "EmptyOperatorTests" );
-        
-        for( int i = 1; i <= 4; i++ )
-        {
-            suite.addTest( new EmptyOperatorTests( "testEmptyOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testEmptyOperator1()
     {
         test( "${ empty null }", true );
     }
+    
+    @Test
 
     public void testEmptyOperator2()
     {
         test( "${ empty 5 }", false );
     }
     
+    @Test
+    
     public void testEmptyOperator3()
     {
         test( "${ empty 'abc' }", false );
     }
+    
+    @Test
     
     public void testEmptyOperator4()
     {

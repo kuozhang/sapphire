@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the greater than operator.
@@ -20,96 +19,107 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class GreaterThanOperatorTests extends OperatorTests
+public final class GreaterThanOperatorTests extends AbstractOperatorTests
 {
-    private GreaterThanOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "GreaterThanOperatorTests" );
-        
-        for( int i = 1; i <= 15; i++ )
-        {
-            suite.addTest( new GreaterThanOperatorTests( "testGreaterThanOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testGreaterThanOperator1()
     {
         test( "${ 3 > 5 }", false );
     }
     
+    @Test
+    
     public void testGreaterThanOperator2()
     {
         test( "${ 5 > 3 }", true );
     }
+    
+    @Test
     
     public void testGreaterThanOperator3()
     {
         test( "${ 3 > 3 }", false );
     }
     
+    @Test
+    
     public void testGreaterThanOperator4()
     {
         test( "${ 3.2 > 5 }", false );
     }
+    
+    @Test
     
     public void testGreaterThanOperator5()
     {
         test( "${ 5.3 > 3 }", true );
     }
     
+    @Test
+    
     public void testGreaterThanOperator6()
     {
         test( "${ 3.2 > 3.2 }", false );
     }
+    
+    @Test
 
     public void testGreaterThanOperator7()
     {
         test( "${ 3 gt 5 }", false );
     }
     
+    @Test
+    
     public void testGreaterThanOperator8()
     {
         test( "${ 5 gt 3 }", true );
     }
+    
+    @Test
     
     public void testGreaterThanOperator9()
     {
         test( "${ 3 gt 3 }", false );
     }
     
+    @Test
+    
     public void testGreaterThanOperator10()
     {
         test( "${ 3.2 gt 5 }", false );
     }
+    
+    @Test
     
     public void testGreaterThanOperator11()
     {
         test( "${ 5.3 gt 3 }", true );
     }
     
+    @Test
+    
     public void testGreaterThanOperator12()
     {
         test( "${ 3.2 gt 3.2 }", false );
     }
+    
+    @Test
 
     public void testGreaterThanOperator13()
     {
         test( "${ Integer3 > 7 }", false );
     }
+    
+    @Test
 
     public void testGreaterThanOperator14()
     {
         test( "${ 7 > Integer5 }", true );
     }
+    
+    @Test
     
     public void testGreaterThanOperator15()
     {

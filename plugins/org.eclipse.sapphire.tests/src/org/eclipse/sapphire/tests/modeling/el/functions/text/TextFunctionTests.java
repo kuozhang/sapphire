@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.text;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Text function.
@@ -29,23 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class TextFunctionTests extends TestExpr
 {
-    private TextFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TextFunctionTests" );
-
-        suite.addTest( new TextFunctionTests( "testTextFunction" ) );
-        suite.addTest( new TextFunctionTests( "testTextFunctionNull" ) );
-        suite.addTest( new TextFunctionTests( "testTextFunctionWrongType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testTextFunction()
     {
@@ -86,6 +68,8 @@ public final class TextFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testTextFunctionNull()
     {
@@ -106,6 +90,8 @@ public final class TextFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testTextFunctionWrongType()
     {

@@ -14,12 +14,10 @@ package org.eclipse.sapphire.tests.modeling.misc.t0018;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests runtime compilation of element type implementation classes.
@@ -29,21 +27,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0018 extends SapphireTestCase
 {
-    private TestModelingMisc0018( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0018" );
-
-        suite.addTest( new TestModelingMisc0018( "testRuntimeTypeCompilation" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testRuntimeTypeCompilation() throws Exception
     {

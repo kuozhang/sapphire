@@ -14,11 +14,9 @@ package org.eclipse.sapphire.tests.modeling.el.t0005;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests List function.
@@ -26,45 +24,30 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestExpr0005
-
-    extends TestExpr
-    
+public final class TestExpr0005 extends TestExpr
 {
-    private TestExpr0005( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0005" );
-
-        suite.addTest( new TestExpr0005( "testEmpty" ) );
-        suite.addTest( new TestExpr0005( "testSingleton" ) );
-        suite.addTest( new TestExpr0005( "testMultiple" ) );
-        suite.addTest( new TestExpr0005( "testVaried" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testEmpty()
     {
         testForExpectedValue( new FunctionContext(), "${ List() }", list() );
     }
     
+    @Test
+    
     public void testSingleton()
     {
         testForExpectedValue( new FunctionContext(), "${ List( 'x' ) }", list( "x" ) );
     }
     
+    @Test
+    
     public void testMultiple()
     {
         testForExpectedValue( new FunctionContext(), "${ List( 'x', 'y', 'z' ) }", list( "x", "y", "z" ) );
     }
-    
+
+    @Test
     @SuppressWarnings( "unchecked" )
     
     public void testVaried()

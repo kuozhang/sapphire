@@ -14,8 +14,7 @@ package org.eclipse.sapphire.tests.modeling.el.operators;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the multiplication operator.
@@ -23,56 +22,51 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MultiplicationOperatorTests extends OperatorTests
+public final class MultiplicationOperatorTests extends AbstractOperatorTests
 {
-    private MultiplicationOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "MultiplicationOperatorTests" );
-        
-        for( int i = 1; i <= 7; i++ )
-        {
-            suite.addTest( new MultiplicationOperatorTests( "testMultiplicationOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testMultiplicationOperator1()
     {
         test( "${ 3 * 5 }", new BigInteger( "15" ) );
     }
     
+    @Test
+    
     public void testMultiplicationOperator2()
     {
         test( "${ 3 * 5 * 7 }", new BigInteger( "105" ) );
     }
+    
+    @Test
     
     public void testMultiplicationOperator3()
     {
         test( "${ 3.2 * 5 }", new BigDecimal( "16.0" ) );
     }
 
+    @Test
+    
     public void testMultiplicationOperator4()
     {
         test( "${ 3.2 * 6}", new BigDecimal( "19.2" ) );
     }
 
+    @Test
+    
     public void testMultiplicationOperator5()
     {
         test( "${ Integer3 * 7 }", new BigInteger( "21" ) );
     }
 
+    @Test
+    
     public void testMultiplicationOperator6()
     {
         test( "${ 7 * Integer5 }", new BigInteger( "35" ) );
     }
+    
+    @Test
     
     public void testMultiplicationOperator7()
     {

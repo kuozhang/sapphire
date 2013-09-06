@@ -13,13 +13,11 @@ package org.eclipse.sapphire.tests.modeling.el.t0007;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests casting between collections and strings.
@@ -27,29 +25,9 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestExpr0007
-
-    extends TestExpr
-    
+public final class TestExpr0007 extends TestExpr
 {
-    private TestExpr0007( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0007" );
-
-        suite.addTest( new TestExpr0007( "testListToString" ) );
-        suite.addTest( new TestExpr0007( "testSetToString" ) );
-        suite.addTest( new TestExpr0007( "testArrayToString" ) );
-        suite.addTest( new TestExpr0007( "testStringToList" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testListToString()
     {
@@ -60,6 +38,8 @@ public final class TestExpr0007
         testForExpectedValue( context, FailSafeFunction.create( Literal.create( list( "x", "y" ) ), Literal.create( String.class ) ), "x,y" );
         testForExpectedValue( context, FailSafeFunction.create( Literal.create( list( "x", "y", "z" ) ), Literal.create( String.class ) ), "x,y,z" );
     }
+    
+    @Test
 
     public void testSetToString()
     {
@@ -70,6 +50,8 @@ public final class TestExpr0007
         testForExpectedValue( context, FailSafeFunction.create( Literal.create( set( "x", "y" ) ), Literal.create( String.class ) ), "x,y" );
         testForExpectedValue( context, FailSafeFunction.create( Literal.create( set( "x", "y", "z" ) ), Literal.create( String.class ) ), "x,y,z" );
     }
+    
+    @Test
 
     public void testArrayToString()
     {
@@ -80,6 +62,8 @@ public final class TestExpr0007
         testForExpectedValue( context, FailSafeFunction.create( Literal.create( new String[] { "x", "y" } ), Literal.create( String.class ) ), "x,y" );
         testForExpectedValue( context, FailSafeFunction.create( Literal.create( new String[] { "x", "y", "z" } ), Literal.create( String.class ) ), "x,y,z" );
     }
+    
+    @Test
 
     public void testStringToList()
     {

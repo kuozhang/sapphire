@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0013;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests use of @DependsOn where the property specifying the dependency resides in an implied element property
@@ -25,21 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0013 extends SapphireTestCase
 {
-    private TestModelingMisc0013( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0013" );
-
-        suite.addTest( new TestModelingMisc0013( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

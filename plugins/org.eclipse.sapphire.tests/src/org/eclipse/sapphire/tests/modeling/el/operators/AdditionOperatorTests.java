@@ -14,8 +14,7 @@ package org.eclipse.sapphire.tests.modeling.el.operators;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the addition operator.
@@ -23,51 +22,44 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class AdditionOperatorTests extends OperatorTests
+public final class AdditionOperatorTests extends AbstractOperatorTests
 {
-    private AdditionOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "AdditionOperatorTests" );
-        
-        for( int i = 1; i <= 6; i++ )
-        {
-            suite.addTest( new AdditionOperatorTests( "testAdditionOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testAdditionOperator1()
     {
         test( "${ 3 + 5 }", new BigInteger( "8" ) );
     }
     
+    @Test
+    
     public void testAdditionOperator2()
     {
         test( "${ 3 + 5 + 7 }", new BigInteger( "15" ) );
     }
     
+    @Test
+    
     public void testAdditionOperator3()
     {
         test( "${ 3.2 + 5 }", new BigDecimal( "8.2" ) );
     }
+    
+    @Test
 
     public void testAdditionOperator4()
     {
         test( "${ Integer3 + 7 }", new BigInteger( "10" ) );
     }
+    
+    @Test
 
     public void testAdditionOperator5()
     {
         test( "${ 7 + Integer5 }", new BigInteger( "12" ) );
     }
+    
+    @Test
     
     public void testAdditionOperator6()
     {

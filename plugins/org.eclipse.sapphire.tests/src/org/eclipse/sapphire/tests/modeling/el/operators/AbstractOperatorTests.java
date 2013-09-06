@@ -9,30 +9,30 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.misc;
+package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import org.eclipse.sapphire.tests.misc.t0001.TestMisc0001;
-import org.eclipse.sapphire.tests.misc.t0002.TestMisc0002;
-import org.eclipse.sapphire.tests.misc.t0003.TestMisc0003;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@RunWith( Suite.class )
-
-@SuiteClasses
-(
-    {
-        TestMisc0001.class,
-        TestMisc0002.class,
-        TestMisc0003.class
-    }
-)
-
-public final class TestMisc
+public abstract class AbstractOperatorTests extends TestExpr
 {
+    protected void test( final String expr, final Object expected )
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        
+        try
+        {
+            testForExpectedValue( new ModelElementFunctionContext( element ), expr, expected );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+
 }
+

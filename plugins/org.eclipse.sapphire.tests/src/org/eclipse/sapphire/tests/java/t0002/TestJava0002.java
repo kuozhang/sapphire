@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.java.t0002;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests correctness of type hierarchy reporting of StandardJavaTypeReferenceService.
@@ -24,28 +22,11 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestJava0002
-
-    extends SapphireTestCase
-    
+public final class TestJava0002 extends SapphireTestCase
 {
     private static final String PACKAGE_NAME = "org.eclipse.sapphire.tests.java.t0002";
     
-    private TestJava0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Java0002" );
-
-        suite.addTest( new TestJava0002( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test()
     {

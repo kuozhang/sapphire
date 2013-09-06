@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.tests.services.t0010;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.Property;
@@ -22,6 +19,7 @@ import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests for various services involved in the version compatibility feature, including ContextVersionService, 
@@ -33,32 +31,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestServices0010 extends SapphireTestCase
 {
-    private TestServices0010( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestServices0010" );
-
-        suite.addTest( new TestServices0010( "testVersionCompatibility" ) );
-        suite.addTest( new TestServices0010( "testDynamicVersionCompatibility" ) );
-        suite.addTest( new TestServices0010( "testCustomVersionCompatibilityService" ) );
-        suite.addTest( new TestServices0010( "testCascadingVersionCompatibility" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityValidationServiceForValue" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityValidationServiceForElement" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityValidationServiceForList" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityEnablementServiceForValue" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityEnablementServiceForElement" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityEnablementServiceForElementImplied" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityEnablementServiceForList" ) );
-        suite.addTest( new TestServices0010( "testVersionCompatibilityFactsService" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testVersionCompatibility() throws Exception
     {
@@ -110,6 +83,8 @@ public final class TestServices0010 extends SapphireTestCase
         assertVersionCompatibility( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY_DYNAMIC, true );
     }
     
+    @Test
+    
     public void testDynamicVersionCompatibility() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
@@ -131,6 +106,8 @@ public final class TestServices0010 extends SapphireTestCase
         assertVersionCompatibility( root, RootElement.PROP_VALUE_SINCE_DYNAMIC, false );
         assertVersionCompatibility( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY_DYNAMIC, false );
     }
+    
+    @Test
     
     public void testCustomVersionCompatibilityService() throws Exception
     {
@@ -160,6 +137,8 @@ public final class TestServices0010 extends SapphireTestCase
         
         assertVersionCompatibility( root, RootElement.PROP_VALUE_VERSION_COMPATIBILITY_SERVICE, true );
     }
+    
+    @Test
     
     public void testCascadingVersionCompatibility() throws Exception
     {
@@ -231,6 +210,8 @@ public final class TestServices0010 extends SapphireTestCase
         assertVersionCompatibility( listElementChild4, ChildElement.PROP_VALUE_SINCE, true );
     }
     
+    @Test
+    
     public void testVersionCompatibilityValidationServiceForValue() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
@@ -250,6 +231,8 @@ public final class TestServices0010 extends SapphireTestCase
         root.setValueSince( null );
         assertValidationOk( root.getValueSince() );
     }
+    
+    @Test
     
     public void testVersionCompatibilityValidationServiceForElement() throws Exception
     {
@@ -271,6 +254,8 @@ public final class TestServices0010 extends SapphireTestCase
         assertValidationOk( root.getChild() );
     }
     
+    @Test
+    
     public void testVersionCompatibilityValidationServiceForList() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
@@ -291,6 +276,8 @@ public final class TestServices0010 extends SapphireTestCase
         assertValidationOk( root.getChildren() );
     }
     
+    @Test
+    
     public void testVersionCompatibilityEnablementServiceForValue() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
@@ -307,6 +294,8 @@ public final class TestServices0010 extends SapphireTestCase
         root.setVersion( "1.0" );
         assertFalse( property.enabled() );
     }
+    
+    @Test
     
     public void testVersionCompatibilityEnablementServiceForElement() throws Exception
     {
@@ -325,6 +314,8 @@ public final class TestServices0010 extends SapphireTestCase
         assertFalse( property.enabled() );
     }
 
+    @Test
+    
     public void testVersionCompatibilityEnablementServiceForElementImplied() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
@@ -341,6 +332,8 @@ public final class TestServices0010 extends SapphireTestCase
         root.setVersion( "1.0" );
         assertFalse( property.enabled() );
     }
+    
+    @Test
     
     public void testVersionCompatibilityEnablementServiceForList() throws Exception
     {
@@ -359,6 +352,8 @@ public final class TestServices0010 extends SapphireTestCase
         assertFalse( property.enabled() );
     }
 
+    @Test
+    
     public void testVersionCompatibilityFactsService() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
