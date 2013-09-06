@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.tests.binding.list.LayeredListPropertyBindingTests;
 import org.eclipse.sapphire.tests.conversion.ConversionTests;
+import org.eclipse.sapphire.tests.index.IndexTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.misc.TestMisc;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
@@ -51,6 +52,7 @@ public final class SapphireTestSuite extends TestCase
         suite.addTest( WorkspaceTestSuite.suite() );
         suite.addTest( ServicesTestSuite.suite() );
         suite.addTest( UniqueValueTests.suite() );
+        suite.addTest( IndexTests.suite() );
         
         return suite;
     }

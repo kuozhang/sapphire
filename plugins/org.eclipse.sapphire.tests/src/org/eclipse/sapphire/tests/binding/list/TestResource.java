@@ -14,13 +14,13 @@ package org.eclipse.sapphire.tests.binding.list;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.Counter;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.LayeredListPropertyBinding;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.Resource;
-import org.eclipse.sapphire.tests.Counter;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

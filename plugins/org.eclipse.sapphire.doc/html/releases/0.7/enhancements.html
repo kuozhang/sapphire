@@ -53,6 +53,7 @@
     <li><a href="#Key-ConsolidatedConversions">Consolidated Conversions</a></li>
     <li><a href="#Key-ExtensiblePersistentState">Extensible Persistent State</a></li>
     <li><a href="#Key-ImprovedJavaLocalization">Improved Localization for Java Code</a></li>
+    <li><a href="#Key-ListIndexFacility">List Index Facility</a></li>
   </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
@@ -602,6 +603,31 @@ mustNotBeLargerThanMessage = <span class="unaffected">Value must not be larger t
     </td>
   </tr>
 </table>
+
+
+<h2><a name="Key-ListIndexFacility">List Index Facility</a></h2>
+
+<p>The scalability and performance of some features can benefit from constant time lookup of list entries based on the
+value of a member property.</p>
+
+<p>A list can have one or more indexes that are created on first request. Once created, an index is shared by all consumers
+of the list and updates itself automatically. The index can also notify listeners when it changes.</p>
+
+<pre class="source-code"><code>Index&lt;T extends Element>
+{
+    ElementList&lt;T> list()
+    ValueProperty property()
+    T element( String key )
+    Set&lt;T> elements( String key )
+    attach( Listener listener )
+    detach( Listener listener )
+}
+
+<font color="#888888">ElementList&lt;T extends Element>
+{</font>
+    Index&lt;T> index( ValueProperty property )
+    Index&lt;T> index( String property )
+<font color="#888888">}</font></code></pre>
 
 
 <h2><a name="Core"><a name="Core-Element">Element</a></a></h2>

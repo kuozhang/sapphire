@@ -14,9 +14,9 @@ package org.eclipse.sapphire.tests.binding.list;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.Counter;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
-import org.eclipse.sapphire.tests.Counter;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 /**
@@ -54,32 +54,32 @@ public final class LayeredListPropertyBindingTests extends TestExpr
         counter.reset();
         
         list.refresh();
-        assertEquals( 1, counter.value() );
+        assertEquals( 1, counter.read() );
         counter.reset();
         
         list.insert();
-        assertEquals( 1, counter.value() );
+        assertEquals( 1, counter.read() );
         counter.reset();
 
         list.remove( 0 );
-        assertEquals( 1, counter.value() );
+        assertEquals( 1, counter.read() );
         counter.reset();
         
         final Element a = list.insert();
         final Element b = list.insert();
-        assertEquals( 2, counter.value() );
+        assertEquals( 2, counter.read() );
         counter.reset();
         
         list.moveDown( a );
-        assertEquals( 1, counter.value() );
+        assertEquals( 1, counter.read() );
         counter.reset();
         
         list.moveUp( a );
-        assertEquals( 1, counter.value() );
+        assertEquals( 1, counter.read() );
         counter.reset();
         
         list.move( b, 0 );
-        assertEquals( 1, counter.value() );
+        assertEquals( 1, counter.read() );
         counter.reset();
     }
 

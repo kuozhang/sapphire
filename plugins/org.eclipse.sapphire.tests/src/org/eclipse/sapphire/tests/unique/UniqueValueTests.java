@@ -44,7 +44,8 @@ public final class UniqueValueTests extends SapphireTestCase
         suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10" ) );
         suite.addTest( new UniqueValueTests( "testUniqueValuePerformance100" ) );
         suite.addTest( new UniqueValueTests( "testUniqueValuePerformance1000" ) );
-        //suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10000" ) );
+        suite.addTest( new UniqueValueTests( "testUniqueValuePerformance10000" ) );
+        suite.addTest( new UniqueValueTests( "testUniqueValuePerformance100000" ) );
         
         return suite;
     }
@@ -86,6 +87,11 @@ public final class UniqueValueTests extends SapphireTestCase
         testUniqueValuePerformance( 10000 );
     }
     
+    public void testUniqueValuePerformance100000() throws Exception
+    {
+        testUniqueValuePerformance( 100000 );
+    }
+    
     private void testUniqueValuePerformance( final int entries ) throws Exception
     {
         final Counter counter = Counter.find( UniqueValueValidationService.class );
@@ -103,13 +109,13 @@ public final class UniqueValueTests extends SapphireTestCase
         
         element.getList().get( 0 ).setValue( "a" );
         element.validation();
-        assertEquals( entries, counter.read() );
+        assertEquals( entries + 1, counter.read() );
         
         counter.reset();
         
         element.getList().get( 0 ).setValue( "9" );
         element.validation();
-        assertEquals( entries, counter.read() );
+        assertEquals( entries + 1, counter.read() );
     }
     
     private String generateTestData( final int entries )

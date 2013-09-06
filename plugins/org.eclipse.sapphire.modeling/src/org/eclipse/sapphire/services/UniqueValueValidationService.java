@@ -12,20 +12,15 @@
 package org.eclipse.sapphire.services;
 
 import org.eclipse.sapphire.Counter;
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
-import org.eclipse.sapphire.FilteredListener;
-import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Index;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
-import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 
 /**
@@ -42,29 +37,27 @@ public class UniqueValueValidationService extends ValidationService
         LocalizableText.init( UniqueValueValidationService.class );
     }
     
-    private ModelPath path;
+    private Index<?> index;
     private Listener listener;
     
     @Override
     protected void initValidationService()
     {
-        final Element element = context( Element.class );
+        final Value<?> value = context( Value.class );
+        final ElementList<?> list = (ElementList<?>) value.element().parent();
         
-        this.path = new ModelPath( "#/" + context( PropertyDef.class ).name() );
+        this.index = list.index( value.definition() );
         
-        this.listener = new FilteredListener<PropertyContentEvent>()
+        this.listener = new Listener()
         {
             @Override
-            protected void handleTypedEvent( final PropertyContentEvent event )
+            public void handle( final Event event )
             {
-                if( event.property().element() != element )
-                {
-                    refresh();
-                }
+                refresh();
             }
         };
         
-        element.attach( this.listener, this.path );
+        this.index.attach( this.listener );
     }
 
     @Override
@@ -90,29 +83,9 @@ public class UniqueValueValidationService extends ValidationService
     {
         final String str = value.text();
         
-        if( str != null )
+        if( str != null && this.index.elements( str ).size() > 1 )
         {
-            final Element element = value.element();
-            final ValueProperty property = value.definition();
-            final Property valueElementParent = element.parent();
-            
-            if( valueElementParent != null && valueElementParent.definition() instanceof ListProperty )
-            {
-                final ElementList<?> list = (ElementList<?>) valueElementParent;
-                
-                for( Element x : list )
-                {
-                    if( x != element )
-                    {
-                        final Value<?> xval = x.property( property );
-                        
-                        if( str.equals( xval.text() ) )
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
+            return false;
         }
         
         return true;
@@ -121,7 +94,10 @@ public class UniqueValueValidationService extends ValidationService
     @Override
     public void dispose()
     {
-        context( Element.class ).detach( this.listener, this.path );
+        this.index.detach( this.listener );
+        
+        this.index = null;
+        this.listener = null;
     }
     
 }
