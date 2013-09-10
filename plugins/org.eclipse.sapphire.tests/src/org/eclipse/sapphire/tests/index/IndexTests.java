@@ -15,7 +15,6 @@ import java.util.Set;
 
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Index;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.tests.EventLog;
 import org.eclipse.sapphire.tests.SapphireTestCase;
@@ -470,7 +469,7 @@ public final class IndexTests extends SapphireTestCase
     }
     
     /**
-     * Test {@link Index#attach(Listener)} with a null.
+     * Test {@link Index#attach(org.eclipse.sapphire.Listener)} with a null.
      */
     
     @Test( expected = IllegalArgumentException.class )
@@ -490,7 +489,7 @@ public final class IndexTests extends SapphireTestCase
     }
     
     /**
-     * Test {@link Index#attach(Listener)} when the list is disposed.
+     * Test {@link Index#attach(org.eclipse.sapphire.Listener)} when the list is disposed.
      */
     
     @Test( expected = IllegalStateException.class )
@@ -513,7 +512,7 @@ public final class IndexTests extends SapphireTestCase
     }
     
     /**
-     * Test {@link Index#detach(Listener)} with a null.
+     * Test {@link Index#detach(org.eclipse.sapphire.Listener)} with a null.
      */
     
     @Test( expected = IllegalArgumentException.class )

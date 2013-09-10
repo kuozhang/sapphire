@@ -860,8 +860,6 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     
     private static final class FileSystemNodeComparator extends ViewerComparator 
     {
-        @SuppressWarnings( "unchecked" )
-        
         public int compare( final Viewer viewer, 
                             final Object obj1, 
                             final Object obj2 ) 
@@ -889,8 +887,6 @@ public class RelativePathBrowseActionHandler extends SapphireBrowseActionHandler
     
     public static final class ResourceComparator extends ViewerComparator 
     {
-        @SuppressWarnings( "unchecked" )
-        
         public int compare( final Viewer viewer, 
                             final Object obj1, 
                             final Object obj2 ) 
