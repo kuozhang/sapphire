@@ -17,6 +17,7 @@ import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -75,6 +76,7 @@ public final class UniqueValueTests extends SapphireTestCase
     }
     
     @Test
+    @Ignore // Issues with exceeding GC overhead limit on some configurations.
     
     public void testUniqueValuePerformance100000() throws Exception
     {
