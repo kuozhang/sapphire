@@ -13,22 +13,38 @@ package org.eclipse.sapphire.services;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public abstract class DataService<T> extends Service
 {
-    private T data;
+    private static final Object INITIAL_DATA = new Object();
+    
+    @Text( "Reentrant call detected during refresh in {0}." )
+    private static LocalizableText reentrantRefreshMessage;
+    
+    @Text( "{0} data accessed prior to service initialization." )
+    private static LocalizableText dataAccessedPriorToInitMessage;
+    
+    static
+    {
+        LocalizableText.init( DataService.class );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private T data = (T) INITIAL_DATA;
+    
     private boolean initialized;
-    private boolean readPriorToInit;
+    private boolean refreshing;
     
     @Override
     protected final void init()
     {
         initDataService();
-        
-        refresh();
         
         this.initialized = true;
     }
@@ -37,13 +53,16 @@ public abstract class DataService<T> extends Service
     {
     }
     
-    // TODO: Make final when override to call refresh() workaround is no longer necessary.
-    
-    public T data()
+    public final T data()
     {
         if( ! this.initialized )
         {
-            this.readPriorToInit = true;
+            throw new IllegalStateException( dataAccessedPriorToInitMessage.format( getClass().getSimpleName() ) );
+        }
+        
+        if( this.data == INITIAL_DATA )
+        {
+            refresh();
         }
         
         return this.data;
@@ -53,16 +72,38 @@ public abstract class DataService<T> extends Service
     
     protected final void refresh()
     {
-        final T newData = compute();
-        
-        if( ! equal( this.data, newData ) )
+        if( this.refreshing )
         {
-            this.data = newData;
+            throw new IllegalStateException( reentrantRefreshMessage.format( getClass().getSimpleName() ) );
+        }
+        
+        this.refreshing = true;
+        
+        boolean broadcast = false;
+        
+        try
+        {
+            final T newData = compute();
             
-            if( this.initialized || this.readPriorToInit )
+            if( this.data == INITIAL_DATA )
             {
-                broadcast();
+                this.data = newData;
             }
+            else if( ! equal( this.data, newData ) )
+            {
+                this.data = newData;
+                
+                broadcast = true;
+            }
+        }
+        finally
+        {
+            this.refreshing = false;
+        }
+        
+        if( broadcast )
+        {
+            broadcast();
         }
     }
 

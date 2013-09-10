@@ -18,9 +18,7 @@ import org.eclipse.sapphire.tests.modeling.misc.t0005.TestModelingMisc0005;
 import org.eclipse.sapphire.tests.modeling.misc.t0007.TestModelingMisc0007;
 import org.eclipse.sapphire.tests.modeling.misc.t0008.TestModelingMisc0008;
 import org.eclipse.sapphire.tests.modeling.misc.t0010.TestModelingMisc0010;
-import org.eclipse.sapphire.tests.modeling.misc.t0011.TestModelingMisc0011;
 import org.eclipse.sapphire.tests.modeling.misc.t0012.ModelElementCopyTests;
-import org.eclipse.sapphire.tests.modeling.misc.t0013.TestModelingMisc0013;
 import org.eclipse.sapphire.tests.modeling.misc.t0014.TestModelingMisc0014;
 import org.eclipse.sapphire.tests.modeling.misc.t0015.TestModelingMisc0015;
 import org.eclipse.sapphire.tests.modeling.misc.t0016.TestModelingMisc0016;
@@ -47,9 +45,7 @@ import org.junit.runners.Suite.SuiteClasses;
         TestModelingMisc0007.class,
         TestModelingMisc0008.class,
         TestModelingMisc0010.class,
-        TestModelingMisc0011.class,
         ModelElementCopyTests.class,
-        TestModelingMisc0013.class,
         TestModelingMisc0014.class,
         TestModelingMisc0015.class,
         TestModelingMisc0016.class,
