@@ -9,9 +9,10 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Counter;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Index;
@@ -22,12 +23,16 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import org.eclipse.sapphire.services.ServiceCondition;
+import org.eclipse.sapphire.services.ServiceContext;
+import org.eclipse.sapphire.services.ValidationService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class UniqueValueValidationService extends ValidationService
+public final class UniqueValueValidationService extends ValidationService
 {
     @Text( "Unique {0} required. Another occurrence of \"{1}\" was found." )
     private static LocalizableText message; 
@@ -66,29 +71,16 @@ public class UniqueValueValidationService extends ValidationService
         Counter.increment( UniqueValueValidationService.class );
 
         final Value<?> value = context( Value.class );
+        final String text = value.text();
         
-        if( isUniqueValue( value ) == false )
+        if( text != null && this.index.elements( text ).size() > 1 )
         {
-            final ValueProperty property = value.definition();
-            final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
-            final String str = value.text();
-            final String msg = message.format( label, str );
+            final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
+            final String msg = message.format( label, text );
             return Status.createErrorStatus( msg );
         }
         
         return Status.createOkStatus();
-    }
-    
-    protected boolean isUniqueValue( final Value<?> value )
-    {
-        final String str = value.text();
-        
-        if( str != null && this.index.elements( str ).size() > 1 )
-        {
-            return false;
-        }
-        
-        return true;
     }
 
     @Override
@@ -98,6 +90,18 @@ public class UniqueValueValidationService extends ValidationService
         
         this.index = null;
         this.listener = null;
+    }
+    
+    public static final class Condition extends ServiceCondition
+    {
+        @Override
+        public boolean applicable( final ServiceContext context )
+        {
+            final ValueProperty property = context.find( ValueProperty.class );
+            final Element element = context.find( Element.class );
+            return ( property != null && property.hasAnnotation( NoDuplicates.class ) && element.parent() instanceof ElementList );
+        }
+        
     }
     
 }

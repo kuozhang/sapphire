@@ -12,12 +12,11 @@
 package org.eclipse.sapphire.tests.unique;
 
 import org.eclipse.sapphire.Counter;
+import org.eclipse.sapphire.internal.UniqueValueValidationService;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.services.UniqueValueValidationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -76,7 +75,6 @@ public final class UniqueValueTests extends SapphireTestCase
     }
     
     @Test
-    @Ignore
     
     public void testUniqueValuePerformance100000() throws Exception
     {
