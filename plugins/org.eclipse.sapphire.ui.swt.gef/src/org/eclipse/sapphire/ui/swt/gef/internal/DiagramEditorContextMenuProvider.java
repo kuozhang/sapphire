@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.gef.ContextMenuProvider;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -31,15 +32,16 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionBridge;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionHandlerBridge;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionSystemPartBridge;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorPageEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -64,38 +66,46 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 	@Override
 	public void buildContextMenu( final IMenuManager menuManager ) 
 	{
-        final ISapphirePart part;
+		final ISapphirePart part;
+		final DiagramPresentation presentation;
+        final GraphicalEditPart editPart;
         final String context;
 
-        final List<ISapphirePart> selection = this.editor.getSelectedParts();
+        final List<GraphicalEditPart> selection = this.editor.getSelectedEditParts();
 		
 		if( selection.size() == 1 )
 		{
-			part = selection.get( 0 );
+			editPart = selection.get( 0 );
 			
-			if( part instanceof SapphireDiagramEditorPagePart )
+			if( editPart instanceof SapphireDiagramEditorPageEditPart )
 			{
 				context = SapphireActionSystem.CONTEXT_DIAGRAM_EDITOR;
+				presentation = ((SapphireDiagramEditorPageEditPart)editPart).getPresentation();
 			}
-			else if( part instanceof DiagramNodePart )
+			else if( editPart instanceof DiagramNodeEditPart )
 			{
 				context = SapphireActionSystem.CONTEXT_DIAGRAM_NODE;
+				presentation = ((DiagramNodeEditPart)editPart).getPresentation();
 			}
-			else if (part instanceof ShapePart)
+			else if (editPart instanceof ShapeEditPart)
 			{
 				context = SapphireActionSystem.CONTEXT_DIAGRAM_NODE_SHAPE;
+				presentation = ((ShapeEditPart)editPart).getShapePresentation();
 			}
-			else if( part instanceof DiagramConnectionPart )
+			else if( editPart instanceof DiagramConnectionEditPart )
 			{
 				context = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
+				presentation = ((DiagramConnectionEditPart)editPart).getPresentation();
 			}
 			else
 			{
 			    throw new IllegalStateException();
 			}
+			part = presentation.part();
 		}
 		else if( selection.size() > 1 )
 		{
+			presentation = this.editor.getDiagramPresentation();
 		    part = this.editor.getPart();
 		    context = SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS;
 		}
@@ -114,7 +124,7 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 		        continue;
 		    }
 		    
-		    if (skipMultipleConnectionAction(selection, context, action)) 
+		    if (skipMultipleConnectionAction(this.editor.getSelectedParts(), context, action)) 
 		    {
 		    	continue;
 		    }
@@ -138,7 +148,7 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 	            
 	            if( bridge == null )
 	            {
-	                bridge = new ActionBridge( diagramRenderingContext, action );
+	                bridge = new ActionBridge( presentation, action );
 	            }
 	            
 	            updatedCache.put( action, bridge );
@@ -160,7 +170,7 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
                     
                     if( bridge == null )
                     {
-                        bridge = new ActionHandlerBridge( diagramRenderingContext, handler );
+                        bridge = new ActionHandlerBridge( presentation, handler );
                     }
                     
                     updatedCache.put( handler, bridge );

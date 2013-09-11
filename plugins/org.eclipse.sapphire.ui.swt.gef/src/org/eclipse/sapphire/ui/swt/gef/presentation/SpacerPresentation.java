@@ -11,9 +11,11 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.editor.SpacerPart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.SpacerFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -23,9 +25,10 @@ public class SpacerPresentation extends ShapePresentation
 {
 	private SpacerPart spacerPart;
 	
-	public SpacerPresentation(ShapePresentation parent, SpacerPart spacerPart, DiagramConfigurationManager configManager)
+	public SpacerPresentation(DiagramPresentation parent, SpacerPart spacerPart,
+							DiagramResourceCache resourceCache)
 	{
-		super(parent, spacerPart, configManager);
+		super(parent, spacerPart, resourceCache);
 		this.spacerPart = spacerPart;
 	}
 	
@@ -42,5 +45,16 @@ public class SpacerPresentation extends ShapePresentation
 	public Point getMaximumSize()
 	{
 		return this.spacerPart.getMaximumSize();
+	}
+	
+	@Override
+	public void render()
+	{
+		IFigure figure = null;
+		if (visible())
+		{
+			figure = new SpacerFigure(this);
+		}
+		setFigure(figure);
 	}
 }

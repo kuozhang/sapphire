@@ -41,6 +41,7 @@ import org.eclipse.sapphire.ui.swt.gef.policies.DiagramConnectionBendpointEditPo
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramConnectionEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramConnectionEndpointEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramConnectionLabelEditPolicy;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramConnectionPresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -112,6 +113,11 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 	
 	public DiagramConnectionModel getCastedModel() {
 		return (DiagramConnectionModel)getModel();
+	}
+	
+	public DiagramConnectionPresentation getPresentation()
+	{
+		return getCastedModel().getPresentation();
 	}
 	
 	public void updateStyle(PolylineConnection connection) {

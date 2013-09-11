@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,10 +30,10 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	private ShapePresentation separator;
 	private int index;
 	
-	public ShapeFactoryPresentation(ShapePresentation parent, ShapeFactoryPart shapeFactoryPart,
-			DiagramConfigurationManager configManager)
+	public ShapeFactoryPresentation(DiagramPresentation parent, ShapeFactoryPart shapeFactoryPart,
+			DiagramResourceCache resourceCache)
 	{
-		super(parent, shapeFactoryPart, configManager);
+		super(parent, shapeFactoryPart, resourceCache);
 		
 		this.children = new ArrayList<ShapePresentation>();
 		if (shapeFactoryPart.visible())
@@ -41,13 +41,13 @@ public class ShapeFactoryPresentation extends ShapePresentation
 			ShapePresentation childPresentation = null;
 			for (ShapePart shapePart : shapeFactoryPart.getChildren())
 			{
-				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
+				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, resourceCache);
 				this.children.add(childPresentation);
 			}
 		}
 		if (shapeFactoryPart.getSeparator() != null)
 		{
-			this.separator = ShapePresentationFactory.createShapePresentation(this, shapeFactoryPart.getSeparator(), configManager);
+			this.separator = ShapePresentationFactory.createShapePresentation(this, shapeFactoryPart.getSeparator(), resourceCache);
 			this.separator.setSeparator(true);
 		}
 	}
@@ -66,8 +66,9 @@ public class ShapeFactoryPresentation extends ShapePresentation
 			for (ShapePart shapePart : shapeFactoryPart.getChildren())
 			{
 				ShapePresentation childPresentation = getChildShapePresentation(shapePart);
-				if (childPresentation == null) {
-					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getConfigurationManager());
+				if (childPresentation == null) 
+				{
+					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getResourceCache());
 				}
 				refreshedChildren.add(childPresentation);
 			}		

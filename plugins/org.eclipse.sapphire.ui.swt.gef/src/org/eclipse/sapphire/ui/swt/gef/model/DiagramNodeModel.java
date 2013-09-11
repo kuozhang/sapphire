@@ -22,8 +22,8 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel.ShapeModelFactory;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
-import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation.ShapePresentationFactory;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -40,18 +40,17 @@ public class DiagramNodeModel extends DiagramModelBase {
 	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
 	private DiagramModel parent;
-    private DiagramNodePart part;
+    private DiagramNodePresentation nodePresentation;
 	private List<DiagramConnectionModel> sourceConnections = new ArrayList<DiagramConnectionModel>();
 	private List<DiagramConnectionModel> targetConnections = new ArrayList<DiagramConnectionModel>();
 	private ShapePresentation shapePresentation;
 	private ShapeModel shapeModel;
 	
-	public DiagramNodeModel(DiagramModel parent, DiagramNodePart part) 
+	public DiagramNodeModel(DiagramModel parent, DiagramNodePresentation nodePresentation) 
 	{
 		this.parent = parent;
-		this.part = part;
-		ShapePart shapePart = this.part.getShapePart();
-		this.shapePresentation = ShapePresentationFactory.createShapePresentation(null, shapePart, parent.getConfigurationManager());
+		this.nodePresentation = nodePresentation;
+		this.shapePresentation = this.nodePresentation.getShapePresentation();
 		this.shapeModel = ShapeModelFactory.createShapeModel(this, null, this.shapePresentation);
 	}
 	
@@ -59,12 +58,17 @@ public class DiagramNodeModel extends DiagramModelBase {
 		return parent;
 	}
 
+	public DiagramNodePresentation getNodePresentation()
+	{
+		return this.nodePresentation;
+	}
+	
 	public SapphirePart getSapphirePart() {
 		return getModelPart();
 	}
 
 	public DiagramNodePart getModelPart() {
-		return part;
+		return this.nodePresentation.part();
 	}
 		
 	public String getLabel() 

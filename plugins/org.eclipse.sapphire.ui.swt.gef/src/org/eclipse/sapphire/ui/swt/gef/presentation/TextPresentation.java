@@ -11,11 +11,12 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -23,9 +24,9 @@ import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 
 public class TextPresentation extends ShapePresentation 
 {
-	public TextPresentation(ShapePresentation parent, TextPart textPart, DiagramConfigurationManager configManager)
+	public TextPresentation(DiagramPresentation parent, TextPart textPart, DiagramResourceCache resourceCache)
 	{
-		super(parent, textPart, configManager);
+		super(parent, textPart, resourceCache);
 	}
 	
 	public Color getTextColor()
@@ -64,4 +65,16 @@ public class TextPresentation extends ShapePresentation
 	{
 		return (TextPart) super.part();
 	}
+	
+	@Override
+    public void render()
+    {
+		IFigure figure = null;
+		if (visible())
+		{
+			figure = new TextFigure(getResourceCache(), this);
+		}
+		setFigure(figure);
+    }
+	
 }

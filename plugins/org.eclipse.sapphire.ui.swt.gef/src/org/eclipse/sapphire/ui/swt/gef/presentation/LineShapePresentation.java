@@ -11,11 +11,13 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.LinePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -23,9 +25,9 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 public class LineShapePresentation extends ShapePresentation 
 {
-	public LineShapePresentation(ShapePresentation parent, LinePart linePart, DiagramConfigurationManager configManager)
+	public LineShapePresentation(DiagramPresentation parent, LinePart linePart, DiagramResourceCache resourceCache)
 	{
-		super(parent, linePart, configManager);
+		super(parent, linePart, resourceCache);
 	}
 
 	@Override
@@ -54,4 +56,14 @@ public class LineShapePresentation extends ShapePresentation
 		return part().getStyle();
 	}
 	
+	@Override
+	public void render()
+	{
+		IFigure figure = null;
+		if (visible())
+		{
+			figure = new OrthogonalLineFigure(this, getResourceCache());
+		}
+		setFigure(figure);
+	}
 }

@@ -20,6 +20,7 @@ Export-Package: org.eclipse.sapphire.ui,
  org.eclipse.sapphire.ui.forms,
  org.eclipse.sapphire.ui.forms.swt,
  org.eclipse.sapphire.ui.forms.swt.presentation,
+ org.eclipse.sapphire.ui.forms.swt.presentation.internal,
  org.eclipse.sapphire.ui.internal,
  org.eclipse.sapphire.ui.listeners,
  org.eclipse.sapphire.ui.util

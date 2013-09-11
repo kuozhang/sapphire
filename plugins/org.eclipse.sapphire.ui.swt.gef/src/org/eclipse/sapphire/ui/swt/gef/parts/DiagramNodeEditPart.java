@@ -58,6 +58,7 @@ import org.eclipse.sapphire.ui.swt.gef.policies.NodeEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLabelDirectEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.NodeLayoutEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ImagePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
@@ -81,10 +82,8 @@ public class DiagramNodeEditPart extends ShapeEditPart
     
     @Override
 	protected IFigure createFigure() {
-    	ShapePresentation shapePresentation = getCastedModel().getShapePresentation();
-    	return ShapeUtil.createFigureForShape(shapePresentation, getCastedModel().getDiagramModel().getResourceCache(),
-    			getConfigurationManager());
-    	
+    	getPresentation().render();
+    	return getPresentation().getFigure();
 	}
 
 	@Override
@@ -222,7 +221,7 @@ public class DiagramNodeEditPart extends ShapeEditPart
 				}
 				else
 				{
-					Command cmd = new DoubleClickNodeCommand(this, getCastedModel().getModelPart());
+					Command cmd = new DoubleClickNodeCommand(getCastedModel().getNodePresentation());
 					// If executing the command from edit domain's command stack, we'd get an 
 					// invalid cursor before the double click cmd is executed.
 					// Bypassing the command stack
@@ -254,6 +253,10 @@ public class DiagramNodeEditPart extends ShapeEditPart
 		return (DiagramNodeModel)getModel();
 	}
 	
+	public DiagramNodePresentation getPresentation()
+	{
+		return getCastedModel().getNodePresentation();
+	}
 
 	@Override
 	protected void refreshVisuals() 

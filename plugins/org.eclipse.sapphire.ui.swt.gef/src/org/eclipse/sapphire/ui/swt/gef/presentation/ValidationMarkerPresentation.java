@@ -46,8 +46,8 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -92,10 +92,10 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	private final List<PropertyEditorAssistContributor> contributors;
 	private Listener validationListener;
 	
-	public ValidationMarkerPresentation(ShapePresentation parent, ValidationMarkerPart validationMarkerPart, 
-			DiagramConfigurationManager configManager)
+	public ValidationMarkerPresentation(DiagramPresentation parent, ValidationMarkerPart validationMarkerPart, 
+			DiagramResourceCache resourceCache)
 	{
-		super(parent, validationMarkerPart, configManager);
+		super(parent, validationMarkerPart, resourceCache);
 		DiagramNodePart nodePart = validationMarkerPart.nearest(DiagramNodePart.class);
 		this.imageCache = nodePart.getSwtResourceCache();
 		
@@ -188,6 +188,13 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	{
 		part().detach(this.validationListener);
 	}
+	
+	@Override
+    public void render()
+    {
+		refresh();
+		setFigure(this.validationMarkerFigure);
+    }
 	
 	private SapphirePart getContainerPart()
 	{

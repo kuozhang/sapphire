@@ -155,9 +155,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 		// Hook the cell editor's copy/paste actions to the actionBars so that
 		// they can
 		// be invoked via keyboard shortcuts.
-		actionBars = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().getActiveEditor().getEditorSite()
-				.getActionBars();
+		actionBars = this.diagramEditor.getEditorSite().getActionBars();
 		saveCurrentActions(actionBars);
 		actionHandler = new CellEditorActionHandler(actionBars);
 		actionHandler.addCellEditor(getCellEditor());
@@ -206,7 +204,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 	}
 
 	private void updateScaledFont(double zoom) {
-		if (cachedZoom == zoom)
+		if (cachedZoom == zoom || getCellEditor() == null)
 			return;
 		Font font = this.label.getFont();
 

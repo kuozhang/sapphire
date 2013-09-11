@@ -8,6 +8,7 @@
  * Contributors:
  *    Ling Hao - initial implementation and ongoing maintenance
  *    Konstantin Komissarchik - [381794] Cleanup needed in presentation code for diagram context menu
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.gef.model;
@@ -18,7 +19,6 @@ import java.util.List;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.Bounds;
-import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
@@ -30,10 +30,14 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramConnectionPresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPagePresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
 public class DiagramModel extends DiagramModelBase {
@@ -41,33 +45,27 @@ public class DiagramModel extends DiagramModelBase {
 	public final static String NODE_ADDED = "NODE_ADDED";
 	public final static String NODE_REMOVED = "NODE_REMOVED";
 
-	private SapphireDiagramEditorPagePart part;
-	private DiagramConfigurationManager configManager;
+	private DiagramPagePresentation diagramPresentation;
 	private List<DiagramNodeModel> nodes = new ArrayList<DiagramNodeModel>();
 	private List<DiagramConnectionModel> connections = new ArrayList<DiagramConnectionModel>();
 	
-	private DiagramResourceCache resourceCache;
-
-	public DiagramModel(SapphireDiagramEditorPagePart part, DiagramConfigurationManager configManager) {
-		this.part = part;
-		this.configManager = configManager;
-		this.resourceCache = new DiagramResourceCache();
+	public DiagramModel(DiagramPagePresentation diagramPresentation) {
+		this.diagramPresentation = diagramPresentation;
 
 		contructNodes();
 		constructConnections();
 	}
 	
-	public SapphirePart getSapphirePart() {
-		return getModelPart();
-	}
-
-	public SapphireDiagramEditorPagePart getModelPart() {
-		return this.part;
+	public DiagramPagePresentation getPresentation()
+	{
+		return this.diagramPresentation;
 	}
 	
-	public DiagramResourceCache getResourceCache() {
-		return resourceCache;
+	@Override
+	public SapphireDiagramEditorPagePart getSapphirePart() {
+		return (SapphireDiagramEditorPagePart)this.diagramPresentation.part();
 	}
+	
 
 	public List<DiagramNodeModel> getNodes() {
 		return nodes;
@@ -79,7 +77,7 @@ public class DiagramModel extends DiagramModelBase {
 	
 	public DiagramConfigurationManager getConfigurationManager()
 	{
-		return this.configManager;
+		return this.diagramPresentation.getConfigurationManager();
 	}
 	
 	public DiagramNodeModel getDiagramNodeModel(DiagramNodePart nodePart) {
@@ -101,7 +99,9 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	public void handleAddNode(DiagramNodePart nodePart) {
-		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePart);
+		// TODO DiagramPagePresentation should listen to the node add/delete events on the node templates.
+		DiagramNodePresentation nodePresentation = getPresentation().addNode(nodePart);
+		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePresentation);
 		
 		Bounds bounds = nodePart.getNodeBounds();
 		if (bounds.getX() < 0 && bounds.getY() < 0) {
@@ -174,21 +174,17 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 
-	private void contructNodes() {
-		for (DiagramNodeTemplate nodeTemplate : getModelPart().getNodeTemplates()) {
-			if (nodeTemplate.visible()) {
-				for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes()) {
-					if (nodePart.visible() && nodePart.getShapePart().visible()) {
-						nodes.add(new DiagramNodeModel(this, nodePart));
-					}
-				}
-			}
+	private void contructNodes() 
+	{
+		for (DiagramNodePresentation nodePresentation : getPresentation().getNodes())
+		{
+			nodes.add(new DiagramNodeModel(this, nodePresentation));
 		}
 	}
 	
 	private void constructConnections() {
 		// add the top level connections back to the diagram
-		for (DiagramConnectionTemplate connTemplate : this.part.getConnectionTemplates()) {
+		for (DiagramConnectionTemplate connTemplate : getSapphirePart().getConnectionTemplates()) {
 			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null)) {
 				addConnection(connPart);
 			}
@@ -196,7 +192,7 @@ public class DiagramModel extends DiagramModelBase {
 
 		// Add embedded connections. This needs to be done after all the nodes
 		// have been added.
-		for (DiagramNodeTemplate nodeTemplate : this.part.getNodeTemplates()) {
+		for (DiagramNodeTemplate nodeTemplate : getSapphirePart().getNodeTemplates()) {
 			// Bug 381795 - Connections do not show correctly when editor is started with connections hidden
 			if (nodeTemplate.visible()) {
 				DiagramEmbeddedConnectionTemplate embeddedConnTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
@@ -209,7 +205,7 @@ public class DiagramModel extends DiagramModelBase {
 		}
 
 		// Add Implicit connections
-		for (DiagramImplicitConnectionTemplate implicitConnTemplate : this.part.getImplicitConnectionTemplates()) {
+		for (DiagramImplicitConnectionTemplate implicitConnTemplate : getSapphirePart().getImplicitConnectionTemplates()) {
 			for (DiagramImplicitConnectionPart implicitConn : implicitConnTemplate.getImplicitConnections()) {
 				addConnection(implicitConn);
 			}
@@ -223,10 +219,13 @@ public class DiagramModel extends DiagramModelBase {
 		
 		Element endpoint1 = connPart.getEndpoint1();
 		Element endpoint2 = connPart.getEndpoint2();
-		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
-		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
+		DiagramNodePart nodePart1 = getSapphirePart().getDiagramNodePart(endpoint1);
+		DiagramNodePart nodePart2 = getSapphirePart().getDiagramNodePart(endpoint2);
 		if (nodePart1 != null && nodePart2 != null) {
-			DiagramConnectionModel connectionModel = new DiagramConnectionModel(this, connPart);
+			DiagramConnectionPresentation connPresentation = new DiagramConnectionPresentation(connPart, getPresentation(), 
+					getPresentation().shell(),
+					getConfigurationManager(), getResourceCache());
+			DiagramConnectionModel connectionModel = new DiagramConnectionModel(this, connPresentation);
 			connections.add(connectionModel);
 
 			DiagramNodeModel sourceNode = getDiagramNodeModel(nodePart1);
@@ -242,7 +241,7 @@ public class DiagramModel extends DiagramModelBase {
 				// But we still route the connection for the purpose of calculating next "fan position" correctly.
 				// See Bug 374793 - Additional bend points added to connection when visible-when condition on nodes change
 								
-				Point bendPoint = this.configManager.getConnectionRouter().route(connectionModel);
+				Point bendPoint = getConfigurationManager().getConnectionRouter().route(connectionModel);
 	        	if (bendPoint != null && connPart.getConnectionBendpoints().isEmpty()) 
 	        	{
 	        		List<org.eclipse.sapphire.ui.Point> bendPoints = new ArrayList<org.eclipse.sapphire.ui.Point>(1);
@@ -270,8 +269,13 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 	
+	public DiagramResourceCache getResourceCache()
+	{
+		return getPresentation().getResourceCache();
+	}
+	
 	private void removeConnection(DiagramConnectionModel connectionModel) {
-		this.configManager.getConnectionRouter().removeConnectionFromCache(connectionModel);
+		getConfigurationManager().getConnectionRouter().removeConnectionFromCache(connectionModel);
 
 		DiagramNodeModel sourceNode = connectionModel.getSourceNode();
 		DiagramNodeModel targetNode = connectionModel.getTargetNode();
@@ -298,11 +302,7 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	public SapphireDiagramEditor getSapphireDiagramEditor() {
-		return this.configManager.getDiagramEditor();
-	}
-
-	public void dispose() {
-		resourceCache.dispose();
+		return getConfigurationManager().getDiagramEditor();
 	}
 	
 }

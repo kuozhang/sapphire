@@ -20,11 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionLayer;
-import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FreeformLayer;
-import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.EditPolicy;
@@ -41,6 +37,8 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramXYLayoutEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.SapphireSnapFeedbackPolicy;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPagePresentation;
 import org.eclipse.swt.SWT;
 
 /**
@@ -59,13 +57,22 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 	public DiagramConfigurationManager getConfigurationManager() {
 		return this.configManager;
 	}
-	
-	@Override
-	protected IFigure createFigure() {
-		Figure f = new FreeformLayer();
-		f.setBorder(new MarginBorder(3));
-		f.setLayoutManager(new FreeformLayout());
 
+	public DiagramPagePresentation getPresentation()
+	{
+		if (getModel() instanceof DiagramModel) {
+			DiagramModel diagramModel = (DiagramModel)getModel();
+			return diagramModel.getPresentation();
+		}
+		return null;
+	}
+
+	@Override
+	protected IFigure createFigure() 
+	{
+		getPresentation().render();
+		IFigure f = getPresentation().getFigure();
+ 
 		// Create the static router for the connection layer
 		ConnectionLayer connLayer = (ConnectionLayer) getLayer(LayerConstants.CONNECTION_LAYER);
 		connLayer.setConnectionRouter(new ShortestPathConnectionRouter(f));
@@ -73,7 +80,7 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 
 		return f;
 	}
-
+	
 	@Override
 	protected void createEditPolicies() {
 		// disallows the removal of this edit part from its parent
@@ -81,8 +88,8 @@ public class SapphireDiagramEditorPageEditPart extends AbstractGraphicalEditPart
 
 		// handles constraint changes (e.g. moving and/or resizing) of model
 		// elements and creation of new model elements
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramXYLayoutEditPolicy(getCastedModel()));
-		installEditPolicy("Snap Feedback", new SapphireSnapFeedbackPolicy(getCastedModel().getResourceCache())); //$NON-NLS-1$
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramXYLayoutEditPolicy(getCastedModel().getPresentation()));
+		installEditPolicy("Snap Feedback", new SapphireSnapFeedbackPolicy(getPresentation().getResourceCache())); //$NON-NLS-1$
 	}
 	
 	@Override

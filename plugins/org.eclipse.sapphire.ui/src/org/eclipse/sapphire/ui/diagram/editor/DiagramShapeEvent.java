@@ -17,7 +17,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramShapeEvent extends DiagramNodeEvent 
+public class DiagramShapeEvent extends DiagramPartEvent 
 {
     public static enum ShapeEventType
     {

@@ -21,23 +21,23 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class CreateNodeCommand extends Command {
-	
+public class CreateNodeCommand extends Command 
+{
+	private DiagramPresentation diagramPresentation;
 	private DiagramNodeTemplate nodeTemplate;
 	private Point location;
 	IConfigurationManagerHolder configHolder;
 
-	public CreateNodeCommand(DiagramModel diagramModel, IConfigurationManagerHolder configHolder,
+	public CreateNodeCommand(DiagramPresentation diagramPresentation, IConfigurationManagerHolder configHolder,
 			DiagramNodeTemplate nodeTemplate, Point location) {
+		this.diagramPresentation = diagramPresentation;
 		this.configHolder = configHolder;
 		this.nodeTemplate = nodeTemplate;
 		this.location = location;
@@ -57,10 +57,8 @@ public class CreateNodeCommand extends Command {
 				DiagramNodeAddActionHandler nodeAddHandler = (DiagramNodeAddActionHandler)handler;
 				if (nodeAddHandler.getNodeTemplate().equals(this.nodeTemplate))
 				{
-					DiagramConfigurationManager configManager = this.configHolder.getConfigurationManager();
-					DiagramRenderingContext ctx = configManager.getDiagramRenderingContextCache().get(editorPart);
 					editorPart.setMouseLocation(this.location.x, this.location.y);
-					nodeAddHandler.execute(ctx);
+					nodeAddHandler.execute(this.diagramPresentation);
 					break;
 				}
 			}

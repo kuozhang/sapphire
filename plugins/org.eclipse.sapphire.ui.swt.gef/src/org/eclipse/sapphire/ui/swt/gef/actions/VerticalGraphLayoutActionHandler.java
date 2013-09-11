@@ -13,9 +13,9 @@ package org.eclipse.sapphire.ui.swt.gef.actions;
 
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.layout.VerticalGraphLayout;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -26,8 +26,8 @@ public class VerticalGraphLayoutActionHandler extends SapphireActionHandler
 	@Override
 	protected Object run( final Presentation context ) 
 	{
-		DiagramRenderingContext diagramCtx = (DiagramRenderingContext)context;
-		SapphireDiagramEditor diagramEditor = diagramCtx.getDiagramEditor();
+		DiagramPresentation diagramPresentation = (DiagramPresentation)context;
+		SapphireDiagramEditor diagramEditor = diagramPresentation.getConfigurationManager().getDiagramEditor();
 		new VerticalGraphLayout().layout(diagramEditor);
 		
 		return null;

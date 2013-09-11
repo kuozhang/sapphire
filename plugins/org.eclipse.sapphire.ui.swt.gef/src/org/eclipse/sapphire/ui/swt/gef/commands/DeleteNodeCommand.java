@@ -14,8 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -26,26 +25,25 @@ public class DeleteNodeCommand extends Command
 	
     private static final String DELETE_ACTION_ID = "Sapphire.Delete";
 
-    private DiagramNodePart nodePart;
+    private DiagramNodePresentation nodePresentation;
 
-	public DeleteNodeCommand(DiagramNodePart part) 
+	public DeleteNodeCommand(DiagramNodePresentation nodePresentation) 
 	{
-		this.nodePart = part;
+		this.nodePresentation = nodePresentation;
 	}
 
 	@Override
 	public boolean canExecute() 
 	{
-		SapphireActionHandler deleteActionHandler = this.nodePart.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
+		SapphireActionHandler deleteActionHandler = this.nodePresentation.part().getAction(DELETE_ACTION_ID).getFirstActiveHandler();
 		return deleteActionHandler.isEnabled();
 	}
 		
 	@Override
 	public void execute() 
 	{
-        SapphireActionHandler deleteActionHandler = this.nodePart.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
-        SapphireRenderingContext renderingCtx = new SapphireRenderingContext(this.nodePart, null);
-        deleteActionHandler.execute(renderingCtx);		
+        SapphireActionHandler deleteActionHandler = this.nodePresentation.part().getAction(DELETE_ACTION_ID).getFirstActiveHandler();
+        deleteActionHandler.execute(this.nodePresentation);		
 		
 	}
 	

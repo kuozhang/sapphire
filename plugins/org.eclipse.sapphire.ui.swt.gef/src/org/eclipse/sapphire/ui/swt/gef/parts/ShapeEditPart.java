@@ -32,8 +32,8 @@ import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ContainerShapePresentation;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -102,10 +102,10 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	{
 		ShapeModel shapeModel = (ShapeModel)getModel();
 		ShapePresentation shapePresentation = shapeModel.getShapePresentation();
-		DiagramNodeEditPart nodeEditPart = getNodeEditPart();
-		IFigure fig = ShapeUtil.createFigureForShape(shapePresentation,  
-					nodeEditPart.getCastedModel().getDiagramModel().getResourceCache(), getConfigurationManager());
-		return fig;
+		shapePresentation.render();
+//		IFigure fig = ShapeUtil.createFigureForShape(shapePresentation,  
+//					nodeEditPart.getCastedModel().getDiagramModel().getResourceCache(), getConfigurationManager());
+		return shapePresentation.getFigure();
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	
 	protected ContainerShapePresentation getParentContainer(ShapePresentation shapePresentation)
 	{
-		ShapePresentation parentPresentation = shapePresentation.parent();
+		DiagramPresentation parentPresentation = shapePresentation.parent();
 		while (!(parentPresentation instanceof ContainerShapePresentation) && parentPresentation != null)
 		{
 			parentPresentation = parentPresentation.parent();
@@ -172,13 +172,13 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 		if (!actionHandlers.isEmpty())
 		{
 			final SapphireActionHandler firstHandler = actionHandlers.get(0);
-            Display.getDefault().asyncExec
+            getShapePresentation().display().asyncExec
             (
                 new Runnable()
                 {
                     public void run()
                     {
-                        firstHandler.execute(getConfigurationManager().getDiagramRenderingContextCache().get(shapePart));
+                        firstHandler.execute(getShapePresentation());
                     }
                 }
             );

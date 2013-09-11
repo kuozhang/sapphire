@@ -19,7 +19,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.IContextButtonPadDeclaration.PadStyle;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
@@ -71,7 +71,7 @@ public class ContextButtonPad extends Shape {
 	 */
 	private SapphireDiagramEditor editor;
 	
-	private List<ISapphirePart> sapphireParts;
+	private List<GraphicalEditPart> editParts;
 
 	private Path pathOuterLine;
 
@@ -105,13 +105,13 @@ public class ContextButtonPad extends Shape {
 	 *            The sapphire parts
 	 */
 	public ContextButtonPad(IContextButtonPadDeclaration declaration, double zoomLevel, SapphireDiagramEditor editor, 
-						List<ISapphirePart> sapphireParts) 
+						List<GraphicalEditPart> editParts) 
 	{
 		this.declaration = declaration;
 		this.zoomLevel = zoomLevel;
 		this.editor = editor;
-		this.sapphireParts = new ArrayList<ISapphirePart>();
-		this.sapphireParts.addAll(sapphireParts);
+		this.editParts = new ArrayList<GraphicalEditPart>();
+		this.editParts.addAll(editParts);
 
 		initialize();
 	}
@@ -549,8 +549,8 @@ public class ContextButtonPad extends Shape {
 		return ret;
 	}
 
-	public final List<ISapphirePart> getSapphireParts() {
-		return this.sapphireParts;
+	public final List<GraphicalEditPart> getEditParts() {
+		return this.editParts;
 	}
 
 	/**

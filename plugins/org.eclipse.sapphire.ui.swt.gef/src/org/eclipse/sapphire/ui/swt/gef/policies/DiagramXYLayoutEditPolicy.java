@@ -35,6 +35,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionLabelEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -42,11 +43,11 @@ import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
 
 public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy 
 {
-	private DiagramModel model;
+	private DiagramPresentation presentation;
 	
-	public DiagramXYLayoutEditPolicy(DiagramModel model)
+	public DiagramXYLayoutEditPolicy(DiagramPresentation presentation)
 	{
-		this.model = model;
+		this.presentation = presentation;
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 		if (child instanceof DiagramNodeEditPart && constraint instanceof Rectangle) {			
 			// Bug 382542 - Diagram: sometimes moving a node does not move context buttons
 			// Hide the context buttons when moving a node
-			this.model.getSapphireDiagramEditor().getContextButtonManager().hideContextButtonsInstantly();
+			this.presentation.getConfigurationManager().getDiagramEditor().getContextButtonManager().hideContextButtonsInstantly();
 			DiagramNodeModel node = ((DiagramNodeEditPart)child).getCastedModel();
 			return new MoveNodeCommand(node, (Rectangle)constraint);
 		}
@@ -103,8 +104,8 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 		IConfigurationManagerHolder host = (IConfigurationManagerHolder)getHost();
 		if (request.getNewObjectType() == DiagramNodeTemplate.class) {
 			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();
-			if (nodeTemplate.getDiagramEditorPart() == this.model.getModelPart()) {
-				cmd = new CreateNodeCommand(this.model, host, nodeTemplate, pt);	
+			if (nodeTemplate.getDiagramEditorPart() == this.presentation.part()) {
+				cmd = new CreateNodeCommand(this.presentation, host, nodeTemplate, pt);	
 			}			
 		}
 		else if (request.getNewObjectType() == ISelection.class) {

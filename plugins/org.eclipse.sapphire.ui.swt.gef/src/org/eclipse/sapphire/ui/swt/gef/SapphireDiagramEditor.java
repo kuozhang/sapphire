@@ -114,6 +114,7 @@ import org.eclipse.sapphire.ui.swt.gef.palette.DefaultFlyoutPalettePreferences;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorEditPartFactory;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPagePresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.HelpEvent;
 import org.eclipse.swt.events.HelpListener;
@@ -123,6 +124,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -155,6 +157,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     
     private DiagramLayoutPersistenceService layoutPersistenceService;
 	private PaletteRoot root;
+	private DiagramPagePresentation diagramPresentation;
     private DiagramModel diagramModel;
     private Listener layoutPersistenceServiceListener;
     private List<ISapphirePart> selectedParts = new ArrayList<ISapphirePart>();
@@ -216,7 +219,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
         this.configManager = new DiagramConfigurationManager(this);
         
-        this.diagramModel = new DiagramModel(part, this.configManager);
+        this.diagramPresentation = new DiagramPagePresentation(this.part, this.configManager, Display.getCurrent().getActiveShell());
+        this.diagramModel = new DiagramModel(this.diagramPresentation);
 
 		setEditDomain(new DefaultEditDomain(this));
 		
@@ -731,13 +735,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	{
 	    this.globalActions = new HashMap<String,ActionBridge>();
 		
-		final ActionBridge selectAllBridge = new ActionBridge( diagramRenderingContext, this.part.getAction( "Sapphire.Diagram.SelectAll" ) );
+		final ActionBridge selectAllBridge = new ActionBridge( this.diagramPresentation, this.part.getAction( "Sapphire.Diagram.SelectAll" ) );
 		this.globalActions.put( ActionFactory.SELECT_ALL.getId(), selectAllBridge );
 		
-        final ActionBridge deleteBridge = new ActionBridge( diagramRenderingContext, this.part.getAction( "Sapphire.Delete" ) );
+        final ActionBridge deleteBridge = new ActionBridge( this.diagramPresentation, this.part.getAction( "Sapphire.Delete" ) );
         this.globalActions.put( ActionFactory.DELETE.getId(), deleteBridge );
 
-        final ActionBridge printBridge = new ActionBridge( diagramRenderingContext, this.part.getAction( "Sapphire.Diagram.Print" ) );
+        final ActionBridge printBridge = new ActionBridge( this.diagramPresentation, this.part.getAction( "Sapphire.Diagram.Print" ) );
         this.globalActions.put( ActionFactory.PRINT.getId(), printBridge );
 	}
 	
@@ -821,7 +825,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			node.handleMoveNode();
 		}
 
-		initRenderingContext();
+		//initRenderingContext();
 		initActions();
 		configureDiagramHeading();
 
@@ -833,39 +837,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 		
 	}
-	
-	private void initRenderingContext()
-	{
-		// cache DiagramRenderingContext for the diagram edit page part
-		DiagramRenderingContext ctx = new DiagramRenderingContext(this.part, this);
-		this.configManager.getDiagramRenderingContextCache().put(this.part, ctx);
 		
-		List<DiagramNodeModel> nodes = this.diagramModel.getNodes();
-		for (DiagramNodeModel node : nodes)
-		{
-			DiagramNodePart nodePart = node.getModelPart();
-			ctx = new DiagramRenderingContext(nodePart, this);
-			getConfigurationManager().getDiagramRenderingContextCache().put(nodePart, ctx);
-			addChildrenRenderingContext(nodePart.getShapePart());
-		}
-		List<DiagramConnectionModel> conns = this.diagramModel.getConnections();
-		for (DiagramConnectionModel conn : conns)
-		{
-			ctx = new DiagramRenderingContext(conn.getModelPart(), this);
-			getConfigurationManager().getDiagramRenderingContextCache().put(conn.getModelPart(), ctx);
-		}
-	}
-	
-	private void addChildrenRenderingContext(ShapePart parentShapePart) {
-		for (ShapePart shapePart : parentShapePart.getActiveChildren())
-		{
-			DiagramRenderingContext ctx = new DiagramRenderingContext(shapePart, this);
-			getConfigurationManager().getDiagramRenderingContextCache().put(shapePart, ctx);
-			
-			addChildrenRenderingContext(shapePart);
-		}
-	}
-	
 	private boolean hasNoExistingLayout()
 	{
 		if (this.layoutPersistenceService == null)
@@ -886,13 +858,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		return false;
 	}
 	
+	public DiagramPagePresentation getDiagramPresentation() {
+		return this.diagramPresentation;
+	}
+	
 	public DiagramModel getDiagramModel() {
 		return this.diagramModel;
 	}
 	
 	public DiagramResourceCache getResourceCache()
 	{
-		return this.diagramModel.getResourceCache();
+		return this.diagramPresentation.getResourceCache();
 	}
 	
 	public DiagramConfigurationManager getConfigurationManager()
@@ -1277,7 +1253,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	public void dispose() {
 		super.dispose();
 		
-		diagramModel.dispose();
+		diagramPresentation.dispose();
 		
 		if (layoutPersistenceService != null)
 		{
@@ -1326,8 +1302,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         final SapphireActionGroup actions = this.part.getActions( SapphireActionSystem.CONTEXT_DIAGRAM_HEADER );
         if (actions != null && !actions.isEmpty())
         {
-	        DiagramRenderingContext context = this.configManager.getDiagramRenderingContextCache().get(this.part);
-	        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager(context, actions);
+	        final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager(this.diagramPresentation, actions);
 	        final SapphireToolBarManagerActionPresentation actionPresentation = new SapphireToolBarManagerActionPresentation( actionPresentationManager );
 	        actionPresentation.setToolBarManager( this.header.getToolBarManager() );
 	        actionPresentation.render();

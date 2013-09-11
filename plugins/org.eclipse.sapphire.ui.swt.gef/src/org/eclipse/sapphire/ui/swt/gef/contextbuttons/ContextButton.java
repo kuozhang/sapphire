@@ -23,6 +23,7 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -30,13 +31,16 @@ import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.DefaultActionImage;
-import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorPageEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -546,10 +550,32 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	
 	private void executeActionHandler(SapphireActionHandler handler)
 	{
-		List<ISapphirePart> sapphireParts = this.contextButtonPad.getSapphireParts();
-		for (ISapphirePart part : sapphireParts)
+		List<GraphicalEditPart> editParts = this.contextButtonPad.getEditParts();
+		for (GraphicalEditPart editPart : editParts)
 		{
-	        handler.execute(context);
+			DiagramPresentation presentation;
+			if( editPart instanceof SapphireDiagramEditorPageEditPart )
+			{
+				presentation = ((SapphireDiagramEditorPageEditPart)editPart).getPresentation();
+			}
+			else if( editPart instanceof DiagramNodeEditPart )
+			{
+				presentation = ((DiagramNodeEditPart)editPart).getPresentation();
+			}
+			else if (editPart instanceof ShapeEditPart)
+			{
+				presentation = ((ShapeEditPart)editPart).getShapePresentation();
+			}
+			else if( editPart instanceof DiagramConnectionEditPart )
+			{
+				presentation = ((DiagramConnectionEditPart)editPart).getPresentation();
+			}
+			else
+			{
+			    throw new IllegalStateException();
+			}
+			
+	        handler.execute(presentation);
 		}
 	}
 

@@ -18,8 +18,7 @@ import java.util.List;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -29,12 +28,11 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 public class ContainerShapePresentation extends ShapePresentation 
 {
 	private List<ShapePresentation> children;
-	private ValidationMarkerPresentation validationMarker;
 	
-	public ContainerShapePresentation(ShapePresentation parent, ContainerShapePart containerShapePart,
-			DiagramConfigurationManager configManager)
+	public ContainerShapePresentation(DiagramPresentation parent, ContainerShapePart containerShapePart,
+				DiagramResourceCache resourceCache)
 	{
-		super(parent, containerShapePart, configManager);
+		super(parent, containerShapePart, resourceCache);
 
 		this.children = new ArrayList<ShapePresentation>();
 		ShapePresentation childPresentation = null;
@@ -42,12 +40,8 @@ public class ContainerShapePresentation extends ShapePresentation
 		{
 			if (canAddShapePart(shapePart))
 			{
-				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
+				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, resourceCache);
 				this.children.add(childPresentation);
-				if (childPresentation instanceof ValidationMarkerPresentation)
-				{
-					this.validationMarker = (ValidationMarkerPresentation)childPresentation;
-				}
 			}
 		}
 	}
@@ -69,22 +63,7 @@ public class ContainerShapePresentation extends ShapePresentation
 	{
 		return (ContainerShapePart) super.part();
 	}
-	
-	public ValidationMarkerSize getValidationMarkerSize()
-	{
-		ValidationMarkerSize size = null;
-		if (this.validationMarker != null)
-		{
-			size = this.validationMarker.getSize();
-		}
-		return size;
-	}
-	
-	public ValidationMarkerPresentation getValidationMarkerPresentation()
-	{
-		return this.validationMarker;
-	}
-	
+		
 	public ShapeLayoutDef getLayout()
 	{
 		return part().getLayout();
@@ -110,7 +89,7 @@ public class ContainerShapePresentation extends ShapePresentation
 			{
 				ShapePresentation childPresentation = getChildShapePresentation(shapePart);
 				if (childPresentation == null) {
-					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getConfigurationManager());
+					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getResourceCache());
 				}
 				refreshedChildren.add(childPresentation);
 			}
@@ -155,5 +134,6 @@ public class ContainerShapePresentation extends ShapePresentation
 		}
 		return figureIndex;
 	}
+	
 }
 
