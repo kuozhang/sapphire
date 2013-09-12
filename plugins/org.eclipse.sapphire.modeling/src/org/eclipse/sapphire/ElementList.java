@@ -13,9 +13,11 @@ package org.eclipse.sapphire;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.modeling.LoggingService;
@@ -32,9 +34,9 @@ import org.eclipse.sapphire.services.PossibleTypesService;
 public final class ElementList<T extends Element> extends Property implements List<T>
 {
     private List<T> content;
+    private Map<ValueProperty,Index<T>> indexes;
     
-    public ElementList( final Element element,
-                        final ListProperty property )
+    public ElementList( final Element element, final ListProperty property )
     {
         super( element, property );
     }
@@ -372,7 +374,7 @@ public final class ElementList<T extends Element> extends Property implements Li
         refresh();
         
         T element = null;
-
+        
         for( T x : this.content )
         {
             if( x.resource() == resource )
@@ -381,6 +383,11 @@ public final class ElementList<T extends Element> extends Property implements Li
                 element.initialize();
                 break;
             }
+        }
+        
+        if( element == null )
+        {
+            throw new IllegalStateException();
         }
         
         return element;
@@ -886,6 +893,86 @@ public final class ElementList<T extends Element> extends Property implements Li
     public T set( final int index, final T element )
     {
         throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * Returns an index with the specified value property as the key. The index is created if it doesn't exist already.
+     * 
+     * @param property the key property
+     * @return the index
+     * @throws IllegalArgumentException if the property is null; if the property does not belong to the list entry type
+     */
+    
+    public Index<T> index( final ValueProperty property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ElementType entryType = definition().getType();
+        
+        if( property.getModelElementType() != entryType )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        synchronized( root() )
+        {
+            assertNotDisposed();
+            
+            if( this.indexes == null )
+            {
+                this.indexes = new HashMap<ValueProperty,Index<T>>();
+            }
+            
+            Index<T> index = this.indexes.get( property );
+            
+            if( index == null )
+            {
+                index = new Index<T>( this, property );
+                this.indexes.put( property, index );
+            }
+            
+            return index;
+        }
+    }
+    
+    /**
+     * Returns an index with the specified value property as the key. The index is created if it doesn't exist already.
+     * 
+     * @param property the key property
+     * @return the index
+     * @throws IllegalArgumentException if the property is null; if the property does not exist in the list entry type;
+     *   if the property is a path; if the property is not a value property
+     */
+    
+    public Index<T> index( final String property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final ElementType entryType = definition().getType();
+        final PropertyDef p = entryType.property( property );
+        
+        if( p == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( ! ( p instanceof ValueProperty ) )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( p.getModelElementType() != entryType )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return index( (ValueProperty) p );
     }
     
     @Override

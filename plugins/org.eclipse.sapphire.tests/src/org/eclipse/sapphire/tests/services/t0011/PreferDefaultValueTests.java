@@ -11,11 +11,9 @@
 
 package org.eclipse.sapphire.tests.services.t0011;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.services.FactsAggregationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests @PreferDefaultValue feature.
@@ -25,22 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class PreferDefaultValueTests extends SapphireTestCase
 {
-    private PreferDefaultValueTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "PreferDefaultValueTests" );
-
-        suite.addTest( new PreferDefaultValueTests( "testPreferDefaultValueValidation" ) );
-        suite.addTest( new PreferDefaultValueTests( "testPreferDefaultValueFacts" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testPreferDefaultValueValidation() throws Exception
     {
@@ -54,6 +37,8 @@ public final class PreferDefaultValueTests extends SapphireTestCase
         element.setValue( null );
         assertValidationOk( element.getValue() );
     }
+    
+    @Test
 
     public void testPreferDefaultValueFacts() throws Exception
     {

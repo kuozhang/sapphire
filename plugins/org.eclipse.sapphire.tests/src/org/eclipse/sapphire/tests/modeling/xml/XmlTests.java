@@ -9,29 +9,31 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0013;
+package org.eclipse.sapphire.tests.modeling.xml;
 
-import org.eclipse.sapphire.services.DefaultValueService;
-import org.eclipse.sapphire.services.DefaultValueServiceData;
+import org.eclipse.sapphire.tests.modeling.xml.binding.XmlBindingTestSuite;
+import org.eclipse.sapphire.tests.modeling.xml.dtd.XmlDtdTestSuite;
+import org.eclipse.sapphire.tests.modeling.xml.xsd.XmlXsdTestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestDefaultValueService extends DefaultValueService
+@RunWith( Suite.class )
+
+@SuiteClasses
+(
+    {
+        XmlBindingTests.class,
+        XmlBindingTestSuite.class,
+        XmlDtdTestSuite.class,
+        XmlXsdTestSuite.class
+    }
+)
+
+public final class XmlTests
 {
-    @Override
-    public DefaultValueServiceData data()
-    {
-        refresh();
-        return super.data();
-    }
-
-    @Override
-    protected DefaultValueServiceData compute()
-    {
-        final TestChildElement element = context( TestChildElement.class );
-        return new DefaultValueServiceData( element.getDefaultIntegerValue().text() );
-    }
-
 }

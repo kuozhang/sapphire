@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0002;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests detection and reporting of missing element name in @XmlListBinding.Mapping annotation.
@@ -24,26 +22,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlBinding0002
-
-    extends SapphireTestCase
-    
+public final class TestXmlBinding0002 extends SapphireTestCase
 {
-    private TestXmlBinding0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlBinding0002" );
-
-        suite.addTest( new TestXmlBinding0002( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

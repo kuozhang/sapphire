@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.index;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -21,6 +18,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Index function.
@@ -30,23 +28,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class IndexFunctionTests extends TestExpr
 {
-    private IndexFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "IndexFunctionTests" );
-
-        suite.addTest( new IndexFunctionTests( "testIndexFunction" ) );
-        suite.addTest( new IndexFunctionTests( "testIndexFunctionOnRoot" ) );
-        suite.addTest( new IndexFunctionTests( "testIndexFunctionOnElementPropertyContent" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testIndexFunction()
     {
@@ -87,6 +69,8 @@ public final class IndexFunctionTests extends TestExpr
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testIndexFunctionOnRoot()
     {
@@ -114,6 +98,8 @@ public final class IndexFunctionTests extends TestExpr
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testIndexFunctionOnElementPropertyContent()
     {
@@ -142,4 +128,5 @@ public final class IndexFunctionTests extends TestExpr
             element.dispose();
         }
     }
+    
 }

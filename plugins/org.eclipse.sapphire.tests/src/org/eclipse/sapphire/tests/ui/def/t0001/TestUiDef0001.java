@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.tests.ui.def.t0001;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.tests.SapphireTestCase;
@@ -21,6 +18,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
+import org.junit.Test;
 
 /**
  * Tests class resolution via import statements in the Sapphire UI Definition model.
@@ -30,21 +28,7 @@ import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
 
 public final class TestUiDef0001 extends SapphireTestCase
 {
-    private TestUiDef0001( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "UiDef0001" );
-
-        suite.addTest( new TestUiDef0001( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test()
     {

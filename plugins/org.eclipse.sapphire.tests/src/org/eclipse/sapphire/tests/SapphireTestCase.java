@@ -24,8 +24,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.Element;
@@ -42,26 +40,28 @@ import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FactsAggregationService;
+import org.junit.After;
+import org.junit.Assert;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireTestCase extends TestCase
+public abstract class SapphireTestCase extends Assert
 {
     private IProject project;
-    
-    protected SapphireTestCase( final String name )
-    {
-        super( name );
-    }
     
     protected final IProject project() throws Exception
     {
         if( this.project == null )
         {
-            final String name = getClass().getName() + "." + getName();
-            this.project = ResourcesPlugin.getWorkspace().getRoot().getProject( name );
+            this.project = ResourcesPlugin.getWorkspace().getRoot().getProject( "test" );
+            
+            if( this.project.exists() )
+            {
+                this.project.delete( true, null );
+            }
+            
             this.project.create( null );
             this.project.open( null );
         }
@@ -69,11 +69,10 @@ public abstract class SapphireTestCase extends TestCase
         return this.project;
     }
     
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    
+    public void deleteProject() throws Exception
     {
-        super.tearDown();
-        
         if( this.project != null )
         {
             this.project.delete( true, null );

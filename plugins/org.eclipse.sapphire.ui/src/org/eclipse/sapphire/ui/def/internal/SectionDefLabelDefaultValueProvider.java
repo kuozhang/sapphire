@@ -12,6 +12,9 @@
 package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeDef;
@@ -23,18 +26,12 @@ import org.eclipse.sapphire.ui.forms.SectionDef;
 
 public final class SectionDefLabelDefaultValueProvider extends DefaultValueService
 {
+    private MasterDetailsContentNodeDef node;
+    private Listener listener;
+    
     @Override
-    public DefaultValueServiceData data()
+    protected void initDefaultValueService()
     {
-        refresh();
-        return super.data();
-    }
-
-    @Override
-    protected DefaultValueServiceData compute()
-    {
-        String defaultValue = null;
-        
         final SectionDef section = context( SectionDef.class );
         
         if( section.parent() != null )
@@ -43,11 +40,39 @@ public final class SectionDefLabelDefaultValueProvider extends DefaultValueServi
             
             if( parent instanceof MasterDetailsContentNodeDef )
             {
-                defaultValue = ( (MasterDetailsContentNodeDef) parent ).getLabel().text();
+                this.node = (MasterDetailsContentNodeDef) parent;
+                
+                this.listener = new FilteredListener<PropertyContentEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final PropertyContentEvent event )
+                    {
+                        refresh();
+                    }
+                };
+                
+                this.node.getLabel().attach( this.listener );
             }
         }
-        
-        return new DefaultValueServiceData( defaultValue );
+    }
+
+    @Override
+    protected DefaultValueServiceData compute()
+    {
+        return new DefaultValueServiceData( this.node != null ? this.node.getLabel().text() : null );
     }
     
+    @Override
+    public void dispose()
+    {
+        if( this.node != null )
+        {
+            this.node.getLabel().detach( this.listener );
+            this.node = null;
+            this.listener = null;
+        }
+        
+        super.dispose();
+    }
+
 }

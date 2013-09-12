@@ -11,35 +11,24 @@
 
 package org.eclipse.sapphire.tests.ui.misc;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.ui.misc.t0001.UiMisc0001Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@RunWith( Suite.class )
+
+@SuiteClasses
+(
+    {
+        UiMisc0001Test.class
+    }
+)
+
 public final class UiMiscTestSuite
-
-    extends TestCase
-    
 {
-    private UiMiscTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "UiMisc" );
-
-        suite.addTest( UiMisc0001Test.suite() );
-        
-        return suite;
-    }
-    
 }

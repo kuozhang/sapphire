@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0004;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests making an existing property read-only when extending from an another model element
@@ -23,27 +21,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestModelingMisc0004
-
-    extends SapphireTestCase
-    
+public final class TestModelingMisc0004 extends SapphireTestCase
 {
-    private TestModelingMisc0004( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0004" );
-
-        suite.addTest( new TestModelingMisc0004( "testWritable" ) );
-        suite.addTest( new TestModelingMisc0004( "testReadOnly" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testWritable() throws Exception
     {
@@ -58,6 +38,8 @@ public final class TestModelingMisc0004
         element.setInteger( 2 );
         assertEquals( Integer.valueOf( 2 ), element.getInteger().content() );
     }
+    
+    @Test
 
     public void testReadOnly() throws Exception
     {

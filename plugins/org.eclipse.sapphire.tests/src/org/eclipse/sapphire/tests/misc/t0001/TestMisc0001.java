@@ -11,13 +11,11 @@
 
 package org.eclipse.sapphire.tests.misc.t0001;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionConstraint;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests Sapphire.version() method.
@@ -29,21 +27,7 @@ public final class TestMisc0001 extends SapphireTestCase
 {
     private static final String EXPECTED_VERSION_CONSTRAINT = "[0.7-0.7.1)";
 
-    private TestMisc0001( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestMisc0001" );
-
-        suite.addTest( new TestMisc0001( "testSapphireVersion" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSapphireVersion() throws Exception
     {

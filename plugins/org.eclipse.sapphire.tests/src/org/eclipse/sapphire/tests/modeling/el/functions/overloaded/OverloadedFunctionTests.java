@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.overloaded;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests resolution of overloaded functions.
@@ -24,21 +22,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class OverloadedFunctionTests extends TestExpr
 {
-    private OverloadedFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "OverloadedFunctionTests" );
-
-        suite.addTest( new OverloadedFunctionTests( "testOverloadedFunctions" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testOverloadedFunctions()
     {

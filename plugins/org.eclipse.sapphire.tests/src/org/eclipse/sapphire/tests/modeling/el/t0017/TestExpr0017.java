@@ -13,9 +13,6 @@ package org.eclipse.sapphire.tests.modeling.el.t0017;
 
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -23,6 +20,7 @@ import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.OrFunction;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 import org.eclipse.sapphire.util.ListFactory;
+import org.junit.Test;
 
 /**
  * Tests AND and OR functions, including arbitrary operand cardinality.
@@ -32,22 +30,7 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class TestExpr0017 extends TestExpr
 {
-    private TestExpr0017( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0017" );
-
-        suite.addTest( new TestExpr0017( "testAndFunction" ) );
-        suite.addTest( new TestExpr0017( "testOrFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testAndFunction()
     {
@@ -68,6 +51,8 @@ public final class TestExpr0017 extends TestExpr
         test( 3, testLogic );
         test( 4, testLogic );
     }
+    
+    @Test
 
     public void testOrFunction()
     {

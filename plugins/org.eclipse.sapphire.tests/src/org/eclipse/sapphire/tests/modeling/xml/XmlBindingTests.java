@@ -13,52 +13,20 @@ package org.eclipse.sapphire.tests.modeling.xml;
 
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
-import org.eclipse.sapphire.tests.modeling.xml.binding.XmlBindingTestSuite;
-import org.eclipse.sapphire.tests.modeling.xml.dtd.XmlDtdTestSuite;
-import org.eclipse.sapphire.tests.modeling.xml.xsd.XmlXsdTestSuite;
+import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlBindingTests
-
-    extends TestCase
-    
+public final class XmlBindingTests extends SapphireTestCase
 {
-    private XmlBindingTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Xml" );
-
-        suite.addTest( new XmlBindingTests( "testValueProperties1" ) );
-        suite.addTest( new XmlBindingTests( "testValueProperties2" ) );
-        suite.addTest( new XmlBindingTests( "testValueProperties3" ) );
-        suite.addTest( XmlBindingTestSuite.suite() );
-        suite.addTest( XmlDtdTestSuite.suite() );
-        suite.addTest( XmlXsdTestSuite.suite() );
-        
-        return suite;
-    }
+    @Test
     
     public void testValueProperties1() throws Exception
     {
@@ -66,8 +34,10 @@ public final class XmlBindingTests
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         final XmlBindingTestModel model = XmlBindingTestModel.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        testValueProperties( resourceStore, model, loadResource( "testValueProperties1.txt" ) );
+        testValueProperties( resourceStore, model, loadResource( XmlBindingTests.class.getSimpleName() + ".testValueProperties1.txt" ) );
     }
+    
+    @Test
     
     public void testValueProperties2() throws Exception
     {
@@ -75,8 +45,10 @@ public final class XmlBindingTests
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         final XmlBindingTestModelAltB model = XmlBindingTestModelAltB.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        testValueProperties( resourceStore, model, loadResource( "testValueProperties2.txt" ) );
+        testValueProperties( resourceStore, model, loadResource( XmlBindingTests.class.getSimpleName() + ".testValueProperties2.txt" ) );
     }
+    
+    @Test
     
     public void testValueProperties3() throws Exception
     {
@@ -84,7 +56,7 @@ public final class XmlBindingTests
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( resourceStore );
         final XmlBindingTestModelAltC model = XmlBindingTestModelAltC.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         
-        testValueProperties( resourceStore, model, loadResource( "testValueProperties3.txt" ) );
+        testValueProperties( resourceStore, model, loadResource( XmlBindingTests.class.getSimpleName() + ".testValueProperties3.txt" ) );
     }
 
     private void testValueProperties( final ByteArrayResourceStore resourceStore,
@@ -129,54 +101,6 @@ public final class XmlBindingTests
         final String result = new String( resourceStore.getContents(), UTF8 );
         
         assertEqualsIgnoreNewLineDiffs( expected, result );
-    }
-    
-    private InputStream loadResourceAsStream( final String name )
-    {
-        final InputStream in = getClass().getResourceAsStream( "XmlBindingTests." + name );
-        
-        if( in == null )
-        {
-            throw new IllegalArgumentException( name );
-        }
-        
-        return in;
-    }
-    
-    private String loadResource( final String name )
-    
-        throws Exception
-        
-    {
-        final InputStream in = loadResourceAsStream( name );
-        
-        try
-        {
-            final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF8 ) );
-            final char[] chars = new char[ 1024 ];
-            final StringBuilder buf = new StringBuilder();
-            
-            for( int i = r.read( chars ); i != -1; i = r.read( chars ) )
-            {
-                buf.append( chars, 0, i );
-            }
-            
-            return buf.toString();
-        }
-        finally
-        {
-            try
-            {
-                in.close();
-            }
-            catch( IOException e ) {}
-        }
-    }
-    
-    private static void assertEqualsIgnoreNewLineDiffs( final String expected, 
-                                                        final String actual ) 
-    {
-        assertEquals( expected.replace( "\r", "" ), actual.replace( "\r", "" ) );
     }
     
 }

@@ -27,11 +27,6 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public abstract class TestExpr extends SapphireTestCase
 {
-    protected TestExpr( final String name )
-    {
-        super( name );
-    }
-    
     protected static void testForExpectedValue( final String expr,
                                                 final Object expected )
     {

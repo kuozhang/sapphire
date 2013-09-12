@@ -13,11 +13,9 @@ package org.eclipse.sapphire.tests.modeling.el.t0009;
 
 import java.math.BigDecimal;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Scale function.
@@ -27,21 +25,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class TestExpr0009 extends TestExpr
 {
-    private TestExpr0009( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0009" );
-
-        suite.addTest( new TestExpr0009( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test()
     {

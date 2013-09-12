@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0017;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests ability to safely access property enablement inside a validation service.
@@ -24,28 +22,15 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0017 extends SapphireTestCase
 {
-    private TestModelingMisc0017( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0017" );
-
-        suite.addTest( new TestModelingMisc0017( "testAccessToEnablementDuringValidation1" ) );
-        suite.addTest( new TestModelingMisc0017( "testAccessToEnablementDuringValidation2" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testAccessToEnablementDuringValidation1() throws Exception
     {
         final TestElement element = TestElement.TYPE.instantiate();
         element.getValue();
     }
+    
+    @Test
 
     public void testAccessToEnablementDuringValidation2() throws Exception
     {

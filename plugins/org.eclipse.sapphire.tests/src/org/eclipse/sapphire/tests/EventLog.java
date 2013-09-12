@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.events;
+package org.eclipse.sapphire.tests;
 
 import java.util.Collections;
 import java.util.List;

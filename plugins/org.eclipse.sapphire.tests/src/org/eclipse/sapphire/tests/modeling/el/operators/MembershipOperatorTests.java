@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the membership operator.
@@ -20,66 +19,65 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MembershipOperatorTests extends OperatorTests
+public final class MembershipOperatorTests extends AbstractOperatorTests
 {
-    private MembershipOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "MembershipOperatorTests" );
-        
-        for( int i = 1; i <= 9; i++ )
-        {
-            suite.addTest( new MembershipOperatorTests( "testMembershipOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testMembershipOperator1()
     {
         test( "${ 'x' IN List( 'x', 'y', 'z' ) }", true );
     }
+    
+    @Test
 
     public void testMembershipOperator2()
     {
         test( "${ 'y' IN List( 'x', 'y', 'z' ) }", true );
     }
+    
+    @Test
 
     public void testMembershipOperator3()
     {
         test( "${ 'z' IN List( 'x', 'y', 'z' ) }", true );
     }
+    
+    @Test
 
     public void testMembershipOperator4()
     {
         test( "${ 'a' IN List( 'x', 'y', 'z' ) }", false );
     }
+    
+    @Test
 
     public void testMembershipOperator5()
     {
         test( "${ 'y' IN 'x,y,z' }", true );
     }
+    
+    @Test
 
     public void testMembershipOperator6()
     {
         test( "${ 'a' IN 'x,y,z' }", false );
     }
+    
+    @Test
 
     public void testMembershipOperator7()
     {
         test( "${ null IN null }", false );
     }
+    
+    @Test
 
     public void testMembershipOperator8()
     {
         test( "${ 'x' IN null }", false );
     }
+    
+    @Test
 
     public void testMembershipOperator9()
     {

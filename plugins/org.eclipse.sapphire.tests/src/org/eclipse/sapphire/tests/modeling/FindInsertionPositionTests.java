@@ -23,14 +23,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.schema.XmlChoiceGroup;
 import org.eclipse.sapphire.modeling.xml.schema.XmlContentModel;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
 import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
+import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,47 +39,9 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FindInsertionPositionTests
-
-    extends TestCase
-    
+public final class FindInsertionPositionTests extends SapphireTestCase
 {
-    private FindInsertionPositionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "FindInsertPositionTests" );
-
-        suite.addTest( new FindInsertionPositionTests( "test_1A" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_1B" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_1C" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_1D" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_1E" ) );
-
-        suite.addTest( new FindInsertionPositionTests( "test_2A" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_2B" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_2C" ) );
-
-        suite.addTest( new FindInsertionPositionTests( "test_3A" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_3B" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_3C" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_3D" ) );
-        
-        suite.addTest( new FindInsertionPositionTests( "test_4A" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_4B" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_4C" ) );
-        
-        suite.addTest( new FindInsertionPositionTests( "test_5A" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_5B" ) );
-        suite.addTest( new FindInsertionPositionTests( "test_5C" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test_1A() throws Exception
     {
@@ -100,6 +60,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "A", expected );
     }
+    
+    @Test
 
     public void test_1B() throws Exception
     {
@@ -119,6 +81,8 @@ public final class FindInsertionPositionTests
         test( XmlContentModel, start, "B", expected );
     }
 
+    @Test
+    
     public void test_1C() throws Exception
     {
         final XmlContentModel XmlContentModel = 
@@ -136,6 +100,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "A", expected );
     }
+    
+    @Test
 
     public void test_1D() throws Exception
     {
@@ -154,6 +120,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "B", expected );
     }
+    
+    @Test
 
     public void test_1E() throws Exception
     {
@@ -172,6 +140,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "C", expected );
     }
+    
+    @Test
 
     public void test_2A() throws Exception
     {
@@ -190,6 +160,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "A", expected );
     }
+    
+    @Test
 
     public void test_2B() throws Exception
     {
@@ -208,6 +180,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "B", expected );
     }
+    
+    @Test
 
     public void test_2C() throws Exception
     {
@@ -226,6 +200,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "C", expected );
     }
+    
+    @Test
 
     public void test_3A() throws Exception
     {
@@ -276,6 +252,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "B", res1 );
     }
+    
+    @Test
  
     public void test_3B() throws Exception
     {
@@ -326,6 +304,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "C", res2 );
     }
+    
+    @Test
 
     public void test_3C() throws Exception
     {
@@ -378,6 +358,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "D", res3 );
     }
+    
+    @Test
 
     public void test_3D() throws Exception
     {
@@ -428,6 +410,8 @@ public final class FindInsertionPositionTests
         
         test( XmlContentModel, start, "E", res4 );
     }
+    
+    @Test
 
     public void test_4A() throws Exception
     {
@@ -455,6 +439,8 @@ public final class FindInsertionPositionTests
             
         test( XmlContentModel, start, "B", expected );
     }
+    
+    @Test
 
     public void test_4B() throws Exception
     {
@@ -482,6 +468,8 @@ public final class FindInsertionPositionTests
             
         test( XmlContentModel, start, "B", expected );
     }
+    
+    @Test
 
     public void test_4C() throws Exception
     {
@@ -509,6 +497,8 @@ public final class FindInsertionPositionTests
             
         test( XmlContentModel, start, "B", expected );
     }
+    
+    @Test
 
     public void test_5A() throws Exception
     {
@@ -548,6 +538,8 @@ public final class FindInsertionPositionTests
         test( XmlContentModel, start, "X", expected );
     }
     
+    @Test
+    
     public void test_5B() throws Exception
     {
         final XmlContentModel XmlContentModel = 
@@ -585,6 +577,8 @@ public final class FindInsertionPositionTests
             
         test( XmlContentModel, start, "X", expected );
     }
+    
+    @Test
     
     public void test_5C() throws Exception
     {

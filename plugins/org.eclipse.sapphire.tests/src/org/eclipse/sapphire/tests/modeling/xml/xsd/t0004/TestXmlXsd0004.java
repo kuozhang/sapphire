@@ -17,9 +17,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
@@ -31,6 +28,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
 import org.eclipse.sapphire.modeling.xml.schema.XmlGroupContentModel;
 import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests treatment of namespaces when including a schema. This variant covers the case where included schema
@@ -42,23 +40,8 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 public final class TestXmlXsd0004 extends SapphireTestCase
 {
     private static final String NAMESPACE = "http://www.eclipse.org/sapphire/tests/xml/xsd/0004/workbook";
-    
-    private TestXmlXsd0004( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlXsd0004" );
 
-        suite.addTest( new TestXmlXsd0004( "testSchemaParsing" ) );
-        suite.addTest( new TestXmlXsd0004( "testInsertOrder" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSchemaParsing() throws Exception
     {
@@ -103,6 +86,8 @@ public final class TestXmlXsd0004 extends SapphireTestCase
         final XmlContentModel foundRectangleContentModel = workbookContentModel.findChildElementContentModel( new QName( NAMESPACE, "rectangle" ) );
         assertNotNull( foundRectangleContentModel );
     }
+    
+    @Test
     
     public void testInsertOrder() throws Exception
     {

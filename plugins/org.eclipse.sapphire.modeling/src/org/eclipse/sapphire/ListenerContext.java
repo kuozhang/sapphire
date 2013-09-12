@@ -12,11 +12,11 @@
 package org.eclipse.sapphire;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.sapphire.modeling.LoggingService;
 
@@ -28,7 +28,7 @@ public final class ListenerContext
 {
     private static final boolean TRACE = false;
     
-    private final Set<Listener> listeners = new CopyOnWriteArraySet<Listener>();
+    private final Set<Listener> listeners = new LinkedHashSet<Listener>();
     private Queue<BroadcastJob> queue = new ConcurrentLinkedQueue<BroadcastJob>();
     private final Map<Class<? extends Event>,Event> suspended = new HashMap<Class<? extends Event>,Event>();
     
@@ -47,7 +47,10 @@ public final class ListenerContext
             throw new IllegalArgumentException();
         }
         
-        return this.listeners.add( listener );
+        synchronized( this )
+        {
+            return this.listeners.add( listener );
+        }
     }
     
     public boolean detach( final Listener listener )
@@ -57,7 +60,14 @@ public final class ListenerContext
             throw new IllegalArgumentException();
         }
         
-        if( this.listeners.remove( listener ) )
+        final boolean removed;
+        
+        synchronized( this )
+        {
+            removed = this.listeners.remove( listener );
+        }
+        
+        if( removed )
         {
             for( BroadcastJob job : this.queue )
             {
@@ -93,11 +103,6 @@ public final class ListenerContext
         
         if( post )
         {
-            if( TRACE )
-            {
-                event.trace( this.listeners.size() );
-            }
-            
             for( BroadcastJob job : this.queue )
             {
                 if( event.supersedes( job.event() ) )
@@ -106,9 +111,17 @@ public final class ListenerContext
                 }
             }
             
-            for( Listener listener : this.listeners )
+            synchronized( this )
             {
-                this.queue.add( new BroadcastJob( listener, event ) );
+                if( TRACE )
+                {
+                    event.trace( this.listeners.size() );
+                }
+                
+                for( Listener listener : this.listeners )
+                {
+                    this.queue.add( new BroadcastJob( listener, event ) );
+                }
             }
         }
     }

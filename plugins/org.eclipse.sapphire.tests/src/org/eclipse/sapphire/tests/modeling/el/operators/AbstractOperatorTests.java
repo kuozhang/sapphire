@@ -9,27 +9,30 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0013;
+package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.annotations.Type;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestRootElement extends Element
+public abstract class AbstractOperatorTests extends TestExpr
 {
-    ElementType TYPE = new ElementType( TestRootElement.class );
-    
-    // *** Child ***
-
-    @Type( base = TestChildElement.class )
-    
-    ImpliedElementProperty PROP_CHILD = new ImpliedElementProperty( TYPE, "Child" );
-
-    TestChildElement getChild();
+    protected void test( final String expr, final Object expected )
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        
+        try
+        {
+            testForExpectedValue( new ModelElementFunctionContext( element ), expr, expected );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
 
 }
+

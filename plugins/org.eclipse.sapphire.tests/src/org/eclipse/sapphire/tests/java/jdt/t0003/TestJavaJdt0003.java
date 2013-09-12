@@ -11,9 +11,6 @@
 
 package org.eclipse.sapphire.tests.java.jdt.t0003;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.java.JavaType;
@@ -21,6 +18,7 @@ import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
+import org.junit.Test;
 
 /**
  * Tests resolution of Java type references in the model via JdtJavaTypeReferenceService.
@@ -28,27 +26,9 @@ import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestJavaJdt0003
-
-    extends JavaJdtTestCase
-    
+public final class TestJavaJdt0003 extends JavaJdtTestCase
 {
-    private TestJavaJdt0003( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "JavaJdt0003" );
-
-        suite.addTest( new TestJavaJdt0003( "testTopLevel" ) );
-        suite.addTest( new TestJavaJdt0003( "testInner" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testTopLevel() throws Exception
     {
@@ -63,6 +43,8 @@ public final class TestJavaJdt0003
 
         assertNotNull( type );
     }
+    
+    @Test
 
     public void testInner() throws Exception
     {

@@ -11,14 +11,12 @@
 
 package org.eclipse.sapphire.tests.java.jdt.t0001;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
+import org.junit.Test;
 
 /**
  * Tests correctness of Java type kind determination of JdtJavaTypeReferenceService.
@@ -26,30 +24,9 @@ import org.eclipse.sapphire.tests.java.jdt.JavaJdtTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestJavaJdt0001
-
-    extends JavaJdtTestCase
-    
+public final class TestJavaJdt0001 extends JavaJdtTestCase
 {
-    private TestJavaJdt0001( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "JavaJdt0001" );
-
-        suite.addTest( new TestJavaJdt0001( "testIsClass" ) );
-        suite.addTest( new TestJavaJdt0001( "testIsAbstractClass" ) );
-        suite.addTest( new TestJavaJdt0001( "testIsInterface" ) );
-        suite.addTest( new TestJavaJdt0001( "testIsAnnotation" ) );
-        suite.addTest( new TestJavaJdt0001( "testIsEnum" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testIsClass() throws Exception
     {
@@ -63,6 +40,8 @@ public final class TestJavaJdt0001
         assertNotNull( type );
         assertEquals( JavaTypeKind.CLASS, type.kind() );
     }
+    
+    @Test
 
     public void testIsAbstractClass() throws Exception
     {
@@ -76,6 +55,8 @@ public final class TestJavaJdt0001
         assertNotNull( type );
         assertEquals( JavaTypeKind.ABSTRACT_CLASS, type.kind() );
     }
+    
+    @Test
 
     public void testIsInterface() throws Exception
     {
@@ -90,6 +71,8 @@ public final class TestJavaJdt0001
         assertEquals( JavaTypeKind.INTERFACE, type.kind() );
     }
     
+    @Test
+    
     public void testIsAnnotation() throws Exception
     {
         final IJavaProject project = getJavaProject();
@@ -102,6 +85,8 @@ public final class TestJavaJdt0001
         assertNotNull( type );
         assertEquals( JavaTypeKind.ANNOTATION, type.kind() );
     }
+    
+    @Test
     
     public void testIsEnum() throws Exception
     {

@@ -11,11 +11,9 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0014;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests VersionMatches and SapphireVersionMatches functions along with String to Version type cast and
@@ -26,22 +24,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class TestExpr0014 extends TestExpr
 {
-    private TestExpr0014( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0014" );
-
-        suite.addTest( new TestExpr0014( "testVersionMatchesFunction" ) );
-        suite.addTest( new TestExpr0014( "testSapphireVersionMatchesFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testVersionMatchesFunction()
     {
@@ -50,6 +33,8 @@ public final class TestExpr0014 extends TestExpr
         testForExpectedValue( context, "${ VersionMatches( '1.2.3', '[1.2.3-2.0)' ) }", Boolean.TRUE );
         testForExpectedValue( context, "${ VersionMatches( '3.5', '[1.2.3-2.0)' ) }", Boolean.FALSE );
     }
+    
+    @Test
     
     public void testSapphireVersionMatchesFunction()
     {

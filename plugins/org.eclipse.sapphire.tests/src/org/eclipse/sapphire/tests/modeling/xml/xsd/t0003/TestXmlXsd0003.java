@@ -17,9 +17,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
@@ -29,6 +26,7 @@ import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.modeling.xml.schema.XmlElementDefinition;
 import org.eclipse.sapphire.modeling.xml.schema.XmlSequenceGroup;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests XML Schema with abstract and substitutionGroup attributes.
@@ -39,23 +37,8 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 public final class TestXmlXsd0003 extends SapphireTestCase
 {
     private final static String SCHEMA_LOCATION = "http://www.eclipse.org/sapphire/tests/xml/xsd/0003";
-    
-    private TestXmlXsd0003( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlXsd0003" );
 
-        suite.addTest( new TestXmlXsd0003( "testSchemaParsing" ) );
-        suite.addTest( new TestXmlXsd0003( "testInsertOrder" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSchemaParsing() throws Exception
     {
@@ -76,6 +59,8 @@ public final class TestXmlXsd0003 extends SapphireTestCase
         final XmlContentModel squareContentModel = rootContentModel.findChildElementContentModel(new QName( SCHEMA_LOCATION, "square" ));
         assertNotNull(squareContentModel);
     }
+    
+    @Test
     
     public void testInsertOrder() throws Exception
     {

@@ -14,13 +14,12 @@
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0010;
 
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests InitialValueService and InitialValue annotation in the context of XML binding.
@@ -31,19 +30,8 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestXmlBinding0010 extends SapphireTestCase
 {
-    private TestXmlBinding0010(final String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        final TestSuite suite = new TestSuite();
-
-        suite.setName("TestXmlBinding0010");
-
-        suite.addTest(new TestXmlBinding0010("test"));
-        return suite;
-    }
-
+    @Test
+    
     public void test() throws Exception {
         final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore(
                 loadResourceAsStream("initial.txt"));

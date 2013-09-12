@@ -13,9 +13,6 @@ package org.eclipse.sapphire.tests.modeling.el.functions.validation.part;
 
 import java.util.Collections;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
@@ -25,6 +22,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.forms.DialogDef;
 import org.eclipse.sapphire.ui.forms.DialogPart;
+import org.junit.Test;
 
 /**
  * Tests Validation function for parts.
@@ -34,21 +32,7 @@ import org.eclipse.sapphire.ui.forms.DialogPart;
 
 public final class PartValidationFunctionTests extends TestExpr
 {
-    private PartValidationFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "PartValidationFunctionTests" );
-
-        suite.addTest( new PartValidationFunctionTests( "testPartValidationFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testPartValidationFunction()
     {

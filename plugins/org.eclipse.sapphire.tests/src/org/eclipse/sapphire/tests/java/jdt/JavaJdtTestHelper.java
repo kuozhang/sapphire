@@ -33,22 +33,18 @@ import org.eclipse.jdt.launching.JavaRuntime;
 public final class JavaJdtTestHelper
 {
     private final Class<?> testClass;
-    private final String testCaseName;
     private IJavaProject project;
     
-    public JavaJdtTestHelper( final Class<?> testClass,
-                              final String testCaseName )
+    public JavaJdtTestHelper( final Class<?> testClass )
     {
         this.testClass = testClass;
-        this.testCaseName = testCaseName;
     }
     
     public IJavaProject getJavaProject() throws Exception
     {
         if( this.project == null )
         {
-            final String name = this.testClass.getName() + "." + this.testCaseName;
-            final IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject( name );
+            final IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject( this.testClass.getName() );
             p.create( null );
             p.open( null );
             

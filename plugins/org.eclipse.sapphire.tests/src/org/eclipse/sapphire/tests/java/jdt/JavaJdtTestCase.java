@@ -14,28 +14,24 @@ package org.eclipse.sapphire.tests.java.jdt;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.After;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class JavaJdtTestCase
-
-    extends SapphireTestCase
-    
+public abstract class JavaJdtTestCase extends SapphireTestCase
 {
     private final JavaJdtTestHelper helper;
     
-    protected JavaJdtTestCase( final String name )
+    protected JavaJdtTestCase()
     {
-        super( name );
-        this.helper = new JavaJdtTestHelper( getClass(), getName() );
+        this.helper = new JavaJdtTestHelper( getClass() );
     }
     
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    public void disposeTestHelper() throws Exception
     {
-        super.tearDown();
         this.helper.dispose();
     }
 

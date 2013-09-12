@@ -11,13 +11,11 @@
 
 package org.eclipse.sapphire.tests.java.t0001;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.internal.StandardJavaTypeReferenceService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests correctness of Java type kind determination of StandardJavaTypeReferenceService.
@@ -25,32 +23,11 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestJava0001
-
-    extends SapphireTestCase
-    
+public final class TestJava0001 extends SapphireTestCase
 {
     private static final String PACKAGE_NAME = "org.eclipse.sapphire.tests.java.t0001";
     
-    private TestJava0001( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Java0001" );
-
-        suite.addTest( new TestJava0001( "testIsClass" ) );
-        suite.addTest( new TestJava0001( "testIsAbstractClass" ) );
-        suite.addTest( new TestJava0001( "testIsInterface" ) );
-        suite.addTest( new TestJava0001( "testIsAnnotation" ) );
-        suite.addTest( new TestJava0001( "testIsEnum" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testIsClass()
     {
@@ -60,6 +37,8 @@ public final class TestJava0001
         assertNotNull( type );
         assertEquals( JavaTypeKind.CLASS, type.kind() );
     }
+    
+    @Test
 
     public void testIsAbstractClass()
     {
@@ -69,6 +48,8 @@ public final class TestJava0001
         assertNotNull( type );
         assertEquals( JavaTypeKind.ABSTRACT_CLASS, type.kind() );
     }
+    
+    @Test
 
     public void testIsInterface()
     {
@@ -79,6 +60,8 @@ public final class TestJava0001
         assertEquals( JavaTypeKind.INTERFACE, type.kind() );
     }
     
+    @Test
+    
     public void testIsAnnotation()
     {
         final StandardJavaTypeReferenceService service = new StandardJavaTypeReferenceService( TestJava0001.class.getClassLoader() );
@@ -87,6 +70,8 @@ public final class TestJava0001
         assertNotNull( type );
         assertEquals( JavaTypeKind.ANNOTATION, type.kind() );
     }
+    
+    @Test
     
     public void testIsEnum()
     {

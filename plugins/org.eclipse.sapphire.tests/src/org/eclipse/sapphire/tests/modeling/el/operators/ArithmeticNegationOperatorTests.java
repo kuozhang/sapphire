@@ -14,8 +14,7 @@ package org.eclipse.sapphire.tests.modeling.el.operators;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the arithmetic negation operator.
@@ -23,36 +22,23 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ArithmeticNegationOperatorTests extends OperatorTests
+public final class ArithmeticNegationOperatorTests extends AbstractOperatorTests
 {
-    private ArithmeticNegationOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "ArithmeticNegationOperatorTests" );
-        
-        for( int i = 1; i <= 3; i++ )
-        {
-            suite.addTest( new ArithmeticNegationOperatorTests( "testArithmeticNegationOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testArithmeticNegationOperator1()
     {
         test( "${ -5 }", new BigInteger( "-5" ) );
     }
+    
+    @Test
 
     public void testArithmeticNegationOperator2()
     {
         test( "${ -5.23 }", new BigDecimal( "-5.23" ) );
     }
+    
+    @Test
 
     public void testArithmeticNegationOperator3()
     {

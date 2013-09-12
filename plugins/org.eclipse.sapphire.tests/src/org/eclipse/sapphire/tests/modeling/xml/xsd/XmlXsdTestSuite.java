@@ -12,42 +12,34 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.modeling.xml.xsd.t0001.TestXmlXsd0001;
 import org.eclipse.sapphire.tests.modeling.xml.xsd.t0002.TestXmlXsd0002;
 import org.eclipse.sapphire.tests.modeling.xml.xsd.t0003.TestXmlXsd0003;
 import org.eclipse.sapphire.tests.modeling.xml.xsd.t0004.TestXmlXsd0004;
 import org.eclipse.sapphire.tests.modeling.xml.xsd.t0005.TestXmlXsd0005;
 import org.eclipse.sapphire.tests.modeling.xml.xsd.t0006.TestXmlXsd0006;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class XmlXsdTestSuite extends TestCase
-{
-    private XmlXsdTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "XmlXsdTestSuite" );
+@RunWith( Suite.class )
 
-        suite.addTest( TestXmlXsd0001.suite() );
-        suite.addTest( TestXmlXsd0002.suite() );
-        suite.addTest( TestXmlXsd0003.suite() );
-        suite.addTest( TestXmlXsd0004.suite() );
-        suite.addTest( TestXmlXsd0005.suite() );
-        suite.addTest( TestXmlXsd0006.suite() );
-        
-        return suite;
+@SuiteClasses
+(
+    {
+        TestXmlXsd0001.class,
+        TestXmlXsd0002.class,
+        TestXmlXsd0003.class,
+        TestXmlXsd0004.class,
+        TestXmlXsd0005.class,
+        TestXmlXsd0006.class
     }
-    
+)
+
+public final class XmlXsdTestSuite
+{
 }

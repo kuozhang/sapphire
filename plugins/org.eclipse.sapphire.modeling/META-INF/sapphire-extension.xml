@@ -91,8 +91,8 @@
     <service>
         <context>Sapphire.Property.Instance</context>
         <id>Sapphire.ValidationService.UniqueValue</id>
-        <implementation>org.eclipse.sapphire.services.UniqueValueValidationService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.UniqueValueValidationServiceCondition</condition>
+        <implementation>org.eclipse.sapphire.internal.UniqueValueValidationService</implementation>
+        <condition>org.eclipse.sapphire.internal.UniqueValueValidationService$Condition</condition>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>

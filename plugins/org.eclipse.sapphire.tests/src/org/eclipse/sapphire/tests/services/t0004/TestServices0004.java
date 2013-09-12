@@ -15,14 +15,12 @@ package org.eclipse.sapphire.tests.services.t0004;
 import java.util.Collection;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.services.ContentProposal;
 import org.eclipse.sapphire.services.ContentProposalService;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests PossibleValuesContentProposalService.
@@ -33,23 +31,8 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestServices0004 extends SapphireTestCase
 {
-    private TestServices0004( final String name ) 
-    {
-        super( name );
-    }
-
-    public static Test suite() 
-    {
-        final TestSuite suite = new TestSuite();
-
-        suite.setName( "TestServices0004" );
-        
-        suite.addTest( new TestServices0004( "testFromPossibleValuesService" ) );
-        suite.addTest( new TestServices0004( "testFromPossibleValuesAnnotation" ) );
-
-        return suite;
-    }
-
+    @Test
+    
     public void testFromPossibleValuesService()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -79,6 +62,8 @@ public final class TestServices0004 extends SapphireTestCase
         assertEquals( 3, proposals.size() );
     }
 
+    @Test
+    
     public void testFromPossibleValuesAnnotation()
     {
         final TestElement item = TestElement.TYPE.instantiate();

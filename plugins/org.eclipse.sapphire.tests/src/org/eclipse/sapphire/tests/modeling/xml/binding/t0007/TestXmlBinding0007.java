@@ -12,13 +12,12 @@
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0007;
 
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests adding of namespace declaration when default prefix for the namespace is already in use.
@@ -26,26 +25,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlBinding0007
-
-    extends SapphireTestCase
-    
+public final class TestXmlBinding0007 extends SapphireTestCase
 {
-    private TestXmlBinding0007( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlBinding0007" );
-
-        suite.addTest( new TestXmlBinding0007( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

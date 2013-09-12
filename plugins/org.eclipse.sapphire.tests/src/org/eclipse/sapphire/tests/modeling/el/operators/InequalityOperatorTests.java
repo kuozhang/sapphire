@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the inequality operator.
@@ -20,96 +19,107 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class InequalityOperatorTests extends OperatorTests
+public final class InequalityOperatorTests extends AbstractOperatorTests
 {
-    private InequalityOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "InequalityOperatorTests" );
-        
-        for( int i = 1; i <= 15; i++ )
-        {
-            suite.addTest( new InequalityOperatorTests( "testInequalityOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testInequalityOperator1()
     {
         test( "${ 3 != 3 }", false );
     }
-
+    
+    @Test
+    
     public void testInequalityOperator2()
     {
         test( "${ 3 != 5 }", true );
     }
 
+    @Test
+    
     public void testInequalityOperator3()
     {
         test( "${ 3.2 != 3.2 }", false );
     }
 
+    @Test
+    
     public void testInequalityOperator4()
     {
         test( "${ 3.2 != 5 }", true );
     }
+    
+    @Test
     
     public void testInequalityOperator5()
     {
         test( "${ 'abc' != 'abc' }", false );
     }
 
+    @Test
+    
     public void testInequalityOperator6()
     {
         test( "${ 'abc' != 'xyz' }", true );
     }
+    
+    @Test
     
     public void testInequalityOperator7()
     {
         test( "${ 3 ne 3 }", false );
     }
 
+    @Test
+    
     public void testInequalityOperator8()
     {
         test( "${ 3 ne 5 }", true );
     }
 
+    @Test
+    
     public void testInequalityOperator9()
     {
         test( "${ 3.2 ne 3.2 }", false );
     }
 
+    @Test
+    
     public void testInequalityOperator10()
     {
         test( "${ 3.2 ne 5 }", true );
     }
+    
+    @Test
     
     public void testInequalityOperator11()
     {
         test( "${ 'abc' ne 'abc' }", false );
     }
 
+    @Test
+    
     public void testInequalityOperator12()
     {
         test( "${ 'abc' ne 'xyz' }", true );
     }
 
+    @Test
+    
     public void testInequalityOperator13()
     {
         test( "${ Integer3 != 7 }", true );
     }
 
+    @Test
+    
     public void testInequalityOperator14()
     {
         test( "${ 7 != Integer5 }", true );
     }
+    
+    @Test
     
     public void testInequalityOperator15()
     {

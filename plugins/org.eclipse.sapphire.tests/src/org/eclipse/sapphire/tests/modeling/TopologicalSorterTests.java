@@ -15,48 +15,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.ui.util.TopologicalSorter;
 import org.eclipse.sapphire.ui.util.TopologicalSorter.Entity;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @SuppressWarnings( "unchecked" )
-
-public final class TopologicalSorterTests
-
-    extends SapphireTestCase
-    
+public final class TopologicalSorterTests extends SapphireTestCase
 {
-    private TopologicalSorterTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TopologicalSorterTests" );
-
-        suite.addTest( new TopologicalSorterTests( "test_1" ) );
-        suite.addTest( new TopologicalSorterTests( "test_2" ) );
-        suite.addTest( new TopologicalSorterTests( "test_3" ) );
-        suite.addTest( new TopologicalSorterTests( "test_4" ) );
-        suite.addTest( new TopologicalSorterTests( "test_5" ) );
-        suite.addTest( new TopologicalSorterTests( "test_6" ) );
-        suite.addTest( new TopologicalSorterTests( "test_7" ) );
-        suite.addTest( new TopologicalSorterTests( "test_8" ) );
-        suite.addTest( new TopologicalSorterTests( "test_9" ) );
-        suite.addTest( new TopologicalSorterTests( "test_10" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test_1()
     {
@@ -71,6 +42,8 @@ public final class TopologicalSorterTests
         
         testWithCycleBreaking( sorter, list( b, c, a ) );
     }
+    
+    @Test
     
     public void test_2()
     {
@@ -87,6 +60,8 @@ public final class TopologicalSorterTests
         testWithCycleBreaking( sorter, list( c, b, a ) );
     }
     
+    @Test
+    
     public void test_3()
     {
         final TopologicalSorter<String> sorter = new TopologicalSorter<String>();
@@ -101,6 +76,8 @@ public final class TopologicalSorterTests
         
         testWithCycleBreaking( sorter, list( c, b, a ) );
     }
+    
+    @Test
     
     public void test_4()
     {
@@ -125,6 +102,8 @@ public final class TopologicalSorterTests
         
         testWithCycleBreaking( sorter, list( d, c, b, a ), list( list( b, c, d ) ) );
     }
+    
+    @Test
     
     public void test_5()
     {
@@ -159,6 +138,8 @@ public final class TopologicalSorterTests
         testWithCycleBreaking( sorter, list( d, g, h, f, e, c, b, a ), list( list( b, c, d ), list( e, f, g ) ) );
     }
     
+    @Test
+    
     public void test_6()
     {
         // One cycle in a graph with no leaves.
@@ -180,6 +161,8 @@ public final class TopologicalSorterTests
         
         testWithCycleBreaking( sorter, list( c, b, a ), list( list( a, b, c ) ) );
     }
+    
+    @Test
     
     public void test_7()
     {
@@ -219,6 +202,8 @@ public final class TopologicalSorterTests
         testWithCycleBreaking( sorter, list( i, f, g, h, e, d, c, b, a ), list( list( b, c, d, e, h, i ), list( e, h, g, f ) ) );
     }
     
+    @Test
+    
     public void test_8()
     {
         // Cycle with another cycle in a graph that has no leaves.
@@ -255,6 +240,8 @@ public final class TopologicalSorterTests
         testWithCycleBreaking( sorter, list( i, f, g, h, e, d, c, b ), list( list( b, c, d, e, h, i ), list( e, h, g, f ) ) );
     }
     
+    @Test
+    
     public void test_9()
     {
         // Graph with a self cycle.
@@ -274,6 +261,8 @@ public final class TopologicalSorterTests
         
         testWithCycleBreaking( sorter, list( b, a ), list( list( b ) ) );
     }
+    
+    @Test
     
     public void test_10()
     {

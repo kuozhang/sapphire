@@ -11,36 +11,28 @@
 
 package org.eclipse.sapphire.tests.misc;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.misc.t0001.TestMisc0001;
 import org.eclipse.sapphire.tests.misc.t0002.TestMisc0002;
 import org.eclipse.sapphire.tests.misc.t0003.TestMisc0003;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestMisc extends TestCase
-{
-    private TestMisc( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestMisc" );
+@RunWith( Suite.class )
 
-        suite.addTest( TestMisc0001.suite() );
-        suite.addTest( TestMisc0002.suite() );
-        suite.addTest( TestMisc0003.suite() );
-        
-        return suite;
+@SuiteClasses
+(
+    {
+        TestMisc0001.class,
+        TestMisc0002.class,
+        TestMisc0003.class
     }
-    
+)
+
+public final class TestMisc
+{
 }

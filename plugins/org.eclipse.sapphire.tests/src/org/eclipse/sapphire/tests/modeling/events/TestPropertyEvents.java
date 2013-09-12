@@ -14,14 +14,12 @@ package org.eclipse.sapphire.tests.modeling.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests delivery of property events.
@@ -31,23 +29,6 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestPropertyEvents extends SapphireTestCase
 {
-    private TestPropertyEvents( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestPropertyEvents" );
-
-        suite.addTest( new TestPropertyEvents( "testEventsValuePropertyPlain" ) );
-        suite.addTest( new TestPropertyEvents( "testEventsValuePropertyConstrained" ) );
-        
-        return suite;
-    }
-    
     private List<Event> monitor( final TestElement element )
     {
         final List<Event> events = new ArrayList<Event>();
@@ -70,6 +51,8 @@ public final class TestPropertyEvents extends SapphireTestCase
         
         return events;
     }
+    
+    @Test
     
     public void testEventsValuePropertyPlain() throws Exception
     {
@@ -108,6 +91,8 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testEventsValuePropertyConstrained() throws Exception
     {

@@ -13,14 +13,12 @@ package org.eclipse.sapphire.tests.services.t0002;
 
 import java.io.ByteArrayInputStream;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests FileExtensionsService and @FileExtensions annotation.
@@ -28,34 +26,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestServices0002
-
-    extends SapphireTestCase
-    
+public final class TestServices0002 extends SapphireTestCase
 {
-    private TestServices0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestServices0002" );
-
-        suite.addTest( new TestServices0002( "testNoFileExtensionsService" ) );
-        suite.addTest( new TestServices0002( "testSingleFileExtension" ) );
-        suite.addTest( new TestServices0002( "testMultipleFileExtensions" ) );
-        suite.addTest( new TestServices0002( "testFileExtensionsExpr1" ) );
-        suite.addTest( new TestServices0002( "testFileExtensionsExpr2" ) );
-        suite.addTest( new TestServices0002( "testFileExtensionsExpr3" ) );
-        suite.addTest( new TestServices0002( "testFileExtensionsExpr4" ) );
-        suite.addTest( new TestServices0002( "testCustomFileExtensionsService" ) );
-        suite.addTest( new TestServices0002( "testValidation" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testNoFileExtensionsService() throws Exception
     {
@@ -65,6 +38,8 @@ public final class TestServices0002
         assertNull( service );
     }
 
+    @Test
+    
     public void testSingleFileExtension() throws Exception
     {
         final TestModel model = TestModel.TYPE.instantiate();
@@ -74,6 +49,8 @@ public final class TestServices0002
         assertEquals( list( "png" ), service.extensions() );
     }
 
+    @Test
+    
     public void testMultipleFileExtensions() throws Exception
     {
         final TestModel model = TestModel.TYPE.instantiate();
@@ -82,6 +59,8 @@ public final class TestServices0002
         assertNotNull( service );
         assertEquals( list( "png", "gif", "jpeg" ), service.extensions() );
     }
+    
+    @Test
     
     public void testFileExtensionsExpr1() throws Exception
     {
@@ -96,6 +75,8 @@ public final class TestServices0002
         model.setLossyCompression( false );
         assertEquals( list( "png", "gif" ), service.extensions() );
     }
+    
+    @Test
     
     public void testFileExtensionsExpr2() throws Exception
     {
@@ -112,6 +93,8 @@ public final class TestServices0002
         assertEquals( list( "png", "gif" ), service.extensions() );
     }
     
+    @Test
+    
     public void testFileExtensionsExpr3() throws Exception
     {
         final TestModelRoot root = TestModelRoot.TYPE.instantiate();
@@ -127,6 +110,8 @@ public final class TestServices0002
         assertEquals( list( "png", "gif" ), service.extensions() );
     }
 
+    @Test
+    
     public void testFileExtensionsExpr4() throws Exception
     {
         final TestModelRoot root = TestModelRoot.TYPE.instantiate();
@@ -141,6 +126,8 @@ public final class TestServices0002
         root.setLossyCompression( false );
         assertEquals( list( "png", "gif" ), service.extensions() );
     }
+    
+    @Test
 
     public void testCustomFileExtensionsService() throws Exception
     {
@@ -150,6 +137,8 @@ public final class TestServices0002
         assertNotNull( service );
         assertEquals( list( "avi", "mpeg" ), service.extensions() );
     }
+    
+    @Test
     
     public void testValidation() throws Exception
     {

@@ -11,33 +11,25 @@
 
 package org.eclipse.sapphire.tests.modeling.el.properties;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.modeling.el.properties.thisp.ThisPropertyTests;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyTests extends TestCase
-{
-    private PropertyTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "PropertyTests" );
-        
-        suite.addTest( ThisPropertyTests.suite() );
-        
-        return suite;
-    }
+@RunWith( Suite.class )
 
+@SuiteClasses
+(
+    {
+        ThisPropertyTests.class
+    }
+)
+
+public final class PropertyTests
+{
 }
 

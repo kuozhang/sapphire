@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.t0018;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests FailSafeFunction function's handling of malformed values. Of particular interest is ability to retrieve malformed text
@@ -30,23 +28,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class TestExpr0018 extends TestExpr
 {
-    private TestExpr0018( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestExpr0018" );
-
-        suite.addTest( new TestExpr0018( "testFailSafeWithBoolean" ) );
-        suite.addTest( new TestExpr0018( "testFailSafeWithInteger" ) );
-        suite.addTest( new TestExpr0018( "testFailSafeWithEnum" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testFailSafeWithBoolean()
     {
@@ -71,6 +53,8 @@ public final class TestExpr0018 extends TestExpr
         assertFailSafeValueEquals( context, "${ BooleanValueWithDefault }", Boolean.class, null, Boolean.TRUE );
     }
     
+    @Test
+    
     public void testFailSafeWithInteger()
     {
         final TestElement element = TestElement.TYPE.instantiate();
@@ -93,6 +77,8 @@ public final class TestExpr0018 extends TestExpr
         assertFailSafeValueEquals( context, "${ IntegerValueWithDefault }", Integer.class, 2, 1 );
         assertFailSafeValueEquals( context, "${ IntegerValueWithDefault }", Integer.class, null, 1 );
     }
+    
+    @Test
     
     public void testFailSafeWithEnum()
     {

@@ -11,11 +11,9 @@
 
 package org.eclipse.sapphire.tests.services.t0013;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.RequiredConstraintService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests for @Required annotation, RequiredConstraintService, DeclarativeRequiredConstraintService,
@@ -26,22 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class RequiredConstraintTests extends SapphireTestCase
 {
-    private RequiredConstraintTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "RequiredConstraintTests" );
-
-        suite.addTest( new RequiredConstraintTests( "testRequiredConstraintValueProperty" ) );
-        suite.addTest( new RequiredConstraintTests( "testRequiredConstraintElementProperty" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testRequiredConstraintValueProperty() throws Exception
     {
@@ -88,6 +71,8 @@ public final class RequiredConstraintTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
     
     public void testRequiredConstraintElementProperty() throws Exception
     {

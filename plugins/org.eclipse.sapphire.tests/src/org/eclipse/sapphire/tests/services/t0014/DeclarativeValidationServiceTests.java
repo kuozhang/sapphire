@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.services.t0014;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests for @Validation, @Validations and DeclarativeValidationService.
@@ -24,21 +22,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class DeclarativeValidationServiceTests extends SapphireTestCase
 {
-    private DeclarativeValidationServiceTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "DeclarativeValidationServiceTests" );
-
-        suite.addTest( new DeclarativeValidationServiceTests( "testDeclarativeValidationService" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testDeclarativeValidationService() throws Exception
     {

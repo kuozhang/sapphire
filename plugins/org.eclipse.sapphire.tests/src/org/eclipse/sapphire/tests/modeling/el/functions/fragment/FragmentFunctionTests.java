@@ -11,14 +11,12 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.fragment;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Fragment function.
@@ -28,21 +26,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class FragmentFunctionTests extends TestExpr
 {
-    private FragmentFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "FragmentFunctionTests" );
-
-        suite.addTest( new FragmentFunctionTests( "testFragmentFunction" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testFragmentFunction()
     {

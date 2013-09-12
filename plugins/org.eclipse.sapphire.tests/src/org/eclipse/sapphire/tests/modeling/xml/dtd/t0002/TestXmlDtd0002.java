@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0002;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.dtd.DtdParser;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests entity resolution during DTD parsing.
@@ -26,21 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestXmlDtd0002 extends SapphireTestCase
 {
-    private TestXmlDtd0002( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlDtd0002" );
-
-        suite.addTest( new TestXmlDtd0002( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

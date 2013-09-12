@@ -14,12 +14,10 @@ package org.eclipse.sapphire.tests.services.t0008;
 import java.util.List;
 import java.util.SortedSet;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.ValidationService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests visibility of base property services in a derived property. 
@@ -29,21 +27,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestServices0008 extends SapphireTestCase
 {
-    private TestServices0008( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestServices0008" );
-
-        suite.addTest( new TestServices0008( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

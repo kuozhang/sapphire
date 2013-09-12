@@ -12,13 +12,12 @@
 package org.eclipse.sapphire.tests.modeling.xml.xsd.t0006;
 
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.modeling.xml.XmlUtil;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 import org.w3c.dom.Document;
 
 /**
@@ -29,27 +28,7 @@ import org.w3c.dom.Document;
 
 public final class TestXmlXsd0006 extends SapphireTestCase
 {
-    private TestXmlXsd0006( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlXsd0006" );
-
-        suite.addTest( new TestXmlXsd0006( "testConvertToNamespaceForm1" ) );
-        suite.addTest( new TestXmlXsd0006( "testConvertToNamespaceForm2" ) );
-        suite.addTest( new TestXmlXsd0006( "testConvertToNamespaceForm3" ) );
-        suite.addTest( new TestXmlXsd0006( "testConvertToNamespaceForm4" ) );
-        
-        suite.addTest( new TestXmlXsd0006( "testConvertFromNamespaceForm1" ) );
-        suite.addTest( new TestXmlXsd0006( "testConvertFromNamespaceForm2" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testConvertToNamespaceForm1() throws Exception
     {
@@ -60,6 +39,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006"
         );
     }
+    
+    @Test
 
     public void testConvertToNamespaceForm2() throws Exception
     {
@@ -71,6 +52,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
             null
         );
     }
+    
+    @Test
 
     public void testConvertToNamespaceForm3() throws Exception
     {
@@ -82,6 +65,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
             "http://www.eclipse.org/sapphire/tests/xml/xsd/0006"
         );
     }
+    
+    @Test
 
     public void testConvertToNamespaceForm4() throws Exception
     {
@@ -138,6 +123,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
             }
         );
     }
+    
+    @Test
 
     public void testConvertFromNamespaceForm1() throws Exception
     {
@@ -147,6 +134,8 @@ public final class TestXmlXsd0006 extends SapphireTestCase
             "ConvertFromNamespaceForm-1-Expected.txt"
         );
     }
+    
+    @Test
 
     public void testConvertFromNamespaceForm2() throws Exception
     {

@@ -11,12 +11,9 @@
 
 package org.eclipse.sapphire.tests;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.binding.list.LayeredListPropertyBindingTests;
 import org.eclipse.sapphire.tests.conversion.ConversionTests;
+import org.eclipse.sapphire.tests.index.IndexTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.misc.TestMisc;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
@@ -24,35 +21,32 @@ import org.eclipse.sapphire.tests.services.ServicesTestSuite;
 import org.eclipse.sapphire.tests.ui.UiTestSuite;
 import org.eclipse.sapphire.tests.unique.UniqueValueTests;
 import org.eclipse.sapphire.tests.workspace.WorkspaceTestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireTestSuite extends TestCase
+@RunWith( Suite.class )
+
+@SuiteClasses
+(
+    {
+        LayeredListPropertyBindingTests.class,
+        ConversionTests.class,
+        TestMisc.class,
+        SapphireModelingFrameworkTests.class,
+        JavaTestSuite.class,
+        UiTestSuite.class,
+        WorkspaceTestSuite.class,
+        ServicesTestSuite.class,
+        UniqueValueTests.class,
+        IndexTests.class
+    }
+)
+
+public final class SapphireTestSuite
 {
-    private SapphireTestSuite( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "Sapphire" );
-        
-        suite.addTest( LayeredListPropertyBindingTests.suite() );
-        suite.addTest( ConversionTests.suite() );
-        suite.addTest( TestMisc.suite() );
-        suite.addTest( SapphireModelingFrameworkTests.suite() );
-        suite.addTest( JavaTestSuite.suite() );
-        suite.addTest( UiTestSuite.suite() );
-        suite.addTest( WorkspaceTestSuite.suite() );
-        suite.addTest( ServicesTestSuite.suite() );
-        suite.addTest( UniqueValueTests.suite() );
-        
-        return suite;
-    }
-    
 }

@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0003;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests the annotation processor's case-insensitivity when looking for property getter and
@@ -25,21 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0003 extends SapphireTestCase
 {
-    private TestModelingMisc0003( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0003" );
-
-        suite.addTest( new TestModelingMisc0003( "test" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void test() throws Exception
     {

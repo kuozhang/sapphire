@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0014;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests operation of Element.dispose() method when the element contains an element or a list property that
@@ -25,23 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0014 extends SapphireTestCase
 {
-    private TestModelingMisc0014( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0014" );
-
-        suite.addTest( new TestModelingMisc0014( "testElementProperty" ) );
-        suite.addTest( new TestModelingMisc0014( "testImpliedElementProperty" ) );
-        suite.addTest( new TestModelingMisc0014( "testListProperty" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testElementProperty() throws Exception
     {
@@ -51,6 +33,8 @@ public final class TestModelingMisc0014 extends SapphireTestCase
         root.dispose();
     }
 
+    @Test
+    
     public void testImpliedElementProperty() throws Exception
     {
         final RootElement root = RootElement.TYPE.instantiate();
@@ -58,6 +42,8 @@ public final class TestModelingMisc0014 extends SapphireTestCase
         root.getChildren();
         root.dispose();
     }
+    
+    @Test
     
     public void testListProperty() throws Exception
     {

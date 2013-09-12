@@ -11,14 +11,12 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0012;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests for XmlDelimitedListBindingImpl and DelimitedListBindingImpl. 
@@ -28,24 +26,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestXmlBinding0012 extends SapphireTestCase
 {
-    private TestXmlBinding0012( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlBinding0012" );
-
-        suite.addTest( new TestXmlBinding0012( "testInsertOneAtEnd" ) );
-        suite.addTest( new TestXmlBinding0012( "testInsertTwoAtEnd" ) );
-        suite.addTest( new TestXmlBinding0012( "testMoveUp" ) );
-        suite.addTest( new TestXmlBinding0012( "testMoveDown" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testInsertOneAtEnd() throws Exception
     {
@@ -64,6 +45,8 @@ public final class TestXmlBinding0012 extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
 
     public void testInsertTwoAtEnd() throws Exception
     {
@@ -87,6 +70,8 @@ public final class TestXmlBinding0012 extends SapphireTestCase
         }
     }
 
+    @Test
+    
     public void testMoveUp() throws Exception
     {
         final ByteArrayResourceStore resourceStore = new ByteArrayResourceStore();
@@ -131,6 +116,8 @@ public final class TestXmlBinding0012 extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
     
     public void testMoveDown() throws Exception
     {

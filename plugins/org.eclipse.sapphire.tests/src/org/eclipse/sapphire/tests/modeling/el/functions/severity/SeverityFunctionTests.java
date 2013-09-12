@@ -11,15 +11,13 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.severity;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
+import org.junit.Test;
 
 /**
  * Tests Severity function.
@@ -29,23 +27,7 @@ import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 
 public final class SeverityFunctionTests extends TestExpr
 {
-    private SeverityFunctionTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "SeverityFunctionTests" );
-
-        suite.addTest( new SeverityFunctionTests( "testSeverityFunction" ) );
-        suite.addTest( new SeverityFunctionTests( "testSeverityFunctionNull" ) );
-        suite.addTest( new SeverityFunctionTests( "testSeverityFunctionWrongType" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSeverityFunction()
     {
@@ -72,6 +54,8 @@ public final class SeverityFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testSeverityFunctionNull()
     {
@@ -92,6 +76,8 @@ public final class SeverityFunctionTests extends TestExpr
             fr.dispose();
         }
     }
+    
+    @Test
 
     public void testSeverityFunctionWrongType()
     {

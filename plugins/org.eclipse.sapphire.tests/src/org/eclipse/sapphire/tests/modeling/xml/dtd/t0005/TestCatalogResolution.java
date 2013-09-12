@@ -11,14 +11,12 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0005;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.XmlElement;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchema;
 import org.eclipse.sapphire.modeling.xml.schema.XmlDocumentSchemasCache;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests reading DTDs from the local catalog.
@@ -28,23 +26,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestCatalogResolution extends SapphireTestCase
 {
-    private TestCatalogResolution( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestCatalogResolution" );
-
-        suite.addTest( new TestCatalogResolution( "testSystemContribution" ) );
-        suite.addTest( new TestCatalogResolution( "testPublicContribution1" ) );
-        suite.addTest( new TestCatalogResolution( "testPublicContribution2" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testSystemContribution() throws Exception
     {
@@ -58,8 +40,10 @@ public final class TestCatalogResolution extends SapphireTestCase
         
         assertNotNull( element.getContentModel() );
     }
+    
+    @Test
 
-   public void testPublicContribution1() throws Exception
+    public void testPublicContribution1() throws Exception
     {
         final XmlDocumentSchema schema = XmlDocumentSchemasCache.getSchema( null, "-//Sapphire//TestCatalogResolution1//EN", "http://www.eclipse.org/sapphire/tests/xml/dtd/0005p.dtd" );
         
@@ -71,6 +55,8 @@ public final class TestCatalogResolution extends SapphireTestCase
         
         assertNotNull( element.getContentModel() );
     }
+    
+    @Test
 
     public void testPublicContribution2() throws Exception
     {

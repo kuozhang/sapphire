@@ -25,22 +25,11 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class TestWorkspace
-
-    extends SapphireTestCase
-    
+public abstract class TestWorkspace extends SapphireTestCase
 {
-    protected TestWorkspace( final String name )
+    protected final IProject createProject( final String name ) throws Exception
     {
-        super( name );
-    }
-    
-    protected final IProject createProject( final String name ) 
-            
-        throws Exception
-        
-    {
-        String n = getClass().getName() + "." + getName();
+        String n = getClass().getName();
         
         if( name != null )
         {
@@ -124,7 +113,7 @@ public abstract class TestWorkspace
     
     protected final void deleteProject( final String name ) throws Exception
     {
-        String n = getClass().getName() + "." + getName();
+        String n = getClass().getName();
         
         if( name != null )
         {

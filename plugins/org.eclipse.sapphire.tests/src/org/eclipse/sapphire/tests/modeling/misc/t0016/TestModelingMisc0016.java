@@ -11,10 +11,8 @@
 
 package org.eclipse.sapphire.tests.modeling.misc.t0016;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests behavior of Element.enabled( ModelProperty ) method for overridden properties.
@@ -24,21 +22,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestModelingMisc0016 extends SapphireTestCase
 {
-    private TestModelingMisc0016( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestModelingMisc0016" );
-
-        suite.addTest( new TestModelingMisc0016( "testEnablementOfOverriddenProperty" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testEnablementOfOverriddenProperty() throws Exception
     {

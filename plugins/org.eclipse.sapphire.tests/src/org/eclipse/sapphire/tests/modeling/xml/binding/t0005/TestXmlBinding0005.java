@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0005;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests reporting of unresolvable namespace usage in element property binding.
@@ -24,27 +22,9 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class TestXmlBinding0005
-
-    extends SapphireTestCase
-    
+public final class TestXmlBinding0005 extends SapphireTestCase
 {
-    private TestXmlBinding0005( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestXmlBinding0005" );
-
-        suite.addTest( new TestXmlBinding0005( "testInMapping" ) );
-        suite.addTest( new TestXmlBinding0005( "testInPath" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testInMapping() throws Exception
     {
@@ -62,6 +42,8 @@ public final class TestXmlBinding0005
         }
     }
 
+    @Test
+    
     public void testInPath() throws Exception
     {
         final XmlResourceStore xmlResourceStore = new XmlResourceStore();

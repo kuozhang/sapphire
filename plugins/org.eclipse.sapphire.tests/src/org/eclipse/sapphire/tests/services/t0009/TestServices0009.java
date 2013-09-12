@@ -11,12 +11,10 @@
 
 package org.eclipse.sapphire.tests.services.t0009;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionConstraint;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests VersionSerializationService and VersionConstraintSerializationService. 
@@ -26,22 +24,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestServices0009 extends SapphireTestCase
 {
-    private TestServices0009( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestServices0009" );
-
-        suite.addTest( new TestServices0009( "testVersionSerializationService" ) );
-        suite.addTest( new TestServices0009( "testVersionConstraintSerializationService" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testVersionSerializationService() throws Exception
     {
@@ -58,6 +41,8 @@ public final class TestServices0009 extends SapphireTestCase
         assertEquals( 3, version.segment( 2 ) );
     }
 
+    @Test
+    
     public void testVersionConstraintSerializationService() throws Exception
     {
         final TestElement element = TestElement.TYPE.instantiate();

@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests for the logical negation operator.
@@ -20,41 +19,30 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class LogicalNegationOperatorTests extends OperatorTests
+public final class LogicalNegationOperatorTests extends AbstractOperatorTests
 {
-    private LogicalNegationOperatorTests( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "LogicalNegationOperatorTests" );
-        
-        for( int i = 1; i <= 4; i++ )
-        {
-            suite.addTest( new LogicalNegationOperatorTests( "testLogicalNegationOperator" + String.valueOf( i ) ) );
-        }
-        
-        return suite;
-    }
+    @Test
     
     public void testLogicalNegationOperator1()
     {
         test( "${ ! true }", false );
     }
     
+    @Test
+    
     public void testLogicalNegationOperator2()
     {
         test( "${ not true }", false );
     }
     
+    @Test
+    
     public void testLogicalNegationOperator3()
     {
         test( "${ ! false }", true );
     }
+    
+    @Test
     
     public void testLogicalNegationOperator4()
     {

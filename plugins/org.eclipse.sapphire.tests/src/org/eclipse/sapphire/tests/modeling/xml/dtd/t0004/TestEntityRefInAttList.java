@@ -11,11 +11,9 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.dtd.t0004;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.sapphire.modeling.xml.dtd.DtdParser;
 import org.eclipse.sapphire.tests.SapphireTestCase;
+import org.junit.Test;
 
 /**
  * Tests parsing of a DTD with an entity ref in ATTLIST.
@@ -25,21 +23,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 
 public final class TestEntityRefInAttList extends SapphireTestCase
 {
-    private TestEntityRefInAttList( final String name )
-    {
-        super( name );
-    }
-    
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite();
-        
-        suite.setName( "TestEntityRefInAttList" );
-
-        suite.addTest( new TestEntityRefInAttList( "testEntityRefInAttList" ) );
-        
-        return suite;
-    }
+    @Test
     
     public void testEntityRefInAttList() throws Exception
     {
