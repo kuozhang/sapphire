@@ -980,13 +980,15 @@ public final class ElementList<T extends Element> extends Property implements Li
     {
         if( this.content != null )
         {
-            for( T element : this.content )
+            for( final T element : this.content )
             {
                 element.dispose();
             }
             
             this.content = null;
         }
+        
+        this.indexes = null;
     }
 
     private void ensureNotReadOnly()
