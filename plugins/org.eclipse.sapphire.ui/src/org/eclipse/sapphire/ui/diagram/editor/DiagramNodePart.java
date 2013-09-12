@@ -272,7 +272,7 @@ public class DiagramNodePart
     
     private void notifyShapeReorder(ShapeFactoryPart shapeFactory)
     {
-		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+		DiagramShapeEvent event = new DiagramShapeEvent(this, shapeFactory);
     	event.setShapeEventType(ShapeEventType.ShapeReorder);
     	this.broadcast(event);
     }
