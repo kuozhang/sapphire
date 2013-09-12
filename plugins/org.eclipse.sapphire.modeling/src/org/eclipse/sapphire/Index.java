@@ -60,7 +60,7 @@ public final class Index<T extends Element>
                 @Override
                 public void handle( final Event event )
                 {
-                    Index.this.handle( event );;
+                    Index.this.handle( event );
                 }
             };
             
@@ -271,7 +271,7 @@ public final class Index<T extends Element>
                     }
                 }
             }
-            else if( event instanceof ElementDisposeEvent )
+            else if( event instanceof ElementDisposeEvent && ! this.list.disposed() )
             {
                 remove( ( (ElementDisposeEvent) event ).element() );
                 
