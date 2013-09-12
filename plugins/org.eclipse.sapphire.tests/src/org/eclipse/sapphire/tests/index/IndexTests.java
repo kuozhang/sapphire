@@ -195,6 +195,39 @@ public final class IndexTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    /**
+     * Test index behavior with list elements that have a custom EqualityService.
+     */
+    
+    @Test
+    
+    public void testIndexWithEqualityService()
+    {
+        final TestElementWithEqualityService element = TestElementWithEqualityService.TYPE.instantiate();
+        
+        try
+        {
+            final ElementList<TestElementWithEqualityService.ListEntry> list = element.getList();
+            
+            list.insert().setValue( "a" );
+            list.insert().setValue( "b" );
+            list.insert().setValue( "a" );
+            
+            final Index<TestElementWithEqualityService.ListEntry> index = list.index( TestElementWithEqualityService.ListEntry.PROP_VALUE );
+            
+            assertEquals( 2, index.elements( "a" ).size() );
+            assertEquals( 1, index.elements( "b" ).size() );
+            
+            list.insert().setValue( "b" );
+            
+            assertEquals( 2, index.elements( "b" ).size() );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
 
     /**
      * Test {@link ElementList#index(ValueProperty)} with a null.

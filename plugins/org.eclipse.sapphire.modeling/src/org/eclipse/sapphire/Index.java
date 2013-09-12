@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -176,7 +177,7 @@ public final class Index<T extends Element>
                 }
                 else
                 {
-                    return SetFactory.unmodifiable( (Set<T>) obj );
+                    return Collections.unmodifiableSet( new IdentityHashSet<T>( (Set<T>) obj ) );
                 }
             }
         }
