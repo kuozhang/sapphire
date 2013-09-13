@@ -229,6 +229,7 @@ public final class DiagramNodeTemplate extends SapphirePart
             this.embeddedConnTemplate = new DiagramEmbeddedConnectionTemplate(embeddedConnDef);
             IDiagramConnectionDef connDef = this.diagramEditor.getDiagramConnectionDef(embeddedConnDef.getConnectionId().content());
             this.embeddedConnTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
+            this.embeddedConnTemplate.initialize();
         }
     }
     
@@ -420,6 +421,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         DiagramNodePart newNode = new DiagramNodePart();
         newNode.init(this, element, this.definition, 
                 Collections.<String,String>emptyMap());
+        newNode.initialize();
         newNode.attach(this.nodePartListener);
         this.diagramNodes.add(newNode);
         if (this.embeddedConnTemplate != null)

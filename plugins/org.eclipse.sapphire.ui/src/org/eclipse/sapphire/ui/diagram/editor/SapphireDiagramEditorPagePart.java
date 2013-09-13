@@ -121,6 +121,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             final DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
             nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
+            nodeTemplate.initialize();
             this.nodeTemplates.add(nodeTemplate);
             nodeTemplate.addTemplateListener(this.nodeTemplateListener);
             
@@ -156,6 +157,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             IDiagramConnectionDef connDef = getDiagramConnectionDef(connBinding.getConnectionId().content());
             DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate(connBinding);
             connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
+            connectionTemplate.initialize();
             this.connectionTemplates.add(connectionTemplate);
             connectionTemplate.addTemplateListener(this.connTemplateListener);
         }
@@ -168,6 +170,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             IDiagramConnectionDef connDef = getDiagramConnectionDef(implicitConnBinding.getConnectionId().content());
             DiagramImplicitConnectionTemplate connectionTemplate = new DiagramImplicitConnectionTemplate(implicitConnBinding);
             connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
+            connectionTemplate.initialize();
             this.implicitConnectionTemplates.add(connectionTemplate);
             connectionTemplate.addTemplateListener(this.implicitConnTemplateListener);
         }

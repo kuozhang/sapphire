@@ -527,6 +527,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         addConnectionPart(srcNodeElement, connPart);
         connPart.init(this, connElement, this.connectionDef, 
                 Collections.<String,String>emptyMap());
+        connPart.initialize();
         connPart.attach(this.connPartListener);
         return connPart;
     }

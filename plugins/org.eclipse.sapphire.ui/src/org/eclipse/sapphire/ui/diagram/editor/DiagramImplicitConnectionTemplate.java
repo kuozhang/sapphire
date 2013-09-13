@@ -200,6 +200,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
         DiagramImplicitConnectionPart connPart = new DiagramImplicitConnectionPart(srcNodeModel, targetNodeModel);
         connPart.init(this, srcNodeModel, this.connectionDef, Collections.<String,String>emptyMap());
+        connPart.initialize();
         return connPart;
     }
     

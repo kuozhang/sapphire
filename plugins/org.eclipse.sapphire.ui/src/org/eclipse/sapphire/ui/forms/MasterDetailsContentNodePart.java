@@ -232,6 +232,7 @@ public final class MasterDetailsContentNodePart
             final SectionPart section = new MasterDetailsSectionPart();
             
             section.init( this, this.modelElement, sectionDefinition, sectionParams );
+            section.initialize();
             section.attach( this.childPartListener );
             
             sectionsListFactory.add( section );
@@ -272,6 +273,7 @@ public final class MasterDetailsContentNodePart
                 
                 final MasterDetailsContentNodePart node = new MasterDetailsContentNodePart();
                 node.init( this, this.modelElement, def, params );
+                node.initialize();
                 node.attach( this.childPartListener );
                 
                 this.rawChildren.add( node );
@@ -979,6 +981,7 @@ public final class MasterDetailsContentNodePart
                     this.nodesCache.put( element, node );
                     
                     node.init( MasterDetailsContentNodePart.this, element, relevantCaseDef, this.params );
+                    node.initialize();
                     node.attach( MasterDetailsContentNodePart.this.childPartListener );
                     node.transformLabelCase = false;
                 }

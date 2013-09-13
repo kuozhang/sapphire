@@ -57,7 +57,10 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
                 }
             }
             
-            return new ClassBasedJavaType( cl );
+            if( cl != null )
+            {
+                return new ClassBasedJavaType( cl );
+            }
         }
         
         return null;

@@ -981,8 +981,6 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                             event.feedback |= DND.FEEDBACK_SCROLL;
                         }
 
-                        @SuppressWarnings( "unchecked" )
-                        
                         public void drop( final DropTargetEvent event ) 
                         {
                             if( event.data == null )
@@ -1268,9 +1266,8 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
     public PropertyEditorPresentation2 createChildPropertyEditorPresentation( final PropertyEditorPart part )
     {
         final Table table = this.table;
-        final Display display = table.getDisplay();
         final Property property = part.property();
-        final Element element = property.element();
+        final Element element = findTableRowElement( property.element() );
         
         ColumnHandler handler = null;
         
@@ -1530,6 +1527,19 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         }
         
         this.tableViewer.update( row, null );
+    }
+    
+    private Element findTableRowElement( final Element element )
+    {
+        final ElementList<?> list = list();
+        Element result = element;
+        
+        for( Property parent = element.parent(); parent != list; parent = result.parent() )
+        {
+            result = parent.element();
+        }
+        
+        return result;
     }
     
     public static final class Factory extends PropertyEditorPresentationFactory

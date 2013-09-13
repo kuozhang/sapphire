@@ -71,7 +71,7 @@ public class SectionPart extends CompositePart
             }
         );
 
-        this.folded = ! def.getCollapsedInitially().content();
+        this.folded = def.getCollapsedInitially().content();
     }
     
     @Override

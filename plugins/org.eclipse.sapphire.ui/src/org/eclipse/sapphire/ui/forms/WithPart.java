@@ -126,6 +126,7 @@ public final class WithPart extends PageBookPart
     {
         final WithPagePart page = new WithPagePart();
         page.init( this, modelElementForPage, pageDef, this.params );
+        page.initialize();
         return page;
     }
     

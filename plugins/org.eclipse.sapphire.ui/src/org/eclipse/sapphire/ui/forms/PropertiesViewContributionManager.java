@@ -56,6 +56,7 @@ public final class PropertiesViewContributionManager
             {
                 this.propertiesViewContribution = new PropertiesViewContributionPart();
                 this.propertiesViewContribution.init( this.part, this.element, def, this.part.getParams() );
+                this.propertiesViewContribution.initialize();
             }
             
             this.propertiesViewContributionInitialized = true;

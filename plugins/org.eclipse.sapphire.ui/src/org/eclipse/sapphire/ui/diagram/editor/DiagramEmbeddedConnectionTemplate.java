@@ -228,6 +228,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         DiagramEmbeddedConnectionPart connPart = 
             new DiagramEmbeddedConnectionPart(this.bindingDef, srcNodeElement, this.endpointPath);
         connPart.init(this, connElement, this.connectionDef, Collections.<String,String>emptyMap());
+        connPart.initialize();
         connPart.attach(this.connPartListener);
         addConnectionPart(srcNodeElement, connPart);
         return connPart;

@@ -111,6 +111,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         
         this.part = new WizardPart();
         this.part.init( null, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
+        this.part.initialize();
         
         setWindowTitle( this.part.getLabel() );
         

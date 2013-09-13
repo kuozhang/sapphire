@@ -55,6 +55,7 @@ public final class MasterDetailsContentOutline
             
             this.root = new MasterDetailsContentNodePart();
             this.root.init( this.editorPagePart, this.rootModelElement, rootNodeDef, Collections.<String,String>emptyMap() );
+            this.root.initialize();
             
             loadTreeState();
             

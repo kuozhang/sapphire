@@ -92,6 +92,7 @@ public class ContainerShapePart extends ShapePart
         	if (childPart != null)
         	{
         		childPart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
+        		childPart.initialize();
         		this.children.add(childPart);
                 childPart.attach
                 (

@@ -152,6 +152,7 @@ public abstract class ContainerPart<T extends FormComponentPart> extends FormCom
     {
         private List<T> all;
         private List<T> visible;
+        private boolean initializingVisibleChildren;
         
         protected abstract void init( ListFactory<T> childPartsListFactory );
         
@@ -183,6 +184,7 @@ public abstract class ContainerPart<T extends FormComponentPart> extends FormCom
                 
                 for( final SapphirePart part : this.all )
                 {
+                    part.initialize();
                     part.attach( listener );
                 }
             }
@@ -194,7 +196,23 @@ public abstract class ContainerPart<T extends FormComponentPart> extends FormCom
         {
             if( this.visible == null )
             {
-                refreshVisibleChildren();
+                if( this.initializingVisibleChildren )
+                {
+                    this.visible = ListFactory.empty();
+                }
+                else
+                {
+                    this.initializingVisibleChildren = true;
+                    
+                    try
+                    {
+                        refreshVisibleChildren();
+                    }
+                    finally
+                    {
+                        this.initializingVisibleChildren = false;
+                    }
+                }
             }
             
             return this.visible;

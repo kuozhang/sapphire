@@ -51,6 +51,7 @@ public final class PropertiesViewContributionPart extends SapphirePart
         {
             final PropertiesViewContributionPagePart pagePart = new PropertiesViewContributionPagePart();
             pagePart.init( this, element, pageDef, this.params );
+            pagePart.initialize();
             pagePart.attach( pagePartListener );
             pagesListFactory.add( pagePart );
         }

@@ -36,7 +36,7 @@ public class FormPart extends ContainerPart<FormComponentPart>
                 
                 for( final PartDef childPartDef : definition().getContent() )
                 {
-                    childPartsListFactory.add( (FormComponentPart) create( FormPart.this, element, childPartDef, FormPart.this.params ) );
+                    childPartsListFactory.add( (FormComponentPart) createWithoutInit( FormPart.this, element, childPartDef, FormPart.this.params ) );
                 }
             }
         };

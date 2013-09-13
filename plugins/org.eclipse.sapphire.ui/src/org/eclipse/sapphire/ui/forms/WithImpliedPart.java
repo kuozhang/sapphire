@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.forms;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
@@ -36,15 +37,38 @@ public final class WithImpliedPart extends ContainerPart<FormComponentPart>
         final WithDef def = (WithDef) this.definition;
         
         this.path = new ModelPath( substituteParams( def.getPath().text() ) );
+        this.element = getModelElement();
         
-        final Property property = getModelElement().property( this.path );
-        
-        if( property == null )
+        for( int i = 0, n = this.path.length(); i < n; i++ )
         {
-            throw new IllegalStateException();
+            final ModelPath.Segment segment = this.path.segment( i );
+            
+            if( segment instanceof ModelPath.ModelRootSegment )
+            {
+                this.element = this.element.root();
+            }
+            else if( segment instanceof ModelPath.ParentElementSegment )
+            {
+                this.element = this.element.parent().element();
+            }
+            else if( segment instanceof ModelPath.PropertySegment )
+            {
+                final Property property = this.element.property( ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+                
+                if( property != null && property.definition() instanceof ImpliedElementProperty )
+                {
+                    this.element = ( (ElementHandle<?>) property ).content();
+                }
+                else
+                {
+                    throw new RuntimeException( this.path.toString() );
+                }
+            }
+            else
+            {
+                throw new RuntimeException( this.path.toString() );
+            }
         }
-        
-        this.element = ( (ElementHandle<?>) property ).content();
     }
     
     protected Children initChildren()
@@ -69,7 +93,7 @@ public final class WithImpliedPart extends ContainerPart<FormComponentPart>
                 
                 for( final FormComponentDef childPartDef : formdef.getContent() )
                 {
-                    childPartsListFactory.add( (FormComponentPart) create( WithImpliedPart.this, element, childPartDef, WithImpliedPart.this.params ) );
+                    childPartsListFactory.add( (FormComponentPart) createWithoutInit( WithImpliedPart.this, element, childPartDef, WithImpliedPart.this.params ) );
                 }
             }
         };

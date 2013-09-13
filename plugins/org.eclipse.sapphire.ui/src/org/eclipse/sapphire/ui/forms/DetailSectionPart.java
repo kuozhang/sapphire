@@ -123,6 +123,13 @@ public final class DetailSectionPart extends PageBookPart
     private void initListSelectionServiceListener()
     {
         final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( this, this.element, this.property );
+        
+        if( listPropertyEditorPart == null )
+        {
+            final String msg = "DetailsSectionPart did not find " + this.property;
+            throw new RuntimeException( msg );
+        }
+        
         final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
         
         final MutableReference<Element> selectedModelElementRef = new MutableReference<Element>();
@@ -225,7 +232,7 @@ public final class DetailSectionPart extends PageBookPart
         {
             final ContainerPart<?> container = (ContainerPart<?>) part;
             
-            for( SapphirePart child : container.children().visible() )
+            for( SapphirePart child : container.children().all() )
             {
                 final PropertyEditorPart propertyEditorPart = findPropertyEditor( child, element, property, searchedParts );
                 

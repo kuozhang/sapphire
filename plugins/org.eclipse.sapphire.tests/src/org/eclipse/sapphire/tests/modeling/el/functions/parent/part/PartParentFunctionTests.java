@@ -44,6 +44,7 @@ public final class PartParentFunctionTests extends TestExpr
             try
             {
                 dialogPart.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
+                dialogPart.initialize();
                 
                 final GroupPart groupPart = (GroupPart) dialogPart.children().all().get( 0 );
                 final PropertyEditorPart propertyEditorPart = (PropertyEditorPart) groupPart.children().all().get( 0 );

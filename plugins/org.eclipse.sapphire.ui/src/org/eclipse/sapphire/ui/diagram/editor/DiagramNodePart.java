@@ -387,6 +387,6 @@ public class DiagramNodePart
     		this.shapePart.setSelectionPresentation(definition.getSelectionPresentation());
     	}
         this.shapePart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
-                
+        this.shapePart.initialize();
     }
 }

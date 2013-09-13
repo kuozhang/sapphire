@@ -46,6 +46,7 @@ public final class PartValidationFunctionTests extends TestExpr
             try
             {
                 part.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
+                part.initialize();
                 
                 final FunctionResult fr = ExpressionLanguageParser.parse( "${ Part.Validation }" ).evaluate( new PartFunctionContext( part, element ) );
                 

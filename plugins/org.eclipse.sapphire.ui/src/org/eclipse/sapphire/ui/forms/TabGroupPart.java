@@ -55,6 +55,7 @@ public final class TabGroupPart extends FormComponentPart
         {
             final TabGroupPagePart pagePart = new TabGroupPagePart();
             pagePart.init( this, element, pageDef, this.params );
+            pagePart.initialize();
             pagePart.attach( tabPartListener );
             pagesListFactory.add( pagePart );
         }

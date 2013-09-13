@@ -67,6 +67,7 @@ public class SapphireDialog extends Dialog
         
         this.part = new DialogPart();
         this.part.init( null, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
+        this.part.initialize();
     }
     
     public final Element element()

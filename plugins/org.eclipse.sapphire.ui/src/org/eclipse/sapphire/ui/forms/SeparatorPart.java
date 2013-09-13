@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.ui.forms;
 
-import java.util.List;
-
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -81,33 +79,28 @@ public abstract class SeparatorPart extends FormComponentPart
                                 @Override
                                 protected Object evaluate()
                                 {
-                                    final List<? extends SapphirePart> parts = form.children().visible();
+                                    SapphirePart previous = null;
                                     
-                                    if( parts != null )
+                                    for( final SapphirePart part : form.children().all() )
                                     {
-                                        SapphirePart previous = null;
-                                        
-                                        for( SapphirePart part : parts )
+                                        if( part == SeparatorPart.this )
                                         {
-                                            if( part == SeparatorPart.this )
+                                            if( previous == null || previous instanceof SeparatorPart )
                                             {
-                                                if( previous == null || previous instanceof SeparatorPart )
-                                                {
-                                                    return false;
-                                                }
-                                                
-                                                previous = part;
+                                                return false;
                                             }
-                                            else
-                                            {
-                                                previous = part;
-                                            }
+                                            
+                                            previous = part;
                                         }
-                                        
-                                        if( previous == SeparatorPart.this )
+                                        else if( part.visible() )
                                         {
-                                            return false;
+                                            previous = part;
                                         }
+                                    }
+                                    
+                                    if( previous == SeparatorPart.this )
+                                    {
+                                        return false;
                                     }
                                     
                                     return true;

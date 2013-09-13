@@ -1200,7 +1200,7 @@
                             <property>MultiOptionPath</property>
                             <action-handler>
                                 <action>Sapphire.Browse</action>
-                                <impl>AbsoluteFilePathBrowseActionHandler</impl>
+                                <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
                                 <param>
                                     <name>extensions</name>
                                     <value>jar,zip</value>
@@ -1208,11 +1208,11 @@
                             </action-handler>
                             <action-handler>
                                 <action>Sapphire.Browse</action>
-                                <impl>AbsoluteFolderPathBrowseActionHandler</impl>
+                                <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
                             </action-handler>
                             <action-handler>
                                 <action>Sapphire.Browse</action>
-                                <impl>WorkspaceRelativePathBrowseActionHandler</impl>
+                                <impl>org.eclipse.sapphire.workspace.ui.WorkspaceRelativePathBrowseActionHandler</impl>
                                 <param>
                                     <name>extensions</name>
                                     <value>jar,zip</value>
@@ -1229,7 +1229,7 @@
                                 <property>MultiOptionPath</property>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>AbsoluteFilePathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>
@@ -1237,11 +1237,11 @@
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>AbsoluteFolderPathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>WorkspaceRelativePathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.workspace.ui.WorkspaceRelativePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>
@@ -1263,7 +1263,7 @@
                                 <property>MultiOptionPath</property>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>AbsoluteFilePathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>
@@ -1271,11 +1271,11 @@
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>AbsoluteFolderPathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>WorkspaceRelativePathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.workspace.ui.WorkspaceRelativePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>

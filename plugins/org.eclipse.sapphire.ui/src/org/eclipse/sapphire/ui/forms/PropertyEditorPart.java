@@ -422,6 +422,7 @@ public final class PropertyEditorPart extends FormComponentPart
             
             childPropertyEditorPart = new PropertyEditorPart();
             childPropertyEditorPart.init( this, element, childPropertyEditorDef, this.params );
+            childPropertyEditorPart.initialize();
             
             propertyEditorsForElement.put( property, childPropertyEditorPart );
         }

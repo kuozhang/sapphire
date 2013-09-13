@@ -141,7 +141,7 @@ public abstract class SapphirePart implements ISapphirePart
     private Map<String,SapphireActionGroup> actions;
     private PartServiceContext serviceContext;
     private FunctionResult visibilityFunctionResult;
-    private boolean visibilityReadBeforeInit;
+    private boolean visibilityFunctionInitializing;
     private boolean initialized;
     private boolean disposed;
     
@@ -165,7 +165,10 @@ public abstract class SapphirePart implements ISapphirePart
         }
         
         this.modelElement = modelElement;
-        
+    }
+    
+    public final void initialize()
+    {
         this.listeners.coordinate( ( (ElementImpl) this.modelElement ).listeners() );
         
         for( ISapphirePartListenerDef listenerDefinition : this.definition.getListeners() )
@@ -203,28 +206,9 @@ public abstract class SapphirePart implements ISapphirePart
         
         init();
         
-        this.visibilityFunctionResult = initExpression
-        (
-            initVisibleWhenFunction(), 
-            Boolean.class,
-            Literal.TRUE,
-            new Runnable()
-            {
-                public void run()
-                {
-                    broadcast( new PartVisibilityEvent( SapphirePart.this ) );
-                }
-            }
-        );
-        
         this.initialized = true;
         
         broadcast( new PartInitializationEvent( this ) );
-        
-        if( this.visibilityReadBeforeInit && this.visibilityFunctionResult.value().equals( Boolean.TRUE ) )
-        {
-            broadcast( new PartVisibilityEvent( this ) );
-        }
     }
     
     protected void init()
@@ -489,8 +473,44 @@ public abstract class SapphirePart implements ISapphirePart
     {
         if( this.visibilityFunctionResult == null )
         {
-            this.visibilityReadBeforeInit = true;
-            return false;
+            if( this.visibilityFunctionInitializing )
+            {
+                this.visibilityFunctionResult = Literal.FALSE.evaluate( new FunctionContext() );
+            }
+            else
+            {
+                this.visibilityFunctionInitializing = true;
+                
+                try
+                {
+                    final FunctionResult fr = initExpression
+                    (
+                        initVisibleWhenFunction(), 
+                        Boolean.class,
+                        Literal.TRUE,
+                        new Runnable()
+                        {
+                            public void run()
+                            {
+                                broadcast( new PartVisibilityEvent( SapphirePart.this ) );
+                            }
+                        }
+                    );
+                    
+                    final boolean visibilityAccessedDuringInit = ( this.visibilityFunctionResult != null );
+                    
+                    this.visibilityFunctionResult = fr;
+                    
+                    if( visibilityAccessedDuringInit && ( (Boolean) fr.value() ).booleanValue() == true )
+                    {
+                        broadcast( new PartVisibilityEvent( this ) );
+                    }
+                }
+                finally
+                {
+                    this.visibilityFunctionInitializing = false;
+                }
+            }
         }
         
         return (Boolean) this.visibilityFunctionResult.value();
@@ -1071,6 +1091,16 @@ public abstract class SapphirePart implements ISapphirePart
                                              final PartDef definition,
                                              final Map<String,String> params )
     {
+        final SapphirePart part = createWithoutInit( parent, element, definition, params );
+        part.initialize();
+        return part;
+    }
+    
+    public static final SapphirePart createWithoutInit( final ISapphirePart parent,
+                                                        final Element element,
+                                                        final PartDef definition,
+                                                        final Map<String,String> params )
+    {
         if( element == null )
         {
             throw new IllegalArgumentException();
@@ -1127,15 +1157,23 @@ public abstract class SapphirePart implements ISapphirePart
         else if( definition instanceof WithDef )
         {
             final String path = ( (SapphirePart) parent ).substituteParams( ( (WithDef) definition ).getPath().text() );
-            final Property property = element.property( path );
             
-            if( property.definition() instanceof ImpliedElementProperty )
+            if( path.endsWith( ".." ) )
             {
                 part = new WithImpliedPart();
             }
             else
             {
-                part = new WithPart();
+                final Property property = element.property( path );
+                
+                if( property.definition() instanceof ImpliedElementProperty )
+                {
+                    part = new WithImpliedPart();
+                }
+                else
+                {
+                    part = new WithPart();
+                }
             }
         }
         else if( definition instanceof DetailSectionDef )
@@ -1179,7 +1217,7 @@ public abstract class SapphirePart implements ISapphirePart
                     }
                 }
                 
-                return create( parent, element, def, partParams );
+                return createWithoutInit( parent, element, def, partParams );
             }
         }
         else if( definition instanceof FormComponentInclude )
@@ -1207,7 +1245,7 @@ public abstract class SapphirePart implements ISapphirePart
                     }
                 }
                 
-                return create( parent, element, def, partParams );
+                return createWithoutInit( parent, element, def, partParams );
             }
         }
         else if( definition instanceof TabGroupDef )

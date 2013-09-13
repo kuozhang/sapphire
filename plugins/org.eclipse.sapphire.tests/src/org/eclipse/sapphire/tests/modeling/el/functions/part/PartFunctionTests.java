@@ -44,6 +44,7 @@ public final class PartFunctionTests extends TestExpr
             try
             {
                 part.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
+                part.initialize();
                 
                 testForExpectedValue( new PartFunctionContext( part, element ), "${ Part }", part );
             }

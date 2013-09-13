@@ -210,6 +210,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 
         this.part = new SapphireDiagramEditorPagePart();
 		this.part.init( editor, this.element, this.definition.resolve(), Collections.<String, String> emptyMap() );
+		this.part.initialize();
         
         final String partName = this.definition.resolve().getPageName().localized( CapitalizationType.TITLE_STYLE, false );
         setPartName( partName );

@@ -2087,9 +2087,12 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             {
                 section.attach( this.listener );
                 
-                final SectionPresentation presentation = (SectionPresentation) section.createPresentation( MasterDetailsEditorPage.this.presentation, this.composite );
-                presentationsListFactory.add( presentation );
-                presentation.render();
+                if( section.visible() )
+                {
+                    final SectionPresentation presentation = (SectionPresentation) section.createPresentation( MasterDetailsEditorPage.this.presentation, this.composite );
+                    presentationsListFactory.add( presentation );
+                    presentation.render();
+                }
             }
             
             this.presentations = presentationsListFactory.result();
