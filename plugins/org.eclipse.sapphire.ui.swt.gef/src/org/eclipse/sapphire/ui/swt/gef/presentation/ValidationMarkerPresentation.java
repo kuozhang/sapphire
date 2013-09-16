@@ -209,7 +209,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
 		
 		Status status = part().content();
 		ValidationMarkerSize size = getSize();
-		if (status.severity() != Status.Severity.OK) 
+		if (part().visible()) 
 		{
 			if (status.severity() == Status.Severity.WARNING) 
 			{
