@@ -28,6 +28,7 @@ import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -103,12 +104,14 @@ public final class SplitFormPresentation extends FormComponentPresentation
     @Override
     public void dispose()
     {
-        super.dispose();
-        
         if( this.children != null )
         {
-            for( final FormComponentPresentation child : this.children )
+            final Orientation orientation = part().orientation();
+            
+            for( final SplitFormSectionPresentation child : this.children )
             {
+                final Point size = child.control().getSize();
+                child.part().weight( orientation == Orientation.HORIZONTAL ? size.x : size.y );
                 child.dispose();
             }
             
@@ -116,6 +119,8 @@ public final class SplitFormPresentation extends FormComponentPresentation
         }
         
         this.form = null;
+        
+        super.dispose();
     }
 
 }

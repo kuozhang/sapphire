@@ -20,8 +20,6 @@ import org.eclipse.sapphire.ui.forms.SplitFormPart;
 import org.eclipse.sapphire.ui.forms.SplitFormSectionPart;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -30,6 +28,8 @@ import org.eclipse.swt.widgets.Composite;
 
 public final class SplitFormSectionPresentation extends CompositePresentation
 {
+    private Composite control;
+    
     public SplitFormSectionPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
     {
         super( part, parent, composite );
@@ -50,14 +50,14 @@ public final class SplitFormSectionPresentation extends CompositePresentation
         final int sectionCount = parent.children().all().size();
         final int sectionIndex = parent.children().all().indexOf( part );
         
-        final Composite outerComposite = new Composite( composite(), SWT.NONE );
+        this.control = new Composite( composite(), SWT.NONE );
 
-        register( outerComposite );
+        register( this.control );
         
-        outerComposite.setBackground( resources().color( part.getBackgroundColor() ) );
-        outerComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
+        this.control.setBackground( resources().color( part.getBackgroundColor() ) );
+        this.control.setBackgroundMode( SWT.INHERIT_DEFAULT );
         
-        outerComposite.setLayout
+        this.control.setLayout
         (
             glayout
             (
@@ -69,22 +69,23 @@ public final class SplitFormSectionPresentation extends CompositePresentation
             )
         );
         
-        outerComposite.addControlListener
-        (
-            new ControlAdapter()
-            {
-                @Override
-                public void controlResized( final ControlEvent event )
-                {
-                    part.weight( orientation == Orientation.HORIZONTAL ? outerComposite.getSize().x : outerComposite.getSize().y );
-                }
-            }
-        );
-        
-        final Composite innerComposite = new Composite( outerComposite, SWT.NONE );
+        final Composite innerComposite = new Composite( this.control, SWT.NONE );
         innerComposite.setLayoutData( gdfill() );
         
         render( innerComposite );
+    }
+    
+    public Composite control()
+    {
+        return this.control;
+    }
+
+    @Override
+    public void dispose()
+    {
+        this.control = null;
+        
+        super.dispose();
     }
 
 }
