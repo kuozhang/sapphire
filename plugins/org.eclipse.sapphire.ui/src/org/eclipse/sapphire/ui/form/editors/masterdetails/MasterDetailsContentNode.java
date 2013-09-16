@@ -9,10 +9,10 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms;
+package org.eclipse.sapphire.ui.form.editors.masterdetails;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.runOnDisplayThread;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
+import static org.eclipse.sapphire.ui.swt.renderer.SwtUtil.runOnDisplayThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,34 +49,43 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
+import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
+import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.SectionPart;
+import org.eclipse.sapphire.ui.def.FormComponentDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SectionPresentation;
+import org.eclipse.sapphire.ui.def.SectionDef;
+import org.eclipse.sapphire.ui.def.SectionRef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeChildDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryCaseDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeFactoryDef;
+import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeInclude;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.MapFactory;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsContentNodePart
+public final class MasterDetailsContentNode
 
     extends SapphirePart
-    implements PropertiesViewContributorPart
+    implements IPropertiesViewContributorPart
     
 {
     private static final ImageData IMG_CONTAINER_NODE
-        = ImageData.readFromClassLoader( MasterDetailsContentNodePart.class, "ContainerNode.png" ).required();
+        = ImageData.readFromClassLoader( MasterDetailsContentNode.class, "ContainerNode.png" ).required();
 
     private static final ImageData IMG_LEAF_NODE
-        = ImageData.readFromClassLoader( MasterDetailsContentNodePart.class, "LeafNode.png" ).required();
+        = ImageData.readFromClassLoader( MasterDetailsContentNode.class, "LeafNode.png" ).required();
 
     @Text( "Could not resolve node \"{0}\"." )
     private static LocalizableText couldNotResolveNode;
@@ -86,14 +95,14 @@ public final class MasterDetailsContentNodePart
     
     static
     {
-        LocalizableText.init( MasterDetailsContentNodePart.class );
+        LocalizableText.init( MasterDetailsContentNode.class );
     }
 
     private MasterDetailsContentOutline contentTree;
     private MasterDetailsContentNodeDef definition;
     private Element modelElement;
     private ElementHandle<?> modelElementProperty;
-    private MasterDetailsContentNodePart parentNode;
+    private MasterDetailsContentNode parentNode;
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
     private Listener childPartListener;
@@ -105,12 +114,12 @@ public final class MasterDetailsContentNodePart
     private boolean transformLabelCase = true;
     private final Function nodeFactoryVisibleFunction;
     
-    public MasterDetailsContentNodePart()
+    public MasterDetailsContentNode()
     {
         this( null );
     }
     
-    public MasterDetailsContentNodePart( final Function nodeFactoryVisibleFunction )
+    public MasterDetailsContentNode( final Function nodeFactoryVisibleFunction )
     {
         this.nodeFactoryVisibleFunction = nodeFactoryVisibleFunction;
     }
@@ -120,11 +129,11 @@ public final class MasterDetailsContentNodePart
     {
         super.init();
         
-        final ISapphirePart parent = parent();
+        final ISapphirePart parent = getParentPart();
 
-        if( parent instanceof MasterDetailsContentNodePart )
+        if( parent instanceof MasterDetailsContentNode )
         {
-            this.parentNode = (MasterDetailsContentNodePart) parent;
+            this.parentNode = (MasterDetailsContentNode) parent;
         }
         else
         {
@@ -171,7 +180,7 @@ public final class MasterDetailsContentNodePart
             {
                 public void run()
                 {
-                    broadcast( new LabelChangedEvent( MasterDetailsContentNodePart.this ) );
+                    broadcast( new LabelChangedEvent( MasterDetailsContentNode.this ) );
                 }
             }
         );
@@ -229,10 +238,16 @@ public final class MasterDetailsContentNodePart
                 throw new IllegalStateException();
             }
             
-            final SectionPart section = new MasterDetailsSectionPart();
+            final SectionPart section = new SectionPart()
+            {
+                @Override
+                protected Object createSectionLayoutData()
+                {
+                    return twd();
+                }
+            };
             
             section.init( this, this.modelElement, sectionDefinition, sectionParams );
-            section.initialize();
             section.attach( this.childPartListener );
             
             sectionsListFactory.add( section );
@@ -271,9 +286,8 @@ public final class MasterDetailsContentNodePart
             {
                 final MasterDetailsContentNodeDef def = (MasterDetailsContentNodeDef) entry;
                 
-                final MasterDetailsContentNodePart node = new MasterDetailsContentNodePart();
+                final MasterDetailsContentNode node = new MasterDetailsContentNode();
                 node.init( this, this.modelElement, def, params );
-                node.initialize();
                 node.attach( this.childPartListener );
                 
                 this.rawChildren.add( node );
@@ -347,11 +361,11 @@ public final class MasterDetailsContentNodePart
                                     section.attach( listener );
                                 }
                                 
-                                for( Object entry : MasterDetailsContentNodePart.this.rawChildren )
+                                for( Object entry : MasterDetailsContentNode.this.rawChildren )
                                 {
-                                    if( entry instanceof MasterDetailsContentNodePart )
+                                    if( entry instanceof MasterDetailsContentNode )
                                     {
-                                        ( (MasterDetailsContentNodePart) entry ).attach( listener );
+                                        ( (MasterDetailsContentNode) entry ).attach( listener );
                                     }
                                     else if( entry instanceof NodeFactory )
                                     {
@@ -381,11 +395,11 @@ public final class MasterDetailsContentNodePart
                                 
                                 if( ! visible )
                                 {
-                                    for( Object entry : MasterDetailsContentNodePart.this.rawChildren )
+                                    for( Object entry : MasterDetailsContentNode.this.rawChildren )
                                     {
-                                        if( entry instanceof MasterDetailsContentNodePart )
+                                        if( entry instanceof MasterDetailsContentNode )
                                         {
-                                            final MasterDetailsContentNodePart node = (MasterDetailsContentNodePart) entry;
+                                            final MasterDetailsContentNode node = (MasterDetailsContentNode) entry;
                                             
                                             if( node.visible() )
                                             {
@@ -410,14 +424,14 @@ public final class MasterDetailsContentNodePart
         return this.contentTree;
     }
 
-    public MasterDetailsContentNodePart getParentNode()
+    public MasterDetailsContentNode getParentNode()
     {
         return this.parentNode;
     }
 
-    public boolean isAncestorOf( final MasterDetailsContentNodePart node )
+    public boolean isAncestorOf( final MasterDetailsContentNode node )
     {
-        MasterDetailsContentNodePart n = node;
+        MasterDetailsContentNode n = node;
         
         while( n != null )
         {
@@ -489,7 +503,7 @@ public final class MasterDetailsContentNodePart
         {
             if( ! expanded )
             {
-                final MasterDetailsContentNodePart selection = getContentTree().getSelectedNode();
+                final MasterDetailsContentNode selection = getContentTree().getSelectedNode();
                 
                 if( selection != null && isAncestorOf( selection ) )
                 {
@@ -506,7 +520,7 @@ public final class MasterDetailsContentNodePart
             
         if( applyToChildren )
         {
-            for( MasterDetailsContentNodePart child : nodes() )
+            for( MasterDetailsContentNode child : nodes() )
             {
                 if( ! child.nodes().visible().isEmpty() )
                 {
@@ -525,20 +539,20 @@ public final class MasterDetailsContentNodePart
         }
     }
     
-    public List<MasterDetailsContentNodePart> getExpandedNodes()
+    public List<MasterDetailsContentNode> getExpandedNodes()
     {
-        final List<MasterDetailsContentNodePart> result = new ArrayList<MasterDetailsContentNodePart>();
+        final List<MasterDetailsContentNode> result = new ArrayList<MasterDetailsContentNode>();
         getExpandedNodes( result );
         return result;
     }
     
-    public void getExpandedNodes( final List<MasterDetailsContentNodePart> result )
+    public void getExpandedNodes( final List<MasterDetailsContentNode> result )
     {
         if( isExpanded() )
         {
             result.add( this );
             
-            for( MasterDetailsContentNodePart child : nodes() )
+            for( MasterDetailsContentNode child : nodes() )
             {
                 child.getExpandedNodes( result );
             }
@@ -594,15 +608,15 @@ public final class MasterDetailsContentNodePart
     {
         if( this.nodes == null )
         {
-            this.nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNodePart>emptyList() );
+            this.nodes = new MasterDetailsContentNodeList( Collections.<MasterDetailsContentNode>emptyList() );
         }
         
         return this.nodes;
     }
     
-    public MasterDetailsContentNodePart findNode( final String label )
+    public MasterDetailsContentNode findNode( final String label )
     {
-        for( MasterDetailsContentNodePart child : nodes() )
+        for( MasterDetailsContentNode child : nodes() )
         {
             if( label.equalsIgnoreCase( child.getLabel() ) )
             {
@@ -613,16 +627,16 @@ public final class MasterDetailsContentNodePart
         return null;
     }
     
-    public MasterDetailsContentNodePart findNode( final Element element )
+    public MasterDetailsContentNode findNode( final Element element )
     {
         if( getModelElement() == element )
         {
             return this;
         }
 
-        for( MasterDetailsContentNodePart child : nodes() )
+        for( MasterDetailsContentNode child : nodes() )
         {
-            final MasterDetailsContentNodePart res = child.findNode( element );
+            final MasterDetailsContentNode res = child.findNode( element );
             
             if( res != null )
             {
@@ -635,13 +649,13 @@ public final class MasterDetailsContentNodePart
     
     private void refreshNodes()
     {
-        final ListFactory<MasterDetailsContentNodePart> nodeListFactory = ListFactory.start();
+        final ListFactory<MasterDetailsContentNode> nodeListFactory = ListFactory.start();
         
         for( Object entry : this.rawChildren )
         {
-            if( entry instanceof MasterDetailsContentNodePart )
+            if( entry instanceof MasterDetailsContentNode )
             {
-                nodeListFactory.add( (MasterDetailsContentNodePart) entry );
+                nodeListFactory.add( (MasterDetailsContentNode) entry );
             }
             else if( entry instanceof NodeFactory )
             {
@@ -749,38 +763,22 @@ public final class MasterDetailsContentNodePart
             }
         }
     }
-    
-    private static final class MasterDetailsSectionPart extends SectionPart
-    {
-        public FormComponentPresentation createPresentation( final SwtPresentation parent, final Composite composite )
-        {
-            return new MasterDetailsSectionPresentation( this, parent, composite );
-        }
-    }
-    
-    private static final class MasterDetailsSectionPresentation extends SectionPresentation
-    {
-        public MasterDetailsSectionPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
-        {
-            super( part, parent, composite );
-        }
-        
-        @Override
-        protected Object createSectionLayoutData()
-        {
-            return twd();
-        }
-    }
 
+    @Override
+    public void render( final SapphireRenderingContext context )
+    {
+        throw new UnsupportedOperationException();
+    }
+    
     public boolean controls( final Element element )
     {
         if( element == getModelElement() )
         {
-            final ISapphirePart parentPart = parent();
+            final ISapphirePart parentPart = getParentPart();
             
-            if( parentPart != null && parentPart instanceof MasterDetailsContentNodePart )
+            if( parentPart != null && parentPart instanceof MasterDetailsContentNode )
             {
-                final MasterDetailsContentNodePart parentNode = (MasterDetailsContentNodePart) parentPart;
+                final MasterDetailsContentNode parentNode = (MasterDetailsContentNode) parentPart;
                 
                 return ( element != parentNode.getLocalModelElement() );
             }
@@ -797,7 +795,7 @@ public final class MasterDetailsContentNodePart
         private final Map<String,String> params;
         private final FunctionResult visibleWhenFunctionResult;
         private final Function visibleWhenFunctionForNodes;
-        private final Map<Element,MasterDetailsContentNodePart> nodesCache = new IdentityHashMap<Element,MasterDetailsContentNodePart>();
+        private final Map<Element,MasterDetailsContentNode> nodesCache = new IdentityHashMap<Element,MasterDetailsContentNode>();
         private final ListenerContext listeners = new ListenerContext();
         
         public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
@@ -941,14 +939,14 @@ public final class MasterDetailsContentNodePart
             return elementsListFactory.result();
         }
         
-        public final List<MasterDetailsContentNodePart> nodes()
+        public final List<MasterDetailsContentNode> nodes()
         {
-            final Map<Element,MasterDetailsContentNodePart> oldCache = MapFactory.unmodifiable( this.nodesCache );
-            final ListFactory<MasterDetailsContentNodePart> nodes = ListFactory.start();
+            final Map<Element,MasterDetailsContentNode> oldCache = MapFactory.unmodifiable( this.nodesCache );
+            final ListFactory<MasterDetailsContentNode> nodes = ListFactory.start();
             
             for( Element element : elements() )
             {
-                MasterDetailsContentNodePart node = this.nodesCache.get( element );
+                MasterDetailsContentNode node = this.nodesCache.get( element );
                 
                 if( node == null )
                 {
@@ -980,7 +978,7 @@ public final class MasterDetailsContentNodePart
                         throw new RuntimeException();
                     }
                     
-                    node = new MasterDetailsContentNodePart( this.visibleWhenFunctionForNodes );
+                    node = new MasterDetailsContentNode( this.visibleWhenFunctionForNodes );
                     
                     // It is very important to put the node into the cache prior to initializing the node as
                     // initialization can case a re-entrant call into this function and we must avoid creating
@@ -988,16 +986,15 @@ public final class MasterDetailsContentNodePart
                     
                     this.nodesCache.put( element, node );
                     
-                    node.init( MasterDetailsContentNodePart.this, element, relevantCaseDef, this.params );
-                    node.initialize();
-                    node.attach( MasterDetailsContentNodePart.this.childPartListener );
+                    node.init( MasterDetailsContentNode.this, element, relevantCaseDef, this.params );
+                    node.attach( MasterDetailsContentNode.this.childPartListener );
                     node.transformLabelCase = false;
                 }
                 
                 nodes.add( node );
             }
             
-            for( Map.Entry<Element,MasterDetailsContentNodePart> entry : oldCache.entrySet() )
+            for( Map.Entry<Element,MasterDetailsContentNode> entry : oldCache.entrySet() )
             {
                 if( ! this.nodesCache.containsKey( entry.getKey() ) )
                 {
@@ -1036,15 +1033,15 @@ public final class MasterDetailsContentNodePart
     
     public static final class NodeListEvent extends PartEvent
     {
-        public NodeListEvent( final MasterDetailsContentNodePart node )
+        public NodeListEvent( final MasterDetailsContentNode node )
         {
             super( node );
         }
 
         @Override
-        public MasterDetailsContentNodePart part()
+        public MasterDetailsContentNode part()
         {
-            return (MasterDetailsContentNodePart) super.part();
+            return (MasterDetailsContentNode) super.part();
         }
     }
     
