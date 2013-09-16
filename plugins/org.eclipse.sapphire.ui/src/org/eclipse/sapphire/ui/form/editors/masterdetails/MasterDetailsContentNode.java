@@ -701,25 +701,33 @@ public final class MasterDetailsContentNode
     @Override
     protected Status computeValidation()
     {
-        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+        final Status.CompositeStatusFactory validation = Status.factoryForComposite();
         
-        for( SapphirePart section : this.sections )
+        for( final SapphirePart section : this.sections )
         {
             if( section.visible() )
             {
-                factory.merge( section.validation() );
+                validation.merge( section.validation() );
             }
         }
 
-        for( SapphirePart node : nodes() )
+        for( final SapphirePart node : nodes() )
         {
             if( node.visible() )
             {
-                factory.merge( node.validation() );
+                validation.merge( node.validation() );
             }
         }
         
-        return factory.create();
+        for( final NodeFactory factory : factories() )
+        {
+            if( factory.visible() )
+            {
+                validation.merge( factory.property().validation() );
+            }
+        }
+        
+        return validation.create();
     }
     
     @Override
