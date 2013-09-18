@@ -85,19 +85,19 @@ public final class UniqueValueTests extends SapphireTestCase
         
         final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
         element.validation();
-        assertEquals( entries, counter.read() );
+        assertEquals( entries * 3, counter.read() );
         
         counter.reset();
         
         element.getList().get( 0 ).setValue( "a" );
         element.validation();
-        assertEquals( entries, counter.read() );
+        assertEquals( entries + 1, counter.read() );
         
         counter.reset();
         
         element.getList().get( 0 ).setValue( "9" );
         element.validation();
-        assertEquals( entries, counter.read() );
+        assertEquals( entries + 6, counter.read() );
     }
     
     private String generateTestData( final int entries )
