@@ -820,7 +820,6 @@
         </case>
         
         <case>
-            <model-element-type>IFormPartInclude</model-element-type>
             <label>Include ${ Part == null ? "" : Part }</label>
             <image>${ Image() }</image>
             <section>
@@ -831,10 +830,11 @@
                 </content>
             </section>
             <node-include>ServicesNode</node-include>
+            <model-element-type>org.eclipse.sapphire.ui.forms.FormComponentInclude</model-element-type>
         </case>
 
         <case>
-            <model-element-type>SplitFormDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.SplitFormDef</model-element-type>
             <label>${ Id == null ? &quot;Split Form&quot; : Id }</label>
             <section>
                 <content>
@@ -854,7 +854,6 @@
             <node-factory>
                 <property>Blocks</property>
                 <case>
-                    <model-element-type>SplitFormBlockDef</model-element-type>
                     <label>Block</label>
                     <node-include>
                         <part>PartsNodeList</part>
@@ -887,7 +886,7 @@
         </case>
 
         <case>
-            <model-element-type>WithDef</model-element-type>
+            <model-element-type>org.eclipse.sapphire.ui.forms.WithDef</model-element-type>
             <label>With</label>
             <image>${ Image() }</image>
             <section>
