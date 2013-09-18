@@ -11,24 +11,25 @@
 
 package org.eclipse.sapphire.tests.conversion;
 
-import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
+import org.eclipse.sapphire.tests.conversion.enumeration.EnumConversionTests;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public enum ThreeChoiceAnswerCustomized
+@RunWith( Suite.class )
+
+@SuiteClasses
+(
+    {
+        ConversionTests.class,
+        EnumConversionTests.class
+    }
+)
+
+public final class ConversionTestSuite
 {
-    @EnumSerialization( primary = "yes", alternative = { "true", "1" } )
-    
-    YES,
-    
-    @EnumSerialization( primary = "maybe", alternative = "0", caseSensitive = false )
-    
-    MAYBE,
-    
-    @EnumSerialization( primary = "no", alternative = { "false", "-1" }, caseSensitive = true )
-    
-    NO
-    
 }

@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.tests;
 
 import org.eclipse.sapphire.tests.binding.list.LayeredListPropertyBindingTests;
-import org.eclipse.sapphire.tests.conversion.ConversionTests;
+import org.eclipse.sapphire.tests.conversion.ConversionTestSuite;
 import org.eclipse.sapphire.tests.index.IndexTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.misc.TestMisc;
@@ -35,7 +35,7 @@ import org.junit.runners.Suite.SuiteClasses;
 (
     {
         LayeredListPropertyBindingTests.class,
-        ConversionTests.class,
+        ConversionTestSuite.class,
         TestMisc.class,
         SapphireModelingFrameworkTests.class,
         JavaTestSuite.class,

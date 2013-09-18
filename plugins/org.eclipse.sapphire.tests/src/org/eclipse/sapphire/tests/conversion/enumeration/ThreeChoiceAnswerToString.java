@@ -9,15 +9,29 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.conversion;
+package org.eclipse.sapphire.tests.conversion.enumeration;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public enum ThreeChoiceAnswer
+public enum ThreeChoiceAnswerToString
 {
-    YES,
-    MAYBE,
-    NO
+    YES( "1" ),
+    MAYBE( "0" ),
+    NO( "-1" );
+    
+    private final String string;
+    
+    private ThreeChoiceAnswerToString( final String string )
+    {
+        this.string = string;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return this.string;
+    }
+    
 }
