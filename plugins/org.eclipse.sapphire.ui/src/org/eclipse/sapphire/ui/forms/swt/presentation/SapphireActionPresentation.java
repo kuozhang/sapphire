@@ -284,7 +284,7 @@ public abstract class SapphireActionPresentation
         
         if( imageData != null )
         {
-            image = ( (FormComponentPresentation) getManager().context() ).resources().image( imageData );
+            image = ( (SwtPresentation) getManager().context() ).resources().image( imageData );
         }
         
         menuItem.setImage( image );
