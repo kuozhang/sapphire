@@ -47,7 +47,7 @@ public final class StaticImageService extends ImageService
         final Class<?> imageAnnotationHostClass = type.findAnnotationHostClass( imageAnnotation );
         final String imagePath = imageAnnotation.path();
         
-        this.image = ImageData.readFromClassLoader( imageAnnotationHostClass, imagePath ).required();
+        this.image = ImageData.readFromClassLoader( imageAnnotationHostClass, imagePath ).optional();
         
         if( this.image == null )
         {
