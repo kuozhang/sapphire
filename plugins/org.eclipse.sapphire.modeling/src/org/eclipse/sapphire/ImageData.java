@@ -105,7 +105,7 @@ public final class ImageData extends BinaryData
             return readFromUrl( url );
         }
         
-        return null;
+        return failure( new IllegalArgumentException() );
     }
     
 }

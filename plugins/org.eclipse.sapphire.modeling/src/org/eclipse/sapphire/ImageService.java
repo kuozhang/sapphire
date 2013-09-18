@@ -9,15 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
 
-import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.services.DataService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ImageService extends DataService<ImageServiceData>
+public abstract class ImageService extends DataService<ImageData>
 {
     @Override
     protected final void initDataService()
@@ -31,7 +31,7 @@ public abstract class ImageService extends DataService<ImageServiceData>
     
     public final ImageData image()
     {
-        return data().image();
+        return data();
     }
     
 }

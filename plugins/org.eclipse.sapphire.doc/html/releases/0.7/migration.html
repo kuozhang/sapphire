@@ -69,6 +69,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#FunctionContext">FunctionContext</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
   <li><a href="#ImageData">ImageData</a></li>
+  <li><a href="#ImageService">ImageService</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#IModelParticle">IModelParticle</a></li>
   <li><a href="#ImpliedElementProperty">ImpliedElementProperty</a></li>
@@ -836,6 +837,50 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">ImageData.</span>read<span class="unaffected">FromClassLoader( cl, path )</span>.required()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ImageService">ImageService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.services<span class="unaffected">.ImageService</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ImageService</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleImageService extends ImageService
+{
+    @Override
+    protected</span> ImageServiceData <span class="unaffected">compute()
+    {
+        ImageData image = ...
+        
+        return</span> new ImageServiceData( image )<span class="unaffected">;
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleImageService extends ImageService
+{
+    @Override
+    protected</span> ImageData <span class="unaffected">compute()
+    {
+        ImageData image = ...
+        
+        return</span> image<span class="unaffected">;
+    }
+}</span></code></pre>
     </td>
   </tr>
 </table>

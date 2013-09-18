@@ -17,8 +17,8 @@
     <service>
         <context>Sapphire.Element.Instance</context>
         <id>Sapphire.ImageService.Static</id>
-        <implementation>org.eclipse.sapphire.services.internal.StaticImageService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.StaticImageService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.StaticImageService</implementation>
+        <condition>org.eclipse.sapphire.internal.StaticImageService$Condition</condition>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>
