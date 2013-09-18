@@ -14,11 +14,10 @@ package org.eclipse.sapphire.samples.contacts.internal;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.ImageService;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.services.ImageService;
-import org.eclipse.sapphire.services.ImageServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -26,8 +25,8 @@ import org.eclipse.sapphire.services.ImageServiceData;
 
 public final class ContactImageService extends ImageService
 {
-    private static final ImageServiceData IMG_PERSON = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "Contact.png" ).required() );
-    private static final ImageServiceData IMG_PERSON_FADED = new ImageServiceData( ImageData.readFromClassLoader( Contact.class, "ContactFaded.png" ).required() );
+    private static final ImageData IMG_PERSON = ImageData.readFromClassLoader( Contact.class, "Contact.png" ).required();
+    private static final ImageData IMG_PERSON_FADED = ImageData.readFromClassLoader( Contact.class, "ContactFaded.png" ).required();
     
     private Listener listener;
     
@@ -47,7 +46,7 @@ public final class ContactImageService extends ImageService
     }
 
     @Override
-    protected ImageServiceData compute()
+    protected ImageData compute()
     {
         if( context( Contact.class ).getEMail().content() == null )
         {

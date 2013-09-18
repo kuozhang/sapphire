@@ -472,7 +472,7 @@ public final class ElementType extends ModelMetadataItem
             {
                 try
                 {
-                    this.image = ImageData.readFromClassLoader( findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ).required();
+                    this.image = ImageData.readFromClassLoader( findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ).optional();
                 }
                 catch( Exception e )
                 {

@@ -15,8 +15,8 @@ import java.util.List;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ImageService;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.services.ImageService;
 
 /**
  * A function that returns the image associated with the current model element. 

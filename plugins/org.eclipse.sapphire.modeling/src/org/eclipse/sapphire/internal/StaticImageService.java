@@ -9,14 +9,17 @@
  *    Ling Hao - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.ImageService;
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.Image;
-import org.eclipse.sapphire.services.ImageService;
-import org.eclipse.sapphire.services.ImageServiceData;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -26,20 +29,37 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class StaticImageService extends ImageService
 {
-    private ImageServiceData data;
+    @Text( "Failed to load image {1} referenced by {0} class." )
+    private static LocalizableText failedToLoadMessage;
+    
+    static
+    {
+        LocalizableText.init( StaticImageService.class );
+    }
+
+    private ImageData image;
     
     @Override
     protected void initImageService()
     {
         final ElementType type = context( Element.class ).type();
         final Image imageAnnotation = type.getAnnotation( Image.class );
-        this.data = new ImageServiceData( ImageData.readFromClassLoader( type.findAnnotationHostClass( imageAnnotation ), imageAnnotation.path() ).required() );
+        final Class<?> imageAnnotationHostClass = type.findAnnotationHostClass( imageAnnotation );
+        final String imagePath = imageAnnotation.path();
+        
+        this.image = ImageData.readFromClassLoader( imageAnnotationHostClass, imagePath ).required();
+        
+        if( this.image == null )
+        {
+            final String msg = failedToLoadMessage.format( imageAnnotationHostClass.getName(), imagePath );
+            LoggingService.log( Status.createErrorStatus( msg ) );
+        }
     }
 
     @Override
-    protected ImageServiceData compute()
+    protected ImageData compute()
     {
-        return this.data;
+        return this.image;
     }
     
     public static final class Condition extends ServiceCondition
