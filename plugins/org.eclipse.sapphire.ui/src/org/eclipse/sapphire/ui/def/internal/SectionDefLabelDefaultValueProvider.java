@@ -67,7 +67,11 @@ public final class SectionDefLabelDefaultValueProvider extends DefaultValueServi
     {
         if( this.node != null )
         {
-            this.node.getLabel().detach( this.listener );
+            if( ! this.node.disposed() )
+            {
+                this.node.getLabel().detach( this.listener );
+            }
+            
             this.node = null;
             this.listener = null;
         }
