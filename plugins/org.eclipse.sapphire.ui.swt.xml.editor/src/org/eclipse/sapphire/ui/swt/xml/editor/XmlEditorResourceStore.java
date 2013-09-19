@@ -30,10 +30,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
@@ -57,7 +54,6 @@ import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SourceEditorService;
-import org.eclipse.sapphire.ui.swt.xml.editor.internal.JavaProjectContext;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -285,16 +281,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
         else if( adapterType == SapphireEditor.class )
         {
             result = adapterType.cast( this.sapphireEditor );
-        }
-        else if( adapterType == Context.class )
-        {
-            final IProject project = adapt( IProject.class );
-            
-            if( project != null )
-            {
-                final IJavaProject jproject = JavaCore.create( project );
-                return adapterType.cast( new JavaProjectContext( jproject ) );
-            }
         }
         else
         {

@@ -25,7 +25,6 @@ Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.jface,
  org.eclipse.jface.text,
  org.eclipse.sapphire.osgi,
- org.eclipse.sapphire.java,
- org.eclipse.jdt.core
+ org.eclipse.sapphire.java
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

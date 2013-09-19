@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.swt.xml.editor.internal;
+package org.eclipse.sapphire.java.jdt.internal;
 
 import java.io.InputStream;
 
