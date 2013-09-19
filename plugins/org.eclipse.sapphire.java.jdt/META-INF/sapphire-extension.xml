@@ -22,4 +22,10 @@
         <implementation>org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService</implementation>
         <condition>org.eclipse.sapphire.java.jdt.internal.JdtJavaTypeReferenceService$Condition</condition>
     </service>
+    <service>
+        <id>Sapphire.Java.JDT.ConversionService.ElementToContext</id>
+        <implementation>org.eclipse.sapphire.java.jdt.internal.ElementToContextConversionService</implementation>
+        <description>ConversionService implementation for Element to Context conversions when the resource is inside a Java project.</description>
+        <context>Sapphire</context>
+    </service>
 </extension>
