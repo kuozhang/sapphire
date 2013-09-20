@@ -44,6 +44,7 @@ public class ContainerShapeModel extends ShapeModel
         		this.children.add(childModel);
         	}        				
 		}
+		presentation.init(this);
 	}
 		
 	public void refreshChildren()

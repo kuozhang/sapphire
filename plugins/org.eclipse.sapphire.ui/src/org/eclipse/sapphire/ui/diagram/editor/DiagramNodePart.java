@@ -22,17 +22,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
-import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent.ShapeEventType;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
@@ -90,75 +87,6 @@ public class DiagramNodePart
         // create shape part
         
         createShapePart();
-                
-        // attach various shape listeners
-        this.shapePart.attach
-        (
-            new FilteredListener<TextChangeEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( TextChangeEvent event )
-                {
-                    notifyTextChange(event.getPart());
-                }
-            }
-        );
-        this.shapePart.attach
-        (
-            new FilteredListener<ShapeUpdateEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( ShapeUpdateEvent event )
-                {
-                    notifyShapeUpdate(event.getPart());
-                }
-            }
-        );        
-        this.shapePart.attach
-        (
-             new FilteredListener<PartVisibilityEvent>()
-             {
-                @Override
-                protected void handleTypedEvent( final PartVisibilityEvent event )
-                {
-                	notifyShapeVisibility((ShapePart)event.part());
-                }
-             }
-        );        
-        this.shapePart.attach
-        (
-             new FilteredListener<ShapeReorderEvent>()
-             {
-                @Override
-                protected void handleTypedEvent( final ShapeReorderEvent event )
-                {
-                	notifyShapeReorder((ShapeFactoryPart)(event.getPart()));
-                }
-             }
-        );        		        
-        this.shapePart.attach
-        (
-             new FilteredListener<ShapeAddEvent>()
-             {
-                @Override
-                protected void handleTypedEvent( final ShapeAddEvent event )
-                {
-                	notifyShapeAdd(event.getPart());
-                }
-             }
-        );        		        
-        this.shapePart.attach
-        (
-             new FilteredListener<ShapeDeleteEvent>()
-             {
-                @Override
-                protected void handleTypedEvent( final ShapeDeleteEvent event )
-                {
-                	notifyShapeDelete(event.getPart());
-                }
-             }
-        );        		        
-        
     }
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
@@ -235,47 +163,47 @@ public class DiagramNodePart
         
     }
         
-    private void notifyShapeUpdate(ShapePart shapePart)
-    {
-		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
-    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
-    	this.broadcast(event);
-    }
-
-    private void notifyTextChange(ShapePart shapePart)
-    {
-		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
-    	event.setShapeEventType(ShapeEventType.TextChange);
-    	this.broadcast(event);
-    }
-    
-    private void notifyShapeVisibility(ShapePart shapePart)
-    {
-		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
-    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
-    	this.broadcast(event);
-    }
-    
-    private void notifyShapeAdd(ShapePart shapePart)
-    {
-		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
-    	event.setShapeEventType(ShapeEventType.ShapeAdd);
-    	this.broadcast(event);
-    }
-    
-    private void notifyShapeDelete(ShapePart shapePart)
-    {    	
-		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
-    	event.setShapeEventType(ShapeEventType.ShapeDelete);
-    	this.broadcast(event);
-    }
-    
-    private void notifyShapeReorder(ShapeFactoryPart shapeFactory)
-    {
-		DiagramShapeEvent event = new DiagramShapeEvent(this, shapeFactory);
-    	event.setShapeEventType(ShapeEventType.ShapeReorder);
-    	this.broadcast(event);
-    }
+//    private void notifyShapeUpdate(ShapePart shapePart)
+//    {
+//		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+//    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
+//    	this.broadcast(event);
+//    }
+//
+//    private void notifyTextChange(ShapePart shapePart)
+//    {
+//		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+//    	event.setShapeEventType(ShapeEventType.TextChange);
+//    	this.broadcast(event);
+//    }
+//    
+//    private void notifyShapeVisibility(ShapePart shapePart)
+//    {
+//		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+//    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
+//    	this.broadcast(event);
+//    }
+//    
+//    private void notifyShapeAdd(ShapePart shapePart)
+//    {
+//		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+//    	event.setShapeEventType(ShapeEventType.ShapeAdd);
+//    	this.broadcast(event);
+//    }
+//    
+//    private void notifyShapeDelete(ShapePart shapePart)
+//    {    	
+//		DiagramShapeEvent event = new DiagramShapeEvent(this, shapePart);
+//    	event.setShapeEventType(ShapeEventType.ShapeDelete);
+//    	this.broadcast(event);
+//    }
+//    
+//    private void notifyShapeReorder(ShapeFactoryPart shapeFactory)
+//    {
+//		DiagramShapeEvent event = new DiagramShapeEvent(this, shapeFactory);
+//    	event.setShapeEventType(ShapeEventType.ShapeReorder);
+//    	this.broadcast(event);
+//    }
     
     public String getNodeTypeId()
     {

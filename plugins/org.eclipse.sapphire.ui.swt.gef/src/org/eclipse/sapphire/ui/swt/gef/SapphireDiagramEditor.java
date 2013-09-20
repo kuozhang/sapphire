@@ -84,12 +84,9 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionBridge;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionSystemPartBridge;
@@ -238,10 +235,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
                         selectParts(part.getSelections());
                         isSelectionFromPagePart = false;
                     } 
-                    else if ( event instanceof DiagramShapeEvent )
-                    {
-                    	handleDiagramShapeEvent((DiagramShapeEvent)event);
-	                } 
                     else if ( event instanceof DiagramNodeEvent )
 	                {
 	                	handleDiagramNodeEvent((DiagramNodeEvent)event);
@@ -308,31 +301,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         this.part.attach( this.diagramEditorPagePartListener );
     }
     
-	private void handleDiagramShapeEvent(DiagramShapeEvent event) {
-    	switch(event.getShapeEventType()) {
-	    	case ShapeUpdate:
-		        updateNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
-	    		break;
-	    	case TextChange:
-		        changeText((DiagramNodePart)event.getPart(), event.getShapePart());
-	    		break;
-	    	case ShapeVisibilityUpdate:
-		        updateShapeVisibility((DiagramNodePart)event.getPart(), event.getShapePart());
-	    		break;
-	    	case ShapeAdd:
-		        addNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
-		        break;
-	    	case ShapeDelete:
-		        deleteNodeShape((DiagramNodePart)event.getPart(), event.getShapePart());
-		        break;
-	    	case ShapeReorder:
-		        reorderShapes((DiagramNodePart)event.getPart(), (ShapeFactoryPart)event.getShapePart());
-		        break;
-	    	default:
-	    		break;
-    	}
-	}
-
     private void handleDiagramNodeEvent(DiagramNodeEvent event) {
     	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
     	switch(event.getNodeEventType()) {
@@ -592,75 +560,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		}
 		
 		diagramModel.handleAddNode(part);
-	}
-	
-	protected void updateNodeShape(DiagramNodePart part, ShapePart shapePart) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleUpdateNodeShape(shapePart);
-		}
-	}
-	
-	protected void changeText(DiagramNodePart part, ShapePart shapePart) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleChangeText((TextPart)shapePart);
-		}
-	}
-
-	protected void updateShapeVisibility(final DiagramNodePart part, final ShapePart shapePart) 
-	{
-		if (diagramModel == null) {
-			return;
-		}
-		
-		diagramModel.handleUpdateShapeVisibility(part, shapePart);
-	}
-
-	protected void addNodeShape(DiagramNodePart part, ShapePart shapePart) 
-	{
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleAddShape(shapePart);
-		}
-		
-	}
-	
-	protected void deleteNodeShape(DiagramNodePart part, ShapePart shapePart)
-	{
-		
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleDeleteShape(shapePart);
-		}
-	}
-
-	protected void reorderShapes(DiagramNodePart part, ShapeFactoryPart shapeFactory)
-	{		
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleReorderShapes(shapeFactory);
-		}
 	}
 	
 	@Override

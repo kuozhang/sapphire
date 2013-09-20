@@ -13,6 +13,9 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.Color;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.diagram.editor.TextChangeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
@@ -24,9 +27,21 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 public class TextPresentation extends ShapePresentation 
 {
+	private Listener textChangeListener;
+	
 	public TextPresentation(DiagramPresentation parent, TextPart textPart, DiagramResourceCache resourceCache)
 	{
 		super(parent, textPart, resourceCache);
+		
+        this.textChangeListener = new FilteredListener<TextChangeEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final TextChangeEvent event )
+            {
+            	refresh();
+            }
+        };
+        part().attach(this.textChangeListener);
 	}
 	
 	public Color getTextColor()
@@ -75,6 +90,18 @@ public class TextPresentation extends ShapePresentation
 			figure = new TextFigure(getResourceCache(), this);
 		}
 		setFigure(figure);
-    }
+    }   
+	
+	@Override
+	public void dispose()
+	{
+		part().detach(this.textChangeListener);
+	}
+
+	private void refresh() {
+		TextFigure textFigure = (TextFigure)getFigure();
+		textFigure.setText(getContent());
+		// TODO necessary? DiagramNodeEditPart.refreshNodeBounds()
+	}
 	
 }

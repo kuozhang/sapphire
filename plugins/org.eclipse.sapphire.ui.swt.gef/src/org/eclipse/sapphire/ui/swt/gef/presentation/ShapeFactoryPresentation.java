@@ -15,9 +15,17 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeAddEvent;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeReorderEvent;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeUpdateEvent;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeFactoryModel;
+import org.eclipse.sapphire.ui.swt.gef.parts.ShapeUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -29,7 +37,11 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	private List<ShapePresentation> children;
 	private ShapePresentation separator;
 	private int index;
-	
+	private Listener shapeReorderListener; 
+	private Listener shapeAddListener; 
+	private Listener shapeDeleteListener; 
+	private Listener shapeUpdateListener;
+
 	public ShapeFactoryPresentation(DiagramPresentation parent, ShapeFactoryPart shapeFactoryPart,
 			DiagramResourceCache resourceCache)
 	{
@@ -50,6 +62,49 @@ public class ShapeFactoryPresentation extends ShapePresentation
 			this.separator = ShapePresentationFactory.createShapePresentation(this, shapeFactoryPart.getSeparator(), resourceCache);
 			this.separator.setSeparator(true);
 		}
+	}
+	
+	public void init(final ShapeFactoryModel model) {
+		shapeReorderListener = new FilteredListener<ShapeReorderEvent>() {
+			@Override
+			protected void handleTypedEvent(ShapeReorderEvent event) {
+				model.handleReorderShapes(part());
+			}
+		};
+		part().attach(shapeReorderListener);
+		
+		shapeAddListener = new FilteredListener<ShapeAddEvent>() {
+			@Override
+			protected void handleTypedEvent(ShapeAddEvent event) {
+				model.handleAddShape(part());
+			}
+		};
+		part().attach(shapeAddListener);
+
+		shapeDeleteListener = new FilteredListener<ShapeDeleteEvent>() {
+			@Override
+			protected void handleTypedEvent(ShapeDeleteEvent event) {
+				model.handleDeleteShape(part());
+			}
+		};
+		part().attach(shapeDeleteListener);
+
+		shapeUpdateListener = new FilteredListener<ShapeUpdateEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final ShapeUpdateEvent event )
+            {
+    			ShapeUtil.updateFigureForShape(ShapeFactoryPresentation.this, getResourceCache(), getConfigurationManager());
+            }
+        };
+        part().attach(shapeUpdateListener);
+	}
+	
+	
+	@Override
+	public ShapeFactoryPart part() 
+	{
+		return (ShapeFactoryPart) super.part();
 	}
 
 	public List<ShapePresentation> getChildren()
@@ -102,6 +157,12 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	public void dispose()
 	{
 		super.dispose();
+		
+		part().attach(shapeReorderListener);
+		part().attach(shapeAddListener);
+		part().attach(shapeDeleteListener);
+		part().attach(shapeUpdateListener);
+		
 		for (ShapePresentation shapePresentation : getChildren())
 		{
 			shapePresentation.dispose();

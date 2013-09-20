@@ -52,7 +52,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent.DiagramPartEventType;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent.ShapeEventType;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
@@ -700,41 +699,41 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return null;
     }
     
-    private void notifyShapeUpdate(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
-    	this.broadcast(event);
-	}
-	
-    private void notifyTextChange(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.TextChange);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeVisibilityUpdate( DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeAdd(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeAdd);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeDelete(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeDelete);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeReorder(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeReorder);
-    	this.broadcast(event);
-	}
+//    private void notifyShapeUpdate(DiagramShapeEvent event)
+//	{
+//    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
+//    	this.broadcast(event);
+//	}
+//	
+//    private void notifyTextChange(DiagramShapeEvent event)
+//	{
+//    	event.setShapeEventType(ShapeEventType.TextChange);
+//    	this.broadcast(event);
+//	}
+//
+//    private void notifyShapeVisibilityUpdate( DiagramShapeEvent event)
+//	{
+//    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
+//    	this.broadcast(event);
+//	}
+//
+//    private void notifyShapeAdd(DiagramShapeEvent event)
+//	{
+//    	event.setShapeEventType(ShapeEventType.ShapeAdd);
+//    	this.broadcast(event);
+//	}
+//
+//    private void notifyShapeDelete(DiagramShapeEvent event)
+//	{
+//    	event.setShapeEventType(ShapeEventType.ShapeDelete);
+//    	this.broadcast(event);
+//	}
+//
+//    private void notifyShapeReorder(DiagramShapeEvent event)
+//	{
+//    	event.setShapeEventType(ShapeEventType.ShapeReorder);
+//    	this.broadcast(event);
+//	}
 
     private void notifyNodeAdd(DiagramNodePart nodePart)
 	{
@@ -883,41 +882,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         	notifyNodeMove(event);
         }	
         
-        @Override
-        public void handleShapeUpdate(final DiagramShapeEvent event)
-        {
-        	notifyShapeUpdate(event);
-        }        
-        
-        @Override
-        public void handleTextChange(final DiagramShapeEvent event)
-        {
-        	notifyTextChange(event);
-        }        
-
-        @Override
-        public void handleShapeVisibilityUpdate(final DiagramShapeEvent event)
-        {        
-        	notifyShapeVisibilityUpdate(event);
-        }        
-        
-        @Override
-        public void handleShapeAdd(final DiagramShapeEvent event)
-        {
-        	notifyShapeAdd(event);
-        }        
-        
-        @Override
-        public void handleShapeDelete(final DiagramShapeEvent event)
-        {        
-        	notifyShapeDelete(event);
-        }        
-        
-        @Override
-        public void handleShapeReorder(final DiagramShapeEvent event)
-        {        
-        	notifyShapeReorder(event);
-        }        
 	}
 	
 	private class ConnectionTemplateListener extends DiagramConnectionTemplateListener
@@ -1016,7 +980,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public static final class ZoomLevelEvent extends PartEvent
     {
-        private final int before;
+        private final int before;  
         private final int after;
         
         public ZoomLevelEvent( final SapphirePart part,

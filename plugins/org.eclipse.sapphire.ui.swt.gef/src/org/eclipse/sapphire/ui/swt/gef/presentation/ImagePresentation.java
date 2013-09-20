@@ -12,9 +12,12 @@
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeUpdateEvent;
 import org.eclipse.sapphire.ui.swt.gef.figures.SapphireImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -25,9 +28,30 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 public class ImagePresentation extends ShapePresentation 
 {
+	private Listener shapeUpdateListener;
+	
 	public ImagePresentation(DiagramPresentation parent, ImagePart imagePart, DiagramResourceCache resourceCache)
 	{
 		super(parent, imagePart, resourceCache);
+
+        this.shapeUpdateListener = new FilteredListener<ShapeUpdateEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final ShapeUpdateEvent event )
+            {
+            	refresh();
+            }
+        };
+        part().attach(this.shapeUpdateListener);
+	}
+	
+	private void refresh() 
+	{
+		DiagramNodePart nodePart = part().nearest(DiagramNodePart.class);
+		final ImageData data = getImage();
+		if (data != null) {   
+			((SapphireImageFigure)getFigure()).setImage(nodePart.getSwtResourceCache().image(data));
+		}
 	}
 
 	@Override
@@ -61,4 +85,10 @@ public class ImagePresentation extends ShapePresentation
 		setFigure(figure);
     }
 	
+	@Override
+	public void dispose()
+	{
+		part().detach(this.shapeUpdateListener);
+	}
+
 }

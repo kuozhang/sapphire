@@ -156,24 +156,6 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 
-	public void handleUpdateShapeVisibility(final DiagramNodePart part, final ShapePart shapePart) {
-		DiagramNodeModel nodeModel = getDiagramNodeModel(part);
-		if (shapePart.parent() instanceof DiagramNodePart) {
-			// handle visibility at the node level
-			if (shapePart.visible()) {
-				if (nodeModel == null) {
-					handleAddNode(part);
-				}
-			} else {
-				if (nodeModel != null) {
-					handleRemoveNode(part);
-				}
-			}
-		} else if (nodeModel != null) {
-			nodeModel.handleUpdateShapeVisibility(shapePart);
-		}
-	}
-
 	private void contructNodes() 
 	{
 		for (DiagramNodePresentation nodePresentation : getPresentation().getNodes())

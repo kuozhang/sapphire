@@ -15,9 +15,13 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
+import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
@@ -28,6 +32,7 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 public class ContainerShapePresentation extends ShapePresentation 
 {
 	private List<ShapePresentation> children;
+	private Listener partVisibilityListener;
 	
 	public ContainerShapePresentation(DiagramPresentation parent, ContainerShapePart containerShapePart,
 				DiagramResourceCache resourceCache)
@@ -44,6 +49,17 @@ public class ContainerShapePresentation extends ShapePresentation
 				this.children.add(childPresentation);
 			}
 		}
+	}
+	
+	public void init(final ContainerShapeModel model) {
+		partVisibilityListener = new FilteredListener<PartVisibilityEvent>() {
+			@Override
+			protected void handleTypedEvent(PartVisibilityEvent event) {
+				ShapePart shapePart = (ShapePart)event.part();
+				model.handleVisibilityChange(shapePart);
+			}
+		};
+		part().attach(partVisibilityListener);
 	}
 	
 	protected boolean canAddShapePart(ShapePart shapePart) {
@@ -73,6 +89,9 @@ public class ContainerShapePresentation extends ShapePresentation
 	public void dispose()
 	{
 		super.dispose();
+		
+		part().detach(partVisibilityListener);
+		
 		for (ShapePresentation shapePresentation : getChildren())
 		{
 			shapePresentation.dispose();

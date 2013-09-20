@@ -11,8 +11,13 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation.ShapePresentationFactory;
 import org.eclipse.swt.widgets.Shell;
@@ -25,6 +30,7 @@ public class DiagramNodePresentation extends DiagramPresentation
 {
 	private DiagramResourceCache resourceCache;
 	private ShapePresentation shapePresentation;
+	private Listener partVisibilityListener;
 	
 	public DiagramNodePresentation(final DiagramNodePart nodePart, final DiagramPresentation parent, 
 			final Shell shell, final DiagramConfigurationManager configManager, final DiagramResourceCache resourceCache)
@@ -35,6 +41,25 @@ public class DiagramNodePresentation extends DiagramPresentation
 				nodePart.getShapePart(), this.resourceCache);
 	}
 	
+	public void init(final DiagramNodeModel model) {
+		partVisibilityListener = new FilteredListener<PartVisibilityEvent>() {
+			@Override
+			protected void handleTypedEvent(PartVisibilityEvent event) {
+				ShapePart shapePart = (ShapePart)event.part();
+				model.handleVisibilityChange(shapePart);
+			}
+		};
+		getShapePresentation().part().attach(partVisibilityListener);
+	}	
+
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		
+		getShapePresentation().part().detach(partVisibilityListener);
+	}
+
 	public ShapePresentation getShapePresentation()
 	{
 		return this.shapePresentation;
@@ -51,5 +76,6 @@ public class DiagramNodePresentation extends DiagramPresentation
     {
 		this.shapePresentation.render();
 		setFigure(this.shapePresentation.getFigure());
-    }	
+    }
+
 }

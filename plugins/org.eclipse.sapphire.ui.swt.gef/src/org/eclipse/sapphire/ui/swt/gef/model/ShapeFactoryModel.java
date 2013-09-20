@@ -55,8 +55,8 @@ public class ShapeFactoryModel extends ShapeModel
 	        		this.children.add(separatorModel);
 	        	}
 			}
-			
 		}
+		presentation.init(this);
 	}
 	
 	private ShapeModel getSeparatorModel(DiagramNodeModel nodeModel, int index) {

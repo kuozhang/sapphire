@@ -37,7 +37,6 @@ import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.policies.DiagramXYLayoutEditPolicy;
 import org.eclipse.sapphire.ui.swt.gef.policies.SapphireSnapFeedbackPolicy;
-import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPagePresentation;
 import org.eclipse.swt.SWT;
 
