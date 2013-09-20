@@ -699,42 +699,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return null;
     }
     
-//    private void notifyShapeUpdate(DiagramShapeEvent event)
-//	{
-//    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
-//    	this.broadcast(event);
-//	}
-//	
-//    private void notifyTextChange(DiagramShapeEvent event)
-//	{
-//    	event.setShapeEventType(ShapeEventType.TextChange);
-//    	this.broadcast(event);
-//	}
-//
-//    private void notifyShapeVisibilityUpdate( DiagramShapeEvent event)
-//	{
-//    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
-//    	this.broadcast(event);
-//	}
-//
-//    private void notifyShapeAdd(DiagramShapeEvent event)
-//	{
-//    	event.setShapeEventType(ShapeEventType.ShapeAdd);
-//    	this.broadcast(event);
-//	}
-//
-//    private void notifyShapeDelete(DiagramShapeEvent event)
-//	{
-//    	event.setShapeEventType(ShapeEventType.ShapeDelete);
-//    	this.broadcast(event);
-//	}
-//
-//    private void notifyShapeReorder(DiagramShapeEvent event)
-//	{
-//    	event.setShapeEventType(ShapeEventType.ShapeReorder);
-//    	this.broadcast(event);
-//	}
-
     private void notifyNodeAdd(DiagramNodePart nodePart)
 	{
 		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
