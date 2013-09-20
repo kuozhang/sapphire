@@ -35,6 +35,8 @@ public class DiagramConnectionModel extends DiagramModelBase {
 	public DiagramConnectionModel(DiagramModel parent, DiagramConnectionPresentation connPresentation) {
 		this.parent = parent;
 		this.connPresentation = connPresentation;
+		
+		connPresentation.init(this);
 	}
 	
 	public DiagramModel getDiagramModel() {

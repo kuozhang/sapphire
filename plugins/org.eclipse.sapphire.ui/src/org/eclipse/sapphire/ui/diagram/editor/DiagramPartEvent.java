@@ -23,13 +23,7 @@ import org.eclipse.sapphire.ui.SapphirePart.PartEvent;
 
 public class DiagramPartEvent extends PartEvent
 {
-    public static enum DiagramPartEventType
-    {
-        DirectEdit
-    }
-
     private final ISapphirePart part;
-    private DiagramPartEventType diagramPartEventType;
     
     public DiagramPartEvent( final ISapphirePart part )
     {
@@ -41,13 +35,4 @@ public class DiagramPartEvent extends PartEvent
     {
         return this.part;
     }
-
-	public DiagramPartEventType getDiagramPartEventType() {
-		return diagramPartEventType;
-	}
-
-	public void setDiagramPartEventType(DiagramPartEventType diagramPartEventType) {
-		this.diagramPartEventType = diagramPartEventType;
-	}
-    
 }

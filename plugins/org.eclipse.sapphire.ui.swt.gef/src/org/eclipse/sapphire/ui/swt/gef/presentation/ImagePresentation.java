@@ -47,10 +47,12 @@ public class ImagePresentation extends ShapePresentation
 	
 	private void refresh() 
 	{
-		DiagramNodePart nodePart = part().nearest(DiagramNodePart.class);
-		final ImageData data = getImage();
-		if (data != null) {   
-			((SapphireImageFigure)getFigure()).setImage(nodePart.getSwtResourceCache().image(data));
+		if (getFigure() != null) {
+			DiagramNodePart nodePart = part().nearest(DiagramNodePart.class);
+			final ImageData data = getImage();
+			if (data != null) {   
+				((SapphireImageFigure)getFigure()).setImage(nodePart.getSwtResourceCache().image(data));
+			}
 		}
 	}
 

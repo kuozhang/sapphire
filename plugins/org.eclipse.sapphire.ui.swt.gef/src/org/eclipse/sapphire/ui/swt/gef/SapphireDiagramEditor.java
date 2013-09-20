@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
@@ -78,9 +77,8 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramDirectEditPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
@@ -235,21 +233,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
                         selectParts(part.getSelections());
                         isSelectionFromPagePart = false;
                     } 
-                    else if ( event instanceof DiagramNodeEvent )
-	                {
-	                	handleDiagramNodeEvent((DiagramNodeEvent)event);
-	                } 
-                    else if ( event instanceof DiagramConnectionEvent )
-	                {
-	                	handleDiagramConnectionEvent((DiagramConnectionEvent)event);
-	                } 
                     else if ( event instanceof DiagramPageEvent )
 	                {
 	                	handleDiagramPageEvent((DiagramPageEvent)event);
 	                } 
-                    else if ( event instanceof DiagramPartEvent )
+                    else if ( event instanceof DiagramDirectEditPartEvent )
 	                {
-	                	handleDiagramPartEvent((DiagramPartEvent)event);
+	    		    	selectAndDirectEditPart(((DiagramDirectEditPartEvent)event).getPart());
 	                }
                 }
             }
@@ -301,59 +291,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         this.part.attach( this.diagramEditorPagePartListener );
     }
     
-    private void handleDiagramNodeEvent(DiagramNodeEvent event) {
-    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
-    	switch(event.getNodeEventType()) {
-	    	case NodeAdd:
-                addNode(nodePart);
-	    		break;
-	    	case NodeDelete:
-                removeNode(nodePart);
-    		break;
-	    	case NodeMove:
-		    	moveNode(nodePart);
-	    		break;
-	    	default:
-	    		break;
-    	}
-	}
-
-    protected void handleDiagramConnectionEvent(DiagramConnectionEvent event) {
-		DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
-
-		switch(event.getConnectionEventType()) {
-	    	case ConnectionUpdate:
-				updateConnection(connPart);
-				break;
-	    	case ConnectionEndpointUpdate:
-                updateConnectionEndpoint(connPart);
-	    		break;
-	    	case ConnectionAdd:
-                addConnectionIfPossible(connPart);
-                break;
-	    	case ConnectionDelete:
-				removeConnection(connPart);
-	    		break;
-	    	case ConnectionAddBendpoint:
-		    	updateConnectionBendpoint(connPart);
-	    		break;
-	    	case ConnectionRemoveBendpoint:
-		    	updateConnectionBendpoint(connPart);
-	    		break;
-	    	case ConnectionMoveBendpoint:
-		    	updateConnectionBendpoint(connPart);
-	    		break;
-	    	case ConnectionResetBendpoint:
-		    	updateConnectionBendpoint(connPart);
-	    		break;
-	    	case ConnectionMoveLabel:
-		    	updateConnectionMoveLabel(connPart);
-	    		break;
-	    	default:
-	    		break;
-    	}
-	}
-
     private void handleDiagramPageEvent(DiagramPageEvent event) {
     	switch(event.getDiagramPageEventType()) {
 	    	case GridStateChange:
@@ -378,16 +315,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     		break;
 	    	case SelectAllNodes:
 		    	selectAllNodes();
-	    		break;
-	    	default:
-	    		break;
-    	}
-	}
-
-    private void handleDiagramPartEvent(DiagramPartEvent event) {
-    	switch(event.getDiagramPartEventType()) {
-	    	case DirectEdit:
-		    	selectAndDirectEditPart(event.getPart());
 	    		break;
 	    	default:
 	    		break;
@@ -438,128 +365,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	@Override
 	public DefaultEditDomain getEditDomain() {
 		return super.getEditDomain();
-	}
-	
-	protected void removeConnection(DiagramConnectionPart connPart) {
-		if (diagramModel == null) {
-			return;
-		}
-
-		diagramModel.removeConnection(connPart);
-	}
-
-	private void addConnection(DiagramConnectionPart connPart)
-	{
-		diagramModel.addConnection(connPart);
-	}
-	
-	protected void addConnectionIfPossible(DiagramConnectionPart connPart) {
-		if (diagramModel == null) {
-			return;
-		}
-		Element endpoint1 = connPart.getEndpoint1();
-		Element endpoint2 = connPart.getEndpoint2();
-		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
-		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
-		GraphicalEditPart node1 = getGraphicalEditPart(nodePart1);
-		GraphicalEditPart node2 = getGraphicalEditPart(nodePart2);
-		if (node1 != null && node2 != null) {
-			addConnection(connPart);
-		}
-	}
-	
-	private void refreshConnectionNodes(DiagramConnectionPart connPart) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramConnectionModel connectionModel = diagramModel.getDiagramConnectionModel(connPart);
-		if (connectionModel != null) {
-			connectionModel.handleUpdateConnection();
-		}
-	}
-
-	protected void updateConnectionEndpoint(DiagramConnectionPart connPart) 
-	{
-		// Check whether the end points have truely changed		
-				
-		Element endpoint1 = connPart.getEndpoint1();
-		Element endpoint2 = connPart.getEndpoint2();
-		DiagramNodePart nodePart1 = this.part.getDiagramNodePart(endpoint1);
-		DiagramNodePart nodePart2 = this.part.getDiagramNodePart(endpoint2);
-		GraphicalEditPart newSrcNode = getGraphicalEditPart(nodePart1);
-		GraphicalEditPart newTargetNode = getGraphicalEditPart(nodePart2);
-
-		ConnectionEditPart connEditPart = (ConnectionEditPart)getGraphicalEditPart(connPart);
-		GraphicalEditPart oldSrcNode = null;
-		GraphicalEditPart oldTargetNode = null;
-		if (connEditPart != null)
-		{
-			oldSrcNode = (GraphicalEditPart)connEditPart.getSource();
-			oldTargetNode = (GraphicalEditPart)connEditPart.getTarget();						
-		}
-		if (oldSrcNode != newSrcNode || oldTargetNode != newTargetNode)
-		{
-			removeConnection(connPart);
-			if (newSrcNode != null && newTargetNode != null)
-			{				
-				addConnection(connPart);				
-			}
-		}			
-		
-	}
-
-	protected void updateConnection(DiagramConnectionPart connPart) {
-		refreshConnectionNodes(connPart);
-	}
-
-	protected void updateConnectionMoveLabel(DiagramConnectionPart connPart) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramConnectionModel connectionModel = diagramModel.getDiagramConnectionModel(connPart);
-		if (connectionModel != null) {
-			connectionModel.handleUpdateConnectionMoveLabel();
-		}
-	}
-
-	protected void updateConnectionBendpoint(DiagramConnectionPart connPart) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramConnectionModel connectionModel = diagramModel.getDiagramConnectionModel(connPart);
-		if (connectionModel != null) {
-			connectionModel.handleUpdateBendPoints();
-		}
-	}
-
-	protected void moveNode(DiagramNodePart part) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		DiagramNodeModel nodeModel = diagramModel.getDiagramNodeModel(part);
-		if (nodeModel != null) {
-			nodeModel.handleMoveNode();
-		}
-	}
-
-	protected void removeNode(DiagramNodePart part) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		diagramModel.handleRemoveNode(part);
-	}
-
-	protected void addNode(DiagramNodePart part) {
-		if (diagramModel == null) {
-			return;
-		}
-		
-		diagramModel.handleAddNode(part);
 	}
 	
 	@Override

@@ -54,6 +54,8 @@ public class DiagramModel extends DiagramModelBase {
 
 		contructNodes();
 		constructConnections();
+
+		diagramPresentation.init(this);
 	}
 	
 	public DiagramPagePresentation getPresentation()
@@ -99,7 +101,6 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	public void handleAddNode(DiagramNodePart nodePart) {
-		// TODO DiagramPagePresentation should listen to the node add/delete events on the node templates.
 		DiagramNodePresentation nodePresentation = getPresentation().addNode(nodePart);
 		DiagramNodeModel nodeModel = new DiagramNodeModel(this, nodePresentation);
 		
@@ -153,6 +154,13 @@ public class DiagramModel extends DiagramModelBase {
 			// next remove the node
 			nodes.remove(nodeModel);
 			firePropertyChange(NODE_REMOVED, null, nodePart);
+		}
+	}
+
+	public void handleMoveNode(DiagramNodePart nodePart) {
+		DiagramNodeModel nodeModel = getDiagramNodeModel(nodePart);
+		if (nodeModel != null) {
+			nodeModel.handleMoveNode();
 		}
 	}
 
@@ -248,6 +256,24 @@ public class DiagramModel extends DiagramModelBase {
 			// For other cases, this method is called on connection part that'll be disposed. So we don't need to remove 
 			// its bend points.
 			//connPart.removeAllBendpoints();
+		}
+	}
+	
+	public void updateConnectionEndpoint(DiagramConnectionPart connPart) {
+		Element endpoint1 = connPart.getEndpoint1();
+		Element endpoint2 = connPart.getEndpoint2();
+		DiagramNodePart nodePart1 = getSapphirePart().getDiagramNodePart(endpoint1);
+		DiagramNodePart nodePart2 = getSapphirePart().getDiagramNodePart(endpoint2);
+
+		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
+		DiagramNodePart oldPart1 = connectionModel == null ? null : connectionModel.getSourceNode().getModelPart();
+		DiagramNodePart oldPart2 = connectionModel == null ? null : connectionModel.getTargetNode().getModelPart();
+		
+		if (nodePart1 != oldPart1 || nodePart2 != oldPart2) {
+			removeConnection(connPart);
+			if (nodePart1 != null && nodePart2 != null) {
+				addConnection(connPart);
+			}
 		}
 	}
 	

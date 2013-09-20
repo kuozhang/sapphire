@@ -51,7 +51,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventType;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent.DiagramPartEventType;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
@@ -775,8 +774,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 
 	private void notifyDirectEdit(ISapphirePart part)
 	{
-		DiagramPartEvent event = new DiagramPartEvent(part);
-		event.setDiagramPartEventType(DiagramPartEventType.DirectEdit);
+		DiagramDirectEditPartEvent event = new DiagramDirectEditPartEvent(part);
     	this.broadcast(event);
 	}
 

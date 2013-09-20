@@ -11,8 +11,12 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.widgets.Shell;
 
@@ -22,10 +26,51 @@ import org.eclipse.swt.widgets.Shell;
 
 public class DiagramConnectionPresentation extends DiagramPresentation 
 {
+	private Listener connectionListener;
+	
 	public DiagramConnectionPresentation(final DiagramConnectionPart connPart, final DiagramPresentation parent, 
 			final Shell shell, final DiagramConfigurationManager configManager, final DiagramResourceCache resourceCache)
 	{
 		super(connPart, parent, configManager, shell);
+	}
+
+	public void init(final DiagramConnectionModel diagramConnectionModel) {
+		connectionListener = new FilteredListener<DiagramConnectionEvent>() {
+			@Override
+			protected void handleTypedEvent(DiagramConnectionEvent event) {
+		    	switch(event.getConnectionEventType()) {
+			    	case ConnectionUpdate:
+			    		diagramConnectionModel.handleUpdateConnection();
+			    		break;
+			    	case ConnectionAddBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+			    		break;
+			    	case ConnectionRemoveBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+		    		break;
+			    	case ConnectionMoveBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+			    		break;
+			    	case ConnectionResetBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+			    		break;
+			    	case ConnectionMoveLabel:
+			    		diagramConnectionModel.handleUpdateConnectionMoveLabel();
+			    		break;
+			    	default:
+			    		break;
+		    	}
+			}
+		};
+		part().attach(connectionListener);
+	}
+
+	@Override
+	public void dispose()
+	{
+		part().detach(connectionListener);
+
+		super.dispose();
 	}
 
 	@Override
@@ -33,4 +78,5 @@ public class DiagramConnectionPresentation extends DiagramPresentation
 	{
 		return (DiagramConnectionPart)super.part();
 	}
+
 }
