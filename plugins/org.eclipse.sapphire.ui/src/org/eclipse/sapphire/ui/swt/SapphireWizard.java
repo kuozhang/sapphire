@@ -171,6 +171,12 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
         return ( this.definition == null ? null : this.definition.resolve() );
     }
     
+    /**
+     * Returns the wizard pages. Can be overridden to add custom pages.
+     * 
+     * @return the wizard pages
+     */
+    
     @Override
     public IWizardPage[] getPages()
     {
@@ -180,7 +186,16 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
         {
             if( wizardPagePart.visible() )
             {
-                result.add( getPage( wizardPagePart ) );
+                SapphireWizardPage wizardPagePresentation = this.pages.get( wizardPagePart );
+                
+                if( wizardPagePresentation == null )
+                {
+                    wizardPagePresentation = new SapphireWizardPage( wizardPagePart );
+                    wizardPagePresentation.setWizard( this );
+                    this.pages.put( wizardPagePart, wizardPagePresentation );
+                }
+                
+                result.add( wizardPagePresentation );
             }
         }
         
@@ -188,62 +203,24 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
     }
 
     @Override
-    public int getPageCount()
+    public final int getPageCount()
     {
-        int count = 0;
-        
-        for( final SapphireWizardPagePart wizardPagePart : this.pages.keySet() )
-        {
-            if( wizardPagePart.visible() )
-            {
-                count++;
-            }
-        }
-        
-        return count;
+        return getPages().length;
     }
 
     @Override
-    public IWizardPage getPage( final String name )
+    public final IWizardPage getPage( final String name )
     {
         if( name == null )
         {
             throw new IllegalArgumentException();
         }
         
-        for( final SapphireWizardPagePart wizardPagePart : this.pages.keySet() )
+        for( final IWizardPage page : getPages() )
         {
-            if( wizardPagePart.visible() && name.equals( wizardPagePart.definition().getId().content() ) )
+            if( name.equals( page.getName() ) )
             {
-                return getPage( wizardPagePart );
-            }
-        }
-        
-        return null;
-    }
-
-    private IWizardPage getPage( final SapphireWizardPagePart wizardPagePart )
-    {
-        SapphireWizardPage wizardPagePresentation = this.pages.get( wizardPagePart );
-        
-        if( wizardPagePresentation == null )
-        {
-            wizardPagePresentation = new SapphireWizardPage( wizardPagePart );
-            wizardPagePresentation.setWizard( this );
-            this.pages.put( wizardPagePart, wizardPagePresentation );
-        }
-        
-        return wizardPagePresentation;
-    }
-
-    @Override
-    public IWizardPage getStartingPage()
-    {
-        for( final SapphireWizardPagePart wizardPagePart : this.pages.keySet() )
-        {
-            if( wizardPagePart.visible() )
-            {
-                return getPage( wizardPagePart );
+                return page;
             }
         }
         
@@ -251,25 +228,32 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
     }
 
     @Override
-    public IWizardPage getNextPage( final IWizardPage page )
+    public final IWizardPage getStartingPage()
+    {
+        final IWizardPage[] pages = getPages();
+        
+        if( pages.length > 0 )
+        {
+            return pages[ 0 ];
+        }
+        
+        return null;
+    }
+
+    @Override
+    public final IWizardPage getNextPage( final IWizardPage page )
     {
         boolean captureNextPage = false;
         
-        for( final SapphireWizardPagePart wizardPagePart : this.pages.keySet() )
+        for( final IWizardPage p : getPages() )
         {
             if( captureNextPage )
             {
-                if( wizardPagePart.visible() )
-                {
-                    return getPage( wizardPagePart );
-                }
+                return p;
             }
-            else
+            else if( p == page )
             {
-                if( getPage( wizardPagePart ) == page )
-                {
-                    captureNextPage = true;
-                }
+                captureNextPage = true;
             }
         }
         
@@ -277,28 +261,23 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
     }
 
     @Override
-    public IWizardPage getPreviousPage( final IWizardPage page )
+    public final IWizardPage getPreviousPage( final IWizardPage page )
     {
-        SapphireWizardPagePart lastVisibleWizardPagePart = null;
+        IWizardPage previous = null;
         
-        for( final SapphireWizardPagePart wizardPagePart : this.pages.keySet() )
+        for( final IWizardPage p : getPages() )
         {
-            if( getPage( wizardPagePart ) == page )
+            if( p == page )
             {
                 break;
             }
-            else if( wizardPagePart.visible() )
+            else
             {
-                lastVisibleWizardPagePart = wizardPagePart;
+                previous = p;
             }
         }
         
-        if( lastVisibleWizardPagePart != null )
-        {
-            return getPage( lastVisibleWizardPagePart );
-        }
-        
-        return null;
+        return previous;
     }
     
     @Override
@@ -309,11 +288,9 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
     @Override
     public final boolean canFinish()
     {
-        for( final Map.Entry<SapphireWizardPagePart,SapphireWizardPage> entry : this.pages.entrySet() )
+        for( final IWizardPage p : getPages() )
         {
-            final SapphireWizardPagePart wizardPagePart = entry.getKey();
-            
-            if( wizardPagePart.visible() && wizardPagePart.validation().severity() == Status.Severity.ERROR )
+            if( ! p.isPageComplete() )
             {
                 return false;
             }
@@ -425,7 +402,7 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
     }
 
     @Override
-    public boolean isHelpAvailable()
+    public final boolean isHelpAvailable()
     {
         return false;
     }
