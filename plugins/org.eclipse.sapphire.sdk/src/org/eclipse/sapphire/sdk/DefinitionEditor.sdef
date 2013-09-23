@@ -696,6 +696,7 @@
                             <property-editor>Label</property-editor>
                             <property-editor>Description</property-editor>
                             <property-editor>Image</property-editor>
+                            <property-editor>VisibleWhen</property-editor>
                             <property-editor>InitialFocus</property-editor>
                             <property-editor>Hints</property-editor>                    
                         </content>

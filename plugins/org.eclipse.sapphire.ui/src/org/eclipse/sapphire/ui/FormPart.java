@@ -163,6 +163,8 @@ public class FormPart extends FormComponentPart
     @Override
     public boolean setFocus()
     {
+        broadcast( new FocusReceivedEvent( this ) );
+
         for( SapphirePart child : getChildParts() )
         {
             if( child.setFocus() == true )
@@ -177,6 +179,8 @@ public class FormPart extends FormComponentPart
     @Override
     public boolean setFocus( final ModelPath path )
     {
+        broadcast( new FocusReceivedEvent( this ) );
+        
         for( SapphirePart child : getChildParts() )
         {
             if( child.setFocus( path ) == true )

@@ -104,6 +104,7 @@
     <li><a href="#Forms-SectionReference">Section Reference</a></li>
     <li><a href="#Forms-ImprovedDateSupport">Improved Date Support</a></li>
     <li><a href="#Forms-ColorBrowsing">Color Browsing</a></li>
+    <li><a href="#Forms-ConditionalWizardPages">Conditional Wizard Pages</a></li>
     <li><a href="#Forms-NestedPropertiesInListPropertyEditor">Nested Properties in List Property Editor</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
@@ -1442,10 +1443,40 @@ ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
     
 Value&lt;</font>Color<font color="#888888">> getColor();
 void setColor( String value );
-void setColor(</font> Color <font color="#888888">value );
-</font></code></pre>
+void setColor(</font> Color <font color="#888888">value );</font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/ColorBrowsing.png"/></p>
+
+
+<h2><a name="Forms-ConditionalWizardPages">Conditional Wizard Pages</a></h2>
+
+<p>Define wizards with pages that appear based on a condition.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;wizard>
+    &lt;id>PurchaseComputerWizard&lt;/id>
+    &lt;element-type>org.eclipse.sapphire.samples.po.PurchaseComputerOp&lt;/element-type>
+    &lt;page>
+        &lt;id>PurchaseComputerWizard.Importance&lt;/id>
+        &lt;label>Expected Usage&lt;/label>
+        &lt;description>The expected usage of the computer determines the optimal components.&lt;/description>
+        &lt;content>
+            &lt;property-editor>PerformanceImportance&lt;/property-editor>
+            &lt;property-editor>StorageImportance&lt;/property-editor>
+            &lt;property-editor>GamingImportance&lt;/property-editor>
+        &lt;/content>
+    &lt;/page>
+    &lt;page>
+        &lt;id>PurchaseComputerWizard.Performance&lt;/id>
+        &lt;label>Performance&lt;/label>
+        &lt;description>The processor and memory selection affects the overall performance of the system.&lt;/description></font>
+        &lt;visible-when>${ PerformanceImportance == 3 }&lt;/visible-when>
+        <font color="#888888">&lt;content>
+            ...
+        &lt;/content>
+    &lt;/page>
+&lt;/wizard></font></code></pre>
 
 
 <h2><a name="Forms-NestedPropertiesInListPropertyEditor">Nested Properties in List Property Editor</a></h2>

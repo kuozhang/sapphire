@@ -2131,6 +2131,8 @@ public class DefaultListPropertyEditorRenderer extends ListPropertyEditorRendere
         public AddActionHandler( final ElementType type )
         {
             this.type = type;
+            
+            setId( "Sapphire.Add." + this.type.getSimpleName() );
         }
         
         @Override

@@ -182,6 +182,12 @@
                                         <value>100:1,100:6,100:1,100:1,100:1</value>
                                     </hint>
                                     <child-property>Total</child-property>
+                                    <action-handler>
+                                        <action>Sapphire.Add</action>
+                                        <impl>org.eclipse.sapphire.samples.po.PurchaseComputerActionHandler</impl>
+                                        <label>Computer</label>
+                                        <location>after:Sapphire.Add.PurchaseOrderEntry</location>
+                                    </action-handler>
                                 </property-editor>
                             </content>
                             <scale-vertically>true</scale-vertically>
@@ -207,5 +213,60 @@
         </content>
         <page-header-image>PurchaseOrder-${ Entries.Size &gt; 3 ? 3 : Entries.Size }.png</page-header-image>
         <element-type>PurchaseOrder</element-type>
-    </form-editor-page>    
+    </form-editor-page>
+    <wizard>
+        <id>PurchaseComputerWizard</id>
+        <element-type>org.eclipse.sapphire.samples.po.PurchaseComputerOp</element-type>
+        <page>
+            <id>PurchaseComputerWizard.Importance</id>
+            <label>Expected Usage</label>
+            <description>The expected usage of the computer determines the optimal components.</description>
+            <content>
+                <property-editor>PerformanceImportance</property-editor>
+                <property-editor>StorageImportance</property-editor>
+                <property-editor>GamingImportance</property-editor>
+            </content>
+        </page>
+        <page>
+            <id>PurchaseComputerWizard.Performance</id>
+            <label>Performance</label>
+            <description>The processor and memory selection affects the overall performance of the system.</description>
+            <visible-when>${ PerformanceImportance == 3 }</visible-when>
+            <content>
+                <property-editor>
+                    <style>Sapphire.PropertyEditor.PopUpListField</style>
+                    <property>Processor</property>
+                </property-editor>
+                <property-editor>
+                    <style>Sapphire.PropertyEditor.PopUpListField</style>
+                    <property>Memory</property>
+                </property-editor>
+            </content>
+        </page>
+        <page>
+            <id>PurchaseComputerWizard.Storage</id>
+            <label>Storage</label>
+            <description>The storage system selection affects how much data the computer can hold.</description>
+            <visible-when>${ StorageImportance == 3 || PerformanceImportance == 3 }</visible-when>
+            <content>
+                <property-editor>
+                    <style>Sapphire.PropertyEditor.PopUpListField</style>
+                    <property>Storage</property>
+                </property-editor>
+            </content>
+        </page>
+        <page>
+            <id>PurchaseComputerWizard</id>
+            <label>Video Card</label>
+            <description>The video card selection affects the quality of visual effects when playing games.</description>
+            <visible-when>${ GamingImportance == 3 }</visible-when>
+            <content>
+                <property-editor>
+                    <style>Sapphire.PropertyEditor.PopUpListField</style>
+                    <property>VideoCard</property>
+                </property-editor>
+            </content>
+        </page>
+        <label>purchase computer</label>
+    </wizard>    
 </definition>

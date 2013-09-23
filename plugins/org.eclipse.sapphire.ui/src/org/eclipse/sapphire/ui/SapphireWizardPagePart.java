@@ -23,7 +23,6 @@ import org.eclipse.sapphire.ui.def.WizardPageDef;
 public final class SapphireWizardPagePart extends CompositePart
 {
     private FunctionResult imageFunctionResult;
-    private boolean visible;
     
     @Override
     protected void init()
@@ -68,20 +67,6 @@ public final class SapphireWizardPagePart extends CompositePart
         return (ImageData) this.imageFunctionResult.value();
     }
     
-    public boolean isVisible()
-    {
-        return this.visible;
-    }
-    
-    public void setVisible( final boolean visible )
-    {
-        if( this.visible != visible )
-        {
-            this.visible = visible;
-            broadcast( new PartVisibilityEvent( this ) );
-        }
-    }
-
     @Override
     public void dispose()
     {
