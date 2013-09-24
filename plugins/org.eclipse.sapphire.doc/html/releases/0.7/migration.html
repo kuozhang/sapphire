@@ -96,6 +96,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
   <li><a href="#SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></li>
+  <li><a href="#SapphireWizard">SapphireWizard</a></li>
   <li><a href="#ServiceFactory">ServiceFactory</a></li>
   <li><a href="#StandardXmlListBindingImpl">StandardXmlListBindingImpl</a></li>
   <li><a href="#Transient">Transient</a></li>
@@ -1903,6 +1904,78 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">handler.</span>property().definition()</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireWizard">SapphireWizard</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>setDefaultPageImageDescriptor( ... )</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">&lt;wizard>
+    &lt;id>ExampleWizard&lt;/id>
+    &lt;label>example wizard&lt;/label></span>
+    &lt;image>...&lt;/image>
+    <span class="unaffected">&lt;page>
+        ...
+    &lt;/page>
+&lt;/wizard></span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">getShell()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>getContainer().<span class="unaffected">getShell()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleWizard extends SapphireWizard&lt;ExampleOp></span>
+{
+    <span class="unaffected">@Override
+    public</span> void addPages()
+    <span class="unaffected">{</span>
+        super.addPages();
+        
+        addPage( new CustomWizardPage() );
+    <span class="unaffected">}
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleWizard extends SapphireWizard&lt;ExampleOp></span>
+{
+    private IWizardPage customWizardPage;
+    
+    <span class="unaffected">@Override
+    public</span> IWizardPage[] getPages()
+    <span class="unaffected">{</span>
+        final IWizardPage[] pages = super.getPages();
+        final IWizardPage[] extended = new IWizardPage[ pages.length + 1 ];
+        
+        System.arraycopy( pages, 0, extended, 0, pages.length );
+        
+        if( this.customWizardPage == null )
+        {
+            this.customWizardPage = new CustomWizardPage();
+            this.customWizardPage.setWizard( this );
+        }
+        
+        extended[ pages.length ] = this.customWizardPage;
+        
+        return extended;
+    <span class="unaffected">}
+}</span></code></pre>
     </td>
   </tr>
 </table>
