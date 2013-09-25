@@ -19,12 +19,12 @@ import java.util.Map;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.graph.DirectedGraph;
 import org.eclipse.draw2d.graph.Edge;
 import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
-import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -69,11 +69,11 @@ public abstract class DiagramGraphLayout
 		for (DiagramNodeModel child : children) 
 		{
 			Node node = new Node();
-			Bounds bounds = child.getNodeBounds();
-			node.x = bounds.getX();
-			node.y = bounds.getY();
-			node.width = bounds.getWidth();
-			node.height = bounds.getHeight();
+			Rectangle bounds = child.getShapePresentation().getFigure().getBounds();//child.getNodeBounds();
+			node.x = bounds.x;
+			node.y = bounds.y;
+			node.width = bounds.width;
+			node.height = bounds.height;
 			node.data = child;
 			shapeToNode.put(child, node);
 			nodeList.add(node);

@@ -17,6 +17,7 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.NodeDirectEditManager;
@@ -32,7 +33,8 @@ public class DirectEditorManagerFactory
 		Value<?> property = FunctionUtil.getFunctionProperty(textPart.getLocalModelElement(), 
 				textPart.getContentFunction());
 		PropertyDef definition = property.definition();
-		if (definition.isOfType(Enum.class))
+		PossibleValuesService possibleValuesService = property.service(PossibleValuesService.class);
+		if (possibleValuesService != null)
 		{
 			return new ComboBoxDirectEditorManager(source, textPart, locator, label);
 		}

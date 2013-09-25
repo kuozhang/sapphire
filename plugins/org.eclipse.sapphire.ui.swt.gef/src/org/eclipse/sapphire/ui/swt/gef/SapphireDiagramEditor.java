@@ -836,6 +836,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		// If the layout file doesn't exist or no layout is written to the layout file, apply auto layout
 		if (hasNoExistingLayout()) 
 		{
+			getGraphicalViewer().flush();
 			new HorizontalGraphLayout().layout(this, true);
 			markEditorClean();
 		}
