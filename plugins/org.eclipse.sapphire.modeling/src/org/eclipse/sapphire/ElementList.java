@@ -910,32 +910,7 @@ public final class ElementList<T extends Element> extends Property implements Li
             throw new IllegalArgumentException();
         }
         
-        final ElementType entryType = definition().getType();
-        
-        if( property.getModelElementType() != entryType )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        synchronized( root() )
-        {
-            assertNotDisposed();
-            
-            if( this.indexes == null )
-            {
-                this.indexes = new HashMap<ValueProperty,Index<T>>();
-            }
-            
-            Index<T> index = this.indexes.get( property );
-            
-            if( index == null )
-            {
-                index = new Index<T>( this, property );
-                this.indexes.put( property, index );
-            }
-            
-            return index;
-        }
+        return index( property.name() );
     }
     
     /**
@@ -954,6 +929,11 @@ public final class ElementList<T extends Element> extends Property implements Li
             throw new IllegalArgumentException();
         }
         
+        if( property.indexOf( '/' ) != -1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         final ElementType entryType = definition().getType();
         final PropertyDef p = entryType.property( property );
         
@@ -967,12 +947,27 @@ public final class ElementList<T extends Element> extends Property implements Li
             throw new IllegalArgumentException();
         }
         
-        if( p.getModelElementType() != entryType )
-        {
-            throw new IllegalArgumentException();
-        }
+        final ValueProperty vp = (ValueProperty) p;
         
-        return index( (ValueProperty) p );
+        synchronized( root() )
+        {
+            assertNotDisposed();
+            
+            if( this.indexes == null )
+            {
+                this.indexes = new HashMap<ValueProperty,Index<T>>();
+            }
+            
+            Index<T> index = this.indexes.get( vp );
+            
+            if( index == null )
+            {
+                index = new Index<T>( this, vp );
+                this.indexes.put( vp, index );
+            }
+            
+            return index;
+        }
     }
     
     @Override

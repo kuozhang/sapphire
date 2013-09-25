@@ -230,6 +230,34 @@ public final class IndexTests extends SapphireTestCase
     }
 
     /**
+     * Test lookup of the index when the property is inherited into list entry type.
+     */
+    
+    @Test
+    
+    public void testIndexWithInheritedProperty()
+    {
+        final TestElementWithInheritedProperty element = TestElementWithInheritedProperty.TYPE.instantiate();
+        
+        try
+        {
+            final ElementList<TestElementWithInheritedProperty.ListEntry> list = element.getList();
+            
+            list.insert().setValue( "a" );
+            list.insert().setValue( "b" );
+            
+            final Index<TestElementWithInheritedProperty.ListEntry> index = list.index( TestElementWithInheritedProperty.ListEntry.PROP_VALUE );
+            
+            assertNotNull( index.element( "a" ) );
+            assertNotNull( index.element( "b" ) );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+
+    /**
      * Test {@link ElementList#index(ValueProperty)} with a null.
      */
     
