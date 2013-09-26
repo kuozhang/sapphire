@@ -54,5 +54,29 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
             element.dispose();
         }
     }
+    
+    @Test
+    
+    public void testDeclarativeValidationService_MessageFunction() throws Exception
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        
+        try
+        {
+            assertValidationOk( element.getPath() );
+            
+            element.setPath( "abc" );
+            
+            assertValidationError( element.getPath(), "Path \"abc\" must start with a slash." );
+            
+            element.setPath( "/abc" );
+            
+            assertValidationOk( element.getPath() );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
 
 }

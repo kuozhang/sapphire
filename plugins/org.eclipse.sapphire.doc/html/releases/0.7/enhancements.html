@@ -1113,7 +1113,7 @@ the signature matches their declaration. Sapphire will handle picking the correc
 
 <p>Use EL to specify validation rules.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
+<p style="margin-left: 20px;"><b>Examples</b></p>
 
 <pre class="source-code"><code><font color="#888888">@Type( base = BigDecimal.class )</font>
     
@@ -1128,6 +1128,17 @@ the signature matches their declaration. Sapphire will handle picking the correc
 Value&lt;BigDecimal> getDiscount();
 void setDiscount( String value );
 void setDiscount( BigDecimal value );</font></code></pre>
+
+<pre class="source-code"><code>@Validation
+(
+    rule = "${ Path == null || Path.StartsWith( '/' ) }",
+    message = "Path \"${ Path }\" must start with a slash."
+)
+
+<font color="#888888">ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );
+
+Value&lt;String> getPath();
+void setPath( String value );</font></code></pre>
 
 
 <h2><a name="ExpressionLanguage-UseInRequired">Use EL in @Required</a></h2>

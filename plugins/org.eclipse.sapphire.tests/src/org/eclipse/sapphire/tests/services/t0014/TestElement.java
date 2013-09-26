@@ -59,5 +59,18 @@ public interface TestElement extends Element
     Value<Integer> getMax();
     void setMax( String value );
     void setMax( Integer value );
+    
+    // *** Path ***
+    
+    @Validation
+    (
+        rule = "${ Path == null || Path.StartsWith( '/' ) }",
+        message = "Path \"${ Path }\" must start with a slash."
+    )
+    
+    ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );
+    
+    Value<String> getPath();
+    void setPath( String value );
 
 }
