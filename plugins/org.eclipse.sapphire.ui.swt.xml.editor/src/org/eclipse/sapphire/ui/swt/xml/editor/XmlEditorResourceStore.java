@@ -34,16 +34,13 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
-import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
-import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.ValidateEditException;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
@@ -83,7 +80,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
     private Element rootModelElement;
     private final Map<Node,List<Element>> nodeToModelElementsMap;
     private final Scrubber scrubber;
-    private final Listener modelElementDisposeListener;
     private final XmlSourceEditorService sourceEditorService;
     private final INodeAdapter xmlNodeListener;
     
@@ -99,15 +95,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
         this.scrubber = new Scrubber();
         this.scrubber.start();
         this.sourceEditorService = new XmlSourceEditorService();
-        
-        this.modelElementDisposeListener = new FilteredListener<ElementDisposeEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final ElementDisposeEvent event )
-            {
-                handleElementDisposed( event.element() );
-            }
-        };
         
         final ISourceEditingTextTools sourceEditingTextTools = (ISourceEditingTextTools) this.sourceEditor.getAdapter( ISourceEditingTextTools.class );
         final IDOMSourceEditingTextTools domSourceEditingTextTools = (IDOMSourceEditingTextTools) sourceEditingTextTools;
@@ -311,7 +298,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
             }
             
             elements.add( element );
-            element.attach( this.modelElementDisposeListener );
         }
     }
     
@@ -341,35 +327,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
         super.dispose();
         detachXmlNodeListener();
         this.scrubber.dispose();
-    }
-
-    private void handleElementDisposed( final Element element )
-    {
-        final Resource resource = element.resource();
-        
-        if( resource instanceof XmlResource )
-        {
-            final XmlElement xmlElement = ( (XmlResource) resource ).getXmlElement(); 
-            
-            if( xmlElement != null )
-            {
-                synchronized( this.nodeToModelElementsMap )
-                {
-                    final Node xmlNode = xmlElement.getDomNode();
-                    final List<Element> elements = this.nodeToModelElementsMap.get( xmlNode );
-                    
-                    if( elements != null )
-                    {
-                        elements.remove( element );
-                        
-                        if( elements.isEmpty() )
-                        {
-                            this.nodeToModelElementsMap.remove( xmlNode );
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public final List<Element> getModelElements( final Node xmlNode )
