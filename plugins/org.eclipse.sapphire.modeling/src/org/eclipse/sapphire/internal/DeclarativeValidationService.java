@@ -57,7 +57,7 @@ public final class DeclarativeValidationService extends ValidationService
             
             annotations.add( type.getAnnotations( Validation.class ) );
             
-            for( Validations v : type.getAnnotations( Validations.class ) )
+            for( final Validations v : type.getAnnotations( Validations.class ) )
             {
                 annotations.add( v.value() );
             }
@@ -66,13 +66,11 @@ public final class DeclarativeValidationService extends ValidationService
         {
             annotations.add( property.getAnnotations( Validation.class ) );
             
-            for( Validations v : property.getAnnotations( Validations.class ) )
+            for( final Validations v : property.getAnnotations( Validations.class ) )
             {
                 annotations.add( v.value() );
             }
         }
-        
-        final ModelElementFunctionContext context = new ModelElementFunctionContext( element );
         
         final Listener listener = new Listener()
         {
@@ -85,29 +83,25 @@ public final class DeclarativeValidationService extends ValidationService
         
         final ListFactory<Rule> rulesListFactory = ListFactory.start();
         
-        for( Validation annotation : annotations.result() )
+        for( final Validation annotation : annotations.result() )
         {
             if( annotation.severity() != Status.Severity.OK )
             {
-                Function function = null;
+                Rule rule = null;
                 
                 try
                 {
-                    function = ExpressionLanguageParser.parse( annotation.rule() );
-                    function = FailSafeFunction.create( function, Boolean.class, false );
+                    rule = new Rule( element, annotation.rule(), annotation.message(), annotation.severity() );
                 }
                 catch( Exception e )
                 {
                     LoggingService.log( e );
-                    function = null;
                 }
                 
-                if( function != null )
+                if( rule != null )
                 {
-                    final FunctionResult conditionFunctionResult = function.evaluate( context );
-                    conditionFunctionResult.attach( listener );
-                    
-                    rulesListFactory.add( new Rule( conditionFunctionResult, annotation.message(), annotation.severity() ) );
+                    rule.attach( listener );
+                    rulesListFactory.add( rule );
                 }
             }
         }
@@ -122,7 +116,7 @@ public final class DeclarativeValidationService extends ValidationService
         
         for( Rule rule : this.rules )
         {
-            factory.merge( rule.validate() );
+            factory.merge( rule.validation() );
         }
         
         return factory.create();
@@ -143,24 +137,44 @@ public final class DeclarativeValidationService extends ValidationService
     
     private static final class Rule
     {
-        private final FunctionResult conditionFunctionResult;
-        private final String message;
+        private final Element element;
+        private final FunctionResult ruleFunctionResult;
+        private final Function messageFunction;
         private final Status.Severity severity;
         
-        public Rule( final FunctionResult conditionFunctionResult,
+        public Rule( final Element element,
+                     final String rule,
                      final String message,
                      final Status.Severity severity )
         {
-            this.conditionFunctionResult = conditionFunctionResult;
-            this.message = message;
+            this.element = element;
             this.severity = severity;
+
+            Function messageFunction = ExpressionLanguageParser.parse( message );
+            messageFunction = FailSafeFunction.create( messageFunction, String.class, false );
+            
+            this.messageFunction = messageFunction;
+            
+            Function ruleFunction = ExpressionLanguageParser.parse( rule );
+            ruleFunction = FailSafeFunction.create( ruleFunction, Boolean.class, false );
+            
+            this.ruleFunctionResult = ruleFunction.evaluate( new ModelElementFunctionContext( element ) );
         }
         
-        public Status validate()
+        public Status validation()
         {
-            if( ( (Boolean) this.conditionFunctionResult.value() ) == false )
+            if( ( (Boolean) this.ruleFunctionResult.value() ) == false )
             {
-                return Status.createStatus( this.severity, this.message );
+                final FunctionResult messageFunctionResult = this.messageFunction.evaluate( new ModelElementFunctionContext( this.element ) );
+                
+                try
+                {
+                    return Status.createStatus( this.severity, (String) messageFunctionResult.value() );
+                }
+                finally
+                {
+                    messageFunctionResult.dispose();
+                }
             }
             else
             {
@@ -168,9 +182,14 @@ public final class DeclarativeValidationService extends ValidationService
             }
         }
         
+        public void attach( final Listener listener )
+        {
+            this.ruleFunctionResult.attach( listener );
+        }
+        
         public void dispose()
         {
-            this.conditionFunctionResult.dispose();
+            this.ruleFunctionResult.dispose();
         }
     }
 

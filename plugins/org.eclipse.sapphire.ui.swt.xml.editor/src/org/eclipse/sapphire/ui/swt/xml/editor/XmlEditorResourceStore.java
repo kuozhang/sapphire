@@ -17,11 +17,10 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,16 +33,13 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
-import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
-import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.ValidateEditException;
 import org.eclipse.sapphire.modeling.xml.XmlElement;
@@ -54,6 +50,7 @@ import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.SourceEditorService;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -81,33 +78,22 @@ public class XmlEditorResourceStore extends XmlResourceStore
     private SapphireEditor sapphireEditor;
     private StructuredTextEditor sourceEditor;
     private Element rootModelElement;
-    private final Map<Node,List<Element>> nodeToModelElementsMap;
-    private final Scrubber scrubber;
-    private final Listener modelElementDisposeListener;
-    private final XmlSourceEditorService sourceEditorService;
+    private final Map<Node,Object> xmlNodeToModelElementsMap;
     private final INodeAdapter xmlNodeListener;
+    private final Scrubber scrubber;
+    private final XmlSourceEditorService sourceEditorService;
     
-    public XmlEditorResourceStore( final SapphireEditor sapphireEditor,
-                                   final StructuredTextEditor sourceEditor )
+    public XmlEditorResourceStore( final SapphireEditor sapphireEditor, final StructuredTextEditor sourceEditor )
     {
         super( (ByteArrayResourceStore) null );
         
         this.sapphireEditor = sapphireEditor;
         this.sourceEditor = sourceEditor;
         this.rootModelElement = null;
-        this.nodeToModelElementsMap = new HashMap<Node,List<Element>>();
+        this.xmlNodeToModelElementsMap = new IdentityHashMap<Node,Object>();
         this.scrubber = new Scrubber();
         this.scrubber.start();
         this.sourceEditorService = new XmlSourceEditorService();
-        
-        this.modelElementDisposeListener = new FilteredListener<ElementDisposeEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final ElementDisposeEvent event )
-            {
-                handleElementDisposed( event.element() );
-            }
-        };
         
         final ISourceEditingTextTools sourceEditingTextTools = (ISourceEditingTextTools) this.sourceEditor.getAdapter( ISourceEditingTextTools.class );
         final IDOMSourceEditingTextTools domSourceEditingTextTools = (IDOMSourceEditingTextTools) sourceEditingTextTools;
@@ -128,14 +114,6 @@ public class XmlEditorResourceStore extends XmlResourceStore
                                        final Object newValue,
                                        final int pos )
             {
-                /* System.err.println( "notifyChanged" );
-                System.err.println( "  notifier = " + notifier.getClass().getName() );
-                System.err.println( "  eventType = " + eventType );
-                System.err.println( "  changedFeature = " + ( changedFeature == null ? "null" : changedFeature.getClass().getName() ) );
-                System.err.println( "  oldValue = " + ( oldValue == null ? "null" : oldValue.getClass().getName() ) );
-                System.err.println( "  newValue = " + ( newValue == null ? "null" : newValue.getClass().getName() ) );
-                System.err.println( "  pos = " + pos ); */
-                
                 if( eventType == INodeNotifier.ADD && newValue instanceof IDOMNode )
                 {
                     attachXmlNodeListener( (IDOMNode) newValue );
@@ -297,39 +275,86 @@ public class XmlEditorResourceStore extends XmlResourceStore
     }
 
     @Override
-    public void registerModelElement( final Node xmlNode,
-                                      final Element element )
+    public void registerModelElement( final Node xmlNode, final Element element )
     {
-        synchronized( this.nodeToModelElementsMap )
+        synchronized( this.xmlNodeToModelElementsMap )
         {
-            List<Element> elements = this.nodeToModelElementsMap.get( xmlNode );
+            final Object object = this.xmlNodeToModelElementsMap.get( xmlNode );
             
-            if( elements == null )
+            if( object == null )
             {
-                elements = new CopyOnWriteArrayList<Element>();
-                this.nodeToModelElementsMap.put( xmlNode, elements );
+                this.xmlNodeToModelElementsMap.put( xmlNode, element );
             }
-            
-            elements.add( element );
-            element.attach( this.modelElementDisposeListener );
+            else if( object instanceof Element )
+            {
+                if( object == element )
+                {
+                    return;
+                }
+                else
+                {
+                    this.xmlNodeToModelElementsMap.put( xmlNode, ListFactory.start().add( object ).add( element ).result() );
+                }
+            }
+            else
+            {
+                final List<?> list = (List<?>) object;
+                
+                for( final Object obj : list )
+                {
+                    if( obj == element )
+                    {
+                        return;
+                    }
+                }
+                
+                this.xmlNodeToModelElementsMap.put( xmlNode, ListFactory.start().add( list ).add( element ).result() );
+            }
         }
     }
     
     @Override
-    public void unregisterModelElement( final Node xmlNode,
-                                        final Element element )
+    public void unregisterModelElement( final Node xmlNode, final Element element )
     {
-        synchronized( this.nodeToModelElementsMap )
+        synchronized( this.xmlNodeToModelElementsMap )
         {
-            List<Element> elements = this.nodeToModelElementsMap.get( xmlNode );
+            Object object = this.xmlNodeToModelElementsMap.get( xmlNode );
             
-            if( elements != null )
+            if( object != null )
             {
-                elements.remove( element );
-                
-                if( elements.size() == 0 )
+                if( object instanceof Element )
                 {
-                    this.nodeToModelElementsMap.remove( xmlNode );
+                    if( object == element )
+                    {
+                        this.xmlNodeToModelElementsMap.remove( xmlNode );
+                    }
+                }
+                else
+                {
+                    final List<?> originalList = (List<?>) object;
+                    final ListFactory<Element> modifiedListFactory = ListFactory.start();
+                    
+                    for( final Object entry : originalList )
+                    {
+                        if( entry != element )
+                        {
+                            modifiedListFactory.add( (Element) entry );
+                        }
+                    }
+                    
+                    final int modifiedListSize = modifiedListFactory.size();
+                    
+                    if( originalList.size() != modifiedListSize )
+                    {
+                        if( modifiedListSize == 1 )
+                        {
+                            this.xmlNodeToModelElementsMap.put( xmlNode, modifiedListFactory.get( 0 ) );
+                        }
+                        else
+                        {
+                            this.xmlNodeToModelElementsMap.put( xmlNode, modifiedListFactory.result() );
+                        }
+                    }
                 }
             }
         }
@@ -343,59 +368,52 @@ public class XmlEditorResourceStore extends XmlResourceStore
         this.scrubber.dispose();
     }
 
-    private void handleElementDisposed( final Element element )
-    {
-        final Resource resource = element.resource();
-        
-        if( resource instanceof XmlResource )
-        {
-            final XmlElement xmlElement = ( (XmlResource) resource ).getXmlElement(); 
-            
-            if( xmlElement != null )
-            {
-                synchronized( this.nodeToModelElementsMap )
-                {
-                    final Node xmlNode = xmlElement.getDomNode();
-                    final List<Element> elements = this.nodeToModelElementsMap.get( xmlNode );
-                    
-                    if( elements != null )
-                    {
-                        elements.remove( element );
-                        
-                        if( elements.isEmpty() )
-                        {
-                            this.nodeToModelElementsMap.remove( xmlNode );
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    @SuppressWarnings( "unchecked" )
+    
     public final List<Element> getModelElements( final Node xmlNode )
     {
-        synchronized( this.nodeToModelElementsMap )
+        final List<Element> elements;
+        
+        synchronized( this.xmlNodeToModelElementsMap )
         {
             Node node = xmlNode;
-            List<Element> elements = this.nodeToModelElementsMap.get( node );
+            Object object = this.xmlNodeToModelElementsMap.get( node );
             
-            while( elements == null && node != null && ! ( node instanceof Document ) )
+            while( object == null && node != null && ! ( node instanceof Document ) )
             {
                 node = node.getParentNode();
-                elements = this.nodeToModelElementsMap.get( node );
+                object = this.xmlNodeToModelElementsMap.get( node );
             }
             
-            if( elements == null )
+            if( object == null )
             {
-                elements = Collections.singletonList( this.rootModelElement );
+                elements = ListFactory.singleton( this.rootModelElement );
+            }
+            else if( object instanceof Element )
+            {
+                if( node.getParentNode() instanceof Document )
+                {
+                    elements = ListFactory.<Element>start().add( this.rootModelElement ).add( (Element) object ).result();
+                }
+                else
+                {
+                    elements = ListFactory.singleton( (Element) object );
+                }
             }
             else
             {
-                elements = Collections.unmodifiableList( elements );
+                if( node.getParentNode() instanceof Document )
+                {
+                    elements = ListFactory.<Element>start().add( this.rootModelElement ).add( (List<Element>) object ).result();
+                }
+                else
+                {
+                    elements = (List<Element>) object;
+                }
             }
-            
-            return elements;
         }
+        
+        return elements;
     }
     
     private void attachXmlNodeListener()
@@ -476,7 +494,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
         
         public void run()
         {
-            final Map<Node,List<Element>> nodeToModelElementsMap = XmlEditorResourceStore.this.nodeToModelElementsMap;
+            final Map<Node,Object> xmlNodeToModelElementsMap = XmlEditorResourceStore.this.xmlNodeToModelElementsMap;
             
             while( true )
             {
@@ -494,23 +512,12 @@ public class XmlEditorResourceStore extends XmlResourceStore
                     }
                 }
                 
-                synchronized( nodeToModelElementsMap )
+                synchronized( xmlNodeToModelElementsMap )
                 {
-                    for( Iterator<Map.Entry<Node,List<Element>>> itr = nodeToModelElementsMap.entrySet().iterator();
-                         itr.hasNext(); )
+                    for( final Iterator<Node> itr = xmlNodeToModelElementsMap.keySet().iterator(); itr.hasNext(); )
                     {
-                        final Map.Entry<Node,List<Element>> entry = itr.next();
-                        
-                        if( entry.getKey().getParentNode() == null )
+                        if( itr.next().getParentNode() == null )
                         {
-                            /* final String nodeClassName = entry.getKey().getClass().getSimpleName();
-                            final int nodeHashCode = entry.getKey().hashCode();
-                            final String modelElementClassName = entry.getValue().getClass().getSimpleName();
-                            final int modelElementHashCode = entry.getValue().hashCode();
-                            
-                            System.err.println( "SCRUBBER REMOVED: " + nodeClassName + ":" + nodeHashCode + " -> " +
-                                                modelElementClassName + ":" + modelElementHashCode ); */
-                            
                             itr.remove();
                         }
                     }

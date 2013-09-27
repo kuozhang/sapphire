@@ -402,12 +402,9 @@ public abstract class FunctionResult
                     
                     return type.cast( res.toString() );
                 }
-                else
-                {
-                    return type.cast( obj.toString() );
-                }
             }
-            else if( Number.class.isAssignableFrom( type ) )
+            
+            if( Number.class.isAssignableFrom( type ) )
             {
                 if( obj instanceof Value )
                 {

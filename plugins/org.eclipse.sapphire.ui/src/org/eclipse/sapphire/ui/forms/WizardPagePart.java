@@ -14,7 +14,6 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
 import org.eclipse.swt.widgets.Composite;
@@ -26,7 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 public final class WizardPagePart extends CompositePart
 {
     private FunctionResult imageFunctionResult;
-    private boolean visible;
     
     @Override
     protected void init()
@@ -69,20 +67,6 @@ public final class WizardPagePart extends CompositePart
     public ImageData getImage()
     {
         return (ImageData) this.imageFunctionResult.value();
-    }
-    
-    public boolean isVisible()
-    {
-        return this.visible;
-    }
-    
-    public void setVisible( final boolean visible )
-    {
-        if( this.visible != visible )
-        {
-            this.visible = visible;
-            broadcast( new PartVisibilityEvent( this ) );
-        }
     }
     
     @Override

@@ -14,20 +14,30 @@ package org.eclipse.sapphire.ui.forms.swt;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil.toImageDescriptor;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.SapphirePart.ImageChangedEvent;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
@@ -37,6 +47,9 @@ import org.eclipse.sapphire.ui.forms.WizardPart;
 import org.eclipse.sapphire.ui.forms.swt.presentation.internal.ProgressMonitorBridge;
 import org.eclipse.sapphire.ui.forms.swt.presentation.internal.StatusDialog;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -47,12 +60,16 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
+public class SapphireWizard<M extends IExecutableModelElement> implements IWizard
 {
     private IExecutableModelElement element;
     private boolean elementInstantiatedLocally;
     private DefinitionLoader.Reference<WizardDef> definition;
     private WizardPart part;
+    private Map<WizardPagePart,SapphireWizardPage> pages;
+    private IWizardContainer container;
+    private ImageDescriptor defaultPageImageDescriptor;
+    private Image defaultPageImage;
     
     public SapphireWizard( final ElementType type,
                            final DefinitionLoader.Reference<WizardDef> definition )
@@ -113,8 +130,6 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         this.part.init( null, this.element, this.definition.resolve(), Collections.<String,String>emptyMap() );
         this.part.initialize();
         
-        setWindowTitle( this.part.getLabel() );
-        
         this.part.attach
         (
             new FilteredListener<SapphirePart.ImageChangedEvent>()
@@ -127,9 +142,24 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
             }
         );
         
-        refreshImage();
+        this.pages = new LinkedHashMap<WizardPagePart,SapphireWizardPage>();
         
-        setNeedsProgressMonitor( true );
+        final Listener pageVisibilityListener = new FilteredListener<PartVisibilityEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PartVisibilityEvent event )
+            {
+                getContainer().updateButtons();
+            }
+        };
+        
+        for( final WizardPagePart page : this.part.getPages() )
+        {
+            page.attach( pageVisibilityListener );
+            this.pages.put( page, null );
+        }
+        
+        refreshImage();
     }
     
     @SuppressWarnings( "unchecked" )
@@ -144,13 +174,132 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         return ( this.definition == null ? null : this.definition.resolve() );
     }
     
+    /**
+     * Returns the wizard pages. Can be overridden to add custom pages.
+     * 
+     * @return the wizard pages
+     */
+    
     @Override
-    public void addPages()
+    public IWizardPage[] getPages()
     {
-        for( WizardPagePart pagePart : this.part.getPages() )
+        final List<IWizardPage> result = new ArrayList<IWizardPage>();
+        
+        for( final WizardPagePart wizardPagePart : this.pages.keySet() )
         {
-            addPage( new SapphireWizardPage( pagePart ) );
+            if( wizardPagePart.visible() )
+            {
+                SapphireWizardPage wizardPagePresentation = this.pages.get( wizardPagePart );
+                
+                if( wizardPagePresentation == null )
+                {
+                    wizardPagePresentation = new SapphireWizardPage( wizardPagePart );
+                    wizardPagePresentation.setWizard( this );
+                    this.pages.put( wizardPagePart, wizardPagePresentation );
+                }
+                
+                result.add( wizardPagePresentation );
+            }
         }
+        
+        return result.toArray( new IWizardPage[ result.size() ] );
+    }
+
+    @Override
+    public final int getPageCount()
+    {
+        return getPages().length;
+    }
+
+    @Override
+    public final IWizardPage getPage( final String name )
+    {
+        if( name == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        for( final IWizardPage page : getPages() )
+        {
+            if( name.equals( page.getName() ) )
+            {
+                return page;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public final IWizardPage getStartingPage()
+    {
+        final IWizardPage[] pages = getPages();
+        
+        if( pages.length > 0 )
+        {
+            return pages[ 0 ];
+        }
+        
+        return null;
+    }
+
+    @Override
+    public final IWizardPage getNextPage( final IWizardPage page )
+    {
+        boolean captureNextPage = false;
+        
+        for( final IWizardPage p : getPages() )
+        {
+            if( captureNextPage )
+            {
+                return p;
+            }
+            else if( p == page )
+            {
+                captureNextPage = true;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public final IWizardPage getPreviousPage( final IWizardPage page )
+    {
+        IWizardPage previous = null;
+        
+        for( final IWizardPage p : getPages() )
+        {
+            if( p == page )
+            {
+                break;
+            }
+            else
+            {
+                previous = p;
+            }
+        }
+        
+        return previous;
+    }
+    
+    @Override
+    public final void addPages()
+    {
+    }
+
+    @Override
+    public final boolean canFinish()
+    {
+        for( final IWizardPage p : getPages() )
+        {
+            if( ! p.isPageComplete() )
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     @Override
@@ -192,7 +341,7 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         }
         else
         {
-            StatusDialog.open( getShell(), st );
+            StatusDialog.open( getContainer().getShell(), st );
             
             return false;
         }
@@ -208,6 +357,76 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
         // The default implementation doesn't do anything.
     }
     
+    @Override
+    public final boolean performCancel()
+    {
+        return true;
+    }
+
+    @Override
+    public final IWizardContainer getContainer()
+    {
+        return this.container;
+    }
+
+    @Override
+    public final void setContainer( final IWizardContainer container )
+    {
+        this.container = container;
+    }
+
+    @Override
+    public final Image getDefaultPageImage()
+    {
+        if( this.defaultPageImage == null )
+        {
+            this.defaultPageImage = JFaceResources.getResources().createImageWithDefault( this.defaultPageImageDescriptor );
+        }
+        
+        return this.defaultPageImage;
+    }
+
+    @Override
+    public final RGB getTitleBarColor()
+    {
+        return null;
+    }
+
+    @Override
+    public final String getWindowTitle()
+    {
+        return this.part.getLabel();
+    }
+
+    @Override
+    public final IDialogSettings getDialogSettings()
+    {
+        return null;
+    }
+
+    @Override
+    public final boolean isHelpAvailable()
+    {
+        return false;
+    }
+
+    @Override
+    public final boolean needsPreviousAndNextButtons()
+    {
+        return true;
+    }
+
+    @Override
+    public final boolean needsProgressMonitor()
+    {
+        return true;
+    }
+
+    @Override
+    public final void createPageControls( final Composite pageContainer )
+    {
+    }
+
     protected final void openFileEditors( final IFile... files )
     {
         final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -268,21 +487,23 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
 
     private final void refreshImage()
     {
-        ImageDescriptor img = toImageDescriptor( this.part.getImage() );
-        
-        if( img == null )
+        if( this.defaultPageImage != null )
         {
-            img = JFaceResources.getImageRegistry().getDescriptor( DEFAULT_IMAGE );
+            JFaceResources.getResources().destroyImage( this.defaultPageImageDescriptor );
+            this.defaultPageImage = null;
         }
+
+        this.defaultPageImageDescriptor = toImageDescriptor( this.part.getImage() );
         
-        setDefaultPageImageDescriptor( img );
+        if( this.defaultPageImageDescriptor == null )
+        {
+            this.defaultPageImageDescriptor = JFaceResources.getImageRegistry().getDescriptor( Wizard.DEFAULT_IMAGE );
+        }
     }
 
     @Override
     public void dispose()
     {
-        super.dispose();
-        
         if( this.element != null )
         {
             if( this.elementInstantiatedLocally )
@@ -304,6 +525,16 @@ public class SapphireWizard<M extends IExecutableModelElement> extends Wizard
             this.definition.dispose();
             this.definition = null;
         }
+        
+        if( this.defaultPageImage != null )
+        {
+            JFaceResources.getResources().destroyImage( this.defaultPageImageDescriptor );
+            this.defaultPageImage = null;
+        }
+        
+        this.defaultPageImageDescriptor = null;
+        this.container = null;
+        this.pages = null;
     }
     
 }

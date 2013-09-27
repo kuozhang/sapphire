@@ -23,6 +23,7 @@ import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdva
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glspacing;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.runOnDisplayThread;
 
 import java.util.List;
 
@@ -223,7 +224,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             @Override
             public void handle( final Event event )
             {
-                updateComboContentOp.run();
+                runOnDisplayThread( updateComboContentOp );
             }
         };
         
@@ -234,7 +235,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                updateComboSelectionOp.run();
+                runOnDisplayThread( updateComboSelectionOp );
             }
         };
         

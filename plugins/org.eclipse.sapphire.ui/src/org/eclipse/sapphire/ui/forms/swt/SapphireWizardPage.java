@@ -177,8 +177,6 @@ public class SapphireWizardPage extends WizardPage
     {
         super.setVisible( visible );
         
-        this.part.setVisible( visible );
-        
         if( visible )
         {
             final String initialFocusProperty = this.part.definition().getInitialFocus().content();
@@ -186,6 +184,10 @@ public class SapphireWizardPage extends WizardPage
             if( initialFocusProperty != null )
             {
                 this.part.setFocus( initialFocusProperty );
+            }
+            else
+            {
+                this.part.setFocus();
             }
         }
     }

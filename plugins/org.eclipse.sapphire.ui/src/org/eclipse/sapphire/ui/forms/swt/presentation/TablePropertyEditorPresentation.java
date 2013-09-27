@@ -2130,6 +2130,8 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         public AddActionHandler( final ElementType type )
         {
             this.type = type;
+            
+            setId( "Sapphire.Add." + this.type.getSimpleName() );
         }
         
         @Override

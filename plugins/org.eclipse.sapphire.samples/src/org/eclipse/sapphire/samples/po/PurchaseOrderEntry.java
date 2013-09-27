@@ -29,6 +29,8 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
+@Label( standard = "entry" )
+
 public interface PurchaseOrderEntry extends Element
 {
     ElementType TYPE = new ElementType( PurchaseOrderEntry.class );

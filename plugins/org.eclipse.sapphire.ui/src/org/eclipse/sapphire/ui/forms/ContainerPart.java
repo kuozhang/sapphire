@@ -111,6 +111,8 @@ public abstract class ContainerPart<T extends FormComponentPart> extends FormCom
     @Override
     public boolean setFocus()
     {
+        broadcast( new FocusReceivedEvent( this ) );
+        
         for( SapphirePart child : children().visible() )
         {
             if( child.setFocus() == true )
@@ -125,6 +127,8 @@ public abstract class ContainerPart<T extends FormComponentPart> extends FormCom
     @Override
     public boolean setFocus( final ModelPath path )
     {
+        broadcast( new FocusReceivedEvent( this ) );
+        
         for( SapphirePart child : children().visible() )
         {
             if( child.setFocus( path ) == true )
