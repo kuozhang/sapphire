@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
@@ -25,6 +27,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+
+import org.eclipse.sapphire.internal.ValueSnapshot;
+import org.eclipse.sapphire.services.ValueLabelService;
 
 /**
  * Represents a string that can be localized by substituting a translated version based on
@@ -312,7 +317,69 @@ public final class LocalizableText
             return this.text;
         }
         
-        return MessageFormat.format( this.text, bindings );
+        boolean foundValueInBindings = false;
+        
+        for( final Object binding : bindings )
+        {
+            if( binding instanceof Value || binding instanceof ValueSnapshot )
+            {
+                foundValueInBindings = true;
+                break;
+            }
+        }
+        
+        final Object[] objects;
+        
+        if( foundValueInBindings )
+        {
+            objects = new Object[ bindings.length ];
+            
+            for( int i = 0; i < bindings.length; i++ )
+            {
+                final Object binding = bindings[ i ];
+                
+                if( binding instanceof Value )
+                {
+                    final Value<?> value = (Value<?>) binding;
+                    objects[ i ] = format( value.definition(), value.text() );
+                }
+                else if( binding instanceof ValueSnapshot )
+                {
+                    final ValueSnapshot snapshot = (ValueSnapshot) binding;
+                    objects[ i ] = format( snapshot.property(), snapshot.text() );
+                }
+                else
+                {
+                    objects[ i ] = binding;
+                }
+            }
+        }
+        else
+        {
+            objects = bindings;
+        }
+        
+        return MessageFormat.format( this.text, objects );
+    }
+    
+    private static String format( final ValueProperty property, final String text ) 
+    {
+        String formatted = property.service( ValueLabelService.class ).provide( text );
+        
+        if( ! ( property.isOfType( Byte.class ) ||
+                property.isOfType( Short.class ) ||
+                property.isOfType( Integer.class ) ||
+                property.isOfType( Long.class ) ||
+                property.isOfType( Float.class ) ||
+                property.isOfType( Double.class ) ||
+                property.isOfType( BigInteger.class ) ||
+                property.isOfType( BigDecimal.class ) ||
+                property.isOfType( Boolean.class ) ) )
+        {
+            formatted = "\"" + formatted + "\"";
+        }
+        
+        return formatted;
     }
     
     /**

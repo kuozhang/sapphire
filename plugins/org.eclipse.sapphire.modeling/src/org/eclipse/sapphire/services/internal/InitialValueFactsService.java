@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.getValueLabel;
-
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.internal.ValueSnapshot;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -43,15 +43,13 @@ public final class InitialValueFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final Property property = context( Property.class );
-        final InitialValueService initialValueService = property.service( InitialValueService.class );
+        final Value<?> value = context( Value.class );
+        final InitialValueService initialValueService = value.service( InitialValueService.class );
+        final String text = initialValueService.value();
         
-        final String value = initialValueService.value();
-        
-        if( value != null && value.trim().length() > 0 )
+        if( text != null && text.trim().length() > 0 )
         {
-            final String valueLabel = getValueLabel( property, value );
-            facts.add( statement.format( valueLabel ) );
+            facts.add( statement.format( new ValueSnapshot( value.definition(), text ) ) );
         }
     }
     

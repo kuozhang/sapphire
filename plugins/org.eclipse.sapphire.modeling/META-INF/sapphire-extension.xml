@@ -184,15 +184,15 @@
     <service>
         <id>Sapphire.ValueLabelService.Default</id>
         <context>Sapphire.Property.MetaModel</context>
-        <implementation>org.eclipse.sapphire.services.internal.DefaultValueLabelService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.DefaultValueLabelService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.DefaultValueLabelService</implementation>
+        <condition>org.eclipse.sapphire.internal.DefaultValueLabelService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.ValueLabelService.Enum</id>
         <overrides>Sapphire.ValueLabelService.Default</overrides>
         <context>Sapphire.Property.MetaModel</context>
-        <implementation>org.eclipse.sapphire.services.internal.EnumValueLabelService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.EnumValueLabelService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.EnumValueLabelService</implementation>
+        <condition>org.eclipse.sapphire.internal.EnumValueLabelService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.ValueImageService.Default</id>

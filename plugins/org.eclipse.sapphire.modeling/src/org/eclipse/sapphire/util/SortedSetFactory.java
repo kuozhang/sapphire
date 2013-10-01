@@ -589,6 +589,12 @@ public final class SortedSetFactory<E>
         {
             return this.entry;
         }
+
+        @Override
+        public String toString()
+        {
+            return "[" + this.entry.toString() + "]";
+        }
     }
     
 }
