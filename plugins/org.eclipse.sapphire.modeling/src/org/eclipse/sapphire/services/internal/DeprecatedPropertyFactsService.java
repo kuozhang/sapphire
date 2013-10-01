@@ -29,7 +29,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class DeprecatedPropertyFactsService extends FactsService
 {
-    @Text( "Deprecated." )
+    @Text( "Deprecated" )
     private static LocalizableText statement;
     
     static

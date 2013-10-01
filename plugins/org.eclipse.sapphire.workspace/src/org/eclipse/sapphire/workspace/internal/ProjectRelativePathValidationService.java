@@ -29,7 +29,7 @@ import org.eclipse.sapphire.workspace.ProjectRelativePath;
 
 public final class ProjectRelativePathValidationService extends ValidationService
 {
-    @Text( "No context project found." )
+    @Text( "No context project found" )
     private static LocalizableText message;
     
     static

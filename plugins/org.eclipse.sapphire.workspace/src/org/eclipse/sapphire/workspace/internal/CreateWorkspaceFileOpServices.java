@@ -43,19 +43,19 @@ import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 
 public final class CreateWorkspaceFileOpServices
 {
-    @Text( "Project \"{0}\" does not exist or is not accessible." )
+    @Text( "Project \"{0}\" does not exist or is not accessible" )
     private static LocalizableText projectDoesNotExist;
     
-    @Text( "File \"{0}\" already exists." )
+    @Text( "File \"{0}\" already exists" )
     private static LocalizableText fileExists;
     
-    @Text( "File extension should be \"{0}\"." )
+    @Text( "File extension should be \"{0}\"" )
     private static LocalizableText invalidFileExtensionOne;
     
-    @Text( "File extension should be \"{0}\" or \"{1}\"." )
+    @Text( "File extension should be \"{0}\" or \"{1}\"" )
     private static LocalizableText invalidFileExtensionTwo;
     
-    @Text( "File extension should be one of \"{0}\"." )
+    @Text( "File extension should be one of \"{0}\"" )
     private static LocalizableText invalidFileExtensionMultiple;
 
     static

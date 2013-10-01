@@ -30,7 +30,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class ReadOnlyPropertyFactsService extends FactsService
 {
-    @Text( "Cannot be modified." )
+    @Text( "Cannot be modified" )
     private static LocalizableText statement;
     
     static

@@ -175,7 +175,7 @@ public interface PurchaseOrder extends Element
     @Validation
     (
         rule = "${ Scale( Discount, 2 ) <= Scale( Subtotal, 2 ) + Scale( Delivery, 2 ) }",
-        message = "Discount must not exceed subtotal plus delivery charge."
+        message = "Discount must not exceed subtotal plus delivery charge"
     )
     
     ValueProperty PROP_DISCOUNT = new ValueProperty( TYPE, "Discount" );

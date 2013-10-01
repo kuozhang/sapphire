@@ -32,7 +32,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class InitialValueFactsService extends FactsService
 {
-    @Text( "Initial value is {0}." )
+    @Text( "Initial value is {0}" )
     private static LocalizableText statement;
     
     static

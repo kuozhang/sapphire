@@ -30,10 +30,10 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class VersionCompatibilityValidationService extends ValidationService
 {
-    @Text( "Not compatible with version {0} of {1}." )
+    @Text( "Not compatible with version {0} of {1}" )
     private static LocalizableText notCompatibleWithVersionMessage;
     
-    @Text( "Version constraint exists, but no version constraint target was found." )
+    @Text( "Version constraint exists, but no version constraint target was found" )
     private static LocalizableText versionConstraintTargetNotFoundMessage;
     
     static

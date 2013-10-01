@@ -33,7 +33,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class PreferDefaultValueFactsService extends FactsService
 {
-    @Text( "Recommended value is {0}." )
+    @Text( "Recommended value is {0}" )
     private static LocalizableText fact;
     
     static

@@ -31,7 +31,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class RequiredConstraintValidationService extends ValidationService
 {
-    @Text( "{0} must be specified." )
+    @Text( "{0} must be specified" )
     private static LocalizableText message;
     
     static

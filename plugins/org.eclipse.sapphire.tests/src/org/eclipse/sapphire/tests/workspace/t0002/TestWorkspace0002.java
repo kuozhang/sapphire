@@ -31,14 +31,14 @@ public final class TestWorkspace0002 extends SapphireTestCase
     
     public void testProjectRelativePath() throws Exception
     {
-        test( TestRootElement.PROP_PROJECT_RELATIVE_PATH, "Must be a project relative path." );
+        test( TestRootElement.PROP_PROJECT_RELATIVE_PATH, "Must be a project relative path" );
     }
 
     @Test
     
     public void testWorkspaceRelativePath() throws Exception
     {
-        test( TestRootElement.PROP_WORKSPACE_RELATIVE_PATH, "Must be a workspace relative path." );
+        test( TestRootElement.PROP_WORKSPACE_RELATIVE_PATH, "Must be a workspace relative path" );
     }
 
     private static void test( final PropertyDef property,

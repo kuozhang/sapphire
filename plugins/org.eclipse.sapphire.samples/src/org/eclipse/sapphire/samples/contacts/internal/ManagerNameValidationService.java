@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.Status;
 
 public final class ManagerNameValidationService extends ConnectionNameValidationService
 {
-    @Text( "Cannot be your own manager." )
+    @Text( "Cannot be your own manager" )
     private static LocalizableText cannotBeYourOwnManager;
     
     static

@@ -39,31 +39,31 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class JavaTypeValidationService extends ValidationService
 {
-    @Text( "Class {0} does not implement or extend {1}." )
+    @Text( "Class {0} does not implement or extend {1}" )
     private static LocalizableText classDoesNotImplementOrExtend;
     
-    @Text( "Interface {0} does not extend {1}." )
+    @Text( "Interface {0} does not extend {1}" )
     private static LocalizableText interfaceDoesNotExtend;
     
-    @Text( "Class {0} does not implement or extend one of [{1}]." )
+    @Text( "Class {0} does not implement or extend one of [{1}]" )
     private static LocalizableText classDoesNotImplementOrExtendOneOf;
     
-    @Text( "Interface {0} does not extend one of [{1}]." )
+    @Text( "Interface {0} does not extend one of [{1}]" )
     private static LocalizableText interfaceDoesNotExtendOneOf;
     
-    @Text( "Type {0} is an abstract class, which is not allowed for {1}." )
+    @Text( "Type {0} is an abstract class, which is not allowed for {1}" )
     private static LocalizableText abstractClassNotAllowed;
     
-    @Text( "Type {0} is a class, which is not allowed for {1}." )
+    @Text( "Type {0} is a class, which is not allowed for {1}" )
     private static LocalizableText classNotAllowed;
     
-    @Text( "Type {0} is an interface, which is not allowed for {1}." )
+    @Text( "Type {0} is an interface, which is not allowed for {1}" )
     private static LocalizableText interfaceNotAllowed;
     
-    @Text( "Type {0} is an annotation, which is not allowed for {1}." )
+    @Text( "Type {0} is an annotation, which is not allowed for {1}" )
     private static LocalizableText annotationNotAllowed;
     
-    @Text( "Type {0} is an enum, which is not allowed for {1}." )
+    @Text( "Type {0} is an enum, which is not allowed for {1}" )
     private static LocalizableText enumNotAllowed;
     
     static

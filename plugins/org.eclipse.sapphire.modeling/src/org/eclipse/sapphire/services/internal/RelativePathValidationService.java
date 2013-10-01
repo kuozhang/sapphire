@@ -31,7 +31,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class RelativePathValidationService extends PathValidationService
 {
-    @Text( "Relative path \"{0}\" could not be resolved." )
+    @Text( "Relative path \"{0}\" could not be resolved" )
     private static LocalizableText couldNotResolveRelative;
     
     static

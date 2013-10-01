@@ -33,7 +33,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class RequiredConstraintFactsService extends FactsService
 {
-    @Text( "Must be specified." )
+    @Text( "Must be specified" )
     private static LocalizableText statement;
     
     static

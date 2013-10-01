@@ -39,7 +39,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class CreateExtensionManifestOpServices
 {
-    @Text( "Sapphire extension manifest should be placed in a META-INF folder under a Java source folder. Folder \"{0}\" is invalid." )
+    @Text( "Sapphire extension manifest should be placed in a META-INF folder under a Java source folder. Folder \"{0}\" is invalid" )
     private static LocalizableText invalidFolder;  
     
     static

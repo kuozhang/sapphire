@@ -31,16 +31,16 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class FileExtensionsFactsService extends FactsService
 {
-    @Text( "Must have \"{0}\" file extension." )
+    @Text( "Must have \"{0}\" file extension" )
     private static LocalizableText statementForOne;
     
-    @Text( "Must have either \"{0}\" or \"{1}\" file extension." )
+    @Text( "Must have either \"{0}\" or \"{1}\" file extension" )
     private static LocalizableText statementForTwo;
     
-    @Text( "Must have either \"{0}\", \"{1}\" or \"{2}\" file extension." )
+    @Text( "Must have either \"{0}\", \"{1}\" or \"{2}\" file extension" )
     private static LocalizableText statementForThree;
     
-    @Text( "Must have one of these file extensions: {0}." )
+    @Text( "Must have one of these file extensions: {0}" )
     private static LocalizableText statementForMany;
     
     static

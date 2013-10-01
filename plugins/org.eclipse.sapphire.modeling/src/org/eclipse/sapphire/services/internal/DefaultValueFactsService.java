@@ -33,10 +33,10 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class DefaultValueFactsService extends FactsService
 {
-    @Text( "Default value is {0}." )
+    @Text( "Default value is {0}" )
     private static LocalizableText statement;
     
-    @Text( "Has default value." )
+    @Text( "Has default value" )
     private static LocalizableText statementForSensitive;
     
     static

@@ -30,7 +30,7 @@ import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 
 public final class WorkspaceRelativePathFactsService extends FactsService
 {
-    @Text( "Must be a workspace relative path." )
+    @Text( "Must be a workspace relative path" )
     private static LocalizableText statement;
     
     static

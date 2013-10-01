@@ -34,7 +34,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class UniqueValueValidationService extends ValidationService
 {
-    @Text( "Unique {0} required. Another occurrence of \"{1}\" was found." )
+    @Text( "Unique {0} required. Another occurrence of \"{1}\" was found" )
     private static LocalizableText message; 
     
     static

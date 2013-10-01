@@ -30,7 +30,7 @@ import org.eclipse.sapphire.workspace.ProjectRelativePath;
 
 public final class ProjectRelativePathFactsService extends FactsService
 {
-    @Text( "Must be a project relative path." )
+    @Text( "Must be a project relative path" )
     private static LocalizableText statement;
     
     static

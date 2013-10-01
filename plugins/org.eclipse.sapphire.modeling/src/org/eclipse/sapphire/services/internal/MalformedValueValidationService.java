@@ -29,7 +29,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class MalformedValueValidationService extends ValidationService
 {
-    @Text( "\"{1}\" is not a valid {0}." )
+    @Text( "\"{1}\" is not a valid {0}" )
     private static LocalizableText cannotParseValueMessage;
     
     static

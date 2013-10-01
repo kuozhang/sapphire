@@ -165,7 +165,7 @@ public final class TestServices0002 extends SapphireTestCase
         assertEquals( list( "jpeg" ), service.extensions() );
         
         model.setFilePath4( txtFilePath );
-        assertValidationError( model.getFilePath4(), "File \"file.txt\" has an invalid extension. Only \"jpeg\" extension is allowed." );
+        assertValidationError( model.getFilePath4(), "File \"file.txt\" has an invalid extension. Only \"jpeg\" extension is allowed" );
         
         model.setFilePath4( jpegFilePath );
         assertValidationOk( model.getFilePath4() );
@@ -173,7 +173,7 @@ public final class TestServices0002 extends SapphireTestCase
         model.setLossyCompression( false );
         assertEquals( list( "png", "gif" ), service.extensions() );
 
-        assertValidationError( model.getFilePath4(), "File \"file.jpeg\" has an invalid extension. Only extensions \"png\" and \"gif\" are allowed." );
+        assertValidationError( model.getFilePath4(), "File \"file.jpeg\" has an invalid extension. Only extensions \"png\" and \"gif\" are allowed" );
 
         model.setFilePath4( pngFilePath );
         assertValidationOk( model.getFilePath4() );

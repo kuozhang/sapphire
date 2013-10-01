@@ -34,7 +34,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class PreferDefaultValueValidationService extends ValidationService
 {
-    @Text( "{0} should be {1}." )
+    @Text( "{0} should be {1}" )
     private static LocalizableText message;
     
     static

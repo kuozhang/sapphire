@@ -31,10 +31,10 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class NumericRangeFactsService extends FactsService
 {
-    @Text( "Minimum value is {0}." )
+    @Text( "Minimum value is {0}" )
     private static LocalizableText minValueStatement;
     
-    @Text( "Maximum value is {0}." )
+    @Text( "Maximum value is {0}" )
     private static LocalizableText maxValueStatement;
     
     static

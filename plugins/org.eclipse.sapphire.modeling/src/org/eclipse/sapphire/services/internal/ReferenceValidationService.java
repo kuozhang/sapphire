@@ -33,7 +33,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class ReferenceValidationService extends ValidationService
 {
-    @Text( "Could not resolve {0} \"{1}\"." )
+    @Text( "Could not resolve {0} \"{1}\"" )
     private static LocalizableText message;
     
     static
