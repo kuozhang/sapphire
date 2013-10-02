@@ -58,6 +58,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#Color">Color</a></li>
   <li><a href="#Context">Context</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
+  <li><a href="#CreateWorkspaceFileOp">CreateWorkspaceFileOp</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
   <li><a href="#DependenciesAggregationService">DependenciesAggregationService</a></li>
   <li><a href="#DtdParser">DtdParser</a></li>
@@ -407,6 +408,48 @@ is now handled by Resource base class</span></code></pre>
 <p>While extending from UniversalConversionService is a quicker migration, in most cases, better performance can be
 achieved by migrating to the new ConversionService API. Conversions implemented in this manner are quicker for
 Sapphire to find.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="CreateWorkspaceFileOp">CreateWorkspaceFileOp</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">CreateWorkspaceFileOp</span>.PROP_FILE_NAME</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">CreateWorkspaceFileOp</span>.PROP_FILE</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">operation</span>.getFileName<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">operation</span>.getFile<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">operation</span>.setFileName<span class="unaffected">( ... )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">operation</span>.setFile<span class="unaffected">( ... )</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">operation</span>.getFileHandle<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">operation</span>.getFile().resolve<span class="unaffected">()</span></code></pre>
     </td>
   </tr>
 </table>

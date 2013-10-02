@@ -202,7 +202,7 @@
   
   <extension point="org.eclipse.ui.menus">
     <menuContribution locationURI="menu:org.eclipse.ui.main.menu">
-      <menu label="Sapphire Samples">
+      <menu label="Sapphire Samples" id="org.eclipse.sapphire.samples">
         <menu label="EzBug">
           <command
             commandId="org.eclipse.sapphire.samples.fileBugReport1"
@@ -409,4 +409,26 @@
       icon="org/eclipse/sapphire/samples/SapphireFile.png"/>
   </extension>
 
+  <!-- 
+    **************************
+    * New File Wizard Sample *
+    **************************
+  -->
+  
+  <extension point="org.eclipse.ui.commands">
+    <command
+      id="org.eclipse.sapphire.samples.newfile.OpenCreateWorkspaceFileWizard"
+      name="File Bug Report (Dialog)"
+      defaultHandler="org.eclipse.sapphire.samples.newfile.OpenCreateWorkspaceFileWizardHandler"/>
+  </extension>
+  
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="menu:org.eclipse.sapphire.samples">
+      <command
+        commandId="org.eclipse.sapphire.samples.newfile.OpenCreateWorkspaceFileWizard"
+        label="New File Wizard..."
+        style="push"/>
+    </menuContribution>
+  </extension>
+  
 </plugin>

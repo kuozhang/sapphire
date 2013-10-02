@@ -9,15 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.renderers.swt;
+package org.eclipse.sapphire.workspace.ui;
 
 import static org.eclipse.sapphire.ui.PropertyEditorPart.DATA_BINDING;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.swt.renderer.GridLayoutUtil.glayout;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -29,17 +29,21 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.PropertyEditorPart;
 import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.renderers.swt.DefaultValuePropertyEditorRenderer;
+import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRenderer;
+import org.eclipse.sapphire.ui.renderers.swt.PropertyEditorRendererFactory;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
 import org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
+import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -54,10 +58,10 @@ import org.eclipse.ui.part.DrillDownComposite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultValuePropertyEditorRenderer
+public final class WorkspaceRelativePathPropertyEditorRenderer extends DefaultValuePropertyEditorRenderer
 {
-    public EclipseWorkspacePathPropertyEditorRenderer( final SapphireRenderingContext context,
-                                                       final PropertyEditorPart part )
+    public WorkspaceRelativePathPropertyEditorRenderer( final SapphireRenderingContext context,
+                                                        final PropertyEditorPart part )
     {
         super( context, part );
     }
@@ -67,6 +71,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
     {
         final PropertyEditorPart part = getPart();
         final Value<?> value = (Value<?>) part.property();
+        final Element element = value.element();
         
         final Text textField = (Text) super.createContents( parent, true );
 
@@ -164,7 +169,18 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
             }
         );
         
-        treeViewer.setInput( ResourcesPlugin.getWorkspace() );
+        final IContainer root;
+        
+        if( element instanceof CreateWorkspaceFileOp )
+        {
+            root = ( (CreateWorkspaceFileOp) element ).getRoot().resolve();
+        }
+        else
+        {
+            root = ResourcesPlugin.getWorkspace().getRoot();
+        }
+        
+        treeViewer.setInput( root );
         
         this.decorator.addEditorControl( drillDown );
         this.decorator.addEditorControl( tree );
@@ -173,8 +189,6 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
         
         if( val != null )
         {
-            final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-            
             IPath path = new Path( val );
             IResource resource = root.findMember( val );
             
@@ -198,18 +212,23 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
             {
                 public void selectionChanged( final SelectionChangedEvent event )
                 {
+                    final IResource resource;
                     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                    String path = MiscUtil.EMPTY_STRING;
                     
-                    if( selection != null && ! selection.isEmpty() )
+                    if( selection == null || selection.isEmpty() )
                     {
-                        final IResource resource = (IResource) selection.getFirstElement();
-                        path = resource.getFullPath().toPortableString();
-                        
-                        if( path.startsWith( "/" ) && path.length() > 1 )
-                        {
-                            path = path.substring( 1 );
-                        }
+                        resource = (IResource) treeViewer.getInput();
+                    }
+                    else
+                    {
+                        resource = (IResource) selection.getFirstElement();
+                    }
+                    
+                    String path = resource.getFullPath().makeRelativeTo( root.getFullPath() ).toString();
+                    
+                    if( path.startsWith( "/" ) && path.length() > 1 )
+                    {
+                        path = path.substring( 1 );
                     }
                     
                     textField.setText( path );
@@ -240,7 +259,7 @@ public final class EclipseWorkspacePathPropertyEditorRenderer extends DefaultVal
         public PropertyEditorRenderer create( final SapphireRenderingContext context,
                                               final PropertyEditorPart part )
         {
-            return new EclipseWorkspacePathPropertyEditorRenderer( context, part );
+            return new WorkspaceRelativePathPropertyEditorRenderer( context, part );
         }
     }
     

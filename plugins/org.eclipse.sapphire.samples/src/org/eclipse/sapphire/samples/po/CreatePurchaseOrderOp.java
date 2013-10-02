@@ -28,11 +28,11 @@ public interface CreatePurchaseOrderOp extends CreateWorkspaceFileOp
 {
     ElementType TYPE = new ElementType( CreatePurchaseOrderOp.class );
     
-    // *** FileName ***
+    // *** File ***
     
     @DefaultValue( text = "sample.po" )
     @FileExtensions( expr = "po" )
 
-    ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
+    ValueProperty PROP_FILE = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE );
     
 }

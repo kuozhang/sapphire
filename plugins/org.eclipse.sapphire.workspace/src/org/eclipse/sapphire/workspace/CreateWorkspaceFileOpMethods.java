@@ -17,21 +17,17 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.platform.PathBridge;
 import org.eclipse.sapphire.platform.StatusBridge;
 
 /**
@@ -48,21 +44,6 @@ public final class CreateWorkspaceFileOpMethods
         LocalizableText.init( CreateWorkspaceFileOpMethods.class );
     }
     
-    public static IFile getFileHandle( final CreateWorkspaceFileOp operation )
-    {
-        final Path folderPath = operation.getFolder().content();
-        final FileName fileName = operation.getFileName().content();
-        
-        if( folderPath == null || fileName == null )
-        {
-            return null;
-        }
-        
-        final Path newFilePath = folderPath.append( fileName.toString() );
-        
-        return ResourcesPlugin.getWorkspace().getRoot().getFile( PathBridge.create( newFilePath ) );
-    }
-    
     public static Status execute( final CreateWorkspaceFileOp operation,
                                   ProgressMonitor monitor )
     {
@@ -75,7 +56,7 @@ public final class CreateWorkspaceFileOpMethods
         
         try
         {
-            final IFile newFileHandle = operation.getFileHandle();
+            final IFile newFileHandle = operation.getFile().resolve();
             
             try
             {

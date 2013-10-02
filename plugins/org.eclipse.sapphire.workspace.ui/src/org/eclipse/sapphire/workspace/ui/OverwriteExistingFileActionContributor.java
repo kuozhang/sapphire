@@ -40,7 +40,7 @@ public final class OverwriteExistingFileActionContributor extends PropertyEditor
     {
         final CreateWorkspaceFileOp op = (CreateWorkspaceFileOp) context.getPart().getLocalModelElement();
         
-        if( op.getFileName().validation().contains( PROBLEM_FILE_EXISTS ) )
+        if( op.getFile().validation().contains( PROBLEM_FILE_EXISTS ) )
         {
             final PropertyEditorAssistContribution.Factory contribution = PropertyEditorAssistContribution.factory();
             

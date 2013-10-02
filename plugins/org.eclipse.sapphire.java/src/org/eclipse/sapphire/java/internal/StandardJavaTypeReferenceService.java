@@ -61,11 +61,14 @@ public final class StandardJavaTypeReferenceService extends JavaTypeReferenceSer
     @Override
     public JavaType resolve( final String name )
     {
-        final Class<?> cl = this.context.findClass( name );
-        
-        if( cl != null )
+        if( name != null )
         {
-            return new ClassBasedJavaType( cl );
+            final Class<?> cl = this.context.findClass( name );
+            
+            if( cl != null )
+            {
+                return new ClassBasedJavaType( cl );
+            }
         }
         
         return null;

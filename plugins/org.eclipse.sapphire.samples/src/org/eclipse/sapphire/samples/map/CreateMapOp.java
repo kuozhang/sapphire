@@ -28,11 +28,11 @@ public interface CreateMapOp extends CreateWorkspaceFileOp
 {
     ElementType TYPE = new ElementType( CreateMapOp.class );
     
-    // *** FileName ***
+    // *** File ***
     
     @DefaultValue( text = "map.xml" )
     @PreferDefaultValue
 
-    ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
+    ValueProperty PROP_FILE = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE );
     
 }

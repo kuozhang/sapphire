@@ -53,11 +53,11 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
 
     ValueProperty PROP_FOLDER = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FOLDER );
     
-    // *** FileName ***
+    // *** File ***
 
     @FileExtensions( expr = "xsd" )
 
-    ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
+    ValueProperty PROP_FILE = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE );
     
     // *** SourceFile ***
     

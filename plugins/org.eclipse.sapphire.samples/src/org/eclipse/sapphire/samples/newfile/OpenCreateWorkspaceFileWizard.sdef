@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition>
+    <import>
+        <definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm</definition>
+    </import>
+    <dialog>
+        <id>SelectRootDialog</id>
+        <label>select root</label>
+        <content>
+            <label>Select a root folder to restrict file location or leave blank to allow the entire workspace.</label>
+            <spacer></spacer>
+            <property-editor>Root</property-editor>
+        </content>
+        <width>400</width>
+    </dialog>
+    <wizard>
+        <id>CreateWorkspaceFileWizard</id>
+        <label>New File (Sapphire Sample)</label>
+        <page>
+            <id>CreateWorkspaceFileWizard.MainPage</id>
+            <label>File (Sapphire Sample)</label>
+            <description>Create a file.</description>
+            <content>
+                <include>CreateWorkspaceFileForm</include>
+            </content>
+            <scale-vertically>true</scale-vertically>
+            <image>org/eclipse/sapphire/samples/SapphireWizardBanner.png</image>
+        </page>
+        <element-type>org.eclipse.sapphire.workspace.CreateWorkspaceFileOp</element-type>
+    </wizard>    
+</definition>
