@@ -15,13 +15,13 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Transient;
 import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
@@ -46,7 +46,7 @@ import org.eclipse.sapphire.workspace.internal.CreateWorkspaceFileOpServices.Roo
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface CreateWorkspaceFileOp extends IExecutableModelElement
+public interface CreateWorkspaceFileOp extends ExecutableElement
 {
     ElementType TYPE = new ElementType( CreateWorkspaceFileOp.class );
     

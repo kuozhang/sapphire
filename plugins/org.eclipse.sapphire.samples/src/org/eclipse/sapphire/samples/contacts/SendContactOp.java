@@ -12,11 +12,11 @@
 package org.eclipse.sapphire.samples.contacts;
 
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.Transient;
 import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
@@ -33,7 +33,7 @@ import org.eclipse.sapphire.samples.contacts.internal.SendContactToPossibleValue
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface SendContactOp extends IExecutableModelElement
+public interface SendContactOp extends ExecutableElement
 {
     ElementType TYPE = new ElementType(SendContactOp.class);
     

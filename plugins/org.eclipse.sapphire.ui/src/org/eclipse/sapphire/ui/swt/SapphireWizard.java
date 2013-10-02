@@ -31,9 +31,9 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
@@ -58,9 +58,9 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizard<M extends IExecutableModelElement> implements IWizard
+public class SapphireWizard<M extends ExecutableElement> implements IWizard
 {
-    private IExecutableModelElement element;
+    private ExecutableElement element;
     private boolean elementInstantiatedLocally;
     private DefinitionLoader.Reference<WizardDef> definition;
     private SapphireWizardPart part;
@@ -93,7 +93,7 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
             throw new IllegalArgumentException();
         }
         
-        if( ! IExecutableModelElement.class.isAssignableFrom( type.getModelElementClass() ) )
+        if( ! ExecutableElement.class.isAssignableFrom( type.getModelElementClass() ) )
         {
             throw new IllegalArgumentException();
         }
@@ -105,10 +105,10 @@ public class SapphireWizard<M extends IExecutableModelElement> implements IWizar
         
         this.elementInstantiatedLocally = true;
         
-        init( (IExecutableModelElement) type.instantiate(), definition );
+        init( (ExecutableElement) type.instantiate(), definition );
     }
     
-    protected void init( final IExecutableModelElement element,
+    protected void init( final ExecutableElement element,
                          final DefinitionLoader.Reference<WizardDef> definition )
     {
         if( element == null )
