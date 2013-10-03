@@ -18,17 +18,41 @@
         <definition>org.eclipse.sapphire.workspace.ui.CreateWorkspaceFileForm</definition>
     </import>
     <dialog>
-        <id>SelectRootDialog</id>
-        <label>select root</label>
+        <id>CustomizeDialog</id>
+        <label>customize wizard</label>
         <content>
             <label>Select a root folder to restrict file location or leave blank to allow the entire workspace.</label>
             <spacer></spacer>
             <property-editor>Root</property-editor>
+            <spacer></spacer>
+            <label>Select the type of file that the wizard should create.</label>
+            <spacer></spacer>
+            <property-editor>
+                <hint>
+                    <name>prefer.vertical.radio.buttons</name>
+                    <value>true</value>
+                </hint>
+                <property>Type</property>
+                <span>true</span>
+                <show-label>false</show-label>
+                <hint>
+                    <name>aux.text.JAVA</name>
+                    <value>Java programming language source file</value>
+                </hint>
+                <hint>
+                    <name>aux.text.XML</name>
+                    <value>Extensible Markup Language file for configuration, data exchange or storage</value>
+                </hint>
+                <hint>
+                    <name>aux.text.TEXT</name>
+                    <value>Plain file suitable for any textual content</value>
+                </hint>
+            </property-editor>
         </content>
         <width>400</width>
     </dialog>
     <wizard>
-        <id>CreateWorkspaceFileWizard</id>
+        <id>CreateFileWizard</id>
         <label>New File (Sapphire Sample)</label>
         <page>
             <id>CreateWorkspaceFileWizard.MainPage</id>
@@ -40,6 +64,6 @@
             <scale-vertically>true</scale-vertically>
             <image>org/eclipse/sapphire/samples/SapphireWizardBanner.png</image>
         </page>
-        <element-type>org.eclipse.sapphire.workspace.CreateWorkspaceFileOp</element-type>
+        <element-type>org.eclipse.sapphire.samples.newfile.CreateFileOp</element-type>
     </wizard>    
 </definition>

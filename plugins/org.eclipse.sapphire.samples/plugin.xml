@@ -417,15 +417,15 @@
   
   <extension point="org.eclipse.ui.commands">
     <command
-      id="org.eclipse.sapphire.samples.newfile.OpenCreateWorkspaceFileWizard"
+      id="org.eclipse.sapphire.samples.newfile.OpenCreateFileWizard"
       name="File Bug Report (Dialog)"
-      defaultHandler="org.eclipse.sapphire.samples.newfile.OpenCreateWorkspaceFileWizardHandler"/>
+      defaultHandler="org.eclipse.sapphire.samples.newfile.OpenCreateFileWizardHandler"/>
   </extension>
   
   <extension point="org.eclipse.ui.menus">
     <menuContribution locationURI="menu:org.eclipse.sapphire.samples">
       <command
-        commandId="org.eclipse.sapphire.samples.newfile.OpenCreateWorkspaceFileWizard"
+        commandId="org.eclipse.sapphire.samples.newfile.OpenCreateFileWizard"
         label="New File Wizard..."
         style="push"/>
     </menuContribution>
