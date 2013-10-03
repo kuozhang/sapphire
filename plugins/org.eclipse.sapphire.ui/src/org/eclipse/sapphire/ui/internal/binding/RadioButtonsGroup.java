@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2013 Oracle
+ * Copyright (c) 2013 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [329102] excess scroll space in editor sections
+ *    Gregory Amerson - [418602] Radio buttons property editor should show images
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.internal.binding;
@@ -35,6 +36,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -43,6 +45,7 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public class RadioButtonsGroup extends Composite
@@ -111,11 +114,12 @@ public class RadioButtonsGroup extends Composite
     
     public Button addRadioButton( final String text )
     {
-        return addRadioButton( text, null );
+        return addRadioButton( text, null, null );
     }
     
     public Button addRadioButton( final String text,
-                                  final String auxText )
+                                  final String auxText,
+                                  final Image image )
     {
         final Button button = new Button( this, SWT.RADIO );
         button.setLayoutData( this.vertical ? gd() : null );
@@ -157,7 +161,12 @@ public class RadioButtonsGroup extends Composite
 
             this.auxTextControls.put( button, auxTextComposite );
         }
-        
+
+        if( image != null )
+        {
+            button.setImage( image );
+        }
+
         return button;
     }
     
