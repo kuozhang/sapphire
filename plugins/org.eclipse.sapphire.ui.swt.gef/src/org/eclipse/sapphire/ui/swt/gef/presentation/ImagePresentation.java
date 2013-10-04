@@ -11,9 +11,16 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ImagePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeUpdateEvent;
+import org.eclipse.sapphire.ui.swt.gef.figures.SapphireImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -21,18 +28,69 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 public class ImagePresentation extends ShapePresentation 
 {
-	public ImagePresentation(ShapePresentation parent, ImagePart imagePart, DiagramConfigurationManager configManager)
+	private Listener shapeUpdateListener;
+	
+	public ImagePresentation(DiagramPresentation parent, ImagePart imagePart, DiagramResourceCache resourceCache)
 	{
-		super(parent, imagePart, configManager);
+		super(parent, imagePart, resourceCache);
+
+        this.shapeUpdateListener = new FilteredListener<ShapeUpdateEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final ShapeUpdateEvent event )
+            {
+            	refresh();
+            }
+        };
+        part().attach(this.shapeUpdateListener);
+	}
+	
+	private void refresh() 
+	{
+		if (getFigure() != null) {
+			DiagramNodePart nodePart = part().nearest(DiagramNodePart.class);
+			final ImageData data = getImage();
+			if (data != null) {   
+				((SapphireImageFigure)getFigure()).setImage(nodePart.getSwtResourceCache().image(data));
+			}
+		}
 	}
 
-	public ImagePart getImagePart()
+	@Override
+	public ImagePart part()
 	{
-		return (ImagePart)getPart();
+		return (ImagePart) super.part();
 	}
 	
 	public ImageData getImage()
 	{
-		return getImagePart().getImage();
+		return part().getImage();
 	}
+	
+	@Override
+    public void render()
+    {
+		IFigure figure = null;
+		if (visible()) 
+		{
+			DiagramNodePart nodePart = part().nearest(DiagramNodePart.class);
+			final ImageData data = getImage();
+			if (data != null) 
+			{
+				figure = new SapphireImageFigure(this, nodePart.getSwtResourceCache().image(data));
+			}
+			else 
+			{
+				figure = new SmoothImageFigure();
+			}
+		}
+		setFigure(figure);
+    }
+	
+	@Override
+	public void dispose()
+	{
+		part().detach(this.shapeUpdateListener);
+	}
+
 }

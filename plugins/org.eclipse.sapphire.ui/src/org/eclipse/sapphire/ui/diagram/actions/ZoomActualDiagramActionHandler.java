@@ -14,9 +14,9 @@ package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
@@ -59,7 +59,7 @@ public final class ZoomActualDiagramActionHandler extends SapphireActionHandler
     }
     
     @Override
-    protected Object run( SapphireRenderingContext context )
+    protected Object run( Presentation context )
     {
         final SapphireDiagramEditorPagePart diagramEditorPart = getPart().nearest( SapphireDiagramEditorPagePart.class );
 

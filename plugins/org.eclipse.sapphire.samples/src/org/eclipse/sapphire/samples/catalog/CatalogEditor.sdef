@@ -210,10 +210,8 @@
                     <separator>
                         <label>description</label>
                     </separator>
-                    <switching-panel>
-                        <list-selection-controller>
-                            <property>Variants</property>
-                        </list-selection-controller>
+                    <detail-section>
+                        <property>Variants</property>
                         <panel>
                             <key>ItemVariant</key>
                             <content>
@@ -229,7 +227,7 @@
                                 <label>Select variant above to view or edit the description.</label>
                             </content>
                         </default-panel>
-                    </switching-panel>
+                    </detail-section>
                 </content>
                 <label>variants</label>
             </section>

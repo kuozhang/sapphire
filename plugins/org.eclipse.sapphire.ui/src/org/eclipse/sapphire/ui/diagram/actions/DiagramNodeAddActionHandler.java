@@ -15,9 +15,9 @@ package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -57,10 +57,10 @@ public class DiagramNodeAddActionHandler extends SapphireActionHandler
     }
     
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run(Presentation context) 
 	{
     	SapphireDiagramEditorPagePart diagramPart = 
-    			(SapphireDiagramEditorPagePart)this.nodeTemplate.getParentPart();
+    			(SapphireDiagramEditorPagePart)this.nodeTemplate.parent();
 
 		DiagramNodePart nodePart = this.nodeTemplate.createNewDiagramNode();
 		Point pt = diagramPart.getMouseLocation();

@@ -15,10 +15,10 @@ package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -67,7 +67,7 @@ public class DeleteAllBendPointsForConnectionActionHandler extends SapphireActio
     }
 
     @Override
-    protected Object run( final SapphireRenderingContext context) 
+    protected Object run( final Presentation context) 
     {
         ( (DiagramConnectionPart) getPart() ).removeAllBendpoints();
         

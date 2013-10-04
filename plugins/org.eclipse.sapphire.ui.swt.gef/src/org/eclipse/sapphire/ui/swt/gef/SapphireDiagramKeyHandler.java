@@ -28,10 +28,11 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentation;
-import org.eclipse.sapphire.ui.swt.renderer.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -114,7 +115,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 		}		
 		if (this.sapphireParts.size() == 1)
 		{
-	        ISapphirePart part = this.sapphirePart.getParentPart();
+	        ISapphirePart part = this.sapphirePart.parent();
 	        
 	        while( part != null )
 	        {
@@ -130,7 +131,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	                }
 	            }
 	            
-	            part = part.getParentPart();
+	            part = part.parent();
 	        }
 					
 			return parent != null && parent.keyPressed(event);
@@ -181,11 +182,11 @@ public class SapphireDiagramKeyHandler extends KeyHandler
     						{
     							public void run()
     							{
-    								handler.execute( manager.getContext() );
+    								handler.execute( manager.context() );
     							}
     						};
 	    
-    						manager.getContext().getDisplay().asyncExec( runnable );
+    						Display.getDefault().asyncExec( runnable );
     					}
     					else
     					{
@@ -247,8 +248,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 	private void initActions()
 	{		
 		this.tempActions = this.sapphirePart.getActions(this.actionContext);
-		this.actionPresentationManager = new SapphireActionPresentationManager(
-				new DiagramRenderingContext(this.sapphirePart, this.diagramEditor),
+		this.actionPresentationManager = new SapphireActionPresentationManager(this.diagramEditor.getDiagramPresentation(),				
 				this.tempActions);
 		this.actionPresentation = new DiagramKeyboardActionPresentation(
 				this.actionPresentationManager, this.diagramEditor, this.editPart);
@@ -257,7 +257,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 		{
 			this.hiddenActions = this.sapphirePart.getActions(this.hiddenContext);
 			this.hiddenActionPresentationManager = new SapphireActionPresentationManager(
-					new DiagramRenderingContext(this.sapphirePart, this.diagramEditor),
+					this.diagramEditor.getDiagramPresentation(),
 					this.hiddenActions);
 			this.hiddenActionPresentation = new DiagramKeyboardActionPresentation(
 					this.hiddenActionPresentationManager, this.diagramEditor, this.editPart);

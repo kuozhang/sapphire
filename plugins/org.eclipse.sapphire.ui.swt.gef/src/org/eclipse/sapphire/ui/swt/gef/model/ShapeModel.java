@@ -43,7 +43,7 @@ public class ShapeModel extends DiagramModelBase
 	@Override
 	public SapphirePart getSapphirePart() 
 	{		
-		return this.shapePresentation.getPart();
+		return this.shapePresentation.part();
 	}
 
 	public ShapePresentation getShapePresentation()

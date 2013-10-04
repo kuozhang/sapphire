@@ -22,61 +22,52 @@ import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ShapePresentation 
+public class ShapePresentation extends DiagramPresentation
 {
-	private ShapePresentation parent;
-	private ShapePart shapePart;
-	private DiagramConfigurationManager configManager;
-	private IFigure figure;
+	private DiagramResourceCache resourceCache;
 	private boolean separator = false;
 	
-	public ShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)
+	public ShapePresentation(DiagramPresentation parent, ShapePart shapePart, DiagramResourceCache resourceCache)
 	{
-		this.parent = parent;
-		this.shapePart = shapePart;
-		this.configManager = configManager;
+	    super( shapePart, parent, parent.getConfigurationManager(), 
+	    		parent.shell() );
+	    
+		this.resourceCache = resourceCache;
 	}
 	
-	public ShapePresentation getParent()
+	@Override
+    public ShapePart part()
+    {
+        return (ShapePart) super.part();
+    }
+    
+	public DiagramResourceCache getResourceCache()
 	{
-		return this.parent;
+		return this.resourceCache;
 	}
 	
-	public ShapePart getPart()
-	{
-		return this.shapePart;
-	}
-	
-	public DiagramConfigurationManager getConfigurationManager()
-	{
-		return this.configManager;
-	}
-	
-	public void setFigure(IFigure fig)
-	{
-		this.figure = fig;
-	}
-	
-	public IFigure getFigure()
-	{
-		return this.figure;
-	}
-	
-	public void removeFigure()
-	{
-		this.figure = null;
-	}
-	
+    @Override
+    public DiagramPresentation parent()
+    {
+        return (DiagramPresentation) super.parent();
+    }
+    
+    public SapphireDiagramEditor page()
+    {
+        return getConfigurationManager().getDiagramEditor();
+    }
+		
 	public IFigure getParentFigure()
 	{
 		IFigure parentFigure = null;
-		ShapePresentation parentPresentation = getParent();
+		DiagramPresentation parentPresentation = parent();
 		while (parentPresentation != null)
 		{
 			parentFigure = parentPresentation.getFigure();
@@ -84,7 +75,7 @@ public class ShapePresentation
 			{
 				break;
 			}
-			parentPresentation = parentPresentation.getParent();
+			parentPresentation = parentPresentation.parent();
 		}
 		return parentFigure;
 	}
@@ -92,31 +83,39 @@ public class ShapePresentation
 	public IFigure getNodeFigure()
 	{
 		IFigure parentFigure = getFigure();
-		ShapePresentation parentPresentation = getParent();
-		while (parentPresentation != null)
+		DiagramPresentation parentPresentation = parent();
+		while (!(parentPresentation instanceof DiagramNodePresentation))
 		{
 			parentFigure = parentPresentation.getFigure();
-			parentPresentation = parentPresentation.getParent();
+			parentPresentation = parentPresentation.parent();
 		}
 		return parentFigure;		
 	}
 	
 	public LayoutConstraintDef getLayoutConstraint()
 	{
-		return this.shapePart.getLayoutConstraint();
+		return part().getLayoutConstraint();
 	}
 	
 	public boolean visible()
 	{
-		return this.shapePart.visible();
+		return part().visible();
 	}
 	
 	public SelectionPresentation getSelectionPresentation()
 	{
-		return this.shapePart.getSelectionPresentation();
-	}	
+		return part().getSelectionPresentation();
+	}
 	
-	public void dispose()
+	@Override
+    public void render()
+    {
+	    // Konstantin: The figure should be created here...
+	    
+	    throw new UnsupportedOperationException();
+    }
+
+    public void dispose()
 	{		
 	}
 	
@@ -134,36 +133,36 @@ public class ShapePresentation
 
 	public static final class ShapePresentationFactory
     {
-    	public static ShapePresentation createShapePresentation(ShapePresentation parent, ShapePart shapePart, DiagramConfigurationManager configManager)
+    	public static ShapePresentation createShapePresentation(DiagramPresentation parent, ShapePart shapePart, DiagramResourceCache resourceCache)
     	{
     		ShapePresentation shapePresentation = null;
         	if (shapePart instanceof TextPart)
         	{
-        		shapePresentation = new TextPresentation(parent, (TextPart)shapePart, configManager);
+        		shapePresentation = new TextPresentation(parent, (TextPart)shapePart, resourceCache);
         	}
         	else if (shapePart instanceof ImagePart)
         	{
-        		shapePresentation = new ImagePresentation(parent, (ImagePart)shapePart, configManager);
+        		shapePresentation = new ImagePresentation(parent, (ImagePart)shapePart, resourceCache);
         	}
         	else if (shapePart instanceof ValidationMarkerPart)
         	{
-        		shapePresentation = new ValidationMarkerPresentation(parent, (ValidationMarkerPart)shapePart, configManager);
+        		shapePresentation = new ValidationMarkerPresentation(parent, (ValidationMarkerPart)shapePart, resourceCache);
         	}
         	else if (shapePart instanceof LinePart)
         	{
-        		shapePresentation = new LineShapePresentation(parent, (LinePart)shapePart, configManager);
+        		shapePresentation = new LineShapePresentation(parent, (LinePart)shapePart, resourceCache);
         	}
         	else if (shapePart instanceof RectanglePart)
         	{
-        		shapePresentation = new RectanglePresentation(parent, (RectanglePart)shapePart, configManager);        		
+        		shapePresentation = new RectanglePresentation(parent, (RectanglePart)shapePart, resourceCache);        		
         	}
         	else if (shapePart instanceof ShapeFactoryPart)
         	{
-        		shapePresentation = new ShapeFactoryPresentation(parent, (ShapeFactoryPart)shapePart, configManager);        		
+        		shapePresentation = new ShapeFactoryPresentation(parent, (ShapeFactoryPart)shapePart, resourceCache);        		
         	}
         	else if (shapePart instanceof SpacerPart)
         	{
-        		shapePresentation = new SpacerPresentation(parent, (SpacerPart)shapePart, configManager);
+        		shapePresentation = new SpacerPresentation(parent, (SpacerPart)shapePart, resourceCache);
         	}
     		return shapePresentation;
     	}

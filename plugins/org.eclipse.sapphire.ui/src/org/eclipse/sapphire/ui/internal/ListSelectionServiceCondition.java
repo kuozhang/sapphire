@@ -15,7 +15,7 @@ package org.eclipse.sapphire.ui.internal;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 
 /**
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>

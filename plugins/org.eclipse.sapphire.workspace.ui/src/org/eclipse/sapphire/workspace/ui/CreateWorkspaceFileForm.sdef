@@ -25,7 +25,7 @@
                 <property>Folder</property>
                 <hint>
                     <name>factory</name>
-                    <value>WorkspaceRelativePathPropertyEditorRenderer$Factory</value>
+                    <value>WorkspaceRelativePathPropertyEditorPresentation$Factory</value>
                 </hint>
                 <span>true</span>
                 <scale-vertically>true</scale-vertically>

@@ -143,6 +143,44 @@
   </extension>
   
   <!-- 
+    ***********
+    * Journal *
+    ***********
+  -->
+  
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      id="org.eclipse.sapphire.samples.journal.JournalEditor"
+      name="Journal Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"
+      filenames="journal.xml"
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.journal.JournalEditor"/>
+      </class>
+    </editor>
+  </extension>
+
+  <!-- 
+    *******************
+    * Reading Journal *
+    *******************
+  -->
+  
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      id="org.eclipse.sapphire.samples.reading.ReadingJournalEditor"
+      name="Reading Journal Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"
+      filenames="reading.xml"
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.reading.ReadingJournalEditor"/>
+      </class>
+    </editor>
+  </extension>
+
+  <!-- 
     ******************
     * Gallery Sample *
     ******************

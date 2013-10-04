@@ -13,7 +13,7 @@ package org.eclipse.sapphire.samples.gallery.internal;
 
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGallery;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGalleryEntity;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
+import org.eclipse.sapphire.ui.forms.PropertyEditorActionHandler;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -21,7 +21,7 @@ import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
 
 public abstract class ValuePropertyActionsGalleryReferenceCreateActionHandlerBase
 
-    extends SapphirePropertyEditorActionHandler
+    extends PropertyEditorActionHandler
     
 {
     protected final boolean isEntityDefined( final String entityName )

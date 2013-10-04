@@ -78,7 +78,7 @@ public class NodeLayoutEditPolicy extends LayoutEditPolicy
 					{
 						ShapeModel shapeModel = (ShapeModel)shapeEditPart.getModel();
 						ShapePart shapePart = (ShapePart)shapeModel.getSapphirePart();
-						if (shapePart.getParentPart() instanceof ShapeFactoryPart)
+						if (shapePart.parent() instanceof ShapeFactoryPart)
 						{
 							moveShapeFactoryPart = true;
 							break;

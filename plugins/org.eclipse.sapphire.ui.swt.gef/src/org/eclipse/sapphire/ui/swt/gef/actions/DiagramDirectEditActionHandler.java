@@ -14,15 +14,15 @@ package org.eclipse.sapphire.ui.swt.gef.actions;
 import java.util.List;
 
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -32,10 +32,10 @@ public class DiagramDirectEditActionHandler extends SapphireActionHandler
 {
 
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run( final Presentation context ) 
 	{
-		DiagramRenderingContext diagramContext = (DiagramRenderingContext)context;
-		SapphireDiagramEditor diagramEditor = diagramContext.getDiagramEditor();
+		DiagramPresentation presentation = (DiagramPresentation)context;
+		SapphireDiagramEditor diagramEditor = presentation.getConfigurationManager().getDiagramEditor();
 		if (diagramEditor != null)
 		{
 			List<ISapphirePart> parts = diagramEditor.getSelectedParts();

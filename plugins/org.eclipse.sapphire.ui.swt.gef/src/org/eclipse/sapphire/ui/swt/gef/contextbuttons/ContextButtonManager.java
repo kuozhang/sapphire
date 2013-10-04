@@ -379,7 +379,7 @@ public class ContextButtonManager {
 		IContextButtonPadDeclaration declaration = new StandardContextButtonPadDeclaration(contextButtonPadData);
 
 		// create context button pad and add to handle layer
-		ContextButtonPad contextButtonPad = new ContextButtonPad(declaration, zoom, getEditor(), getEditor().getSelectedParts());
+		ContextButtonPad contextButtonPad = new ContextButtonPad(declaration, zoom, getEditor(), getEditor().getSelectedEditParts());
 		setActiveContextButtonPad(contextButtonPad);
 		IFigure feedbackLayer = rootEditPart.getLayer(LayerConstants.HANDLE_LAYER);
 		feedbackLayer.add(contextButtonPad);

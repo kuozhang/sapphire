@@ -65,12 +65,14 @@ import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
-import org.eclipse.sapphire.ui.PropertyEditorPart;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorCondition;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.forms.PropertyEditorActionHandler;
+import org.eclipse.sapphire.ui.forms.PropertyEditorCondition;
+import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -79,7 +81,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditorActionHandler
+public abstract class JavaTypeCreateActionHandler extends PropertyEditorActionHandler
 {
     @Text( "Java Convention Violation" )
     private static LocalizableText discourageDialogTitle;
@@ -140,8 +142,9 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
     @Override
     @SuppressWarnings( "deprecation" )
 
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
+        final Shell shell = ( (FormComponentPresentation) context ).shell();
         final Value<?> javaTypeNameValue = (Value<?>) property();
         
         if( javaTypeNameValue.malformed() )
@@ -153,7 +156,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         if( javaTypeName.pkg() == null )
         {
-            if( ! MessageDialog.openConfirm( context.getShell(), discourageDialogTitle.text(), discourageDefaultPackage.text() ) )
+            if( ! MessageDialog.openConfirm( shell, discourageDialogTitle.text(), discourageDefaultPackage.text() ) )
             {
                 return null;
             }
@@ -161,7 +164,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         if( ! Character.isUpperCase( javaTypeName.simple().charAt( 0 ) ) )
         {
-            if( ! MessageDialog.openConfirm( context.getShell(), discourageDialogTitle.text(), discourageLowerCase.text() ) )
+            if( ! MessageDialog.openConfirm( shell, discourageDialogTitle.text(), discourageLowerCase.text() ) )
             {
                 return null;
             }
@@ -381,7 +384,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         
         try
         {
-            ( new ProgressMonitorDialog( context.getShell() ) ).run( false, false, op );
+            ( new ProgressMonitorDialog( shell ) ).run( false, false, op );
         }
         catch( InvocationTargetException e )
         {
@@ -460,7 +463,7 @@ public abstract class JavaTypeCreateActionHandler extends SapphirePropertyEditor
         }
     }
     
-    protected static abstract class Condition extends SapphirePropertyEditorCondition
+    protected static abstract class Condition extends PropertyEditorCondition
     {
         @Override
         protected final boolean evaluate( final PropertyEditorPart part )

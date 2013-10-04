@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.samples.sqlschema.internal;
 
 import org.eclipse.sapphire.samples.sqlschema.Column;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 
 /**
@@ -22,11 +22,10 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 
 public class TogglePrimaryKeyActionHandler extends SapphireActionHandler 
 {
-
 	@Override
-	protected Object run(SapphireRenderingContext context) 
+	protected Object run( final Presentation context ) 
 	{
-        final ShapePart part = (ShapePart) context.getPart();
+        final ShapePart part = (ShapePart) context.part();
         final Column column = (Column) part.getModelElement();
         boolean isPrimaryKey = column.getIsPrimaryKey().content();
         column.setIsPrimaryKey(!isPrimaryKey);

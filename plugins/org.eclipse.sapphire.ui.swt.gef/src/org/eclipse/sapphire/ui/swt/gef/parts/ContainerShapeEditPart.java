@@ -70,7 +70,7 @@ public class ContainerShapeEditPart extends ShapeEditPart
 	@Override
 	public boolean isSelectable() {
 		ContainerShapeModel model = getCastedModel();
-		if (model.getShapePresentation().getPart().isActive()) {
+		if (model.getShapePresentation().part().isActive()) {
 			return true;
 		}
 		return false;

@@ -18,10 +18,10 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.tests.modeling.el.TestExpr;
 import org.eclipse.sapphire.ui.PartFunctionContext;
-import org.eclipse.sapphire.ui.SapphireDialogPart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.def.DialogDef;
+import org.eclipse.sapphire.ui.forms.DialogDef;
+import org.eclipse.sapphire.ui.forms.DialogPart;
 import org.junit.Test;
 
 /**
@@ -41,11 +41,12 @@ public final class PartValidationFunctionTests extends TestExpr
         try
         {
             final DefinitionLoader.Reference<DialogDef> definition = DefinitionLoader.sdef( PartValidationFunctionTests.class ).dialog();
-            final SapphirePart part = new SapphireDialogPart();
+            final SapphirePart part = new DialogPart();
             
             try
             {
                 part.init( null, element, definition.resolve(), Collections.<String,String>emptyMap() );
+                part.initialize();
                 
                 final FunctionResult fr = ExpressionLanguageParser.parse( "${ Part.Validation }" ).evaluate( new PartFunctionContext( part, element ) );
                 

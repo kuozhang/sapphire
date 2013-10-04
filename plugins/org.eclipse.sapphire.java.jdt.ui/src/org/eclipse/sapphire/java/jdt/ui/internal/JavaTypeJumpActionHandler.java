@@ -22,15 +22,16 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.Presentation;
+import org.eclipse.sapphire.ui.forms.JumpActionHandler;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class JavaTypeJumpActionHandler extends SapphireJumpActionHandler
+public final class JavaTypeJumpActionHandler extends JumpActionHandler
 {
     public static final String ID = "Sapphire.Jump.Java.Type";
 
@@ -68,7 +69,7 @@ public final class JavaTypeJumpActionHandler extends SapphireJumpActionHandler
     }
 
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         final Value<?> value = (Value<?>) property();
         final String typeName = value.text( true );
@@ -86,7 +87,7 @@ public final class JavaTypeJumpActionHandler extends SapphireJumpActionHandler
                 else 
                 {
                     final String message = couldNotFindTypeDialogMessage.format( typeName );
-                    MessageDialog.openInformation( context.getShell(), couldNotFindTypeDialogTitle.text(), message );
+                    MessageDialog.openInformation( ( (FormComponentPresentation) context ).shell(), couldNotFindTypeDialogTitle.text(), message );
                 }
             } 
             catch( CoreException e ) 

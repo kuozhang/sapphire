@@ -18,22 +18,21 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
-import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SelectionPresentation;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ShapePart extends SapphirePart implements IPropertiesViewContributorPart
+public class ShapePart extends SapphirePart implements PropertiesViewContributorPart
 {
 	private ShapeDef shapeDef;
 	private Element modelElement;
@@ -53,13 +52,6 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
 	public LayoutConstraintDef getLayoutConstraint()
 	{
 		return this.shapeDef.getSequenceLayoutConstraint();
-	}
-	
-	@Override
-	public void render(SapphireRenderingContext context) 
-	{
-		// TODO Auto-generated method stub
-
 	}
 	
 	public boolean isActive()
@@ -135,7 +127,7 @@ public class ShapePart extends SapphirePart implements IPropertiesViewContributo
 				nodePart = (DiagramNodePart)part;
 				break;
 			}
-			part = part.getParentPart();
+			part = part.parent();
 		}
 		return nodePart;
 	}

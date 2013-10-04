@@ -17,8 +17,8 @@ import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.def.IPropertiesViewContributorDef;
 import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -27,7 +27,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
 @Label( standard = "shape" )
 @Image( path = "ShapeDef.png" )
 
-public interface ShapeDef extends PartDef, IPropertiesViewContributorDef
+public interface ShapeDef extends PartDef, PropertiesViewContributorDef
 {
 	ElementType TYPE = new ElementType( ShapeDef.class );
 		    

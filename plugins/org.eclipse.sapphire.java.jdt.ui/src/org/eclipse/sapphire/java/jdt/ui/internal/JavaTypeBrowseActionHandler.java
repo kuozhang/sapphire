@@ -25,10 +25,11 @@ import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.forms.BrowseActionHandler;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
@@ -37,7 +38,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandler
+public final class JavaTypeBrowseActionHandler extends BrowseActionHandler
 {
     @Text( "Select" )
     private static LocalizableText select;
@@ -67,7 +68,7 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
     }
 
     @Override
-    public String browse( final SapphireRenderingContext context )
+    public String browse( final Presentation context )
     {
         final Property property = property();
         
@@ -153,7 +154,7 @@ public final class JavaTypeBrowseActionHandler extends SapphireBrowseActionHandl
         try 
         {
             final SelectionDialog dlg 
-                = JavaUI.createTypeDialog( context.getShell(), null, project, browseDialogStyle, false );
+                = JavaUI.createTypeDialog( ( (FormComponentPresentation) context ).shell(), null, project, browseDialogStyle, false );
             
             final String title = property.definition().getLabel( true, CapitalizationType.TITLE_STYLE, false );
             dlg.setTitle(select + title);

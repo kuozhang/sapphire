@@ -25,7 +25,7 @@ public class MoveShapeActionHandlerCondition extends SapphireCondition
 	@Override
 	protected boolean evaluate() 
 	{
-    	if (getPart() instanceof ShapePart && getPart().getParentPart() instanceof ShapeFactoryPart)
+    	if (getPart() instanceof ShapePart && getPart().parent() instanceof ShapeFactoryPart)
     	{
     		return true;
     	}

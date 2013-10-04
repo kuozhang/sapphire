@@ -24,6 +24,7 @@ import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValueDefaultValueService;
 import org.eclipse.sapphire.ui.def.internal.SapphireHintValuePossibleValuesService;
+import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

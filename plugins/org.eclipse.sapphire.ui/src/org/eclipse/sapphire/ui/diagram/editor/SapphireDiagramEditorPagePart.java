@@ -34,16 +34,12 @@ import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.IPropertiesViewContributorPart;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.PropertiesViewContributionManager;
-import org.eclipse.sapphire.ui.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
@@ -55,9 +51,10 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventType;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent.DiagramPartEventType;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramShapeEvent.ShapeEventType;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -122,6 +119,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             final DiagramNodeTemplate nodeTemplate = new DiagramNodeTemplate();
             nodeTemplate.init(this, this.modelElement, nodeDef, Collections.<String,String>emptyMap());
+            nodeTemplate.initialize();
             this.nodeTemplates.add(nodeTemplate);
             nodeTemplate.addTemplateListener(this.nodeTemplateListener);
             
@@ -157,6 +155,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             IDiagramConnectionDef connDef = getDiagramConnectionDef(connBinding.getConnectionId().content());
             DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate(connBinding);
             connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
+            connectionTemplate.initialize();
             this.connectionTemplates.add(connectionTemplate);
             connectionTemplate.addTemplateListener(this.connTemplateListener);
         }
@@ -169,6 +168,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             IDiagramConnectionDef connDef = getDiagramConnectionDef(implicitConnBinding.getConnectionId().content());
             DiagramImplicitConnectionTemplate connectionTemplate = new DiagramImplicitConnectionTemplate(implicitConnBinding);
             connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
+            connectionTemplate.initialize();
             this.implicitConnectionTemplates.add(connectionTemplate);
             connectionTemplate.addTemplateListener(this.implicitConnTemplateListener);
         }
@@ -410,12 +410,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     }
     
     @Override
-    public void render(SapphireRenderingContext context)
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
     public Set<String> getActionContexts()
     {
         Set<String> contextSet = new HashSet<String>();
@@ -480,9 +474,9 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 	        {
 	            propertiesViewContribution = this.propertiesViewContributionManager.getPropertiesViewContribution();
 	        }
-	        else if( selection instanceof IPropertiesViewContributorPart )
+	        else if( selection instanceof PropertiesViewContributorPart )
 	        {
-	            propertiesViewContribution = ( (IPropertiesViewContributorPart) selection ).getPropertiesViewContribution();
+	            propertiesViewContribution = ( (PropertiesViewContributorPart) selection ).getPropertiesViewContribution();
 	        }	        	        
         }
         if (propertiesViewContribution == null || !propertiesViewContribution.getLocalModelElement().disposed())
@@ -704,42 +698,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return null;
     }
     
-    private void notifyShapeUpdate(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeUpdate);
-    	this.broadcast(event);
-	}
-	
-    private void notifyTextChange(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.TextChange);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeVisibilityUpdate( DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeVisibilityUpdate);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeAdd(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeAdd);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeDelete(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeDelete);
-    	this.broadcast(event);
-	}
-
-    private void notifyShapeReorder(DiagramShapeEvent event)
-	{
-    	event.setShapeEventType(ShapeEventType.ShapeReorder);
-    	this.broadcast(event);
-	}
-
     private void notifyNodeAdd(DiagramNodePart nodePart)
 	{
 		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
@@ -816,8 +774,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 
 	private void notifyDirectEdit(ISapphirePart part)
 	{
-		DiagramPartEvent event = new DiagramPartEvent(part);
-		event.setDiagramPartEventType(DiagramPartEventType.DirectEdit);
+		DiagramDirectEditPartEvent event = new DiagramDirectEditPartEvent(part);
     	this.broadcast(event);
 	}
 
@@ -887,41 +844,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         	notifyNodeMove(event);
         }	
         
-        @Override
-        public void handleShapeUpdate(final DiagramShapeEvent event)
-        {
-        	notifyShapeUpdate(event);
-        }        
-        
-        @Override
-        public void handleTextChange(final DiagramShapeEvent event)
-        {
-        	notifyTextChange(event);
-        }        
-
-        @Override
-        public void handleShapeVisibilityUpdate(final DiagramShapeEvent event)
-        {        
-        	notifyShapeVisibilityUpdate(event);
-        }        
-        
-        @Override
-        public void handleShapeAdd(final DiagramShapeEvent event)
-        {
-        	notifyShapeAdd(event);
-        }        
-        
-        @Override
-        public void handleShapeDelete(final DiagramShapeEvent event)
-        {        
-        	notifyShapeDelete(event);
-        }        
-        
-        @Override
-        public void handleShapeReorder(final DiagramShapeEvent event)
-        {        
-        	notifyShapeReorder(event);
-        }        
 	}
 	
 	private class ConnectionTemplateListener extends DiagramConnectionTemplateListener
@@ -1020,7 +942,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public static final class ZoomLevelEvent extends PartEvent
     {
-        private final int before;
+        private final int before;  
         private final int after;
         
         public ZoomLevelEvent( final SapphirePart part,

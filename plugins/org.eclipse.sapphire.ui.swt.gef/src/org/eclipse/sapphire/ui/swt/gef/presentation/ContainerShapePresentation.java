@@ -15,11 +15,14 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
-import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.model.ContainerShapeModel;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -29,12 +32,12 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 public class ContainerShapePresentation extends ShapePresentation 
 {
 	private List<ShapePresentation> children;
-	private ValidationMarkerPresentation validationMarker;
+	private Listener partVisibilityListener;
 	
-	public ContainerShapePresentation(ShapePresentation parent, ContainerShapePart containerShapePart,
-			DiagramConfigurationManager configManager)
+	public ContainerShapePresentation(DiagramPresentation parent, ContainerShapePart containerShapePart,
+				DiagramResourceCache resourceCache)
 	{
-		super(parent, containerShapePart, configManager);
+		super(parent, containerShapePart, resourceCache);
 
 		this.children = new ArrayList<ShapePresentation>();
 		ShapePresentation childPresentation = null;
@@ -42,14 +45,21 @@ public class ContainerShapePresentation extends ShapePresentation
 		{
 			if (canAddShapePart(shapePart))
 			{
-				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, configManager);
+				childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, resourceCache);
 				this.children.add(childPresentation);
-				if (childPresentation instanceof ValidationMarkerPresentation)
-				{
-					this.validationMarker = (ValidationMarkerPresentation)childPresentation;
-				}
 			}
 		}
+	}
+	
+	public void init(final ContainerShapeModel model) {
+		partVisibilityListener = new FilteredListener<PartVisibilityEvent>() {
+			@Override
+			protected void handleTypedEvent(PartVisibilityEvent event) {
+				ShapePart shapePart = (ShapePart)event.part();
+				model.handleVisibilityChange(shapePart);
+			}
+		};
+		part().attach(partVisibilityListener);
 	}
 	
 	protected boolean canAddShapePart(ShapePart shapePart) {
@@ -64,35 +74,24 @@ public class ContainerShapePresentation extends ShapePresentation
 		return this.children;
 	}
 	
-	public ContainerShapePart getContainerShapePart()
+	@Override
+	public ContainerShapePart part()
 	{
-		return (ContainerShapePart)getPart();
+		return (ContainerShapePart) super.part();
 	}
-	
-	public ValidationMarkerSize getValidationMarkerSize()
-	{
-		ValidationMarkerSize size = null;
-		if (this.validationMarker != null)
-		{
-			size = this.validationMarker.getSize();
-		}
-		return size;
-	}
-	
-	public ValidationMarkerPresentation getValidationMarkerPresentation()
-	{
-		return this.validationMarker;
-	}
-	
+		
 	public ShapeLayoutDef getLayout()
 	{
-		return getContainerShapePart().getLayout();
+		return part().getLayout();
 	}
 	
 	@Override
 	public void dispose()
 	{
 		super.dispose();
+		
+		part().detach(partVisibilityListener);
+		
 		for (ShapePresentation shapePresentation : getChildren())
 		{
 			shapePresentation.dispose();
@@ -102,14 +101,14 @@ public class ContainerShapePresentation extends ShapePresentation
 	public void refreshChildren()
 	{
 		List<ShapePresentation> refreshedChildren = new ArrayList<ShapePresentation>();
-		ContainerShapePart containerShapePart = (ContainerShapePart)this.getPart();
+		ContainerShapePart containerShapePart = part();
 		for (ShapePart shapePart : containerShapePart.getChildren())
 		{
 			if (canAddShapePart(shapePart))
 			{
 				ShapePresentation childPresentation = getChildShapePresentation(shapePart);
 				if (childPresentation == null) {
-					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getConfigurationManager());
+					childPresentation = ShapePresentationFactory.createShapePresentation(this, shapePart, getResourceCache());
 				}
 				refreshedChildren.add(childPresentation);
 			}
@@ -119,7 +118,7 @@ public class ContainerShapePresentation extends ShapePresentation
 	
 	private ShapePresentation getChildShapePresentation(ShapePart shapePart) {
 		for (ShapePresentation presentation : getChildren()) {
-			if (presentation.getPart() == shapePart) {
+			if (presentation.part() == shapePart) {
 				return presentation;
 			}
 		}
@@ -154,5 +153,6 @@ public class ContainerShapePresentation extends ShapePresentation
 		}
 		return figureIndex;
 	}
+	
 }
 

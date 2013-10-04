@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.model;
 
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramConnectionPresentation;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -26,14 +27,16 @@ public class DiagramConnectionModel extends DiagramModelBase {
 	public final static String CONNECTION_START_EDITING = "CONNECTION_START_EDITING";
 
 	private DiagramModel parent;
-	private DiagramConnectionPart part;
+	private DiagramConnectionPresentation connPresentation;
 	
 	private DiagramNodeModel sourceNode;
 	private DiagramNodeModel targetNode;
 
-	public DiagramConnectionModel(DiagramModel parent, DiagramConnectionPart part) {
+	public DiagramConnectionModel(DiagramModel parent, DiagramConnectionPresentation connPresentation) {
 		this.parent = parent;
-		this.part = part;
+		this.connPresentation = connPresentation;
+		
+		connPresentation.init(this);
 	}
 	
 	public DiagramModel getDiagramModel() {
@@ -44,8 +47,13 @@ public class DiagramConnectionModel extends DiagramModelBase {
 		return getModelPart();
 	}
 
+	public DiagramConnectionPresentation getPresentation()
+	{
+		return this.connPresentation;
+	}
+	
 	public DiagramConnectionPart getModelPart() {
-		return part;
+		return getPresentation().part();
 	}
 	
 	public DiagramNodeModel getSourceNode() {

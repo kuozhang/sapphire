@@ -15,10 +15,11 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.samples.contacts.SendContactOp;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.swt.SapphireWizard;
+import org.eclipse.sapphire.ui.forms.swt.SapphireWizard;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.ui.swt.SapphireWizard;
 public final class SendContactActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         final Contact contact = (Contact) getModelElement();
         
@@ -43,7 +44,7 @@ public final class SendContactActionHandler extends SapphireActionHandler
                 DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).wizard( "SendContactWizard" )
             );
             
-            final WizardDialog dialog = new WizardDialog( context.getShell(), wizard );
+            final WizardDialog dialog = new WizardDialog( ( (FormComponentPresentation) context ).shell(), wizard );
             
             dialog.open();
         }

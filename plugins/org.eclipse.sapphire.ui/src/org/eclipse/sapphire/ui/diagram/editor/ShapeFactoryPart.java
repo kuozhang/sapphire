@@ -246,6 +246,7 @@ public class ShapeFactoryPart extends ShapePart
     	if (shapePart != null)
     	{
     		shapePart.init(this, modelElement, shapeDef, Collections.<String,String>emptyMap());
+    		shapePart.initialize();
     		shapePart.setActive(true);
             shapePart.attach
             (

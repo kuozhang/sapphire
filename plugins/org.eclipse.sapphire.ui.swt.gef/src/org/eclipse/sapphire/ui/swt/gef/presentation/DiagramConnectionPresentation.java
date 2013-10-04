@@ -1,0 +1,82 @@
+/******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Shenxue Zhou - initial implementation and ongoing maintenance
+ ******************************************************************************/
+
+package org.eclipse.sapphire.ui.swt.gef.presentation;
+
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.swt.widgets.Shell;
+
+/**
+ * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ */
+
+public class DiagramConnectionPresentation extends DiagramPresentation 
+{
+	private Listener connectionListener;
+	
+	public DiagramConnectionPresentation(final DiagramConnectionPart connPart, final DiagramPresentation parent, 
+			final Shell shell, final DiagramConfigurationManager configManager, final DiagramResourceCache resourceCache)
+	{
+		super(connPart, parent, configManager, shell);
+	}
+
+	public void init(final DiagramConnectionModel diagramConnectionModel) {
+		connectionListener = new FilteredListener<DiagramConnectionEvent>() {
+			@Override
+			protected void handleTypedEvent(DiagramConnectionEvent event) {
+		    	switch(event.getConnectionEventType()) {
+			    	case ConnectionUpdate:
+			    		diagramConnectionModel.handleUpdateConnection();
+			    		break;
+			    	case ConnectionAddBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+			    		break;
+			    	case ConnectionRemoveBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+		    		break;
+			    	case ConnectionMoveBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+			    		break;
+			    	case ConnectionResetBendpoint:
+			    		diagramConnectionModel.handleUpdateBendPoints();
+			    		break;
+			    	case ConnectionMoveLabel:
+			    		diagramConnectionModel.handleUpdateConnectionMoveLabel();
+			    		break;
+			    	default:
+			    		break;
+		    	}
+			}
+		};
+		part().attach(connectionListener);
+	}
+
+	@Override
+	public void dispose()
+	{
+		part().detach(connectionListener);
+
+		super.dispose();
+	}
+
+	@Override
+	public DiagramConnectionPart part()
+	{
+		return (DiagramConnectionPart)super.part();
+	}
+
+}

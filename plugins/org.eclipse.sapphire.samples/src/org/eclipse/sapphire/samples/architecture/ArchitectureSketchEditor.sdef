@@ -301,13 +301,12 @@
                 <image>Components.png</image>
                 <section>
                     <content>
-                        <label>Define components.</label>
-                        <spacer></spacer>
                         <actuator>
                             <action-id>Sapphire.Add</action-id>
                             <label>Add a component</label>
                         </actuator>
                     </content>
+                    <description>Define components.</description>
                 </section>
             </node>
         </root-node>

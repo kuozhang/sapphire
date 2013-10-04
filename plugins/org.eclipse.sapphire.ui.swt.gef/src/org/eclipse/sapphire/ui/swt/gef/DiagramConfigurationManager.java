@@ -20,24 +20,17 @@ import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 public class DiagramConfigurationManager
 {
 	private SapphireDiagramEditor diagramEditor;
-	private DiagramRenderingContextCache drcCache;
 	private SapphireConnectionRouter connectionRouter;
 	
 	public DiagramConfigurationManager(SapphireDiagramEditor diagramEditor)
 	{
 		this.diagramEditor = diagramEditor;
-		this.drcCache = new DiagramRenderingContextCache();
 		this.connectionRouter = new SapphireConnectionRouter();
 	}
 	
 	public SapphireDiagramEditor getDiagramEditor()
 	{
 		return this.diagramEditor;
-	}
-	
-	public DiagramRenderingContextCache getDiagramRenderingContextCache()
-	{
-		return this.drcCache;
 	}
 	
 	public SapphireConnectionRouter getConnectionRouter()

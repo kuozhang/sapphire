@@ -101,6 +101,7 @@
     </action>
     <action>
         <id>Sapphire.DoubleTap</id>
+        <label>double tap</label>
         <context>Sapphire.Diagram.Node.Shape.Hidden</context>
     </action>
     <action>
@@ -319,130 +320,130 @@
    
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.AbsoluteFilePathBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
         <id>Sapphire.Browse.File.Absolute</id>
         <description>Opens the native file browse dialog. Activates if the property is a value property, has @AbsolutePath annotation and has @ValidFileSystemResourceType annotation that specifies file type.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.AbsoluteFilePathBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.AbsoluteFilePathBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.AbsoluteFolderPathBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
         <id>Sapphire.Browse.Folder.Absolute</id>
         <description>Opens the native folder browse dialog. Activates if the property is a value property, has @AbsolutePath annotation and has @ValidFileSystemResourceType annotation that specifies folder type.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.AbsoluteFolderPathBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.AbsoluteFolderPathBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.RelativePathBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.RelativePathBrowseActionHandler</impl>
         <id>Sapphire.Browse.Path.Relative</id>
         <description>Opens a browse dialog for a relative path to a file or a folder. Activates if the property is a value property and has a RelativePathService.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RelativePathBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RelativePathBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.PossibleValuesBrowseActionHandler</impl>
         <id>Sapphire.Browse.Possible</id>
         <description>Opens a browse dialog listing possible values for the property. Activates if the property is a value property and has either @PossibleValuesProvider, @PossibleValues or @PossibleValuesFromModel annotation.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.PossibleValuesBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.PossibleValuesBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
         <id>Sapphire.Browse.Color</id>
         <description>Opens a color browse dialog. Activates if the property is a value property of type Color.</description>
-        <condition>org.eclipse.sapphire.ui.swt.internal.ColorBrowseActionHandler$Condition</condition>
-        <impl>org.eclipse.sapphire.ui.swt.internal.ColorBrowseActionHandler</impl>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.ColorBrowseActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.ColorBrowseActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
         <id>Sapphire.Browse.Calendar</id>
         <description>Opens a calendar to allow date selection. Activates if the property is a value property of type Date.</description>
-        <condition>org.eclipse.sapphire.ui.swt.internal.CalendarBrowseActionHandler$Condition</condition>
-        <impl>org.eclipse.sapphire.ui.swt.internal.CalendarBrowseActionHandler</impl>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.CalendarBrowseActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.CalendarBrowseActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Help</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.HelpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpActionHandler</impl>
         <id>Sapphire.Help</id>
         <description>Shows the documentation associated with a given UI part using Eclipse context help view.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.HelpActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RelativePathJumpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RelativePathJumpActionHandler</impl>
         <id>Sapphire.Jump.Path.Relative</id>
         <description>Opens the file specified by a relative path using the associated Eclipse editor. Activates if the property is a value property and has a RelativePathService.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RelativePathJumpActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RelativePathJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.UrlJumpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.UrlJumpActionHandler</impl>
         <id>Sapphire.Jump.URL</id>
         <description>Opens the specified URL using an external web browser. Activates if the property is of type URL.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.UrlJumpActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.UrlJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Restore.Defaults</action>
-        <impl>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RestoreDefaultsActionHandler</impl>
         <id>Sapphire.Restore.Defaults</id>
         <description>Opens a dialog showing all properties in the section with non-default values. The user can select which of those properties to restore to their default state.</description>
-        <condition>org.eclipse.sapphire.ui.swt.renderer.actions.internal.RestoreDefaultsActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RestoreDefaultsActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Outline.CollapseAll</action>
         <id>Sapphire.Outline.CollapseAll</id>
         <description>Collapses all nodes in the content outline.</description>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineCollapseAllActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineCollapseAllActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Delete</action>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeDeleteActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineNodeDeleteActionHandler</impl>
         <id>Sapphire.Outline.Delete</id>
         <description>Deletes the model element associated with a given content outline node. Activates if the UI part is a content outline or a content outline node. All affected nodes must have the same parent and that parent must be a list property.</description>
         <context>Sapphire.EditorPage.Outline</context>
         <context>Sapphire.EditorPage.Outline.Node</context>
-        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeDeleteActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.internal.OutlineNodeDeleteActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Outline.ExpandAll</action>
         <id>Sapphire.Outline.ExpandAll</id>
         <description>Expands all nodes in the content outline.</description>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineExpandAllActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineExpandAllActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Move.Down</action>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeMoveDownActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineNodeMoveDownActionHandler</impl>
         <id>Sapphire.Outline.Move.Down</id>
         <description>Moves the model element one position towards the end of the containing list, swapping places with the following element. Activates if the UI part is a content outline node. The affected node must have a list property parent.</description>
-        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeListMemberActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.internal.OutlineNodeListMemberActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Move.Up</action>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeMoveUpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineNodeMoveUpActionHandler</impl>
         <id>Sapphire.Outline.Move.Up</id>
         <description>Moves the model element one position towards the beginning of the containing list, swapping places with the preceding element. Activates if the UI part is a content outline node. The affected node must have a list property parent.</description>
-        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeListMemberActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.internal.OutlineNodeListMemberActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.ShowInSource</action>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineNodeShowInSourceActionHandler</impl>
         <id>Sapphire.Outline.ShowInSource</id>
         <description>Shows the model element associated with a given content outline node in the corresponding source editor.</description>
         <context>Sapphire.EditorPage.Outline.Node</context>
-        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowInSourceActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.internal.OutlineNodeShowInSourceActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.ShowNextError</action>
         <id>Sapphire.ShowNextError.Outline</id>
         <description>Shows the next validation error.</description>
         <context>Sapphire.EditorPage.Outline.Node</context>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowNextErrorActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineNodeShowNextErrorActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.ShowNextWarning</action>
         <id>Sapphire.ShowNextWarning.Outline</id>
         <description>Shows the next validation warning</description>
         <context>Sapphire.EditorPage.Outline.Node</context>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeShowNextWarningActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineNodeShowNextWarningActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.ShowInSource</action>
@@ -539,10 +540,10 @@
     </action-handler>    
     <action-handler-factory>
         <action>Sapphire.Add</action>
-        <impl>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerFactory</impl>
+        <impl>org.eclipse.sapphire.ui.forms.internal.OutlineNodeAddActionHandlerFactory</impl>
         <description>Creates an add action handler for every possible member element type for all lists whose members are shown as child nodes beneath the content outline node in question.</description>
         <context>Sapphire.EditorPage.Outline.Node</context>
-        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.OutlineNodeAddActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.internal.OutlineNodeAddActionHandlerCondition</condition>
     </action-handler-factory>
     <action-handler-factory>
         <action>Sapphire.Add</action>
@@ -593,8 +594,8 @@
         <id>Sapphire.ProblemsTraversalService</id>
         <context>Sapphire.Part</context>
         <description>Produces a problem-annotated traversal order through the content outline, which can be used to find the next error or warning from any location in the content outline. An implementation of this service is provided with Sapphire. This service is not intended to be implemented by adopters.</description>
-        <implementation>org.eclipse.sapphire.ui.form.editors.masterdetails.ProblemsTraversalService</implementation>
-        <condition>org.eclipse.sapphire.ui.form.editors.masterdetails.internal.ProblemsTraversalServiceCondition</condition>
+        <implementation>org.eclipse.sapphire.ui.forms.ProblemsTraversalService</implementation>
+        <condition>org.eclipse.sapphire.ui.forms.internal.ProblemsTraversalServiceCondition</condition>
     </service>
     <function>
         <name>Part</name>

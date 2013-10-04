@@ -18,12 +18,11 @@ import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.editor.ContainerShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel.ShapeModelFactory;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
-import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation.ShapePresentationFactory;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -34,37 +33,40 @@ public class DiagramNodeModel extends DiagramModelBase {
     public final static String SOURCE_CONNECTIONS = "SOURCE_CONNECTIONS";
 	public final static String TARGET_CONNECTIONS = "TARGET_CONNECTIONS";
 	public final static String NODE_BOUNDS = "NODE_BOUNDS";
-	public final static String SHAPE_UPDATES = "SHAPE_UPDATES";
-	public final static String CHANGE_TEXT = "CHANGE_TEXT";
 	public final static String SHAPE_VISIBILITY_UPDATES = "SHAPE_VISIBILITY_UPDATES";
 	public final static String NODE_START_EDITING = "NODE_START_EDITING";
 	
 	private DiagramModel parent;
-    private DiagramNodePart part;
+    private DiagramNodePresentation nodePresentation;
 	private List<DiagramConnectionModel> sourceConnections = new ArrayList<DiagramConnectionModel>();
 	private List<DiagramConnectionModel> targetConnections = new ArrayList<DiagramConnectionModel>();
 	private ShapePresentation shapePresentation;
 	private ShapeModel shapeModel;
 	
-	public DiagramNodeModel(DiagramModel parent, DiagramNodePart part) 
+	public DiagramNodeModel(DiagramModel parent, DiagramNodePresentation nodePresentation) 
 	{
 		this.parent = parent;
-		this.part = part;
-		ShapePart shapePart = this.part.getShapePart();
-		this.shapePresentation = ShapePresentationFactory.createShapePresentation(null, shapePart, parent.getConfigurationManager());
+		this.nodePresentation = nodePresentation;
+		this.shapePresentation = this.nodePresentation.getShapePresentation();
 		this.shapeModel = ShapeModelFactory.createShapeModel(this, null, this.shapePresentation);
+		this.nodePresentation.init(this);
 	}
 	
 	public DiagramModel getDiagramModel() {
 		return parent;
 	}
 
+	public DiagramNodePresentation getNodePresentation()
+	{
+		return this.nodePresentation;
+	}
+	
 	public SapphirePart getSapphirePart() {
 		return getModelPart();
 	}
 
 	public DiagramNodePart getModelPart() {
-		return part;
+		return this.nodePresentation.part();
 	}
 		
 	public String getLabel() 
@@ -92,47 +94,11 @@ public class DiagramNodeModel extends DiagramModelBase {
 		firePropertyChange(NODE_BOUNDS, null, getModelPart().getNodeBounds());
 	}
 	
-	public void handleUpdateNodeShape(ShapePart shapePart) {
-		firePropertyChange(SHAPE_UPDATES, null, shapePart);
-	}
-
-	public void handleChangeText(TextPart textPart) {
-		firePropertyChange(CHANGE_TEXT, null, textPart);
-	}
-
-	public void handleUpdateShapeVisibility(ShapePart shapePart) {
- 		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
-		if (parentModel.equals(getShapeModel())) {
-			if (getShapeModel() instanceof ContainerShapeModel) {
-				((ContainerShapeModel)getShapeModel()).refreshChildren();
-			}
-			firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
-		} else {
-			ContainerShapeModel containerModel = ShapeModelUtil.getNearestContainerModel(parentModel);
-			if (containerModel != null) {
-				containerModel.handleVisibilityChange(shapePart);
-			}
+	public void handleVisibilityChange(ShapePart shapePart) {
+		if (getShapeModel() instanceof ContainerShapeModel) {
+			((ContainerShapeModel)getShapeModel()).refreshChildren();
 		}
-	}
-
-	public void handleAddShape(ShapePart shapePart) {
-		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
-		if (parentModel instanceof ShapeFactoryModel) {
-			((ShapeFactoryModel)parentModel).handleAddShape(shapePart);
-		}
-	}
-
-	public void handleDeleteShape(ShapePart shapePart) {
-		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), (ShapePart)shapePart.getParentPart());
-		if (parentModel instanceof ShapeFactoryModel) {
-			((ShapeFactoryModel)parentModel).handleDeleteShape(shapePart);
-		}
-	}
-
-	public void handleReorderShapes(ShapeFactoryPart shapeFactory) {
-		ShapeModel parentModel = ShapeModelUtil.getChildShapeModel(getShapeModel(), shapeFactory);
-		assert(parentModel instanceof ShapeFactoryModel);
-		((ShapeFactoryModel)parentModel).handleReorderShapes(shapeFactory);
+		firePropertyChange(SHAPE_VISIBILITY_UPDATES, null, shapePart);
 	}
 
 	public List<DiagramConnectionModel> getSourceConnections() {

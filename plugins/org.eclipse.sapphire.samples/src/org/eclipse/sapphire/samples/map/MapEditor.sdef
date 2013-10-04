@@ -207,10 +207,8 @@
                         <separator>
                             <label>Railway Routes</label>
                         </separator>
-                        <switching-panel>
-                            <list-selection-controller>
-                                <property>Locations</property>
-                            </list-selection-controller>
+                        <detail-section>
+                            <property>Locations</property>
                             <panel>
                                 <key>Location</key>
                                 <content>
@@ -222,7 +220,7 @@
                                     <label>Select a location above to configure additional properties.</label>
                                 </content>
                             </default-panel>
-                        </switching-panel>                        
+                        </detail-section>                        
                     </content>
                 </section>
             </node>

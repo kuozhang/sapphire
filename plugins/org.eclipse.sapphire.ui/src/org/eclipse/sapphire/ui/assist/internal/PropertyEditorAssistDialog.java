@@ -19,9 +19,9 @@ import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
+import org.eclipse.sapphire.ui.forms.swt.presentation.Popup;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.text.SapphireFormText;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.swt.SapphirePopup;
-import org.eclipse.sapphire.ui.swt.renderer.internal.formtext.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -43,7 +43,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 public class PropertyEditorAssistDialog
     
-    extends SapphirePopup
+    extends Popup
 
 {
     private final PropertyEditorAssistContext context;

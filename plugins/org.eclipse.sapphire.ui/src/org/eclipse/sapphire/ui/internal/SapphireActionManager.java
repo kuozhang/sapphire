@@ -101,9 +101,9 @@ public final class SapphireActionManager
             }
         }
         
-        if( this.part.getParentPart() != null )
+        if( this.part.parent() != null )
         {
-            return this.part.getParentPart().getAction( id );
+            return this.part.parent().getAction( id );
         }
         
         return null;

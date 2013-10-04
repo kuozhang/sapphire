@@ -20,9 +20,10 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGallery;
 import org.eclipse.sapphire.samples.gallery.IValuePropertyActionsGalleryEntity;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -40,7 +41,7 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler2 exte
     }
 
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         final IInputValidator inputValidator = new IInputValidator()
         {
@@ -68,7 +69,7 @@ public final class ValuePropertyActionsGalleryReferenceCreateActionHandler2 exte
             }
         };
         
-        final InputDialog dialog = new InputDialog( context.getShell(), "Create", "Create a new entity with the specified name.", "", inputValidator );
+        final InputDialog dialog = new InputDialog( ( (FormComponentPresentation) context ).shell(), "Create", "Create a new entity with the specified name.", "", inputValidator );
         
         if( dialog.open() != Window.CANCEL )
         {

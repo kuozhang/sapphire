@@ -38,7 +38,7 @@ public final class PartParentFunction extends Function
             @Override
             protected Object evaluate()
             {
-                return operand( 0, SapphirePart.class, false ).getParentPart();
+                return operand( 0, SapphirePart.class, false ).parent();
             }
         };
     }

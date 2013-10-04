@@ -14,8 +14,9 @@ package org.eclipse.sapphire.samples.contacts.ui.internal;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ui.SapphireBrowseActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
+import org.eclipse.sapphire.ui.Presentation;
+import org.eclipse.sapphire.ui.forms.BrowseActionHandler;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -31,15 +32,15 @@ import org.eclipse.swt.widgets.Text;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class WebSiteUrlBrowseHandler extends SapphireBrowseActionHandler
+public final class WebSiteUrlBrowseHandler extends BrowseActionHandler
 {
     @Override
-    public String browse( final SapphireRenderingContext context )
+    public String browse( final Presentation context )
     {
         String val = ( (Value<?>) property() ).text( true );
         val = ( val == null ? "" : val );
         
-        final WebSiteUrlDialog dialog = new WebSiteUrlDialog( context.getShell(), val );
+        final WebSiteUrlDialog dialog = new WebSiteUrlDialog( ( (FormComponentPresentation) context ).shell(), val );
         
         if( dialog.open() == Window.OK )
         {

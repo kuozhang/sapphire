@@ -33,7 +33,7 @@ public class SapphireDiagramGridLayer extends GridLayer
 	public SapphireDiagramGridLayer(DiagramModel diagramModel)
 	{
 		this.diagramModel = diagramModel;
-		this.diagramPart = diagramModel.getModelPart();
+		this.diagramPart = diagramModel.getSapphirePart();
 	}
 	
 	@Override

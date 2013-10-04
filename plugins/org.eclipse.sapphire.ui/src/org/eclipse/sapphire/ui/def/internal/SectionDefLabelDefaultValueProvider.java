@@ -17,8 +17,8 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.services.DefaultValueServiceData;
-import org.eclipse.sapphire.ui.def.SectionDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeDef;
+import org.eclipse.sapphire.ui.forms.SectionDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

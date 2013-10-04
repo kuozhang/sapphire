@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.xml.XmlNode;
 import org.eclipse.sapphire.modeling.xml.XmlPath;
 import org.eclipse.sapphire.modeling.xml.XmlValueBindingImpl;
 import org.eclipse.sapphire.ui.def.HtmlContentSourceType;
-import org.eclipse.sapphire.ui.def.HtmlPanelDef;
+import org.eclipse.sapphire.ui.forms.HtmlPanelDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

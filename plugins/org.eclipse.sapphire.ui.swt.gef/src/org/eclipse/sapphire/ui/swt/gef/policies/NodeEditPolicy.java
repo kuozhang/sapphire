@@ -28,7 +28,7 @@ public class NodeEditPolicy extends ComponentEditPolicy {
 		Object child = getHost().getModel();
 		if (child instanceof DiagramNodeModel) {
 			DiagramNodeModel nodeModel = (DiagramNodeModel)child;
-			return new DeleteNodeCommand(nodeModel.getModelPart());
+			return new DeleteNodeCommand(nodeModel.getNodePresentation());
 		}
 		return super.createDeleteCommand(deleteRequest);
 	}

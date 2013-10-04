@@ -12,10 +12,11 @@
 package org.eclipse.sapphire.samples.po;
 
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.swt.SapphireWizard;
+import org.eclipse.sapphire.ui.forms.swt.SapphireWizard;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,13 +25,13 @@ import org.eclipse.sapphire.ui.swt.SapphireWizard;
 public final class PurchaseComputerActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         final PurchaseComputerOp op = PurchaseComputerOp.TYPE.instantiate();
         
         try
         {
-            op.setPurchaseOrder( context.getPart().getLocalModelElement().nearest( PurchaseOrder.class ) );
+            op.setPurchaseOrder( context.part().getLocalModelElement().nearest( PurchaseOrder.class ) );
             
             final SapphireWizard<PurchaseComputerOp> wizard = new SapphireWizard<PurchaseComputerOp>
             ( 
@@ -38,7 +39,7 @@ public final class PurchaseComputerActionHandler extends SapphireActionHandler
                 DefinitionLoader.context( PurchaseComputerOp.class ).sdef( "PurchaseOrderEditor" ).wizard( "PurchaseComputerWizard" )
             );
             
-            final WizardDialog dialog = new WizardDialog( context.getShell(), wizard );
+            final WizardDialog dialog = new WizardDialog( ( (SwtPresentation) context ).shell(), wizard );
             
             dialog.open();
         }

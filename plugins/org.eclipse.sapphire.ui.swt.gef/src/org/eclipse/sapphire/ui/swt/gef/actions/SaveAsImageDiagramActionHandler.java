@@ -24,16 +24,15 @@ import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -54,14 +53,14 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
     }
 
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
-        DiagramRenderingContext diagramContext = (DiagramRenderingContext) context;
-        SapphireDiagramEditor diagramEditor = diagramContext.getDiagramEditor();
+        DiagramPresentation diagramPresentation = (DiagramPresentation)context;
+        SapphireDiagramEditor diagramEditor = diagramPresentation.getConfigurationManager().getDiagramEditor();
 
         if( diagramEditor != null )
         {
-            FileDialog dialog = new FileDialog( context.getShell(), SWT.SAVE );
+            FileDialog dialog = new FileDialog( diagramEditor.getSite().getShell(), SWT.SAVE );
 
             IEditorInput editorInput = diagramEditor.getPart().adapt( IEditorInput.class );
 
@@ -109,7 +108,7 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
 
             Rectangle rectangle = figure.getBounds();
 
-            Image image = new Image( Display.getDefault(), rectangle.width, rectangle.height );
+            Image image = new Image( diagramPresentation.display(), rectangle.width, rectangle.height );
 
             FileOutputStream output = null;
             GC gc = null;

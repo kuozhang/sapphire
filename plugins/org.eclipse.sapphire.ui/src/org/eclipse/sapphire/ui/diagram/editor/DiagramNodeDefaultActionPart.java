@@ -19,7 +19,6 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDefaultActionDef;
 
 /**
@@ -62,12 +61,6 @@ public class DiagramNodeDefaultActionPart extends SapphirePart
         }        
     }
     
-    @Override
-    public void render(SapphireRenderingContext context) 
-    {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public Set<String> getActionContexts()
     {

@@ -11,11 +11,15 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.Color;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.diagram.editor.TextChangeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -23,29 +27,41 @@ import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 
 public class TextPresentation extends ShapePresentation 
 {
-	public TextPresentation(ShapePresentation parent, TextPart textPart, DiagramConfigurationManager configManager)
+	private Listener textChangeListener;
+	
+	public TextPresentation(DiagramPresentation parent, TextPart textPart, DiagramResourceCache resourceCache)
 	{
-		super(parent, textPart, configManager);
+		super(parent, textPart, resourceCache);
+		
+        this.textChangeListener = new FilteredListener<TextChangeEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final TextChangeEvent event )
+            {
+            	refresh();
+            }
+        };
+        part().attach(this.textChangeListener);
 	}
 	
 	public Color getTextColor()
 	{
-		return getTextPart().getTextColor();
+		return part().getTextColor();
 	}
 	
 	public String getContent()
 	{
-		return getTextPart().getContent();
+		return part().getContent();
 	}
 
 	public FontDef getFontDef()
 	{
-		return getTextPart().getFontDef();
+		return part().getFontDef();
 	}
 	
 	public boolean truncatable()
 	{
-		return getTextPart().truncatable();
+		return part().truncatable();
 	}
 	
 	@Override
@@ -55,12 +71,37 @@ public class TextPresentation extends ShapePresentation
 		if (this.getFigure() != null)
 		{
 			TextFigure textFigure = (TextFigure)getFigure();
-			textFigure.setText(getTextPart().getContent());
+			textFigure.setText(part().getContent());
 		}
 	}
 	
-	private TextPart getTextPart()
+	@Override
+	public TextPart part()
 	{
-		return (TextPart)this.getPart();
+		return (TextPart) super.part();
 	}
+	
+	@Override
+    public void render()
+    {
+		IFigure figure = null;
+		if (visible())
+		{
+			figure = new TextFigure(getResourceCache(), this);
+		}
+		setFigure(figure);
+    }   
+	
+	@Override
+	public void dispose()
+	{
+		part().detach(this.textChangeListener);
+	}
+
+	private void refresh() {
+		TextFigure textFigure = (TextFigure)getFigure();
+		textFigure.setText(getContent());
+		// TODO necessary? DiagramNodeEditPart.refreshNodeBounds()
+	}
+	
 }

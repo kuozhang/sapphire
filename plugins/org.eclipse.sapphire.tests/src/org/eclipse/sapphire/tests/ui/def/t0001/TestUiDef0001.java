@@ -17,7 +17,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.def.MasterDetailsEditorPageDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
 import org.junit.Test;
 
 /**

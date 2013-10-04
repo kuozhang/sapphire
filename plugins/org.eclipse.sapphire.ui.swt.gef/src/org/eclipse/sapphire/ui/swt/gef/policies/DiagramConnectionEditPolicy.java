@@ -30,7 +30,7 @@ public class DiagramConnectionEditPolicy extends ComponentEditPolicy
 		if (child instanceof DiagramConnectionModel) 
 		{
 			DiagramConnectionModel connModel = (DiagramConnectionModel)child;
-			return new DeleteConnectionCommand(connModel.getModelPart());
+			return new DeleteConnectionCommand(connModel.getPresentation());
 		}
 		return super.createDeleteCommand(deleteRequest);
 	}

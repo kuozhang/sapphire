@@ -17,17 +17,17 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.samples.contacts.Contact;
-import org.eclipse.sapphire.ui.SapphireJumpActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentNode;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsContentOutline;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
+import org.eclipse.sapphire.ui.Presentation;
+import org.eclipse.sapphire.ui.forms.JumpActionHandler;
+import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodePart;
+import org.eclipse.sapphire.ui.forms.MasterDetailsContentOutline;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
+public final class ContactDetailsJumpHandler extends JumpActionHandler
 {
     @Override
     protected void initDependencies( final List<String> dependencies )
@@ -49,9 +49,9 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
     }
 
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
-        final CalendarEditor editor = context.getPart().nearest( CalendarEditor.class );
+        final CalendarEditor editor = context.part().nearest( CalendarEditor.class );
         jump( editor, getModelElement() );
         return null;
     }
@@ -79,7 +79,7 @@ public final class ContactDetailsJumpHandler extends SapphireJumpActionHandler
             {
                 final MasterDetailsEditorPagePart contactsFormPage = (MasterDetailsEditorPagePart) editor.getEditorPagePart( "Contacts" );
                 final MasterDetailsContentOutline outline = contactsFormPage.outline();
-                final MasterDetailsContentNode contactNode = outline.getRoot().findNode( contact );
+                final MasterDetailsContentNodePart contactNode = outline.getRoot().findNode( contact );
                 
                 if( contactNode != null )
                 {

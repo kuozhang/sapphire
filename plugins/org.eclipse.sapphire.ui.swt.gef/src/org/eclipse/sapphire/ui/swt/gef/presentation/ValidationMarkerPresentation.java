@@ -43,12 +43,11 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerContentEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
-import org.eclipse.sapphire.ui.renderers.swt.SwtRendererUtil;
-import org.eclipse.sapphire.ui.swt.SwtResourceCache;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -93,10 +92,10 @@ public class ValidationMarkerPresentation extends ShapePresentation
 	private final List<PropertyEditorAssistContributor> contributors;
 	private Listener validationListener;
 	
-	public ValidationMarkerPresentation(ShapePresentation parent, ValidationMarkerPart validationMarkerPart, 
-			DiagramConfigurationManager configManager)
+	public ValidationMarkerPresentation(DiagramPresentation parent, ValidationMarkerPart validationMarkerPart, 
+			DiagramResourceCache resourceCache)
 	{
-		super(parent, validationMarkerPart, configManager);
+		super(parent, validationMarkerPart, resourceCache);
 		DiagramNodePart nodePart = validationMarkerPart.nearest(DiagramNodePart.class);
 		this.imageCache = nodePart.getSwtResourceCache();
 		
@@ -168,31 +167,38 @@ public class ValidationMarkerPresentation extends ShapePresentation
             	refresh();
             }
         };
-        getValidationMarkerPart().attach(this.validationListener);
+        part().attach(this.validationListener);
         				
 		refresh();
 	}
 
-	public ValidationMarkerPart getValidationMarkerPart()
+	@Override
+	public ValidationMarkerPart part()
 	{
-		return (ValidationMarkerPart)getPart();
+		return (ValidationMarkerPart) super.part();
 	}
 	
 	public ValidationMarkerSize getSize()
 	{
-		return getValidationMarkerPart().getSize();
+		return part().getSize();
 	}
 	
 	@Override
 	public void dispose()
 	{
-		getValidationMarkerPart().detach(this.validationListener);
+		part().detach(this.validationListener);
 	}
+	
+	@Override
+    public void render()
+    {
+		refresh();
+		setFigure(this.validationMarkerFigure);
+    }
 	
 	private SapphirePart getContainerPart()
 	{
-		
-		return getValidationMarkerPart().getContainerParent();
+		return part().getContainerParent();
 	}
 	
 	private void refresh()
@@ -201,9 +207,9 @@ public class ValidationMarkerPresentation extends ShapePresentation
 		
 		Image image = null;
 		
-		Status status = getValidationMarkerPart().content();
+		Status status = part().content();
 		ValidationMarkerSize size = getSize();
-		if (status.severity() != Status.Severity.OK) 
+		if (part().visible()) 
 		{
 			if (status.severity() == Status.Severity.WARNING) 
 			{
@@ -304,10 +310,9 @@ public class ValidationMarkerPresentation extends ShapePresentation
 		if (this.assistContext == null)
 		{
     		SapphirePart parentPart = getContainerPart();
-    		DiagramRenderingContext context = getConfigurationManager().getDiagramRenderingContextCache().get(parentPart);	            
 			
-	        this.assistContext = new PropertyEditorAssistContext( parentPart, context );
-	        this.problem = getValidationMarkerPart().content();
+	        this.assistContext = new PropertyEditorAssistContext( parentPart, page().getSite().getShell() );
+	        this.problem = part().content();
             for( PropertyEditorAssistContributor c : this.contributors )
             {
                 c.contribute( this.assistContext );

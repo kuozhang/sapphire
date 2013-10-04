@@ -19,9 +19,9 @@ import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.calendar.integrated.CalendarEditor;
 import org.eclipse.sapphire.samples.calendar.integrated.IAttendee;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 
 /**
@@ -70,7 +70,7 @@ public final class ShowContactDetailsActionHandler extends SapphireActionHandler
     }
 
     @Override
-    protected Object run( SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         final ISapphirePart part = getPart();
         final CalendarEditor editor = part.nearest( CalendarEditor.class );

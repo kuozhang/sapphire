@@ -44,6 +44,7 @@ public class ContainerShapeModel extends ShapeModel
         		this.children.add(childModel);
         	}        				
 		}
+		presentation.init(this);
 	}
 		
 	public void refreshChildren()
@@ -67,7 +68,7 @@ public class ContainerShapeModel extends ShapeModel
 	
 	private ShapeModel getChildShapeModel(ShapePresentation shapePresentation) {
 		for (ShapeModel model : getChildren()) {
-			if (model.getShapePresentation().getPart() == shapePresentation.getPart()) {
+			if (model.getShapePresentation().part() == shapePresentation.part()) {
 				return model;
 			}
 		}

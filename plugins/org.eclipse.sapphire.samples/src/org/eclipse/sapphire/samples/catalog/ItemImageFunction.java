@@ -24,8 +24,8 @@ import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.PartFunctionContext;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.MasterDetailsEditorPagePart;
-import org.eclipse.sapphire.ui.form.editors.masterdetails.state.MasterDetailsEditorPageState;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageState;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

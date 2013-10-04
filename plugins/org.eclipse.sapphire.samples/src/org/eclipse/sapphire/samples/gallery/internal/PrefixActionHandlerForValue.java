@@ -17,16 +17,16 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.SapphirePropertyEditorActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.forms.PropertyEditorActionHandler;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PrefixActionHandlerForValue extends SapphirePropertyEditorActionHandler
+public final class PrefixActionHandlerForValue extends PropertyEditorActionHandler
 {
     private String prefix;
     
@@ -71,7 +71,7 @@ public final class PrefixActionHandlerForValue extends SapphirePropertyEditorAct
     }
     
     @Override
-    protected Object run( final SapphireRenderingContext context )
+    protected Object run( final Presentation context )
     {
         final String oldValue = ( (Value<?>) property() ).text();
         final String newValue;

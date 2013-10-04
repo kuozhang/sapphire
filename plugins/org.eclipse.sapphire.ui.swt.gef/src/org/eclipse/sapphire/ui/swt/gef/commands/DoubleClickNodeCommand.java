@@ -13,10 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
-import org.eclipse.sapphire.ui.swt.gef.DiagramRenderingContext;
-import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramNodePresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -24,31 +21,27 @@ import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
 
 public class DoubleClickNodeCommand extends Command
 {
-	private DiagramNodePart nodePart;
-	private IConfigurationManagerHolder configHolder;
+	private DiagramNodePresentation nodePresentation;
 	
-	public DoubleClickNodeCommand(IConfigurationManagerHolder configHolder, DiagramNodePart nodePart)
+	public DoubleClickNodeCommand(DiagramNodePresentation nodePresentation)
 	{
-		this.configHolder = configHolder;
-		this.nodePart = nodePart;
+		this.nodePresentation = nodePresentation;
 	}
 	
 	@Override
 	public boolean canExecute()
 	{
-        SapphireActionHandler handler = (SapphireActionHandler)this.nodePart.getDefaultActionHandler();
+        SapphireActionHandler handler = (SapphireActionHandler)this.nodePresentation.part().getDefaultActionHandler();
         return (handler != null && handler.isEnabled());		
 	}
 	
 	@Override
 	public void execute() 
 	{
-        SapphireActionHandler handler = (SapphireActionHandler)this.nodePart.getDefaultActionHandler();
+        SapphireActionHandler handler = (SapphireActionHandler)this.nodePresentation.part().getDefaultActionHandler();
         if (handler != null && handler.isEnabled())
         {
-        	DiagramConfigurationManager configManager = configHolder.getConfigurationManager();
-        	DiagramRenderingContext context = configManager.getDiagramRenderingContextCache().get(this.nodePart);
-            handler.execute(context);
+            handler.execute(this.nodePresentation);
         }            
 	}
 	

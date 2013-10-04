@@ -11,11 +11,13 @@
 
 package org.eclipse.sapphire.ui.swt.gef.presentation;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.diagram.editor.LinePart;
-import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
+import org.eclipse.sapphire.ui.swt.gef.figures.OrthogonalLineFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -23,34 +25,45 @@ import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 
 public class LineShapePresentation extends ShapePresentation 
 {
-	public LineShapePresentation(ShapePresentation parent, LinePart linePart, DiagramConfigurationManager configManager)
+	public LineShapePresentation(DiagramPresentation parent, LinePart linePart, DiagramResourceCache resourceCache)
 	{
-		super(parent, linePart, configManager);
+		super(parent, linePart, resourceCache);
 	}
 
-	public LinePart getLinePart()
+	@Override
+	public LinePart part()
 	{
-		return (LinePart)getPart();
+		return (LinePart) super.part();
 	}
 	
 	public boolean isHorizontal()
 	{
-		return getLinePart().getOrientation() == Orientation.HORIZONTAL;
+		return part().getOrientation() == Orientation.HORIZONTAL;
 	}
 	
 	public int getWeight()
 	{
-		return getLinePart().getWeight();
+		return part().getWeight();
 	}
 	
 	public Color getColor()
 	{
-		return getLinePart().getColor();
+		return part().getColor();
 	}
 	
 	public LineStyle getStyle()
 	{
-		return getLinePart().getStyle();
+		return part().getStyle();
 	}
 	
+	@Override
+	public void render()
+	{
+		IFigure figure = null;
+		if (visible())
+		{
+			figure = new OrthogonalLineFigure(this, getResourceCache());
+		}
+		setFigure(figure);
+	}
 }

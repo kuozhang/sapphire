@@ -13,8 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramConnectionPresentation;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -24,17 +23,17 @@ public class DeleteConnectionCommand extends Command
 {
     private static final String DELETE_ACTION_ID = "Sapphire.Delete";
 
-    private DiagramConnectionPart connectionPart;
+    private DiagramConnectionPresentation presentation;
     
-	public DeleteConnectionCommand(DiagramConnectionPart part) 
+	public DeleteConnectionCommand(DiagramConnectionPresentation presentation) 
 	{
-		this.connectionPart = part;
+		this.presentation = presentation;
 	}
 	
 	@Override
 	public boolean canExecute() 
 	{
-		SapphireActionHandler deleteActionHandler = this.connectionPart.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
+		SapphireActionHandler deleteActionHandler = this.presentation.part().getAction(DELETE_ACTION_ID).getFirstActiveHandler();
 		return deleteActionHandler.isEnabled();
 	}
 	
@@ -42,8 +41,7 @@ public class DeleteConnectionCommand extends Command
 	@Override
 	public void execute() 
 	{
-        SapphireActionHandler deleteActionHandler = this.connectionPart.getAction(DELETE_ACTION_ID).getFirstActiveHandler();
-        SapphireRenderingContext renderingCtx = new SapphireRenderingContext(this.connectionPart, null);
-        deleteActionHandler.execute(renderingCtx);		
+        SapphireActionHandler deleteActionHandler = this.presentation.part().getAction(DELETE_ACTION_ID).getFirstActiveHandler();
+        deleteActionHandler.execute(this.presentation);		
 	}
 }

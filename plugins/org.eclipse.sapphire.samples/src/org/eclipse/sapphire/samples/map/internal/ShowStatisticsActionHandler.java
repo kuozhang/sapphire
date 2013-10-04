@@ -15,11 +15,12 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.SapphireRenderingContext;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 
 /**
  * Action handler for Sample.Map.ShowStatistics action, which illustrates how
@@ -32,7 +33,7 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 public final class ShowStatisticsActionHandler extends SapphireActionHandler
 {
     @Override
-    protected Object run( final SapphireRenderingContext context ) 
+    protected Object run( final Presentation context ) 
     {
         final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
         
@@ -72,7 +73,7 @@ public final class ShowStatisticsActionHandler extends SapphireActionHandler
         msg.append( "Connections: " ).append( connections ).append( '\n' );
         msg.append( "Bend Points: " ).append( bendpoints );
         
-        MessageDialog.openInformation( context.getShell(), "Statistics", msg.toString() );
+        MessageDialog.openInformation( ( (FormComponentPresentation) context ).shell(), "Statistics", msg.toString() );
         
         return null;
     }

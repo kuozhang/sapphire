@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.def.internal;
 
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.def.SectionDef;
+import org.eclipse.sapphire.ui.forms.SectionDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

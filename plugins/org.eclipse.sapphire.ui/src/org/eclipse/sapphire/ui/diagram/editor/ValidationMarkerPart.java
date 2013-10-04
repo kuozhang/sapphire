@@ -70,10 +70,10 @@ public class ValidationMarkerPart extends ShapePart
 			// or until the diagram node part. The validation marker should indicate validation problems
 			// associated with the corresponding model element.
 			SapphirePart part = this;
-			SapphirePart parentPart = (SapphirePart)getParentPart();
+			SapphirePart parentPart = (SapphirePart)parent();
 			while (!(parentPart instanceof DiagramNodePart || parentPart.getLocalModelElement() != getLocalModelElement())) {
 				part = parentPart;
-				parentPart = (SapphirePart)parentPart.getParentPart();
+				parentPart = (SapphirePart)parentPart.parent();
 			}
 			this.containerParent = part;
 		}

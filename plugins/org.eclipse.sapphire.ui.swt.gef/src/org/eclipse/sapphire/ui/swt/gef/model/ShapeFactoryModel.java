@@ -39,7 +39,7 @@ public class ShapeFactoryModel extends ShapeModel
 		super(nodeModel, parent, presentation);
 		this.shapeFactoryPresentation = presentation;
 		children = new ArrayList<ShapeModel>();
-		if (this.shapeFactoryPresentation.getPart().visible()) 
+		if (this.shapeFactoryPresentation.part().visible()) 
 		{
 			List<ShapePresentation> presentations = this.shapeFactoryPresentation.getChildren();
 			int size = presentations.size();
@@ -55,8 +55,8 @@ public class ShapeFactoryModel extends ShapeModel
 	        		this.children.add(separatorModel);
 	        	}
 			}
-			
 		}
+		presentation.init(this);
 	}
 	
 	private ShapeModel getSeparatorModel(DiagramNodeModel nodeModel, int index) {
@@ -99,7 +99,7 @@ public class ShapeFactoryModel extends ShapeModel
 	{
 		this.shapeFactoryPresentation.refreshChildren();
 		List<ShapeModel> refreshedChildren = new ArrayList<ShapeModel>();
-		if (this.shapeFactoryPresentation.getPart().visible()) 
+		if (this.shapeFactoryPresentation.part().visible()) 
 		{
 			List<ShapePresentation> presentations = this.shapeFactoryPresentation.getChildren();
 			int size = presentations.size();
@@ -127,7 +127,7 @@ public class ShapeFactoryModel extends ShapeModel
 	
 	private ShapeModel getChildShapeModel(ShapePresentation shapePresentation) {
 		for (ShapeModel model : getChildren()) {
-			if (model.getShapePresentation().getPart() == shapePresentation.getPart()) {
+			if (model.getShapePresentation().part() == shapePresentation.part()) {
 				return model;
 			}
 		}

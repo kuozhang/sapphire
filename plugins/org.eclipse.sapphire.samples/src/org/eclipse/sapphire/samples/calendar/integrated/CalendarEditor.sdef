@@ -104,10 +104,8 @@
                                 <separator>
                                     <label>details</label>
                                 </separator>
-                                <switching-panel>
-                                    <list-selection-controller>
-                                        <property>Attendees</property>
-                                    </list-selection-controller>
+                                <detail-section>
+                                    <property>Attendees</property>
                                     <panel>
                                         <key>IAttendee</key>
                                         <content>
@@ -147,7 +145,7 @@
                                             <label>Select an attendee above to view or edit additional parameters.</label>
                                         </content>
                                     </default-panel>
-                                </switching-panel>
+                                </detail-section>
                             </content>
                         </section>
                     </case>
