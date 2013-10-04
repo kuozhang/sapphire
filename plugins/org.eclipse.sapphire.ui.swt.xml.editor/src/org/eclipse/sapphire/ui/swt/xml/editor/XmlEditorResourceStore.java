@@ -275,6 +275,8 @@ public class XmlEditorResourceStore extends XmlResourceStore
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
+    
     public void registerModelElement( final Node xmlNode, final Element element )
     {
         synchronized( this.xmlNodeToModelElementsMap )
@@ -293,12 +295,12 @@ public class XmlEditorResourceStore extends XmlResourceStore
                 }
                 else
                 {
-                    this.xmlNodeToModelElementsMap.put( xmlNode, ListFactory.start().add( object ).add( element ).result() );
+                    this.xmlNodeToModelElementsMap.put( xmlNode, ListFactory.<Element>start().add( (Element) object ).add( element ).result() );
                 }
             }
             else
             {
-                final List<?> list = (List<?>) object;
+                final List<Element> list = (List<Element>) object;
                 
                 for( final Object obj : list )
                 {
@@ -308,7 +310,7 @@ public class XmlEditorResourceStore extends XmlResourceStore
                     }
                 }
                 
-                this.xmlNodeToModelElementsMap.put( xmlNode, ListFactory.start().add( list ).add( element ).result() );
+                this.xmlNodeToModelElementsMap.put( xmlNode, ListFactory.<Element>start().add( list ).add( element ).result() );
             }
         }
     }
