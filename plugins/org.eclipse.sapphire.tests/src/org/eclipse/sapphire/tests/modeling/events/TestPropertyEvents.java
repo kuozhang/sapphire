@@ -124,7 +124,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             
             assertEquals( 2, events.size() );
             assertPropertyContentEvent( events.get( 0 ), element.getValueConstrained() );
-            assertPropertyValidationEvent( events.get( 1 ), element.getValueConstrained(), Status.createOkStatus(), Status.createErrorStatus( "Value constrained must be specified." ) );
+            assertPropertyValidationEvent( events.get( 1 ), element.getValueConstrained(), Status.createOkStatus(), Status.createErrorStatus( "Value constrained must be specified" ) );
             
             events.clear();
 
@@ -133,7 +133,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             
             assertEquals( 2, events.size() );
             assertPropertyContentEvent( events.get( 0 ), element.getValueConstrained() );
-            assertPropertyValidationEvent( events.get( 1 ), element.getValueConstrained(), Status.createErrorStatus( "Value constrained must be specified." ), Status.createOkStatus() );
+            assertPropertyValidationEvent( events.get( 1 ), element.getValueConstrained(), Status.createErrorStatus( "Value constrained must be specified" ), Status.createOkStatus() );
             
             events.clear();
             

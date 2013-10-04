@@ -28,11 +28,11 @@ public interface CreateGalleryOp extends CreateWorkspaceFileOp
 {
     ElementType TYPE = new ElementType( CreateGalleryOp.class );
     
-    // *** FileName ***
+    // *** File ***
     
     @DefaultValue( text = "sapphire-gallery.xml" )
     @PreferDefaultValue
 
-    ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
+    ValueProperty PROP_FILE = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE );
     
 }

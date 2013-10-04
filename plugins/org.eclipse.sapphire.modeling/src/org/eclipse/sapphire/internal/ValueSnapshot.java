@@ -9,32 +9,39 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.services.ServiceCondition;
-import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.services.ValueLabelService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DefaultValueLabelService extends ValueLabelService
+public final class ValueSnapshot
 {
-    @Override
-    public String provide( final String value )
+    private final ValueProperty property;
+    private final String text;
+    
+    public ValueSnapshot( final ValueProperty property, final String text )
     {
-        return value;
+        this.property = property;
+        this.text = text;
     }
-
-    public static final class Condition extends ServiceCondition
+    
+    public ValueProperty property()
     {
-        @Override
-        public boolean applicable( final ServiceContext context )
-        {
-            return ( context.find( ValueProperty.class ) != null );
-        }
+        return this.property;
+    }
+    
+    public String text()
+    {
+        return this.text;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return this.text;
     }
     
 }

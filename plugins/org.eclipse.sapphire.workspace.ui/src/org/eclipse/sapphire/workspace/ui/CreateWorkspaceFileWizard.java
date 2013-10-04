@@ -126,7 +126,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
     @Override
     protected void performPostFinish() 
     {
-        openFileEditor( element().getFileHandle(), editor() );
+        openFileEditor( element().getFile().resolve(), editor() );
     }
     
     protected String editor()

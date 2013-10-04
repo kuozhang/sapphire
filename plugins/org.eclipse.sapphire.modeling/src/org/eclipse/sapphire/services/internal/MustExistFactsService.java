@@ -30,7 +30,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class MustExistFactsService extends FactsService
 {
-    @Text( "Must exist." )
+    @Text( "Must exist" )
     private static LocalizableText statement;
     
     static

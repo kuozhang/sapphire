@@ -29,13 +29,13 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class CountConstraintValidationService extends ValidationService
 {
-    @Text( "At least {1} {0} must be specified." )
+    @Text( "At least {1} {0} must be specified" )
     private static LocalizableText countConstraintTooFew;
     
-    @Text( "At least one {0} must be specified." )
+    @Text( "At least one {0} must be specified" )
     private static LocalizableText countConstraintTooFewAtLeastOne;
     
-    @Text( "Cannot specify more than {1} {0} items." )
+    @Text( "Cannot specify more than {1} {0} items" )
     private static LocalizableText countConstraintTooMany;
     
     static

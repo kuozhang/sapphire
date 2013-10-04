@@ -12,11 +12,11 @@
 package org.eclipse.sapphire.samples.po;
 
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.Transient;
 import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
@@ -31,7 +31,7 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface PurchaseComputerOp extends IExecutableModelElement
+public interface PurchaseComputerOp extends ExecutableElement
 {
     ElementType TYPE = new ElementType( PurchaseComputerOp.class );
     

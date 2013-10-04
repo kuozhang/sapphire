@@ -20,14 +20,11 @@ import org.eclipse.sapphire.services.ReferenceService;
 
 public final class ReferenceValue<R,T> extends Value<R>
 {
-    private final ReferenceService service;
+    private ReferenceService service;
     
-    public ReferenceValue( final Element element,
-                           final ValueProperty property )
+    public ReferenceValue( final Element element, final ValueProperty property )
     {
         super( element, property );
-        
-        this.service = service( ReferenceService.class );
     }
     
     /**
@@ -55,22 +52,24 @@ public final class ReferenceValue<R,T> extends Value<R>
     {
         assertNotDisposed();
         
+        if( this.service == null )
+        {
+            this.service = service( ReferenceService.class );
+        }
+        
         T result = null;
         
         if( this.service != null )
         {
             final String ref = text();
             
-            if( ref != null )
+            try
             {
-                try
-                {
-                    result = (T) this.service.resolve( ref );
-                }
-                catch( Exception e )
-                {
-                    LoggingService.log( e );
-                }
+                result = (T) this.service.resolve( ref );
+            }
+            catch( Exception e )
+            {
+                LoggingService.log( e );
             }
         }
         

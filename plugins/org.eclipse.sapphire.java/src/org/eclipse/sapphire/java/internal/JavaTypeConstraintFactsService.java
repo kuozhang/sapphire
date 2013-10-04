@@ -55,25 +55,25 @@ public final class JavaTypeConstraintFactsService extends FactsService
     @Text( "an enumeration" )
     private static LocalizableText termEnumeration;
     
-    @Text( "Must be {0}." )
+    @Text( "Must be {0}" )
     private static LocalizableText statementKindOne;
     
-    @Text( "Must be {0} or {1}." )
+    @Text( "Must be {0} or {1}" )
     private static LocalizableText statementKindTwo;
     
-    @Text( "Must be {0}, {1} or {2}." )
+    @Text( "Must be {0}, {1} or {2}" )
     private static LocalizableText statementKindThree;
     
-    @Text( "Must be {0}, {1}, {2} or {3}." )
+    @Text( "Must be {0}, {1}, {2} or {3}" )
     private static LocalizableText statementKindFour;
     
-    @Text( "Must {0} {1}." )
+    @Text( "Must {0} {1}" )
     private static LocalizableText statementTypeOne;
     
-    @Text( "Must implement or extend one of: {0}." )
+    @Text( "Must implement or extend one of: {0}" )
     private static LocalizableText statementTypeOneOf;
     
-    @Text( "Must implement or extend all: {0}." )
+    @Text( "Must implement or extend all: {0}" )
     private static LocalizableText statementTypeAll;
     
     @Text( "implement" )

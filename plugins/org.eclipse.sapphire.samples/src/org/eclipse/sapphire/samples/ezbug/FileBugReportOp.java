@@ -13,8 +13,8 @@
 package org.eclipse.sapphire.samples.ezbug;
 
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.ImpliedElementProperty;
-import org.eclipse.sapphire.modeling.IExecutableModelElement;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
@@ -30,7 +30,7 @@ import org.eclipse.sapphire.samples.ezbug.internal.FileBugReportOpMethods;
 
 @XmlBinding( path = "report" )
 
-public interface FileBugReportOp extends IExecutableModelElement
+public interface FileBugReportOp extends ExecutableElement
 {
     ElementType TYPE = new ElementType( FileBugReportOp.class );
     

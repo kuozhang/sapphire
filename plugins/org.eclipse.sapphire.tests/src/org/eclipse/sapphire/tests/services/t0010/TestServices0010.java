@@ -219,14 +219,14 @@ public final class TestServices0010 extends SapphireTestCase
         assertValidationOk( root.getValueSince() );
         
         root.setValueSince( "abc" );
-        assertValidationError( root.getValueSince(), "Version constraint exists, but no version constraint target was found." );
+        assertValidationError( root.getValueSince(), "Version constraint exists, but no version constraint target was found" );
 
         root.setValueSince( null );
         root.setVersion( "1.0" );
         assertValidationOk( root.getValueSince() );
         
         root.setValueSince( "abc" );
-        assertValidationError( root.getValueSince(), "Not compatible with version 1 of Test Versioned System." );
+        assertValidationError( root.getValueSince(), "Not compatible with version 1 of Test Versioned System" );
         
         root.setValueSince( null );
         assertValidationOk( root.getValueSince() );
@@ -241,14 +241,14 @@ public final class TestServices0010 extends SapphireTestCase
         assertValidationOk( root.getChild() );
         
         root.getChild().content( true );
-        assertValidationError( root.getChild(), "Version constraint exists, but no version constraint target was found." );
+        assertValidationError( root.getChild(), "Version constraint exists, but no version constraint target was found" );
 
         root.getChild().clear();
         root.setVersion( "1.0" );
         assertValidationOk( root.getChild() );
         
         root.getChild().content( true );
-        assertValidationError( root.getChild(), "Not compatible with version 1 of Test Versioned System." );
+        assertValidationError( root.getChild(), "Not compatible with version 1 of Test Versioned System" );
         
         root.getChild().clear();
         assertValidationOk( root.getChild() );
@@ -263,14 +263,14 @@ public final class TestServices0010 extends SapphireTestCase
         assertValidationOk( root.getChildren() );
         
         root.getChildren().insert();
-        assertValidationError( root.getChildren(), "Version constraint exists, but no version constraint target was found." );
+        assertValidationError( root.getChildren(), "Version constraint exists, but no version constraint target was found" );
 
         root.getChildren().remove( 0 );
         root.setVersion( "1.0" );
         assertValidationOk( root.getChildren() );
         
         root.getChildren().insert();
-        assertValidationError( root.getChildren(), "Not compatible with version 1 of Test Versioned System." );
+        assertValidationError( root.getChildren(), "Not compatible with version 1 of Test Versioned System" );
         
         root.getChildren().remove( 0 );
         assertValidationOk( root.getChildren() );

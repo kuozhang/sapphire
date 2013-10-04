@@ -9,18 +9,16 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire;
 
-import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.modeling.ProgressMonitor;
+import org.eclipse.sapphire.modeling.Status;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface IExecutableModelElement
-
-    extends Element
-    
+public interface ExecutableElement extends Element
 {
     Status execute( ProgressMonitor monitor );
 }

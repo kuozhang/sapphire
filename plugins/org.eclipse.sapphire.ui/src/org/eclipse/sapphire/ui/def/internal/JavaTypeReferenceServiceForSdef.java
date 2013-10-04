@@ -32,34 +32,37 @@ public final class JavaTypeReferenceServiceForSdef extends JavaTypeReferenceServ
     @Override
     public JavaType resolve( final String name )
     {
-        final ISapphireUiDef sdef = context( ISapphireUiDef.class );
-        final Context context = sdef.adapt( Context.class );
-        
-        if( context != null )
+        if( name != null )
         {
-            Class<?> cl = context.findClass( name );
+            final ISapphireUiDef sdef = context( ISapphireUiDef.class );
+            final Context context = sdef.adapt( Context.class );
             
-            if( cl == null && name.indexOf( '.' ) == -1 )
+            if( context != null )
             {
-                for( IPackageReference packageRef : sdef.getImportedPackages() )
+                Class<?> cl = context.findClass( name );
+                
+                if( cl == null && name.indexOf( '.' ) == -1 )
                 {
-                    final String packageName = packageRef.getName().text();
-                    
-                    if( packageName != null )
+                    for( IPackageReference packageRef : sdef.getImportedPackages() )
                     {
-                        cl = context.findClass( packageName + "." + name );
+                        final String packageName = packageRef.getName().text();
                         
-                        if( cl != null )
+                        if( packageName != null )
                         {
-                            break;
+                            cl = context.findClass( packageName + "." + name );
+                            
+                            if( cl != null )
+                            {
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            
-            if( cl != null )
-            {
-                return new ClassBasedJavaType( cl );
+                
+                if( cl != null )
+                {
+                    return new ClassBasedJavaType( cl );
+                }
             }
         }
         

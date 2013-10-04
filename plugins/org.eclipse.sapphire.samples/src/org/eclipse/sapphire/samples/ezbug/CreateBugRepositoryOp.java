@@ -28,11 +28,11 @@ public interface CreateBugRepositoryOp extends CreateWorkspaceFileOp
 {
     ElementType TYPE = new ElementType( CreateBugRepositoryOp.class );
     
-    // *** FileName ***
+    // *** File ***
     
     @DefaultValue( text = "bugs.xml" )
     @PreferDefaultValue
 
-    ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
+    ValueProperty PROP_FILE = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE );
     
 }

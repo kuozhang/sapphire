@@ -39,8 +39,8 @@ public final class UniqueValueTests extends SapphireTestCase
         assertValidationOk( element );
         
         element.getList().get( 0 ).setValue( "9" );
-        assertValidationError( element.getList().get( 0 ), "Unique value required. Another occurrence of \"9\" was found." );
-        assertValidationError( element.getList().get( 9 ), "Unique value required. Another occurrence of \"9\" was found." );
+        assertValidationError( element.getList().get( 0 ), "Unique value required. Another occurrence of \"9\" was found" );
+        assertValidationError( element.getList().get( 9 ), "Unique value required. Another occurrence of \"9\" was found" );
         assertValidationOk( element.getList().get( 1 ) );
         
         element.getList().get( 0 ).setValue( "0" );

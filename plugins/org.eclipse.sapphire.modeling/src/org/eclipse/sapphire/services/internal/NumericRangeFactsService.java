@@ -16,8 +16,8 @@ import java.util.SortedSet;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.internal.ValueSnapshot;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
-import org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -31,10 +31,10 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class NumericRangeFactsService extends FactsService
 {
-    @Text( "Minimum value is {0}." )
+    @Text( "Minimum value is {0}" )
     private static LocalizableText minValueStatement;
     
-    @Text( "Maximum value is {0}." )
+    @Text( "Maximum value is {0}" )
     private static LocalizableText maxValueStatement;
     
     static
@@ -52,12 +52,12 @@ public final class NumericRangeFactsService extends FactsService
             
         if( min.length() > 0 ) 
         {
-            facts.add( minValueStatement.format( SapphireCommonUtil.normalizeForDisplay( property, min ) ) );
+            facts.add( minValueStatement.format( new ValueSnapshot( property, min ) ) );
         }
         
         if( max.length() > 0 ) 
         {
-            facts.add( maxValueStatement.format( SapphireCommonUtil.normalizeForDisplay( property, max ) ) );
+            facts.add( maxValueStatement.format( new ValueSnapshot( property, max ) ) );
         }
     }
     

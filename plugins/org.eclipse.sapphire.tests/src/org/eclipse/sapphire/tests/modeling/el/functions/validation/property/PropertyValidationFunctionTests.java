@@ -44,7 +44,7 @@ public final class PropertyValidationFunctionTests extends TestExpr
             assertValidationOk( (Status) fr.value() );
             
             element.setIntegerValue( "abc" );
-            assertValidationError( (Status) fr.value(), "\"abc\" is not a valid integer." );
+            assertValidationError( (Status) fr.value(), "\"abc\" is not a valid integer" );
             
             element.setIntegerValue( 4 );
             assertValidationOk( (Status) fr.value() );

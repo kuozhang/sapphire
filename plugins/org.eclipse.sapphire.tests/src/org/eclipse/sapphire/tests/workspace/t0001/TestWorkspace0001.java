@@ -100,7 +100,7 @@ public final class TestWorkspace0001 extends TestWorkspace
         
         element = TestElement.TYPE.instantiate();
         
-        testValidationError( element, property, this.aa.getProjectRelativePath(), "No context project found." );
+        testValidationError( element, property, this.aa.getProjectRelativePath(), "No context project found" );
     }
     
     private void testValidationOk( final TestElement element,
@@ -124,14 +124,14 @@ public final class TestWorkspace0001 extends TestWorkspace
                                               final ValueProperty property,
                                               final IPath path )
     {
-        testValidationError( element, property, path, "File or folder \"" + path.toPortableString() + "\" does not exist." );
+        testValidationError( element, property, path, "File or folder \"" + path.toPortableString() + "\" does not exist" );
     }
 
     private void testValidationErrorNotResolved( final TestElement element,
                                                  final ValueProperty property,
                                                  final IPath path )
     {
-        testValidationError( element, property, path, "Relative path \"" + path.toPortableString() + "\" could not be resolved." );
+        testValidationError( element, property, path, "Relative path \"" + path.toPortableString() + "\" could not be resolved" );
     }
 
 }

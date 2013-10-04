@@ -33,7 +33,7 @@ public interface TestElement extends Element
     
     @Type( base = Integer.class )
     @DefaultValue( text = "0" )
-    @Validation( rule = "${ Min <= Max }", message = "Must not be larger than max." )
+    @Validation( rule = "${ Min <= Max }", message = "Must not be larger than max" )
 
     ValueProperty PROP_MIN = new ValueProperty( TYPE, "Min" );
     
@@ -49,8 +49,8 @@ public interface TestElement extends Element
     @Validations
     (
         {
-            @Validation( rule = "${ Max >= Min }", message = "Must not be smaller than min." ),
-            @Validation( rule = "${ Max <= 100 }", message = "Must be less than or equal to 100.", severity = Status.Severity.WARNING )
+            @Validation( rule = "${ Max >= Min }", message = "Must not be smaller than min" ),
+            @Validation( rule = "${ Max <= 100 }", message = "Must be less than or equal to 100", severity = Status.Severity.WARNING )
         }
     )
     
@@ -65,7 +65,7 @@ public interface TestElement extends Element
     @Validation
     (
         rule = "${ Path == null || Path.StartsWith( '/' ) }",
-        message = "Path \"${ Path }\" must start with a slash."
+        message = "Path \"${ Path }\" must start with a slash"
     )
     
     ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );

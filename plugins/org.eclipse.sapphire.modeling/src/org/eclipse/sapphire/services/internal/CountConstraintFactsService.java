@@ -31,13 +31,13 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class CountConstraintFactsService extends FactsService
 {
-    @Text( "Must have at least one." )
+    @Text( "Must have at least one" )
     private static LocalizableText atLeastOneStatement;
     
-    @Text( "Must have at least {0} items." )
+    @Text( "Must have at least {0} items" )
     private static LocalizableText minCountStatement;
     
-    @Text( "Must have at most {0} items." )
+    @Text( "Must have at most {0} items" )
     private static LocalizableText maxCountStatement;
     
     static

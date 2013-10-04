@@ -11,14 +11,13 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.getDefaultValueLabel;
-
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.internal.ValueSnapshot;
 import org.eclipse.sapphire.modeling.annotations.SensitiveData;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -33,10 +32,10 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class DefaultValueFactsService extends FactsService
 {
-    @Text( "Default value is {0}." )
+    @Text( "Default value is {0}" )
     private static LocalizableText statement;
     
-    @Text( "Has default value." )
+    @Text( "Has default value" )
     private static LocalizableText statementForSensitive;
     
     static
@@ -47,18 +46,18 @@ public final class DefaultValueFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final Value<?> property = context( Value.class );
-        final String defaultValue = getDefaultValueLabel( property );
+        final Value<?> value = context( Value.class );
+        final String def = value.getDefaultText();
         
-        if( defaultValue != null )
+        if( def != null )
         {
-            if( property.definition().hasAnnotation( SensitiveData.class ) )
+            if( value.definition().hasAnnotation( SensitiveData.class ) )
             {
                 facts.add( statementForSensitive.text() );
             }
             else
             {
-                facts.add( statement.format( defaultValue ) );
+                facts.add( statement.format( new ValueSnapshot( value.definition(), def ) ) );
             }
         }
     }

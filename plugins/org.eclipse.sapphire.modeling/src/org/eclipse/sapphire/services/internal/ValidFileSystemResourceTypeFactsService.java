@@ -32,10 +32,10 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class ValidFileSystemResourceTypeFactsService extends FactsService
 {
-    @Text( "Must be a file." )
+    @Text( "Must be a file" )
     private static LocalizableText statementForFile;
     
-    @Text( "Must be a folder." )
+    @Text( "Must be a folder" )
     private static LocalizableText statementForFolder;
     
     static

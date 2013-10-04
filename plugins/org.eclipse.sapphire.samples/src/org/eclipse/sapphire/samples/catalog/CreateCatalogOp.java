@@ -28,11 +28,11 @@ public interface CreateCatalogOp extends CreateWorkspaceFileOp
 {
     ElementType TYPE = new ElementType( CreateCatalogOp.class );
     
-    // *** FileName ***
+    // *** File ***
     
     @DefaultValue( text = "catalog.xml" )
     @PreferDefaultValue
 
-    ValueProperty PROP_FILE_NAME = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE_NAME );
+    ValueProperty PROP_FILE = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FILE );
     
 }

@@ -15,26 +15,32 @@ import static org.eclipse.sapphire.workspace.CreateWorkspaceFileOp.PROBLEM_FILE_
 
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.sapphire.Element;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.platform.PathBridge;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.services.InitialValueService;
 import org.eclipse.sapphire.services.InitialValueServiceData;
+import org.eclipse.sapphire.services.ReferenceService;
+import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.services.ValidationService;
+import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 
 /**
@@ -43,19 +49,22 @@ import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 
 public final class CreateWorkspaceFileOpServices
 {
-    @Text( "Project \"{0}\" does not exist or is not accessible." )
+    @Text( "Folder must be specified" )
+    private static LocalizableText folderMustBeSpecified;
+
+    @Text( "Project \"{0}\" does not exist or is not accessible" )
     private static LocalizableText projectDoesNotExist;
     
-    @Text( "File \"{0}\" already exists." )
+    @Text( "File \"{0}\" already exists" )
     private static LocalizableText fileExists;
     
-    @Text( "File extension should be \"{0}\"." )
+    @Text( "File extension should be \"{0}\"" )
     private static LocalizableText invalidFileExtensionOne;
     
-    @Text( "File extension should be \"{0}\" or \"{1}\"." )
+    @Text( "File extension should be \"{0}\" or \"{1}\"" )
     private static LocalizableText invalidFileExtensionTwo;
     
-    @Text( "File extension should be one of \"{0}\"." )
+    @Text( "File extension should be one of \"{0}\"" )
     private static LocalizableText invalidFileExtensionMultiple;
 
     static
@@ -65,22 +74,184 @@ public final class CreateWorkspaceFileOpServices
 
     public CreateWorkspaceFileOpServices() {}
     
+    public static final class RootReferenceService extends ReferenceService
+    {
+        @Override
+        public Object resolve( final String reference )
+        {
+            final IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
+            
+            if( reference == null )
+            {
+                return wsroot;
+            }
+            else
+            {
+                final Path root = new Path( reference );
+                
+                if( root.segmentCount() == 1 )
+                {
+                    return wsroot.getProject( root.segment( 0 ) );
+                }
+                else
+                {
+                    return wsroot.getFolder( PathBridge.create( root ) );
+                }
+            }
+        }
+    }
+    
+    public static final class FolderReferenceService extends ReferenceService
+    {
+        @Override
+        protected void init()
+        {
+            super.init();
+         
+            context( CreateWorkspaceFileOp.class ).getRoot().attach
+            (
+                new FilteredListener<PropertyContentEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final PropertyContentEvent event )
+                    {
+                        broadcast();
+                    }
+                }
+            );
+        }
+
+        @Override
+        public Object resolve( final String reference )
+        {
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+            final IContainer root = op.getRoot().resolve();
+            
+            if( reference == null )
+            {
+                return root;
+            }
+            else
+            {
+                final IPath path = new org.eclipse.core.runtime.Path( reference );
+                
+                if( root instanceof IWorkspaceRoot && path.segmentCount() == 1 )
+                {
+                    return ( (IWorkspaceRoot) root ).getProject( path.segment( 0 ) );
+                }
+                else
+                {
+                    return root.getFolder( path );
+                }
+            }
+        }
+    }
+
+    public static final class FolderRelativePathService extends RelativePathService
+    {
+        @Override
+        public List<Path> roots()
+        {
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+            final IContainer root = op.getRoot().resolve();
+            
+            if( root == null )
+            {
+                return ListFactory.empty();
+            }
+            else
+            {
+                return ListFactory.singleton( new Path( root.getLocation().toString() ) );
+            }
+        }
+        
+        @Override
+        public Path convertToRelative( final Path path )
+        {
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+            final IContainer root = op.getRoot().resolve();
+            
+            if( root instanceof IWorkspaceRoot )
+            {
+                for( final IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects() )
+                {
+                    final Path location = new Path( project.getLocation().toPortableString() );
+                    
+                    if( location.isPrefixOf( path ) )
+                    {
+                        return new Path( project.getName() ).append( path.makeRelativeTo( location ) );
+                    }
+                }
+            }
+            else
+            {
+                super.convertToRelative( path );
+            }
+            
+            return null;
+        }
+
+        @Override
+        public Path convertToAbsolute( final Path path )
+        {
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+            final IContainer root = op.getRoot().resolve();
+            
+            if( root instanceof IWorkspaceRoot )
+            {
+                if( path.segmentCount() > 0 )
+                {
+                    final IProject project = ( (IWorkspaceRoot) root ).getProject( path.segment( 0 ) );
+                    return new Path( project.getLocation().toString() ).append( path.removeFirstSegments( 1 ) );
+                }
+            }
+            else
+            {
+                super.convertToAbsolute( path );
+            }
+            
+            return null;
+        }
+    }
+    
     public static final class FolderValidationService extends ValidationService
     {
         @Override
+        protected void initValidationService()
+        {
+            context( CreateWorkspaceFileOp.class ).getRoot().attach
+            (
+                new FilteredListener<PropertyContentEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( final PropertyContentEvent event )
+                    {
+                        broadcast();
+                    }
+                }
+            );
+        }
+
+        @Override
         protected Status compute()
         {
-            final Value<Path> target = context( Element.class ).property( context( ValueProperty.class ) );
-            final Path path = target.content();
+            final ReferenceValue<Path,IContainer> value = context( ReferenceValue.of( Path.class, IContainer.class ) );
+            final CreateWorkspaceFileOp op = value.nearest( CreateWorkspaceFileOp.class );
             
-            if( path != null && path.segmentCount() > 0 )
+            if( value.empty() && op.getRoot().empty() )
             {
-                final String projectName = path.segment( 0 );
-                final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( projectName );
+                return Status.createErrorStatus( folderMustBeSpecified.text() );
+            }
+            
+            final IContainer folder = context( ReferenceValue.of( Path.class, IContainer.class ) ).resolve();
+            
+            if( folder != null )
+            {
+                final IProject project = folder.getProject();
                 
-                if( resource == null || ! ( resource instanceof IProject && resource.isAccessible() ) )
+                if( project != null && ! project.isAccessible() )
                 {
-                    final String msg = projectDoesNotExist.format( projectName );
+                    final String msg = projectDoesNotExist.format( project.getName() );
                     return Status.createErrorStatus( msg );
                 }
             }
@@ -122,7 +293,46 @@ public final class CreateWorkspaceFileOpServices
         }
     }
     
-    public static final class FileNameValidationService extends ValidationService
+    public static final class FileReferenceService extends ReferenceService
+    {
+        @Override
+        protected void init()
+        {
+            super.init();
+            
+            final Listener listener = new FilteredListener<PropertyContentEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    broadcast();
+                }
+            };
+            
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+            
+            op.getRoot().attach( listener );
+            op.getFolder().attach( listener );
+        }
+
+        @Override
+        public Object resolve( final String reference )
+        {
+            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
+            final IContainer folder = op.getFolder().resolve();
+            
+            if( reference == null || folder == null || folder instanceof IWorkspaceRoot )
+            {
+                return null;
+            }
+            else
+            {
+                return folder.getFile(  new org.eclipse.core.runtime.Path( reference ) );
+            }
+        }
+    }
+
+    public static final class FileValidationService extends ValidationService
     {
         @Override
         protected void initValidationService()
@@ -228,7 +438,7 @@ public final class CreateWorkspaceFileOpServices
                     }
                 }
                 
-                final IFile fileHandle = op.getFileHandle();
+                final IFile fileHandle = op.getFile().resolve();
                 
                 if( fileHandle != null && fileHandle.exists() && op.getOverwriteExistingFile().content() == false )
                 {

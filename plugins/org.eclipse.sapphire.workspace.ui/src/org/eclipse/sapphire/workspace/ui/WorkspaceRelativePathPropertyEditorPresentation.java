@@ -9,15 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.presentation;
+package org.eclipse.sapphire.workspace.ui;
 
 import static org.eclipse.sapphire.ui.forms.PropertyEditorPart.DATA_BINDING;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -29,17 +29,22 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.annotations.FileSystemResourceType;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
-import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentationFactory;
 import org.eclipse.sapphire.ui.forms.swt.presentation.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
 import org.eclipse.sapphire.ui.forms.swt.presentation.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.presentation.TextFieldPropertyEditorPresentation;
+import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -54,20 +59,20 @@ import org.eclipse.ui.part.DrillDownComposite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EclipseWorkspacePathPropertyEditorPresentation extends TextFieldPropertyEditorPresentation
+public final class WorkspaceRelativePathPropertyEditorPresentation extends TextFieldPropertyEditorPresentation
 {
-    public EclipseWorkspacePathPropertyEditorPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+    public WorkspaceRelativePathPropertyEditorPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
     {
         super( part, parent, composite );
     }
 
     @Override
-    @SuppressWarnings( "unchecked" ) // TreeViewer is parameterized since Eclipse 4.4 
     
     protected void createContents( final Composite parent )
     {
         final PropertyEditorPart part = part();
         final Value<?> value = (Value<?>) part.property();
+        final Element element = value.element();
         
         final Text textField = (Text) super.createContents( parent, true );
 
@@ -165,7 +170,18 @@ public final class EclipseWorkspacePathPropertyEditorPresentation extends TextFi
             }
         );
         
-        treeViewer.setInput( ResourcesPlugin.getWorkspace() );
+        final IContainer root;
+        
+        if( element instanceof CreateWorkspaceFileOp )
+        {
+            root = ( (CreateWorkspaceFileOp) element ).getRoot().resolve();
+        }
+        else
+        {
+            root = ResourcesPlugin.getWorkspace().getRoot();
+        }
+        
+        treeViewer.setInput( root );
         
         this.decorator.addEditorControl( drillDown );
         this.decorator.addEditorControl( tree );
@@ -174,8 +190,6 @@ public final class EclipseWorkspacePathPropertyEditorPresentation extends TextFi
         
         if( val != null )
         {
-            final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-            
             IPath path = new Path( val );
             IResource resource = root.findMember( val );
             
@@ -199,18 +213,23 @@ public final class EclipseWorkspacePathPropertyEditorPresentation extends TextFi
             {
                 public void selectionChanged( final SelectionChangedEvent event )
                 {
+                    final IResource resource;
                     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-                    String path = MiscUtil.EMPTY_STRING;
                     
-                    if( selection != null && ! selection.isEmpty() )
+                    if( selection == null || selection.isEmpty() )
                     {
-                        final IResource resource = (IResource) selection.getFirstElement();
-                        path = resource.getFullPath().toPortableString();
-                        
-                        if( path.startsWith( "/" ) && path.length() > 1 )
-                        {
-                            path = path.substring( 1 );
-                        }
+                        resource = (IResource) treeViewer.getInput();
+                    }
+                    else
+                    {
+                        resource = (IResource) selection.getFirstElement();
+                    }
+                    
+                    String path = resource.getFullPath().makeRelativeTo( root.getFullPath() ).toString();
+                    
+                    if( path.startsWith( "/" ) && path.length() > 1 )
+                    {
+                        path = path.substring( 1 );
                     }
                     
                     textField.setText( path );
@@ -240,7 +259,7 @@ public final class EclipseWorkspacePathPropertyEditorPresentation extends TextFi
         @Override
         public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
         {
-            return new EclipseWorkspacePathPropertyEditorPresentation( part, parent, composite );
+            return new WorkspaceRelativePathPropertyEditorPresentation( part, parent, composite );
         }
     }
     

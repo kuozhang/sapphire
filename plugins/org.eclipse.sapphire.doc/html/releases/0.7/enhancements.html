@@ -106,12 +106,14 @@
     <li><a href="#Forms-ColorBrowsing">Color Browsing</a></li>
     <li><a href="#Forms-ConditionalWizardPages">Conditional Wizard Pages</a></li>
     <li><a href="#Forms-NestedPropertiesInListPropertyEditor">Nested Properties in List Property Editor</a></li>
+    <li><a href="#Forms-RadioButtonImages">Radio Buttons with Images</a></li>
   </ol>
   <li><a href="#Miscellaneous">Miscellaneous</a></li>
   <ol type="A">
     <li><a href="#Miscellaneous-JavaIdentifier">JavaIdentifier</a></li>
     <li><a href="#Miscellaneous-ImageData">ImageData</a></li>
     <li><a href="#Miscellaneous-ModernizedPopups">Modernized Popups</a></li>
+    <li><a href="#Miscellaneous-CreateWorkspaceFileOp">CreateWorkspaceFileOp</a></li>
   </ol>
 </ol>
 
@@ -1599,6 +1601,41 @@ ElementList&lt;Employee> getEmployees();</code></pre>
 &lt;/Employee></code></pre>
 
 
+<h2><a name="Forms-RadioButtonImages">Radio Buttons with Images</a></h2>
+
+<p>The radio buttons property editor presentation now uses value images, when available.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">enum FileType
+{
+    @Label( standard = "Java" )</font>
+    @Image( path = "JavaFile.png" )
+    
+    <font color="#888888">JAVA,
+    
+    @Label( standard = "XML" )</font>
+    @Image( path = "XmlFile.png" )
+    
+    <font color="#888888">XML,
+    
+    @Label( standard = "text" )</font>
+    @Image( path = "TextFile.png" )
+    
+    <font color="#888888">TEXT
+}
+
+@Type( base = FileType.class )
+
+ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
+
+Value&lt;FileType> getType();
+void setType( String value );
+void setType( FileType value );</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/RadioButtonImages.png"/></p>
+
+
 <h2><a name="Miscellaneous"><a name="Miscellaneous-JavaIdentifier">JavaIdentifier</a></a></h2>
 
 <p>The JavaIdentifier class can be used to represent a legal Java identifier, such as the name of a variable,
@@ -1636,6 +1673,49 @@ void setFieldName(</font> JavaIdentifier <font color="#888888">value );</font></
 <p>The presentation of popups has been refreshed to have less pronounced rounding of the corners.</p>
 
 <p style="margin-left: 20px;"><img src="images/ModernizedPopups.png"/></p>
+
+
+<h2><a name="Miscellaneous-CreateWorkspaceFileOp">CreateWorkspaceFileOp</a></h2>
+
+<p>CreateWorkspaceFileOp now supports customizable root folder. This restricts where files can be located and helps
+to focus the corresponding UI. Further, the Folder and File properties now are reference values resolving to their
+corresponding IResource.</p>
+
+<pre class="source-code"><code><font color="#888888">CreateWorkspaceFileOp
+{</font>
+    // *** Root ***
+    
+    @Type( base = Path.class )
+    @Reference( target = IContainer.class )
+    
+    ValueProperty PROP_ROOT = new ValueProperty( TYPE, "Root" );
+    
+    ReferenceValue&lt;Path,IContainer> getRoot();
+    void setRoot( String value );
+    void setRoot( Path value );
+    
+    <font color="#888888">// *** Folder ***
+    
+    @Type( base = Path.class )</font>
+    @Reference( target = IContainer.class )
+    
+    <font color="#888888">ValueProperty PROP_FOLDER = new ValueProperty( TYPE, "Folder" );</font>
+    
+    ReferenceValue&lt;Path,IContainer> <font color="#888888">getFolder();
+    void setFolder( String value );
+    void setFolder( Path value );
+    
+    // *** File ***
+    
+    @Type( base = FileName.class )</font>
+    @Reference( target = IFile.class )
+    
+    <font color="#888888">ValueProperty PROP_FILE = new ValueProperty( TYPE, "File" );</font>
+    
+    ReferenceValue&lt;FileName,IFile> <font color="#888888">getFile();
+    void setFile( String value );
+    void setFile( FileName value );
+}</font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2013 Oracle<br/>

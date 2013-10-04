@@ -36,13 +36,13 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
             element.setMin( 30 );
             element.setMax( 20 );
             
-            assertValidationError( element.getMin(), "Must not be larger than max." );
-            assertValidationError( element.getMax(), "Must not be smaller than min." );
+            assertValidationError( element.getMin(), "Must not be larger than max" );
+            assertValidationError( element.getMax(), "Must not be smaller than min" );
             
             element.setMax( 200 );
             
             assertValidationOk( element.getMin() );
-            assertValidationWarning( element.getMax(), "Must be less than or equal to 100." );
+            assertValidationWarning( element.getMax(), "Must be less than or equal to 100" );
             
             element.setMax( 50 );
             
@@ -67,7 +67,7 @@ public final class DeclarativeValidationServiceTests extends SapphireTestCase
             
             element.setPath( "abc" );
             
-            assertValidationError( element.getPath(), "Path \"abc\" must start with a slash." );
+            assertValidationError( element.getPath(), "Path \"abc\" must start with a slash" );
             
             element.setPath( "/abc" );
             

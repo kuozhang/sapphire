@@ -30,7 +30,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class NoDuplicatesFactsService extends FactsService
 {
-    @Text( "Must be unique." )
+    @Text( "Must be unique" )
     private static LocalizableText statement;
     
     static

@@ -30,7 +30,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class AbsolutePathFactsService extends FactsService
 {
-    @Text( "Must be an absolute path." )
+    @Text( "Must be an absolute path" )
     private static LocalizableText statement;
     
     static

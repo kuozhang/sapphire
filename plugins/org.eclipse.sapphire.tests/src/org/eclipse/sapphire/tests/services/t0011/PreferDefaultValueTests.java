@@ -32,7 +32,7 @@ public final class PreferDefaultValueTests extends SapphireTestCase
         assertValidationOk( element.getValue() );
         
         element.setValue( "abc" );
-        assertValidationWarning( element.getValue(), "Value should be \"123\"." );
+        assertValidationWarning( element.getValue(), "Value should be \"123\"" );
         
         element.setValue( null );
         assertValidationOk( element.getValue() );
@@ -46,7 +46,7 @@ public final class PreferDefaultValueTests extends SapphireTestCase
         
         assertEquals
         (
-            set( "Default value is \"123\".", "Recommended value is \"123\"." ),
+            set( "Default value is \"123\"", "Recommended value is \"123\"" ),
             element.property( TestElement.PROP_VALUE ).service( FactsAggregationService.class ).facts()
         );        
     }

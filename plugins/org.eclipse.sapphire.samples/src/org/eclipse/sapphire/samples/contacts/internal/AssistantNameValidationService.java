@@ -21,7 +21,7 @@ import org.eclipse.sapphire.modeling.Status;
 
 public final class AssistantNameValidationService extends ConnectionNameValidationService
 {
-    @Text( "Cannot be your own assistant." )
+    @Text( "Cannot be your own assistant" )
     private static LocalizableText cannotBeYourOwnAssistant;
     
     static

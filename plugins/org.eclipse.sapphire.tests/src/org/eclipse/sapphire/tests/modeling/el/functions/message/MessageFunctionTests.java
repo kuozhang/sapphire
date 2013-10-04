@@ -45,7 +45,7 @@ public final class MessageFunctionTests extends TestExpr
             assertEquals( "ok", fr.value() );
             
             element.setIntegerValue( "abc" );
-            assertEquals( "\"abc\" is not a valid integer.", fr.value() );
+            assertEquals( "\"abc\" is not a valid integer", fr.value() );
             
             element.setIntegerValue( 4 );
             assertEquals( "ok", fr.value() );

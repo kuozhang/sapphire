@@ -30,28 +30,28 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 
 public abstract class PathValidationService extends ValidationService
 {
-    @Text( "Folder \"{0}\" does not exist." )
+    @Text( "Folder \"{0}\" does not exist" )
     protected static LocalizableText folderMustExist;
     
-    @Text( "File \"{0}\" does not exist.")
+    @Text( "File \"{0}\" does not exist")
     protected static LocalizableText fileMustExist;
     
-    @Text( "File or folder \"{0}\" does not exist." )
+    @Text( "File or folder \"{0}\" does not exist" )
     protected static LocalizableText resourceMustExistMessage;
     
-    @Text( "Resource at location \"{0}\" is not a file." )
+    @Text( "Resource at location \"{0}\" is not a file" )
     protected static LocalizableText pathIsNotFile;
     
-    @Text( "Resource at location \"{0}\" is not a folder." )
+    @Text( "Resource at location \"{0}\" is not a folder" )
     protected static LocalizableText pathIsNotFolder;
     
-    @Text( "File \"{0}\" has an invalid extension. Only \"{1}\" extension is allowed." )
+    @Text( "File \"{0}\" has an invalid extension. Only \"{1}\" extension is allowed" )
     protected static LocalizableText invalidFileExtensionOne;
     
-    @Text( "File \"{0}\" has an invalid extension. Only extensions \"{1}\" and \"{2}\" are allowed." )
+    @Text( "File \"{0}\" has an invalid extension. Only extensions \"{1}\" and \"{2}\" are allowed" )
     protected static LocalizableText invalidFileExtensionTwo;
     
-    @Text( "File \"{0}\" has an invalid extension. Only extensions from \"{1}\" list are allowed." )
+    @Text( "File \"{0}\" has an invalid extension. Only extensions from \"{1}\" list are allowed" )
     protected static LocalizableText invalidFileExtensionMultiple;
     
     static

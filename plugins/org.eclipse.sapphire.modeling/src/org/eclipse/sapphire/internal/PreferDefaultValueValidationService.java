@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.internal;
 
-import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.getDefaultValueLabel;
-
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
@@ -34,7 +32,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class PreferDefaultValueValidationService extends ValidationService
 {
-    @Text( "{0} should be {1}." )
+    @Text( "{0} should be {1}" )
     private static LocalizableText message;
     
     static
@@ -67,11 +65,12 @@ public final class PreferDefaultValueValidationService extends ValidationService
         if( ! value.empty() )
         {
             final String text = value.text();
-            final String def = getDefaultValueLabel( value );
+            final String def = value.getDefaultText();
             
             if( def != null && ! def.equals( text ) )
             {
-                final String msg = message.format( value.definition().getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ), def );
+                final ValueProperty p = value.definition();
+                final String msg = message.format( p.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false ), new ValueSnapshot( p, def ) );
                 return Status.createWarningStatus( msg );
             }
         }

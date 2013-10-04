@@ -11,8 +11,6 @@
 
 package org.eclipse.sapphire.internal;
 
-import static org.eclipse.sapphire.modeling.util.internal.SapphireCommonUtil.getDefaultValueLabel;
-
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.LocalizableText;
@@ -33,7 +31,7 @@ import org.eclipse.sapphire.services.ServiceContext;
 
 public final class PreferDefaultValueFactsService extends FactsService
 {
-    @Text( "Recommended value is {0}." )
+    @Text( "Recommended value is {0}" )
     private static LocalizableText fact;
     
     static
@@ -44,12 +42,12 @@ public final class PreferDefaultValueFactsService extends FactsService
     @Override
     protected void facts( final SortedSet<String> facts )
     {
-        final Value<?> property = context( Value.class );
-        final String defaultValue = getDefaultValueLabel( property );
+        final Value<?> value = context( Value.class );
+        final String def = value.getDefaultText();
         
-        if( defaultValue != null )
+        if( def != null )
         {
-            facts.add( fact.format( defaultValue ) );
+            facts.add( fact.format( new ValueSnapshot( value.definition(), def ) ) );
         }
     }
     
