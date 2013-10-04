@@ -21,7 +21,6 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.diagram.actions.DiagramNodeAddActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.swt.gef.parts.IConfigurationManagerHolder;
 import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
 
 /**
@@ -33,12 +32,9 @@ public class CreateNodeCommand extends Command
 	private DiagramPresentation diagramPresentation;
 	private DiagramNodeTemplate nodeTemplate;
 	private Point location;
-	IConfigurationManagerHolder configHolder;
 
-	public CreateNodeCommand(DiagramPresentation diagramPresentation, IConfigurationManagerHolder configHolder,
-			DiagramNodeTemplate nodeTemplate, Point location) {
+	public CreateNodeCommand(DiagramPresentation diagramPresentation, DiagramNodeTemplate nodeTemplate, Point location) {
 		this.diagramPresentation = diagramPresentation;
-		this.configHolder = configHolder;
 		this.nodeTemplate = nodeTemplate;
 		this.location = location;
 	}

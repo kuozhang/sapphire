@@ -105,7 +105,7 @@ public class DiagramXYLayoutEditPolicy extends XYLayoutEditPolicy
 		if (request.getNewObjectType() == DiagramNodeTemplate.class) {
 			DiagramNodeTemplate nodeTemplate = (DiagramNodeTemplate)request.getNewObject();
 			if (nodeTemplate.getDiagramEditorPart() == this.presentation.part()) {
-				cmd = new CreateNodeCommand(this.presentation, host, nodeTemplate, pt);	
+				cmd = new CreateNodeCommand(this.presentation, nodeTemplate, pt);	
 			}			
 		}
 		else if (request.getNewObjectType() == ISelection.class) {
