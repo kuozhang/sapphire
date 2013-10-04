@@ -111,7 +111,13 @@ public final class SplitFormPresentation extends FormComponentPresentation
             for( final SplitFormSectionPresentation child : this.children )
             {
                 final Point size = child.control().getSize();
-                child.part().weight( orientation == Orientation.HORIZONTAL ? size.x : size.y );
+                final int weight = ( orientation == Orientation.HORIZONTAL ? size.x : size.y );
+                
+                if( weight != 0 )
+                {
+                    child.part().weight( orientation == Orientation.HORIZONTAL ? size.x : size.y );
+                }
+                
                 child.dispose();
             }
             
