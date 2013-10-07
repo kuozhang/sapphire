@@ -288,7 +288,12 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                     // If an editable pop-up list was presenting the default value and user clears it, there is
                     // no change in the model, but we need to restore the display of the default value in the UI.
                     
-                    updateComboSelectionOp.run();
+                    // Note that the pop-up list may have been disposed due to the above model change.
+                    
+                    if( ! combo.isDisposed() )
+                    {
+                        updateComboSelectionOp.run();
+                    }
                 }
             }
         );
