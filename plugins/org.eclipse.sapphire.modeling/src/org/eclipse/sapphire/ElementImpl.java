@@ -708,9 +708,9 @@ public abstract class ElementImpl implements Element
                 this.elementServiceContext = new ElementInstanceServiceContext( this );
                 this.elementServiceContext.coordinate( this.listeners );
             }
+            
+            return this.elementServiceContext.services( type );
         }
-        
-        return this.elementServiceContext.services( type );
     }
     
     public final Status validation()

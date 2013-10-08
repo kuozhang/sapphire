@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.tests;
 
 import org.eclipse.sapphire.tests.binding.list.LayeredListPropertyBindingTests;
+import org.eclipse.sapphire.tests.concurrency.ConcurrencyTests;
 import org.eclipse.sapphire.tests.conversion.ConversionTestSuite;
 import org.eclipse.sapphire.tests.index.IndexTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
@@ -43,7 +44,8 @@ import org.junit.runners.Suite.SuiteClasses;
         WorkspaceTestSuite.class,
         ServicesTestSuite.class,
         UniqueValueTests.class,
-        IndexTests.class
+        IndexTests.class,
+        ConcurrencyTests.class
     }
 )
 

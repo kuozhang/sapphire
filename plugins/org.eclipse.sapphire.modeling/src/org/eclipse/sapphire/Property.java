@@ -465,9 +465,9 @@ public abstract class Property implements Observable
             {
                 this.services = new PropertyInstanceServiceContext( this, ( (ElementImpl) element() ).listeners() );
             }
+            
+            return this.services.services( type );
         }
-        
-        return this.services.services( type );
     }
     
     /**
