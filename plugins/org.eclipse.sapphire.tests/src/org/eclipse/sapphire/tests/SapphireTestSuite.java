@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.sapphire.tests.concurrency.ConcurrencyTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.misc.TestMisc;
 import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
@@ -47,6 +48,7 @@ public final class SapphireTestSuite extends TestCase
         suite.addTest( WorkspaceTestSuite.suite() );
         suite.addTest( ServicesTestSuite.suite() );
         suite.addTest( UniqueValueTests.suite() );
+        suite.addTest( ConcurrencyTests.suite() );
         
         return suite;
     }

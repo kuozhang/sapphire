@@ -893,9 +893,9 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 this.elementServiceContext = new ElementInstanceServiceContext( this );
                 this.elementServiceContext.coordinate( this.listeners );
             }
+            
+            return this.elementServiceContext.services( serviceType );
         }
-        
-        return this.elementServiceContext.services( serviceType );
     }
 
     public final <S extends Service> S service( final ModelProperty property,
@@ -975,11 +975,9 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
             throw new IllegalArgumentException();
         }
         
-        PropertyInstanceServiceContext context;
-        
         synchronized( root() )
         {
-            context = this.propertyServiceContexts.get( prop );
+            PropertyInstanceServiceContext context = this.propertyServiceContexts.get( prop );
             
             if( context == null )
             {
@@ -987,9 +985,9 @@ public abstract class ModelElement extends ModelParticle implements IModelElemen
                 context.coordinate( this.listeners );
                 this.propertyServiceContexts.put( prop, context );
             }
+            
+            return context.services( serviceType );
         }
-        
-        return context.services( serviceType );
     }
 
     public final boolean empty( final ModelProperty property )
