@@ -82,6 +82,7 @@ public final class SapphireKeySequence
     private static final String SYMBOL_SHIFT = "SHIFT";
     private static final String SYMBOL_ALT = "ALT";
     private static final String SYMBOL_CONTROL = "CONTROL";
+    private static final String SYMBOL_ENTER = "ENTER";
     private static final String SYMBOL_DEL = "DEL";
     private static final String SYMBOL_ARROW_UP = "ARROW_UP";
     private static final String SYMBOL_ARROW_DOWN = "ARROW_DOWN";
@@ -124,6 +125,15 @@ public final class SapphireKeySequence
                 }
                 
                 modifiers.add( Modifier.CONTROL );
+            }
+            else if( segment.equalsIgnoreCase( SYMBOL_ENTER ) )
+            {
+                if( keyCode != -1 )
+                {
+                    throw new IllegalArgumentException();
+                }
+                
+                keyCode = '\r';
             }
             else if( segment.equalsIgnoreCase( SYMBOL_DEL ) )
             {
