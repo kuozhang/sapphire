@@ -23,7 +23,7 @@ import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdva
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glspacing;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.runOnDisplayThread;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.runOnDisplayThread;
 
 import java.util.List;
 

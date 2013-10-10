@@ -10,7 +10,7 @@
  *    Ling Hao - [329102] excess scroll space in editor sections
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.presentation.internal;
+package org.eclipse.sapphire.ui.forms.swt.presentation;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.ColumnSortComparator;
 import org.eclipse.sapphire.ui.forms.swt.presentation.internal.text.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;

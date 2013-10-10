@@ -20,7 +20,7 @@ import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdhi
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.reflowOnResize;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.reflowOnResize;
 
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;

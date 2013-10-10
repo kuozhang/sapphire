@@ -15,8 +15,8 @@ package org.eclipse.sapphire.ui.forms.swt.presentation;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.makeTableSortable;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.suppressDashedTableEntryBorder;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.makeTableSortable;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.suppressDashedTableEntryBorder;
 
 import java.util.ArrayList;
 import java.util.Collection;

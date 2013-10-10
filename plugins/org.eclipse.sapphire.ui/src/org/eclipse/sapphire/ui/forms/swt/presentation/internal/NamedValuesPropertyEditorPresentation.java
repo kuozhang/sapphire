@@ -20,7 +20,7 @@ import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdvi
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glspacing;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.changeRadioButtonSelection;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.changeRadioButtonSelection;
 
 import java.util.ArrayList;
 import java.util.List;

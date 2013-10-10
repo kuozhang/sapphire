@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.forms;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.runOnDisplayThread;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.runOnDisplayThread;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
 
 import java.util.ArrayList;

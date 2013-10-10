@@ -17,9 +17,9 @@ import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.changeRadioButtonSelection;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.reflowOnResize;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.setEnabledOnChildren;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.changeRadioButtonSelection;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.reflowOnResize;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.setEnabledOnChildren;
 
 import java.util.ArrayList;
 import java.util.Collections;

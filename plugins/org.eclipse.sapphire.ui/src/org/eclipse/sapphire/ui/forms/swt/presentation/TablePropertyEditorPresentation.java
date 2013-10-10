@@ -27,7 +27,7 @@ import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdvf
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glspacing;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.suppressDashedTableEntryBorder;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.suppressDashedTableEntryBorder;
 import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdentity;
 

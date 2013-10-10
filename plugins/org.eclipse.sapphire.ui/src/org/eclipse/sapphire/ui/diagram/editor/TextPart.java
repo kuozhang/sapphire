@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.runOnDisplayThread;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.runOnDisplayThread;
 
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.Element;

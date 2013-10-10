@@ -22,8 +22,8 @@ import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdvf
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glspacing;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.reflowOnResize;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.internal.SwtUtil.runOnDisplayThread;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.reflowOnResize;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.runOnDisplayThread;
 
 import java.util.ArrayList;
 import java.util.HashSet;
