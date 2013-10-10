@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.presentation.internal;
+package org.eclipse.sapphire.ui.forms.swt.presentation;
 
 import java.util.Collection;
 
@@ -20,7 +20,6 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;

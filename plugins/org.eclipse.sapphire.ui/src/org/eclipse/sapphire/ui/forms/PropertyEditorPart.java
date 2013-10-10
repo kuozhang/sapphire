@@ -55,6 +55,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.forms.swt.presentation.CheckBoxListPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentationFactory;
@@ -62,7 +63,6 @@ import org.eclipse.sapphire.ui.forms.swt.presentation.SlushBucketPropertyEditorP
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.TablePropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.TextFieldPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.CheckBoxListPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.internal.CheckBoxPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.internal.NamedValuesPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.internal.PopUpListFieldPropertyEditorPresentation;

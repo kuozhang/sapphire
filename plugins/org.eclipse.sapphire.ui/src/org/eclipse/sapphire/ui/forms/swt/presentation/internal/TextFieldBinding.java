@@ -17,6 +17,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
+import org.eclipse.sapphire.ui.forms.swt.presentation.AbstractBinding;
 import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;

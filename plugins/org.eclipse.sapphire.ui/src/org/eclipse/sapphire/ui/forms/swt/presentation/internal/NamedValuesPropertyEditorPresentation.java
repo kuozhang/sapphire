@@ -36,6 +36,7 @@ import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.swt.presentation.AbstractBinding;
 import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentationFactory;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;

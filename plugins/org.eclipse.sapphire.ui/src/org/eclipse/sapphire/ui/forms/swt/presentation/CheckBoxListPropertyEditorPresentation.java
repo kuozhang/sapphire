@@ -10,7 +10,7 @@
  *    Ling Hao - [404482] CheckBoxListPropertyEditorRenderer needs a listener
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.presentation.internal;
+package org.eclipse.sapphire.ui.forms.swt.presentation;
 
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
@@ -75,10 +75,7 @@ import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.ListPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentationFactory;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.presentation.internal.ColumnSortComparator;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.SetFactory;
