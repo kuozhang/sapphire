@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.eclipse.sapphire.ui.swt.gef;singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: bundle
-Export-Package: org.eclipse.sapphire.ui.swt.gef
+Export-Package: org.eclipse.sapphire.ui.swt.gef,
+ org.eclipse.sapphire.ui.swt.gef.presentation
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
