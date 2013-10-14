@@ -100,24 +100,22 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
     @Override
     public JavaType resolve( final String name )
     {
-        if( name.trim().length() == 0 || name.startsWith( "." ) || name.endsWith( "." ) )
+        if( name != null && name.trim().length() > 0 && ! name.startsWith( "." ) && ! name.endsWith( "." ) )
         {
-            return null;
-        }
-        
-        try
-        {
-            final String n = name.replace( '$', '.' );
-            final IType type = this.project.findType( n );
-            
-            if( type != null && type.exists() && ! type.isAnonymous() )
+            try
             {
-                return new JdtJavaType( type );
+                final String n = name.replace( '$', '.' );
+                final IType type = this.project.findType( n );
+                
+                if( type != null && type.exists() && ! type.isAnonymous() )
+                {
+                    return new JdtJavaType( type );
+                }
             }
-        }
-        catch( JavaModelException e )
-        {
-            LoggingService.log( e );
+            catch( JavaModelException e )
+            {
+                LoggingService.log( e );
+            }
         }
         
         return null;
