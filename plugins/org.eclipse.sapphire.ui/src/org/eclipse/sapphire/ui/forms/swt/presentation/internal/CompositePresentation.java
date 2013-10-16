@@ -111,7 +111,7 @@ public class CompositePresentation extends FormComponentPresentation
             // ScrolledComposite does not seem to inherit background color like other controls, so
             // we need to set it explicitly.
             
-            this.scrolledComposite.setBackground( resources().color( part().getBackgroundColor() ) );
+            this.scrolledComposite.setBackground( composite.getBackground() );
             this.scrolledComposite.setBackgroundMode( SWT.INHERIT_DEFAULT );
         }
         
