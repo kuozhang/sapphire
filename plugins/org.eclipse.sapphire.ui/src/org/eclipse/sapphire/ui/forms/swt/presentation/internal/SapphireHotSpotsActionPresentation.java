@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2013 Oracle
+ * Copyright (c) 2013 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [419551] ClassCastException in SapphireHotSpotsActionPresentation
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.forms.swt.presentation.internal;
@@ -16,9 +17,9 @@ import java.util.Map;
 
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Menu;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public abstract class SapphireHotSpotsActionPresentation extends SapphireActionPresentation
@@ -70,8 +72,8 @@ public abstract class SapphireHotSpotsActionPresentation extends SapphireActionP
             this.popupMenu = null;
         }
         
-        this.popupMenu = new Menu( ( (FormComponentPresentation) getManager().context() ).shell(), SWT.POP_UP );
         
+        this.popupMenu = new Menu( ( (SwtPresentation) getManager().context() ).shell(), SWT.POP_UP );
         for( SapphireActionHandler handler : action.getActiveHandlers() )
         {
             renderMenuItem( this.popupMenu, handler );
