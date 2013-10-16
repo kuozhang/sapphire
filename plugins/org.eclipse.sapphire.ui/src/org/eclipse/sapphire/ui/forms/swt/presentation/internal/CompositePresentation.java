@@ -29,6 +29,7 @@ import org.eclipse.sapphire.ui.forms.CompositeDef;
 import org.eclipse.sapphire.ui.forms.CompositePart;
 import org.eclipse.sapphire.ui.forms.ContainerPart.VisibleChildrenEvent;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
+import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodePart;
 import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
 import org.eclipse.sapphire.util.ListFactory;
@@ -67,7 +68,7 @@ public class CompositePresentation extends FormComponentPresentation
         final CompositePart part = part();
         final CompositeDef def = part.definition();
         
-        final boolean indent = def.getIndent().content();
+        final boolean indent = ( def.getIndent().content() && ! ( part.parent() instanceof MasterDetailsContentNodePart ) );
         
         if( indent )
         {
