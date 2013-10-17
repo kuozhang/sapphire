@@ -846,6 +846,7 @@
             <section>
                 <content>
                     <include>PartId</include>
+                    <property-editor>VisibleWhen</property-editor>
                     <property-editor>BackgroundColor</property-editor>
                     <property-editor>Orientation</property-editor>
                     <property-editor>
