@@ -1022,7 +1022,14 @@
             <image>${ Image() }</image>
             <section>
                 <content>
-                    <property-editor>ScaleVertically</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
+                    <property-editor>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                        <property>ScaleVertically</property>
+                    </property-editor>
                 </content>
             </section>
             <node-factory>
