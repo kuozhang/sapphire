@@ -100,16 +100,16 @@ public class IdUtil
                 {
                     DiagramNodePart nodePart = nodeParts.get(i);
                     String instanceId2 = nodePart.getInstanceId();
-                    if (instanceId != null && instanceId2 != null && instanceId.equals(instanceId2))
+                    if (instanceId != null && instanceId2 != null)
                     {
-                    	if (nodeIndex == -1 || (i == nodeIndex))
+                    	if (instanceId.equalsIgnoreCase(instanceId2))
                     	{
                     		return nodePart;
                     	}
                     }
-                    else if (nodeIndex == i)
+                    else if (nodeIndex == -1 || (i == nodeIndex))
                     {
-                        return nodePart;
+                    	return nodePart;
                     }
                 }
             }

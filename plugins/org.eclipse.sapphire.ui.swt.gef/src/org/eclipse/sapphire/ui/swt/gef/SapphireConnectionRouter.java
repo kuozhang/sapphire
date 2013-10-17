@@ -19,6 +19,7 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Ray;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
@@ -110,9 +111,20 @@ public class SapphireConnectionRouter
 		this.connectionIndices.clear();
 	}
 	
-	private Point getNodeLocation(DiagramNodeModel node) {
+	private Point getNodeLocation(DiagramNodeModel node) 
+	{
 		Bounds bounds = node.getNodeBounds();
-		return new Point(bounds.getX() + (bounds.getWidth()/2), bounds.getY() + (bounds.getHeight()/2));
+		if (node.getShapePresentation().getFigure() != null)
+		{
+			Rectangle rect = node.getShapePresentation().getFigure().getBounds();
+			int x = rect.x != -1 ? rect.x : bounds.getX();
+			int y = rect.y != -1 ? rect.y : bounds.getY();
+			return new Point(x + rect.width / 2, y + rect.height / 2);
+		}
+		else
+		{					
+			return new Point(bounds.getX() + bounds.getWidth() /2, bounds.getY() + bounds.getWidth() / 2);
+		}
 	}
 	
 	public Point route(DiagramConnectionModel conn) 

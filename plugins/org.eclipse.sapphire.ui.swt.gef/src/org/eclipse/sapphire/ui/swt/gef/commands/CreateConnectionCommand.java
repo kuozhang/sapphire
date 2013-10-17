@@ -68,7 +68,7 @@ public class CreateConnectionCommand extends Command {
 	 */
 	public boolean canExecute() {
 		// disallow source -> source connections
-		if (target == null || source.equals(target)) {
+		if (target == null /*|| source.equals(target)*/) {
 			return false;
 		}
 		DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(this.source);
