@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.forms.swt;
 
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.Element;
@@ -28,10 +28,6 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.FormEditorPageDef;
 import org.eclipse.sapphire.ui.forms.FormEditorPagePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpSystem;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireToolBarManagerActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IManagedForm;

@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.ui.forms;
 
 import org.eclipse.sapphire.modeling.el.FunctionResult;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.TextPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.TextPresentation;
 import org.eclipse.swt.widgets.Composite;
 
 /**

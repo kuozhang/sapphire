@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.forms;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.runOnDisplayThread;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.runOnDisplayThread;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
 
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SectionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.SectionPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.MapFactory;
 import org.eclipse.swt.widgets.Composite;

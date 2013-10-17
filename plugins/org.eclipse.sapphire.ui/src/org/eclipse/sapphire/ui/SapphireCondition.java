@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.modeling.LoggingService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -38,7 +38,7 @@ public abstract class SapphireCondition
         }
         catch( Exception e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
         
         return null;
@@ -79,7 +79,7 @@ public abstract class SapphireCondition
         }
         catch( Exception e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
             return;
         }
         

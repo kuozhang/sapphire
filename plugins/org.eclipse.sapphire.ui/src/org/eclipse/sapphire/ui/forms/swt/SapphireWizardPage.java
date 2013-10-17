@@ -12,9 +12,9 @@
 
 package org.eclipse.sapphire.ui.forms.swt;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.toImageDescriptor;
 
 import org.eclipse.help.IContext;
 import org.eclipse.jface.wizard.IWizardContainer;
@@ -31,8 +31,7 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentation;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.forms.WizardPagePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.CompositePresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpSystem;
+import org.eclipse.sapphire.ui.forms.swt.internal.CompositePresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;

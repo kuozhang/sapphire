@@ -320,73 +320,73 @@
    
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFilePathBrowseActionHandler</impl>
         <id>Sapphire.Browse.File.Absolute</id>
         <description>Opens the native file browse dialog. Activates if the property is a value property, has @AbsolutePath annotation and has @ValidFileSystemResourceType annotation that specifies file type.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.AbsoluteFilePathBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.AbsoluteFilePathBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFolderPathBrowseActionHandler</impl>
         <id>Sapphire.Browse.Folder.Absolute</id>
         <description>Opens the native folder browse dialog. Activates if the property is a value property, has @AbsolutePath annotation and has @ValidFileSystemResourceType annotation that specifies folder type.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.AbsoluteFolderPathBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.AbsoluteFolderPathBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.RelativePathBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.RelativePathBrowseActionHandler</impl>
         <id>Sapphire.Browse.Path.Relative</id>
         <description>Opens a browse dialog for a relative path to a file or a folder. Activates if the property is a value property and has a RelativePathService.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RelativePathBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.RelativePathBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.PossibleValuesBrowseActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.internal.PossibleValuesBrowseActionHandler</impl>
         <id>Sapphire.Browse.Possible</id>
         <description>Opens a browse dialog listing possible values for the property. Activates if the property is a value property and has either @PossibleValuesProvider, @PossibleValues or @PossibleValuesFromModel annotation.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.PossibleValuesBrowseActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.PossibleValuesBrowseActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
         <id>Sapphire.Browse.Color</id>
         <description>Opens a color browse dialog. Activates if the property is a value property of type Color.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.ColorBrowseActionHandler$Condition</condition>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.ColorBrowseActionHandler</impl>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.ColorBrowseActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.ui.forms.swt.internal.ColorBrowseActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Browse</action>
         <id>Sapphire.Browse.Calendar</id>
         <description>Opens a calendar to allow date selection. Activates if the property is a value property of type Date.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.CalendarBrowseActionHandler$Condition</condition>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.CalendarBrowseActionHandler</impl>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.CalendarBrowseActionHandler$Condition</condition>
+        <impl>org.eclipse.sapphire.ui.forms.swt.internal.CalendarBrowseActionHandler</impl>
     </action-handler>
     <action-handler>
         <action>Sapphire.Help</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.internal.HelpActionHandler</impl>
         <id>Sapphire.Help</id>
         <description>Shows the documentation associated with a given UI part using Eclipse context help view.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.HelpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RelativePathJumpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.internal.RelativePathJumpActionHandler</impl>
         <id>Sapphire.Jump.Path.Relative</id>
         <description>Opens the file specified by a relative path using the associated Eclipse editor. Activates if the property is a value property and has a RelativePathService.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RelativePathJumpActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.RelativePathJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.UrlJumpActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.internal.UrlJumpActionHandler</impl>
         <id>Sapphire.Jump.URL</id>
         <description>Opens the specified URL using an external web browser. Activates if the property is of type URL.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.UrlJumpActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.UrlJumpActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Restore.Defaults</action>
-        <impl>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RestoreDefaultsActionHandler</impl>
+        <impl>org.eclipse.sapphire.ui.forms.swt.internal.RestoreDefaultsActionHandler</impl>
         <id>Sapphire.Restore.Defaults</id>
         <description>Opens a dialog showing all properties in the section with non-default values. The user can select which of those properties to restore to their default state.</description>
-        <condition>org.eclipse.sapphire.ui.forms.swt.presentation.internal.RestoreDefaultsActionHandlerCondition</condition>
+        <condition>org.eclipse.sapphire.ui.forms.swt.internal.RestoreDefaultsActionHandlerCondition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Outline.CollapseAll</action>

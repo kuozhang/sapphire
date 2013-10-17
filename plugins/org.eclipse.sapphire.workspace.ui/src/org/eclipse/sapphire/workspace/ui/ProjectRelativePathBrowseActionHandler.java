@@ -21,7 +21,7 @@ import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.forms.swt.presentation.RelativePathBrowseActionHandler;
+import org.eclipse.sapphire.ui.forms.swt.RelativePathBrowseActionHandler;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

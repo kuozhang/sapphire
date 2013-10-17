@@ -15,8 +15,8 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SplitFormPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.SplitFormPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Composite;
 

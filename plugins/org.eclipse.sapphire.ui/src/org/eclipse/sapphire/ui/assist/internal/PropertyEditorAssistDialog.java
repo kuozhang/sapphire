@@ -16,12 +16,12 @@ import java.util.Map;
 
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
-import org.eclipse.sapphire.ui.forms.swt.presentation.Popup;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.text.SapphireFormText;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.Popup;
+import org.eclipse.sapphire.ui.forms.swt.internal.text.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -158,7 +158,7 @@ public class PropertyEditorAssistDialog
                                 
                                 if( editFailedException == null )
                                 {
-                                    SapphireUiFrameworkPlugin.log( e );
+                                    LoggingService.log( e );
                                 }
                             }
                             finally

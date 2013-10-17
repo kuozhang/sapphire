@@ -26,6 +26,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
@@ -43,9 +44,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerContentEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.swt.SWT;
@@ -111,7 +111,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
         final Listener contributorListener = new Listener()
@@ -140,7 +140,7 @@ public class ValidationMarkerPresentation extends ShapePresentation
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             contributor.attach( contributorListener );

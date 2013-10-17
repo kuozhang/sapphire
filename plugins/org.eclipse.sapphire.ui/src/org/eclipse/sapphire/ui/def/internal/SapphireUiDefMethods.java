@@ -18,12 +18,13 @@ import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -53,7 +54,7 @@ public final class SapphireUiDefMethods
                     if( expectedType != null && ! expectedType.isAssignableFrom( def.getClass() ) )
                     {
                         final String msg = doesNotImplement.format( id, expectedType.getName() );
-                        SapphireUiFrameworkPlugin.logError( msg );
+                        LoggingService.log( Status.createErrorStatus( msg ) );
                         
                         return null;
                     }

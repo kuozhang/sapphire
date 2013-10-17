@@ -19,9 +19,9 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.TabGroupPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.TabGroupPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Composite;
 

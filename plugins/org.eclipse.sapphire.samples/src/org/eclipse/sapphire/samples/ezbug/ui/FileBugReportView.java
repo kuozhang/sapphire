@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.samples.ezbug.ui;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.samples.ezbug.FileBugReportOp;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;

@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.swt.widgets.Shell;
 

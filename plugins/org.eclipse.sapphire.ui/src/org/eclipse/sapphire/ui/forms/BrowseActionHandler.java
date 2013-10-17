@@ -15,8 +15,8 @@ import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.Presentation;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -59,7 +59,7 @@ public abstract class BrowseActionHandler extends PropertyEditorActionHandler
                 
                 if( editFailedException == null )
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }

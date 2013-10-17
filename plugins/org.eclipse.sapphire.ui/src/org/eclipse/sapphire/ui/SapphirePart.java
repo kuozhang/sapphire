@@ -15,8 +15,6 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin.logError;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +42,7 @@ import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
@@ -99,10 +98,9 @@ import org.eclipse.sapphire.ui.forms.WithImpliedPart;
 import org.eclipse.sapphire.ui.forms.WithPart;
 import org.eclipse.sapphire.ui.forms.WizardPageDef;
 import org.eclipse.sapphire.ui.forms.WizardPagePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
+import org.eclipse.sapphire.ui.forms.swt.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -186,7 +184,7 @@ public abstract class SapphirePart implements ISapphirePart
                 catch( Exception e )
                 {
                     final String msg = failedToInstantiate.format( listenerClass.name() );
-                    logError( msg, e );
+                    LoggingService.log( Status.createErrorStatus( msg, e ) );
                 }
                 
                 if( listener != null )
@@ -198,7 +196,7 @@ public abstract class SapphirePart implements ISapphirePart
                     else
                     {
                         final String msg = doesNotExtend.format( listenerClass.name() );
-                        logError( msg );
+                        LoggingService.log( Status.createErrorStatus( msg ) );
                     }
                 }
             }
@@ -1142,7 +1140,7 @@ public abstract class SapphirePart implements ISapphirePart
                 }
                 catch( Exception e )
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }

@@ -16,7 +16,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.forms.BrowseActionHandler;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;

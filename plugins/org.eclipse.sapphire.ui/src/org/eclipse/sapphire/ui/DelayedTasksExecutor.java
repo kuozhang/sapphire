@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.widgets.Display;
 
@@ -212,7 +212,7 @@ public final class DelayedTasksExecutor
                                     }
                                     catch( Exception e )
                                     {
-                                        SapphireUiFrameworkPlugin.log( e );
+                                        LoggingService.log( e );
                                     }
                                 }
                             }

@@ -15,8 +15,8 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gd;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
 import java.net.URI;
 import java.util.Collections;
@@ -40,21 +40,21 @@ import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
+import org.eclipse.sapphire.ui.forms.swt.EditorPagePresentation;
 import org.eclipse.sapphire.ui.forms.swt.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.forms.swt.SapphireEditorFormPage;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.EditorPagePresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphirePropertySheetPage;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.text.SapphireFormText;
+import org.eclipse.sapphire.ui.forms.swt.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.internal.SapphirePropertySheetPage;
+import org.eclipse.sapphire.ui.forms.swt.internal.text.SapphireFormText;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -326,7 +326,7 @@ public abstract class SapphireEditor
         }
         catch( BackingStoreException e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
         
         return lastActivePage;
@@ -346,7 +346,7 @@ public abstract class SapphireEditor
         }
         catch( BackingStoreException e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
     }
 
@@ -465,7 +465,7 @@ public abstract class SapphireEditor
             }
             catch( PartInitException e ) 
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
                 
             if( this.model == null )
@@ -491,7 +491,7 @@ public abstract class SapphireEditor
                 }
                 catch( PartInitException e ) 
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
                 
                 setActivePage( getLastActivePage() );
@@ -587,7 +587,7 @@ public abstract class SapphireEditor
         }
         catch( ResourceStoreException e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
     }
 

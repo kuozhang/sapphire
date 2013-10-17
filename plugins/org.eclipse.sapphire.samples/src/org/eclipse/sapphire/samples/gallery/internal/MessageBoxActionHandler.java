@@ -16,7 +16,7 @@ import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

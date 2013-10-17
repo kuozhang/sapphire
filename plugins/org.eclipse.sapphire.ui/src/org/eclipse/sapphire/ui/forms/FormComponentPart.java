@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui.forms;
 
 import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.widgets.Composite;
 
 /**

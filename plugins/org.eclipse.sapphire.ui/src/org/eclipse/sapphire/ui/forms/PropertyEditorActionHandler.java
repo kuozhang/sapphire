@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.forms;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.runOnDisplayThread;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.runOnDisplayThread;
 
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Element;

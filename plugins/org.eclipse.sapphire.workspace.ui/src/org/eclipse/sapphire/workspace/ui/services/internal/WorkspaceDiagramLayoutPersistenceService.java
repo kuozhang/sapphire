@@ -17,6 +17,7 @@ import java.io.File;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.modeling.FileResourceStore;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -29,7 +30,6 @@ import org.eclipse.sapphire.ui.diagram.def.LayoutPersistence;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -57,7 +57,7 @@ public class WorkspaceDiagramLayoutPersistenceService extends
 		}
 		catch (Exception e)
 		{
-			SapphireUiFrameworkPlugin.log( e );
+		    LoggingService.log( e );
 		}
 		return layoutModel;
 	}

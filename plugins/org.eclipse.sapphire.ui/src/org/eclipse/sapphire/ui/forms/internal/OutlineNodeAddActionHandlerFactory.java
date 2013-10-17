@@ -31,6 +31,7 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.Presentation;
@@ -42,7 +43,6 @@ import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodePart;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentOutline;
 import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -261,7 +261,7 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                 
                 if( editFailedException == null )
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
 

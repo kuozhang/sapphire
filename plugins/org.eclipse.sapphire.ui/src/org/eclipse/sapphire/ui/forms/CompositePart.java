@@ -16,9 +16,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.CompositePresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.CompositePresentation;
 import org.eclipse.swt.widgets.Composite;
 
 /**

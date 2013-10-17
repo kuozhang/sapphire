@@ -14,12 +14,12 @@ package org.eclipse.sapphire.ui;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -103,7 +103,7 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
             
             if( editFailedException == null )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
         

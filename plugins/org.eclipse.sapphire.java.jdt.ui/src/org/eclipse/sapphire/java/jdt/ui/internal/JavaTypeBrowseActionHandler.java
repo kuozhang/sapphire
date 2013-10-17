@@ -25,12 +25,13 @@ import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.forms.BrowseActionHandler;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
 /**
@@ -103,7 +104,7 @@ public final class JavaTypeBrowseActionHandler extends BrowseActionHandler
                 else
                 {
                     final String msg = typeKindNotRecognized.format( kindString );
-                    SapphireUiFrameworkPlugin.logError( msg );
+                    LoggingService.log( Status.createErrorStatus( msg ) );
                 }
             }
         }
@@ -167,7 +168,7 @@ public final class JavaTypeBrowseActionHandler extends BrowseActionHandler
                 }
             }
         } catch (JavaModelException e) {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
         
         return null;

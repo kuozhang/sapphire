@@ -19,7 +19,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.toImageDescriptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +62,7 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
@@ -85,13 +86,12 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.forms.swt.presentation.ActionBridge;
-import org.eclipse.sapphire.ui.forms.swt.presentation.ActionSystemPartBridge;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.EditorPagePresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpSystem;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireToolBarManagerActionPresentation;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.ActionBridge;
+import org.eclipse.sapphire.ui.forms.swt.ActionSystemPartBridge;
+import org.eclipse.sapphire.ui.forms.swt.EditorPagePresentation;
+import org.eclipse.sapphire.ui.forms.swt.HelpSystem;
+import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.SapphireToolBarManagerActionPresentation;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.dnd.ObjectsTransferDropTargetListener;
 import org.eclipse.sapphire.ui.swt.gef.dnd.SapphireTemplateTransferDropTargetListener;
@@ -487,7 +487,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			this.part.saveDiagram();
 			markEditorClean();
 		} catch (Exception e) {
-			SapphireUiFrameworkPlugin.log(e);
+		    LoggingService.log( e );
 		}
 	}
 

@@ -71,7 +71,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorActionHandler;
 import org.eclipse.sapphire.ui.forms.PropertyEditorCondition;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPartSite;

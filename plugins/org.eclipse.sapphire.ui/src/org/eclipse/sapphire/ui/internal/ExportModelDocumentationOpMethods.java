@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.docsys.DocumentationContent;
@@ -333,7 +334,7 @@ public final class ExportModelDocumentationOpMethods
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             buf.append( "\n</style>" );

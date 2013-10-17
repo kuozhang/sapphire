@@ -13,7 +13,7 @@
 
 package org.eclipse.sapphire.ui;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.sizeOfImage;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.sizeOfImage;
 
 import java.util.Collections;
 import java.util.List;

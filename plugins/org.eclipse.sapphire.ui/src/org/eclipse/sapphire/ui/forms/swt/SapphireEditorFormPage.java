@@ -13,7 +13,7 @@
 
 package org.eclipse.sapphire.ui.forms.swt;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.toImageDescriptor;
 
 import java.util.Collections;
 
@@ -30,7 +30,6 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart.PageHeaderTextEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.EditorPagePresentation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.editor.FormPage;

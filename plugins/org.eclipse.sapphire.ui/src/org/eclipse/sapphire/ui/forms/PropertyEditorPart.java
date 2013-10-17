@@ -39,6 +39,7 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
@@ -55,20 +56,19 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.forms.swt.presentation.CheckBoxListPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentationFactory;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SlushBucketPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.TablePropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.TextFieldPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.CheckBoxPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.NamedValuesPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.PopUpListFieldPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.PopUpListFieldStyle;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.RadioButtonsPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.CheckBoxListPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentationFactory;
+import org.eclipse.sapphire.ui.forms.swt.SlushBucketPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.TablePropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.TextFieldPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.CheckBoxPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.NamedValuesPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.PopUpListFieldPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.PopUpListFieldStyle;
+import org.eclipse.sapphire.ui.forms.swt.internal.RadioButtonsPropertyEditorPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Composite;
 
@@ -208,7 +208,7 @@ public final class PropertyEditorPart extends FormComponentPart
                     if( invalid )
                     {
                         final String msg = invalidChildPropertyPath.format( this.property.name(), childPropertyPath.toString() );
-                        SapphireUiFrameworkPlugin.logError( msg );
+                        LoggingService.log( Status.createErrorStatus( msg ) );
                     }
                     else
                     {
@@ -529,7 +529,7 @@ public final class PropertyEditorPart extends FormComponentPart
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             if( factory == null )

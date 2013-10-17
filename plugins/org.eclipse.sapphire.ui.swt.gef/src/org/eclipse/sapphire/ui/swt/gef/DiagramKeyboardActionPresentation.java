@@ -13,8 +13,8 @@ package org.eclipse.sapphire.ui.swt.gef;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.sapphire.ui.SapphireAction;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireHotSpotsActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.SapphireHotSpotsActionPresentation;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 

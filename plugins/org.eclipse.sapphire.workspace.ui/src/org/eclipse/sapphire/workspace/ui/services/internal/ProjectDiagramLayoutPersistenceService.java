@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
@@ -34,7 +35,6 @@ import org.eclipse.sapphire.ui.diagram.def.LayoutPersistence;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -83,7 +83,7 @@ public class ProjectDiagramLayoutPersistenceService extends StandardDiagramLayou
 		}
 		catch (Exception e)
 		{
-			SapphireUiFrameworkPlugin.log( e );
+		    LoggingService.log( e );
 		}
 		return layoutModel;
 	}

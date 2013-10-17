@@ -12,8 +12,8 @@
 package org.eclipse.sapphire.workspace.ui;
 
 import static org.eclipse.sapphire.ui.forms.PropertyEditorPart.DATA_BINDING;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -38,12 +38,12 @@ import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.services.FileExtensionsService;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentationFactory;
-import org.eclipse.sapphire.ui.forms.swt.presentation.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
-import org.eclipse.sapphire.ui.forms.swt.presentation.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.TextFieldPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentationFactory;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.TextFieldPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
+import org.eclipse.sapphire.ui.forms.swt.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;

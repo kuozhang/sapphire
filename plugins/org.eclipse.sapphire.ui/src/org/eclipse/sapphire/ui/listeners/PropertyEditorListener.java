@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.listeners;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.ui.forms.swt.presentation.PropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

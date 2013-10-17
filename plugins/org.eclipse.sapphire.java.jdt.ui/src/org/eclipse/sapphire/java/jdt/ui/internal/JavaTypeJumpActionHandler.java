@@ -22,10 +22,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.forms.JumpActionHandler;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -92,7 +92,7 @@ public final class JavaTypeJumpActionHandler extends JumpActionHandler
             } 
             catch( CoreException e ) 
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
     }
         
@@ -136,7 +136,7 @@ public final class JavaTypeJumpActionHandler extends JumpActionHandler
         }
         catch( JavaModelException e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
         }
         
         return type;

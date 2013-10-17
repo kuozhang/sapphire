@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.ui.forms;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.sizeOfImage;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.sizeOfImage;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,10 +36,10 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ImageReference;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.ActuatorButtonPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.ActuatorLinkPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.ActuatorButtonPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.ActuatorLinkPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Composite;
 

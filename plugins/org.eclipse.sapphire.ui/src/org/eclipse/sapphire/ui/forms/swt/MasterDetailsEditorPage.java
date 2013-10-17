@@ -18,12 +18,12 @@ import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_HEADER;
 import static org.eclipse.sapphire.ui.SapphireActionSystem.CONTEXT_EDITOR_PAGE_OUTLINE_NODE;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gd;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdhfill;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdhhint;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdwhint;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gd;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhfill;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhhint;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdwhint;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twlayout;
 import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 import static org.eclipse.sapphire.util.CollectionsUtil.findPrecedingItem;
@@ -71,6 +71,7 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
@@ -98,19 +99,13 @@ import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart;
 import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart.OutlineHeaderTextEvent;
 import org.eclipse.sapphire.ui.forms.SectionPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.ElementsTransfer;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpSystem;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireKeyboardActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireMenuActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireToolBarActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireToolBarManagerActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SapphireToolTip;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.SectionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.text.SapphireFormText;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.internal.ElementsTransfer;
+import org.eclipse.sapphire.ui.forms.swt.internal.SapphireKeyboardActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.SapphireMenuActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.SapphireToolBarActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.SapphireToolTip;
+import org.eclipse.sapphire.ui.forms.swt.internal.SectionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.text.SapphireFormText;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
@@ -1165,7 +1160,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                                 
                                 if( editFailedException == null )
                                 {
-                                    SapphireUiFrameworkPlugin.log( e );
+                                    LoggingService.log( e );
                                 }
                             }
                             finally
@@ -1423,7 +1418,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         
                         if( editFailedException == null )
                         {
-                            SapphireUiFrameworkPlugin.log( e );
+                            LoggingService.log( e );
                         }
                         
                         event.detail = DND.DROP_NONE;
@@ -1764,7 +1759,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             this.masterSection.handleSelectionChangedEvent( outline().getSelectedNodes() );

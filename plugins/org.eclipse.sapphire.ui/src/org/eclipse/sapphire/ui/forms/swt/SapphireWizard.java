@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.forms.swt;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.toImageDescriptor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -34,6 +34,7 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
@@ -44,9 +45,8 @@ import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.forms.WizardDef;
 import org.eclipse.sapphire.ui.forms.WizardPagePart;
 import org.eclipse.sapphire.ui.forms.WizardPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.ProgressMonitorBridge;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.StatusDialog;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.internal.ProgressMonitorBridge;
+import org.eclipse.sapphire.ui.forms.swt.internal.StatusDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
@@ -323,7 +323,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
         }
         catch( InvocationTargetException e )
         {
-            SapphireUiFrameworkPlugin.log( e.getTargetException() );
+            LoggingService.log( e.getTargetException() );
             return false;
         }
         catch( InterruptedException e )
@@ -445,7 +445,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
                     } 
                     catch( PartInitException e ) 
                     {
-                        SapphireUiFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                     }
                 }
             }
@@ -480,7 +480,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
             } 
             catch( PartInitException e ) 
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
     }

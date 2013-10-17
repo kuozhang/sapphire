@@ -1200,7 +1200,7 @@
                             <property>MultiOptionPath</property>
                             <action-handler>
                                 <action>Sapphire.Browse</action>
-                                <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
+                                <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFilePathBrowseActionHandler</impl>
                                 <param>
                                     <name>extensions</name>
                                     <value>jar,zip</value>
@@ -1208,7 +1208,7 @@
                             </action-handler>
                             <action-handler>
                                 <action>Sapphire.Browse</action>
-                                <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
+                                <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFolderPathBrowseActionHandler</impl>
                             </action-handler>
                             <action-handler>
                                 <action>Sapphire.Browse</action>
@@ -1229,7 +1229,7 @@
                                 <property>MultiOptionPath</property>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFilePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>
@@ -1237,7 +1237,7 @@
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFolderPathBrowseActionHandler</impl>
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
@@ -1263,7 +1263,7 @@
                                 <property>MultiOptionPath</property>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFilePathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFilePathBrowseActionHandler</impl>
                                     <param>
                                         <name>extensions</name>
                                         <value>jar,zip</value>
@@ -1271,7 +1271,7 @@
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>
-                                    <impl>org.eclipse.sapphire.ui.forms.swt.presentation.AbsoluteFolderPathBrowseActionHandler</impl>
+                                    <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFolderPathBrowseActionHandler</impl>
                                 </action-handler>
                                 <action-handler>
                                     <action>Sapphire.Browse</action>

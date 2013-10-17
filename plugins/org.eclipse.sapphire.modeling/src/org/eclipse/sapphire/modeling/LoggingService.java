@@ -17,7 +17,7 @@ package org.eclipse.sapphire.modeling;
 
 public final class LoggingService
 {
-    public static void log( final Exception e )
+    public static void log( final Throwable e )
     {
         log( Status.createErrorStatus( e ) );
     }

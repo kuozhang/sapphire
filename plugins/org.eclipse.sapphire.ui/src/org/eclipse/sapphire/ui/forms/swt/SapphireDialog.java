@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.ui.forms.swt;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdfill;
+import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
 import java.util.Collections;
 

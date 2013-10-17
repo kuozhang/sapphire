@@ -37,7 +37,6 @@ import org.eclipse.sapphire.ui.def.KeyBindingBehavior;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
 import org.eclipse.sapphire.ui.def.SapphireKeySequence;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.util.TopologicalSorter;
 
 /**
@@ -107,7 +106,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                             }
                             catch( Exception e )
                             {
-                                SapphireUiFrameworkPlugin.log( e );
+                                LoggingService.log( e );
                             }
                         }
                         
@@ -119,7 +118,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                             }
                             catch( Exception e )
                             {
-                                SapphireUiFrameworkPlugin.log( e );
+                                LoggingService.log( e );
                             }
                         }
                     }
@@ -485,7 +484,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                     }
                     catch( Exception e )
                     {
-                        SapphireUiFrameworkPlugin.log( e );
+                        LoggingService.log( e );
                         
                         // Filters are booted on first failure to keep malfunctioning filters from
                         // flooding the log, etc.

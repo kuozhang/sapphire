@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -25,7 +26,6 @@ import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.ISapphireUiExtensionDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -69,7 +69,7 @@ public final class SapphireExtensionSystem
                 }
                 catch( ResourceStoreException e )
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
 

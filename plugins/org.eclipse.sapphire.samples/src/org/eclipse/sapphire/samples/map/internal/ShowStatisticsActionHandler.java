@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 
 /**
  * Action handler for Sample.Map.ShowStatistics action, which illustrates how

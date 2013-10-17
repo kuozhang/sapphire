@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.def.ActionContextRef;
 import org.eclipse.sapphire.ui.def.ActionContextsHostDef;
 import org.eclipse.sapphire.ui.def.ActionDef;
@@ -29,7 +30,6 @@ import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFilterDef;
 import org.eclipse.sapphire.ui.def.ISapphireConditionHostDef;
 import org.eclipse.sapphire.ui.def.PartDef;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.util.TopologicalSorter;
 
 /**
@@ -240,7 +240,7 @@ public final class SapphireActionGroup
                 }
                 catch( Exception e )
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }
@@ -272,7 +272,7 @@ public final class SapphireActionGroup
                 }
                 catch( Exception e )
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }
@@ -296,7 +296,7 @@ public final class SapphireActionGroup
                 }
                 catch( Exception e )
                 {
-                    SapphireUiFrameworkPlugin.log( e );
+                    LoggingService.log( e );
                 }
             }
         }
@@ -334,7 +334,7 @@ public final class SapphireActionGroup
         }
         catch( Exception e )
         {
-            SapphireUiFrameworkPlugin.log( e );
+            LoggingService.log( e );
             return false;
         }
     }

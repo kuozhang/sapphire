@@ -25,6 +25,7 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.Presentation;
@@ -38,9 +39,8 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
+import org.eclipse.sapphire.ui.forms.swt.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -147,7 +147,7 @@ public final class PropertyEditorAssistDecorator
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
         
@@ -198,7 +198,7 @@ public final class PropertyEditorAssistDecorator
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
             
             contributor.attach( contributorListener );
@@ -522,7 +522,7 @@ public final class PropertyEditorAssistDecorator
             }
             catch( Exception e )
             {
-                SapphireUiFrameworkPlugin.log( e );
+                LoggingService.log( e );
             }
         }
     }

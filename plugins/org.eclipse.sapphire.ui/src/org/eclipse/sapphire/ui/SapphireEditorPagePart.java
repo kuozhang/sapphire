@@ -36,7 +36,7 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.internal.HelpSystem;
+import org.eclipse.sapphire.ui.forms.swt.HelpSystem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 

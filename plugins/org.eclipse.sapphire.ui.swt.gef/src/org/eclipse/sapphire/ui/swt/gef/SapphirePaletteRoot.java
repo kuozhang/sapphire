@@ -39,7 +39,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
+import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.tools.SapphireMarqueeSelectionTool;
 
 /**

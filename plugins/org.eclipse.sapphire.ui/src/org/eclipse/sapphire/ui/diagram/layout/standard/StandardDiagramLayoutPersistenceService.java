@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -48,7 +49,6 @@ import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.ConnectionHashKey;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
-import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
@@ -87,7 +87,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		}
 		catch (Exception e)
 		{
-			SapphireUiFrameworkPlugin.log( e );
+		    LoggingService.log( e );
 		}
 		addDiagramPartListener();
     }		
@@ -245,7 +245,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		}
 		catch (ResourceStoreException rse)
 		{
-			SapphireUiFrameworkPlugin.log( rse );
+		    LoggingService.log( rse );
 		}
 		// Clear the dirty state
 		this.dirty = false;
