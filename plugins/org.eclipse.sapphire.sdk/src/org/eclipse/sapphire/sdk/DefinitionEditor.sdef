@@ -967,6 +967,7 @@
             <section>
                 <content>
                     <property-editor>Property</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                     <property-editor>
                         <property>ScaleVertically</property>
                         <hint>
