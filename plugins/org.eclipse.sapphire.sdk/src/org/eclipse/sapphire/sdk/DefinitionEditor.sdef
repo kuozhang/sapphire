@@ -573,6 +573,8 @@
             <image>${ Image() }</image>
             <section>
                 <content>
+                    <property-editor>VisibleWhen</property-editor>
+                    <spacer></spacer>
                     <property-editor>
                         <property>ContentSourceType</property>
                         <show-label>false</show-label>
