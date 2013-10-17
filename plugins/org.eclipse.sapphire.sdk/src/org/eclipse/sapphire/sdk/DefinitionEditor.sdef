@@ -528,6 +528,7 @@
                     <spacer></spacer>
                     <property-editor>ActionId</property-editor>
                     <property-editor>ActionHandlerId</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
             <node-include>ActionsOverallNode</node-include>
