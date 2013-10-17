@@ -582,7 +582,7 @@ public class FormTextModel {
     public HyperlinkSettings getHyperlinkSettings() {
         // #132723 cannot have null settings
         if (hyperlinkSettings==null) {
-            Display display = SWTUtil.getStandardDisplay();
+            Display display = getStandardDisplay();
             hyperlinkSettings = new HyperlinkSettings(display);
 
             // Setting link foreground color for windows 7
@@ -801,5 +801,18 @@ public class FormTextModel {
      */
     public void setWhitespaceNormalized(boolean whitespaceNormalized) {
         this.whitespaceNormalized = whitespaceNormalized;
+    }
+
+    /**
+     * Returns the standard display to be used. The method first checks, if
+     * the thread calling this method has an associated disaply. If so, this
+     * display is returned. Otherwise the method returns the default display.
+     */
+    private static Display getStandardDisplay() {
+        Display display;
+        display = Display.getCurrent();
+        if (display == null)
+            display = Display.getDefault();
+        return display;
     }
 }
