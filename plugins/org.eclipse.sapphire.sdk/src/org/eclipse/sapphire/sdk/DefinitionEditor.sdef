@@ -1063,6 +1063,7 @@
                 <content>
                     <property-editor>Label</property-editor>
                     <property-editor>Text</property-editor>
+                    <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
             <node-include>ServicesNode</node-include>
