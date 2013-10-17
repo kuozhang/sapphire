@@ -748,6 +748,7 @@
                 <label>composite</label>
                 <content>
                     <include>PartId</include>
+                    <property-editor>VisibleWhen</property-editor>
                 </content>
             </section>
             <section>
