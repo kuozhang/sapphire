@@ -841,7 +841,7 @@
                                 <property>Homogeneous</property>
                                 <hint>
                                     <name>factory</name>
-                                    <value>CompactListPropertyEditorRenderer$Factory</value>
+                                    <value>CompactListPropertyEditorPresentation$Factory</value>
                                 </hint>
                             </property-editor>
                         </content>
@@ -853,7 +853,7 @@
                                 <property>HomogeneousWithJavaType</property>
                                 <hint>
                                     <name>factory</name>
-                                    <value>CompactListPropertyEditorRenderer$Factory</value>
+                                    <value>CompactListPropertyEditorPresentation$Factory</value>
                                 </hint>
                             </property-editor>
                         </content>
@@ -1257,7 +1257,7 @@
                             <property>List</property>
                             <hint>
                                 <name>factory</name>
-                                <value>CompactListPropertyEditorRenderer$Factory</value>
+                                <value>CompactListPropertyEditorPresentation$Factory</value>
                             </hint>
                             <child-property>
                                 <property>MultiOptionPath</property>

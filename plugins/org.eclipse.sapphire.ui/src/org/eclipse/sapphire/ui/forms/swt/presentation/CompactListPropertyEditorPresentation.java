@@ -76,7 +76,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class CompactListPropertyEditorRenderer extends ListPropertyEditorPresentation
+public final class CompactListPropertyEditorPresentation extends ListPropertyEditorPresentation
 {
     public static final String DATA_SELECTION_PROVIDER = "selection.provider";
     
@@ -89,7 +89,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
     private SapphireFormText addText;
     private HyperlinkAdapter addTextHyperlinkAdapter;
     
-    public CompactListPropertyEditorRenderer( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+    public CompactListPropertyEditorPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
     {
         super( part, parent, composite );
     }
@@ -133,7 +133,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
             
             public void run()
             {
-                if( CompactListPropertyEditorRenderer.this.mainComposite.isDisposed() )
+                if( CompactListPropertyEditorPresentation.this.mainComposite.isDisposed() )
                 {
                     return;
                 }
@@ -147,7 +147,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
                 
                 try
                 {
-                    CompactListPropertyEditorRenderer.this.refreshControls();
+                    CompactListPropertyEditorPresentation.this.refreshControls();
                 }
                 finally
                 {
@@ -171,7 +171,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
                 // catch the case where a full page refresh is performed perhaps because user
                 // has visited the source page.
                 
-                CompactListPropertyEditorRenderer.this.refreshOperation.run();
+                CompactListPropertyEditorPresentation.this.refreshOperation.run();
             }
         };
     }
@@ -311,7 +311,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
                 @Override
                 public void handleHyperlinkEvent()
                 {
-                    jumpActionHandler.execute( CompactListPropertyEditorRenderer.this );
+                    jumpActionHandler.execute( CompactListPropertyEditorPresentation.this );
                 }
 
                 @Override
@@ -487,7 +487,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
     {
         super.handlePropertyChangedEvent();
         
-        CompactListPropertyEditorRenderer.this.refreshOperation.run();
+        CompactListPropertyEditorPresentation.this.refreshOperation.run();
     }
     
     @Override
@@ -513,7 +513,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
 
         @Override
         protected Object run(Presentation context) {
-            CompactListPropertyEditorRenderer.this.deleteBinding(this.binding);
+            CompactListPropertyEditorPresentation.this.deleteBinding(this.binding);
             return null;
         }
         
@@ -602,7 +602,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
         private Text text;
         private ProxyResource resource;
         private ToolBar toolbar;
-        private CompactListPropertyEditorRenderer.DeleteActionHandler deleteActionHandler;
+        private CompactListPropertyEditorPresentation.DeleteActionHandler deleteActionHandler;
         private PropertyEditorAssistDecorator decorator;
         private SapphireKeyboardActionPresentation actionPresentationKeyboard;
         private boolean modifying = false;
@@ -631,7 +631,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
             setModelElement(element);
             String value = element != null ? element.property(this.resource.getValueProperty()).text() : null;
             value = value == null ? "" : value;
-            if (!CompactListPropertyEditorRenderer.equals(value, this.text.getText())) {
+            if (!CompactListPropertyEditorPresentation.equals(value, this.text.getText())) {
                 this.text.setText(value);
             }
         }
@@ -666,12 +666,12 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
             this.actionPresentationKeyboard.render();
         }
 
-        public CompactListPropertyEditorRenderer.DeleteActionHandler getDeleteActionHandler() {
+        public CompactListPropertyEditorPresentation.DeleteActionHandler getDeleteActionHandler() {
             return this.deleteActionHandler;
         }
 
         public void setDeleteActionHandler(
-                CompactListPropertyEditorRenderer.DeleteActionHandler deleteActionHandler) {
+                CompactListPropertyEditorPresentation.DeleteActionHandler deleteActionHandler) {
             this.deleteActionHandler = deleteActionHandler;
         }
 
@@ -724,7 +724,7 @@ public final class CompactListPropertyEditorRenderer extends ListPropertyEditorP
         @Override
         public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
         {
-            return new CompactListPropertyEditorRenderer( part, parent, composite );
+            return new CompactListPropertyEditorPresentation( part, parent, composite );
         }
     }
     
