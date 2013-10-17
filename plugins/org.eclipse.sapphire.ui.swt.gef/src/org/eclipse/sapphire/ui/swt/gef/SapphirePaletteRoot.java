@@ -39,7 +39,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.tools.SapphireMarqueeSelectionTool;
 
 /**
@@ -114,7 +114,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 		{
 			IDiagramConnectionDef connDef = connectionPalette.getConnectionDef();
 			ImageData imageData = connectionPalette.getImageData();
-            ImageDescriptor imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+            ImageDescriptor imageDescriptor = SwtUtil.toImageDescriptor(imageData);
 
             CreationFactory factory = new ConnectionCreationFactory(connDef);
 			String tpLabel = connDef.getToolPaletteLabel().content();
@@ -151,7 +151,7 @@ public class SapphirePaletteRoot extends PaletteRoot
         	IDiagramNodeDef nodeDef = nodeTemplate.definition();
 
             final ImageData imageData = nodeTemplate.getToolPaletteImage();
-            ImageDescriptor imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+            ImageDescriptor imageDescriptor = SwtUtil.toImageDescriptor(imageData);
 
             CreationFactory factory = new NodeCreationFactory(nodeTemplate);
 

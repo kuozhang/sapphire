@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.forms.swt;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

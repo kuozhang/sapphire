@@ -35,7 +35,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionBridge;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionHandlerBridge;
 import org.eclipse.sapphire.ui.forms.swt.presentation.ActionSystemPartBridge;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
@@ -158,7 +158,7 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 	        else if( count > 1 )
 	        {
                 final String childMenuText = LabelTransformer.transform( action.getLabel(), CapitalizationType.TITLE_STYLE, true );
-                final ImageDescriptor childMenuImage = SwtRendererUtil.toImageDescriptor( action.getImage( 16 ) );
+                final ImageDescriptor childMenuImage = SwtUtil.toImageDescriptor( action.getImage( 16 ) );
                 final MenuManager childMenuManager = new MenuManager( childMenuText, childMenuImage, action.getId() );
                 
                 childMenuManager.setParent( menuManager );

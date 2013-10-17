@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -27,6 +28,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -401,6 +403,56 @@ public final class SwtUtil
             
             buf.append( indent ).append( widget == target ? "**" : "" ).append( widget ).append( "()" ).append( '\n' );
         }
+    }
+
+    public static ImageDescriptor toImageDescriptor( final org.eclipse.sapphire.ImageData data )
+    {
+        if( data != null )
+        {
+            final ImageData swtImageData = new ImageData( data.contents() );
+            return ImageDescriptor.createFromImageData( swtImageData );
+        }
+        
+        return null;
+    }
+    
+    public static ImageData toImageData( final org.eclipse.sapphire.ImageData data )
+    {
+        if( data != null )
+        {
+            return new ImageData( data.contents() );
+        }
+        
+        return null;
+    }
+
+    public static ImageData createImageData( final ClassLoader cl,
+                                             final String path )
+    {
+        return toImageData( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
+    }
+
+    public static ImageData createImageData( final Class<?> cl,
+                                             final String path )
+    {
+        return toImageData( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
+    }
+
+    public static ImageDescriptor createImageDescriptor( final ClassLoader cl,
+                                                         final String path )
+    {
+        return toImageDescriptor( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
+    }
+
+    public static ImageDescriptor createImageDescriptor( final Class<?> cl,
+                                                         final String path )
+    {
+        return toImageDescriptor( org.eclipse.sapphire.ImageData.readFromClassLoader( cl, path ).required() );
+    }
+    
+    public static int sizeOfImage( final org.eclipse.sapphire.ImageData image )
+    {
+        return toImageData( image ).height;
     }
 
 }

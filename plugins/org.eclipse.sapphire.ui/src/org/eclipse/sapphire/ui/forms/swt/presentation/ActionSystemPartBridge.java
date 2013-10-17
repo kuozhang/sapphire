@@ -88,7 +88,7 @@ public abstract class ActionSystemPartBridge extends Action
 	
 	private void refreshImage()
 	{
-	    setImageDescriptor( SwtRendererUtil.toImageDescriptor( this.sapphireActionSystemPart.getImage( 16 ) ) );
+	    setImageDescriptor( SwtUtil.toImageDescriptor( this.sapphireActionSystemPart.getImage( 16 ) ) );
 	}
 
 	public void dispose()

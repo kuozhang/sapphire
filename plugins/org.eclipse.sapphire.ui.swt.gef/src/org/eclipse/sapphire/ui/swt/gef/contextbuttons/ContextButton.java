@@ -33,7 +33,7 @@ import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.DefaultActionImage;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.figures.FigureUtil;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
@@ -512,7 +512,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		}
 		else
 		{
-			imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+			imageDescriptor = SwtUtil.toImageDescriptor(imageData);
 			return imageDescriptor.createImage();
 		}
 		
@@ -529,7 +529,7 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		}
 		else
 		{
-			imageDescriptor = SwtRendererUtil.toImageDescriptor(imageData);
+			imageDescriptor = SwtUtil.toImageDescriptor(imageData);
 			return imageDescriptor.createImage();
 		}		
 	}

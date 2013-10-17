@@ -1950,10 +1950,10 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
     }
     
     private static final ImageDescriptor IMG_CHECKBOX_ON
-        = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOn.gif" );
+        = SwtUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOn.gif" );
     
     private static final ImageDescriptor IMG_CHECKBOX_OFF
-        = SwtRendererUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOff.gif" );
+        = SwtUtil.createImageDescriptor( BooleanPropertyColumnHandler.class, "CheckBoxOff.gif" );
     
     private final class BooleanPropertyColumnHandler extends ColumnHandler
     {

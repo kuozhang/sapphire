@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.forms.swt;
 
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.gdfill;
 import static org.eclipse.sapphire.ui.forms.swt.presentation.GridLayoutUtil.glayout;
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
 
 import org.eclipse.help.IContext;
 import org.eclipse.jface.wizard.IWizardContainer;

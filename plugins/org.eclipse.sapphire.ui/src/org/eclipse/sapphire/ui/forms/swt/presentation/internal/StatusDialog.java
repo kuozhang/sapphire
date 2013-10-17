@@ -34,8 +34,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -223,7 +223,7 @@ public final class StatusDialog extends Dialog
             {
                 if( this.errorImage == null )
                 {
-                    this.errorImage = SwtRendererUtil.createImageDescriptor( SwtResourceCache.class, "Error.png" ).createImage();
+                    this.errorImage = SwtUtil.createImageDescriptor( SwtResourceCache.class, "Error.png" ).createImage();
                 }
                 
                 return this.errorImage;
@@ -233,7 +233,7 @@ public final class StatusDialog extends Dialog
             {
                 if( this.warningImage == null )
                 {
-                    this.warningImage = SwtRendererUtil.createImageDescriptor( SwtResourceCache.class, "Warning.png" ).createImage();
+                    this.warningImage = SwtUtil.createImageDescriptor( SwtResourceCache.class, "Warning.png" ).createImage();
                 }
                 
                 return this.warningImage;

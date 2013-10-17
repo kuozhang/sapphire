@@ -24,7 +24,7 @@ import java.util.List;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.ImageData;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.accessibility.ACC;
@@ -575,7 +575,7 @@ public class SapphireFormText extends Canvas {
     public void setImage( final String key,
                           final ImageData imageData )
     {
-        setImage( key, SwtRendererUtil.toImageDescriptor( imageData ) );
+        setImage( key, SwtUtil.toImageDescriptor( imageData ) );
     }
 
     /**

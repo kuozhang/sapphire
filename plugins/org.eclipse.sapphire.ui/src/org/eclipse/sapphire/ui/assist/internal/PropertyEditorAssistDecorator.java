@@ -38,8 +38,8 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -77,13 +77,13 @@ public final class PropertyEditorAssistDecorator
     }
     
     private static final ImageDescriptor IMG_ASSIST
-        = SwtRendererUtil.createImageDescriptor( PropertyEditorAssistContext.class, "Assist.png" );
+        = SwtUtil.createImageDescriptor( PropertyEditorAssistContext.class, "Assist.png" );
     
     private static final ImageDescriptor IMG_ASSIST_FAINT
-        = SwtRendererUtil.createImageDescriptor( PropertyEditorAssistContext.class, "AssistFaint.png" );
+        = SwtUtil.createImageDescriptor( PropertyEditorAssistContext.class, "AssistFaint.png" );
     
     private static final ImageDescriptor IMG_ASSIST_CLEAR
-        = SwtRendererUtil.createImageDescriptor( PropertyEditorAssistContext.class, "AssistClear.png" );
+        = SwtUtil.createImageDescriptor( PropertyEditorAssistContext.class, "AssistClear.png" );
     
     private final SapphirePart part;
     private final Property property;

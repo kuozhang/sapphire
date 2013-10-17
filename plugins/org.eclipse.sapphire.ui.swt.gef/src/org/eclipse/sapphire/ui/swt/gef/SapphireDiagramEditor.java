@@ -19,7 +19,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,7 +81,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramDirectEditPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;

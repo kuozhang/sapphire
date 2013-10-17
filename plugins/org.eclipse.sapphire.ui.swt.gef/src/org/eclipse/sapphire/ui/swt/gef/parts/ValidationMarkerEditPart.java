@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.ValidationMarkerModel;
@@ -31,13 +31,13 @@ import org.eclipse.swt.graphics.Image;
 public class ValidationMarkerEditPart extends ShapeEditPart 
 {
     private static final ImageDescriptor IMG_ERROR_SMALL
-			= SwtRendererUtil.createImageDescriptor( ValidationMarkerEditPart.class, "error_small.png" );
+			= SwtUtil.createImageDescriptor( ValidationMarkerEditPart.class, "error_small.png" );
     private static final ImageDescriptor IMG_ERROR
-			= SwtRendererUtil.createImageDescriptor( ValidationMarkerEditPart.class, "error.gif" );
+			= SwtUtil.createImageDescriptor( ValidationMarkerEditPart.class, "error.gif" );
     private static final ImageDescriptor IMG_WARNING_SMALL
-			= SwtRendererUtil.createImageDescriptor( ValidationMarkerEditPart.class, "warning_small.png" );
+			= SwtUtil.createImageDescriptor( ValidationMarkerEditPart.class, "warning_small.png" );
     private static final ImageDescriptor IMG_WARNING
-			= SwtRendererUtil.createImageDescriptor( ValidationMarkerEditPart.class, "warning.gif" );
+			= SwtUtil.createImageDescriptor( ValidationMarkerEditPart.class, "warning.gif" );
 	
 	public ValidationMarkerEditPart(DiagramConfigurationManager configManager)
 	{

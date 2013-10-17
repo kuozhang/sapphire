@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.forms.swt.presentation;
 
-import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil.toImageDescriptor;
+import static org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil.toImageDescriptor;
 
 import java.util.HashMap;
 import java.util.Map;

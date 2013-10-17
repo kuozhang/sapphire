@@ -43,8 +43,8 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerContentEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ValidationMarkerPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerSize;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.sapphire.ui.swt.gef.figures.SmoothImageFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -62,13 +62,13 @@ import org.eclipse.swt.widgets.Display;
 public class ValidationMarkerPresentation extends ShapePresentation 
 {
     private static final ImageDescriptor IMG_ERROR_SMALL
-			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "error_small.png" );
+			= SwtUtil.createImageDescriptor( SmoothImageFigure.class, "error_small.png" );
     private static final ImageDescriptor IMG_ERROR
-			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "error.gif" );
+			= SwtUtil.createImageDescriptor( SmoothImageFigure.class, "error.gif" );
     private static final ImageDescriptor IMG_WARNING_SMALL
-			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "warning_small.png" );
+			= SwtUtil.createImageDescriptor( SmoothImageFigure.class, "warning_small.png" );
     private static final ImageDescriptor IMG_WARNING
-			= SwtRendererUtil.createImageDescriptor( SmoothImageFigure.class, "warning.gif" );
+			= SwtUtil.createImageDescriptor( SmoothImageFigure.class, "warning.gif" );
     
     private static final List<Class<? extends PropertyEditorAssistContributor>> SYSTEM_CONTRIBUTORS
     		= new ArrayList<Class<? extends PropertyEditorAssistContributor>>();

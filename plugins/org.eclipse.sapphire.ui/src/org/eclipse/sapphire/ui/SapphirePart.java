@@ -99,8 +99,8 @@ import org.eclipse.sapphire.ui.forms.WithImpliedPart;
 import org.eclipse.sapphire.ui.forms.WithPart;
 import org.eclipse.sapphire.ui.forms.WizardPageDef;
 import org.eclipse.sapphire.ui.forms.WizardPagePart;
-import org.eclipse.sapphire.ui.forms.swt.presentation.SwtRendererUtil;
 import org.eclipse.sapphire.ui.forms.swt.presentation.SwtResourceCache;
+import org.eclipse.sapphire.ui.forms.swt.presentation.SwtUtil;
 import org.eclipse.sapphire.ui.internal.PartServiceContext;
 import org.eclipse.sapphire.ui.internal.SapphireUiFrameworkPlugin;
 import org.eclipse.swt.widgets.Display;
@@ -975,7 +975,7 @@ public abstract class SapphirePart implements ISapphirePart
                 if( this.baseImageData != newBaseImageData )
                 {
                     this.baseImageData = newBaseImageData;
-                    this.base = SwtRendererUtil.toImageDescriptor( this.baseImageData );
+                    this.base = SwtUtil.toImageDescriptor( this.baseImageData );
                     this.error = null;
                     this.warning = null;
                 }
