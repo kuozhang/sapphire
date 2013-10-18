@@ -52,55 +52,177 @@ to 0.7 release. Only changes from the previous release are covered.</p>
 <p>Table of Contents</p>
 
 <ol>
+  <li><a href="#AbsoluteFilePathBrowseActionHandler">AbsoluteFilePathBrowseActionHandler</a></li>
+  <li><a href="#AbsoluteFolderPathBrowseActionHandler">AbsoluteFolderPathBrowseActionHandler</a></li>
+  <li><a href="#AbstractSlushBucketPropertyEditorRenderer">AbstractSlushBucketPropertyEditorRenderer</a></li>
+  <li><a href="#ActionBridge">ActionBridge</a></li>
+  <li><a href="#ActionHandlerBridge">ActionHandlerBridge</a></li>
+  <li><a href="#ActionSystemPartBridge">ActionSystemPartBridge</a></li>
+  <li><a href="#ActuatorDef">ActuatorDef</a></li>
+  <li><a href="#ActuatorPart">ActuatorPart</a></li>
   <li><a href="#AdapterService">AdapterService</a></li>
   <li><a href="#BindingImpl">BindingImpl</a></li>
+  <li><a href="#BooleanPropertyEditorRenderer">BooleanPropertyEditorRenderer</a></li>
   <li><a href="#BundleImageDataFactory">BundleImageDataFactory</a></li>
+  <li><a href="#CheckBoxListPropertyEditorRenderer">CheckBoxListPropertyEditorRenderer</a></li>
   <li><a href="#Color">Color</a></li>
+  <li><a href="#ColumnSortComparator">ColumnSortComparator</a></li>
+  <li><a href="#CompactListPropertyEditorRenderer">CompactListPropertyEditorRenderer</a></li>
+  <li><a href="#CompositeDef">CompositeDef</a></li>
+  <li><a href="#CompositePart">CompositePart</a></li>
+  <li><a href="#ConditionalDef">ConditionalDef</a></li>
+  <li><a href="#ConditionalPart">ConditionalPart</a></li>
+  <li><a href="#ContentOutlineNodeState">ContentOutlineNodeState</a></li>
+  <li><a href="#ContentOutlineState">ContentOutlineState</a></li>
   <li><a href="#Context">Context</a></li>
   <li><a href="#ConversionService">ConversionService</a></li>
   <li><a href="#CreateWorkspaceFileOp">CreateWorkspaceFileOp</a></li>
   <li><a href="#DateSerializationService">DateSerializationService</a></li>
+  <li><a href="#DefaultListPropertyEditorRenderer">DefaultListPropertyEditorRenderer</a></li>
+  <li><a href="#DefaultValuePropertyEditorRenderer">DefaultValuePropertyEditorRenderer</a></li>
   <li><a href="#DependenciesAggregationService">DependenciesAggregationService</a></li>
+  <li><a href="#DialogDef">DialogDef</a></li>
   <li><a href="#DtdParser">DtdParser</a></li>
+  <li><a href="#EclipseWorkspacePathPropertyEditorRenderer">EclipseWorkspacePathPropertyEditorRenderer</a></li>
+  <li><a href="#EditorPagePresentation">EditorPagePresentation</a></li>
   <li><a href="#ElementBindingImpl">ElementBindingImpl</a></li>
   <li><a href="#ElementProperty">ElementProperty</a></li>
   <li><a href="#ElementValidationEvent">ElementValidationEvent</a></li>
   <li><a href="#EnabledFunction">Enabled Function</a></li>
+  <li><a href="#EnumPropertyEditorRenderer">EnumPropertyEditorRenderer</a></li>
   <li><a href="#Event">Event</a></li>
+  <li><a href="#FormComponentDef">FormComponentDef</a></li>
+  <li><a href="#FormComponentPart">FormComponentPart</a></li>
+  <li><a href="#FormDef">FormDef</a></li>
+  <li><a href="#FormEditorPage">FormEditorPage</a></li>
+  <li><a href="#FormEditorPageDef">FormEditorPageDef</a></li>
+  <li><a href="#FormEditorPagePart">FormEditorPagePart</a></li>
+  <li><a href="#FormPart">FormPart</a></li>
   <li><a href="#FunctionContext">FunctionContext</a></li>
   <li><a href="#GenerateImpl">GenerateImpl</a></li>
+  <li><a href="#GridLayoutUtil">GridLayoutUtil</a></li>
+  <li><a href="#HtmlPanelDef">HtmlPanelDef</a></li>
+  <li><a href="#HtmlPanelPart">HtmlPanelPart</a></li>
+  <li><a href="#HyperlinkTable">HyperlinkTable</a></li>
   <li><a href="#ImageData">ImageData</a></li>
   <li><a href="#ImageService">ImageService</a></li>
   <li><a href="#IExecutableModelElement">IExecutableModelElement</a></li>
+  <li><a href="#IFormPartInclude">IFormPartInclude</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
   <li><a href="#IModelParticle">IModelParticle</a></li>
   <li><a href="#ImpliedElementProperty">ImpliedElementProperty</a></li>
+  <li><a href="#IPropertiesViewContributionDef">IPropertiesViewContributionDef</a></li>
+  <li><a href="#IPropertiesViewContributionPageDef">IPropertiesViewContributionPageDef</a></li>
+  <li><a href="#IPropertiesViewContributorDef">IPropertiesViewContributorDef</a></li>
+  <li><a href="#IPropertiesViewContributorPart">IPropertiesViewContributorPart</a></li>
+  <li><a href="#ISapphireGroupDef">ISapphireGroupDef</a></li>
+  <li><a href="#ISapphireLabelDef">ISapphireLabelDef</a></li>
+  <li><a href="#ISapphireStaticTextFieldDef">ISapphireStaticTextFieldDef</a></li>
+  <li><a href="#LabelPart">LabelPart</a></li>
   <li><a href="#LayeredListBindingImpl">LayeredListBindingImpl</a></li>
+  <li><a href="#LineSeparatorDef">LineSeparatorDef</a></li>
+  <li><a href="#LineSeparatorPart">LineSeparatorPart</a></li>
   <li><a href="#ListBindingImpl">ListBindingImpl</a></li>
   <li><a href="#ListProperty">ListProperty</a></li>
+  <li><a href="#ListPropertyEditorRenderer">ListPropertyEditorRenderer</a></li>
+  <li><a href="#MasterDetailsContentNode">MasterDetailsContentNode</a></li>
+  <li><a href="#MasterDetailsContentNodeChildDef">MasterDetailsContentNodeChildDef</a></li>
+  <li><a href="#MasterDetailsContentNodeDef">MasterDetailsContentNodeDef</a></li>
+  <li><a href="#MasterDetailsContentNodeFactoryCaseDef">MasterDetailsContentNodeFactoryCaseDef</a></li>
+  <li><a href="#MasterDetailsContentNodeFactoryDef">MasterDetailsContentNodeFactoryDef</a></li>
+  <li><a href="#MasterDetailsContentNodeInclude">MasterDetailsContentNodeInclude</a></li>
+  <li><a href="#MasterDetailsContentNodeList">MasterDetailsContentNodeList</a></li>
+  <li><a href="#MasterDetailsContentOutline">MasterDetailsContentOutline</a></li>
+  <li><a href="#MasterDetailsEditorPage">MasterDetailsEditorPage</a></li>
+  <li><a href="#MasterDetailsEditorPageDef">MasterDetailsEditorPageDef</a></li>
   <li><a href="#MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></li>
+  <li><a href="#MasterDetailsEditorPageState">MasterDetailsEditorPageState</a></li>
   <li><a href="#ModelElementHandle">ModelElementHandle</a></li>
   <li><a href="#ModelElementList">ModelElementList</a></li>
+  <li><a href="#ModelElementsTransfer">ModelElementsTransfer</a></li>
   <li><a href="#ModelElementType">ModelElementType</a></li>
   <li><a href="#ModelProperty">ModelProperty</a></li>
+  <li><a href="#NamedValuesPropertyEditorRenderer">NamedValuesPropertyEditorRenderer</a></li>
   <li><a href="#NLS">NLS</a></li>
+  <li><a href="#PageBookDef">PageBookDef</a></li>
+  <li><a href="#PageBookExtDef">PageBookExtDef</a></li>
+  <li><a href="#PageBookKeyMapping">PageBookKeyMapping</a></li>
+  <li><a href="#PageBookPart">PageBookPart</a></li>
+  <li><a href="#PageBookPartControlMethod">PageBookPartControlMethod</a></li>
   <li><a href="#PossibleValuesService">PossibleValuesService</a></li>
+  <li><a href="#ProblemsTraversalService">ProblemsTraversalService</a></li>
+  <li><a href="#ProblemsTraversalServiceData">ProblemsTraversalServiceData</a></li>
+  <li><a href="#ProgressMonitorBridge">ProgressMonitorBridge</a></li>
+  <li><a href="#PropertiesViewContributionManager">PropertiesViewContributionManager</a></li>
+  <li><a href="#PropertiesViewContributionPagePart">PropertiesViewContributionPagePart</a></li>
+  <li><a href="#PropertiesViewContributionPart">PropertiesViewContributionPart</a></li>
   <li><a href="#PropertyContentEvent">PropertyContentEvent</a></li>
+  <li><a href="#PropertyEditorDef">PropertyEditorDef</a></li>
+  <li><a href="#PropertyEditorPart">PropertyEditorPart</a></li>
   <li><a href="#PropertyEnablementEvent">PropertyEnablementEvent</a></li>
   <li><a href="#PropertyEvent">PropertyEvent</a></li>
   <li><a href="#PropertyEditorAssistContext">PropertyEditorAssistContext</a></li>
   <li><a href="#PropertyEditorAssistContributor">PropertyEditorAssistContributor</a></li>
+  <li><a href="#PropertyEditorRenderer">PropertyEditorRenderer</a></li>
+  <li><a href="#PropertyEditorRendererFactory">PropertyEditorRendererFactory</a></li>
   <li><a href="#PropertyInitializationEvent">PropertyInitializationEvent</a></li>
   <li><a href="#PropertyValidationEvent">PropertyValidationEvent</a></li>
   <li><a href="#ReferenceValue">ReferenceValue</a></li>
+  <li><a href="#RelativePathBrowseActionHandler">RelativePathBrowseActionHandler</a></li>
   <li><a href="#Resource">Resource</a></li>
   <li><a href="#Sapphire">Sapphire</a></li>
+  <li><a href="#SapphireActionPresentation">SapphireActionPresentation</a></li>
+  <li><a href="#SapphireActionPresentationManager">SapphireActionPresentationManager</a></li>
+  <li><a href="#SapphireBrowseActionHandler">SapphireBrowseActionHandler</a></li>
   <li><a href="#SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></li>
+  <li><a href="#SapphireDialog">SapphireDialog</a></li>
+  <li><a href="#SapphireDialogPart">SapphireDialogPart</a></li>
   <li><a href="#SapphireEditor">SapphireEditor</a></li>
+  <li><a href="#SapphireEditorFormPage">SapphireEditorFormPage</a></li>
+  <li><a href="#SapphireEnumControlledPageBook">SapphireEnumControlledPageBook</a></li>
+  <li><a href="#SapphireForm">SapphireForm</a></li>
+  <li><a href="#SapphireGroup">SapphireGroup</a></li>
+  <li><a href="#SapphireHotSpotsActionPresentation">SapphireHotSpotsActionPresentation</a></li>
+  <li><a href="#SapphireJumpActionHandler">SapphireJumpActionHandler</a></li>
+  <li><a href="#SapphireKeyboardActionPresentation">SapphireKeyboardActionPresentation</a></li>
+  <li><a href="#SapphireListControlledPageBook">SapphireListControlledPageBook</a></li>
+  <li><a href="#SapphireMenuActionPresentation">SapphireMenuActionPresentation</a></li>
+  <li><a href="#SapphirePopup">SapphirePopup</a></li>
   <li><a href="#SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></li>
+  <li><a href="#SapphirePropertyEditorCondition">SapphirePropertyEditorCondition</a></li>
+  <li><a href="#SapphirePropertyPage">SapphirePropertyPage</a></li>
+  <li><a href="#SapphirePropertySheetPage">SapphirePropertySheetPage</a></li>
+  <li><a href="#SapphireStaticTextField">SapphireStaticTextField</a></li>
+  <li><a href="#SapphireStatusDialog">SapphireStatusDialog</a></li>
+  <li><a href="#SapphireTextCellEditor">SapphireTextCellEditor</a></li>
+  <li><a href="#SapphireTextPopup">SapphireTextPopup</a></li>
+  <li><a href="#SapphireToolBarActionPresentation">SapphireToolBarActionPresentation</a></li>
+  <li><a href="#SapphireToolBarManagerActionPresentation">SapphireToolBarManagerActionPresentation</a></li>
+  <li><a href="#SapphireToolTip">SapphireToolTip</a></li>
   <li><a href="#SapphireWizard">SapphireWizard</a></li>
+  <li><a href="#SapphireWizardPage">SapphireWizardPage</a></li>
+  <li><a href="#SapphireWizardPagePart">SapphireWizardPagePart</a></li>
+  <li><a href="#SapphireWizardPart">SapphireWizardPart</a></li>
+  <li><a href="#ScalePropertyEditorRenderer">ScalePropertyEditorRenderer</a></li>
+  <li><a href="#SectionDef">SectionDef</a></li>
+  <li><a href="#SectionPart">SectionPart</a></li>
+  <li><a href="#SectionRef">SectionRef</a></li>
+  <li><a href="#SeparatorDef">SeparatorDef</a></li>
+  <li><a href="#SeparatorPart">SeparatorPart</a></li>
   <li><a href="#ServiceFactory">ServiceFactory</a></li>
+  <li><a href="#SlushBucketPropertyEditor">SlushBucketPropertyEditor</a></li>
+  <li><a href="#SplitFormBlockDef">SplitFormBlockDef</a></li>
+  <li><a href="#SplitFormBlockPart">SplitFormBlockPart</a></li>
+  <li><a href="#SplitFormDef">SplitFormDef</a></li>
+  <li><a href="#SplitFormPart">SplitFormPart</a></li>
   <li><a href="#StandardXmlListBindingImpl">StandardXmlListBindingImpl</a></li>
+  <li><a href="#SwtRendererUtil">SwtRendererUtil</a></li>
+  <li><a href="#SwtResourceCache">SwtResourceCache</a></li>
+  <li><a href="#SwtUtil">SwtUtil</a></li>
+  <li><a href="#TabGroupDef">TabGroupDef</a></li>
+  <li><a href="#TabGroupPageDef">TabGroupPageDef</a></li>
+  <li><a href="#TabGroupPagePart">TabGroupPagePart</a></li>
+  <li><a href="#TabGroupPart">TabGroupPart</a></li>
   <li><a href="#Transient">Transient</a></li>
   <li><a href="#TransientProperty">TransientProperty</a></li>
   <li><a href="#TypeCast">TypeCast</a></li>
@@ -109,14 +231,167 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ValidationService">ValidationService</a></li>
   <li><a href="#Value">Value</a></li>
   <li><a href="#ValueBindingImpl">ValueBindingImpl</a></li>
+  <li><a href="#ValueLabelProvider">ValueLabelProvider</a></li>
   <li><a href="#ValueProperty">ValueProperty</a></li>
+  <li><a href="#ValuePropertyEditorRenderer">ValuePropertyEditorRenderer</a></li>
   <li><a href="#ValueSerializationMasterService">ValueSerializationMasterService</a></li>
   <li><a href="#ValueSerializationService">ValueSerializationService</a></li>
+  <li><a href="#WhitespaceSeparatorDef">WhitespaceSeparatorDef</a></li>
+  <li><a href="#WhitespaceSeparatorPart">WhitespaceSeparatorPart</a></li>
+  <li><a href="#WithDef">WithDef</a></li>
+  <li><a href="#WithPart">WithPart</a></li>
+  <li><a href="#WithPartImplied">WithPartImplied</a></li>
+  <li><a href="#WizardDef">WizardDef</a></li>
+  <li><a href="#WizardPageDef">WizardPageDef</a></li>
   <li><a href="#XmlDocumentSchemasCache">XmlDocumentSchemasCache</a></li>
   <li><a href="#XmlResource">XmlResource</a></li>
   <li><a href="#Service">@Service</a></li>
   <li><a href="#SDEF">SDEF</a></li>
 </ol>
+
+
+<h2><a name="AbsoluteFilePathBrowseActionHandler">AbsoluteFilePathBrowseActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer.actions<span class="unaffected">.AbsoluteFilePathBrowseActionHandler</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.AbsoluteFilePathBrowseActionHandler</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="AbsoluteFolderPathBrowseActionHandler">AbsoluteFolderPathBrowseActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer.actions<span class="unaffected">.AbsoluteFolderPathBrowseActionHandler</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.AbsoluteFolderPathBrowseActionHandler</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="AbstractSlushBucketPropertyEditorRenderer">AbstractSlushBucketPropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.AbstractSlushBucketPropertyEditor</span>Renderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.AbstractSlushBucketPropertyEditor</span>Presentation</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ActionBridge">ActionBridge</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.ActionBridge</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.ActionBridge</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ActionHandlerBridge">ActionHandlerBridge</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.ActionHandlerBridge</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.ActionHandlerBridge</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ActionSystemPartBridge">ActionSystemPartBridge</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.ActionSystemPartBridge</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.ActionSystemPartBridge</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ActuatorDef">ActuatorDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.ActuatorDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.ActuatorDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ActuatorPart">ActuatorPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.ActuatorPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">ActuatorPart</span></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="AdapterService">AdapterService</a></h2>
@@ -263,9 +538,32 @@ is now handled by Resource base class</span></code></pre>
 </table>
 
 
+<h2><a name="BooleanPropertyEditorRenderer">BooleanPropertyEditorRenderer</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
 <h2><a name="BundleImageDataFactory">BundleImageDataFactory</a></h2>
 
-<p>This facility has been removed and no analog has been provided.</p>
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="CheckBoxListPropertyEditorRenderer">CheckBoxListPropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.CheckBoxListPropertyEditor</span>Renderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.CheckBoxListPropertyEditor</span>Presentation</code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="Color">Color</a></h2>
@@ -305,6 +603,111 @@ is now handled by Resource base class</span></code></pre>
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">color.</span>blue<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ColumnSortComparator">ColumnSortComparator</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="CompactListPropertyEditorRenderer">CompactListPropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.CompactListPropertyEditor</span>Renderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.CompactListPropertyEditor</span>Presentation</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="CompositeDef">CompositeDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.CompositeDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.CompositeDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="CompositePart">CompositePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.CompositePart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">CompositePart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ConditionalDef">ConditionalDef</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="ConditionalPart">ConditionalPart</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="ContentOutlineNodeState">ContentOutlineNodeState</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.state.ContentOutline<span class="unaffected">NodeState</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.MasterDetails<span class="unaffected">NodeState</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ContentOutlineState">ContentOutlineState</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.state.Content<span class="unaffected">OutlineState</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.MasterDetails<span class="unaffected">OutlineState</span></code></pre>
     </td>
   </tr>
 </table>
@@ -533,6 +936,42 @@ void setDate( Date value );</span></code></pre>
 </table>
 
 
+<h2><a name="DefaultListPropertyEditorRenderer">DefaultListPropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.</span>DefaultListPropertyEditorRenderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.</span>TablePropertyEditorPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="DefaultValuePropertyEditorRenderer">DefaultValuePropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.</span>DefaultValuePropertyEditorRenderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.</span>TextFieldPropertyEditorPresentation</span></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="DependenciesAggregationService">DependenciesAggregationService</a></h2>
 
 <p>As an optimization, the aggregation intermediary to DependenciesService has been removed.</p>
@@ -553,6 +992,24 @@ for( DependenciesService service : property.services( DependenciesService.class 
 {
     dependencies.addAll( service.dependencies() );
 }</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="DialogDef">DialogDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.DialogDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.DialogDef</span></code></pre>
     </td>
   </tr>
 </table>
@@ -579,6 +1036,42 @@ for( DependenciesService service : property.services( DependenciesService.class 
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">DtdParser.</span>parse( new URL( location ) )</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="EclipseWorkspacePathPropertyEditorRenderer">EclipseWorkspacePathPropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>ui.renderers.swt.EclipseWorkspacePathPropertyEditorRenderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>workspace.ui.WorkspaceRelativePathPropertyEditorPresentation</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="EditorPagePresentation">EditorPagePresentation</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.EditorPagePresentation</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">swt.EditorPagePresentation</span></code></pre>
     </td>
   </tr>
 </table>
@@ -709,6 +1202,11 @@ needs to listen on all PropertyValidationEvents.</span></code></pre>
 </table>
 
 
+<h2><a name="EnumPropertyEditorRenderer">EnumPropertyEditorRenderer</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
 <h2><a name="Event">Event</a></h2>
 
 <table>
@@ -786,6 +1284,132 @@ public class FilteringListenerWrapper extends Listener
 </table>
 
 
+<h2><a name="FormComponentDef">FormComponentDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.FormComponentDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.FormComponentDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormComponentPart">FormComponentPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.FormComponentPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">FormComponentPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormDef">FormDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.FormDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.FormDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormEditorPage">FormEditorPage</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.FormEditorPage</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt.<span class="unaffected">FormEditorPage</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormEditorPageDef">FormEditorPageDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.FormEditorPageDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.FormEditorPageDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormEditorPagePart">FormEditorPagePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.FormEditorPagePart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">FormEditorPagePart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="FormPart">FormPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.FormPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">FormPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="FunctionContext">FunctionContext</a></h2>
 
 <table>
@@ -819,6 +1443,65 @@ which elements should be compiled. Also, the developer no longer has control ove
 of the generated implementation class. As such, the @GenerateImpl annotation has been removed and no direct 
 equivalent has been provided. For further guidance, post a question 
 on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphire Adopter Forum</a>.</p>
+
+
+<h2><a name="GridLayoutUtil">GridLayoutUtil</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.GridLayoutUtil</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.GridLayoutUtil</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="HtmlPanelDef">HtmlPanelDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.HtmlPanelDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.HtmlPanelDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="HtmlPanelPart">HtmlPanelPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.HtmlPanelPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">HtmlPanelPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="HyperlinkTable">HyperlinkTable</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
 
 
 <h2><a name="ImageData">ImageData</a></h2>
@@ -944,6 +1627,24 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">ExecutableElement</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="IFormPartInclude">IFormPartInclude</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.I<span class="unaffected">Form</span>Part<span class="unaffected">Include</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">Form</span>Component<span class="unaffected">Include</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1266,6 +1967,150 @@ element.</span>visit
 </table>
 
 
+<h2><a name="IPropertiesViewContributionDef">IPropertiesViewContributionDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.I<span class="unaffected">PropertiesViewContributionDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributionDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="IPropertiesViewContributionPageDef">IPropertiesViewContributionPageDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.I<span class="unaffected">PropertiesViewContributionPageDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributionPageDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="IPropertiesViewContributorDef">IPropertiesViewContributorDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.I<span class="unaffected">PropertiesViewContributorDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributorDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="IPropertiesViewContributorPart">IPropertiesViewContributorPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>I<span class="unaffected">PropertiesViewContributorPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributorPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireGroupDef">ISapphireGroupDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.ISapphire<span class="unaffected">GroupDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">GroupDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireLabelDef">ISapphireLabelDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.ISapphireLabel<span class="unaffected">Def</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.Text<span class="unaffected">Def</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireStaticTextFieldDef">ISapphireStaticTextFieldDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.ISapphire<span class="unaffected">StaticTextFieldDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">StaticTextFieldDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="LabelPart">LabelPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Label<span class="unaffected">Part</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.Text<span class="unaffected">Part</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="LayeredListBindingImpl">LayeredListBindingImpl</a></h2>
 
 <table>
@@ -1279,6 +2124,42 @@ element.</span>visit
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.LayeredListPropertyBinding</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="LineSeparatorDef">LineSeparatorDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.LineSeparatorDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.LineSeparatorDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="LineSeparatorPart">LineSeparatorPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.LineSeparatorPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">LineSeparatorPart</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1320,6 +2201,204 @@ element.</span>visit
 </table>
 
 
+<h2><a name="ListPropertyEditorRenderer">ListPropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.ListPropertyEditor</span>Renderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.ListPropertyEditor</span>Presentation</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentNode">MasterDetailsContentNode</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails<span class="unaffected">.MasterDetailsContentNode</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodePart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentNodeChildDef">MasterDetailsContentNodeChildDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def<span class="unaffected">.MasterDetailsContentNodeChildDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeChildDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentNodeDef">MasterDetailsContentNodeDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def<span class="unaffected">.MasterDetailsContentNodeDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentNodeFactoryCaseDef">MasterDetailsContentNodeFactoryCaseDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def<span class="unaffected">.MasterDetailsContentNodeFactoryCaseDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeFactoryCaseDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentNodeFactoryDef">MasterDetailsContentNodeFactoryDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def<span class="unaffected">.MasterDetailsContentNodeFactoryDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeFactoryDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentNodeInclude">MasterDetailsContentNodeInclude</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def<span class="unaffected">.MasterDetailsContentNodeInclude</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeInclude</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentNodeList">MasterDetailsContentNodeList</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails<span class="unaffected">.MasterDetailsContentNodeList</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeList</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsContentOutline">MasterDetailsContentOutline</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails<span class="unaffected">.MasterDetailsContentOutline</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentOutline</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsEditorPage">MasterDetailsEditorPage</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails<span class="unaffected">.MasterDetailsEditorPage</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.MasterDetailsEditorPage</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsEditorPageDef">MasterDetailsEditorPageDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def<span class="unaffected">.MasterDetailsEditorPageDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsEditorPageDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="MasterDetailsEditorPagePart">MasterDetailsEditorPagePart</a></h2>
 
 <table>
@@ -1329,10 +2408,36 @@ element.</span>visit
   </tr>
   <tr>
     <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails<span class="unaffected">.MasterDetailsEditorPagePart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsEditorPagePart</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
 <pre class="source-code"><code><span class="unaffected">MasterDetailsEditorPageState state = page.</span>getState<span class="unaffected">();</span></code></pre>
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">MasterDetailsEditorPageState state = page.</span>state<span class="unaffected">();</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="MasterDetailsEditorPageState">MasterDetailsEditorPageState</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.state<span class="unaffected">.MasterDetailsEditorPageState</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsEditorPageState</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1522,6 +2627,11 @@ for( Element child : list )
 </table>
 
 
+<h2><a name="ModelElementsTransfer">ModelElementsTransfer</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
 <h2><a name="ModelElementType">ModelElementType</a></h2>
 
 <p>With the switch to on-demand element compilation, the developer no longer has control over the name
@@ -1595,6 +2705,11 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="NamedValuesPropertyEditorRenderer">NamedValuesPropertyEditorRenderer</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
 <h2><a name="NLS">NLS</a></h2>
 
 <table>
@@ -1647,6 +2762,83 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="PageBookDef">PageBookDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.PageBookDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PageBookDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PageBookExtDef">PageBookExtDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.PageBook</span>Ext<span class="unaffected">Def</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PageBookDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PageBookKeyMapping">PageBookKeyMapping</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.PageBookKeyMapping</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PageBookKeyMapping</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PageBookPart">PageBookPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.PageBookPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PageBookPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PageBookPartControlMethod">PageBookPartControlMethod</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
 <h2><a name="PossibleValuesService">PossibleValuesService</a></h2>
 
 <table>
@@ -1685,6 +2877,114 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="ProblemsTraversalService">ProblemsTraversalService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails<span class="unaffected">.ProblemsTraversalService</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.ProblemsTraversalService</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ProblemsTraversalServiceData">ProblemsTraversalServiceData</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails<span class="unaffected">.ProblemsTraversalServiceData</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.ProblemsTraversalServiceData</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ProgressMonitorBridge">ProgressMonitorBridge</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>ui.swt<span class="unaffected">.ProgressMonitorBridge</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.platform<span class="unaffected">.ProgressMonitorBridge</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertiesViewContributionManager">PropertiesViewContributionManager</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.PropertiesViewContributionManager</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributionManager</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertiesViewContributionPagePart">PropertiesViewContributionPagePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.PropertiesViewContributionPagePart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributionPagePart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertiesViewContributionPart">PropertiesViewContributionPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.PropertiesViewContributionPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributionPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="PropertyContentEvent">PropertyContentEvent</a></h2>
 
 <table>
@@ -1698,6 +2998,42 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyContentEvent</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEditorDef">PropertyEditorDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.PropertyEditorDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PropertyEditorDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEditorPart">PropertyEditorPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.PropertyEditorPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertyEditorPart</code></pre>
     </td>
   </tr>
 </table>
@@ -1823,6 +3159,42 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="PropertyEditorRenderer">PropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.PropertyEditor</span>Renderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.PropertyEditor</span>Presentation</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEditorRendererFactory">PropertyEditorRendererFactory</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.PropertyEditor</span>Renderer<span class="unaffected">Factory</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.PropertyEditor</span>Presentation<span class="unaffected">Factory</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="PropertyInitializationEvent">PropertyInitializationEvent</a></h2>
 
 <p>As an optimization, property initialization events are no longer broadcast.</p>
@@ -1859,6 +3231,24 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ReferenceValue</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="RelativePathBrowseActionHandler">RelativePathBrowseActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer.actions<span class="unaffected">.RelativePathBrowseActionHandler</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.RelativePathBrowseActionHandler</span></code></pre>
     </td>
   </tr>
 </table>
@@ -1924,6 +3314,60 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="SapphireActionPresentation">SapphireActionPresentation</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SapphireActionPresentation</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireActionPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireActionPresentationManager">SapphireActionPresentationManager</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SapphireActionPresentationManager</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireActionPresentationManager</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireBrowseActionHandler">SapphireBrowseActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">BrowseActionHandler</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">BrowseActionHandler</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="SapphireDiagramEditorPagePart">SapphireDiagramEditorPagePart</a></h2>
 
 <table>
@@ -1942,6 +3386,42 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="SapphireDialog">SapphireDialog</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.SapphireDialog</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">swt.SapphireDialog</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireDialogPart">SapphireDialogPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.SapphireDialogPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">DialogPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="SapphireEditor">SapphireEditor</a></h2>
 
 <p>The following method has been removed and no direct equivalent have been provided. For further guidance, post a question 
@@ -1953,12 +3433,187 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <span class="unaffected">}</span></code></pre>
 
 
+<h2><a name="SapphireEditorFormPage">SapphireEditorFormPage</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.SapphireEditorFormPage</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt.<span class="unaffected">SapphireEditorFormPage</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireEnumControlledPageBook">SapphireEnumControlledPageBook</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="SapphireForm">SapphireForm</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.SapphireForm</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">swt.SapphireForm</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireGroup">SapphireGroup</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">Group</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">Group</span>Part</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireHotSpotsActionPresentation">SapphireHotSpotsActionPresentation</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SapphireHotSpotsActionPresentation</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireHotSpotsActionPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireJumpActionHandler">SapphireJumpActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">JumpActionHandler</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">JumpActionHandler</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireKeyboardActionPresentation">SapphireKeyboardActionPresentation</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SapphireKeyboardActionPresentation</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireKeyboardActionPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireListControlledPageBook">SapphireListControlledPageBook</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>SapphireListControlledPageBook</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.DetailSectionPart</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireMenuActionPresentation">SapphireMenuActionPresentation</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SapphireMenuActionPresentation</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireMenuActionPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphirePopup">SapphirePopup</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.</span>Sapphire<span class="unaffected">Popup</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.<span class="unaffected">Popup</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></h2>
 
 <table>
   <tr>
     <th>Before</th>
     <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">PropertyEditorActionHandler</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertyEditorActionHandler</span></code></pre>
+    </td>
   </tr>
   <tr>
     <td>
@@ -1971,12 +3626,135 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="SapphirePropertyEditorCondition">SapphirePropertyEditorCondition</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">PropertyEditorCondition</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertyEditorCondition</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphirePropertyPage">SapphirePropertyPage</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.SapphirePropertyPage</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">swt.SapphirePropertyPage</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphirePropertySheetPage">SapphirePropertySheetPage</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="SapphireStaticTextField">SapphireStaticTextField</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">StaticTextField</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">StaticTextField</span>Part</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireStatusDialog">SapphireStatusDialog</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="SapphireTextCellEditor">SapphireTextCellEditor</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="SapphireTextPopup">SapphireTextPopup</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="SapphireToolBarActionPresentation">SapphireToolBarActionPresentation</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SapphireToolBarActionPresentation</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireToolBarActionPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireToolBarManagerActionPresentation">SapphireToolBarManagerActionPresentation</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SapphireToolBarManagerActionPresentation</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireToolBarManagerActionPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireToolTip">SapphireToolTip</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
 <h2><a name="SapphireWizard">SapphireWizard</a></h2>
 
 <table>
   <tr>
     <th>Before</th>
     <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.SapphireWizard</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">swt.SapphireWizard</span></code></pre>
+    </td>
   </tr>
   <tr>
     <td>
@@ -2043,6 +3821,155 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="SapphireWizardPage">SapphireWizardPage</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.SapphireWizardPage</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">swt.SapphireWizardPage</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireWizardPagePart">SapphireWizardPagePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">WizardPagePart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">WizardPagePart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphireWizardPart">SapphireWizardPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>Sapphire<span class="unaffected">WizardPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">WizardPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ScalePropertyEditorRenderer">ScalePropertyEditorRenderer</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
+<h2><a name="SectionDef">SectionDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.SectionDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.SectionDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SectionPart">SectionPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.SectionPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">SectionPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SectionRef">SectionRef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.SectionRef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.SectionRef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SeparatorDef">SeparatorDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.SeparatorDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.SeparatorDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SeparatorPart">SeparatorPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.SeparatorPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">SeparatorPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="ServiceFactory">ServiceFactory</a></h2>
 
 <table>
@@ -2099,6 +4026,96 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="SlushBucketPropertyEditor">SlushBucketPropertyEditor</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.SlushBucketPropertyEditor</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.SlushBucketPropertyEditor</span>Presentation</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SplitFormBlockDef">SplitFormBlockDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.SplitForm</span>Block<span class="unaffected">Def</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.SplitForm</span>Section<span class="unaffected">Def</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SplitFormBlockPart">SplitFormBlockPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.SplitForm</span>Block<span class="unaffected">Part</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">SplitForm</span>Section<span class="unaffected">Part</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SplitFormDef">SplitFormDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.SplitFormDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.SplitFormDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SplitFormPart">SplitFormPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.SplitFormPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">SplitFormPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="StandardXmlListBindingImpl">StandardXmlListBindingImpl</a></h2>
 
 <table>
@@ -2132,6 +4149,132 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
         <span class="unaffected">...
     }
 }</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SwtRendererUtil">SwtRendererUtil</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.Swt</span>Renderer<span class="unaffected">Util</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.SwtUtil</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SwtResourceCache">SwtResourceCache</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.swt.SwtResourceCache</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.SwtResourceCache</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SwtUtil">SwtUtil</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>swt.renderer<span class="unaffected">.SwtUtil</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SwtUtil</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="TabGroupDef">TabGroupDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.TabGroupDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.TabGroupDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="TabGroupPageDef">TabGroupPageDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.TabGroupPageDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.TabGroupPageDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="TabGroupPagePart">TabGroupPagePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.TabGroupPagePart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">TabGroupPagePart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="TabGroupPart">TabGroupPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.TabGroupPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">TabGroupPart</span></code></pre>
     </td>
   </tr>
 </table>
@@ -2539,6 +4682,11 @@ validation using Property.validation() API. The property manages the interaction
 </table>
 
 
+<h2><a name="ValueLabelProvider">ValueLabelProvider</a></h2>
+
+<p>This class is not longer available and no analog has been provided.</p>
+
+
 <h2><a name="ValueProperty">ValueProperty</a></h2>
 
 <table>
@@ -2552,6 +4700,24 @@ validation using Property.validation() API. The property manages the interaction
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">ValueProperty</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ValuePropertyEditorRenderer">ValuePropertyEditorRenderer</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>renderers<span class="unaffected">.swt.ValuePropertyEditor</span>Renderer</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.ValuePropertyEditor</span>Presentation</code></pre>
     </td>
   </tr>
 </table>
@@ -2659,6 +4825,132 @@ matches the default implementation of the encode() method.</p>
 </table>
 
 
+<h2><a name="WhitespaceSeparatorDef">WhitespaceSeparatorDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.WhitespaceSeparatorDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.WhitespaceSeparatorDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="WhitespaceSeparatorPart">WhitespaceSeparatorPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.WhitespaceSeparatorPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">WhitespaceSeparatorPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="WithDef">WithDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.WithDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.WithDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="WithPart">WithPart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.WithPart</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">WithPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="WithPartImplied">WithPartImplied</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.With</span>PartImplied</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">With</span>ImpliedPart</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="WizardDef">WizardDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.WizardDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.WizardDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="WizardPageDef">WizardPageDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.WizardPageDef</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.WizardPageDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="XmlDocumentSchemasCache">XmlDocumentSchemasCache</a></h2>
 
 <table>
@@ -2746,6 +5038,119 @@ metamodel context will need an adjustment.</p>
     </td>
     <td>
 <pre class="source-code"><code>&lt;background-color>white&lt;/background-color></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;switching-panel>
+    &lt;list-selection-controller>
+        <span class="unaffected">&lt;property>...&lt;/property></span>
+    &lt;/list-selection-controller>
+    <span class="unaffected">&lt;panel>
+        &lt;key>...&lt;/key>
+        &lt;content>
+	        ...
+        &lt;/content>
+    &lt;/panel>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel></span>
+&lt;/switching-panel></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;detail-section>
+    <span class="unaffected">&lt;property>...&lt;/property>
+    &lt;panel>
+        &lt;key>...&lt;/key>
+        &lt;content>
+	        ...
+        &lt;/content>
+    &lt;/panel>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel></span>
+&lt;/detail-section></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;switching-panel>
+    &lt;enum-controller>
+        &lt;property>ExampleEnum&lt;/property>
+    &lt;/enum-controller>
+    &lt;panel>
+        &lt;key>ExampleEnum.ITEM1&lt;/key>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/panel>
+    &lt;panel>
+        &lt;key>ExampleEnum.ITEM2&lt;/key>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/panel>
+    &lt;default-panel>
+        <span class="unaffected">&lt;content>
+	        ...
+        &lt;/content></span>
+    &lt;/default-panel>
+&lt;switching-panel></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;form>
+    &lt;visible-when>${ ExampleEnum == "ITEM1" }&lt;/visible-when>
+    <span class="unaffected">&lt;content>
+        ...
+    &lt;/content></span>
+&lt;/form>
+&lt;form>
+    &lt;visible-when>${ ExampleEnum == "ITEM2" }&lt;/visible-when>
+    <span class="unaffected">&lt;content>
+        ...
+    &lt;/content></span>
+&lt;/form>
+&lt;form>
+    &lt;visible-when>${ ExampleEnum != "ITEM1" and ExampleEnum != "ITEM2" }&lt;/visible-when>
+    <span class="unaffected">&lt;content>
+        ...
+    &lt;/content></span>
+&lt;/form></code></pre>
+
+<p>When comparing enum values in an expression, make sure to use strings as specified
+by @EnumSerialization annotations (if present) rather than names of enum items in Java.</p>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;if>
+    &lt;condition><span class="unaffected">${ ... }</span>&lt;/condition>
+    &lt;then>
+        <span class="unaffected">...</span>
+    &lt;/then>
+    &lt;else>
+        <span class="unaffected">...</span>
+    &lt;/else>
+&lt;/if></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;form>
+    &lt;visible-when><span class="unaffected">${ ... }</span>&lt;/visible-when>
+    &lt;content>
+        <span class="unaffected">...</span>
+    &lt;/content>
+&lt;/form>
+&lt;form>
+    &lt;visible-when><span class="unaffected">${</span> ! ( <span class="unaffected">...</span> ) <span class="unaffected">}</span>&lt;/visible-when>
+    &lt;content>
+        <span class="unaffected">...</span>
+    &lt;/content>
+&lt;/form></code></pre>
     </td>
   </tr>
 </table>
