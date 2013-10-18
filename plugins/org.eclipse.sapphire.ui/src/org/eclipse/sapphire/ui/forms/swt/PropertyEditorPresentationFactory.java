@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire.ui.forms.swt;
 
-import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.swt.widgets.Composite;
 
@@ -23,5 +22,5 @@ public abstract class PropertyEditorPresentationFactory
 {
     public abstract boolean isApplicableTo( PropertyEditorPart part );
     
-    public abstract PropertyEditorPresentation create( FormComponentPart part, SwtPresentation parent, Composite composite );
+    public abstract PropertyEditorPresentation create( PropertyEditorPart part, SwtPresentation parent, Composite composite );
 }

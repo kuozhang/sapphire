@@ -1549,7 +1549,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         }
         
         @Override
-        public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new TablePropertyEditorPresentation( part, parent, composite );
         }

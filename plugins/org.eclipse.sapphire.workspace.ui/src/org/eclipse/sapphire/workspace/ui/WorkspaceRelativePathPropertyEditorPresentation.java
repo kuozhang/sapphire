@@ -40,10 +40,10 @@ import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentationFactory;
-import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.TextFieldPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.RelativePathBrowseActionHandler.ContainersOnlyViewerFilter;
 import org.eclipse.sapphire.ui.forms.swt.RelativePathBrowseActionHandler.ExtensionBasedViewerFilter;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.TextFieldPropertyEditorPresentation;
 import org.eclipse.sapphire.workspace.CreateWorkspaceFileOp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -257,7 +257,7 @@ public final class WorkspaceRelativePathPropertyEditorPresentation extends TextF
         }
         
         @Override
-        public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new WorkspaceRelativePathPropertyEditorPresentation( part, parent, composite );
         }

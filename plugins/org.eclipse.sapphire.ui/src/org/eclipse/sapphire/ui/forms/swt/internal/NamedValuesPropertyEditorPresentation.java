@@ -361,7 +361,7 @@ public final class NamedValuesPropertyEditorPresentation extends ValuePropertyEd
         }
         
         @Override
-        public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new NamedValuesPropertyEditorPresentation( part, parent, composite );
         }

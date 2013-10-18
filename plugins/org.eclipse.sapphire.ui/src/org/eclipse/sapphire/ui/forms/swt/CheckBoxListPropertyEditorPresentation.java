@@ -752,7 +752,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
         }
         
         @Override
-        public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new CheckBoxListPropertyEditorPresentation( part, parent, composite );
         }
@@ -787,7 +787,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
         }
         
         @Override
-        public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new CheckBoxListPropertyEditorPresentation( part, parent, composite );
         }

@@ -398,7 +398,7 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
         }
         
         @Override
-        public PropertyEditorPresentation create( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new SlushBucketPropertyEditorPresentation( part, parent, composite );
         }
