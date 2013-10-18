@@ -64,11 +64,6 @@ public class Value<T> extends Property
         {
             init();
             
-            if( true )
-            {
-                throw new RuntimeException();
-            }
-    
             refreshContent( false );
             refreshDefaultContent( false );
             refreshEnablement( false );
