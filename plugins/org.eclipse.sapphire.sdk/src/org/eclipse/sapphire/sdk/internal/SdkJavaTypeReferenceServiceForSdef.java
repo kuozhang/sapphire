@@ -49,40 +49,38 @@ public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceS
     @Override
     public JavaType resolve( final String name )
     {
-        if( name.trim().length() == 0 || name.startsWith( "." ) || name.endsWith( "." ) )
+        if( name != null && name.trim().length() != 0 && ! name.startsWith( "." ) && ! name.endsWith( "." ) )
         {
-            return null;
-        }
-        
-        final String n = name.replace( '$', '.' );
-        
-        try
-        {
-            IType type = this.project.findType( n );
+            final String n = name.replace( '$', '.' );
             
-            if( type == null && name.indexOf( '.' ) == -1 )
+            try
             {
-                for( IPackageReference packageRef : context( ISapphireUiDef.class ).getImportedPackages() )
+                IType type = this.project.findType( n );
+                
+                if( type == null && name.indexOf( '.' ) == -1 )
                 {
-                    final String packageName = packageRef.getName().text();
-                    
-                    if( packageName != null )
+                    for( IPackageReference packageRef : context( ISapphireUiDef.class ).getImportedPackages() )
                     {
-                        type = this.project.findType( packageName, n );
-        
-                        if( type != null && type.exists() && ! type.isAnonymous() )
+                        final String packageName = packageRef.getName().text();
+                        
+                        if( packageName != null )
                         {
-                            break;
+                            type = this.project.findType( packageName, n );
+            
+                            if( type != null && type.exists() && ! type.isAnonymous() )
+                            {
+                                break;
+                            }
                         }
                     }
                 }
+                
+                return new JdtJavaType( type );
             }
-            
-            return new JdtJavaType( type );
-        }
-        catch( JavaModelException e )
-        {
-            LoggingService.log( e );
+            catch( JavaModelException e )
+            {
+                LoggingService.log( e );
+            }
         }
         
         return null;
