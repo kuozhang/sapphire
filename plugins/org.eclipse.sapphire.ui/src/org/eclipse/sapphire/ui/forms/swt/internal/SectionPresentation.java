@@ -33,6 +33,8 @@ import org.eclipse.sapphire.ui.forms.SectionPart;
 import org.eclipse.sapphire.ui.forms.SectionPart.DescriptionEvent;
 import org.eclipse.sapphire.ui.forms.SectionPart.TitleEvent;
 import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.SapphireKeyboardActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.text.SapphireFormText;
 import org.eclipse.swt.SWT;

@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.forms.ActuatorPart;
 import org.eclipse.sapphire.ui.forms.ActuatorPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

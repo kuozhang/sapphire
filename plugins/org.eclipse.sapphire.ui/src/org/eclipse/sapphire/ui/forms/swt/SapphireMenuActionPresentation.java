@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.internal;
+package org.eclipse.sapphire.ui.forms.swt;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
@@ -29,9 +29,6 @@ import org.eclipse.sapphire.ui.SapphireActionSystemPart.ImagesChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.VisibilityEvent;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
-import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.forms.swt.SapphireHotSpotsActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;

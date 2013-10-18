@@ -12,7 +12,7 @@
  *    Shenxue Zhou - display a default image for actions without images
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.internal;
+package org.eclipse.sapphire.ui.forms.swt;
 
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
@@ -34,9 +34,6 @@ import org.eclipse.sapphire.ui.SapphireActionSystemPart.ToolTipChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.def.SapphireActionType;
-import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.forms.swt.SapphireHotSpotsActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;

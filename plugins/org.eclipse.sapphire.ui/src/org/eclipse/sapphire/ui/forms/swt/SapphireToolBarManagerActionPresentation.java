@@ -16,7 +16,6 @@ import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.SubToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.sapphire.ui.forms.swt.internal.SapphireToolBarActionPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;

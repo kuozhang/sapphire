@@ -44,6 +44,7 @@ import org.eclipse.sapphire.ui.forms.WithDef;
 import org.eclipse.sapphire.ui.forms.WithPart;
 import org.eclipse.sapphire.ui.forms.WithPart.Style;
 import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
+import org.eclipse.sapphire.ui.forms.swt.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;

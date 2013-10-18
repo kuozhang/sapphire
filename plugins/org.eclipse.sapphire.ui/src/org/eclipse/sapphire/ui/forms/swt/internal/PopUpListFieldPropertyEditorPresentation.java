@@ -37,6 +37,7 @@ import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.swt.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.ValuePropertyEditorPresentation;
 import org.eclipse.sapphire.util.MutableReference;

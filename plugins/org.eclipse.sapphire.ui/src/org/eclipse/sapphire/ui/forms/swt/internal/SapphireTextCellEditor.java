@@ -42,6 +42,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
 import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
 import org.eclipse.sapphire.ui.forms.swt.SapphireHotSpotsActionPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SapphireKeyboardActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.TablePropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SapphireHotSpotsActionPresentation.ControlHotSpot;
 import org.eclipse.swt.SWT;

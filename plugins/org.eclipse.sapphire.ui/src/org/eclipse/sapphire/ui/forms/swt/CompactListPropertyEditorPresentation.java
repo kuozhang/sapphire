@@ -55,8 +55,6 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.internal.SapphireKeyboardActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.internal.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.TextOverlayPainter;
 import org.eclipse.sapphire.ui.forms.swt.internal.text.SapphireFormText;
 import org.eclipse.swt.SWT;
