@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentationFactory;
+import org.eclipse.sapphire.ui.forms.swt.RadioButtonsGroup;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.ValuePropertyEditorPresentation;
 import org.eclipse.swt.SWT;

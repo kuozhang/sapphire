@@ -11,7 +11,7 @@
  *    Gregory Amerson - [418602] Radio buttons property editor should show images
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.internal;
+package org.eclipse.sapphire.ui.forms.swt;
 
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhfill;
@@ -58,8 +58,7 @@ public class RadioButtonsGroup extends Composite
     private Button selection;
     private List<SelectionListener> listeners;
     
-    public RadioButtonsGroup( final Composite composite,
-                              final boolean vertical )
+    public RadioButtonsGroup( final Composite composite, final boolean vertical )
     {
         super( composite, SWT.NONE );
 
