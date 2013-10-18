@@ -13,7 +13,8 @@ package org.eclipse.sapphire.workspace.internal;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.sapphire.ConversionService;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.workspace.WorkspaceFileResourceStore;
 
@@ -39,7 +40,7 @@ public final class IFileToWorkspaceFileResourceStoreConversionService extends Co
         }
         catch( ResourceStoreException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         return null;

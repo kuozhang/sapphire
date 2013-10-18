@@ -19,8 +19,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -108,7 +109,7 @@ public abstract class SapphireActionPresentation
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     
                     // Filters are booted on first failure to keep malfunctioning filters from
                     // flooding the log, etc.
@@ -157,7 +158,7 @@ public abstract class SapphireActionPresentation
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     
                     // Filters are booted on first failure to keep malfunctioning filters from
                     // flooding the log, etc.

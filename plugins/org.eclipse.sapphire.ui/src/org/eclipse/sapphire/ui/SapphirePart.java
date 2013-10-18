@@ -35,14 +35,15 @@ import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
@@ -184,7 +185,7 @@ public abstract class SapphirePart implements ISapphirePart
                 catch( Exception e )
                 {
                     final String msg = failedToInstantiate.format( listenerClass.name() );
-                    LoggingService.log( Status.createErrorStatus( msg, e ) );
+                    Sapphire.service( LoggingService.class ).logError( msg, e );
                 }
                 
                 if( listener != null )
@@ -196,7 +197,7 @@ public abstract class SapphirePart implements ISapphirePart
                     else
                     {
                         final String msg = doesNotExtend.format( listenerClass.name() );
-                        LoggingService.log( Status.createErrorStatus( msg ) );
+                        Sapphire.service( LoggingService.class ).logError( msg );
                     }
                 }
             }
@@ -1140,7 +1141,7 @@ public abstract class SapphirePart implements ISapphirePart
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
         }

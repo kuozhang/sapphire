@@ -72,6 +72,7 @@
     <li><a href="#Core-NewConversions">New Conversions</a></li>
     <li><a href="#Core-OrderedPossibleValues">Ordered Possible Values</a></li>
     <li><a href="#Core-SimplerDateSerialization">Simpler Date Serialization</a></li>
+    <li><a href="#Core-LoggingService">LoggingService</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -1050,6 +1051,57 @@ the severity rank order, not in the alphabetical order.</p>
 Value&lt;Date> getDate();
 void setDate( String value );
 void setDate( Date value );</font></code></pre>
+
+
+<h2><a name="Core-LoggingService">LoggingService</a></h2>
+
+<p>Log messages and exceptions relating to system operation.</p>
+
+<pre class="source-code"><code>public abstract class LoggingService extends Service
+{
+    public final void logError( String message )
+    public final void logError( String message, Throwable e )
+    public final void logWarning( String message )
+    public final void log( Throwable e )
+    public abstract void log( Status status )
+}</code></pre>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">try
+{
+    ...
+}
+catch( Exception e )
+{</font>
+    Sapphire.service( LoggingService.class ).log( e );
+<font color="#888888">}</font></code></pre>
+
+<p>Two implementations are provided with Sapphire. One writes to the system error stream and another writes to the Eclipse platform
+log if the framework is running in the context of Eclipse.</p>
+
+<p>If an alternate log strategy is desired, a custom LoggingService implementation can be supplied.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code>public class ExampleLoggingService extends LoggingService
+{
+    @Override
+    public void log( Status status )
+    {
+        ...
+    }
+}</code></pre>
+
+<pre class="source-code"><code><font color="#888888">&lt;extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></font>
+    &lt;service>
+        &lt;id>ExampleLoggingService&lt;/id>
+        &lt;implementation>org.eclipse.sapphire.examples.ExampleLoggingService&lt;/implementation>
+        &lt;context>Sapphire&lt;/context>
+        &lt;overrides>Sapphire.LoggingService.Standard&lt;/overrides>
+        &lt;overrides>Sapphire.LoggingService.Platform&lt;/overrides>
+    &lt;/service>
+<font color="#888888">&lt;/extension></font></code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-FunctionsAsProperties">EL Functions as Properties</a></a></h2>

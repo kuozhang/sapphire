@@ -21,7 +21,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ValidateEditException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -302,7 +303,7 @@ public abstract class XmlNode
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
         }

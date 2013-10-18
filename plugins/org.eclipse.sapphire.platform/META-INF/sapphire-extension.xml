@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension xmlns="http://www.eclipse.org/sapphire/xmlns/extension" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <service>
+        <id>Sapphire.LoggingService.Platform</id>
+        <implementation>org.eclipse.sapphire.platform.internal.PlatformLoggingService</implementation>
+        <context>Sapphire</context>
+        <overrides>Sapphire.LoggingService.Standard</overrides>
+    </service>
+</extension>

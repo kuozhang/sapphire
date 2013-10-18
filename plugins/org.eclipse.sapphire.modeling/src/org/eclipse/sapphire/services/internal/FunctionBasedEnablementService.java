@@ -17,8 +17,9 @@ import java.util.List;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -63,7 +64,7 @@ public final class FunctionBasedEnablementService extends EnablementService
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
                 function = null;
             }
             
@@ -105,7 +106,7 @@ public final class FunctionBasedEnablementService extends EnablementService
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

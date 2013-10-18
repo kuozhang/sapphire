@@ -14,14 +14,15 @@ package org.eclipse.sapphire.internal;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Since;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibility;
 import org.eclipse.sapphire.VersionCompatibilityService;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
 import org.eclipse.sapphire.VersionConstraint;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.ConcatFunction;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -76,7 +77,7 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         else
@@ -89,7 +90,7 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             
             if( function != null )
@@ -164,7 +165,7 @@ public final class DeclarativeVersionCompatibilityService extends VersionCompati
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

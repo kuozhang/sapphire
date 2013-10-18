@@ -55,13 +55,14 @@ import org.eclipse.sapphire.ImageService;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -248,7 +249,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     possibleValues = SetFactory.empty();
                 }
 
@@ -635,7 +636,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
                 
                 if( label == null )
@@ -665,7 +666,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
                 
                 if( imageData == null )

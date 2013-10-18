@@ -17,7 +17,8 @@ import java.util.Set;
 
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.util.MapFactory;
 import org.eclipse.sapphire.util.SetFactory;
 
@@ -57,7 +58,7 @@ public abstract class Service
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

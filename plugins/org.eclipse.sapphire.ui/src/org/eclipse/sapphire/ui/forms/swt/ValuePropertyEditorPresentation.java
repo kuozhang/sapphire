@@ -11,9 +11,10 @@
 
 package org.eclipse.sapphire.ui.forms.swt;
 
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.swt.widgets.Composite;
@@ -70,7 +71,7 @@ public abstract class ValuePropertyEditorPresentation extends PropertyEditorPres
                 }
                 else
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
         

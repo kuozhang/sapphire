@@ -16,10 +16,10 @@ import java.lang.reflect.Field;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.IPackageReference;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
@@ -54,7 +54,7 @@ public final class SapphireUiDefMethods
                     if( expectedType != null && ! expectedType.isAssignableFrom( def.getClass() ) )
                     {
                         final String msg = doesNotImplement.format( id, expectedType.getName() );
-                        LoggingService.log( Status.createErrorStatus( msg ) );
+                        Sapphire.service( LoggingService.class ).logError( msg );
                         
                         return null;
                     }

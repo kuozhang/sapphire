@@ -14,7 +14,8 @@ package org.eclipse.sapphire.services;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.util.MapFactory;
 import org.eclipse.sapphire.util.SetFactory;
 
@@ -98,7 +99,7 @@ public final class ServiceProxy
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
             
@@ -113,7 +114,7 @@ public final class ServiceProxy
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
         }
@@ -131,7 +132,7 @@ public final class ServiceProxy
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

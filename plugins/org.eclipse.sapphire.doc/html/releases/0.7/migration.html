@@ -125,6 +125,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ListBindingImpl">ListBindingImpl</a></li>
   <li><a href="#ListProperty">ListProperty</a></li>
   <li><a href="#ListPropertyEditorRenderer">ListPropertyEditorRenderer</a></li>
+  <li><a href="#LoggingService">LoggingService</a></li>
   <li><a href="#MasterDetailsContentNode">MasterDetailsContentNode</a></li>
   <li><a href="#MasterDetailsContentNodeChildDef">MasterDetailsContentNodeChildDef</a></li>
   <li><a href="#MasterDetailsContentNodeDef">MasterDetailsContentNodeDef</a></li>
@@ -2214,6 +2215,32 @@ element.</span>visit
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.ListPropertyEditor</span>Presentation</code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="LoggingService">LoggingService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.<span class="unaffected">LoggingService</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.LoggingService</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">LoggingService.log( ... )</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>Sapphire.service( <span class="unaffected">LoggingService</span>.class )<span class="unaffected">.log( ... )</span></code></pre>
     </td>
   </tr>
 </table>

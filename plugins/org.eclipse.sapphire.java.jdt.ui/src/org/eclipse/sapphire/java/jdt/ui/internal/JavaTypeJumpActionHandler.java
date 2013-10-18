@@ -20,9 +20,10 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.forms.JumpActionHandler;
 import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
@@ -92,7 +93,7 @@ public final class JavaTypeJumpActionHandler extends JumpActionHandler
             } 
             catch( CoreException e ) 
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
     }
         
@@ -136,7 +137,7 @@ public final class JavaTypeJumpActionHandler extends JumpActionHandler
         }
         catch( JavaModelException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         return type;

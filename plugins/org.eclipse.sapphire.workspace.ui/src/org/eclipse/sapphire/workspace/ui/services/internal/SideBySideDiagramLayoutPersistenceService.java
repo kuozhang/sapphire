@@ -20,8 +20,9 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.FileResourceStore;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -87,7 +88,7 @@ public class SideBySideDiagramLayoutPersistenceService extends StandardDiagramLa
 		}
 		catch (Exception e)
 		{
-		    LoggingService.log( e );
+		    Sapphire.service( LoggingService.class ).log( e );
 		}
 			
 		return layoutModel;

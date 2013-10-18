@@ -22,8 +22,9 @@ import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
@@ -129,7 +130,7 @@ public final class SaveAsImageDiagramActionHandler extends SapphireActionHandler
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             finally
             {

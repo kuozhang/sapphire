@@ -15,11 +15,12 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyBinding;
 import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
@@ -74,7 +75,7 @@ public abstract class XmlResource extends Resource
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     binding = null;
                 }
             }
@@ -95,7 +96,7 @@ public abstract class XmlResource extends Resource
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     binding = null;
                 }
             }
@@ -120,7 +121,7 @@ public abstract class XmlResource extends Resource
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     binding = null;
                 }
             }

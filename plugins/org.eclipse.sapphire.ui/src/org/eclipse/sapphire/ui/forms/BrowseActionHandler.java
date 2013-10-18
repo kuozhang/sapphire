@@ -12,10 +12,11 @@
 package org.eclipse.sapphire.ui.forms;
 
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.Presentation;
 
 /**
@@ -59,7 +60,7 @@ public abstract class BrowseActionHandler extends PropertyEditorActionHandler
                 
                 if( editFailedException == null )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
         }

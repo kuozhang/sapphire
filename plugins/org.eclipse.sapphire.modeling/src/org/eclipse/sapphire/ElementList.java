@@ -20,7 +20,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedSet;
 
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
@@ -194,7 +193,7 @@ public final class ElementList<T extends Element> extends Property implements Li
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                 }
                 

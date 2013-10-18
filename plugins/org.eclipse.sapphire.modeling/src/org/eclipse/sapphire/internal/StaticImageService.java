@@ -16,9 +16,9 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ImageService;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -52,7 +52,7 @@ public final class StaticImageService extends ImageService
         if( this.image == null )
         {
             final String msg = failedToLoadMessage.format( imageAnnotationHostClass.getName(), imagePath );
-            LoggingService.log( Status.createErrorStatus( msg ) );
+            Sapphire.service( LoggingService.class ).logError( msg );
         }
     }
 

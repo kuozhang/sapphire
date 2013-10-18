@@ -16,10 +16,11 @@ import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.RequiredConstraintService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -68,7 +69,7 @@ public final class DeclarativeRequiredConstraintService extends RequiredConstrai
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     function = Literal.FALSE;
                 }
             }
@@ -109,7 +110,7 @@ public final class DeclarativeRequiredConstraintService extends RequiredConstrai
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

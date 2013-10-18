@@ -18,7 +18,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.xml.dtd.DtdParser;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 
@@ -162,7 +163,7 @@ public final class XmlDocumentSchemasCache
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
                 schema = EMPTY_SCHEMA;
             }
             

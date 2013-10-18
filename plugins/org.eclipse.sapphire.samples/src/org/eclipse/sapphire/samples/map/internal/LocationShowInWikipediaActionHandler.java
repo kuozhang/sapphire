@@ -14,7 +14,8 @@ package org.eclipse.sapphire.samples.map.internal;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.samples.map.Location;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -53,11 +54,11 @@ public final class LocationShowInWikipediaActionHandler extends SapphireActionHa
             }
             catch( MalformedURLException e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             catch( PartInitException e ) 
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         

@@ -18,7 +18,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelMetadataItem;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.annotations.Listeners;
@@ -82,7 +81,7 @@ public abstract class PropertyDef extends ModelMetadataItem
         }
         catch( RuntimeException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
             throw e;
         }
         
@@ -257,7 +256,7 @@ public abstract class PropertyDef extends ModelMetadataItem
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                 }
             }

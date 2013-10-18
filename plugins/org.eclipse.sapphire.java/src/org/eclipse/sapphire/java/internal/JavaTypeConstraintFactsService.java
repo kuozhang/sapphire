@@ -17,14 +17,15 @@ import java.util.List;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -140,7 +141,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                     
                     if( type != null )

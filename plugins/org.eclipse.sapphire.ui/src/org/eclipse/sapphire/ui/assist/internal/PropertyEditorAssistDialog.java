@@ -15,8 +15,9 @@ package org.eclipse.sapphire.ui.assist.internal;
 import java.util.Map;
 
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistSection;
@@ -41,10 +42,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class PropertyEditorAssistDialog
-    
-    extends Popup
-
+public class PropertyEditorAssistDialog extends Popup
 {
     private final PropertyEditorAssistContext context;
     private final FormToolkit toolkit;
@@ -158,7 +156,7 @@ public class PropertyEditorAssistDialog
                                 
                                 if( editFailedException == null )
                                 {
-                                    LoggingService.log( e );
+                                    Sapphire.service( LoggingService.class ).log( e );
                                 }
                             }
                             finally

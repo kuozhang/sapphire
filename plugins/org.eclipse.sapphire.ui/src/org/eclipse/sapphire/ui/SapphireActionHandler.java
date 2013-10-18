@@ -13,8 +13,9 @@ package org.eclipse.sapphire.ui;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -103,7 +104,7 @@ public abstract class SapphireActionHandler extends SapphireActionSystemPart
             
             if( editFailedException == null )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         

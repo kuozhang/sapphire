@@ -24,7 +24,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -127,7 +128,7 @@ public class MiscUtil
         }
         catch( IOException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
             return "";
         }
         finally

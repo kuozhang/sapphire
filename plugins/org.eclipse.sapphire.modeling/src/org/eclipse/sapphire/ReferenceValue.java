@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire;
 
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
@@ -69,7 +68,7 @@ public final class ReferenceValue<R,T> extends Value<R>
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         

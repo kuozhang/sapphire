@@ -16,10 +16,11 @@ import java.util.Collection;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -106,7 +107,7 @@ public abstract class AbstractBinding
             }
             else
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     
@@ -149,7 +150,7 @@ public abstract class AbstractBinding
         }
         catch( Exception e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
     }
     

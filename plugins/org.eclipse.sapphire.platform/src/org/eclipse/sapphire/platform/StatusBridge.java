@@ -76,7 +76,7 @@ public final class StatusBridge
 
             public String getPlugin()
             {
-                return "org.eclipse.sapphire.osgi";
+                return "org.eclipse.sapphire";
             }
 
             public int getSeverity()

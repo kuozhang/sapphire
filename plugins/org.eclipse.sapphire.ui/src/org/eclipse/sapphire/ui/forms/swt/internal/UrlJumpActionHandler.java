@@ -13,8 +13,9 @@ package org.eclipse.sapphire.ui.forms.swt.internal;
 
 import java.net.URL;
 
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.forms.JumpActionHandler;
@@ -64,7 +65,7 @@ public final class UrlJumpActionHandler extends JumpActionHandler
             }
             catch( PartInitException e ) 
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         

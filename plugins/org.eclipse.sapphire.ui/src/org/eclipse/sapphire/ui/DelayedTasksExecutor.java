@@ -16,7 +16,8 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.widgets.Display;
 
@@ -212,7 +213,7 @@ public final class DelayedTasksExecutor
                                     }
                                     catch( Exception e )
                                     {
-                                        LoggingService.log( e );
+                                        Sapphire.service( LoggingService.class ).log( e );
                                     }
                                 }
                             }

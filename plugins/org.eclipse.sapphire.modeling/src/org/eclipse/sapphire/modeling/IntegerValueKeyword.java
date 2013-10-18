@@ -13,15 +13,15 @@ package org.eclipse.sapphire.modeling;
 
 import java.text.NumberFormat;
 
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
+
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class IntegerValueKeyword
-
-    extends ValueKeyword
-    
+public final class IntegerValueKeyword extends ValueKeyword
 {
     public IntegerValueKeyword( final String keyword,
                                 final String value )
@@ -42,7 +42,7 @@ public final class IntegerValueKeyword
         }
         catch( NumberFormatException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         final StringBuilder buf = new StringBuilder();

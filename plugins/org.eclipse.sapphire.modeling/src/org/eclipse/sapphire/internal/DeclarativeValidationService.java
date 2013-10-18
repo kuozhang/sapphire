@@ -17,10 +17,11 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Validation;
 import org.eclipse.sapphire.Validations;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.CompositeStatusFactory;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
@@ -95,7 +96,7 @@ public final class DeclarativeValidationService extends ValidationService
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
                 
                 if( rule != null )

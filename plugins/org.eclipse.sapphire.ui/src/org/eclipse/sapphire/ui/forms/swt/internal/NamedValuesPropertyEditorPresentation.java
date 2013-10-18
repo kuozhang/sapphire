@@ -25,12 +25,13 @@ import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.changeRadioButtonSelecti
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.NamedValues;
 import org.eclipse.sapphire.modeling.annotations.NamedValues.NamedValue;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -339,7 +340,7 @@ public final class NamedValuesPropertyEditorPresentation extends ValuePropertyEd
             }
             else
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

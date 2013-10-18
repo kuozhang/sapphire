@@ -31,11 +31,12 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
@@ -216,7 +217,7 @@ public final class WithPresentation extends PageBookPresentation
                                     
                                     if( editFailedException == null )
                                     {
-                                        LoggingService.log( e );
+                                        Sapphire.service( LoggingService.class ).log( e );
                                     }
                                 }
                             }
@@ -310,7 +311,7 @@ public final class WithPresentation extends PageBookPresentation
                                     
                                     if( editFailedException == null )
                                     {
-                                        LoggingService.log( e );
+                                        Sapphire.service( LoggingService.class ).log( e );
                                     }
                                 }
                             }
@@ -405,7 +406,7 @@ public final class WithPresentation extends PageBookPresentation
                                     
                                     if( editFailedException == null )
                                     {
-                                        LoggingService.log( e );
+                                        Sapphire.service( LoggingService.class ).log( e );
                                     }
                                 }
                             }

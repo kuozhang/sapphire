@@ -14,11 +14,12 @@ package org.eclipse.sapphire.internal;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Version;
 import org.eclipse.sapphire.VersionCompatibilityTarget;
 import org.eclipse.sapphire.VersionCompatibilityTargetService;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.FailSafeFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
@@ -65,7 +66,7 @@ public final class DeclarativeVersionCompatibilityTargetService extends VersionC
         }
         catch( Exception e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         if( versionFunction == null )
@@ -100,7 +101,7 @@ public final class DeclarativeVersionCompatibilityTargetService extends VersionC
         }
         catch( Exception e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         if( versionedFunction == null )
@@ -147,7 +148,7 @@ public final class DeclarativeVersionCompatibilityTargetService extends VersionC
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
 
@@ -159,7 +160,7 @@ public final class DeclarativeVersionCompatibilityTargetService extends VersionC
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

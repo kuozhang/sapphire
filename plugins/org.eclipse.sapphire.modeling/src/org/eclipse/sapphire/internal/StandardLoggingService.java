@@ -9,20 +9,21 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling;
+package org.eclipse.sapphire.internal;
+
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.modeling.Status;
 
 /**
+ * Implementation of LoggingService that writes to system error stream. 
+ * 
  * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class LoggingService
+public final class StandardLoggingService extends LoggingService
 {
-    public static void log( final Throwable e )
-    {
-        log( Status.createErrorStatus( e ) );
-    }
-
-    public static void log( final Status status )
+    @Override
+    public void log( final Status status )
     {
         System.err.println( status );
     }

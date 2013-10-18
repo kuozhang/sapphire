@@ -12,7 +12,8 @@
 package org.eclipse.sapphire.ui.diagram.actions.internal;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.ui.SapphireCondition;
 import org.eclipse.sapphire.ui.SourceEditorService;
 
@@ -39,7 +40,7 @@ public final class DiagramShowInSourceActionHandlerCondition
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         

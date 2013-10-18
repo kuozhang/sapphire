@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.internal.ElementClassLoaders;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelMetadataItem;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
@@ -190,7 +189,7 @@ public final class ElementType extends ModelMetadataItem
                 {
                     // todo: log a better message here
                     
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     
                     this.implClass = null;
                 }
@@ -268,7 +267,7 @@ public final class ElementType extends ModelMetadataItem
                     }
                     catch( IllegalAccessException e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                     
                     if( value instanceof PropertyDef )
@@ -476,7 +475,7 @@ public final class ElementType extends ModelMetadataItem
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
             
@@ -503,7 +502,7 @@ public final class ElementType extends ModelMetadataItem
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                 }
             }

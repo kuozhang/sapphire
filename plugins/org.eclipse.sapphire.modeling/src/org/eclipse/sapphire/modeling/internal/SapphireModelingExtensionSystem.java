@@ -27,9 +27,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Result;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -405,7 +406,7 @@ public final class SapphireModelingExtensionSystem
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                     function = null;
                     this.functionInstantiationFailed = true;
                 }

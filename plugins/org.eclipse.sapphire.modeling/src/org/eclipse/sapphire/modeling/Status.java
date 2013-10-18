@@ -62,14 +62,23 @@ public final class Status
     
     public static Status createErrorStatus( final Throwable exception )
     {
-        String message = exception.getMessage();
-        
-        if( message == null )
+        if( exception == null )
         {
-            message = defaultErrorMessage.text();
+            throw new IllegalArgumentException();
         }
         
-        return createErrorStatus( message, exception );
+        final String text = exception.getMessage();
+        final StringBuilder msg = new StringBuilder();
+        
+        msg.append( exception.getClass().getSimpleName() );
+        
+        if( text != null && text.length() != 0 )
+        {
+            msg.append( ": " );
+            msg.append( text );
+        }
+        
+        return createErrorStatus( msg.toString(), exception );
     }
     
     public static Status createErrorStatus( final String message,

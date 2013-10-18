@@ -40,10 +40,11 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Serialization;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.SensitiveData;
 import org.eclipse.sapphire.services.ContentProposal;
@@ -96,7 +97,7 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
         }
         catch( ParseException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         CONTENT_ASSIST_KEY_STROKE = keyStroke;
@@ -346,7 +347,7 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
             
@@ -366,7 +367,7 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
                                 }
                                 catch( Exception e )
                                 {
-                                    LoggingService.log( e );
+                                    Sapphire.service( LoggingService.class ).log( e );
                                 }
                             }
                         }

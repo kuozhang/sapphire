@@ -34,7 +34,8 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ProgressMonitor;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.DelayedTasksExecutor;
@@ -323,7 +324,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
         }
         catch( InvocationTargetException e )
         {
-            LoggingService.log( e.getTargetException() );
+            Sapphire.service( LoggingService.class ).log( e.getTargetException() );
             return false;
         }
         catch( InterruptedException e )
@@ -445,7 +446,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
                     } 
                     catch( PartInitException e ) 
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                 }
             }
@@ -480,7 +481,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
             } 
             catch( PartInitException e ) 
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

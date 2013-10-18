@@ -29,9 +29,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.Status;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -564,7 +564,7 @@ public final class XmlDocumentSchemaParser
         catch( Exception e )
         {
             final String message = parseFailed.format( url.toString() );
-            LoggingService.log( Status.createErrorStatus( message, e ) );
+            Sapphire.service( LoggingService.class ).logError( message, e );
         }
         
         return null;

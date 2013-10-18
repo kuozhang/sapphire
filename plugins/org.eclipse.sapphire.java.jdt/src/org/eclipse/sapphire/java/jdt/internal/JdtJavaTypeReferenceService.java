@@ -20,13 +20,14 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeReferenceService;
 import org.eclipse.sapphire.java.jdt.JdtJavaType;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -114,7 +115,7 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
             }
             catch( JavaModelException e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         
@@ -158,7 +159,7 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
                         }
                         catch( CoreException e )
                         {
-                            LoggingService.log( e );
+                            Sapphire.service( LoggingService.class ).log( e );
                         }
                     }
                 }

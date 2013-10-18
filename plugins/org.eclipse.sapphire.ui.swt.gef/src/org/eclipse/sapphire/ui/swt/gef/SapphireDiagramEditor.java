@@ -61,8 +61,9 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.ISapphireEditorActionContributor;
@@ -487,7 +488,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 			this.part.saveDiagram();
 			markEditorClean();
 		} catch (Exception e) {
-		    LoggingService.log( e );
+		    Sapphire.service( LoggingService.class ).log( e );
 		}
 	}
 

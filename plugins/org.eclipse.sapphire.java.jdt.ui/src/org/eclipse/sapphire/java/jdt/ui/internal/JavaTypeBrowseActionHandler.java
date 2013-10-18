@@ -20,13 +20,13 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
@@ -104,7 +104,7 @@ public final class JavaTypeBrowseActionHandler extends BrowseActionHandler
                 else
                 {
                     final String msg = typeKindNotRecognized.format( kindString );
-                    LoggingService.log( Status.createErrorStatus( msg ) );
+                    Sapphire.service( LoggingService.class ).logError( msg );
                 }
             }
         }
@@ -168,7 +168,7 @@ public final class JavaTypeBrowseActionHandler extends BrowseActionHandler
                 }
             }
         } catch (JavaModelException e) {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         return null;

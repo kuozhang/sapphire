@@ -19,6 +19,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -63,7 +65,7 @@ public abstract class ExtensionsLocator
                     // Problem here means a bug in the discrete locator implementation. Log the problem and fail over
                     // to the default locator logic.
                     
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
             
@@ -92,7 +94,7 @@ public abstract class ExtensionsLocator
                         }
                         catch( IOException e )
                         {
-                            LoggingService.log( e );
+                            Sapphire.service( LoggingService.class ).log( e );
                         }
                         
                         return Collections.unmodifiableList( handles );

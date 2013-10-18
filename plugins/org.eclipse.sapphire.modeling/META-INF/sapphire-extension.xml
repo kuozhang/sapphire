@@ -777,4 +777,9 @@
             <parameter>org.eclipse.sapphire.Element</parameter>
         </signature>
     </function>
+    <service>
+        <id>Sapphire.LoggingService.Standard</id>
+        <implementation>org.eclipse.sapphire.internal.StandardLoggingService</implementation>
+        <context>Sapphire</context>
+    </service>
 </extension>

@@ -14,8 +14,9 @@ package org.eclipse.sapphire.services.internal;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.annotations.DependsOn;
 import org.eclipse.sapphire.services.DependenciesService;
@@ -58,7 +59,7 @@ public final class DeclarativeDependenciesService extends DependenciesService
             }
             catch( ModelPath.MalformedPathException e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             
             dependencies.add( path );

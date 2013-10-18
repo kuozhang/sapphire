@@ -12,7 +12,8 @@
 package org.eclipse.sapphire.ui.swt.gef.palette;
 
 import org.eclipse.gef.ui.palette.FlyoutPaletteComposite;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
 
@@ -47,7 +48,7 @@ public class DefaultFlyoutPalettePreferences implements FlyoutPaletteComposite.F
             }
             catch( ResourceStoreException e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }			
 		}
 	}
@@ -69,7 +70,7 @@ public class DefaultFlyoutPalettePreferences implements FlyoutPaletteComposite.F
             }
             catch( ResourceStoreException e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }			
 		}
 	}
@@ -91,7 +92,7 @@ public class DefaultFlyoutPalettePreferences implements FlyoutPaletteComposite.F
             }
             catch( ResourceStoreException e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }			
 		}
 	}

@@ -28,11 +28,11 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.LayeredListPropertyBinding;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.LoggingService;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.util.ListFactory;
@@ -80,7 +80,7 @@ public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
                 catch( Exception e )
                 {
                     final String msg = failure.format( property.element().type().getSimpleName(), property.name(), e.getMessage() );
-                    LoggingService.log( Status.createErrorStatus( msg ) );
+                    Sapphire.service( LoggingService.class ).logError( msg );
                 }
             }
         };

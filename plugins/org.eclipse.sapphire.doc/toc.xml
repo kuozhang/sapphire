@@ -49,6 +49,7 @@
      <topic href="html/services/InitialValueService.html" label="InitialValueService"/>
      <topic href="html/services/JavaTypeConstraintService.html" label="JavaTypeConstraintService"/>
      <topic href="html/services/ListSelectionService.html" label="ListSelectionService"/>
+     <topic href="html/services/LoggingService.html" label="LoggingService"/>
      <topic href="html/services/MasterConversionService.html" label="MasterConversionService"/>
      <topic href="html/services/PossibleTypesService.html" label="PossibleTypesService"/>
      <topic href="html/services/ProblemsTraversalService.html" label="ProblemsTraversalService"/>

@@ -23,7 +23,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.samples.map.Location;
 import org.eclipse.sapphire.samples.map.Map;
 import org.eclipse.sapphire.ui.DragAndDropService;
@@ -69,11 +70,11 @@ public class MapDragAndDropService extends DragAndDropService
         }
         catch( CoreException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         catch( IOException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         finally
         {

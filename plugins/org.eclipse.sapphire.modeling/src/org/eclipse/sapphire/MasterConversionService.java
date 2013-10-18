@@ -11,7 +11,6 @@
 
 package org.eclipse.sapphire;
 
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.services.Service;
 
 /**
@@ -72,7 +71,7 @@ public final class MasterConversionService extends Service
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                     
                     if( result != null )
@@ -92,7 +91,7 @@ public final class MasterConversionService extends Service
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                     
                     if( result != null )

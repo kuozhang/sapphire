@@ -13,9 +13,10 @@ package org.eclipse.sapphire.ui.forms.swt.internal;
 
 import java.io.File;
 
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.ui.Presentation;
@@ -107,7 +108,7 @@ public final class RelativePathJumpActionHandler extends JumpActionHandler
                             } 
                             catch( PartInitException e ) 
                             {
-                                LoggingService.log( e );
+                                Sapphire.service( LoggingService.class ).log( e );
                             }
                         }
                     }

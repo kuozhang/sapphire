@@ -52,9 +52,11 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
@@ -63,7 +65,6 @@ import org.eclipse.sapphire.java.JavaTypeConstraintBehavior;
 import org.eclipse.sapphire.java.JavaTypeConstraintService;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -207,7 +208,7 @@ public abstract class JavaTypeCreateActionHandler extends PropertyEditorActionHa
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
         }
@@ -375,7 +376,7 @@ public abstract class JavaTypeCreateActionHandler extends PropertyEditorActionHa
                 }
                 catch( CoreException e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
                 
                 monitor.done();
@@ -388,13 +389,13 @@ public abstract class JavaTypeCreateActionHandler extends PropertyEditorActionHa
         }
         catch( InvocationTargetException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         catch( InterruptedException e )
         {
             // Should not happen.
 
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         return null;

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -60,7 +59,7 @@ public final class Sapphire
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
                 version = new Version( 0 );
             }
             
@@ -116,7 +115,7 @@ public final class Sapphire
                                 }
                                 catch( IllegalArgumentException e )
                                 {
-                                    LoggingService.log( e );
+                                    Sapphire.service( LoggingService.class ).log( e );
                                 }
                             }
                             

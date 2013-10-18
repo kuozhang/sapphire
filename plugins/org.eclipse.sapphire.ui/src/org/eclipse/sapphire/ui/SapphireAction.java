@@ -24,7 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -106,7 +107,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                             }
                             catch( Exception e )
                             {
-                                LoggingService.log( e );
+                                Sapphire.service( LoggingService.class ).log( e );
                             }
                         }
                         
@@ -118,7 +119,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                             }
                             catch( Exception e )
                             {
-                                LoggingService.log( e );
+                                Sapphire.service( LoggingService.class ).log( e );
                             }
                         }
                     }
@@ -405,7 +406,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                     }
                 }
                 
@@ -438,7 +439,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                 }
                 catch( Exception e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
             
@@ -484,7 +485,7 @@ public final class SapphireAction extends SapphireActionSystemPart
                     }
                     catch( Exception e )
                     {
-                        LoggingService.log( e );
+                        Sapphire.service( LoggingService.class ).log( e );
                         
                         // Filters are booted on first failure to keep malfunctioning filters from
                         // flooding the log, etc.

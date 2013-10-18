@@ -29,9 +29,10 @@ import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.ExtensionsLocator;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.UrlResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -279,7 +280,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                 }
                 catch( ResourceStoreException e )
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
             }
 

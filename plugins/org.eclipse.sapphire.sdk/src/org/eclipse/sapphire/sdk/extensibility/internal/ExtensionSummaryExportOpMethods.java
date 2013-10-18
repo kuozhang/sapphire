@@ -31,10 +31,11 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummaryExportOp;
 import org.eclipse.sapphire.sdk.extensibility.ExtensionSummarySectionColumnDef;
@@ -734,7 +735,7 @@ public final class ExtensionSummaryExportOpMethods
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             
             buf.append( "\n</style>" );

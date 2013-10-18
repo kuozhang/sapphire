@@ -29,7 +29,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -87,7 +88,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		}
 		catch (Exception e)
 		{
-		    LoggingService.log( e );
+		    Sapphire.service( LoggingService.class ).log( e );
 		}
 		addDiagramPartListener();
     }		
@@ -245,7 +246,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		}
 		catch (ResourceStoreException rse)
 		{
-		    LoggingService.log( rse );
+		    Sapphire.service( LoggingService.class ).log( rse );
 		}
 		// Clear the dirty state
 		this.dirty = false;

@@ -23,9 +23,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEvent;
-import org.eclipse.sapphire.modeling.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.Presentation;
@@ -147,7 +148,7 @@ public final class PropertyEditorAssistDecorator
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
         
@@ -198,7 +199,7 @@ public final class PropertyEditorAssistDecorator
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             
             contributor.attach( contributorListener );
@@ -522,7 +523,7 @@ public final class PropertyEditorAssistDecorator
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
         }
     }

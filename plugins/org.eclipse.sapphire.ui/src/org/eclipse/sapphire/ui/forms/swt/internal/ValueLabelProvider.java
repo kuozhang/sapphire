@@ -14,9 +14,10 @@ package org.eclipse.sapphire.ui.forms.swt.internal;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.sapphire.ImageData;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.ValueImageService;
 import org.eclipse.sapphire.services.ValueLabelService;
@@ -69,7 +70,7 @@ public final class ValueLabelProvider implements ILabelProvider
         }
         catch( Exception e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         if( label == null )
@@ -107,7 +108,7 @@ public final class ValueLabelProvider implements ILabelProvider
         }
         catch( Exception e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         return imageData;

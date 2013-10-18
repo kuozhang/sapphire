@@ -63,6 +63,11 @@ public class Value<T> extends Property
         synchronized( root() )
         {
             init();
+            
+            if( true )
+            {
+                throw new RuntimeException();
+            }
     
             refreshContent( false );
             refreshDefaultContent( false );

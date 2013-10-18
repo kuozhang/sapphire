@@ -37,10 +37,11 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
@@ -326,7 +327,7 @@ public abstract class SapphireEditor
         }
         catch( BackingStoreException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
         
         return lastActivePage;
@@ -346,7 +347,7 @@ public abstract class SapphireEditor
         }
         catch( BackingStoreException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
     }
 
@@ -465,7 +466,7 @@ public abstract class SapphireEditor
             }
             catch( PartInitException e ) 
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
                 
             if( this.model == null )
@@ -491,7 +492,7 @@ public abstract class SapphireEditor
                 }
                 catch( PartInitException e ) 
                 {
-                    LoggingService.log( e );
+                    Sapphire.service( LoggingService.class ).log( e );
                 }
                 
                 setActivePage( getLastActivePage() );
@@ -587,7 +588,7 @@ public abstract class SapphireEditor
         }
         catch( ResourceStoreException e )
         {
-            LoggingService.log( e );
+            Sapphire.service( LoggingService.class ).log( e );
         }
     }
 

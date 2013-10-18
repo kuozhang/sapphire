@@ -28,18 +28,19 @@ import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
@@ -208,7 +209,7 @@ public final class PropertyEditorPart extends FormComponentPart
                     if( invalid )
                     {
                         final String msg = invalidChildPropertyPath.format( this.property.name(), childPropertyPath.toString() );
-                        LoggingService.log( Status.createErrorStatus( msg ) );
+                        Sapphire.service( LoggingService.class ).logError( msg );
                     }
                     else
                     {
@@ -529,7 +530,7 @@ public final class PropertyEditorPart extends FormComponentPart
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             
             if( factory == null )

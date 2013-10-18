@@ -16,8 +16,9 @@ import java.io.File;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.FileResourceStore;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.internal.FileUtil;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -57,7 +58,7 @@ public class WorkspaceDiagramLayoutPersistenceService extends
 		}
 		catch (Exception e)
 		{
-		    LoggingService.log( e );
+		    Sapphire.service( LoggingService.class ).log( e );
 		}
 		return layoutModel;
 	}

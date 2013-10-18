@@ -78,17 +78,18 @@ import org.eclipse.sapphire.ImageService;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
-import org.eclipse.sapphire.modeling.LoggingService;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.Status.Severity;
@@ -938,7 +939,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                                         
                                         if( editFailedException == null )
                                         {
-                                            LoggingService.log( e );
+                                            Sapphire.service( LoggingService.class ).log( e );
                                         }
                                     }
                                 }
@@ -1067,7 +1068,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                                 
                                 if( editFailedException == null )
                                 {
-                                    LoggingService.log( e );
+                                    Sapphire.service( LoggingService.class ).log( e );
                                 }
                                 
                                 event.detail = DND.DROP_NONE;
@@ -1578,7 +1579,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             }
             catch( Exception e )
             {
-                LoggingService.log( e );
+                Sapphire.service( LoggingService.class ).log( e );
             }
             
             if( label == null )
