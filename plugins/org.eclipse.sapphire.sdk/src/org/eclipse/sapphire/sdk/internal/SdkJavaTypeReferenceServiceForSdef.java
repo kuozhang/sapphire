@@ -76,7 +76,10 @@ public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceS
                     }
                 }
                 
-                return new JdtJavaType( type );
+                if( type != null )
+                {
+                    return new JdtJavaType( type );
+                }
             }
             catch( JavaModelException e )
             {
