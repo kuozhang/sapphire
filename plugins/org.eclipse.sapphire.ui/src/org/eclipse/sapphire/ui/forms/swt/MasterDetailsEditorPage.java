@@ -1194,49 +1194,68 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                         final Point pt = dragOverItem.getDisplay().map( null, tree, event.x, event.y );
                         final Rectangle bounds = dragOverItem.getBounds();
                         
-                        MasterDetailsContentNodePart precedingNode = null;
-                        MasterDetailsContentNodePart trailingNode = null;
-
-                        if( pt.y < bounds.y + bounds.height / 2 )
-                        {
-                            precedingNode = findPrecedingItem( siblingNodes, dragOverNode );
-                            trailingNode = dragOverNode;
-                            
-                            event.feedback = DND.FEEDBACK_INSERT_BEFORE;
-                        }
-                        else
-                        {
-                            precedingNode = dragOverNode;
-                            trailingNode = findTrailingItem( siblingNodes, dragOverNode );
-
-                            event.feedback = DND.FEEDBACK_INSERT_AFTER;
-                        }
+                        boolean dragOverNodeAcceptedDrop = false;
                         
-                        boolean ok = false;
-                        
-                        if( precedingNode != null )
+                        if( pt.y > bounds.y + bounds.height / 3 && pt.y < bounds.y + bounds.height - bounds.height / 3 )
                         {
-                            final Element precedingElement = precedingNode.getModelElement();
-                            
-                            if( precedingElement.parent() instanceof ElementList && precedingNode.controls( precedingElement ) )
+                            for( final PropertyDef dragOverTargetChildProperty : dragOverNode.getChildNodeFactoryProperties() )
                             {
-                                ok = true;
+                                if( dragOverTargetChildProperty instanceof ListProperty && ! dragOverTargetChildProperty.isReadOnly() )
+                                {
+                                    dragOverNodeAcceptedDrop = true;
+                                    event.feedback = DND.FEEDBACK_SELECT;
+                                    
+                                    break;
+                                }
                             }
                         }
                         
-                        if( ! ok && trailingNode != null )
+                        if( ! dragOverNodeAcceptedDrop )
                         {
-                            final Element trailingElement = trailingNode.getModelElement();
-                            
-                            if( trailingElement.parent() instanceof ElementList && trailingNode.controls( trailingElement ) )
+                            MasterDetailsContentNodePart precedingNode = null;
+                            MasterDetailsContentNodePart trailingNode = null;
+    
+                            if( pt.y < bounds.y + bounds.height / 2 )
                             {
-                                ok = true;
+                                precedingNode = findPrecedingItem( siblingNodes, dragOverNode );
+                                trailingNode = dragOverNode;
+                                
+                                event.feedback = DND.FEEDBACK_INSERT_BEFORE;
                             }
-                        }
-                        
-                        if( ! ok )
-                        {
-                            event.feedback = DND.FEEDBACK_NONE;
+                            else
+                            {
+                                precedingNode = dragOverNode;
+                                trailingNode = findTrailingItem( siblingNodes, dragOverNode );
+    
+                                event.feedback = DND.FEEDBACK_INSERT_AFTER;
+                            }
+                            
+                            boolean ok = false;
+                            
+                            if( precedingNode != null )
+                            {
+                                final Element precedingElement = precedingNode.getModelElement();
+                                
+                                if( precedingElement.parent() instanceof ElementList && precedingNode.controls( precedingElement ) )
+                                {
+                                    ok = true;
+                                }
+                            }
+                            
+                            if( ! ok && trailingNode != null )
+                            {
+                                final Element trailingElement = trailingNode.getModelElement();
+                                
+                                if( trailingElement.parent() instanceof ElementList && trailingNode.controls( trailingElement ) )
+                                {
+                                    ok = true;
+                                }
+                            }
+                            
+                            if( ! ok )
+                            {
+                                event.feedback = DND.FEEDBACK_NONE;
+                            }
                         }
                     }
                     
@@ -1266,16 +1285,33 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     
                     MasterDetailsContentNodePart precedingNode = null;
                     MasterDetailsContentNodePart trailingNode = null;
+                    
+                    boolean dropTargetNodeAcceptedDrop = false; 
 
-                    if( pt.y < bounds.y + bounds.height / 2 ) 
+                    if( pt.y > bounds.y + bounds.height / 3 && pt.y < bounds.y + bounds.height - bounds.height / 3 )
                     {
-                        precedingNode = findPrecedingItem( siblingNodes, dropTargetNode );
-                        trailingNode = dropTargetNode;
+                        for( final PropertyDef dropTargetChildProperty : dropTargetNode.getChildNodeFactoryProperties() )
+                        {
+                            if( dropTargetChildProperty instanceof ListProperty && ! dropTargetChildProperty.isReadOnly() )
+                            {
+                                dropTargetNodeAcceptedDrop = true;
+                                break;
+                            }
+                        }
                     }
-                    else
+                    
+                    if( ! dropTargetNodeAcceptedDrop )
                     {
-                        precedingNode = dropTargetNode;
-                        trailingNode = findTrailingItem( siblingNodes, dropTargetNode );
+                        if( pt.y < bounds.y + bounds.height / 2 ) 
+                        {
+                            precedingNode = findPrecedingItem( siblingNodes, dropTargetNode );
+                            trailingNode = dropTargetNode;
+                        }
+                        else
+                        {
+                            precedingNode = dropTargetNode;
+                            trailingNode = findTrailingItem( siblingNodes, dropTargetNode );
+                        }
                     }
                     
                     // Determine whether the drop was valid from model standpoint and figure out

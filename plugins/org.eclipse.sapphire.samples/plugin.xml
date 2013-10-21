@@ -416,6 +416,25 @@
   </extension>
 
   <!-- 
+    *************************
+    * Recursive Tree Sample *
+    *************************
+  -->
+  
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      id="org.eclipse.sapphire.samples.recursion.RecursiveTreeEditor"
+      name="Recursive Tree Editor (Sapphire Sample)"
+      icon="org/eclipse/sapphire/samples/SapphireFile.png"
+      filenames="recursion.xml"
+      default="true">
+      <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+        <parameter name="sdef" value="org.eclipse.sapphire.samples.recursion.RecursiveTreeEditor"/>
+      </class>
+    </editor>
+  </extension>
+
+  <!-- 
     **************
     * UML Sample *
     **************
