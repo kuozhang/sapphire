@@ -869,7 +869,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                 final ElementsTransfer transfer = new ElementsTransfer( element().type().getModelElementClass().getClassLoader() );
                 final Transfer[] transfers = new Transfer[] { transfer };
                 
-                final DragSource dragSource = new DragSource( this.table, DND.DROP_MOVE );
+                final DragSource dragSource = new DragSource( this.table, DND.DROP_COPY | DND.DROP_MOVE );
                 dragSource.setTransfer( transfers );
 
                 final List<Element> dragElements = new ArrayList<Element>();
@@ -950,7 +950,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                     }
                 );
                 
-                final DropTarget target = new DropTarget( this.table, DND.DROP_MOVE );
+                final DropTarget target = new DropTarget( this.table, DND.DROP_COPY | DND.DROP_MOVE );
                 target.setTransfer( transfers );
                 
                 target.addDropListener
@@ -1026,16 +1026,19 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                             
                             try
                             {
-                                for( Element dragElement : dragElements )
+                                if( event.detail == DND.DROP_MOVE )
                                 {
-                                    final ElementList<?> dragElementContainer = (ElementList<?>) dragElement.parent();
-                                    
-                                    if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                                    for( Element dragElement : dragElements )
                                     {
-                                        position--;
+                                        final ElementList<?> dragElementContainer = (ElementList<?>) dragElement.parent();
+                                        
+                                        if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                                        {
+                                            position--;
+                                        }
+                                        
+                                        dragElementContainer.remove( dragElement );
                                     }
-                                    
-                                    dragElementContainer.remove( dragElement );
                                 }
             
                                 final List<Element> newSelection = new ArrayList<Element>();
