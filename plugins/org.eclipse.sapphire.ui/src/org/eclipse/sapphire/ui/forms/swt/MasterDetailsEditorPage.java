@@ -68,6 +68,7 @@ import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
@@ -1408,6 +1409,20 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         event.detail = DND.DROP_NONE;
                         return;
+                    }
+                    
+                    // Prevent a drop within a drag element.
+                    
+                    for( Property p = list; p != null; p = p.element().parent() )
+                    {
+                        for( final Element dragElement : dragElements )
+                        {
+                            if( p.element() == dragElement )
+                            {
+                                event.detail = DND.DROP_NONE;
+                                return;
+                            }
+                        }
                     }
                     
                     // Perform the removal and insertion into the new location.
