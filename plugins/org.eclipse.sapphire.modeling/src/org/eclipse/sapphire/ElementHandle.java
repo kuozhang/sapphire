@@ -187,7 +187,10 @@ public final class ElementHandle<T extends Element> extends Property
                         element.attach( listener, path );
                     }
                     
-                    return;
+                    if( ! ( head instanceof AllDescendentsSegment ) )
+                    {
+                        return;
+                    }
                 }
             }
             
@@ -228,7 +231,10 @@ public final class ElementHandle<T extends Element> extends Property
                         element.detach( listener, path );
                     }
                     
-                    return;
+                    if( ! ( head instanceof AllDescendentsSegment ) )
+                    {
+                        return;
+                    }
                 }
             }
 

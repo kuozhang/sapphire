@@ -12,7 +12,9 @@
 package org.eclipse.sapphire.tests.modeling.events;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
@@ -55,5 +57,33 @@ public interface TestElement extends Element
     
     Value<String> getValueConstrained();
     void setValueConstrained( String value );
+    
+    // *** List ***
+    
+    interface ListEntry extends Element
+    {
+        ElementType TYPE = new ElementType( ListEntry.class );
+        
+        // *** Value ***
+        
+        ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+        
+        Value<String> getValue();
+        void setValue( String value );
+        
+        // *** Children ***
+        
+        @Type( base = ListEntry.class )
+        
+        ListProperty PROP_CHILDREN = new ListProperty( TYPE, "Children" );
+        
+        ElementList<ListEntry> getChildren();
+     }
+    
+    @Type( base = ListEntry.class )
 
+    ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
+    
+    ElementList<ListEntry> getList();
+    
 }

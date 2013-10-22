@@ -244,7 +244,10 @@ public final class ElementList<T extends Element> extends Property implements Li
                         element.attach( listener, path );
                     }
                     
-                    return;
+                    if( ! ( head instanceof AllDescendentsSegment ) )
+                    {
+                        return;
+                    }
                 }
             }
             
@@ -280,7 +283,10 @@ public final class ElementList<T extends Element> extends Property implements Li
                         element.detach( listener, path );
                     }
                     
-                    return;
+                    if( ! ( head instanceof AllDescendentsSegment ) )
+                    {
+                        return;
+                    }
                 }
             }
             

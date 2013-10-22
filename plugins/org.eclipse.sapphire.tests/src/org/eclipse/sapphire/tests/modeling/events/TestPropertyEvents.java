@@ -31,6 +31,11 @@ public final class TestPropertyEvents extends SapphireTestCase
 {
     private List<Event> monitor( final TestElement element )
     {
+        return monitor( element, null );
+    }
+    
+    private List<Event> monitor( final TestElement element, final String path )
+    {
         final List<Event> events = new ArrayList<Event>();
         
         final Listener listener = new Listener()
@@ -42,11 +47,18 @@ public final class TestPropertyEvents extends SapphireTestCase
             }
         };
         
-        element.attach( listener );
-        
-        for( Property property : element.properties() )
+        if( path == null )
         {
-            property.attach( listener );
+            element.attach( listener );
+            
+            for( Property property : element.properties() )
+            {
+                property.attach( listener );
+            }
+        }
+        else
+        {
+            element.attach( listener, path );
         }
         
         return events;
@@ -142,6 +154,70 @@ public final class TestPropertyEvents extends SapphireTestCase
             assertEquals( 2, events.size() );
             assertPropertyContentEvent( events.get( 0 ), element.getEnablement() );
             assertPropertyEnablementEvent( events.get( 1 ), element.getValueConstrained(), true, false );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+    
+    @Test
+    
+    public void testEventsListPropertyDescendents() throws Exception
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        
+        try
+        {
+            final List<Event> events = monitor( element, "List/*" );
+            
+            assertEquals( 0, events.size() );
+
+            final TestElement.ListEntry a = element.getList().insert();
+            
+            assertEquals( 1, events.size() );
+            assertPropertyContentEvent( events.get( 0 ), element.getList() );
+            
+            events.clear();
+            
+            final TestElement.ListEntry b = element.getList().insert();
+
+            assertEquals( 1, events.size() );
+            assertPropertyContentEvent( events.get( 0 ), element.getList() );
+            
+            events.clear();
+            
+            a.setValue( "abc" );
+            b.setValue( "def" );
+            
+            assertEquals( 2, events.size() );
+            assertPropertyContentEvent( events.get( 0 ), a.getValue() );
+            assertPropertyContentEvent( events.get( 1 ), b.getValue() );
+            
+            events.clear();
+            
+            element.getList().remove( a );
+            
+            assertEquals( 1, events.size() );
+            assertPropertyContentEvent( events.get( 0 ), element.getList() );
+            
+            events.clear();
+            
+            final TestElement.ListEntry ba = b.getChildren().insert();
+            final TestElement.ListEntry bb = b.getChildren().insert();
+
+            assertEquals( 2, events.size() );
+            assertPropertyContentEvent( events.get( 0 ), b.getChildren() );
+            assertPropertyContentEvent( events.get( 1 ), b.getChildren() );
+            
+            events.clear();
+            
+            ba.setValue( "ghi" );
+            bb.setValue( "jkl" );
+
+            assertEquals( 2, events.size() );
+            assertPropertyContentEvent( events.get( 0 ), ba.getValue() );
+            assertPropertyContentEvent( events.get( 1 ), bb.getValue() );
         }
         finally
         {
