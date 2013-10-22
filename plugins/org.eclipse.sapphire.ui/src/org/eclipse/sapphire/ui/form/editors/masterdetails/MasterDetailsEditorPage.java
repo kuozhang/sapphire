@@ -1013,7 +1013,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         final ModelElementsTransfer transfer = new ModelElementsTransfer( getModelElement().type().getModelElementClass().getClassLoader() );
         final Transfer[] transfers = new Transfer[] { transfer };
         
-        final DragSource dragSource = new DragSource( tree, DND.DROP_MOVE );
+        final DragSource dragSource = new DragSource( tree, DND.DROP_COPY | DND.DROP_MOVE );
         dragSource.setTransfer( transfers );
 
         final List<IModelElement> dragElements = new ArrayList<IModelElement>();
@@ -1157,7 +1157,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             }
         );
         
-        final DropTarget target = new DropTarget( tree, DND.DROP_MOVE );
+        final DropTarget target = new DropTarget( tree, DND.DROP_COPY | DND.DROP_MOVE );
         target.setTransfer( transfers );
         
         target.addDropListener
@@ -1362,18 +1362,21 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         outline.listeners().suspend( MasterDetailsContentOutline.SelectionChangedEvent.class );
                     
-                        for( IModelElement dragElement : dragElements )
+                        if( event.detail == DND.DROP_MOVE )
                         {
-                            final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
-                            
-                            if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                            for( IModelElement dragElement : dragElements )
                             {
-                                position--;
+                                final ModelElementList<IModelElement> dragElementContainer = (ModelElementList<IModelElement>) dragElement.parent();
+                                
+                                if( dragElementContainer == list && dragElementContainer.indexOf( dragElement ) < position )
+                                {
+                                    position--;
+                                }
+                                
+                                dragElementContainer.remove( dragElement );
                             }
+                        }    
                             
-                            dragElementContainer.remove( dragElement );
-                        }
-    
                         final List<MasterDetailsContentNode> newSelection = new ArrayList<MasterDetailsContentNode>();
                         
                         for( IModelElement droppedElement : droppedElements )
