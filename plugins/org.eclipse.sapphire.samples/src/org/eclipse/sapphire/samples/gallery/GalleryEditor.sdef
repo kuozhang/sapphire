@@ -234,18 +234,12 @@
                         <label>combo boxes</label>
                         <content>
                             <property-editor>
+                                <style>Sapphire.PropertyEditor.PopUpListField</style>
                                 <property>Simple</property>
-                                <hint>
-                                    <name>prefer.combo</name>
-                                    <value>true</value>
-                                </hint>
                             </property-editor>
                             <property-editor>
+                                <style>Sapphire.PropertyEditor.PopUpListField</style>
                                 <property>CustomSerializedWithDefault</property>
-                                <hint>
-                                    <name>prefer.combo</name>
-                                    <value>true</value>
-                                </hint>
                             </property-editor>
                         </content>
                     </section>

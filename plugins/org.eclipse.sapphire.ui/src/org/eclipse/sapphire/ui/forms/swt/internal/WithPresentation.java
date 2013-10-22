@@ -93,7 +93,7 @@ public final class WithPresentation extends PageBookPresentation
     {
         final WithPart part = part();
         final WithDef def = part.definition();
-        final ElementHandle<?> property = part.property(); 
+        final ElementHandle<?> property = part.property();
         
         final Composite composite = new Composite( composite(), SWT.NONE );
         composite.setLayoutData( gdhspan( ( part.getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
@@ -230,11 +230,6 @@ public final class WithPresentation extends PageBookPresentation
                     final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( innerTypeSelectorComposite, false );
                     radioButtonsGroup.setLayoutData( gdhfill() );
                     
-                    final Button noneButton = radioButtonsGroup.addRadioButton( noneSelection.text() );
-                    decorator.addEditorControl( noneButton );
-                    actionPresentationKeyboard.attach( noneButton );
-                    attachHelp( noneButton, property );
-                    
                     final Map<ElementType,Button> typeToButton = new HashMap<ElementType,Button>();
                     final Map<Button,ElementType> buttonToType = new HashMap<Button,ElementType>();
                     
@@ -248,6 +243,12 @@ public final class WithPresentation extends PageBookPresentation
                         actionPresentationKeyboard.attach( button );
                         attachHelp( button, property );
                     }
+                    
+                    final Button noneButton = radioButtonsGroup.addRadioButton( noneSelection.text() );
+                    noneButton.setVisible( false );
+                    decorator.addEditorControl( noneButton );
+                    actionPresentationKeyboard.attach( noneButton );
+                    attachHelp( noneButton, property );
                     
                     updateUserInterfaceOp = new Runnable()
                     {
@@ -265,10 +266,12 @@ public final class WithPresentation extends PageBookPresentation
                             if( subModelElement == null )
                             {
                                 button = noneButton;
+                                noneButton.setVisible( true );
                             }
                             else
                             {
                                 button = typeToButton.get( subModelElement.type() );
+                                noneButton.setVisible( false );
                             }
                             
                             if( radioButtonsGroup.getSelection() != button )
@@ -327,12 +330,10 @@ public final class WithPresentation extends PageBookPresentation
                     actionPresentationKeyboard.attach( combo );
                     attachHelp( combo, property );
                     
-                    combo.add( noneSelection.text() );
-                    
                     final Map<ElementType,Integer> typeToIndex = new HashMap<ElementType,Integer>();
                     final Map<Integer,ElementType> indexToType = new HashMap<Integer,ElementType>();
                     
-                    int index = 1;
+                    int index = 0;
                     
                     for( ElementType type : allPossibleTypes )
                     {
@@ -359,7 +360,7 @@ public final class WithPresentation extends PageBookPresentation
                             
                             if( subModelElement == null )
                             {
-                                index = 0;
+                                index = -1;
                             }
                             else
                             {
@@ -368,7 +369,14 @@ public final class WithPresentation extends PageBookPresentation
                             
                             if( combo.getSelectionIndex() != index )
                             {
-                                combo.select( index );
+                                if( index == -1 )
+                                {
+                                    combo.deselectAll();
+                                }
+                                else
+                                {
+                                    combo.select( index );
+                                }
                             }
                             
                             combo.setEnabled( property.enabled() );
@@ -387,7 +395,7 @@ public final class WithPresentation extends PageBookPresentation
                                     final ElementHandle<?> handle = (ElementHandle<?>) property;
                                     final int index = combo.getSelectionIndex();
                                     
-                                    if( index == 0 )
+                                    if( index == -1 )
                                     {
                                         handle.clear();
                                     }
