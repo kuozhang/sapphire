@@ -352,12 +352,12 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		return this.editorIsDirty;
 	}
 	
-	protected void markEditorDirty() {
+	public void markEditorDirty() {
 		this.editorIsDirty = true;
 		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 	}
 	
-	protected void markEditorClean() {
+	public void markEditorClean() {
 		this.editorIsDirty = false;
 		firePropertyChange(IWorkbenchPartConstants.PROP_DIRTY);
 	}
