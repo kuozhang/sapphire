@@ -160,18 +160,19 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#PropertyContentEvent">PropertyContentEvent</a></li>
   <li><a href="#PropertyEditorDef">PropertyEditorDef</a></li>
   <li><a href="#PropertyEditorPart">PropertyEditorPart</a></li>
-  <li><a href="#PropertyEnablementEvent">PropertyEnablementEvent</a></li>
-  <li><a href="#PropertyEvent">PropertyEvent</a></li>
   <li><a href="#PropertyEditorAssistContext">PropertyEditorAssistContext</a></li>
   <li><a href="#PropertyEditorAssistContributor">PropertyEditorAssistContributor</a></li>
   <li><a href="#PropertyEditorRenderer">PropertyEditorRenderer</a></li>
   <li><a href="#PropertyEditorRendererFactory">PropertyEditorRendererFactory</a></li>
+  <li><a href="#PropertyEnablementEvent">PropertyEnablementEvent</a></li>
+  <li><a href="#PropertyEvent">PropertyEvent</a></li>
   <li><a href="#PropertyInitializationEvent">PropertyInitializationEvent</a></li>
   <li><a href="#PropertyValidationEvent">PropertyValidationEvent</a></li>
   <li><a href="#ReferenceValue">ReferenceValue</a></li>
   <li><a href="#RelativePathBrowseActionHandler">RelativePathBrowseActionHandler</a></li>
   <li><a href="#Resource">Resource</a></li>
   <li><a href="#Sapphire">Sapphire</a></li>
+  <li><a href="#SapphireActionHandler">SapphireActionHandler</a></li>
   <li><a href="#SapphireActionPresentation">SapphireActionPresentation</a></li>
   <li><a href="#SapphireActionPresentationManager">SapphireActionPresentationManager</a></li>
   <li><a href="#SapphireBrowseActionHandler">SapphireBrowseActionHandler</a></li>
@@ -188,6 +189,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#SapphireKeyboardActionPresentation">SapphireKeyboardActionPresentation</a></li>
   <li><a href="#SapphireListControlledPageBook">SapphireListControlledPageBook</a></li>
   <li><a href="#SapphireMenuActionPresentation">SapphireMenuActionPresentation</a></li>
+  <li><a href="#SapphirePart">SapphirePart</a></li>
   <li><a href="#SapphirePopup">SapphirePopup</a></li>
   <li><a href="#SapphirePropertyEditorActionHandler">SapphirePropertyEditorActionHandler</a></li>
   <li><a href="#SapphirePropertyEditorCondition">SapphirePropertyEditorCondition</a></li>
@@ -2217,6 +2219,14 @@ element.</span>visit
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.ListPropertyEditor</span>Presentation</code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>getList<span class="unaffected">()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>list<span class="unaffected">()</span></code></pre>
+    </td>
+  </tr>
 </table>
 
 
@@ -3066,50 +3076,6 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
-<h2><a name="PropertyEnablementEvent">PropertyEnablementEvent</a></h2>
-
-<table>
-  <tr>
-    <th>Before</th>
-    <th>After</th>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
-    </td>
-  </tr>
-</table>
-
-
-<h2><a name="PropertyEvent">PropertyEvent</a></h2>
-
-<table>
-  <tr>
-    <th>Before</th>
-    <th>After</th>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEvent</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyEvent</span></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code><span class="unaffected">event</span>.<span class="unaffected">element()</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">event</span>.property().<span class="unaffected">element()</span></code></pre>
-    </td>
-  </tr>
-</table>
-
-
 <h2><a name="PropertyEditorAssistContributor">PropertyEditorAssistContributor</a></h2>
 
 <table>
@@ -3217,6 +3183,87 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.swt.PropertyEditor</span>Presentation<span class="unaffected">Factory</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePropertyEditor</span>Render<span class="unaffected">Factory extends PropertyEditor</span>Renderer<span class="unaffected">Factory
+{
+    @Override
+    public boolean isApplicableTo( PropertyEditorPart part ) 
+    {
+        ...
+    }
+
+    @Override
+    public PropertyEditor</span>Renderer <span class="unaffected">create(</span> SapphireRenderingContext context,
+                                          <span class="unaffected">PropertyEditorPart part ) 
+    {
+        return new ExamplePropertyEditor</span>Render<span class="unaffected">(</span> context, part <span class="unaffected">);
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePropertyEditor</span>Presentation<span class="unaffected">Factory extends PropertyEditor</span>Presentation<span class="unaffected">Factory
+{
+    @Override
+    public boolean isApplicableTo( PropertyEditorPart part ) 
+    {
+        ...
+    }
+
+    @Override
+    public PropertyEditor</span>Presentation <span class="unaffected">create( PropertyEditorPart part</span>, 
+                                              SwtPresentation parent,
+                                              Composite composite <span class="unaffected">) 
+    {
+        return new ExamplePropertyEditor</span>Presentation<span class="unaffected">(</span> part, parent, composite <span class="unaffected">);
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEnablementEvent">PropertyEnablementEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyEnablementEvent</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PropertyEvent">PropertyEvent</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.modeling.<span class="unaffected">PropertyEvent</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire</span>.<span class="unaffected">PropertyEvent</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">event</span>.<span class="unaffected">element()</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">event</span>.property().<span class="unaffected">element()</span></code></pre>
     </td>
   </tr>
 </table>
@@ -3341,6 +3388,42 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="SapphireActionHandler">SapphireActionHandler</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    protected Object run(</span> SapphireRenderingContext <span class="unaffected">context )
+    {
+        Shell shell = context</span>.getShell()<span class="unaffected">;
+        
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleActionHandler extends SapphireActionHandler
+{
+    @Override
+    protected Object run(</span> Presentation <span class="unaffected">context )
+    {
+        Shell shell =</span> ( (SwtPresentation) <span class="unaffected">context</span> ).shell()<span class="unaffected">;
+        
+        ...
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="SapphireActionPresentation">SapphireActionPresentation</a></h2>
 
 <table>
@@ -3390,6 +3473,32 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">BrowseActionHandler</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleBrowseActionHandler extends</span> Sapphire<span class="unaffected">BrowseActionHandler
+{
+    @Override
+    protected String browse(</span> SapphireRenderingContext <span class="unaffected">context )
+    {
+        Shell shell = context</span>.getShell()<span class="unaffected">;
+        
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleBrowseActionHandler extends BrowseActionHandler
+{
+    @Override
+    protected String browse(</span> Presentation <span class="unaffected">context )
+    {
+        Shell shell =</span> ( (SwtPresentation) <span class="unaffected">context</span> ).shell()<span class="unaffected">;
+        
+        ...
+    }
+}</span></code></pre>
     </td>
   </tr>
 </table>
@@ -3604,6 +3713,61 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.swt<span class="unaffected">.SapphireMenuActionPresentation</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="SapphirePart">SapphirePart</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>getParentPart()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>parent()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>getImageCache()</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>getSwtResourceCache()</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePart extends</span> SapphirePart
+<span class="unaffected">{
+    @Override
+    public void render(</span> SapphireRenderingContext context <span class="unaffected">)
+    {
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePart extends</span> FormComponentPart
+<span class="unaffected">{</span>
+    @Override
+    public FormComponentPresentation createPresentation( SwtPresentation parent, Composite composite )
+    {
+        return new FormComponentPresentation( this, parent, composite )
+        {
+            <span class="unaffected">@Override
+            public void render()
+            {
+                ...
+            }</span>
+        };
+    }
+<span class="unaffected">}</span></code></pre>
     </td>
   </tr>
 </table>
