@@ -64,6 +64,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.modeling.IModelElement;
+import org.eclipse.sapphire.modeling.IModelParticle;
 import org.eclipse.sapphire.modeling.ImageData;
 import org.eclipse.sapphire.modeling.ListProperty;
 import org.eclipse.sapphire.modeling.LoggingService;
@@ -1391,6 +1392,20 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     {
                         event.detail = DND.DROP_NONE;
                         return;
+                    }
+                    
+                    // Prevent a drop within a drag element.
+                    
+                    for( IModelParticle p = list; p != null; p = p.parent().parent() )
+                    {
+                        for( final IModelElement dragElement : dragElements )
+                        {
+                            if( p.parent() == dragElement )
+                            {
+                                event.detail = DND.DROP_NONE;
+                                return;
+                            }
+                        }
                     }
                     
                     // Perform the removal and insertion into the new location.
