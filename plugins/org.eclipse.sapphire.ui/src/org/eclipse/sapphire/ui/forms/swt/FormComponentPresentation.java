@@ -25,9 +25,7 @@ import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -116,7 +114,10 @@ public abstract class FormComponentPresentation extends SwtPresentation
 
         if( this.composite != null )
         {
-            this.composite.removeDisposeListener( this.compositeDisposeListener );
+            if( ! this.composite.isDisposed() )
+            {
+                this.composite.removeDisposeListener( this.compositeDisposeListener );
+            }
             
             this.composite = null;
             this.compositeDisposeListener = null;
