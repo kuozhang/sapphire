@@ -27,9 +27,10 @@ public abstract class ElementServiceContext extends AnnotationsAwareServiceConte
     
     public ElementServiceContext( final String contextType,
                                   final ServiceContext parent,
-                                  final ElementType elementMetaModel )
+                                  final ElementType elementMetaModel,
+                                  final Object lock )
     {
-        super( contextType, parent );
+        super( contextType, parent, lock );
         
         this.elementMetaModel = elementMetaModel;
     }

@@ -168,7 +168,7 @@ public final class Sapphire
     {
         if( services == null )
         {
-            services = new ServiceContext( ServiceContext.ID_ROOT, null );
+            services = new ServiceContext( ServiceContext.ID_ROOT );
         }
         
         return services;

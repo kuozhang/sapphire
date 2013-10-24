@@ -49,9 +49,12 @@ public abstract class DataService<T> extends Service
     @Override
     protected final void init()
     {
-        initDataService();
-        
-        this.initialized = true;
+        synchronized( context().lock() )
+        {
+            initDataService();
+            
+            this.initialized = true;
+        }
     }
 
     protected void initDataService()
@@ -60,87 +63,93 @@ public abstract class DataService<T> extends Service
     
     public final T data()
     {
-        if( ! this.initialized )
+        synchronized( context().lock() )
         {
-            throw new IllegalStateException( dataAccessedPriorToInitMessage.format( getClass().getSimpleName() ) );
+            if( ! this.initialized )
+            {
+                throw new IllegalStateException( dataAccessedPriorToInitMessage.format( getClass().getSimpleName() ) );
+            }
+            
+            if( this.data == INITIAL_DATA )
+            {
+                refresh();
+            }
+            
+            return this.data;
         }
-        
-        if( this.data == INITIAL_DATA )
-        {
-            refresh();
-        }
-        
-        return this.data;
     }
     
     protected abstract T compute();
     
     protected final void refresh()
     {
-        if( this.refreshing )
+        synchronized( context().lock() )
         {
-            throw new IllegalStateException( reentrantRefreshMessage.format( getClass().getSimpleName() ) );
-        }
-        
-        this.refreshing = true;
-        
-        boolean broadcast = false;
-        
-        try
-        {
-            final T newData;
+            if( this.refreshing )
+            {
+                throw new IllegalStateException( reentrantRefreshMessage.format( getClass().getSimpleName() ) );
+            }
+            
+            this.refreshing = true;
+            
+            boolean broadcast = false;
             
             try
             {
-                newData = compute();
-            }
-            catch( Exception e )
-            {
-                final ServiceContext context = context();
-                final String contextLabel;
+                final T newData;
                 
-                final PropertyDef property = context.find( PropertyDef.class );
-
-                if( property != null )
+                try
                 {
-                    contextLabel = property.getModelElementType().getSimpleName() + "." + property.name();
+                    newData = compute();
                 }
-                else
+                catch( Exception e )
                 {
-                    final ElementType type = context.find( ElementType.class );
+                    final ServiceContext context = context();
+                    final String contextLabel;
                     
-                    if( type != null )
+                    final PropertyDef property = context.find( PropertyDef.class );
+    
+                    if( property != null )
                     {
-                        contextLabel = type.getSimpleName();
+                        contextLabel = property.getModelElementType().getSimpleName() + "." + property.name();
                     }
                     else
                     {
-                        contextLabel = context.getClass().getSimpleName();
+                        final ElementType type = context.find( ElementType.class );
+                        
+                        if( type != null )
+                        {
+                            contextLabel = type.getSimpleName();
+                        }
+                        else
+                        {
+                            contextLabel = context.getClass().getSimpleName();
+                        }
                     }
+                    
+                    throw new RuntimeException( computeFailedMessage.format( contextLabel, getClass().getSimpleName() ), e );
                 }
                 
-                throw new RuntimeException( computeFailedMessage.format( contextLabel, getClass().getSimpleName() ), e );
+                if( this.data == INITIAL_DATA )
+                {
+                    this.data = newData;
+                }
+                else if( ! equal( this.data, newData ) )
+                {
+                    this.data = newData;
+                    
+                    broadcast = true;
+                }
+            }
+            finally
+            {
+                this.refreshing = false;
             }
             
-            if( this.data == INITIAL_DATA )
+            if( broadcast )
             {
-                this.data = newData;
+                broadcast();
             }
-            else if( ! equal( this.data, newData ) )
-            {
-                this.data = newData;
-                
-                broadcast = true;
-            }
-        }
-        finally
-        {
-            this.refreshing = false;
-        }
-        
-        if( broadcast )
-        {
-            broadcast();
         }
     }
 

@@ -37,13 +37,33 @@ public class ServiceContext
     private final ServiceContext parent;
     private List<ServiceProxy> services;
     private ListenerContext coordinatingListenerContext;
+    
+    /**
+     * The object that should be used for synchronization by all of this context's services.
+     */
+    
+    private final Object lock;
+    
     private boolean disposed = false;
     
+    public ServiceContext( final String type )
+    {
+        this( type, null, null );
+    }
+
     public ServiceContext( final String type,
                            final ServiceContext parent )
     {
+        this( type, parent, null );
+    }
+
+    public ServiceContext( final String type,
+                           final ServiceContext parent,
+                           final Object lock )
+    {
         this.type = type;
         this.parent = parent;
+        this.lock = ( lock == null ? this : lock );
     }
 
     public final String type()
@@ -77,72 +97,93 @@ public class ServiceContext
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
-    public final synchronized <S extends Service> List<S> services( final Class<S> type )
+    public final <S extends Service> List<S> services( final Class<S> type )
     {
-        if( type == null )
+        synchronized( this.lock )
         {
-            throw new IllegalArgumentException();
-        }
-        
-        if( this.disposed )
-        {
-            throw new IllegalStateException();
-        }
-        
-        if( this.services == null )
-        {
-            final ListFactory<ServiceProxy> services = ListFactory.start();
-            
-            services.add( local() );
-            
-            for( final ServiceExtension extension : SapphireModelingExtensionSystem.services() )
+            if( type == null )
             {
-                if( extension.contexts().contains( this.type ) )
-                {
-                    services.add
-                    (
-                        new ServiceProxy
-                        (
-                            this,
-                            extension.id(),
-                            extension.implementation(),
-                            extension.condition(),
-                            extension.overrides(),
-                            null
-                        )
-                    );
-                }
+                throw new IllegalArgumentException();
             }
             
-            this.services = new CopyOnWriteArrayList<ServiceProxy>( services.result() );
-        }
-        
-        final DependencySorter<String,S> sorter = new DependencySorter<String,S>();
-        final ListFactory<ServiceProxy> failed = ListFactory.start();
-        
-        for( final ServiceProxy proxy : this.services )
-        {
-            if( type.isAssignableFrom( proxy.type() ) )
+            if( this.disposed )
             {
-                if( sorter.contains( proxy.id() ) )
+                throw new IllegalStateException();
+            }
+            
+            if( this.services == null )
+            {
+                final ListFactory<ServiceProxy> services = ListFactory.start();
+                
+                services.add( local() );
+                
+                for( final ServiceExtension extension : SapphireModelingExtensionSystem.services() )
                 {
-                    failed.add( proxy );
+                    if( extension.contexts().contains( this.type ) )
+                    {
+                        services.add
+                        (
+                            new ServiceProxy
+                            (
+                                this,
+                                extension.id(),
+                                extension.implementation(),
+                                extension.condition(),
+                                extension.overrides(),
+                                null
+                            )
+                        );
+                    }
                 }
-                else
+                
+                this.services = new CopyOnWriteArrayList<ServiceProxy>( services.result() );
+            }
+            
+            final DependencySorter<String,S> sorter = new DependencySorter<String,S>();
+            final ListFactory<ServiceProxy> failed = ListFactory.start();
+            
+            for( final ServiceProxy proxy : this.services )
+            {
+                if( type.isAssignableFrom( proxy.type() ) )
                 {
-                    final S service = type.cast( proxy.service() );
-                    
-                    if( service == null )
+                    if( sorter.contains( proxy.id() ) )
                     {
                         failed.add( proxy );
                     }
                     else
                     {
-                        if( this.coordinatingListenerContext != null )
-                        {
-                            service.coordinate( this.coordinatingListenerContext );
-                        }
+                        final S service = type.cast( proxy.service() );
                         
+                        if( service == null )
+                        {
+                            failed.add( proxy );
+                        }
+                        else
+                        {
+                            if( this.coordinatingListenerContext != null )
+                            {
+                                service.coordinate( this.coordinatingListenerContext );
+                            }
+                            
+                            sorter.add( service.id(), service );
+                            
+                            for( final String override : service.overrides() )
+                            {
+                                sorter.dependency( override, service.id() );
+                            }
+                        }
+                    }
+                }
+            }
+            
+            this.services.removeAll( failed.result() );
+            
+            if( this.parent != null )
+            {
+                for( final S service : this.parent.services( type ) )
+                {
+                    if( ! sorter.contains( service.id()  ) )
+                    {
                         sorter.add( service.id(), service );
                         
                         for( final String override : service.overrides() )
@@ -152,34 +193,27 @@ public class ServiceContext
                     }
                 }
             }
-        }
-        
-        this.services.removeAll( failed.result() );
-        
-        if( this.parent != null )
-        {
-            for( final S service : this.parent.services( type ) )
+            
+            final List<S> services = sorter.sort();
+            
+            for( final Service service : services )
             {
-                if( ! sorter.contains( service.id()  ) )
-                {
-                    sorter.add( service.id(), service );
-                    
-                    for( final String override : service.overrides() )
-                    {
-                        sorter.dependency( override, service.id() );
-                    }
-                }
+                service.initIfNecessary();
             }
+            
+            return services;
         }
-        
-        final List<S> services = sorter.sort();
-        
-        for( final Service service : services )
-        {
-            service.initIfNecessary();
-        }
-        
-        return services;
+    }
+    
+    /**
+     * Returns the object that should be used for synchronization by all of this context's services.
+     * 
+     * @return the object that should be used for synchronization by all of this context's services
+     */
+    
+    public final Object lock()
+    {
+        return this.lock;
     }
     
     public final void coordinate( final ListenerContext context )

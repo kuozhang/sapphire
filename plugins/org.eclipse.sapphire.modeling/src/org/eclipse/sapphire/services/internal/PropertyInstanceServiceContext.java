@@ -27,7 +27,7 @@ public final class PropertyInstanceServiceContext extends PropertyServiceContext
     public PropertyInstanceServiceContext( final Property instance,
                                            final ListenerContext listenerContextForCoordination )
     {
-        super( ID_PROPERTY_INSTANCE, instance.definition().services(), instance.definition() );
+        super( ID_PROPERTY_INSTANCE, instance.definition().services(), instance.definition(), instance.root() );
         
         this.property = instance;
         

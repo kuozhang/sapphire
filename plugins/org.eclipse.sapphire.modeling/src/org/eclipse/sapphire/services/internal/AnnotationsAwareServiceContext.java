@@ -31,9 +31,10 @@ import org.eclipse.sapphire.util.SetFactory;
 public abstract class AnnotationsAwareServiceContext extends ServiceContext
 {
     public AnnotationsAwareServiceContext( final String type,
-                                           final ServiceContext parent )
+                                           final ServiceContext parent,
+                                           final Object lock )
     {
-        super( type, parent );
+        super( type, parent, lock );
     }
     
     @Override

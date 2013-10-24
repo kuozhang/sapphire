@@ -32,9 +32,10 @@ public abstract class PropertyServiceContext extends AnnotationsAwareServiceCont
     
     public PropertyServiceContext( final String type,
                                    final ServiceContext parent,
-                                   final PropertyDef property )
+                                   final PropertyDef property,
+                                   final Object lock )
     {
-        super( type, parent );
+        super( type, parent, lock );
         
         this.property = property;
     }

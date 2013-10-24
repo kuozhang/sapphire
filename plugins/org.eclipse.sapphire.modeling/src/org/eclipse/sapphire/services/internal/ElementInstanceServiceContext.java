@@ -23,7 +23,7 @@ public final class ElementInstanceServiceContext extends ElementServiceContext
     
     public ElementInstanceServiceContext( final Element element )
     {
-        super( ID_ELEMENT_INSTANCE, element.type().services(), element.type() );
+        super( ID_ELEMENT_INSTANCE, element.type().services(), element.type(), element.root() );
         
         this.element = element;
     }

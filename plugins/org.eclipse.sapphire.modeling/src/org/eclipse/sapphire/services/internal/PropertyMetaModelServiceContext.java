@@ -22,7 +22,7 @@ public final class PropertyMetaModelServiceContext extends PropertyServiceContex
 {
     public PropertyMetaModelServiceContext( final PropertyDef property )
     {
-        super( ID_PROPERTY_METAMODEL, Sapphire.services(), property );
+        super( ID_PROPERTY_METAMODEL, Sapphire.services(), property, null );
     }
     
 }
