@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.forms;
 
 import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.runOnDisplayThread;
-import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twd;
+import static org.eclipse.sapphire.ui.forms.swt.TableWrapLayoutUtil.twd;
 
 import java.util.ArrayList;
 import java.util.Collections;

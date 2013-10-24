@@ -24,7 +24,7 @@ import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
-import static org.eclipse.sapphire.ui.internal.TableWrapLayoutUtil.twlayout;
+import static org.eclipse.sapphire.ui.forms.swt.TableWrapLayoutUtil.twlayout;
 import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 import static org.eclipse.sapphire.util.CollectionsUtil.findPrecedingItem;
 import static org.eclipse.sapphire.util.CollectionsUtil.findTrailingItem;
