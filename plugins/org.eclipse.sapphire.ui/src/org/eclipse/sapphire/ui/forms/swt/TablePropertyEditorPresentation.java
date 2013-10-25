@@ -120,7 +120,6 @@ import org.eclipse.sapphire.ui.forms.swt.internal.ElementsTransfer;
 import org.eclipse.sapphire.ui.forms.swt.internal.HyperlinkTable;
 import org.eclipse.sapphire.ui.forms.swt.internal.PopUpListFieldCellEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.PopUpListFieldStyle;
-import org.eclipse.sapphire.ui.forms.swt.internal.SapphireTextCellEditor;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;

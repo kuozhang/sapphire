@@ -10,7 +10,7 @@
  *    Ling Hao - Bug 328777 Table cell editor overlaps neighboring field
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.swt.internal;
+package org.eclipse.sapphire.ui.forms.swt;
 
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdfill;
@@ -39,11 +39,6 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionHandler.PostExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireActionHandler.PreExecuteEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart.EnablementChangedEvent;
-import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
-import org.eclipse.sapphire.ui.forms.swt.SapphireHotSpotsActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.SapphireKeyboardActionPresentation;
-import org.eclipse.sapphire.ui.forms.swt.TablePropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SapphireHotSpotsActionPresentation.ControlHotSpot;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
