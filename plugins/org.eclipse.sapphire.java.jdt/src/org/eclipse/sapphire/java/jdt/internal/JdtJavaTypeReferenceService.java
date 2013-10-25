@@ -85,7 +85,7 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
                         {
                             if( ! value.disposed() && ! value.root().disposed() )
                             {
-                                value.refresh();
+                                broadcast();
                             }
                         }
                     };
