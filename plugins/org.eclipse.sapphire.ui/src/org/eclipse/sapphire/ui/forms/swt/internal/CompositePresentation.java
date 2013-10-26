@@ -229,10 +229,6 @@ public class CompositePresentation extends FormComponentPresentation
             {
                 control.dispose();
             }
-            
-            // TODO: Convert this into a warning.
-            
-            throw new IllegalStateException();
         }
         
         renderChildren( this.innerComposite );
