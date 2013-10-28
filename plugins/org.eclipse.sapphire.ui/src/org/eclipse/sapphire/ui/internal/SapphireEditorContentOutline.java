@@ -121,6 +121,8 @@ public final class SapphireEditorContentOutline
         this.pageToPageSite.clear();
         this.pagebook = null;
         this.listeners = null;
+        
+        getSite().getActionBars().updateActionBars();
     }
     
     public boolean isDisposed()

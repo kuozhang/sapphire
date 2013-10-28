@@ -76,6 +76,15 @@ public final class SapphireToolBarManagerActionPresentation extends SapphireHotS
         }
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        this.toolBarManager.remove( this.toolBarContribution );
+        this.toolBarManager.update( true );
+    }
+
     private final class ToolBarContribution extends ControlContribution
     {
         private ToolBar toolBar;

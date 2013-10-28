@@ -1601,6 +1601,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         private Composite outerComposite = null;
         private FilteredTree filteredTree = null;
         private TreeViewer treeViewer = null;
+        private SapphireActionPresentationManager actionPresentationManager;
         
         public void init( final IPageSite pageSite ) 
         {
@@ -1624,15 +1625,14 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             
             final SapphireActionGroup actions = part.getActions( CONTEXT_EDITOR_PAGE_OUTLINE_HEADER );
             
-            final SapphireActionPresentationManager actionPresentationManager 
-                = new SapphireActionPresentationManager( MasterDetailsEditorPage.this.presentation, actions );
+            this.actionPresentationManager = new SapphireActionPresentationManager( MasterDetailsEditorPage.this.presentation, actions );
             
-            final SapphireToolBarManagerActionPresentation toolbarActionsPresentation = new SapphireToolBarManagerActionPresentation( actionPresentationManager );
+            final SapphireToolBarManagerActionPresentation toolbarActionsPresentation = new SapphireToolBarManagerActionPresentation( this.actionPresentationManager );
             
             toolbarActionsPresentation.setToolBarManager( getSite().getActionBars().getToolBarManager() );
             toolbarActionsPresentation.render();
             
-            final SapphireKeyboardActionPresentation keyboardActionsPresentation = new SapphireKeyboardActionPresentation( actionPresentationManager );
+            final SapphireKeyboardActionPresentation keyboardActionsPresentation = new SapphireKeyboardActionPresentation( this.actionPresentationManager );
             keyboardActionsPresentation.attach( this.filteredTree.getFilterControl() );
             keyboardActionsPresentation.render();
         }
@@ -1673,6 +1673,15 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
 
         public void removeSelectionChangedListener( final ISelectionChangedListener listener )
         {
+        }
+
+        @Override
+        public void dispose()
+        {
+            super.dispose();
+            
+            this.actionPresentationManager.dispose();
+            this.actionPresentationManager = null;
         }
     }
     
