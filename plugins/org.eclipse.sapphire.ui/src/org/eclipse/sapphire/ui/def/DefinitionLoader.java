@@ -110,21 +110,7 @@ public final class DefinitionLoader
         {
             try
             {
-                final ByteArrayResourceStore urlResourceStore = new ByteArrayResourceStore( stream )
-                {
-                    @Override
-                    public <A> A adapt( final Class<A> adapterType )
-                    {
-                        if( adapterType == Context.class )
-                        {
-                            return adapterType.cast( DefinitionLoader.this.context );
-                        }
-                        
-                        return super.adapt( adapterType );
-                    }
-                };
-                
-                resource = new RootXmlResource( new XmlResourceStore( urlResourceStore ) );
+                resource = new RootXmlResource( new XmlResourceStore( new DefinitionLoaderResourceStore( stream, this.context ) ) );
             }
             catch( ResourceStoreException e )
             {
@@ -288,6 +274,29 @@ public final class DefinitionLoader
         if( this.sdef != null )
         {
             this.sdef.dispose();
+        }
+    }
+    
+    private static final class DefinitionLoaderResourceStore extends ByteArrayResourceStore
+    {
+        private final Context context;
+        
+        public DefinitionLoaderResourceStore( final InputStream in, final Context context ) throws ResourceStoreException
+        {
+            super( in );
+            
+            this.context = context;
+        }
+
+        @Override
+        public <A> A adapt( final Class<A> adapterType )
+        {
+            if( adapterType == Context.class )
+            {
+                return adapterType.cast( this.context );
+            }
+            
+            return super.adapt( adapterType );
         }
     }
 
