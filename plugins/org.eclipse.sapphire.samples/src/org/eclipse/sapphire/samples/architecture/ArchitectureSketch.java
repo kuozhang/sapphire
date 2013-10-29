@@ -76,7 +76,7 @@ public interface ArchitectureSketch extends Element
     @Type( base = Integer.class )
     @Label( standard = "detail level" )
     @DefaultValue( text = "1" )
-    @NumericRange( min = "1" )
+    @NumericRange( min = "0" )
     
     ValueProperty PROP_DETAIL_LEVEL = new ValueProperty( TYPE, "DetailLevel" );
     

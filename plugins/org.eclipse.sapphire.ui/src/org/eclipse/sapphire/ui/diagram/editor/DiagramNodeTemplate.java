@@ -40,6 +40,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
@@ -62,6 +63,9 @@ public final class DiagramNodeTemplate extends SapphirePart
         {            
         }
         public void handleNodeDelete(final DiagramNodePart nodePart)
+        {            
+        }
+        public void handleNodeAboutToBeDeleted(final DiagramNodePart nodePart)
         {            
         }
         public void handleNodeMove(final DiagramNodeEvent event)
@@ -251,6 +255,14 @@ public final class DiagramNodeTemplate extends SapphirePart
     	return newNodePart;
     }
     
+    public void deleteNode(DiagramNodePart nodePart)
+    {
+        notifyNodeAboutToBeDeleted(nodePart);
+		Element nodeModel = nodePart.getLocalModelElement();		
+        ElementList<?> list = (ElementList<?>) nodeModel.parent();
+        list.remove(nodeModel);                	
+    }
+    
     public PropertyDef getModelProperty()
     {
         return this.modelProperty;
@@ -371,7 +383,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         return null;
     }
     
-    public DiagramNodePart createNewNodePart(Element element)
+    private DiagramNodePart createNewNodePart(Element element)
     {
         DiagramNodePart newNode = new DiagramNodePart();
         newNode.init(this, element, this.definition, 
@@ -401,10 +413,6 @@ public final class DiagramNodeTemplate extends SapphirePart
         for (DiagramNodePart nodePart : nodeParts)
         {
         	notifyNodeAdd(nodePart);
-        }
-        if (this.embeddedConnTemplate != null)
-        {
-        	this.embeddedConnTemplate.showAllConnectionParts(this);
         }
     }
     
@@ -451,6 +459,14 @@ public final class DiagramNodeTemplate extends SapphirePart
         }                
     }
     
+    private void notifyNodeAboutToBeDeleted(DiagramNodePart nodePart)
+    {
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleNodeAboutToBeDeleted(nodePart);
+        }				
+	}
+
     private void notifyNodeDelete(DiagramNodePart nodePart)
     {
         for( DiagramNodeTemplateListener listener : this.listeners )
@@ -481,7 +497,8 @@ public final class DiagramNodeTemplate extends SapphirePart
      */
     private void refreshAttachedConnections(DiagramNodePart nodePart)
     {
-    	List<DiagramConnectionPart> attachedConnections = this.diagramEditor.getAttachedConnections(nodePart);
+    	ConnectionService connService = this.diagramEditor.service(ConnectionService.class);
+    	List<DiagramConnectionPart> attachedConnections = connService.getAttachedConnections(nodePart);
     	for (DiagramConnectionPart connPart : attachedConnections)
     	{
     		connPart.getDiagramConnectionTemplate().notifyConnectionAdd(new DiagramConnectionEvent(connPart));

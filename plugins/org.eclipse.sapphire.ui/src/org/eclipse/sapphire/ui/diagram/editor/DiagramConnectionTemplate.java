@@ -235,12 +235,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 			}
         };
     }
-    
-    public String getConnectionId()
-    {
-        return this.bindingDef.getConnectionId().content();
-    }
-    
+        
     public String getConnectionTypeId()
     {
         return this.connectionDef.getId().content();
@@ -521,7 +516,14 @@ public class DiagramConnectionTemplate extends SapphirePart
         return null;
     }
     
-    public DiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
+    public void deleteConnection(DiagramConnectionPart connPart)
+    {
+        final Element element = connPart.getLocalModelElement();
+        final ElementList<?> list = (ElementList<?>) element.parent();
+        list.remove(element);    	
+    }
+    
+    protected DiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
     {
         DiagramConnectionPart connPart = new DiagramConnectionPart(this.bindingDef, this.endpoint1Path, this.endpoint2Path);
         addConnectionPart(srcNodeElement, connPart);
@@ -529,6 +531,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 Collections.<String,String>emptyMap());
         connPart.initialize();
         connPart.attach(this.connPartListener);
+        notifyConnectionAdd(new DiagramConnectionEvent(connPart));
         return connPart;
     }
         
@@ -555,6 +558,29 @@ public class DiagramConnectionTemplate extends SapphirePart
     	}
     }
     
+    public void hideAllConnectionParts(DiagramNodeTemplate nodeTemplate)
+    {
+    	List<DiagramConnectionPart> connParts = getDiagramConnections(null);
+    	for (DiagramConnectionPart connPart : connParts)
+    	{
+    		Element endpt1 = connPart.getEndpoint1();
+    		Element endpt2 = connPart.getEndpoint2();
+    		DiagramNodePart nodePart1 = this.diagramEditor.getDiagramNodePart(endpt1);
+    		if (nodePart1 != null && nodePart1.getDiagramNodeTemplate() == nodeTemplate)
+    		{
+    			notifyConnectionDelete(new DiagramConnectionEvent(connPart));
+    		}
+    		else
+    		{
+    			DiagramNodePart nodePart2 = this.diagramEditor.getDiagramNodePart(endpt2);
+        		if (nodePart2 != null && nodePart2.getDiagramNodeTemplate() == nodeTemplate)
+        		{
+        			notifyConnectionDelete(new DiagramConnectionEvent(connPart));
+        		}    			
+    		}
+    	}
+    }
+
     protected void setModelProperty(final Element modelElement, 
                                     String propertyName, Object value)
     {
@@ -622,9 +648,9 @@ public class DiagramConnectionTemplate extends SapphirePart
         for (Element newConn : newConns)
         {                    
             createNewConnectionPart(newConn, connListParent);
-        }
-        
+        }        
     }
+    
     protected void handleModelPropertyChange(final PropertyEvent event)
     {
         final Element element = event.property().element();
@@ -682,12 +708,12 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
     }
     
-    public void addConnectionPart(Element srcNodeModel, DiagramConnectionPart connPart)
+    protected void addConnectionPart(Element srcNodeModel, DiagramConnectionPart connPart)
     {
         this.diagramConnections.add(connPart);
     }
     
-    public void disposeConnectionPart(DiagramConnectionPart connPart)
+    protected void disposeConnectionPart(DiagramConnectionPart connPart)
     {
     	connPart.dispose();
     	connPart.detach(this.connPartListener);
@@ -734,7 +760,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         }        
     }
     
-    public void notifyConnectionAdd(DiagramConnectionEvent event)
+    protected void notifyConnectionAdd(DiagramConnectionEvent event)
     {
         for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {

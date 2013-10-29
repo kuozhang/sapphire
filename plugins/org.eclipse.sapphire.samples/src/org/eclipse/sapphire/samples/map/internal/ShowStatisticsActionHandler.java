@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -36,6 +37,7 @@ public final class ShowStatisticsActionHandler extends SapphireActionHandler
     protected Object run( final Presentation context ) 
     {
         final SapphireDiagramEditorPagePart page = (SapphireDiagramEditorPagePart) getPart();
+        ConnectionService connService = page.service(ConnectionService.class);
         
         int nodes = 0;
         int connections = 0;
@@ -56,7 +58,7 @@ public final class ShowStatisticsActionHandler extends SapphireActionHandler
             {
                 nodes = page.getNodes().size();
                 
-                final List<DiagramConnectionPart> allConnections = page.getConnections();
+                final List<DiagramConnectionPart> allConnections = connService.getAllExplicitConnections();
                 
                 connections = allConnections.size();
                 

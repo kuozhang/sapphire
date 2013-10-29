@@ -21,7 +21,8 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
+import org.eclipse.sapphire.ui.diagram.ConnectionServiceEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -41,7 +42,7 @@ public class DiagramPagePresentation extends DiagramPresentation
 	private DiagramResourceCache resourceCache;
 	private List<DiagramNodePresentation> nodes = new ArrayList<DiagramNodePresentation>();
 	private Listener diagramNodeListener;
-	private Listener diagramConnectionListener;
+	private Listener connectionServiceListener;
 	
 	public DiagramPagePresentation(final SapphirePart part, final DiagramConfigurationManager configManager, final Shell shell)
 	{
@@ -72,10 +73,10 @@ public class DiagramPagePresentation extends DiagramPresentation
 		};
 		part().attach(diagramNodeListener);
 
-		diagramConnectionListener = new FilteredListener<DiagramConnectionEvent>() {
+		this.connectionServiceListener = new FilteredListener<ConnectionServiceEvent>() {
 			@Override
-			protected void handleTypedEvent(DiagramConnectionEvent event) {
-		    	DiagramConnectionPart connectionPart = (DiagramConnectionPart)event.getPart();
+			protected void handleTypedEvent(ConnectionServiceEvent event) {
+		    	DiagramConnectionPart connectionPart = event.getConnectionPart();
 		    	switch(event.getConnectionEventType()) {
 			    	case ConnectionEndpointUpdate:
 			    		diagramModel.updateConnectionEndpoint(connectionPart);
@@ -91,7 +92,7 @@ public class DiagramPagePresentation extends DiagramPresentation
 		    	}
 			}
 		};
-		part().attach(diagramConnectionListener);
+		part().service(ConnectionService.class).attach(this.connectionServiceListener);
 	}
 	
 	@Override
@@ -124,7 +125,7 @@ public class DiagramPagePresentation extends DiagramPresentation
 		resourceCache.dispose();
 		
 		part().detach(diagramNodeListener);
-		part().detach(diagramConnectionListener);
+		part().service(ConnectionService.class).detach(this.connectionServiceListener);
 
 		super.dispose();
 	}

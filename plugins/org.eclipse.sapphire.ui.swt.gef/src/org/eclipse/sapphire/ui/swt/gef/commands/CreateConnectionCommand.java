@@ -11,14 +11,11 @@
 
 package org.eclipse.sapphire.ui.swt.gef.commands;
 
-import java.util.List;
-
 import org.eclipse.draw2d.Connection;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 
@@ -66,15 +63,14 @@ public class CreateConnectionCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
-	public boolean canExecute() {
+	public boolean canExecute()
+	{
 		// disallow source -> source connections
 		if (target == null /*|| source.equals(target)*/) {
 			return false;
 		}
-		DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(this.source);
-		if (connectionTemplate != null && connectionTemplate.canCreateNewConnection(this.source.getModelPart(), this.target.getModelPart()))
-			return true;
-		return false;
+		ConnectionService connService = this.diagramPart.service(ConnectionService.class);
+		return connService.valid(this.source.getModelPart(), this.target.getModelPart(), this.connDef.getId().content());
 	}
 
 	/*
@@ -82,12 +78,15 @@ public class CreateConnectionCommand extends Command {
 	 * 
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
-	public void execute() {
-		DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(this.source);
-		DiagramConnectionPart connection = connectionTemplate.createNewDiagramConnection(this.source.getModelPart(), this.target.getModelPart());
+	public void execute()
+	{
+		ConnectionService connService = this.diagramPart.service(ConnectionService.class);
+		DiagramConnectionPart connection = connService.connect(this.source.getModelPart(), this.target.getModelPart(),
+				this.connDef.getId().content());
 		
 		// activate direct editing after object creation
-		if (connection.canEditLabel()) {
+		if (connection != null && connection.canEditLabel()) 
+		{
 			diagramPart.selectAndDirectEdit(connection);
 		}
 	}
@@ -106,25 +105,4 @@ public class CreateConnectionCommand extends Command {
 		}
 		this.target = target;
 	}
-
-    private DiagramConnectionTemplate getConnectionTemplate(DiagramNodeModel srcNode)
-    {
-        DiagramEmbeddedConnectionTemplate embeddedConn = srcNode.getModelPart().getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
-        if (embeddedConn != null && 
-                embeddedConn.getConnectionId().equalsIgnoreCase(this.connDef.getId().content()))
-        {
-            return embeddedConn;
-        }
-        
-        // check top level connections
-        List<DiagramConnectionTemplate> connTemplates = this.diagramPart.getConnectionTemplates();
-        for (DiagramConnectionTemplate connTemplate : connTemplates)
-        {
-            if (connTemplate.getConnectionId().equalsIgnoreCase(this.connDef.getId().content()))
-            {
-                return connTemplate;
-            }
-        }
-        return null;
-    }
 }

@@ -167,6 +167,7 @@
                 </page>
             </properties-view>
             <width>80</width>
+            <visible-when>${Root().DetailLevel &gt; 0}</visible-when>
         </node>
         <page-header-text>Architecture (Sapphire Sample)</page-header-text>
         <connection>

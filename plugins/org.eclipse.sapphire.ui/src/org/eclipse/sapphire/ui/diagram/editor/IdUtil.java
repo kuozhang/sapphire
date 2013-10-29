@@ -17,6 +17,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
 import java.util.List;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -124,7 +125,7 @@ public class IdUtil
         {
             return null;
         }
-        String connPartId = connId.substring(0, index);
+        String connTypeId = connId.substring(0, index);
         String subId = connId.substring(index + 1);
         String instanceId = null;
         int index2 = subId.indexOf(CONNECTION_ID_SEPARATOR);
@@ -142,27 +143,22 @@ public class IdUtil
         {
             connIndex = -1;
         }
-        for (DiagramConnectionTemplate connTemplate : diagramPart.getConnectionTemplates())
+        ConnectionService connService = diagramPart.service(ConnectionService.class);
+        List<DiagramConnectionPart> connParts = connService.getAllTopLevelConnections();
+        for (int i = 0; i < connParts.size(); i++)
         {
-            if (connTemplate.getConnectionTypeId().equals(connPartId))
+            DiagramConnectionPart connPart = connParts.get(i);
+            String instanceId2 = connPart.getInstanceId();
+            if (connPart.getConnectionTypeId().equals(connTypeId) && instanceId != null && instanceId2 != null && instanceId.equals(instanceId2))
             {
-                List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
-                for (int i = 0; i < connParts.size(); i++)
-                {
-                    DiagramConnectionPart connPart = connParts.get(i);
-                    String instanceId2 = connPart.getInstanceId();
-                    if (instanceId != null && instanceId2 != null && instanceId.equals(instanceId2))
-                    {
-                    	if (connIndex == -1 || (i == connIndex))
-                    	{
-                    		return connPart;
-                    	}                        
-                    }
-                    else if (i == connIndex)
-                    {
-                        return connPart;
-                    }
-                }
+            	if (connIndex == -1 || (i == connIndex))
+            	{
+            		return connPart;
+            	}                        
+            }
+            else if (i == connIndex)
+            {
+                return connPart;
             }
         }
         return null;
@@ -175,7 +171,7 @@ public class IdUtil
         {
             return null;
         }
-        String connPartId = connId.substring(0, index);
+        String connTypeId = connId.substring(0, index);
         String subId = connId.substring(index + 1);
         
         String instanceId = null;
@@ -195,30 +191,27 @@ public class IdUtil
         {
             connIndex = -1;
         }
-        
-        DiagramNodeTemplate nodeTemplate = nodePart.getDiagramNodeTemplate();
-        DiagramEmbeddedConnectionTemplate connTemplate = 
-            nodeTemplate.getEmbeddedConnectionTemplate();
-        if (connTemplate != null && connTemplate.getConnectionTypeId().equals(connPartId))
+        SapphireDiagramEditorPagePart diagramPart = nodePart.nearest(SapphireDiagramEditorPagePart.class);
+        ConnectionService connService = diagramPart.service(ConnectionService.class);
+        List<DiagramConnectionPart> connParts = connService.getEmbeddedConnections(nodePart);
+        for (int i = 0; i < connParts.size(); i++)
         {
-            List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(nodePart.getLocalModelElement());
-            for (int i = 0; i < connParts.size(); i++)
+            DiagramConnectionPart connPart = connParts.get(i);
+            String instanceId2 = connPart.getInstanceId();
+            if (connPart.getConnectionTypeId().equals(connTypeId) &&
+            		instanceId != null && instanceId2 != null && instanceId.equals(instanceId2))
             {
-                DiagramConnectionPart connPart = connParts.get(i);
-                String instanceId2 = connPart.getInstanceId();
-                if (instanceId != null && instanceId2 != null && instanceId.equals(instanceId2))
-                {
-                	if (connIndex == -1 || (i == connIndex))
-                	{
-                		return connPart;
-                	}                    
-                }
-                else if (i == connIndex)
-                {
-                    return connPart;
-                }                
+            	if (connIndex == -1 || (i == connIndex))
+            	{
+            		return connPart;
+            	}                    
             }
+            else if (i == connIndex)
+            {
+                return connPart;
+            }                
         }
+        
         return null;
     }
     

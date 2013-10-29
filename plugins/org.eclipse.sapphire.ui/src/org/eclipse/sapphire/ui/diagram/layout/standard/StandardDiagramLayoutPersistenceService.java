@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
@@ -35,12 +36,11 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
+import org.eclipse.sapphire.ui.diagram.ConnectionServiceEvent;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionBendPoints;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeBounds;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -67,6 +67,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	protected StandardDiagramLayout layoutModel;
 	protected IEditorInput editorInput;
 	private Listener diagramEditorPagePartListener;
+	private Listener connectionServiceListener;
 	private Map<String, DiagramNodeBounds> nodeBounds;
 	private Map<ConnectionHashKey, DiagramConnectionBendPoints> connectionBendPoints;
 	private Map<ConnectionHashKey, Point> connectionLabelPositions;
@@ -91,6 +92,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		    Sapphire.service( LoggingService.class ).log( e );
 		}
 		addDiagramPartListener();
+		addConnectionServiceListener();
     }		
 		
 	@Override
@@ -307,6 +309,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private void addNodeBoundsToModel()
 	{
 		this.layoutModel.getDiagramNodesLayout().clear();
+		ConnectionService connService = context(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
 		for (DiagramNodeTemplate nodeTemplate : context( SapphireDiagramEditorPagePart.class ).getNodeTemplates())
 		{
 			for (DiagramNodePart nodePart : nodeTemplate.getDiagramNodes())
@@ -334,42 +337,37 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 					}
 				}
 				// save the embedded connection bendpoints
-				DiagramEmbeddedConnectionTemplate embeddedConnTemplate = 
-						nodePart.getDiagramNodeTemplate().getEmbeddedConnectionTemplate();
-				if (embeddedConnTemplate != null)
+				diagramNode.getEmbeddedConnectionsLayout().clear();
+				List<DiagramConnectionPart> connParts = connService.getEmbeddedConnections(nodePart);
+				for (DiagramConnectionPart connPart : connParts)
 				{
-					diagramNode.getEmbeddedConnectionsLayout().clear();
-					List<DiagramConnectionPart> connParts = embeddedConnTemplate.getDiagramConnections(nodePart.getLocalModelElement());
-					for (DiagramConnectionPart connPart : connParts)
+					String connId = IdUtil.computeConnectionId(connPart);
+					
+					DiagramConnectionLayout conn = null;
+					DiagramConnectionBendPoints connBendPoints = connPart.getConnectionBendpoints();
+					if (connBendPoints.size() > 0)
+					{							
+						conn = diagramNode.getEmbeddedConnectionsLayout().insert();
+						conn.setConnectionId(connId);
+						for (Point pt : connBendPoints.getBendPoints())
+						{
+							DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().insert();
+							pt2.setX(pt.getX());
+							pt2.setY(pt.getY());
+						}
+					}
+					if (connPart.getLabel() != null && connPart.getLabelPosition() != null)
 					{
-						String connId = IdUtil.computeConnectionId(connPart);
-						
-						DiagramConnectionLayout conn = null;
-						DiagramConnectionBendPoints connBendPoints = connPart.getConnectionBendpoints();
-						if (connBendPoints.size() > 0)
-						{							
+						if (conn == null)
+						{
 							conn = diagramNode.getEmbeddedConnectionsLayout().insert();
 							conn.setConnectionId(connId);
-							for (Point pt : connBendPoints.getBendPoints())
-							{
-								DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().insert();
-								pt2.setX(pt.getX());
-								pt2.setY(pt.getY());
-							}
 						}
-						if (connPart.getLabel() != null && connPart.getLabelPosition() != null)
-						{
-							if (conn == null)
-							{
-								conn = diagramNode.getEmbeddedConnectionsLayout().insert();
-								conn.setConnectionId(connId);
-							}
-							conn.setLabelX(connPart.getLabelPosition().getX());
-							conn.setLabelY(connPart.getLabelPosition().getY());
-						}
-						
-					}
+						conn.setLabelX(connPart.getLabelPosition().getX());
+						conn.setLabelY(connPart.getLabelPosition().getY());
+					}					
 				}
+				
 			}
 		}
 	}
@@ -377,35 +375,33 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private void addConnectionsToModel()
 	{
 		this.layoutModel.getDiagramConnectionsLayout().clear();
-		for (DiagramConnectionTemplate connTemplate : context( SapphireDiagramEditorPagePart.class ).getConnectionTemplates())
+		ConnectionService connService = context(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
+		for (DiagramConnectionPart connPart : connService.getAllTopLevelConnections())
 		{
-			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
+			String id = IdUtil.computeConnectionId(connPart);
+			DiagramConnectionLayout conn = null;
+			
+			DiagramConnectionBendPoints connBendPoints = connPart.getConnectionBendpoints();
+			if (connBendPoints.size() > 0)
+			{		
+				conn = this.layoutModel.getDiagramConnectionsLayout().insert();
+				conn.setConnectionId(id);
+				for (Point pt : connBendPoints.getBendPoints())
+				{
+					DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().insert();
+					pt2.setX(pt.getX());
+					pt2.setY(pt.getY());
+				}					
+			}
+			if (connPart.getLabel() != null && connPart.getLabelPosition() != null)
 			{
-				String id = IdUtil.computeConnectionId(connPart);
-				DiagramConnectionLayout conn = null;
-				
-				DiagramConnectionBendPoints connBendPoints = connPart.getConnectionBendpoints();
-				if (connBendPoints.size() > 0)
-				{		
+				if (conn == null)
+				{
 					conn = this.layoutModel.getDiagramConnectionsLayout().insert();
 					conn.setConnectionId(id);
-					for (Point pt : connBendPoints.getBendPoints())
-					{
-						DiagramBendPointLayout pt2 = conn.getConnectionBendpoints().insert();
-						pt2.setX(pt.getX());
-						pt2.setY(pt.getY());
-					}					
 				}
-				if (connPart.getLabel() != null && connPart.getLabelPosition() != null)
-				{
-					if (conn == null)
-					{
-						conn = this.layoutModel.getDiagramConnectionsLayout().insert();
-						conn.setConnectionId(id);
-					}
-					conn.setLabelX(connPart.getLabelPosition().getX());
-					conn.setLabelY(connPart.getLabelPosition().getY());
-				}
+				conn.setLabelX(connPart.getLabelPosition().getX());
+				conn.setLabelY(connPart.getLabelPosition().getY());
 			}
 		}
 	}
@@ -430,7 +426,8 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	{
 		this.nodeBounds.clear();
 		this.connectionBendPoints.clear();
-		for (DiagramConnectionPart connPart : context( SapphireDiagramEditorPagePart.class ).getConnections())
+		ConnectionService connService = context(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
+		for (DiagramConnectionPart connPart : connService.getAllExplicitConnections())
 		{
 			addConnectionToPersistenceCache(connPart);
 		}
@@ -451,10 +448,6 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
                 {
                 	handleDiagramNodeEvent((DiagramNodeEvent)event);
                 } 
-                else if ( event instanceof DiagramConnectionEvent )
-                {
-                	handleDiagramConnectionEvent((DiagramConnectionEvent)event);
-                } 
                 else if ( event instanceof DiagramPageEvent )
                 {
                 	handleDiagramPageEvent((DiagramPageEvent)event);
@@ -462,6 +455,19 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
             }
         };
 		context( SapphireDiagramEditorPagePart.class ).attach(diagramEditorPagePartListener);
+	}
+	
+	private void addConnectionServiceListener()
+	{
+		this.connectionServiceListener = new FilteredListener<ConnectionServiceEvent>() 
+		{
+			@Override
+			protected void handleTypedEvent(ConnectionServiceEvent event) 
+			{
+				handleDiagramConnectionEvent(event);
+			}
+		};
+		context( SapphireDiagramEditorPagePart.class ).service(ConnectionService.class).attach(this.connectionServiceListener);
 	}
 	
     private void handleDiagramNodeEvent(DiagramNodeEvent event) {
@@ -491,8 +497,8 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     	}
 	}
 
-    protected void handleDiagramConnectionEvent(DiagramConnectionEvent event) {
-		DiagramConnectionPart connPart = (DiagramConnectionPart)event.getPart();
+    protected void handleDiagramConnectionEvent(ConnectionServiceEvent event) {
+		DiagramConnectionPart connPart = event.getConnectionPart();
 
 		switch(event.getConnectionEventType()) {
 	    	case ConnectionAdd:
@@ -529,7 +535,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		    		}
 		    		else
 		    		{
-		    			write((DiagramConnectionPart)event.getPart());
+		    			write(connPart);
 		    		}
 		    	}
 	    		break;
@@ -616,25 +622,29 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     private boolean isDiagramLayoutChanged()
     {
     	boolean changed = false;
-		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
-		{
-			if (!nodePart.getLocalModelElement().disposed() && isNodeLayoutChanged(nodePart))
+    	if (!context(SapphireDiagramEditorPagePart.class).disposed())
+    	{
+			for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
 			{
-				changed = true;
-				break;
+				if (!nodePart.getLocalModelElement().disposed() && isNodeLayoutChanged(nodePart))
+				{
+					changed = true;
+					break;
+				}
 			}
-		}
-		for (DiagramConnectionPart connPart : context( SapphireDiagramEditorPagePart.class ).getConnections())
-		{
-			if (!connPart.getLocalModelElement().disposed() && isConnectionLayoutChanged(connPart))
+			ConnectionService connService = context(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
+			for (DiagramConnectionPart connPart : connService.getAllExplicitConnections())
 			{
-				changed = true;
-				break;
+				if (!connPart.getLocalModelElement().disposed() && isConnectionLayoutChanged(connPart))
+				{
+					changed = true;
+					break;
+				}
 			}
-		}
-		
+    	}
     	return changed;
     }
+    	
     
     @Override
     public boolean dirty()

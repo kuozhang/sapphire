@@ -25,12 +25,10 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 
@@ -142,75 +140,25 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
 
     private void deleteNodeConnections(DiagramNodePart nodePart)
     {
-        Element nodeModel = nodePart.getLocalModelElement();
-        SapphireDiagramEditorPagePart diagramPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
-        
-        // Look for embedded connections
-        for (DiagramNodeTemplate nodeTemplate : diagramPart.getNodeTemplates())
-        {
-        	DiagramEmbeddedConnectionTemplate embeddedConn = nodeTemplate.getEmbeddedConnectionTemplate();
-            if (embeddedConn != null)
-            {
-                for (DiagramConnectionPart connPart : embeddedConn.getDiagramConnections(null))
-                {
-                    if ((connPart.getEndpoint1() != null && connPart.getEndpoint1() == nodeModel) || 
-                            (connPart.getEndpoint2() != null && connPart.getEndpoint2() == nodeModel))
-                    {
-                        deleteConnection(connPart);
-                    }
-                }
-            }
-        }
-
-        // Look for top level connections        
-        for (DiagramConnectionTemplate connTemplate : diagramPart.getConnectionTemplates())
-        {
-            for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null))
-            {
-                if ((connPart.getEndpoint1() != null && connPart.getEndpoint1() == nodeModel) || 
-                        (connPart.getEndpoint2() != null && connPart.getEndpoint2() == nodeModel))
-                {
-                    if (!(connPart instanceof DiagramImplicitConnectionPart))
-                    {
-                        deleteConnection(connPart);
-                    }
-                }
-            }
-        }
+    	SapphireDiagramEditorPagePart diagramPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
+    	ConnectionService connService = diagramPart.service(ConnectionService.class);
+    	for (DiagramConnectionPart connPart: connService.getAttachedConnections(nodePart))
+    	{
+    		deleteConnection(connPart);
+    	}
     }
     
     private void deleteConnection(DiagramConnectionPart connPart)
     {
-        final Element element = connPart.getLocalModelElement();
-        final ElementList<?> list = (ElementList<?>) element.parent();
-        list.remove(element);            
+    	connPart.getDiagramConnectionTemplate().deleteConnection(connPart);
     }
     
     private void deleteNode(DiagramNodePart nodePart)
     {
-        Element nodeModel = nodePart.getLocalModelElement();
         // Need to remove connection parts that are associated with this node
         deleteNodeConnections(nodePart);
         
-        // Check top level connections to see whether we need to remove the connection parent element
-        SapphireDiagramEditorPagePart editorPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
-        List<DiagramConnectionTemplate> connTemplates = editorPart.getConnectionTemplates();
-        for (DiagramConnectionTemplate connTemplate : connTemplates)
-        {
-            if (connTemplate.getConnectionType() == DiagramConnectionTemplate.ConnectionType.OneToMany)
-            {
-                Element connParentElement = connTemplate.getConnectionParentElement(nodeModel);
-                if (connParentElement != null)
-                {
-                    ElementList<?> connParentList = (ElementList<?>) connParentElement.parent();
-                    connParentList.remove(connParentElement);
-                }
-            }
-        }
-        
-        ElementList<?> list = (ElementList<?>) nodeModel.parent();
-        list.remove(nodeModel);            
-    	
+        nodePart.getDiagramNodeTemplate().deleteNode(nodePart);
     }
     
     private void deleteShapePart(ShapePart shapePart)

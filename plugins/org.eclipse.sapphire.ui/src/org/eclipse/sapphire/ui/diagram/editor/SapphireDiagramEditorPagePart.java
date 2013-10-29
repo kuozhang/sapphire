@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
@@ -40,14 +39,10 @@ import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate.DiagramConnectionTemplateListener;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.DiagramImplicitConnectionTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventType;
@@ -71,13 +66,9 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private List<IDiagramNodeDef> nodeDefs;
     private List<IDiagramConnectionDef> connectionDefs;
     private List<DiagramNodeTemplate> nodeTemplates;
-    private List<DiagramConnectionTemplate> connectionTemplates;
-    private List<DiagramImplicitConnectionTemplate> implicitConnectionTemplates;
     private NodeTemplateListener nodeTemplateListener;
-    private ConnectionTemplateListener connTemplateListener;
     private PropertiesViewContributionManager propertiesViewContributionManager;
     private List<ISapphirePart> selections;
-    private ImplicitConnectionTemplateListener implicitConnTemplateListener;
     private boolean showGrid;
     private boolean showGuides;
     private int gridUnit;
@@ -108,8 +99,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         this.mouseLocation = new Point(0, 0);
         
         this.nodeTemplateListener = new NodeTemplateListener();
-        this.connTemplateListener = new ConnectionTemplateListener();
-        this.implicitConnTemplateListener = new ImplicitConnectionTemplateListener();
         
         this.nodeTemplates = new ArrayList<DiagramNodeTemplate>();
         this.nodeDefs = this.diagramPageDef.getDiagramNodeDefs();
@@ -130,49 +119,12 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
                     @Override
                     protected void handleTypedEvent( final PartVisibilityEvent event )
                     {
-                        refreshDiagramPalette( (DiagramNodeTemplate) event.part() );
+                        handleNodeTemplateVisibilityChange( (DiagramNodeTemplate) event.part() );
                     }
                  }
             );
         }
-        
-        // Need to initialize the embedded connections after all the diagram node parts are created
-        // For connections between "anonymous" nodes, we'd represent connections using node index based
-        // mechanism.
-        for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
-        {
-            nodeTemplate.initEmbeddedConnections();
-            if (nodeTemplate.getEmbeddedConnectionTemplate() != null)
-            {
-                nodeTemplate.getEmbeddedConnectionTemplate().addTemplateListener(this.connTemplateListener);
-            }
-        }
-                
-        this.connectionTemplates = new ArrayList<DiagramConnectionTemplate>();
-        ElementList<IDiagramExplicitConnectionBindingDef> connectionBindings = this.diagramPageDef.getDiagramConnectionBindingDefs();
-        for (IDiagramExplicitConnectionBindingDef connBinding : connectionBindings)
-        {
-            IDiagramConnectionDef connDef = getDiagramConnectionDef(connBinding.getConnectionId().content());
-            DiagramConnectionTemplate connectionTemplate = new DiagramConnectionTemplate(connBinding);
-            connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
-            connectionTemplate.initialize();
-            this.connectionTemplates.add(connectionTemplate);
-            connectionTemplate.addTemplateListener(this.connTemplateListener);
-        }
-        
-        // initialize implicit connections
-        this.implicitConnectionTemplates = new ArrayList<DiagramImplicitConnectionTemplate>();
-        ElementList<IDiagramImplicitConnectionBindingDef> implicitConnBindings = this.diagramPageDef.getImplicitConnectionBindingDefs();
-        for (IDiagramImplicitConnectionBindingDef implicitConnBinding : implicitConnBindings)
-        {
-            IDiagramConnectionDef connDef = getDiagramConnectionDef(implicitConnBinding.getConnectionId().content());
-            DiagramImplicitConnectionTemplate connectionTemplate = new DiagramImplicitConnectionTemplate(implicitConnBinding);
-            connectionTemplate.init(this, this.modelElement, connDef, Collections.<String,String>emptyMap());
-            connectionTemplate.initialize();
-            this.implicitConnectionTemplates.add(connectionTemplate);
-            connectionTemplate.addTemplateListener(this.implicitConnTemplateListener);
-        }
-        
+                                
         this.connectionImageDataFunctionResults = new ArrayList<FunctionResult>();
         for (IDiagramConnectionDef connectionDef : this.connectionDefs)
         {
@@ -398,17 +350,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
         return connDef;
     }
-    
-    public List<DiagramConnectionTemplate> getConnectionTemplates()
-    {
-        return this.connectionTemplates;
-    }
-            
-    public List<DiagramImplicitConnectionTemplate> getImplicitConnectionTemplates()
-    {
-        return this.implicitConnectionTemplates;
-    }
-    
+        
     @Override
     public Set<String> getActionContexts()
     {
@@ -485,30 +427,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
     }
     
-    private void refreshDiagramPalette(DiagramNodeTemplate nodeTemplate)
+    private void handleNodeTemplateVisibilityChange(DiagramNodeTemplate nodeTemplate)
     {
+    	ConnectionService connService = this.service(ConnectionService.class);
     	if( nodeTemplate.visible() )
     	{
-    		// Restore all the connection PEs if they are associated with the 
-    		// nodes for the node template
     		nodeTemplate.showAllNodeParts();
-        	List<DiagramConnectionTemplate> connTemplates = getConnectionTemplates();
-        	for (DiagramConnectionTemplate connTemplate : connTemplates)
-        	{
-        		connTemplate.showAllConnectionParts(nodeTemplate);
-        	}
-        	
-        	List<DiagramImplicitConnectionTemplate> implictConnTemplates = 
-        			getImplicitConnectionTemplates();
-        	for (DiagramImplicitConnectionTemplate implicitConnTemplate : implictConnTemplates)
-        	{
-        		implicitConnTemplate.refreshImplicitConnections();
-        	}
+    		// Restore all the connection parts if they are associated with the 
+    		// nodes for the node template    		
+    		connService.showAllAttachedConnections(nodeTemplate.getNodeTypeId());
     	}
     	else
     	{
-    		// The connection PEs associated with nodes are removed when the node PEs get removed.
-    		// So we don't need to explicitly remove those connection PEs
+    		connService.hideAllAttachedConnections(nodeTemplate.getNodeTypeId());
     		nodeTemplate.hideAllNodeParts();
     	}
     	notifyDiagramChange();
@@ -526,28 +457,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         return nodes.result();
     }
-    
-    public List<DiagramConnectionPart> getConnections()
-    {
-        final ListFactory<DiagramConnectionPart> connections = ListFactory.start();
         
-        for( DiagramConnectionTemplate template : getConnectionTemplates() )
-        {
-            connections.add( template.getDiagramConnections( null ) );
-        }
-        
-        for( DiagramNodeTemplate nodeTemplate : getNodeTemplates() )
-        {
-            final DiagramConnectionTemplate embeddedConnectionTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-            if (embeddedConnectionTemplate != null)
-            {
-                connections.add( embeddedConnectionTemplate.getDiagramConnections( null ) );
-            }
-        }
-        
-        return connections.result();
-    }
-    
     public DiagramNodePart getDiagramNodePart(Element nodeElement)
     {
         if (nodeElement == null)
@@ -568,87 +478,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         return null;
     }
     
-    public DiagramConnectionPart getDiagramConnectionPart(Element connElement)
-    {
-    	if (connElement == null)
-    	{
-    		return null;
-    	}
-    	List<DiagramConnectionTemplate> connTemplates = this.getConnectionTemplates();
-    	for (DiagramConnectionTemplate connTemplate : connTemplates)
-    	{
-    		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
-    		 for (DiagramConnectionPart connPart : connParts)
-    		 {
-    			 if (connPart.getLocalModelElement() == connElement)
-    			 {
-    				 return connPart;
-    			 }
-    		 }
-    	}
-    	// Check for embedded connections
-        List<DiagramNodeTemplate> nodeTemplates = this.getNodeTemplates();
-        for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
-        {
-        	DiagramEmbeddedConnectionTemplate connTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-        	if (connTemplate != null)
-        	{
-        		List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
-	       		 for (DiagramConnectionPart connPart : connParts)
-	       		 {
-	       			 if (connPart.getLocalModelElement() == connElement)
-	       			 {
-	       				 return connPart;
-	       			 }
-	       		 }        	
-        	}
-        }    	
-    	return null;
-    }
-        
-    /**
-     * Returns the list of connections that are attached to a node on either end.
-     * @param nodePart the sapphire node part
-     * @return the list of connections
-     */
-    public List<DiagramConnectionPart> getAttachedConnections(DiagramNodePart nodePart)
-    {
-    	Element nodeElement = nodePart.getLocalModelElement();
-    	List<DiagramConnectionPart> attachedConnections = new ArrayList<DiagramConnectionPart>();
-    	
-    	List<DiagramConnectionTemplate> connTemplates = this.getConnectionTemplates();
-    	for (DiagramConnectionTemplate connTemplate : connTemplates)
-    	{
-    		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
-    		 for (DiagramConnectionPart connPart : connParts)
-    		 {
-    			 if ((connPart.getEndpoint1() != null && connPart.getEndpoint1() == nodeElement) || 
-    					 connPart.getEndpoint2() != null && connPart.getEndpoint2() == nodeElement)
-    			 {
-    				 attachedConnections.add(connPart);
-    			 }
-    		 }
-    	}
-    	// Check for embedded connections
-        List<DiagramNodeTemplate> nodeTemplates = this.getNodeTemplates();
-        for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
-        {
-        	DiagramEmbeddedConnectionTemplate connTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-        	if (connTemplate != null)
-        	{
-        		List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
-	       		 for (DiagramConnectionPart connPart : connParts)
-	       		 {
-	    			 if (connPart.getEndpoint1() == nodeElement || connPart.getEndpoint2() == nodeElement)
-	    			 {
-	    				 attachedConnections.add(connPart);
-	    			 }
-	       		 }        	
-        	}
-        }    	
-    	
-    	return attachedConnections;
-    }
         
     @Override
     public void dispose() 
@@ -674,23 +503,26 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             nodeTemplate.dispose();
         }
         this.nodeTemplates.clear();
-        for (DiagramConnectionTemplate connTemplate : this.connectionTemplates)
-        {
-            connTemplate.dispose();
-        }
-        this.connectionTemplates.clear();
-        for (DiagramImplicitConnectionTemplate connTemplate : this.implicitConnectionTemplates)
-        {
-            connTemplate.dispose();
-        }
-        this.implicitConnectionTemplates.clear();
     }
     
-    public DiagramNodeTemplate getNodeTemplate(PropertyDef modelProperty)
+    public List<DiagramNodeTemplate> getNodeTemplates(PropertyDef modelProperty)
     {
+    	List<DiagramNodeTemplate> nodeTemplates = new ArrayList<DiagramNodeTemplate>();
     	for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
     	{
     		if (nodeTemplate.getModelProperty() == modelProperty)
+    		{
+    			nodeTemplates.add(nodeTemplate);
+    		}
+    	}
+    	return nodeTemplates;
+    }
+    
+    public DiagramNodeTemplate getNodeTemplate(String nodeType)
+    {    	
+    	for (DiagramNodeTemplate nodeTemplate : this.nodeTemplates)
+    	{
+    		if (nodeTemplate.getNodeTypeId().equalsIgnoreCase(nodeType))
     		{
     			return nodeTemplate;
     		}
@@ -712,63 +544,16 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	this.broadcast(event);
 	}
 	
+	private void notifyNodeAboutToBeDeleted(DiagramNodePart nodePart)
+	{
+		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
+		event.setNodeEventType(NodeEventType.NodeAboutToBeDeleted);
+    	this.broadcast(event);
+	}
+
 	private void notifyNodeMove(DiagramNodeEvent event)
 	{
 		event.setNodeEventType(NodeEventType.NodeMove);
-    	this.broadcast(event);
-	}
-
-	private void notifyConnectionUpdate(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionUpdate);
-    	this.broadcast(event);
-	}
-	
-	private void notifyConnectionEndpointUpdate(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionEndpointUpdate);
-    	this.broadcast(event);
-	}
-
-    private void notifyConnectionAdd(final DiagramConnectionEvent event)
-    {
-		event.setConnectionEventType(ConnectionEventType.ConnectionAdd);
-    	this.broadcast(event);
-    }
-
-	private void notifyConnectionDelete(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionDelete);
-    	this.broadcast(event);
-	}
-	
-	private void notifyConnectionAddBendpoint(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionAddBendpoint);
-    	this.broadcast(event);
-	}
-
-	private void notifyConnectionRemoveBendpoint(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionRemoveBendpoint);
-    	this.broadcast(event);
-	}
-
-	private void notifyConnectionMoveBendpoint(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionMoveBendpoint);
-    	this.broadcast(event);
-	}
-	
-	private void notifyConnectionResetBendpoints(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionResetBendpoint);
-    	this.broadcast(event);
-	}
-
-	private void notifyConnectionMoveLabel(final DiagramConnectionEvent event)
-	{
-		event.setConnectionEventType(ConnectionEventType.ConnectionMoveLabel);
     	this.broadcast(event);
 	}
 
@@ -839,6 +624,12 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }		
 
         @Override
+        public void handleNodeAboutToBeDeleted(final DiagramNodePart nodePart)
+        {
+        	notifyNodeAboutToBeDeleted(nodePart);
+        }		
+
+        @Override
         public void handleNodeMove(final DiagramNodeEvent event)
         {
         	notifyNodeMove(event);
@@ -846,80 +637,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
 	}
 	
-	private class ConnectionTemplateListener extends DiagramConnectionTemplateListener
-	{
-        @Override
-        public void handleConnectionUpdate(final DiagramConnectionEvent event)
-        {
-            notifyConnectionUpdate(event);
-        }
-        
-        @Override
-        public void handleConnectionEndpointUpdate(final DiagramConnectionEvent event)
-        {
-            notifyConnectionEndpointUpdate(event);
-        }
-
-        @Override
-        public void handleConnectionAdd(final DiagramConnectionEvent event)
-        {
-            notifyConnectionAdd(event);
-        }
-
-        @Override
-        public void handleConnectionDelete(final DiagramConnectionEvent event)
-        {
-            notifyConnectionDelete(event);
-        }
-        
-        @Override
-        public void handleAddBendpoint(final DiagramConnectionEvent event)
-        {
-            notifyConnectionAddBendpoint(event);
-        }
-
-        @Override
-        public void handleRemoveBendpoint(final DiagramConnectionEvent event)
-        {
-            notifyConnectionRemoveBendpoint(event);
-        }
-
-        @Override
-        public void handleMoveBendpoint(final DiagramConnectionEvent event)
-        {
-            notifyConnectionMoveBendpoint(event);
-        }
-
-        @Override
-        public void handleResetBendpoints(final DiagramConnectionEvent event)
-        {
-            notifyConnectionResetBendpoints(event);
-        }
-
-        @Override
-        public void handleMoveLabel(final DiagramConnectionEvent event)
-        {
-            notifyConnectionMoveLabel(event);
-        }
-	}
-    
-    private class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplateListener
-    {
-
-        @Override
-        public void handleConnectionAdd(final DiagramConnectionEvent event)
-        {
-            notifyConnectionAdd(event);
-        }
-
-        @Override
-        public void handleConnectionDelete(final DiagramConnectionEvent event)
-        {
-            notifyConnectionDelete(event);
-        }
-        
-    }
-    
     public final static class ConnectionPalette {
     	
     	ImageData imageData;

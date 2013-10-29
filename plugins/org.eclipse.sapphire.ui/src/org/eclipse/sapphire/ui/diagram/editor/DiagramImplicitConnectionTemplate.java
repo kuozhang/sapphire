@@ -62,8 +62,6 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     private Listener modelPropertyListener;
     private Set<DiagramImplicitConnectionTemplateListener> templateListeners;
     private Map<Element, FunctionResult> listEntryFunctionMap;
-    private DiagramNodeTemplate nodeTemplate;
-    private NodeTemplateListener nodeTemplateListener;
         
     public DiagramImplicitConnectionTemplate(IDiagramImplicitConnectionBindingDef bindingDef)
     {
@@ -106,12 +104,15 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         // in diagram node template is notified. In this case, dangling connection parts
         // are created before node parts are created. So when new node part is created, we 
         // need to notify connection template.
-        this.nodeTemplate = 
-        		this.diagramEditor.getNodeTemplate(this.modelProperty);
-        if (this.nodeTemplate != null)
+        List<DiagramNodeTemplate> nodeTemplates = 
+        		this.diagramEditor.getNodeTemplates(this.modelProperty);
+        if (!nodeTemplates.isEmpty())
         {
-        	this.nodeTemplateListener = new NodeTemplateListener();
-        	this.nodeTemplate.addTemplateListener(this.nodeTemplateListener);
+        	NodeTemplateListener nodeTemplateListener = new NodeTemplateListener();
+        	for (DiagramNodeTemplate nodeTemplate : nodeTemplates)
+        	{
+        		nodeTemplate.addTemplateListener(nodeTemplateListener);
+        	}
         }
     }
     
@@ -129,14 +130,14 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         // change propogrates to OEPE
 //        String temp = this.propertyName + "/*";
 //        this.allDescendentsPath = new ModelPath(temp);
-//        this.modelElement.attach(this.modelPropertyListener, this.allDescendentsPath);
+//        getModelElement().attach(this.modelPropertyListener, this.allDescendentsPath);
     }
     
     @Override
     public void removeModelListener()
     {
         getModelElement().detach(this.modelPropertyListener, this.propertyName);
-//        this.modelElement.detach(this.modelPropertyListener, this.allDescendentsPath);
+//        getModelElement().detach(this.modelPropertyListener, this.allDescendentsPath);
     }
     
     public void refreshImplicitConnections()
@@ -151,15 +152,16 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         this.implicitConnections.clear();
         for (int i = 0; i < newFilteredList.size() - 1; i++)
         {
-            DiagramImplicitConnectionPart connPart = 
-                    createNewImplicitConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
-            if (connPart.getEndpoint1() != null && connPart.getEndpoint2() != null &&
-            		this.diagramEditor.getDiagramNodePart(connPart.getEndpoint1()) != null &&
-            		this.diagramEditor.getDiagramNodePart(connPart.getEndpoint2()) != null)
-            {
+        	DiagramNodePart srcNode = this.diagramEditor.getDiagramNodePart(newFilteredList.get(i));
+        	DiagramNodePart targetNode = this.diagramEditor.getDiagramNodePart(newFilteredList.get(i+1));
+        	if (srcNode != null && srcNode.getDiagramNodeTemplate().visible() &&
+        			targetNode != null && targetNode.getDiagramNodeTemplate().visible())
+        	{
+	            DiagramImplicitConnectionPart connPart = 
+	                    createNewImplicitConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
                 this.implicitConnections.add(connPart);
                 notifyConnectionAdd(connPart);
-            }
+        	}
         }            
     }
     

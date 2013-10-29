@@ -597,6 +597,12 @@
         <implementation>org.eclipse.sapphire.ui.forms.ProblemsTraversalService</implementation>
         <condition>org.eclipse.sapphire.ui.forms.internal.ProblemsTraversalServiceCondition</condition>
     </service>
+    <service>
+        <id>Sapphire.Diagrams.ConnectionService.Standard</id>
+        <context>Sapphire.Part</context>
+        <implementation>org.eclipse.sapphire.ui.diagram.internal.StandardConnectionService</implementation>
+        <condition>org.eclipse.sapphire.ui.diagram.internal.StandardConnectionService$Condition</condition>
+    </service>    
     <function>
         <name>Part</name>
         <impl>org.eclipse.sapphire.ui.internal.PartFunction</impl>

@@ -78,6 +78,7 @@ import org.eclipse.sapphire.ui.SapphireHelpContext;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramDirectEditPartEvent;
@@ -151,6 +152,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     private SapphireDiagramEditorPagePart part;
     
     private DiagramLayoutPersistenceService layoutPersistenceService;
+    private ConnectionService connectionService;
 	private PaletteRoot root;
 	private DiagramPagePresentation diagramPresentation;
     private DiagramModel diagramModel;
@@ -210,6 +212,8 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
         final String partName = this.definition.resolve().getPageName().localized( CapitalizationType.TITLE_STYLE, false );
         setPartName( partName );
 
+        // Initialize connection service
+        this.connectionService = SapphireDiagramEditorFactory.getConnectionService(this.part);
 		// Initialize layout persistence service
 		this.layoutPersistenceService = SapphireDiagramEditorFactory.getLayoutPersistenceService(this.part);
 		
@@ -244,7 +248,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
                 }
             }
         );
-        
+        		
 		this.layoutPersistenceServiceListener = new Listener() 
 		{
             @Override
@@ -344,6 +348,11 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     public DiagramLayoutPersistenceService getLayoutPersistenceService()
     {
     	return this.layoutPersistenceService;
+    }
+    
+    public ConnectionService getConnectionService()
+    {
+    	return this.connectionService;
     }
     
 	@Override

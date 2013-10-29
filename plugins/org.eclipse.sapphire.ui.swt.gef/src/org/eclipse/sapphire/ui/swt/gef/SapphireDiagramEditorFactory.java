@@ -13,6 +13,7 @@
 
 package org.eclipse.sapphire.ui.swt.gef;
 
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 
@@ -30,4 +31,11 @@ public class SapphireDiagramEditorFactory
         return layoutPersistentService;     	
     }
         
+    public static ConnectionService getConnectionService(SapphireDiagramEditorPagePart diagramPart)
+    {
+    	ConnectionService connectionService = 
+    			diagramPart.service(ConnectionService.class);
+    	
+        return connectionService;     	
+    }
 }

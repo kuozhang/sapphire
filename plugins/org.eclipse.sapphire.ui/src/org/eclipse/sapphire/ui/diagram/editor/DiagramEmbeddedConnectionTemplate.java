@@ -223,7 +223,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     }
     
     @Override
-    public DiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
+    protected DiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
     {
         DiagramEmbeddedConnectionPart connPart = 
             new DiagramEmbeddedConnectionPart(this.bindingDef, srcNodeElement, this.endpointPath);

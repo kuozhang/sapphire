@@ -19,13 +19,10 @@ import java.util.List;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
@@ -140,18 +137,6 @@ public class DiagramModel extends DiagramModelBase {
 	public void handleRemoveNode(DiagramNodePart nodePart) {
 		DiagramNodeModel nodeModel = getDiagramNodeModel(nodePart);
 		if (nodeModel != null) {
-			// first remove all connections, if they still exist
-			List<DiagramConnectionModel> tobeRemoved = new ArrayList<DiagramConnectionModel>();
-			for (DiagramConnectionModel connectionModel : connections) {
-				if (connectionModel.getSourceNode().equals(nodeModel) || connectionModel.getTargetNode().equals(nodeModel)) {
-					tobeRemoved.add(connectionModel);
-				}
-			}
-			for (DiagramConnectionModel connectionModel : tobeRemoved) {
-				removeConnection(connectionModel);
-			}
-			
-			// next remove the node
 			nodes.remove(nodeModel);
 			firePropertyChange(NODE_REMOVED, null, nodePart);
 		}
@@ -173,32 +158,15 @@ public class DiagramModel extends DiagramModelBase {
 	}
 	
 	private void constructConnections() {
-		// add the top level connections back to the diagram
-		for (DiagramConnectionTemplate connTemplate : getSapphirePart().getConnectionTemplates()) {
-			for (DiagramConnectionPart connPart : connTemplate.getDiagramConnections(null)) {
-				addConnection(connPart);
-			}
+		ConnectionService connService = getSapphirePart().service(ConnectionService.class);
+		for (DiagramConnectionPart connPart : connService.getAllExplicitConnections())
+		{
+			addConnection(connPart);
 		}
-
-		// Add embedded connections. This needs to be done after all the nodes
-		// have been added.
-		for (DiagramNodeTemplate nodeTemplate : getSapphirePart().getNodeTemplates()) {
-			// Bug 381795 - Connections do not show correctly when editor is started with connections hidden
-			if (nodeTemplate.visible()) {
-				DiagramEmbeddedConnectionTemplate embeddedConnTemplate = nodeTemplate.getEmbeddedConnectionTemplate();
-				if (embeddedConnTemplate != null) {
-					for (DiagramConnectionPart connPart : embeddedConnTemplate.getDiagramConnections(null)) {
-						addConnection(connPart);
-					}
-				}
-			}
-		}
-
+		
 		// Add Implicit connections
-		for (DiagramImplicitConnectionTemplate implicitConnTemplate : getSapphirePart().getImplicitConnectionTemplates()) {
-			for (DiagramImplicitConnectionPart implicitConn : implicitConnTemplate.getImplicitConnections()) {
-				addConnection(implicitConn);
-			}
+		for (DiagramImplicitConnectionPart implicitConn : connService.getAllImplicitConnections()) {
+			addConnection(implicitConn);
 		}
 	}
 	

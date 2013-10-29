@@ -84,6 +84,20 @@ public interface IDiagramEditorPageDef extends EditorPageDef, PropertiesViewCont
     void setLayoutPersistence( String value );
     void setLayoutPersistence( LayoutPersistence value );
     
+    // *** ConnectionServiceType ***
+    
+    @Type( base = ConnectionServiceType.class )
+    @Label( standard = "connection service type")
+    @Localizable
+    @XmlBinding( path = "connection-service-type" )
+    @DefaultValue( text = "standard" )
+    
+    ValueProperty PROP_CONNECTION_SERVICE_TYPE = new ValueProperty( TYPE, "ConnectionServiceType" );
+    
+    Value<ConnectionServiceType> getConnectionServiceType();
+    void setConnectionServiceType( String value );
+    void setConnectionServiceType( ConnectionServiceType value );
+
     // *** PaletteCompartments ***
     
     @Type( base = IDiagramPaletteCompartmentDef.class )
