@@ -12,7 +12,9 @@
 package org.eclipse.sapphire.services;
 
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.ListenerContext;
@@ -36,6 +38,13 @@ public class ServiceContext
     private final String type;
     private final ServiceContext parent;
     private List<ServiceProxy> services;
+    
+    /**
+     * Cache of previous service lookups.
+     */
+    
+    private Map<Class<?>,List<? extends Service>> cache;
+    
     private ListenerContext coordinatingListenerContext;
     
     /**
@@ -97,6 +106,8 @@ public class ServiceContext
         return ( services.isEmpty() ? null : services.get( 0 ) );
     }
 
+    @SuppressWarnings( "unchecked" )
+    
     public final <S extends Service> List<S> services( final Class<S> type )
     {
         synchronized( this.lock )
@@ -109,6 +120,16 @@ public class ServiceContext
             if( this.disposed )
             {
                 throw new IllegalStateException();
+            }
+            
+            if( this.cache != null )
+            {
+                final List<? extends Service> services = this.cache.get( type );
+                
+                if( services != null )
+                {
+                    return (List<S>) services;
+                }
             }
             
             if( this.services == null )
@@ -200,6 +221,13 @@ public class ServiceContext
             {
                 service.initIfNecessary();
             }
+            
+            if( this.cache == null )
+            {
+                this.cache = new IdentityHashMap<Class<?>,List<? extends Service>>();
+            }
+            
+            this.cache.put( type, services );
             
             return services;
         }
