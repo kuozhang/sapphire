@@ -13,7 +13,9 @@ package org.eclipse.sapphire.ui.forms.swt.internal;
 
 import java.util.List;
 
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ui.forms.ContainerPart;
+import org.eclipse.sapphire.ui.forms.ContainerPart.VisibleChildrenEvent;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
@@ -55,6 +57,18 @@ public class FormPresentation extends FormComponentPresentation
         {
             child.render();
         }
+        
+        attachPartListener
+        (
+            new FilteredListener<VisibleChildrenEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final VisibleChildrenEvent event )
+                {
+                    refresh();
+                }
+            }
+        );
     }
 
     @Override

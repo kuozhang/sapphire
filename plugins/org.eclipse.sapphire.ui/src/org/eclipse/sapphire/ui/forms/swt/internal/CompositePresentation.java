@@ -164,7 +164,7 @@ public class CompositePresentation extends FormComponentPresentation
             }
         }
         
-        refreshChildren();
+        refresh();
         
         attachPartListener
         (
@@ -173,7 +173,7 @@ public class CompositePresentation extends FormComponentPresentation
                 @Override
                 protected void handleTypedEvent( final VisibleChildrenEvent event )
                 {
-                    refreshChildren();
+                    refresh();
                 }
             }
         );
@@ -208,7 +208,8 @@ public class CompositePresentation extends FormComponentPresentation
         }
     }
 
-    private void refreshChildren()
+    @Override
+    public void refresh()
     {
         boolean needToLayout = false;
         

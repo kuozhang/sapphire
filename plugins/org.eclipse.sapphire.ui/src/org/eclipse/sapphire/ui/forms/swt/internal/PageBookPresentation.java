@@ -26,7 +26,6 @@ import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -71,15 +70,15 @@ public class PageBookPresentation extends FormComponentPresentation
                 @Override
                 protected void handleTypedEvent( final PageChangedEvent event )
                 {
-                    refresh();
+                    refreshActivePage();
                 }
             }
         );
         
-        refresh();
+        refreshActivePage();
     }
 
-    private void refresh()
+    private void refreshActivePage()
     {
         if( this.currentPagePresentation != null )
         {
@@ -89,13 +88,6 @@ public class PageBookPresentation extends FormComponentPresentation
         
         if( this.composite.getChildren().length > 0 )
         {
-            System.err.println( "=============" );
-            for( Control c : this.composite.getChildren() )
-            {
-                System.err.println( c.toString() );
-            }
-            System.err.println( "=============" );
-            
             throw new IllegalStateException();
         }
         

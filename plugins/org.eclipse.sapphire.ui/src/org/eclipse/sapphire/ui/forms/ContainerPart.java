@@ -59,7 +59,7 @@ public abstract class ContainerPart<T extends FormComponentPart> extends FormCom
                         @Override
                         protected void init()
                         {
-                            attach
+                            ContainerPart.this.attach
                             (
                                 new FilteredListener<VisibleChildrenEvent>()
                                 {

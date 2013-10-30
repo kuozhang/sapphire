@@ -461,14 +461,14 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
     protected void handlePropertyChangedEvent()
     {
         super.handlePropertyChangedEvent();
-        refresh();
+        refreshTable();
     }
     
     @Override
     protected void handleChildPropertyEvent( final PropertyContentEvent event )
     {
         super.handleChildPropertyEvent( event );
-        refresh();
+        refreshTable();
     }
     
     public final Element getSelectedElement()
@@ -529,7 +529,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
         }
     }
     
-    private void refresh()
+    private void refreshTable()
     {
         final int oldItemCount = this.table.getItemCount();
         final Entry oldSelection = (Entry) ( (IStructuredSelection) this.tableViewer.getSelection() ).getFirstElement();

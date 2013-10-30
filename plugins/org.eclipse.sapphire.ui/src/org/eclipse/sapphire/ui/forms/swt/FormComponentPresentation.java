@@ -108,6 +108,16 @@ public abstract class FormComponentPresentation extends SwtPresentation
         composite().getShell().layout( true, true );
     }
     
+    public void refresh()
+    {
+        final SwtPresentation parent = parent();
+        
+        if( parent instanceof FormComponentPresentation )
+        {
+            ( (FormComponentPresentation) parent ).refresh();
+        }
+    }
+    
     public void dispose()
     {
         super.dispose();
