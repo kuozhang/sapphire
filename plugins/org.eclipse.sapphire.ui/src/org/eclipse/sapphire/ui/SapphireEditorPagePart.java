@@ -139,7 +139,7 @@ public class SapphireEditorPagePart
                 throw new IllegalStateException();
             }
             
-            final ElementType persistedStateElementType = ElementType.read( persistedStateElementJavaType.artifact() );
+            final ElementType persistedStateElementType = ElementType.read( (Class<?>) persistedStateElementJavaType.artifact() );
             
             try
             {

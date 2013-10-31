@@ -121,7 +121,7 @@ public final class DiagramNodeTemplate extends SapphirePart
             }
             else 
             {
-                final Class<?> cl = this.modelElementType.artifact();
+                final Class<?> cl = (Class<?>) this.modelElementType.artifact();
                 if( cl == null || cl.isAssignableFrom( listEntryModelElement.getClass() ) )
                 {
                 	createNewNodePart(listEntryModelElement);
@@ -241,7 +241,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 		}
 		else
 		{
-			final Class cl = this.modelElementType.artifact();
+			final Class cl = (Class<?>) this.modelElementType.artifact();
 			if (cl != null)
 			{
 				newElement = list.insert(cl);
@@ -276,7 +276,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         }
         else 
         {
-            final Class<?> cl = this.modelElementType.artifact();
+            final Class<?> cl = (Class<?>) this.modelElementType.artifact();
             return ElementType.read(cl);
         }
     }
@@ -320,7 +320,7 @@ public final class DiagramNodeTemplate extends SapphirePart
     		}
     		else
     		{
-        		final Class<?> cl = this.modelElementType.artifact();
+        		final Class<?> cl = (Class<?>) this.modelElementType.artifact();
         		if( cl == null || cl.isAssignableFrom( ele.getClass()))
         		{
         			newList.add(ele);

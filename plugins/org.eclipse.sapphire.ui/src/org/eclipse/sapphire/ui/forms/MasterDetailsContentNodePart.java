@@ -965,7 +965,7 @@ public final class MasterDetailsContentNodePart
                         }
                         else
                         {
-                            final Class<?> cl = type.artifact();
+                            final Class<?> cl = (Class<?>) type.artifact();
         
                             if( cl == null || cl.isAssignableFrom( element.getClass() ) )
                             {

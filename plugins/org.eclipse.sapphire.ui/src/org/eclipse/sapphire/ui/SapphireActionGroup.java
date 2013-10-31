@@ -229,7 +229,7 @@ public final class SapphireActionGroup
                     
                     if( implType != null )
                     {
-                        final Class<?> implClass = implType.artifact();
+                        final Class<?> implClass = (Class<?>) implType.artifact();
                         
                         if( implClass != null )
                         {
@@ -261,7 +261,7 @@ public final class SapphireActionGroup
                     
                     if( implType != null )
                     {
-                        final Class<?> implClass = implType.artifact();
+                        final Class<?> implClass = (Class<?>) implType.artifact();
                         
                         if( implClass != null )
                         {
@@ -291,7 +291,7 @@ public final class SapphireActionGroup
                     
                     if( implClass != null )
                     {
-                        final SapphireActionHandlerFilter filter = (SapphireActionHandlerFilter) implClass.artifact().newInstance();
+                        final SapphireActionHandlerFilter filter = (SapphireActionHandlerFilter) ( (Class<?>) implClass.artifact() ).newInstance();
                         addFilter( filter );
                     }
                 }
@@ -311,7 +311,7 @@ public final class SapphireActionGroup
             
             if( conditionType != null )
             {
-                final Class<?> conditionClass = conditionType.artifact();
+                final Class<?> conditionClass = (Class<?>) conditionType.artifact();
                 
                 if( conditionClass != null )
                 {

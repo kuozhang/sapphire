@@ -119,7 +119,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                             final ServiceDef def = (ServiceDef) element;
                             final String id = def.getId().text();
                             final JavaType type = def.getImplementation().resolve();
-                            final Class<?> cl = ( type == null ? null : type.artifact() );
+                            final Class<?> cl = ( type == null ? null : (Class<?>) type.artifact() );
                             
                             if( id != null && id.startsWith( "Sapphire." ) && 
                                 cl != null && ConversionService.class.isAssignableFrom( cl ) )
@@ -162,7 +162,7 @@ public class DynamicContentProducer implements IHelpContentProducer
                             final ServiceDef def = (ServiceDef) element;
                             final String id = def.getId().text();
                             final JavaType type = def.getImplementation().resolve();
-                            final Class<?> cl = ( type == null ? null : type.artifact() );
+                            final Class<?> cl = ( type == null ? null : (Class<?>) type.artifact() );
                             
                             if( id != null && id.startsWith( "Sapphire." ) && 
                                 cl != null && FactsService.class.isAssignableFrom( cl ) )

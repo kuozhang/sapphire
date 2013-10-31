@@ -115,7 +115,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
             final DefinitionLoader.Reference<WizardDef> definition = DefinitionLoader.context( context ).sdef( sdef ).wizard();
             
             final JavaType operationJavaType = definition.resolve().getElementType().resolve();
-            final ElementType operationElementType = ElementType.read( operationJavaType.artifact(), true );
+            final ElementType operationElementType = ElementType.read( (Class<?>) operationJavaType.artifact(), true );
     
             init( operationElementType, definition );
             

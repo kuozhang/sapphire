@@ -81,7 +81,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         ElementList<IModelElementTypeDef> types = this.bindingDef.getModelElementTypes();
         for (IModelElementTypeDef typeDef : types)
         {
-            this.modelElementTypes.add(typeDef.getType().resolve().artifact());
+            this.modelElementTypes.add((Class<?>)typeDef.getType().resolve().artifact());
         }
         initImplicitConnectionParts();
         

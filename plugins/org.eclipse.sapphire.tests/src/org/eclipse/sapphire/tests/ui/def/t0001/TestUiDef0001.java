@@ -48,7 +48,7 @@ public final class TestUiDef0001 extends SapphireTestCase
             
             type = handlers.get( 0 ).getImplClass().resolve();
             assertNotNull( type );
-            cl = type.artifact();
+            cl = (Class<?>) type.artifact();
             assertNotNull( cl );
             assertEquals( TestActionHandler.class, cl );
         }

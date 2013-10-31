@@ -20,10 +20,7 @@ import java.util.Set;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ClassBasedJavaType
-
-    extends JavaType
-    
+public final class ClassBasedJavaType extends JavaType
 {
     private final Class<?> cl;
     private final JavaTypeKind kind;

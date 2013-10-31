@@ -118,6 +118,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#ISapphireGroupDef">ISapphireGroupDef</a></li>
   <li><a href="#ISapphireLabelDef">ISapphireLabelDef</a></li>
   <li><a href="#ISapphireStaticTextFieldDef">ISapphireStaticTextFieldDef</a></li>
+  <li><a href="#JavaType">JavaType</a></li>
   <li><a href="#LabelPart">LabelPart</a></li>
   <li><a href="#LayeredListBindingImpl">LayeredListBindingImpl</a></li>
   <li><a href="#LineSeparatorDef">LineSeparatorDef</a></li>
@@ -2091,6 +2092,24 @@ element.</span>visit
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">StaticTextFieldDef</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="JavaType">JavaType</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Class&lt;?> cl = type.artifact();</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">Class&lt;?> cl =</span> (Class&lt;?>) <span class="unaffected">type.artifact();</span></code></pre>
     </td>
   </tr>
 </table>

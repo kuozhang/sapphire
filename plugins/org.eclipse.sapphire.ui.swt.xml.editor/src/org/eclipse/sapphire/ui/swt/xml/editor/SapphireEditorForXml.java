@@ -93,7 +93,7 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
             this.definition = DefinitionLoader.context( context ).sdef( sdef ).page();
             
             final JavaType elementJavaType = this.definition.resolve().getElementType().resolve();
-            this.type = ElementType.read( elementJavaType.artifact(), true );
+            this.type = ElementType.read( (Class<?>) elementJavaType.artifact(), true );
         }
     }
     

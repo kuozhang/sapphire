@@ -27,7 +27,7 @@ public abstract class JavaType
     
     public abstract Set<JavaType> interfaces();
     
-    public abstract Class<?> artifact();
+    public abstract Object artifact();
     
     public final boolean isOfType( final String type )
     {

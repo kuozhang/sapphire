@@ -204,7 +204,7 @@ public class ShapeFactoryPart extends ShapePart
             }
             else
             {
-                final Class<?> cl = type.artifact();
+                final Class<?> cl = (Class<?>) type.artifact();
 
                 if( cl == null || cl.isAssignableFrom( element.getClass() ) )
                 {

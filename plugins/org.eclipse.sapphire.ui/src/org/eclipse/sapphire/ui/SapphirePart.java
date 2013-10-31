@@ -180,7 +180,7 @@ public abstract class SapphirePart implements ISapphirePart
                 
                 try
                 {
-                    listener = listenerClass.artifact().newInstance();
+                    listener = ( (Class<?>) listenerClass.artifact() ).newInstance();
                 }
                 catch( Exception e )
                 {
@@ -1137,7 +1137,7 @@ public abstract class SapphirePart implements ISapphirePart
             {
                 try
                 {
-                    part = (SapphirePart) customPartImplClass.artifact().newInstance();
+                    part = (SapphirePart) ( (Class<?>) customPartImplClass.artifact() ).newInstance();
                 }
                 catch( Exception e )
                 {

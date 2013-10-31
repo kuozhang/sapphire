@@ -87,9 +87,9 @@ public final class JdtJavaType extends JavaType
     }
     
     @Override
-    public Class<?> artifact()
+    public IType artifact()
     {
-        return null;
+        return this.type;
     }
     
     @Override
