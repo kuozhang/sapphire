@@ -11,9 +11,11 @@
 
 package org.eclipse.sapphire.modeling.el.parser;
 
-import java.io.Reader;
 import java.io.StringReader;
 
+import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionException;
 import org.eclipse.sapphire.modeling.el.parser.internal.ExpressionLanguageParserImpl;
@@ -25,14 +27,17 @@ import org.eclipse.sapphire.modeling.el.parser.internal.TokenMgrError;
 
 public final class ExpressionLanguageParser
 {
+    @Text( "Failed while parsing an expression: {0}" )
+    private static LocalizableText parseFailedMessage;
+    
+    static
+    {
+        LocalizableText.init( ExpressionLanguageParser.class );
+    }
+
     public static Function parse( final String expression )
     {
-        return parse( new StringReader( expression ) );
-    }
-    
-    public static Function parse( final Reader expression )
-    {
-        final ExpressionLanguageParserImpl parser = new ExpressionLanguageParserImpl( expression );
+        final ExpressionLanguageParserImpl parser = new ExpressionLanguageParserImpl( new StringReader( expression ) );
         
         try
         {
@@ -40,11 +45,11 @@ public final class ExpressionLanguageParser
         }
         catch( TokenMgrError e )
         {
-            throw new FunctionException( e );
+            throw new FunctionException( Status.createErrorStatus( parseFailedMessage.format( expression ), e ) );
         }
         catch( Exception e )
         {
-            throw new FunctionException( e );
+            throw new FunctionException( Status.createErrorStatus( parseFailedMessage.format( expression ), e ) );
         }
     }
     
