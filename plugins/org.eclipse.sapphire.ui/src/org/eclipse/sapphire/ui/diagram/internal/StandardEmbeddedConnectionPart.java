@@ -13,7 +13,9 @@
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.diagram.internal;
+
+import java.util.List;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
@@ -23,13 +25,15 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart 
+public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPart 
 {
     private Element srcNodeModel;
     private Element endpointModel;
@@ -37,7 +41,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     private FunctionResult endpointFunctionResult;
     private IDiagramConnectionEndpointBindingDef endpointDef;
     
-    public DiagramEmbeddedConnectionPart(IDiagramExplicitConnectionBindingDef connBindingDef, Element srcNodeModel, ModelPath endpointPath)
+    public StandardEmbeddedConnectionPart(IDiagramExplicitConnectionBindingDef connBindingDef, Element srcNodeModel, ModelPath endpointPath)
     {
         this.bindingDef = connBindingDef;
         this.srcNodeModel = srcNodeModel;
@@ -108,7 +112,7 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
                 DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.endpointModel);
                 if (nodePart != null)
                 {
-                    value = IdUtil.computeNodeId(nodePart);
+                    value = nodePart.getId();
                 }
             }            
             
@@ -126,6 +130,23 @@ public class DiagramEmbeddedConnectionPart extends DiagramConnectionPart
     {
         SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)parent().parent().parent();
         return diagramPart.getDiagramNodePart(this.srcNodeModel);
+    }
+    
+    public String getId()
+    {
+        StringBuffer buffer = new StringBuffer(getConnectionTypeId());
+        buffer.append(CONNECTION_ID_SEPARATOR);
+        String instanceId = getInstanceId();
+        if (instanceId != null && instanceId.length() > 0)
+        {
+            buffer.append(getInstanceId());
+            buffer.append(CONNECTION_ID_SEPARATOR);
+        }
+        Element srcNodeElement = getSourceNodePart().getLocalModelElement();
+        List<StandardDiagramConnectionPart> connParts = getDiagramConnectionTemplate().getDiagramConnections(srcNodeElement);
+        int index = connParts.indexOf(this);
+        buffer.append(index);                
+        return buffer.toString();            	
     }
     
     @Override

@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.model;
 
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramConnectionPresentation;
 
 /**
@@ -52,7 +52,7 @@ public class DiagramConnectionModel extends DiagramModelBase {
 		return this.connPresentation;
 	}
 	
-	public DiagramConnectionPart getModelPart() {
+	public StandardDiagramConnectionPart getModelPart() {
 		return getPresentation().part();
 	}
 	

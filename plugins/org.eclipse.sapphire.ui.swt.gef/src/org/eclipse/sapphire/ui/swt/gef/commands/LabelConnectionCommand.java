@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 
 /**
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
@@ -20,10 +20,10 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 public class LabelConnectionCommand extends Command {
 	
-	private DiagramConnectionPart part;
+	private StandardDiagramConnectionPart part;
 	private String labelText;
 
-	public LabelConnectionCommand(DiagramConnectionPart part, String labelText) {
+	public LabelConnectionCommand(StandardDiagramConnectionPart part, String labelText) {
 		this.part = part;
 		this.labelText = labelText;
 	}

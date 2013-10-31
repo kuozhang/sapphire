@@ -16,10 +16,10 @@ import java.util.List;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramPresentation;
@@ -56,9 +56,9 @@ public class DiagramDirectEditActionHandler extends SapphireActionHandler
 //					ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)part);
 //					shapeModel.handleDirectEditing((ShapePart)part);
 				}
-				else if (part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart))
+				else if (part instanceof StandardDiagramConnectionPart && !(part instanceof StandardImplicitConnectionPart))
 				{
-					model.handleDirectEditing((DiagramConnectionPart)part);
+					model.handleDirectEditing((StandardDiagramConnectionPart)part);
 				}
 			}
 		}

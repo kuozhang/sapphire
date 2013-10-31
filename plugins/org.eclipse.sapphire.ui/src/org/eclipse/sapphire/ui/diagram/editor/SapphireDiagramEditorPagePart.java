@@ -21,8 +21,10 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
@@ -39,7 +41,6 @@ import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
@@ -75,6 +76,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private int verticalGridUnit;
 	private List<FunctionResult> connectionImageDataFunctionResults;
 	private Point mouseLocation;
+	private Map<String, DiagramNodePart> nodeIdMap;
 
     @Override
     protected void init()
@@ -429,17 +431,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     private void handleNodeTemplateVisibilityChange(DiagramNodeTemplate nodeTemplate)
     {
-    	ConnectionService connService = this.service(ConnectionService.class);
+    	//ConnectionService connService = this.service(ConnectionService.class);
     	if( nodeTemplate.visible() )
     	{
     		nodeTemplate.showAllNodeParts();
     		// Restore all the connection parts if they are associated with the 
     		// nodes for the node template    		
-    		connService.showAllAttachedConnections(nodeTemplate.getNodeTypeId());
+    		//connService.showAllAttachedConnections(nodeTemplate.getNodeTypeId());
+    		notifyNodeTemplateVisibilityChange(nodeTemplate);
     	}
     	else
     	{
-    		connService.hideAllAttachedConnections(nodeTemplate.getNodeTypeId());
+    		//connService.hideAllAttachedConnections(nodeTemplate.getNodeTypeId());
+    		notifyNodeTemplateVisibilityChange(nodeTemplate);
     		nodeTemplate.hideAllNodeParts();
     	}
     	notifyDiagramChange();
@@ -476,6 +480,20 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             }
         }
         return null;
+    }
+    
+    public DiagramNodePart getNode(String nodeId)
+    {
+    	if (this.nodeIdMap == null)
+    	{
+    		this.nodeIdMap = new HashMap<String, DiagramNodePart>();
+    		List<DiagramNodePart> nodes = getNodes();
+    		for (DiagramNodePart node : nodes)
+    		{
+    			this.nodeIdMap.put(node.getId(), node);
+    		}
+    	}
+    	return this.nodeIdMap.get(nodeId);
     }
     
         
@@ -551,6 +569,11 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	this.broadcast(event);
 	}
 
+	private void notifyNodeTemplateVisibilityChange(DiagramNodeTemplate nodeTemplate)
+	{
+		NodeTemplateVisibilityEvent event = new NodeTemplateVisibilityEvent(nodeTemplate);
+    	this.broadcast(event);
+	}
 	private void notifyNodeMove(DiagramNodeEvent event)
 	{
 		event.setNodeEventType(NodeEventType.NodeMove);

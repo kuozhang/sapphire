@@ -18,7 +18,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -62,7 +62,7 @@ public class DiagramResourceCache {
         return linkStyle;
     }
 	
-    public Color getLineColor(DiagramConnectionPart connection) {
+    public Color getLineColor(StandardDiagramConnectionPart connection) {
     	IDiagramConnectionDef def = connection.getConnectionDef();
     	Color color = ColorConstants.darkBlue;
     	if (def != null) {

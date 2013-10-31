@@ -17,9 +17,9 @@ import java.util.List;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
@@ -47,15 +47,15 @@ public class LabelNodeCommand extends Command {
 		// Make a copy of all the connections that are attached to this node before setting the 
 		// node label.
 		List<DiagramConnectionModel> connModels = diagramModel.getConnections();
-		List<DiagramConnectionPart> connParts1 = new ArrayList<DiagramConnectionPart>();
-		List<DiagramConnectionPart> connParts2 = new ArrayList<DiagramConnectionPart>();
+		List<StandardDiagramConnectionPart> connParts1 = new ArrayList<StandardDiagramConnectionPart>();
+		List<StandardDiagramConnectionPart> connParts2 = new ArrayList<StandardDiagramConnectionPart>();
 		for (DiagramConnectionModel connModel : connModels)
 		{
 			// Need to disable connection part listeners so the attached connections don't get deleted.
 			// Will re-enable them once the end points are refreshed. 
 			if (connModel.getSourceNode().equals(node) || (connModel.getTargetNode().equals(node)))
 			{
-				DiagramConnectionPart connPart = connModel.getModelPart();
+				StandardDiagramConnectionPart connPart = connModel.getModelPart();
 	            connPart.removeModelListener();
 	            connPart.getDiagramConnectionTemplate().removeModelListener();
 	
@@ -75,7 +75,7 @@ public class LabelNodeCommand extends Command {
 		prop.write( this.labelText );
 				
 		// Refreshing endpoints of attached connections and re-enable listeners on them.
-		for (DiagramConnectionPart connPart : connParts1)
+		for (StandardDiagramConnectionPart connPart : connParts1)
 		{
 			if (!connPart.disposed())
 			{
@@ -84,7 +84,7 @@ public class LabelNodeCommand extends Command {
 	            connPart.getDiagramConnectionTemplate().addModelListener();
 			}
 		}
-		for (DiagramConnectionPart connPart : connParts2)
+		for (StandardDiagramConnectionPart connPart : connParts2)
 		{
 			if (!connPart.disposed())
 			{

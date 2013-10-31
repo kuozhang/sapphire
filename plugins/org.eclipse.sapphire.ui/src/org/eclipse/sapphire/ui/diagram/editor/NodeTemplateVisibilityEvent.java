@@ -11,21 +11,23 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
-import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.Event;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public abstract class DiagramConnectionPart extends SapphirePart 
+public class NodeTemplateVisibilityEvent extends Event 
 {
-	public abstract boolean removable();
+	private DiagramNodeTemplate nodeTemplate;
 	
-	public abstract void remove();
+	public NodeTemplateVisibilityEvent(DiagramNodeTemplate nodeTemplate)
+	{
+		this.nodeTemplate = nodeTemplate;
+	}
 	
-	public abstract String getId();
-	
-	public abstract DiagramConnectionPart reconnect(DiagramNodePart newSrc, DiagramNodePart newTarget);
-	
-	public abstract boolean canEditLabel();
+	public DiagramNodeTemplate getNodeTemplate()
+	{
+		return this.nodeTemplate;
+	}
 }

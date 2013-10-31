@@ -62,6 +62,8 @@ public class DiagramNodePart
 	private PropertiesViewContributionManager propertiesViewContributionManager; 
 	private DiagramNodeBounds nodeBounds = new DiagramNodeBounds();
 	private ShapePart shapePart;
+	
+    private static final String NODE_ID_SEPARATOR = "#";
 
 	@Override
     protected void init()
@@ -221,6 +223,23 @@ public class DiagramNodePart
                 
         return id;		
 	}
+    
+    public String getId()
+    {
+        StringBuffer buffer = new StringBuffer(getNodeTypeId());
+        buffer.append(NODE_ID_SEPARATOR);
+        String instanceId = getInstanceId();
+        if (instanceId != null && instanceId.length() > 0)
+        {
+            buffer.append(getInstanceId());
+            buffer.append(NODE_ID_SEPARATOR);
+        }
+        List<DiagramNodePart> nodeParts = getDiagramNodeTemplate().getDiagramNodes();            
+        int index = nodeParts.indexOf(this);
+        buffer.append(index);
+        
+        return buffer.toString();    	
+    }
 	
 	public boolean canResizeShape()
 	{

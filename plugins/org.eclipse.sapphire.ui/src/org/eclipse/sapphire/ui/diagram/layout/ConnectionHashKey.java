@@ -12,11 +12,10 @@
 package org.eclipse.sapphire.ui.diagram.layout;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.editor.IdUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardEmbeddedConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -72,16 +71,16 @@ public class ConnectionHashKey
 		}
 	}
 	
-	public static ConnectionHashKey createKey(final DiagramConnectionPart connPart)
+	public static ConnectionHashKey createKey(final StandardDiagramConnectionPart connPart)
 	{
 		SapphireDiagramEditorPagePart diagramPart = connPart.getDiagramConnectionTemplate().getDiagramEditor();
-		String connId = IdUtil.computeConnectionId(connPart);
+		String connId = connPart.getId();
 		String nodeId = null;
-		if (connPart instanceof DiagramEmbeddedConnectionPart)
+		if (connPart instanceof StandardEmbeddedConnectionPart)
 		{
 			Element srcElement = connPart.getEndpoint1();
 			DiagramNodePart nodePart = diagramPart.getDiagramNodePart(srcElement);
-			nodeId = IdUtil.computeNodeId(nodePart);
+			nodeId = nodePart.getId();
 		}
 		ConnectionHashKey hashKey = new ConnectionHashKey(nodeId, connId);
 		return hashKey;		

@@ -37,13 +37,13 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate.DiagramConnectionTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.DiagramImplicitConnectionTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.NodeTemplateVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.util.ListFactory;
 
@@ -62,6 +62,7 @@ public class StandardConnectionService extends ConnectionService
     private ConnectionTemplateListener connTemplateListener;
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
     private Listener diagramNodeListener;
+    private Listener diagramNodeTemplateListener;
 	
     @Override
     protected void init()
@@ -127,7 +128,23 @@ public class StandardConnectionService extends ConnectionService
 		    	}
 			}
 		};
-		this.diagramPagePart.attach(diagramNodeListener);
+		this.diagramNodeTemplateListener = new FilteredListener<NodeTemplateVisibilityEvent>() 
+		{
+			@Override
+			protected void handleTypedEvent(NodeTemplateVisibilityEvent event) 
+			{
+		    	if (event.getNodeTemplate().visible())
+		    	{
+		    		showAllAttachedConnections(event.getNodeTemplate());
+		    	}
+		    	else
+		    	{
+		    		hideAllAttachedConnections(event.getNodeTemplate());
+		    	}
+			}
+		};
+		this.diagramPagePart.attach(this.diagramNodeListener);
+		this.diagramPagePart.attach(this.diagramNodeTemplateListener);
         
     }
 
@@ -143,146 +160,52 @@ public class StandardConnectionService extends ConnectionService
 	}
 
 	@Override
-	public DiagramConnectionPart connect(DiagramNodePart srcNode, DiagramNodePart targetNode, String connectionType) 
+	public StandardDiagramConnectionPart connect(DiagramNodePart srcNode, DiagramNodePart targetNode, String connectionType) 
 	{
 		DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(srcNode, connectionType);
 		if (connectionTemplate != null)
 		{
-			DiagramConnectionPart connection = connectionTemplate.createNewDiagramConnection(srcNode, targetNode);
+			StandardDiagramConnectionPart connection = connectionTemplate.createNewDiagramConnection(srcNode, targetNode);
 			return connection;
 		}
 		return null;
 	}
 		
 	@Override
-    public List<DiagramConnectionPart> getAllExplicitConnections()
-    {
+	public List<DiagramConnectionPart> list()
+	{
         final ListFactory<DiagramConnectionPart> connections = ListFactory.start();
         
         for( DiagramConnectionTemplate template : getAllConnectionTemplates() )
         {
-            connections.add( template.getDiagramConnections( null ) );
+        	for (StandardDiagramConnectionPart connPart : template.getDiagramConnections(null))
+        	{
+        		connections.add(connPart);
+        	}
         }
         
         for (DiagramConnectionTemplate embeddedConnectionTemplate : this.embeddedConnectionTemplateMap.values())
         {
-        	connections.add( embeddedConnectionTemplate.getDiagramConnections( null ) );
+        	for (StandardDiagramConnectionPart connPart : embeddedConnectionTemplate.getDiagramConnections(null))
+        	{
+        		connections.add(connPart);
+        	}
         }
-        
-        return connections.result();
-    }
-				
-	@Override
-	public List<DiagramImplicitConnectionPart> getAllImplicitConnections()
-	{
-        final ListFactory<DiagramImplicitConnectionPart> connections = ListFactory.start();
-        
         for( DiagramImplicitConnectionTemplate template : this.implicitConnectionTemplates )
         {
-            connections.add( template.getImplicitConnections() );
+        	for (StandardImplicitConnectionPart connPart : template.getImplicitConnections())
+        	{
+        		connections.add( connPart );
+        	}
         }
-                
-        return connections.result();		
-	}
-		
-	@Override
-	public List<DiagramConnectionPart> getAllTopLevelConnections()
-	{		
-        final ListFactory<DiagramConnectionPart> connections = ListFactory.start();
-        
-        for( DiagramConnectionTemplate template : getAllConnectionTemplates() )
-        {
-            connections.add( template.getDiagramConnections( null ) );
-        }
-                
+
         return connections.result();
 	}
-	
-	@Override
-    public DiagramConnectionPart getDiagramConnectionPart(Element connElement)
-    {
-    	if (connElement == null)
-    	{
-    		return null;
-    	}
-    	List<DiagramConnectionPart> connParts = getAllExplicitConnections();
-    	for (DiagramConnectionPart connPart : connParts)
-		{
-    		if (connPart.getLocalModelElement() == connElement)
-    		{
-    			return connPart;
-    		}
-		}
-    	List<DiagramImplicitConnectionPart> implicitConnParts = getAllImplicitConnections();
-    	for (DiagramImplicitConnectionPart connPart : implicitConnParts)
-		{
-    		if (connPart.getLocalModelElement() == connElement)
-    		{
-    			return connPart;
-    		}
-		}    	
-    	return null;
-    }
-	
-    /**
-     * Returns the list of connections that are attached to a node on either end.
-     * @param nodePart the sapphire node part
-     * @return the list of connections
-     */
-    public List<DiagramConnectionPart> getAttachedConnections(DiagramNodePart nodePart)
-    {
-    	Element nodeElement = nodePart.getLocalModelElement();
-    	List<DiagramConnectionPart> attachedConnections = new ArrayList<DiagramConnectionPart>();
-    	
-    	List<DiagramConnectionTemplate> connTemplates = this.getAllConnectionTemplates();
-    	for (DiagramConnectionTemplate connTemplate : connTemplates)
-    	{
-    		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
-    		 for (DiagramConnectionPart connPart : connParts)
-    		 {
-    			 if ((connPart.getEndpoint1() != null && connPart.getEndpoint1() == nodeElement) || 
-    					 connPart.getEndpoint2() != null && connPart.getEndpoint2() == nodeElement)
-    			 {
-    				 attachedConnections.add(connPart);
-    			 }
-    		 }
-    	}
-    	// Check for embedded connections
-    	for (DiagramConnectionTemplate connTemplate : this.embeddedConnectionTemplateMap.values())
-    	{
-    		 List<DiagramConnectionPart> connParts = connTemplate.getDiagramConnections(null);
-    		 for (DiagramConnectionPart connPart : connParts)
-    		 {
-    			 if ((connPart.getEndpoint1() != null && connPart.getEndpoint1() == nodeElement) || 
-    					 connPart.getEndpoint2() != null && connPart.getEndpoint2() == nodeElement)
-    			 {
-    				 attachedConnections.add(connPart);
-    			 }
-    		 }
-    	}
-    	
-    	return attachedConnections;
-    }
-    
-    @Override
-    public List<DiagramConnectionPart> getEmbeddedConnections(DiagramNodePart nodePart)
-    {
-    	Element nodeElement = nodePart.getLocalModelElement();
-    	List<DiagramConnectionPart> attachedConnections = new ArrayList<DiagramConnectionPart>();
-    	DiagramEmbeddedConnectionTemplate embeddedConnectionTemplate = 
-    			this.embeddedConnectionTemplateMap.get(nodePart.getDiagramNodeTemplate());
-    	if (embeddedConnectionTemplate != null)
-        {
-        	List<DiagramConnectionPart> connParts = embeddedConnectionTemplate.getDiagramConnections(nodeElement);
-        	attachedConnections.addAll(connParts);
-        } 
-        return attachedConnections;
-    }
-    
-    @Override
-	public void showAllAttachedConnections(String nodeType)
+					
+	private void showAllAttachedConnections(DiagramNodeTemplate nodeTemplate)
 	{
-    	DiagramNodeTemplate nodeTemplate = this.diagramPagePart.getNodeTemplate(nodeType);
+		if (nodeTemplate == null)
+			return;
     	if (nodeTemplate != null)
     	{
 	    	List<DiagramConnectionTemplate> connTemplates = getAllConnectionTemplates();
@@ -290,27 +213,24 @@ public class StandardConnectionService extends ConnectionService
 	    	{
 	    		connTemplate.showAllConnectionParts(nodeTemplate);
 	    	}
+	    	DiagramEmbeddedConnectionTemplate embeddedConnTemplate = this.embeddedConnectionTemplateMap.get(nodeTemplate);
+	        if (embeddedConnTemplate != null)
+	        {
+	        	embeddedConnTemplate.showAllConnectionParts(nodeTemplate);
+	        }
+	    	
+	    	refreshImplicitConnections();
     	}
-    	DiagramEmbeddedConnectionTemplate embeddedConnTemplate = this.embeddedConnectionTemplateMap.get(nodeTemplate);
-        if (embeddedConnTemplate != null)
-        {
-        	embeddedConnTemplate.showAllConnectionParts(nodeTemplate);
-        }
-    	
-    	refreshImplicitConnections();		
 	}
-	
-    @Override
-	public void hideAllAttachedConnections(String nodeType)
+	    
+	private void hideAllAttachedConnections(DiagramNodeTemplate nodeTemplate)
 	{		
-    	DiagramNodeTemplate nodeTemplate = this.diagramPagePart.getNodeTemplate(nodeType);
-    	if (nodeTemplate != null)
+    	if (nodeTemplate == null)
+    		return;
+    	List<DiagramConnectionTemplate> connTemplates = getAllConnectionTemplates();
+    	for (DiagramConnectionTemplate connTemplate : connTemplates)
     	{
-	    	List<DiagramConnectionTemplate> connTemplates = getAllConnectionTemplates();
-	    	for (DiagramConnectionTemplate connTemplate : connTemplates)
-	    	{
-	    		connTemplate.hideAllConnectionParts(nodeTemplate);
-	    	}
+    		connTemplate.hideAllConnectionParts(nodeTemplate);
     	}
     	DiagramEmbeddedConnectionTemplate embeddedConnTemplate = this.embeddedConnectionTemplateMap.get(nodeTemplate);
         if (embeddedConnTemplate != null)
@@ -381,63 +301,63 @@ public class StandardConnectionService extends ConnectionService
 	private void notifyConnectionUpdate(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionUpdate);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionUpdate);
     	this.broadcast(serviceEvent);
 	}
 	
 	private void notifyConnectionEndpointUpdate(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionEndpointUpdate);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionEndpointUpdate);
     	this.broadcast(serviceEvent);
 	}
 
     private void notifyConnectionAdd(final DiagramConnectionEvent event)
     {
     	ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAdd);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAdd);
     	this.broadcast(serviceEvent);
     }
 
 	private void notifyConnectionDelete(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionDelete);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionDelete);
     	this.broadcast(serviceEvent);
 	}
 	
 	private void notifyConnectionAddBendpoint(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAddBendpoint);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAddBendpoint);
     	this.broadcast(serviceEvent);
 	}
 
 	private void notifyConnectionRemoveBendpoint(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionRemoveBendpoint);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionRemoveBendpoint);
     	this.broadcast(serviceEvent);
 	}
 
 	private void notifyConnectionMoveBendpoint(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveBendpoint);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveBendpoint);
     	this.broadcast(serviceEvent);
 	}
 	
 	private void notifyConnectionResetBendpoints(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionResetBendpoint);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionResetBendpoint);
     	this.broadcast(serviceEvent);
 	}
 
 	private void notifyConnectionMoveLabel(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveLabel);
+				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveLabel);
     	this.broadcast(serviceEvent);
 	}
 	

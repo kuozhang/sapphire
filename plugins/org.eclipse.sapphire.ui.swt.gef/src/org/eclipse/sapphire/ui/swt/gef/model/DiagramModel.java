@@ -21,10 +21,10 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramConnectionPresentation;
@@ -88,7 +88,7 @@ public class DiagramModel extends DiagramModelBase {
 		return null;
 	}
 	
-	public DiagramConnectionModel getDiagramConnectionModel(DiagramConnectionPart connectionPart) {
+	public DiagramConnectionModel getDiagramConnectionModel(StandardDiagramConnectionPart connectionPart) {
 		for (DiagramConnectionModel connectionModel : connections) {
 			if (connectionModel.getModelPart() == connectionPart) {
 				return connectionModel;
@@ -127,7 +127,7 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 
-	public void handleDirectEditing(DiagramConnectionPart connectionPart) {
+	public void handleDirectEditing(StandardDiagramConnectionPart connectionPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connectionPart);
 		if (connectionModel != null) {
 			connectionModel.handleStartEditing();
@@ -159,18 +159,14 @@ public class DiagramModel extends DiagramModelBase {
 	
 	private void constructConnections() {
 		ConnectionService connService = getSapphirePart().service(ConnectionService.class);
-		for (DiagramConnectionPart connPart : connService.getAllExplicitConnections())
+		for (DiagramConnectionPart connPart : connService.list())
 		{
-			addConnection(connPart);
+			addConnection((StandardDiagramConnectionPart)connPart);
 		}
 		
-		// Add Implicit connections
-		for (DiagramImplicitConnectionPart implicitConn : connService.getAllImplicitConnections()) {
-			addConnection(implicitConn);
-		}
 	}
 	
-	public void addConnection(DiagramConnectionPart connPart) {
+	public void addConnection(StandardDiagramConnectionPart connPart) {
 		if (getDiagramConnectionModel(connPart) != null) {
 			return;
 		}
@@ -210,7 +206,7 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 	
-	public void removeConnection(DiagramConnectionPart connPart) {
+	public void removeConnection(StandardDiagramConnectionPart connPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
 		if (connectionModel != null) {
 			removeConnection(connectionModel);
@@ -227,7 +223,7 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 	
-	public void updateConnectionEndpoint(DiagramConnectionPart connPart) {
+	public void updateConnectionEndpoint(StandardDiagramConnectionPart connPart) {
 		Element endpoint1 = connPart.getEndpoint1();
 		Element endpoint2 = connPart.getEndpoint2();
 		DiagramNodePart nodePart1 = getSapphirePart().getDiagramNodePart(endpoint1);

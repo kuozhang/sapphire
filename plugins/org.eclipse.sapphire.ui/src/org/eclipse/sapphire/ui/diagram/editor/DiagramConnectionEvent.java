@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>

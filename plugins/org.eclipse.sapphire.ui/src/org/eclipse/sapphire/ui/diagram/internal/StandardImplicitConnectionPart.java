@@ -9,22 +9,24 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.diagram.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class DiagramImplicitConnectionPart extends DiagramConnectionPart 
+public class StandardImplicitConnectionPart extends StandardDiagramConnectionPart 
 {
     private Element srcNodeModel;
     private Element targetNodeModel;
     private DiagramImplicitConnectionTemplate connectionTemplate;
     
-    public DiagramImplicitConnectionPart(Element srcNodeModel, Element targetNodeModel)
+    public StandardImplicitConnectionPart(Element srcNodeModel, Element targetNodeModel)
     {
         this.srcNodeModel = srcNodeModel;
         this.targetNodeModel = targetNodeModel;
@@ -47,6 +49,12 @@ public class DiagramImplicitConnectionPart extends DiagramConnectionPart
     public Element getEndpoint2()
     {
         return this.targetNodeModel;
+    }
+    
+    @Override
+    public boolean removable()
+    {
+    	return false;
     }
     
     @Override

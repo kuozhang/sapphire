@@ -80,13 +80,13 @@ import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramDirectEditPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart.ZoomLevelEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.forms.swt.ActionBridge;
 import org.eclipse.sapphire.ui.forms.swt.ActionSystemPartBridge;
@@ -750,13 +750,13 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	public GraphicalEditPart getGraphicalEditPart(ISapphirePart sapphirePart)
 	{
-		if (sapphirePart instanceof DiagramNodePart || sapphirePart instanceof ShapePart || sapphirePart instanceof DiagramConnectionPart)
+		if (sapphirePart instanceof DiagramNodePart || sapphirePart instanceof ShapePart || sapphirePart instanceof StandardDiagramConnectionPart)
 		{
 			GraphicalViewer viewer = this.getGraphicalViewer();
 			
 			Object editpartObj = null;
 			DiagramNodePart nodePart = null;
-			DiagramConnectionPart connPart = null;
+			StandardDiagramConnectionPart connPart = null;
 			if (sapphirePart instanceof DiagramNodePart)
 			{
 				nodePart = (DiagramNodePart)sapphirePart;
@@ -770,9 +770,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 				ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)sapphirePart);
 				editpartObj = viewer.getEditPartRegistry().get(shapeModel);
 			}
-			else if (sapphirePart instanceof DiagramConnectionPart)
+			else if (sapphirePart instanceof StandardDiagramConnectionPart)
 			{
-				connPart = (DiagramConnectionPart)sapphirePart;
+				connPart = (StandardDiagramConnectionPart)sapphirePart;
 				DiagramConnectionModel connModel = this.getDiagramModel().getDiagramConnectionModel(connPart);
 				editpartObj = viewer.getEditPartRegistry().get(connModel);				
 			}
@@ -783,7 +783,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	
 	public void selectAndDirectEditPart(final ISapphirePart part)
 	{
-		if (part instanceof DiagramNodePart || part instanceof ShapePart || part instanceof DiagramConnectionPart)
+		if (part instanceof DiagramNodePart || part instanceof ShapePart || part instanceof StandardDiagramConnectionPart)
 		{
 			GraphicalViewer viewer = getGraphicalViewer();
 			// Bug 370869 - DND from the tool palette would show an invalid cursor before placing the new node 
@@ -811,10 +811,10 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 					viewer.select(editpart);
 					getDiagramModel().handleDirectEditing((ShapePart)part);
 				}
-				else if (part instanceof DiagramConnectionPart)
+				else if (part instanceof StandardDiagramConnectionPart)
 				{
 					viewer.select(editpart);
-					getDiagramModel().handleDirectEditing((DiagramConnectionPart)part);
+					getDiagramModel().handleDirectEditing((StandardDiagramConnectionPart)part);
 				}
 				
 			}
@@ -867,7 +867,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     		{
     			Object editpartObj = null;
     			DiagramNodePart nodePart = null;
-    			DiagramConnectionPart connPart = null;
+    			StandardDiagramConnectionPart connPart = null;
     			
     			if (sapphirePart instanceof DiagramNodePart)
     			{
@@ -882,9 +882,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     				ShapeModel shapeModel = ShapeModelUtil.getChildShapeModel(nodeModel.getShapeModel(), (ShapePart)sapphirePart);
     				editpartObj = viewer.getEditPartRegistry().get(shapeModel);
     			}
-    			else if (sapphirePart instanceof DiagramConnectionPart)
+    			else if (sapphirePart instanceof StandardDiagramConnectionPart)
     			{
-    				connPart = (DiagramConnectionPart)sapphirePart;
+    				connPart = (StandardDiagramConnectionPart)sapphirePart;
     				DiagramConnectionModel connModel = this.getDiagramModel().getDiagramConnectionModel(connPart);
     				editpartObj = viewer.getEditPartRegistry().get(connModel);				
     			}

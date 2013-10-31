@@ -25,8 +25,8 @@ import org.eclipse.draw2d.graph.Edge;
 import org.eclipse.draw2d.graph.EdgeList;
 import org.eclipse.draw2d.graph.Node;
 import org.eclipse.draw2d.graph.NodeList;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
@@ -133,7 +133,7 @@ public abstract class DiagramGraphLayout
 			}
 			DiagramConnectionModel conn = (DiagramConnectionModel)edge.data;
 			NodeList nodes = edge.vNodes;
-			DiagramConnectionPart connPart = conn.getModelPart();
+			StandardDiagramConnectionPart connPart = conn.getModelPart();
 			ArrayList<org.eclipse.sapphire.ui.Point> connBendPoints = new ArrayList<org.eclipse.sapphire.ui.Point>();
 			if (nodes != null)
 			{

@@ -47,6 +47,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.util.CollectionsUtil;
 
 /**
@@ -106,7 +107,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     private ValueProperty endpoint1Property;
     private ValueProperty endpoint2Property;
     
-    private List<DiagramConnectionPart> diagramConnections = new ArrayList<DiagramConnectionPart>();
+    private List<StandardDiagramConnectionPart> diagramConnections = new ArrayList<StandardDiagramConnectionPart>();
     
     public DiagramConnectionTemplate() {}
     
@@ -241,16 +242,16 @@ public class DiagramConnectionTemplate extends SapphirePart
         return this.connectionDef.getId().content();
     }
     
-    public List<DiagramConnectionPart> getDiagramConnections(Element connListParent)
+    public List<StandardDiagramConnectionPart> getDiagramConnections(Element connListParent)
     {
-        List<DiagramConnectionPart> connList = new ArrayList<DiagramConnectionPart>();
+        List<StandardDiagramConnectionPart> connList = new ArrayList<StandardDiagramConnectionPart>();
         if (connListParent == null || getConnectionType() == ConnectionType.OneToOne)
         {
             connList.addAll(this.diagramConnections);
         }
         else
         {            
-            for (DiagramConnectionPart connPart : this.diagramConnections)
+            for (StandardDiagramConnectionPart connPart : this.diagramConnections)
             {
                 Element connModel = connPart.getLocalModelElement();
                 if (connModel.parent().element() == connListParent)
@@ -279,7 +280,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                         if (reference.text() != null)
                         {
                             SapphireDiagramEditorPagePart diagramEditorPart = getDiagramEditor();
-                            DiagramNodePart targetNode = IdUtil.getNodePart(diagramEditorPart, reference.text());
+                            DiagramNodePart targetNode = diagramEditorPart.getNode(reference.text());
                             if (targetNode != null)
                             {
                                 model = targetNode.getLocalModelElement();
@@ -395,7 +396,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
         if (endpoint1Value == null || endpoint1Value.length() == 0)
         {
-            endpoint1Value = IdUtil.computeNodeId(srcNode);
+            endpoint1Value = srcNode.getId();
         }
         return endpoint1Value;
     }
@@ -415,7 +416,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
         if (endpoint2Value == null || endpoint2Value.length() == 0)
         {
-            endpoint2Value = IdUtil.computeNodeId(targetNode);
+            endpoint2Value = targetNode.getId();
         }
         return endpoint2Value;
     }
@@ -459,7 +460,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     	setModelProperty(connModelElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
     }
     
-    public DiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 
+    public StandardDiagramConnectionPart createNewDiagramConnection(DiagramNodePart srcNode, 
                                                             DiagramNodePart targetNode)
     {        
         // Get the serialized value of endpoint1
@@ -477,7 +478,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint1Path.head()).getPropertyName(), endpoint1Value);
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
 
-                DiagramConnectionPart newConn = getConnectionPart(srcNode.getModelElement(), newElement);
+                StandardDiagramConnectionPart newConn = getConnectionPart(srcNode.getModelElement(), newElement);
                 if (newConn == null) {
                 	newConn = createNewConnectionPart(newElement, null);
                 }
@@ -506,7 +507,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 ElementList<?> connList = srcElement.property((ListProperty)connProp);
                 Element newElement = connList.insert();
                 setModelProperty(newElement, ((ModelPath.PropertySegment)this.endpoint2Path.head()).getPropertyName(), endpoint2Value);
-                DiagramConnectionPart newConn = getConnectionPart(srcElement, newElement);
+                StandardDiagramConnectionPart newConn = getConnectionPart(srcElement, newElement);
                 if (newConn == null) {
                 	newConn = createNewConnectionPart(newElement, null);
                 }                
@@ -516,16 +517,16 @@ public class DiagramConnectionTemplate extends SapphirePart
         return null;
     }
     
-    public void deleteConnection(DiagramConnectionPart connPart)
+    public void deleteConnection(StandardDiagramConnectionPart connPart)
     {
         final Element element = connPart.getLocalModelElement();
         final ElementList<?> list = (ElementList<?>) element.parent();
         list.remove(element);    	
     }
     
-    protected DiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
+    protected StandardDiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
     {
-        DiagramConnectionPart connPart = new DiagramConnectionPart(this.bindingDef, this.endpoint1Path, this.endpoint2Path);
+        StandardDiagramConnectionPart connPart = new StandardDiagramConnectionPart(this.bindingDef, this.endpoint1Path, this.endpoint2Path);
         addConnectionPart(srcNodeElement, connPart);
         connPart.init(this, connElement, this.connectionDef, 
                 Collections.<String,String>emptyMap());
@@ -537,8 +538,8 @@ public class DiagramConnectionTemplate extends SapphirePart
         
     public void showAllConnectionParts(DiagramNodeTemplate nodeTemplate)
     {
-    	List<DiagramConnectionPart> connParts = getDiagramConnections(null);
-    	for (DiagramConnectionPart connPart : connParts)
+    	List<StandardDiagramConnectionPart> connParts = getDiagramConnections(null);
+    	for (StandardDiagramConnectionPart connPart : connParts)
     	{
     		Element endpt1 = connPart.getEndpoint1();
     		Element endpt2 = connPart.getEndpoint2();
@@ -560,8 +561,8 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public void hideAllConnectionParts(DiagramNodeTemplate nodeTemplate)
     {
-    	List<DiagramConnectionPart> connParts = getDiagramConnections(null);
-    	for (DiagramConnectionPart connPart : connParts)
+    	List<StandardDiagramConnectionPart> connParts = getDiagramConnections(null);
+    	for (StandardDiagramConnectionPart connPart : connParts)
     	{
     		Element endpt1 = connPart.getEndpoint1();
     		Element endpt2 = connPart.getEndpoint2();
@@ -625,9 +626,9 @@ public class DiagramConnectionTemplate extends SapphirePart
     protected void handleConnectionListChange(Element connListParent, ListProperty listProperty)
     {
     	ElementList<?> newList = connListParent.property(listProperty);
-        List<DiagramConnectionPart> connParts = getDiagramConnections(connListParent);
+        List<StandardDiagramConnectionPart> connParts = getDiagramConnections(connListParent);
         List<Element> oldList = new ArrayList<Element>(connParts.size());
-        for (DiagramConnectionPart connPart : connParts)
+        for (StandardDiagramConnectionPart connPart : connParts)
         {
             oldList.add(connPart.getLocalModelElement());
         }
@@ -637,7 +638,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         // Handle deleted connections
         for (Element deletedConn : deletedConns)
         {
-            DiagramConnectionPart connPart = getConnectionPart(connListParent, deletedConn);
+            StandardDiagramConnectionPart connPart = getConnectionPart(connListParent, deletedConn);
             if (connPart != null)
             {
                 notifyConnectionDelete(new DiagramConnectionEvent(connPart));
@@ -664,10 +665,10 @@ public class DiagramConnectionTemplate extends SapphirePart
         else if (property == this.modelProperty)
         {
             // 1xn type connection and we are dealing with events on connection list parent
-            List<DiagramConnectionPart> connParts = getDiagramConnections(null);
+            List<StandardDiagramConnectionPart> connParts = getDiagramConnections(null);
             List<Element> oldList = new ArrayList<Element>();
             Set<Element> oldConnParents = new HashSet<Element>(); 
-            for (DiagramConnectionPart connPart : connParts)
+            for (StandardDiagramConnectionPart connPart : connParts)
             {
                 Element connElement = connPart.getLocalModelElement();                
                 Element connParentElement = connElement.parent().element();
@@ -685,9 +686,9 @@ public class DiagramConnectionTemplate extends SapphirePart
             List<Element> newConnParents = CollectionsUtil.removedBasedOnEntryIdentity(newList, oldList);
             
             // connection parents are deleted and we need to dispose any connections associated with them
-            List<DiagramConnectionPart> connPartsCopy = new ArrayList<DiagramConnectionPart>(connParts.size());
+            List<StandardDiagramConnectionPart> connPartsCopy = new ArrayList<StandardDiagramConnectionPart>(connParts.size());
             connPartsCopy.addAll(connParts);
-            for (DiagramConnectionPart connPart : connPartsCopy)
+            for (StandardDiagramConnectionPart connPart : connPartsCopy)
             {
                 Element connElement = connPart.getLocalModelElement();                
                 Element connParentElement = connElement.parent().element();
@@ -708,22 +709,22 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
     }
     
-    protected void addConnectionPart(Element srcNodeModel, DiagramConnectionPart connPart)
+    protected void addConnectionPart(Element srcNodeModel, StandardDiagramConnectionPart connPart)
     {
         this.diagramConnections.add(connPart);
     }
     
-    protected void disposeConnectionPart(DiagramConnectionPart connPart)
+    protected void disposeConnectionPart(StandardDiagramConnectionPart connPart)
     {
     	connPart.dispose();
     	connPart.detach(this.connPartListener);
         this.diagramConnections.remove(connPart);
     }
     
-    protected DiagramConnectionPart getConnectionPart(Element srcNodeModel, Element connModel)
+    protected StandardDiagramConnectionPart getConnectionPart(Element srcNodeModel, Element connModel)
     {
-        List<DiagramConnectionPart> connParts = getDiagramConnections(srcNodeModel);
-        for (DiagramConnectionPart connPart : connParts)
+        List<StandardDiagramConnectionPart> connParts = getDiagramConnections(srcNodeModel);
+        for (StandardDiagramConnectionPart connPart : connParts)
         {
             if (connPart.getLocalModelElement() == connModel)
             {
@@ -736,8 +737,8 @@ public class DiagramConnectionTemplate extends SapphirePart
     public void dispose()
     {
         removeModelListener();
-        List<DiagramConnectionPart> connParts = getDiagramConnections(null);
-        for (DiagramConnectionPart connPart : connParts)
+        List<StandardDiagramConnectionPart> connParts = getDiagramConnections(null);
+        for (StandardDiagramConnectionPart connPart : connParts)
         {
         	notifyConnectionDelete(new DiagramConnectionEvent(connPart));
             connPart.dispose();

@@ -33,6 +33,7 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
+import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -58,7 +59,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
 //    private ModelPath allDescendentsPath;
     private ListProperty modelProperty;
     private List<Class<?>> modelElementTypes;
-    private List<DiagramImplicitConnectionPart> implicitConnections;
+    private List<StandardImplicitConnectionPart> implicitConnections;
     private Listener modelPropertyListener;
     private Set<DiagramImplicitConnectionTemplateListener> templateListeners;
     private Map<Element, FunctionResult> listEntryFunctionMap;
@@ -144,7 +145,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
         List<Element> newFilteredList = getFilteredModelElementList();
         
-        for (DiagramImplicitConnectionPart connPart : this.implicitConnections)
+        for (StandardImplicitConnectionPart connPart : this.implicitConnections)
         {
             notifyConnectionDelete(connPart);
             connPart.dispose();
@@ -157,7 +158,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         	if (srcNode != null && srcNode.getDiagramNodeTemplate().visible() &&
         			targetNode != null && targetNode.getDiagramNodeTemplate().visible())
         	{
-	            DiagramImplicitConnectionPart connPart = 
+	            StandardImplicitConnectionPart connPart = 
 	                    createNewImplicitConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
                 this.implicitConnections.add(connPart);
                 notifyConnectionAdd(connPart);
@@ -165,7 +166,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         }            
     }
     
-    public List<DiagramImplicitConnectionPart> getImplicitConnections()
+    public List<StandardImplicitConnectionPart> getImplicitConnections()
     {
         return this.implicitConnections;
     }
@@ -174,10 +175,10 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
     	List<Element> newFilteredList = getFilteredModelElementList();
         
-        this.implicitConnections = new ArrayList<DiagramImplicitConnectionPart>();
+        this.implicitConnections = new ArrayList<StandardImplicitConnectionPart>();
         for (int i = 0; i < newFilteredList.size() - 1; i++)
         {
-            DiagramImplicitConnectionPart connPart = 
+            StandardImplicitConnectionPart connPart = 
                     createNewImplicitConnectionPart(newFilteredList.get(i), newFilteredList.get(i+1));
             this.implicitConnections.add(connPart);
         }    
@@ -198,9 +199,9 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         return filteredList;
     }
         
-    private DiagramImplicitConnectionPart createNewImplicitConnectionPart(Element srcNodeModel, Element targetNodeModel)
+    private StandardImplicitConnectionPart createNewImplicitConnectionPart(Element srcNodeModel, Element targetNodeModel)
     {
-        DiagramImplicitConnectionPart connPart = new DiagramImplicitConnectionPart(srcNodeModel, targetNodeModel);
+        StandardImplicitConnectionPart connPart = new StandardImplicitConnectionPart(srcNodeModel, targetNodeModel);
         connPart.init(this, srcNodeModel, this.connectionDef, Collections.<String,String>emptyMap());
         connPart.initialize();
         return connPart;
@@ -262,7 +263,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         this.templateListeners.remove( listener );
     }    
 
-    public void notifyConnectionAdd(DiagramImplicitConnectionPart connPart)
+    public void notifyConnectionAdd(StandardImplicitConnectionPart connPart)
     {
         for( DiagramImplicitConnectionTemplateListener listener : this.templateListeners )
         {
@@ -270,7 +271,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
         }        
     }
 
-    public void notifyConnectionDelete(DiagramImplicitConnectionPart connPart)
+    public void notifyConnectionDelete(StandardImplicitConnectionPart connPart)
     {
         for( DiagramImplicitConnectionTemplateListener listener : this.templateListeners )
         {
@@ -289,8 +290,8 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
             }
         }
 
-        List<DiagramImplicitConnectionPart> connParts = getImplicitConnections();
-        for (DiagramImplicitConnectionPart connPart : connParts)
+        List<StandardImplicitConnectionPart> connParts = getImplicitConnections();
+        for (StandardImplicitConnectionPart connPart : connParts)
         {
         	connPart.dispose();
         }

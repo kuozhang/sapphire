@@ -21,7 +21,8 @@ import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Action handler for Sample.Map.ShowStatistics action, which illustrates how
@@ -49,22 +50,22 @@ public final class ShowStatisticsActionHandler extends SapphireActionHandler
             {
                 nodes++;
             }
-            else if( selectedPart instanceof DiagramConnectionPart )
+            else if( selectedPart instanceof StandardDiagramConnectionPart )
             {
                 connections++;
-                bendpoints += ( (DiagramConnectionPart) selectedPart ).getConnectionBendpoints().size();
+                bendpoints += ( (StandardDiagramConnectionPart) selectedPart ).getConnectionBendpoints().size();
             }
             else if( selectedPart instanceof SapphireDiagramEditorPagePart )
             {
                 nodes = page.getNodes().size();
                 
-                final List<DiagramConnectionPart> allConnections = connService.getAllExplicitConnections();
+                final List<DiagramConnectionPart> allConnections = connService.list();
                 
                 connections = allConnections.size();
                 
                 for( DiagramConnectionPart connection : allConnections )
                 {
-                    bendpoints += connection.getConnectionBendpoints().size();
+                    bendpoints += ((StandardDiagramConnectionPart)connection).getConnectionBendpoints().size();
                 }
             }
         }
@@ -75,7 +76,7 @@ public final class ShowStatisticsActionHandler extends SapphireActionHandler
         msg.append( "Connections: " ).append( connections ).append( '\n' );
         msg.append( "Bend Points: " ).append( bendpoints );
         
-        MessageDialog.openInformation( ( (FormComponentPresentation) context ).shell(), "Statistics", msg.toString() );
+        MessageDialog.openInformation( Display.getDefault().getActiveShell(), "Statistics", msg.toString() );
         
         return null;
     }

@@ -27,10 +27,11 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -71,7 +72,7 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
     	boolean enabled = false;
     	
     	if( part instanceof DiagramNodePart || part instanceof ShapePart ||
-    			(part instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
+    			(part instanceof StandardDiagramConnectionPart && !(part instanceof StandardImplicitConnectionPart)))
     	{
     		enabled = true;
     	}
@@ -82,7 +83,7 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
 	    	for (ISapphirePart selectedPart : selectedParts)
 	    	{
 	    		if (selectedPart instanceof DiagramNodePart || selectedPart instanceof ShapePart ||
-	    				(selectedPart instanceof DiagramConnectionPart && !(part instanceof DiagramImplicitConnectionPart)))
+	    				(selectedPart instanceof StandardDiagramConnectionPart && !(part instanceof StandardImplicitConnectionPart)))
 	    		{
 	    			enabled = true;
 	    		}
@@ -96,10 +97,10 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
     protected Object run(Presentation context) 
     {
         ISapphirePart part = context.part();
-        if (part instanceof DiagramConnectionPart)
+        if (part instanceof StandardDiagramConnectionPart)
         {
-            DiagramConnectionPart connPart = (DiagramConnectionPart)part;
-            deleteConnection(connPart);   
+            StandardDiagramConnectionPart connPart = (StandardDiagramConnectionPart)part;
+            connPart.remove();   
         }
         else if (part instanceof DiagramNodePart)
         {
@@ -118,10 +119,10 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
         	parts.addAll(pagePart.getSelections());
         	for (ISapphirePart selectedPart : parts)
         	{
-        		if (selectedPart instanceof DiagramConnectionPart)
+        		if (selectedPart instanceof StandardDiagramConnectionPart)
         		{
-                    DiagramConnectionPart connPart = (DiagramConnectionPart)selectedPart;
-                    deleteConnection(connPart);           			
+                    StandardDiagramConnectionPart connPart = (StandardDiagramConnectionPart)selectedPart;
+                    connPart.remove();          			
         		}
                 else if (selectedPart instanceof DiagramNodePart)
                 {
@@ -140,17 +141,20 @@ public class DiagramDeleteActionHandler extends SapphireActionHandler
 
     private void deleteNodeConnections(DiagramNodePart nodePart)
     {
+    	Element nodeElement = nodePart.getLocalModelElement();
     	SapphireDiagramEditorPagePart diagramPart = nodePart.getDiagramNodeTemplate().getDiagramEditorPart();
     	ConnectionService connService = diagramPart.service(ConnectionService.class);
-    	for (DiagramConnectionPart connPart: connService.getAttachedConnections(nodePart))
+    	for (DiagramConnectionPart connPart : connService.list())
     	{
-    		deleteConnection(connPart);
+    		StandardDiagramConnectionPart standardConnPart = (StandardDiagramConnectionPart)connPart;
+			 if (standardConnPart.removable() &&
+					 ((standardConnPart.getEndpoint1() != null && standardConnPart.getEndpoint1() == nodeElement) || 
+							 standardConnPart.getEndpoint2() != null && standardConnPart.getEndpoint2() == nodeElement))
+			 {
+				 connPart.remove();
+			 }
+    		
     	}
-    }
-    
-    private void deleteConnection(DiagramConnectionPart connPart)
-    {
-    	connPart.getDiagramConnectionTemplate().deleteConnection(connPart);
     }
     
     private void deleteNode(DiagramNodePart nodePart)

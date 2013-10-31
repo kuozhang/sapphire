@@ -13,11 +13,8 @@
 package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementList;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 
@@ -45,8 +42,8 @@ public class ReconnectConnectionCommand extends Command {
 	@Override
 	public boolean canExecute() {
 		// Don't allow reconnect on implicit connections
-		DiagramConnectionPart connectionPart = this.connection.getModelPart();
-		if (connectionPart instanceof DiagramImplicitConnectionPart) {
+		StandardDiagramConnectionPart connectionPart = this.connection.getModelPart();
+		if (connectionPart instanceof StandardImplicitConnectionPart) {
 			return false;
 		}
 		if (newSource != null) {
@@ -62,7 +59,7 @@ public class ReconnectConnectionCommand extends Command {
 		if (newSource.equals(oldTarget)) {
 			return false;
 		}
-		DiagramConnectionPart connectionPart = this.connection.getModelPart();
+		StandardDiagramConnectionPart connectionPart = this.connection.getModelPart();
 		
 		if (!(connectionPart.getDiagramConnectionTemplate().canCreateNewConnection(
 				newSource.getModelPart(), oldTarget.getModelPart())))
@@ -76,7 +73,7 @@ public class ReconnectConnectionCommand extends Command {
 		if (newTarget.equals(oldSource)) {
 			return false;
 		}
-		DiagramConnectionPart connectionPart = this.connection.getModelPart();
+		StandardDiagramConnectionPart connectionPart = this.connection.getModelPart();
 		
 		if (!(connectionPart.getDiagramConnectionTemplate().canCreateNewConnection(
 				oldSource.getModelPart(), newTarget.getModelPart())))
@@ -90,30 +87,9 @@ public class ReconnectConnectionCommand extends Command {
 	{
 		// Tried to reset the endpoint but it turns out to be very complex. It's easier
 		// to delete the connection and recreate a new one
-		DiagramConnectionPart connectionPart = connection.getModelPart();
-        
-        DiagramNodePart srcNode = newSource != null ? newSource.getModelPart() : oldSource.getModelPart();
-        DiagramNodePart targetNode = newTarget != null ? newTarget.getModelPart() : oldTarget.getModelPart();
-        DiagramConnectionPart newConnPart = 
-            connectionPart.getDiagramConnectionTemplate().createNewDiagramConnection(srcNode, targetNode); 
-
-        final Element oldConnElement = connectionPart.getLocalModelElement();
-        newConnPart.getLocalModelElement().copy(oldConnElement);
-        // Bug 382912 - Reconnecting an existing connection adds a bend point 
-        // After the copy, connection endpoint event is triggered which causes SapphireConnectionRouter
-        // to be called. Since the old connection hasn't been deleted, a default bend point will be added. 
-        newConnPart.removeAllBendpoints();
-		
-		if (newSource != null) 
-		{
-			newConnPart.resetEndpoint1(newSource.getModelPart());
-		} 
-		if (newTarget != null)
-		{
-			newConnPart.resetEndpoint2(newTarget.getModelPart());
-		}
-        final ElementList<?> list = (ElementList<?>) oldConnElement.parent();
-        list.remove(oldConnElement);
+		StandardDiagramConnectionPart connectionPart = connection.getModelPart();
+		connectionPart.reconnect(newSource != null ? newSource.getModelPart() : oldSource.getModelPart(), 
+									newTarget != null ? newTarget.getModelPart() : oldTarget.getModelPart());
 	}
 
 	public void setNewTarget(DiagramNodeModel target) {

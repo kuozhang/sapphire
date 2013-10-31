@@ -31,7 +31,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.forms.swt.ActionBridge;
 import org.eclipse.sapphire.ui.forms.swt.ActionHandlerBridge;
 import org.eclipse.sapphire.ui.forms.swt.ActionSystemPartBridge;
@@ -195,7 +195,7 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 		if (SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS.equals(context)) {
 			if (DIAGRAM_DELETE_ALL_BEND_POINTS.equals(action.getId())) {
 				for (ISapphirePart part : selection) {
-		            if(part instanceof DiagramConnectionPart) {
+		            if(part instanceof StandardDiagramConnectionPart) {
 		            	return false;
 		            }
 				}

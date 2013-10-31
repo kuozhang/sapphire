@@ -44,6 +44,7 @@ import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.util.CollectionsUtil;
 
 /**
@@ -498,11 +499,19 @@ public final class DiagramNodeTemplate extends SapphirePart
     private void refreshAttachedConnections(DiagramNodePart nodePart)
     {
     	ConnectionService connService = this.diagramEditor.service(ConnectionService.class);
-    	List<DiagramConnectionPart> attachedConnections = connService.getAttachedConnections(nodePart);
-    	for (DiagramConnectionPart connPart : attachedConnections)
+    	Element nodeElement = nodePart.getLocalModelElement();
+    	for (DiagramConnectionPart connPart : connService.list())
     	{
-    		connPart.getDiagramConnectionTemplate().notifyConnectionAdd(new DiagramConnectionEvent(connPart));
+    		StandardDiagramConnectionPart standardConnPart = (StandardDiagramConnectionPart)connPart;
+			 if (standardConnPart.removable() && 
+					 ((standardConnPart.getEndpoint1() != null && standardConnPart.getEndpoint1() == nodeElement) || 
+							 standardConnPart.getEndpoint2() != null && standardConnPart.getEndpoint2() == nodeElement))
+			 {
+				 standardConnPart.getDiagramConnectionTemplate().notifyConnectionAdd(new DiagramConnectionEvent(connPart));
+			 }
+
     	}
+    		
     }
 	
 }
