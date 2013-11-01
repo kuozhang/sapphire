@@ -33,7 +33,7 @@ import org.eclipse.sapphire.util.SortedSetFactory;
 
 public abstract class PossibleValuesService extends Service
 {
-    @Text( "\"{0}\" is not among possible values for {1}." )
+    @Text( "\"{0}\" is not among possible values" )
     private static LocalizableText defaultInvalidValueMessage;
     
     static

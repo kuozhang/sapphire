@@ -14,6 +14,7 @@ package org.eclipse.sapphire.services.internal;
 import java.text.MessageFormat;
 import java.util.Set;
 
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -42,7 +43,7 @@ public final class StaticPossibleValuesService extends PossibleValuesService
     {
         super.init();
         
-        final PossibleValues a = context( ValueProperty.class ).getAnnotation( PossibleValues.class );
+        final PossibleValues a = context( PropertyDef.class ).getAnnotation( PossibleValues.class );
         
         this.values = a.values();
         this.invalidValueMessageTemplate = a.invalidValueMessage();
@@ -63,7 +64,12 @@ public final class StaticPossibleValuesService extends PossibleValuesService
     @Override
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        if( this.invalidValueMessageTemplate.length() > 0 )
+        {
+            return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        }
+        
+        return super.getInvalidValueMessage( invalidValue );
     }
     
     @Override
@@ -89,8 +95,14 @@ public final class StaticPossibleValuesService extends PossibleValuesService
         @Override
         public boolean applicable( final ServiceContext context )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
-            return ( property != null && property.hasAnnotation( PossibleValues.class ) && property.getAnnotation( PossibleValues.class ).values().length > 0 );
+            final PropertyDef property = context.find( PropertyDef.class );
+            
+            return
+            (
+                ( property instanceof ValueProperty || property instanceof ListProperty ) && 
+                property.hasAnnotation( PossibleValues.class ) && 
+                property.getAnnotation( PossibleValues.class ).values().length > 0
+            );
         }
     }
     

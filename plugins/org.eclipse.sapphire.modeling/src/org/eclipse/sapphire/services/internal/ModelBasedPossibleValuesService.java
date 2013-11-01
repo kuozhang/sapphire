@@ -16,8 +16,10 @@ import java.text.MessageFormat;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyVisitor;
@@ -55,10 +57,10 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
     {
         super.init();
         
-        final Value<?> value = context( Value.class );
-        final Element element = value.element();
+        final Property property = context( Property.class );
+        final Element element = property.element();
         
-        final PossibleValues a = value.definition().getAnnotation( PossibleValues.class );
+        final PossibleValues a = property.definition().getAnnotation( PossibleValues.class );
         
         this.path = new ModelPath( a.property() );
         this.values = SetFactory.empty();
@@ -109,7 +111,12 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
     @Override
     public String getInvalidValueMessage( final String invalidValue )
     {
-        return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        if( this.invalidValueMessageTemplate.length() > 0 )
+        {
+            return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
+        }
+        
+        return super.getInvalidValueMessage( invalidValue );
     }
     
     @Override
@@ -171,9 +178,9 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         @Override
         public boolean applicable( final ServiceContext context )
         {
-            final Value<?> property = context.find( Value.class );
+            final Property property = context.find( Property.class );
             
-            if( property != null )
+            if( property instanceof Value || property instanceof ElementList )
             {
                 final PossibleValues possibleValuesAnnotation = property.definition().getAnnotation( PossibleValues.class );
                 
