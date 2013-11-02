@@ -204,8 +204,6 @@ public class StandardConnectionService extends ConnectionService
 					
 	private void showAllAttachedConnections(DiagramNodeTemplate nodeTemplate)
 	{
-		if (nodeTemplate == null)
-			return;
     	if (nodeTemplate != null)
     	{
 	    	List<DiagramConnectionTemplate> connTemplates = getAllConnectionTemplates();
@@ -225,20 +223,21 @@ public class StandardConnectionService extends ConnectionService
 	    
 	private void hideAllAttachedConnections(DiagramNodeTemplate nodeTemplate)
 	{		
-    	if (nodeTemplate == null)
-    		return;
-    	List<DiagramConnectionTemplate> connTemplates = getAllConnectionTemplates();
-    	for (DiagramConnectionTemplate connTemplate : connTemplates)
-    	{
-    		connTemplate.hideAllConnectionParts(nodeTemplate);
-    	}
-    	DiagramEmbeddedConnectionTemplate embeddedConnTemplate = this.embeddedConnectionTemplateMap.get(nodeTemplate);
-        if (embeddedConnTemplate != null)
+        if (nodeTemplate != null)
         {
-        	embeddedConnTemplate.hideAllConnectionParts(nodeTemplate);
+        	List<DiagramConnectionTemplate> connTemplates = getAllConnectionTemplates();
+        	for (DiagramConnectionTemplate connTemplate : connTemplates)
+        	{
+        		connTemplate.hideAllConnectionParts(nodeTemplate);
+        	}
+        	DiagramEmbeddedConnectionTemplate embeddedConnTemplate = this.embeddedConnectionTemplateMap.get(nodeTemplate);
+            if (embeddedConnTemplate != null)
+            {
+            	embeddedConnTemplate.hideAllConnectionParts(nodeTemplate);
+            }
+        	
+        	refreshImplicitConnections();
         }
-    	
-    	refreshImplicitConnections();		
 	}
     
 	private List<DiagramConnectionTemplate> getAllConnectionTemplates()
