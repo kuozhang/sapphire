@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ImageService;
 import org.eclipse.sapphire.ListProperty;
@@ -59,11 +60,12 @@ import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.PossibleTypesService;
@@ -586,37 +588,83 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
         private final LocalizationService localizationService;
         private String value;
         private Element element;
+        private Value<?> property;
         private ValueLabelService valueLabelService;
         private ValueImageService valueImageService;
         private ImageService elementImageService;
-        private Listener listener;
+        private Listener elementImageServiceListener;
+        private Listener propertyValidationListener;
         
         public Entry( final String value, final Element element )
         {
             this.localizationService = part().definition().adapt( LocalizationService.class );
             this.value = value;
-            this.element = element;
             
             this.valueLabelService = CheckBoxListPropertyEditorPresentation.this.memberProperty.service( ValueLabelService.class );
             this.valueImageService = CheckBoxListPropertyEditorPresentation.this.memberProperty.service( ValueImageService.class );
             
-            this.listener = new Listener()
+            rebase( element );
+        }
+        
+        private void rebase( final Element element )
+        {
+            if( this.element != null )
             {
-                @Override
-                public void handle( final Event event )
+                if( this.elementImageService != null )
                 {
-                    CheckBoxListPropertyEditorPresentation.this.tableViewer.update( Entry.this, null );
+                    this.elementImageService.detach( this.elementImageServiceListener );
                 }
-            };
+                
+                if( this.elementImageService != null || this.valueImageService != null )
+                {
+                    this.property.detach( this.propertyValidationListener );
+                }
+            }
+            
+            this.element = element;
             
             if( this.element != null )
             {
+                this.property = this.element.property( getMemberProperty() );
                 this.elementImageService = this.element.service( ImageService.class );
                 
                 if( this.elementImageService != null )
                 {
-                    this.elementImageService.attach( this.listener );
+                    if( this.elementImageServiceListener == null )
+                    {
+                        this.elementImageServiceListener = new Listener()
+                        {
+                            @Override
+                            public void handle( final Event event )
+                            {
+                                CheckBoxListPropertyEditorPresentation.this.tableViewer.update( Entry.this, null );
+                            }
+                        };
+                    }
+                    
+                    this.elementImageService.attach( this.elementImageServiceListener );
                 }
+                
+                if( this.elementImageService != null || this.valueImageService != null )
+                {
+                    if( this.propertyValidationListener == null )
+                    {
+                        this.propertyValidationListener = new FilteredListener<PropertyValidationEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final PropertyValidationEvent event )
+                            {
+                                CheckBoxListPropertyEditorPresentation.this.tableViewer.update( Entry.this, null );
+                            }
+                        };
+                    }
+                    
+                    this.property.attach( this.propertyValidationListener );
+                }
+            }
+            else
+            {
+                this.property = null;
             }
         }
         
@@ -678,8 +726,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
             }
             else
             {
-                final Status st = this.element.property( getMemberProperty() ).validation();
-                image = resources().image( this.elementImageService.image(), st.severity() );
+                image = resources().image( this.elementImageService.image(), this.property.validation().severity() );
             }
             
             return image;
@@ -706,40 +753,24 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
         {
             if( this.element == null )
             {
-                this.element = property().insert();
-                this.element.property( getMemberProperty() ).write( this.value );
-                
-                this.elementImageService = this.element.service( ImageService.class );
-                
-                if( this.elementImageService != null )
-                {
-                    this.elementImageService.attach( this.listener );
-                }
+                rebase( property().insert() );
+                this.property.write( this.value );
             }
             else
             {
-                if( this.elementImageService != null )
-                {
-                    this.elementImageService.detach( this.listener );
-                    this.elementImageService = null;
-                }
-                
                 // Must null the element field before trying to remove the element as remove will 
                 // trigger property change event and it is possible for the resulting refresh to 
                 // set the element field to a new value before returning.
                 
                 final Element el = this.element;
-                this.element = null;
+                rebase( null );
                 property().remove( el );
             }
         }
         
         public void dispose()
         {
-            if( this.elementImageService != null )
-            {
-                this.elementImageService.detach( this.listener );
-            }
+            rebase( null );
         }
     }
     
