@@ -42,12 +42,12 @@ public interface PageBookDef extends FormComponentDef
 
     // *** DefaultPage ***
     
-    @Type( base = CompositeDef.class )
+    @Type( base = FormDef.class )
     @Label( standard = "default page" )
     @XmlBinding( path = "default-panel" )
     
     ImpliedElementProperty PROP_DEFAULT_PAGE = new ImpliedElementProperty( TYPE, "DefaultPage" );
     
-    CompositeDef getDefaultPage();
+    FormDef getDefaultPage();
 
 }

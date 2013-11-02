@@ -122,7 +122,7 @@ public final class WithPart extends PageBookPart
     }
     
     @Override
-    protected CompositePart createPagePart( final Element modelElementForPage, final CompositeDef pageDef )
+    protected FormPart createPagePart( final Element modelElementForPage, final FormDef pageDef )
     {
         final WithPagePart page = new WithPagePart();
         page.init( this, modelElementForPage, pageDef, this.params );

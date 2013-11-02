@@ -24,7 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 @Label( standard = "page" )
 
-public interface PageBookKeyMapping extends CompositeDef
+public interface PageBookKeyMapping extends FormDef
 {
     ElementType TYPE = new ElementType( PageBookKeyMapping.class );
     

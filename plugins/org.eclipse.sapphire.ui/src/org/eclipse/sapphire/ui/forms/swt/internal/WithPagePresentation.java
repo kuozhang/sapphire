@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class WithPagePresentation extends CompositePresentation
+public final class WithPagePresentation extends FormPresentation
 {
     @Text( "No additional properties are currently available." )
     private static LocalizableText noAdditionalPropertiesMessage;
@@ -51,19 +51,19 @@ public final class WithPagePresentation extends CompositePresentation
     }
     
     @Override
-    protected void renderChildren( final Composite composite )
+    public void render()
     {
-        final WithPagePart part = part();
-        
-        super.renderChildren( composite );
-        
-        if( part.children().visible().isEmpty() )
+        if( part().children().visible().isEmpty() )
         {
-            final SapphireFormText text = new SapphireFormText( composite, SWT.NONE );
+            final SapphireFormText text = new SapphireFormText( composite(), SWT.NONE );
             text.setLayoutData( gdhindent( gdwhint( gdhspan( gdhfill(), 2 ), 100 ), 9 ) );
             text.setText( noAdditionalPropertiesMessage.text(), false, false );
             
             register( text );
+        }
+        else
+        {
+            super.render();
         }
     }
 

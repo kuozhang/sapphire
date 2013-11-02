@@ -101,6 +101,12 @@ public class PageBookPresentation extends FormComponentPresentation
         
         layout();
     }
+    
+    @Override
+    public void refresh()
+    {
+        refreshActivePage();
+    }
 
     @Override
     public void dispose()

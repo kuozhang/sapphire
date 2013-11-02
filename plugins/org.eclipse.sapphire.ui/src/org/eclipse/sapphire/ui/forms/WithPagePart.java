@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class WithPagePart extends CompositePart
+public final class WithPagePart extends FormPart
 {
     @Override
     protected Function initVisibleWhenFunction()

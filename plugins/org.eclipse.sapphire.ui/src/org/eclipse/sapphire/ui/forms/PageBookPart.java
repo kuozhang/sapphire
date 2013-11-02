@@ -40,12 +40,12 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class PageBookPart extends FormComponentPart
 {
-    private static CompositeDef systemDefaultPageDef;
+    private static FormDef systemDefaultPageDef;
     
-    private Map<Object,CompositeDef> pageDefs;
-    private CompositeDef defaultPageDef;
-    private CompositePart currentPage;
-    private Map<PageCacheKey,CompositePart> pages = Collections.synchronizedMap( new HashMap<PageCacheKey,CompositePart>() );
+    private Map<Object,FormDef> pageDefs;
+    private FormDef defaultPageDef;
+    private FormPart currentPage;
+    private Map<PageCacheKey,FormPart> pages = Collections.synchronizedMap( new HashMap<PageCacheKey,FormPart>() );
     private boolean exposePageValidationState = false;
     private Listener childPartValidationListener = null;
     
@@ -56,7 +56,7 @@ public abstract class PageBookPart extends FormComponentPart
         
         final PageBookDef def = (PageBookDef) this.definition;
         
-        this.pageDefs = new LinkedHashMap<Object,CompositeDef>();
+        this.pageDefs = new LinkedHashMap<Object,FormDef>();
         
         for( PageBookKeyMapping page : def.getPages() )
         {
@@ -113,7 +113,7 @@ public abstract class PageBookPart extends FormComponentPart
                                 @Override
                                 protected void handleTypedEvent( final PageChangedEvent event )
                                 {
-                                    final CompositePart page = getCurrentPage();
+                                    final FormPart page = getCurrentPage();
                                     
                                     if( page != null )
                                     {
@@ -125,7 +125,7 @@ public abstract class PageBookPart extends FormComponentPart
                             }
                         );
                         
-                        final CompositePart page = getCurrentPage();
+                        final FormPart page = getCurrentPage();
                         
                         if( page != null )
                         {
@@ -138,7 +138,7 @@ public abstract class PageBookPart extends FormComponentPart
                     {
                         boolean visible = false;
                         
-                        final CompositePart page = getCurrentPage();
+                        final FormPart page = getCurrentPage();
                         
                         if( page != null )
                         {
@@ -165,7 +165,7 @@ public abstract class PageBookPart extends FormComponentPart
         }
     }
 
-    public final CompositePart getCurrentPage()
+    public final FormPart getCurrentPage()
     {
         return this.currentPage;
     }
@@ -173,11 +173,11 @@ public abstract class PageBookPart extends FormComponentPart
     protected final void changePage( final Element modelElementForPage,
                                      final Object pageKey )
     {
-        CompositeDef pageDef = this.defaultPageDef;
+        FormDef pageDef = this.defaultPageDef;
         
         if( pageKey != null )
         {
-            for( Map.Entry<Object,CompositeDef> entry : this.pageDefs.entrySet() )
+            for( Map.Entry<Object,FormDef> entry : this.pageDefs.entrySet() )
             {
                 if( entry.getKey().equals( pageKey ) )
                 {
@@ -191,14 +191,14 @@ public abstract class PageBookPart extends FormComponentPart
     }
 
     private void changePage( final Element modelElementForPage,
-                             final CompositeDef pageDef )
+                             final FormDef pageDef )
     {
         if( modelElementForPage == null )
         {
             throw new IllegalArgumentException();
         }
         
-        final CompositePart oldPage = this.currentPage;
+        final FormPart oldPage = this.currentPage;
         
         if( oldPage != null && this.childPartValidationListener != null )
         {
@@ -223,7 +223,7 @@ public abstract class PageBookPart extends FormComponentPart
                     @Override
                     protected void handleTypedEvent( final ElementDisposeEvent event )
                     {
-                        final CompositePart page = PageBookPart.this.pages.remove( key );
+                        final FormPart page = PageBookPart.this.pages.remove( key );
                         
                         if( page != null )
                         {
@@ -259,9 +259,9 @@ public abstract class PageBookPart extends FormComponentPart
     
     protected abstract Object parsePageKey( final String pageKeyString );
     
-    protected CompositePart createPagePart( final Element modelElementForPage, final CompositeDef pageDef )
+    protected FormPart createPagePart( final Element modelElementForPage, final FormDef pageDef )
     {
-        return (CompositePart) create( this, modelElementForPage, pageDef, this.params );
+        return (FormPart) create( this, modelElementForPage, pageDef, this.params );
     }
 
     @Override
@@ -269,7 +269,7 @@ public abstract class PageBookPart extends FormComponentPart
     {
         if( this.exposePageValidationState == true )
         {
-            final CompositePart currentPage = getCurrentPage();
+            final FormPart currentPage = getCurrentPage();
             
             if( currentPage != null )
             {
@@ -322,7 +322,7 @@ public abstract class PageBookPart extends FormComponentPart
     {
         super.dispose();
         
-        for( final CompositePart page : this.pages.values() )
+        for( final FormPart page : this.pages.values() )
         {
             page.dispose();
         }
@@ -382,10 +382,10 @@ public abstract class PageBookPart extends FormComponentPart
     
     private static final class PageCacheKey
     {
-        private final CompositeDef def;
+        private final FormDef def;
         private final Element element;
         
-        public PageCacheKey( final CompositeDef def, final Element element )
+        public PageCacheKey( final FormDef def, final Element element )
         {
             this.def = def;
             this.element = element;
