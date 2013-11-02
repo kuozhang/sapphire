@@ -237,6 +237,7 @@ public final class ElementList<T extends Element> extends Property implements Li
                 
                 if( head instanceof AllDescendentsSegment || head instanceof PropertySegment || head instanceof TypeFilterSegment )
                 {
+                    attach( listener );
                     attach( new PropagationListener( listener, path ) );
                     
                     for( Element element : this )
@@ -244,10 +245,7 @@ public final class ElementList<T extends Element> extends Property implements Li
                         element.attach( listener, path );
                     }
                     
-                    if( ! ( head instanceof AllDescendentsSegment ) )
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
             
@@ -276,6 +274,7 @@ public final class ElementList<T extends Element> extends Property implements Li
                 
                 if( head instanceof AllDescendentsSegment || head instanceof PropertySegment || head instanceof TypeFilterSegment )
                 {
+                    detach( listener );
                     detach( new PropagationListener( listener, path ) );
                     
                     for( Element element : this )
@@ -283,10 +282,7 @@ public final class ElementList<T extends Element> extends Property implements Li
                         element.detach( listener, path );
                     }
                     
-                    if( ! ( head instanceof AllDescendentsSegment ) )
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
             

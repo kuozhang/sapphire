@@ -175,6 +175,8 @@ public final class ElementHandle<T extends Element> extends Property
                 
                 if( head instanceof AllDescendentsSegment || head instanceof PropertySegment || head instanceof TypeFilterSegment )
                 {
+                    attach( listener );
+                    
                     if( ! ( definition() instanceof ImpliedElementProperty ) )
                     {
                         attach( new PropagationListener( listener, path ) );
@@ -187,10 +189,7 @@ public final class ElementHandle<T extends Element> extends Property
                         element.attach( listener, path );
                     }
                     
-                    if( ! ( head instanceof AllDescendentsSegment ) )
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
             
@@ -219,6 +218,8 @@ public final class ElementHandle<T extends Element> extends Property
                 
                 if( head instanceof AllDescendentsSegment || head instanceof PropertySegment || head instanceof TypeFilterSegment )
                 {
+                    detach( listener );
+                    
                     if( ! ( definition() instanceof ImpliedElementProperty ) )
                     {
                         detach( new PropagationListener( listener, path ) );
@@ -231,10 +232,7 @@ public final class ElementHandle<T extends Element> extends Property
                         element.detach( listener, path );
                     }
                     
-                    if( ! ( head instanceof AllDescendentsSegment ) )
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
 
