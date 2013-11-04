@@ -231,18 +231,14 @@ public final class PropertyEditorPart extends FormComponentPart
                 @Override
                 protected void handleTypedEvent( final PropertyEvent event )
                 {
-                    if( event instanceof PropertyValidationEvent || event instanceof PropertyEnablementEvent ||
-                        ( event instanceof PropertyContentEvent && event.property() == property() ) )
+                    if( ! ( event instanceof PropertyContentEvent && event.property() instanceof Value ) )
                     {
                         refreshValidation();
                     }
                 }
             };
             
-            for( ModelPath childPropertyPath : this.childPropertyPaths )
-            {
-                this.property.attach( this.propertyValidationListener, childPropertyPath );
-            }
+            this.property.attach( this.propertyValidationListener, "*" );
         }
         else
         {
@@ -257,10 +253,10 @@ public final class PropertyEditorPart extends FormComponentPart
                     }
                 }
             };
+            
+            this.property.attach( this.propertyValidationListener );
         }
 
-        this.property.attach( this.propertyValidationListener );
-        
         // Hints
 
         this.hints = new HashMap<String,Object>();
@@ -616,12 +612,9 @@ public final class PropertyEditorPart extends FormComponentPart
             
             if( this.property instanceof ElementList )
             {
-                for( Element child : (ElementList<?>) this.property )
+                for( final Element child : (ElementList<?>) this.property )
                 {
-                    for( ModelPath childPropertyPath : this.childPropertyPaths )
-                    {
-                        factory.merge( child.property( childPropertyPath ).validation() );
-                    }
+                    factory.merge( child.validation() );
                 }
             }
         }
@@ -717,14 +710,13 @@ public final class PropertyEditorPart extends FormComponentPart
     {
         if( this.propertyValidationListener != null && ! this.property.disposed() )
         {
-            this.property.detach( this.propertyValidationListener );
-            
             if( this.property instanceof ElementList )
             {
-                for( ModelPath childPropertyPath : this.childPropertyPaths )
-                {
-                    this.property.detach( this.propertyValidationListener, childPropertyPath );
-                }
+                this.property.detach( this.propertyValidationListener, "*" );
+            }
+            else
+            {
+                this.property.detach( this.propertyValidationListener );
             }
         }
         
