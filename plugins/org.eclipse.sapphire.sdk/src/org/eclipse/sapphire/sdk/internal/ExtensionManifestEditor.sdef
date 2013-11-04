@@ -16,7 +16,7 @@
     <import>
         <package>org.eclipse.sapphire.sdk.internal</package>
         <package>org.eclipse.sapphire.sdk.extensibility</package>
-        <package>org.eclipse.sapphire.ui.renderers.swt</package>
+        <package>org.eclipse.sapphire.ui.forms.swt</package>
         <definition>org.eclipse.sapphire.sdk.Common</definition>
     </import>
 
@@ -53,7 +53,7 @@
                                 <property-editor>
                                     <hint>
                                         <name>factory</name>
-                                        <value>CheckBoxListPropertyEditorRenderer$Factory</value>
+                                        <value>CheckBoxListPropertyEditorPresentation$Factory</value>
                                     </hint>
                                     <property>Contexts</property>
                                     <hint>

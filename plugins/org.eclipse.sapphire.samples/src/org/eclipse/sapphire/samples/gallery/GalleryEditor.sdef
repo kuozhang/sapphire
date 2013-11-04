@@ -19,8 +19,7 @@
 <definition>
 
     <import>
-        <package>org.eclipse.sapphire.ui.swt.renderer.actions</package>
-        <package>org.eclipse.sapphire.ui.renderers.swt</package>
+        <package>org.eclipse.sapphire.ui.forms.swt</package>
         <package>org.eclipse.sapphire.samples</package>
         <package>org.eclipse.sapphire.samples.gallery</package>
         <package>org.eclipse.sapphire.samples.gallery.internal</package>
@@ -1097,15 +1096,15 @@
                             <spacer />
                             <label>
                                 The checkbox list is an alternate property editor type that may work better in some cases. To use it,
-                                specify CheckBoxListPropertyEditorRenderer$Factory for factory hint. The property editor is located in
-                                the org.eclipse.sapphire.ui.renderers.swt package.</label>
+                                specify CheckBoxListPropertyEditorPresentation$Factory for factory hint. The property editor is located in
+                                the org.eclipse.sapphire.ui.forms.swt package.</label>
                             <property-editor>
                                 <property>MultiSelectString</property>
                                 <show-label>false</show-label>
                                 <span>true</span>
                                 <hint>
                                     <name>factory</name>
-                                    <value>CheckBoxListPropertyEditorRenderer$Factory</value>
+                                    <value>CheckBoxListPropertyEditorPresentation$Factory</value>
                                 </hint>
                             </property-editor>
                             <spacer></spacer>
