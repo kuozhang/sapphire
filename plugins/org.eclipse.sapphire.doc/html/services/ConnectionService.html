@@ -1,0 +1,71 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2013 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>ConnectionService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>ConnectionService</h1>
+
+<p>ConnectionService is responsible for listing and establishing connections in a diagram.</p>
+
+<p>Typically, there is no need for the developer to implement this service as the provided StandardConnectionService
+uses the connection binding definitions in sdef to manage the connections. A custom implementation is only needed
+if sdef connection binding facilities are not sufficiently expressive or if the developer needs to customize user 
+interaction when a connection is established. In the latter case, StandardConnectionService can be extended instead
+of implementing ConnectionService from scratch.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example from the SQL Schema Editor sample, StandardConnectionService is extended
+to open a columns association wizard when user defines a foreign key.</p>
+
+<pre class="source-code"><code>public final class SqlSchemaConnectionService extends StandardConnectionService
+{
+    @Override
+    public StandardDiagramConnectionPart connect( final DiagramNodePart node1, final DiagramNodePart node2, final String connectionType )
+    {
+        final StandardDiagramConnectionPart fkConnectionPart = super.connect( node1, node2, connectionType );
+        final ForeignKey fk = (ForeignKey) fkConnectionPart.getLocalModelElement();
+
+        ...
+        
+        final SapphireWizard wizard = new SapphireWizard( fk, DefinitionLoader.sdef( SqlSchemaEditor.class ).wizard( "DefineForeignKeyWizard" ) )
+        {
+            @Override
+            public boolean performCancel()
+            {
+                fkConnectionPart.remove();
+                return true;
+            }
+        };
+        
+        final WizardDialog dialog = new WizardDialog( Display.getDefault().getActiveShell(), wizard );
+        
+        dialog.open();
+        
+        return ( fk.disposed() ? null : fkConnectionPart );
+    }
+}</code></pre>
+
+<div class="copyright">Copyright (c) 2013 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>
