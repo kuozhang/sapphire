@@ -61,7 +61,7 @@
     <li><a href="#Core-ElementHandle">ElementHandle</a></li>
     <li><a href="#Core-ElementList">ElementList</a></li>
     <li><a href="#Core-ElementType">ElementType</a></li>
-    <li><a href="#Core-PropertyInstance">PropertyInstance</a></li>
+    <li><a href="#Core-Property">Property</a></li>
     <li><a href="#Core-ReferenceValue">ReferenceValue</a></li>
     <li><a href="#Core-RequiredConstraintService">RequiredConstraintService</a></li>
     <li><a href="#Core-Result">Result</a></li>
@@ -640,35 +640,23 @@ of the list and updates itself automatically. The index can also notify listener
 
 <h2><a name="Core"><a name="Core-Element">Element</a></a></h2>
 
-<p>A facility to copy all properties of one element to another element existed in previous releases. Now a facility to 
-copy individual properties is also available.</p>
-
-<pre class="source-code"><code><font color="#888888">Element
-{
-    void copy( Element element )</font>
-    void copy( Element element, ModelProperty property )
-    void copy( Element element, String property )
-<font color="#888888">}</font></code></pre>
-
-<p>Clear one property or all of them using the new methods.</p>
+<p>Clear all properties in an element using the new method.</p>
 
 <pre class="source-code"><code><font color="#888888">Element
 {</font>
     void clear()
-    void clear( ModelProperty property )
-    void clear( String property )
 <font color="#888888">}</font></code></pre>
 
 <p>A property can now be looked up by a path. Previously, only lookup by name was available. In addition to this, the
-result of the lookup is a <a href="#Core-PropertyInstance">PropertyInstance</a> object that represents an instance of
+result of the lookup is a <a href="#Core-Property">Property</a> object that represents an instance of
 a property within an element.</p>
 
 <pre class="source-code"><code><font color="#888888">Element
 {</font>
-    SortedSet&lt;PropertyInstance> <font color="#888888">properties()</font>
-    PropertyInstance <font color="#888888">property( String</font> path <font color="#888888">)</font>
-    PropertyInstance property( ModelPath path )
-    PropertyInstance property( ModelProperty property )
+    SortedSet&lt;Property> <font color="#888888">properties()</font>
+    Property <font color="#888888">property( String</font> path <font color="#888888">)</font>
+    Property property( ModelPath path )
+    Property property( ModelProperty property )
 <font color="#888888">}</font></code></pre>
 
 
@@ -753,29 +741,34 @@ an unchecked cast warning. A method has been added to make it easy to reference 
 <font color="#888888">}</font></code></pre>
 
 
-<h2><a name="Core"><a name="Core-PropertyInstance">PropertyInstance</a></a></h2>
+<h2><a name="Core"><a name="Core-Property">Property</a></a></h2>
 
-<p>The new PropertyInstance class represents an instance of a property within an element. Many of the operations
+<p>The new Property class represents an instance of a property within an element. Many of the operations
 performed on an element that require a property to be supplied can now be performed on the property instance.
 A property instance can found using methods on <a href="#Core-Element">Element</a>.</p>
 
-<pre class="source-code"><code>PropertyInstance
+<pre class="source-code"><code>Property
 {
+    Element root()
     Element element()
-    ModelProperty property()
-    &lt;T> T read()
-    void write( Object content )
+    PropertyDef definition()
+    String name()
+    &lt;T> T nearest( Class&lt;T> type )
     void clear()
+    void copy( Element source )
     boolean empty()
     boolean enabled()
     Status validation()
     void refresh()
-    void refresh( boolean force )
-    void refresh( boolean force, boolean deep )
     &lt;S extends Service> S service( Class&lt;S> type )
     &lt;S extends Service> List&lt;S> services( Class&lt;S> type )
     void attach( Listener listener )
+    void attach( Listener listener, String path )
+    void attach( Listener listener, ModelPath path )
     void detach( Listener listener )
+    void detach( Listener listener, String path )
+    void detach( Listener listener, ModelPath path )
+    boolean disposed()
 }</code></pre>
 
 
