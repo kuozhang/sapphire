@@ -30,6 +30,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ExecutableElement;
 import org.eclipse.sapphire.FilteredListener;
@@ -61,9 +62,9 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizard<M extends ExecutableElement> implements IWizard
+public class SapphireWizard implements IWizard
 {
-    private ExecutableElement element;
+    private Element element;
     private boolean elementInstantiatedLocally;
     private DefinitionLoader.Reference<WizardDef> definition;
     private WizardPart part;
@@ -72,14 +73,12 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
     private ImageDescriptor defaultPageImageDescriptor;
     private Image defaultPageImage;
     
-    public SapphireWizard( final ElementType type,
-                           final DefinitionLoader.Reference<WizardDef> definition )
+    public SapphireWizard( final ElementType type, final DefinitionLoader.Reference<WizardDef> definition )
     {
         init( type, definition );
     }
 
-    public SapphireWizard( final M element,
-                           final DefinitionLoader.Reference<WizardDef> definition )
+    public SapphireWizard( final Element element, final DefinitionLoader.Reference<WizardDef> definition )
     {
         init( element, definition );
     }
@@ -88,15 +87,9 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
     {
     }
     
-    protected void init( final ElementType type,
-                         final DefinitionLoader.Reference<WizardDef> definition )
+    protected void init( final ElementType type, final DefinitionLoader.Reference<WizardDef> definition )
     {
         if( type == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        if( ! ExecutableElement.class.isAssignableFrom( type.getModelElementClass() ) )
         {
             throw new IllegalArgumentException();
         }
@@ -108,11 +101,10 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
         
         this.elementInstantiatedLocally = true;
         
-        init( (ExecutableElement) type.instantiate(), definition );
+        init( type.instantiate(), definition );
     }
     
-    protected void init( final ExecutableElement element,
-                         final DefinitionLoader.Reference<WizardDef> definition )
+    protected void init( final Element element, final DefinitionLoader.Reference<WizardDef> definition )
     {
         if( element == null )
         {
@@ -163,11 +155,9 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
         refreshImage();
     }
     
-    @SuppressWarnings( "unchecked" )
-    
-    public final M element()
+    public Element element()
     {
-        return (M) this.element;
+        return this.element;
     }
     
     public final WizardDef definition()
@@ -350,7 +340,12 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
     
     protected Status performFinish( final ProgressMonitor monitor )
     {
-        return this.element.execute( monitor );
+        if( this.element instanceof ExecutableElement )
+        {
+            return ( (ExecutableElement) this.element ).execute( monitor );
+        }
+        
+        return Status.createOkStatus();
     }
     
     protected void performPostFinish()
@@ -359,7 +354,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
     }
     
     @Override
-    public final boolean performCancel()
+    public boolean performCancel()
     {
         return true;
     }
@@ -458,8 +453,7 @@ public class SapphireWizard<M extends ExecutableElement> implements IWizard
         openFileEditor( file, null );
     }
     
-    protected final void openFileEditor( final IFile file,
-                                         final String editor )
+    protected final void openFileEditor( final IFile file, final String editor )
     {
         final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         

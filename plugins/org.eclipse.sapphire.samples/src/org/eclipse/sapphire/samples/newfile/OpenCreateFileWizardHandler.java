@@ -43,7 +43,7 @@ public final class OpenCreateFileWizardHandler extends AbstractHandler
             
             if( selectRootDialog.open() == Dialog.OK )
             {
-                final CreateWorkspaceFileWizard<CreateFileOp> createFileWizard = new CreateWorkspaceFileWizard<CreateFileOp>
+                final CreateWorkspaceFileWizard createFileWizard = new CreateWorkspaceFileWizard
                 (
                     operation,
                     DefinitionLoader.context( getClass() ).sdef( "CreateFileWizard" ).wizard( "CreateFileWizard" )

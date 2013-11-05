@@ -33,7 +33,7 @@ public final class PurchaseComputerActionHandler extends SapphireActionHandler
         {
             op.setPurchaseOrder( context.part().getLocalModelElement().nearest( PurchaseOrder.class ) );
             
-            final SapphireWizard<PurchaseComputerOp> wizard = new SapphireWizard<PurchaseComputerOp>
+            final SapphireWizard wizard = new SapphireWizard
             ( 
                 op,
                 DefinitionLoader.context( PurchaseComputerOp.class ).sdef( "PurchaseOrderEditor" ).wizard( "PurchaseComputerWizard" )

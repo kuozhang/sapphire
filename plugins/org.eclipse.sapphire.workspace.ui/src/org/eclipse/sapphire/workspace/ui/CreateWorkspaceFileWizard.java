@@ -33,22 +33,20 @@ import org.eclipse.ui.IWorkbenchWizard;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp> 
+public class CreateWorkspaceFileWizard 
 
-    extends SapphireWizard<M>
+    extends SapphireWizard
     implements IWorkbenchWizard, IExecutableExtension
     
 {
     private String editor;
     
-    public CreateWorkspaceFileWizard( final ElementType type,
-                                      final DefinitionLoader.Reference<WizardDef> definition )
+    public CreateWorkspaceFileWizard( final ElementType type, final DefinitionLoader.Reference<WizardDef> definition )
     {
         super( type, definition );
     }
     
-    public CreateWorkspaceFileWizard( final M element,
-                                      final DefinitionLoader.Reference<WizardDef> definition )
+    public CreateWorkspaceFileWizard( final CreateWorkspaceFileOp element, final DefinitionLoader.Reference<WizardDef> definition )
     {
         super( element, definition );
     }
@@ -58,6 +56,12 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
         super();
     }
     
+    @Override
+    public CreateWorkspaceFileOp element()
+    {
+        return (CreateWorkspaceFileOp) super.element();
+    }
+
     @Override
     protected void init( final ElementType type,
                          final DefinitionLoader.Reference<WizardDef> definition )

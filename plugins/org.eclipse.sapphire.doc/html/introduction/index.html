@@ -507,7 +507,7 @@ hookup.</p>
 <p>The above defines a one page wizard by re-using the composite definition created earlier. Now back to Java
 to use the wizard...</p>
 
-<pre class="source-code"><code>SapphireWizard&lt;FileBugReportOp> wizard = new SapphireWizard&lt;FileBugReportOp>
+<pre class="source-code"><code>SapphireWizard wizard = new SapphireWizard
 (
     FileBugReportOp.TYPE, 
     DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug.sdef" ).wizard( "wizard" )
