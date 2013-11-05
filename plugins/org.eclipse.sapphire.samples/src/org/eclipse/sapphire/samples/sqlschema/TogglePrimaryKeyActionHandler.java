@@ -9,9 +9,8 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.samples.sqlschema.internal;
+package org.eclipse.sapphire.samples.sqlschema;
 
-import org.eclipse.sapphire.samples.sqlschema.Column;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
