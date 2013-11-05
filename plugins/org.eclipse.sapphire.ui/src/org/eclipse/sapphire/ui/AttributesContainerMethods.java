@@ -9,10 +9,9 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.internal;
+package org.eclipse.sapphire.ui;
 
 import org.eclipse.sapphire.MasterConversionService;
-import org.eclipse.sapphire.ui.AttributesContainer;
 import org.eclipse.sapphire.ui.AttributesContainer.Attribute;
 
 /**

@@ -20,7 +20,6 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.ui.internal.AttributesContainerMethods;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
