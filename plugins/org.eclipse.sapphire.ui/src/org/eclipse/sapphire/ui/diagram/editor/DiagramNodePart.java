@@ -22,8 +22,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Bounds;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -89,6 +92,20 @@ public class DiagramNodePart
         // create shape part
         
         createShapePart();
+        if (getPropertiesViewContribution() != null)
+        {
+        	getPropertiesViewContribution().attach
+            (
+                new FilteredListener<PartValidationEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( PartValidationEvent event )
+                    {
+                    	refreshValidation();
+                    }
+                }
+            );        	
+        }        
     }
     
     public DiagramNodeTemplate getDiagramNodeTemplate()
@@ -164,6 +181,16 @@ public class DiagramNodePart
         this.shapePart.dispose();
         
     }
+    
+    @Override
+    protected Status computeValidation()
+    {
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+        factory.merge(getShapePart().validation());
+        factory.merge(getPropertiesViewContribution().validation());
+        return factory.create();
+    }
+    
         
 //    private void notifyShapeUpdate(ShapePart shapePart)
 //    {
@@ -335,5 +362,17 @@ public class DiagramNodePart
     	}
         this.shapePart.init(this, this.modelElement, shape, Collections.<String,String>emptyMap());
         this.shapePart.initialize();
+        this.shapePart.attach
+        (
+        	new FilteredListener<PartValidationEvent>()
+	        {
+	            @Override
+	            protected void handleTypedEvent( PartValidationEvent event )
+	            {
+	            	refreshValidation();
+	            }
+	        }
+        );
+
     }
 }

@@ -31,6 +31,7 @@ import org.eclipse.sapphire.ui.diagram.shape.def.ShapeLayoutDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.SpacerDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.TextDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ValidationMarkerDef;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -188,6 +189,13 @@ public class ContainerShapePart extends ShapePart
         	if (!(child instanceof ValidationMarkerPart))
         	{
         		factory.merge( child.validation() );
+        		if (child instanceof PropertiesViewContributorPart)
+        		{
+        			if (((PropertiesViewContributorPart)child).getPropertiesViewContribution() != null)
+        			{
+        				factory.merge(((PropertiesViewContributorPart)child).getPropertiesViewContribution().validation());
+        			}
+        		}
         	}
         }
         

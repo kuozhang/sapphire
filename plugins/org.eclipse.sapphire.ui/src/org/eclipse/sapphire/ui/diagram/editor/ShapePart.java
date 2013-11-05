@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ui.ISapphirePart;
+import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.shape.def.LayoutConstraintDef;
@@ -47,6 +49,20 @@ public class ShapePart extends SapphirePart implements PropertiesViewContributor
         super.init();
         this.shapeDef = (ShapeDef)super.definition;
         this.modelElement = getModelElement();
+        if (getPropertiesViewContribution() != null)
+        {
+        	getPropertiesViewContribution().attach
+            (
+                new FilteredListener<PartValidationEvent>()
+                {
+                    @Override
+                    protected void handleTypedEvent( PartValidationEvent event )
+                    {
+                    	refreshValidation();
+                    }
+                }
+            );        	
+        }
     }
 
 	public LayoutConstraintDef getLayoutConstraint()

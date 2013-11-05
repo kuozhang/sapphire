@@ -16,9 +16,12 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
+import org.eclipse.sapphire.ui.diagram.editor.ShapeUpdateEvent;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
+import org.eclipse.sapphire.ui.swt.gef.parts.ShapeUtil;
 import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation.ShapePresentationFactory;
 import org.eclipse.swt.widgets.Shell;
 
@@ -31,6 +34,7 @@ public class DiagramNodePresentation extends DiagramPresentation
 	private DiagramResourceCache resourceCache;
 	private ShapePresentation shapePresentation;
 	private Listener partVisibilityListener;
+	private Listener shapeUpdateListener;
 	
 	public DiagramNodePresentation(final DiagramNodePart nodePart, final DiagramPresentation parent, 
 			final Shell shell, final DiagramConfigurationManager configManager, final DiagramResourceCache resourceCache)
@@ -50,6 +54,15 @@ public class DiagramNodePresentation extends DiagramPresentation
 			}
 		};
 		getShapePresentation().part().attach(partVisibilityListener);
+		shapeUpdateListener = new FilteredListener<ShapeUpdateEvent>() {
+			@Override
+			protected void handleTypedEvent(ShapeUpdateEvent event) {
+				ShapePart shapePart = event.getPart();
+            	ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(getShapePresentation(), shapePart);
+    			ShapeUtil.updateFigureForShape(shapePresentation, resourceCache, getConfigurationManager());
+			}
+		};
+		getShapePresentation().part().attach(shapeUpdateListener);
 	}	
 
 	@Override
@@ -58,6 +71,7 @@ public class DiagramNodePresentation extends DiagramPresentation
 		super.dispose();
 		
 		getShapePresentation().part().detach(partVisibilityListener);
+		getShapePresentation().part().detach(shapeUpdateListener);
 	}
 
 	public ShapePresentation getShapePresentation()

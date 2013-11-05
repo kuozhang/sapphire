@@ -46,6 +46,7 @@ public class ValidationMarkerPart extends ShapePart
             protected void handleTypedEvent( PartValidationEvent event )
             {
             	broadcast(new ValidationMarkerContentEvent(ValidationMarkerPart.this));
+            	broadcast(new ShapeUpdateEvent(ValidationMarkerPart.this));
             }
         };
         this.containerParent.attach(this.validationListener);
@@ -69,13 +70,21 @@ public class ValidationMarkerPart extends ShapePart
 			// Go up in the Sapphire part hierarchy until a parent part with different model element
 			// or until the diagram node part. The validation marker should indicate validation problems
 			// associated with the corresponding model element.
-			SapphirePart part = this;
-			SapphirePart parentPart = (SapphirePart)parent();
-			while (!(parentPart instanceof DiagramNodePart || parentPart.getLocalModelElement() != getLocalModelElement())) {
-				part = parentPart;
-				parentPart = (SapphirePart)parentPart.parent();
+			DiagramNodePart nodePart = this.nearest(DiagramNodePart.class);
+			if (nodePart.getLocalModelElement() == getLocalModelElement())
+			{
+				this.containerParent = nodePart;
 			}
-			this.containerParent = part;
+			else
+			{
+				SapphirePart part = this;
+				SapphirePart parentPart = (SapphirePart)parent();
+				while (!(parentPart instanceof DiagramNodePart || parentPart.getLocalModelElement() != getLocalModelElement())) {
+					part = parentPart;
+					parentPart = (SapphirePart)parentPart.parent();
+				}
+				this.containerParent = part;				
+			}
 		}
 		return this.containerParent;
 	}

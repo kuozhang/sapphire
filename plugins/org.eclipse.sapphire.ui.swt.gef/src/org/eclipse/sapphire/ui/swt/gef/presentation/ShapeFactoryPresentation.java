@@ -22,10 +22,8 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapeDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeFactoryPart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapeReorderEvent;
-import org.eclipse.sapphire.ui.diagram.editor.ShapeUpdateEvent;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeFactoryModel;
-import org.eclipse.sapphire.ui.swt.gef.parts.ShapeUtil;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -40,7 +38,6 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	private Listener shapeReorderListener; 
 	private Listener shapeAddListener; 
 	private Listener shapeDeleteListener; 
-	private Listener shapeUpdateListener;
 
 	public ShapeFactoryPresentation(DiagramPresentation parent, ShapeFactoryPart shapeFactoryPart,
 			DiagramResourceCache resourceCache)
@@ -88,16 +85,6 @@ public class ShapeFactoryPresentation extends ShapePresentation
 			}
 		};
 		part().attach(shapeDeleteListener);
-
-		shapeUpdateListener = new FilteredListener<ShapeUpdateEvent>()
-        {
-            @Override
-            protected void handleTypedEvent( final ShapeUpdateEvent event )
-            {
-    			ShapeUtil.updateFigureForShape(ShapeFactoryPresentation.this, getResourceCache(), getConfigurationManager());
-            }
-        };
-        part().attach(shapeUpdateListener);
 	}
 	
 	
@@ -158,10 +145,9 @@ public class ShapeFactoryPresentation extends ShapePresentation
 	{
 		super.dispose();
 		
-		part().attach(shapeReorderListener);
-		part().attach(shapeAddListener);
-		part().attach(shapeDeleteListener);
-		part().attach(shapeUpdateListener);
+		part().detach(shapeReorderListener);
+		part().detach(shapeAddListener);
+		part().detach(shapeDeleteListener);
 		
 		for (ShapePresentation shapePresentation : getChildren())
 		{
