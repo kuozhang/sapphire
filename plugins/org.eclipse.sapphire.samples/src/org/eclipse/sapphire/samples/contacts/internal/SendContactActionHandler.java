@@ -38,7 +38,7 @@ public final class SendContactActionHandler extends SapphireActionHandler
         {
             operation.setContact( contact );
             
-            final SapphireWizard wizard = new SapphireWizard
+            final SapphireWizard<SendContactOp> wizard = new SapphireWizard<SendContactOp>
             ( 
                 operation, 
                 DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).wizard( "SendContactWizard" )

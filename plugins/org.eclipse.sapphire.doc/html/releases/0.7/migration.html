@@ -3962,14 +3962,6 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">SapphireWizard</span>&lt;ExampleOp> <span class="unaffected">wizard = new SapphireWizard</span>&lt;ExampleOp><span class="unaffected">( ... );</span></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code><span class="unaffected">SapphireWizard wizard = new SapphireWizard( ... );</span></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
 <pre class="source-code"><code>setDefaultPageImageDescriptor( ... )</code></pre>
     </td>
     <td>
@@ -3993,9 +3985,9 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">public class ExampleWizard extends SapphireWizard</span>&lt;ExampleOp>
-<span class="unaffected">{
-    @Override
+<pre class="source-code"><code><span class="unaffected">public class ExampleWizard extends SapphireWizard&lt;ExampleOp></span>
+{
+    <span class="unaffected">@Override
     public</span> void addPages()
     <span class="unaffected">{</span>
         super.addPages();
@@ -4005,8 +3997,8 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 }</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">public class ExampleWizard extends SapphireWizard
-{</span>
+<pre class="source-code"><code><span class="unaffected">public class ExampleWizard extends SapphireWizard&lt;ExampleOp></span>
+{
     private IWizardPage customWizardPage;
     
     <span class="unaffected">@Override

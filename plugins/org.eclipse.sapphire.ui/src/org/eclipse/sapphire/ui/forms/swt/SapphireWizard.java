@@ -62,7 +62,7 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizard implements IWizard
+public class SapphireWizard<M extends Element> implements IWizard
 {
     private Element element;
     private boolean elementInstantiatedLocally;
@@ -78,7 +78,7 @@ public class SapphireWizard implements IWizard
         init( type, definition );
     }
 
-    public SapphireWizard( final Element element, final DefinitionLoader.Reference<WizardDef> definition )
+    public SapphireWizard( final M element, final DefinitionLoader.Reference<WizardDef> definition )
     {
         init( element, definition );
     }
@@ -155,9 +155,11 @@ public class SapphireWizard implements IWizard
         refreshImage();
     }
     
-    public Element element()
+    @SuppressWarnings( "unchecked" )
+    
+    public final M element()
     {
-        return this.element;
+        return (M) this.element;
     }
     
     public final WizardDef definition()

@@ -30,7 +30,7 @@ public final class FileBugReportHandler3 extends AbstractHandler
     {
         final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
         
-        final SapphireWizard wizard = new SapphireWizard
+        final SapphireWizard<FileBugReportOp> wizard = new SapphireWizard<FileBugReportOp>
         ( 
             FileBugReportOp.TYPE,
             DefinitionLoader.context( FileBugReportOp.class ).sdef( "EzBug" ).wizard( "FileBugReportWizard" )
