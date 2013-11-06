@@ -92,6 +92,11 @@ public abstract class Context
         
         public ClassLoaderContext( final ClassLoader loader )
         {
+            if( loader == null )
+            {
+                throw new IllegalArgumentException();
+            }
+            
             this.loader = loader;
         }
         
@@ -140,6 +145,24 @@ public abstract class Context
             }
             
             return null;
+        }
+
+        @Override
+        public boolean equals( final Object obj )
+        {
+            if( obj instanceof ClassLoaderContext )
+            {
+                final ClassLoaderContext context = (ClassLoaderContext) obj;
+                return ( this.loader == context.loader );
+            }
+            
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return this.loader.hashCode();
         }
     }
     
@@ -194,6 +217,24 @@ public abstract class Context
             }
             
             return stream;
+        }
+        
+        @Override
+        public boolean equals( final Object obj )
+        {
+            if( obj instanceof ClassContext )
+            {
+                final ClassContext context = (ClassContext) obj;
+                return super.equals( context ) && this.pkg.equals( context.pkg );
+            }
+            
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return super.hashCode() ^ this.pkg.hashCode();
         }
     }
     

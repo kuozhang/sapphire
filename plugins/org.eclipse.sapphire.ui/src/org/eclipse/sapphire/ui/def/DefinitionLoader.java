@@ -13,6 +13,9 @@ package org.eclipse.sapphire.ui.def;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Element;
@@ -25,6 +28,8 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.ui.forms.DialogDef;
 import org.eclipse.sapphire.ui.forms.FormComponentDef;
 import org.eclipse.sapphire.ui.forms.WizardDef;
+import org.eclipse.sapphire.util.EqualsFactory;
+import org.eclipse.sapphire.util.HashCodeFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -32,6 +37,8 @@ import org.eclipse.sapphire.ui.forms.WizardDef;
 
 public final class DefinitionLoader
 {
+    private static final Map<CacheKey,SoftReference<DefinitionLoader>> cache = new HashMap<CacheKey,SoftReference<DefinitionLoader>>();
+    
     private final Context context;
     private ISapphireUiDef sdef;
     
@@ -97,6 +104,23 @@ public final class DefinitionLoader
             throw new IllegalStateException();
         }
         
+        final CacheKey defLoaderCacheKey = new CacheKey( this.context, name );
+        
+        synchronized( cache )
+        {
+            final SoftReference<DefinitionLoader> defLoaderRef = cache.get( defLoaderCacheKey );
+            
+            if( defLoaderRef != null )
+            {
+                final DefinitionLoader loader = defLoaderRef.get();
+                
+                if( loader != null )
+                {
+                    return loader;
+                }
+            }
+        }
+        
         final InputStream stream = this.context.findResource( name.replace( '.', '/' ) + ".sdef" );
         
         if( stream == null )
@@ -127,6 +151,11 @@ public final class DefinitionLoader
         }
         
         this.sdef = ISapphireUiDef.TYPE.instantiate( resource );
+        
+        synchronized( cache )
+        {
+            cache.put( defLoaderCacheKey, new SoftReference<DefinitionLoader>( this ) );
+        }
         
         return this;
     }
@@ -277,29 +306,6 @@ public final class DefinitionLoader
         }
     }
     
-    private static final class DefinitionLoaderResourceStore extends ByteArrayResourceStore
-    {
-        private final Context context;
-        
-        public DefinitionLoaderResourceStore( final InputStream in, final Context context ) throws ResourceStoreException
-        {
-            super( in );
-            
-            this.context = context;
-        }
-
-        @Override
-        public <A> A adapt( final Class<A> adapterType )
-        {
-            if( adapterType == Context.class )
-            {
-                return adapterType.cast( this.context );
-            }
-            
-            return super.adapt( adapterType );
-        }
-    }
-
     public static final class Reference<T extends Element>
     {
         // Must reference loader to make sure it doesn't go away while this reference is still in use.
@@ -358,6 +364,59 @@ public final class DefinitionLoader
         {
             this.loader = null;
             this.def = null;
+        }
+    }
+
+    private static final class DefinitionLoaderResourceStore extends ByteArrayResourceStore
+    {
+        private final Context context;
+        
+        public DefinitionLoaderResourceStore( final InputStream in, final Context context ) throws ResourceStoreException
+        {
+            super( in );
+            
+            this.context = context;
+        }
+
+        @Override
+        public <A> A adapt( final Class<A> adapterType )
+        {
+            if( adapterType == Context.class )
+            {
+                return adapterType.cast( this.context );
+            }
+            
+            return super.adapt( adapterType );
+        }
+    }
+
+    private static final class CacheKey
+    {
+        private final Context context;
+        private final String name;
+        
+        public CacheKey( final Context context, final String name )
+        {
+            this.context = context;
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals( final Object obj )
+        {
+            if( obj instanceof CacheKey )
+            {
+                final CacheKey key = (CacheKey) obj;
+                return EqualsFactory.start().add( this.context, key.context ).add( this.name, key.name ).result();
+            }
+            
+            return false;
+        }
+        
+        @Override
+        public int hashCode()
+        {
+            return HashCodeFactory.start().add( this.context ).add( this.name ).result();
         }
     }
     

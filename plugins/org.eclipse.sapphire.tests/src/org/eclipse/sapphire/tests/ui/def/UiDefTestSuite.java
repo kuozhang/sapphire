@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests.ui.def;
 
+import org.eclipse.sapphire.tests.ui.def.loader.DefinitionLoaderTests;
 import org.eclipse.sapphire.tests.ui.def.t0001.TestUiDef0001;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -25,7 +26,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses
 (
     {
-        TestUiDef0001.class
+        TestUiDef0001.class,
+        DefinitionLoaderTests.class
     }
 )
 

@@ -97,4 +97,22 @@ public final class BundleBasedContext extends Context
         return null;
     }
     
+    @Override
+    public boolean equals( final Object obj )
+    {
+        if( obj instanceof BundleBasedContext )
+        {
+            final BundleBasedContext context = (BundleBasedContext) obj;
+            return ( this.bundle == context.bundle );
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.bundle.hashCode();
+    }
+
 }
