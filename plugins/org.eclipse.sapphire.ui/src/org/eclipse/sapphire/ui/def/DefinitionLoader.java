@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Resource;
+import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
@@ -106,17 +107,20 @@ public final class DefinitionLoader
         
         final CacheKey defLoaderCacheKey = new CacheKey( this.context, name );
         
-        synchronized( cache )
+        if( ! Sapphire.isDevMode() )
         {
-            final SoftReference<DefinitionLoader> defLoaderRef = cache.get( defLoaderCacheKey );
-            
-            if( defLoaderRef != null )
+            synchronized( cache )
             {
-                final DefinitionLoader loader = defLoaderRef.get();
+                final SoftReference<DefinitionLoader> defLoaderRef = cache.get( defLoaderCacheKey );
                 
-                if( loader != null )
+                if( defLoaderRef != null )
                 {
-                    return loader;
+                    final DefinitionLoader loader = defLoaderRef.get();
+                    
+                    if( loader != null )
+                    {
+                        return loader;
+                    }
                 }
             }
         }
@@ -152,9 +156,12 @@ public final class DefinitionLoader
         
         this.sdef = ISapphireUiDef.TYPE.instantiate( resource );
         
-        synchronized( cache )
+        if( ! Sapphire.isDevMode() )
         {
-            cache.put( defLoaderCacheKey, new SoftReference<DefinitionLoader>( this ) );
+            synchronized( cache )
+            {
+                cache.put( defLoaderCacheKey, new SoftReference<DefinitionLoader>( this ) );
+            }
         }
         
         return this;
