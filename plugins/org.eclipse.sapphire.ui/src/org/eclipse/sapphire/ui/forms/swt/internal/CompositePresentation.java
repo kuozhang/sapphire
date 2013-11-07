@@ -224,12 +224,9 @@ public class CompositePresentation extends FormComponentPresentation
             needToLayout = true;
         }
         
-        if( this.innerComposite.getChildren().length != 0 )
+        for( final Control control : this.innerComposite.getChildren() )
         {
-            for( final Control control : this.innerComposite.getChildren() )
-            {
-                control.dispose();
-            }
+            control.dispose();
         }
         
         renderChildren( this.innerComposite );

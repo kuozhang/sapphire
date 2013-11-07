@@ -26,6 +26,7 @@ import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -86,9 +87,9 @@ public class PageBookPresentation extends FormComponentPresentation
             this.currentPagePresentation = null;
         }
         
-        if( this.composite.getChildren().length > 0 )
+        for( final Control control : this.composite.getChildren() )
         {
-            throw new IllegalStateException();
+            control.dispose();
         }
         
         final FormPart page = part().getCurrentPage();
