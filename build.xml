@@ -461,14 +461,6 @@
       </fileset>
     </zip>
 
-    <checksum todir="${build.dir}/packages" fileext=".md5" algorithm="MD5">
-      <fileset dir="${build.dir}/packages" includes="*.zip"/>
-    </checksum>
-
-    <checksum todir="${build.dir}/packages" fileext=".sha1" algorithm="SHA1">
-      <fileset dir="${build.dir}/packages" includes="*.zip"/>
-    </checksum>
-
   </target>
 
 
