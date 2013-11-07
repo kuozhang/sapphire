@@ -59,7 +59,8 @@ public abstract class AnnotationsAwareServiceContext extends ServiceContext
         
         for( org.eclipse.sapphire.modeling.annotations.Service svc : serviceAnnotations )
         {
-            if( isInstanceContext && svc.context() == org.eclipse.sapphire.modeling.annotations.Service.Context.INSTANCE )
+            if( ( isInstanceContext && svc.context() == org.eclipse.sapphire.modeling.annotations.Service.Context.INSTANCE ) ||
+                ( ! isInstanceContext && svc.context() == org.eclipse.sapphire.modeling.annotations.Service.Context.METAMODEL ) )
             {
                 final Class<? extends Service> cl = svc.impl();
                 
