@@ -123,6 +123,12 @@
                                 <actuator>
                                     <action-id>Sapphire.Add</action-id>
                                     <label>add an item</label>
+                                    <action-handler-id>Sapphire.Add.SingleVariantItem</action-handler-id>
+                                </actuator>
+                                <actuator>
+                                    <action-id>Sapphire.Add</action-id>
+                                    <action-handler-id>Sapphire.Add.MultiVariantItem</action-handler-id>
+                                    <label>add a multi-variant item</label>
                                 </actuator>
                             </content>
                         </section>
@@ -154,6 +160,12 @@
                                 <actuator>
                                     <action-id>Sapphire.Add</action-id>
                                     <label>add an item</label>
+                                    <action-handler-id>Sapphire.Add.SingleVariantItem</action-handler-id>
+                                </actuator>
+                                <actuator>
+                                    <action-id>Sapphire.Add</action-id>
+                                    <action-handler-id>Sapphire.Add.MultiVariantItem</action-handler-id>
+                                    <label>add a multi-variant item</label>
                                 </actuator>
                             </content>
                         </section>
