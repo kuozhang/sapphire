@@ -111,7 +111,14 @@ public interface ListPropertiesGallery extends Element
         
         @Label( standard = "color" )
         @NoDuplicates
-        @Services( { @Service( impl = ColorValueLabelService.class ), @Service( impl = ColorValueImageService.class ) } )
+        
+        @Services
+        (
+            {
+                @Service( impl = ColorValueLabelService.class, context = Service.Context.METAMODEL ),
+                @Service( impl = ColorValueImageService.class, context = Service.Context.METAMODEL )
+            }
+        )
 
         ValueProperty PROP_ITEM = new ValueProperty( TYPE, "Item" );
         
