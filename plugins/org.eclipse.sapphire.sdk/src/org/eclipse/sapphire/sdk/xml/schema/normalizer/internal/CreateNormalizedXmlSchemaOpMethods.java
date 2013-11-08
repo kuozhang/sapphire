@@ -279,7 +279,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
                         || inlineExtension( root )
                         || inlineSequenceInSequence( root )
                         || inlineSequenceInChoice( root )
-                        || inlineTypes( root, types )
+                        || inlineTypes( root, types, SetFactory.<String>empty() )
                         || inlineElements( root, elements )
                         || inlineGroups( root, groups )
                         || removeRedundantMinMaxOccursInChoice( root );
@@ -750,16 +750,17 @@ public final class CreateNormalizedXmlSchemaOpMethods
         return changed;
     }
     
-    private static boolean inlineTypes( final XmlElement element,
-                                        final Map<String,XmlElement> types )
+    private static boolean inlineTypes( final XmlElement element, final Map<String,XmlElement> types, final Set<String> inlined )
     {
         boolean changed = false;
         
         for( XmlElement x : element.getChildElements() )
         {
+            String tname = null;
+            
             if( x.getLocalName().equals( "element" ) )
             {
-                final String tname = x.getAttributeText( "type" );
+                tname = x.getAttributeText( "type" );
                 
                 if( tname.length() > 0 )
                 {
@@ -767,19 +768,23 @@ public final class CreateNormalizedXmlSchemaOpMethods
                     
                     if( type != null )
                     {
-                        final Element xdom = x.getDomNode();
-                        final Element tdom = (Element) xdom.getOwnerDocument().importNode( type.getDomNode(), true );
-                        
                         x.setAttributeText( "type", null, true );
-                        tdom.removeAttribute( "name" );
-                        xdom.insertBefore( tdom, null );
                         
-                        changed = true;
+                        if( ! inlined.contains( tname ) )
+                        {
+                            final Element xdom = x.getDomNode();
+                            final Element tdom = (Element) xdom.getOwnerDocument().importNode( type.getDomNode(), true );
+                            
+                            tdom.removeAttribute( "name" );
+                            xdom.insertBefore( tdom, null );
+                            
+                            changed = true;
+                        }
                     }
                 }
             }
             
-            if( inlineTypes( x, types ) )
+            if( inlineTypes( x, types, SetFactory.<String>start().add( inlined ).add( tname ).result() ) )
             {
                 changed = true;
             }
