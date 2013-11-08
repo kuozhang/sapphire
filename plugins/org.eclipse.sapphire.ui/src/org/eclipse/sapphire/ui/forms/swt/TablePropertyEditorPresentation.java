@@ -170,7 +170,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
     private boolean exposeDeleteAction;
     private Map<Element,TableRow> rows;
     private Table table;
-    private TableViewer tableViewer;
+    private CustomTableViewer tableViewer;
     private SelectionProvider selectionProvider;
     private List<ColumnHandler> columnHandlers;
     private Runnable refreshOperation;
@@ -276,7 +276,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         final TableColumnLayout tableColumnLayout = new TableColumnLayout();
         tableParentComposite.setLayout( tableColumnLayout );
         
-        this.tableViewer = new TableViewer( tableParentComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
+        this.tableViewer = new CustomTableViewer( tableParentComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI );
         this.table = this.tableViewer.getTable();
         this.decorator.addEditorControl( this.table );
         
@@ -1556,6 +1556,20 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             return new TablePropertyEditorPresentation( part, parent, composite );
         }
     }
+    
+    private static final class CustomTableViewer extends TableViewer
+    {
+        public CustomTableViewer( final Composite parent, final int style )
+        {
+            super( parent, style );
+        }
+
+        @Override
+        public void applyEditorValue()
+        {
+            super.applyEditorValue();
+        }
+    }
 
     private final class DefaultColumnLabelProvider extends ColumnLabelProvider
     {
@@ -2123,7 +2137,19 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         }
     }
     
-    private final class AddActionHandler extends PropertyEditorActionHandler
+    private abstract class TablePropertyEditorActionHandler extends PropertyEditorActionHandler
+    {
+        @Override
+        protected final Object run( final Presentation context )
+        {
+            TablePropertyEditorPresentation.this.tableViewer.applyEditorValue();
+            return executeTablePropertyEditorAction( context );
+        }
+        
+        protected abstract Object executeTablePropertyEditorAction( Presentation context );
+    }
+    
+    private final class AddActionHandler extends TablePropertyEditorActionHandler
     {
         private final ElementType type;
         
@@ -2151,13 +2177,14 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         }
 
         @Override
-        protected Object run( final Presentation context )
+        protected Object executeTablePropertyEditorAction( final Presentation context )
         {
+            TablePropertyEditorPresentation.this.tableViewer.applyEditorValue();
             return list().insert( this.type );
         }
     }
     
-    private static abstract class SelectionBasedActionHandler extends PropertyEditorActionHandler
+    private abstract class SelectionBasedActionHandler extends TablePropertyEditorActionHandler
     {
         @Override
         public void init( final SapphireAction action, 
@@ -2198,7 +2225,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
     private final class DeleteActionHandler extends SelectionBasedActionHandler
     {
         @Override
-        protected final Object run( final Presentation context )
+        protected final Object executeTablePropertyEditorAction( final Presentation context )
         {
             final List<TableRow> rowsToDelete = getSelectedRows();
             
@@ -2252,7 +2279,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         }
 
         @Override
-        protected final Object run( final Presentation context )
+        protected final Object executeTablePropertyEditorAction( final Presentation context )
         {
             final Element element = getSelectedElement();
 
@@ -2282,7 +2309,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         }
     
         @Override
-        protected final Object run( final Presentation context )
+        protected final Object executeTablePropertyEditorAction( final Presentation context )
         {
             final Element element = getSelectedElement();
 
