@@ -702,34 +702,37 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
 
         public Image image()
         {
-            final Image image;
+            ImageData image = null;
             
-            if( this.element == null || this.elementImageService == null )
+            if( this.elementImageService != null )
             {
-                ImageData imageData = null;
-                
+                image = this.elementImageService.image();
+            }
+            else
+            {
                 try
                 {
-                    imageData = this.valueImageService.provide( this.value );
+                    image = this.valueImageService.provide( this.value );
                 }
                 catch( Exception e )
                 {
                     Sapphire.service( LoggingService.class ).log( e );
                 }
                 
-                if( imageData == null )
+                if( image == null )
                 {
-                    imageData = getMemberType().image();
+                    image = getMemberType().image();
                 }
-                
-                image = resources().image( imageData );
+            }
+            
+            if( this.property == null )
+            {
+                return resources().image( image );
             }
             else
             {
-                image = resources().image( this.elementImageService.image(), this.property.validation().severity() );
+                return resources().image( image, this.property.validation().severity() );
             }
-            
-            return image;
         }
         
         public Color foreground()
