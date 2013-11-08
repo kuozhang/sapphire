@@ -47,7 +47,7 @@ public final class CreateNormalizedXmlSchemaOpServices
                 }
             };
             
-            context( CreateNormalizedXmlSchemaOp.class ).property( CreateNormalizedXmlSchemaOp.PROP_CONTEXT ).attach( this.listener );
+            context( CreateNormalizedXmlSchemaOp.class ).getContext().attach( this.listener );
         }
     
         @Override
@@ -71,7 +71,12 @@ public final class CreateNormalizedXmlSchemaOpServices
             
             if( this.listener != null )
             {
-                context( CreateNormalizedXmlSchemaOp.class ).property( CreateNormalizedXmlSchemaOp.PROP_CONTEXT ).detach( this.listener );
+                final CreateNormalizedXmlSchemaOp op = context( CreateNormalizedXmlSchemaOp.class );
+                
+                if( ! op.disposed() )
+                {
+                    op.getContext().detach( this.listener );
+                }
             }
         }
     }
