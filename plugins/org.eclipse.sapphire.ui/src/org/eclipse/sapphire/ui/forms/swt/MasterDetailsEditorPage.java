@@ -2061,7 +2061,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         {
             this.composite = parent;
             
-            this.composite.setLayout( glayout( 2 ) );
+            this.composite.setLayout( glayout( 2, 0, 0 ) );
             this.composite.setBackground( getPart().getSwtResourceCache().color( org.eclipse.sapphire.Color.WHITE ) );
             this.composite.setBackgroundMode( SWT.INHERIT_DEFAULT );
             
