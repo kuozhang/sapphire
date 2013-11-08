@@ -12,7 +12,6 @@
 package org.eclipse.sapphire.ui.forms;
 
 import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.runOnDisplayThread;
-import static org.eclipse.sapphire.ui.forms.swt.TableWrapLayoutUtil.twd;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,12 +54,8 @@ import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
-import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.internal.SectionPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.MapFactory;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -229,7 +224,7 @@ public final class MasterDetailsContentNodePart
                 throw new IllegalStateException();
             }
             
-            final SectionPart section = new MasterDetailsSectionPart();
+            final SectionPart section = new SectionPart();
             
             section.init( this, this.modelElement, sectionDefinition, sectionParams );
             section.initialize();
@@ -750,28 +745,6 @@ public final class MasterDetailsContentNodePart
         }
     }
     
-    private static final class MasterDetailsSectionPart extends SectionPart
-    {
-        public FormComponentPresentation createPresentation( final SwtPresentation parent, final Composite composite )
-        {
-            return new MasterDetailsSectionPresentation( this, parent, composite );
-        }
-    }
-    
-    private static final class MasterDetailsSectionPresentation extends SectionPresentation
-    {
-        public MasterDetailsSectionPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
-        {
-            super( part, parent, composite );
-        }
-        
-        @Override
-        protected Object createSectionLayoutData()
-        {
-            return twd();
-        }
-    }
-
     public boolean controls( final Element element )
     {
         if( element == getModelElement() )

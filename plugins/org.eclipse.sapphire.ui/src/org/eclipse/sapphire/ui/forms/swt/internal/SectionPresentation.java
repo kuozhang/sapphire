@@ -53,7 +53,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public class SectionPresentation extends CompositePresentation
+public final class SectionPresentation extends CompositePresentation
 {
     private SapphireActionPresentationManager actionPresentationManager;
     private Section section;
@@ -82,7 +82,7 @@ public class SectionPresentation extends CompositePresentation
         final FormToolkit toolkit = new FormToolkit( composite().getDisplay() );
         
         final Composite outerComposite = new Composite( composite(), SWT.NONE );
-        outerComposite.setLayoutData( createSectionLayoutData() );
+        outerComposite.setLayoutData( gdhspan( ( part().getScaleVertically() ? gdfill() : gdhfill() ), 2 ) );
         outerComposite.setLayout( glayout( 1, 10, 10, 10, 20 ) );
         
         register( outerComposite );
@@ -166,11 +166,6 @@ public class SectionPresentation extends CompositePresentation
         this.section.setClient( this.sectionContentOuterComposite );
         
         return this.sectionContentInnerComposite;
-    }
-    
-    protected Object createSectionLayoutData()
-    {
-        return gdhspan( ( part().getScaleVertically() ? gdfill() : gdhfill() ), 2 );
     }
     
     private void refreshTitle()

@@ -24,7 +24,6 @@ import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhfill;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhhint;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
-import static org.eclipse.sapphire.ui.forms.swt.TableWrapLayoutUtil.twlayout;
 import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 import static org.eclipse.sapphire.util.CollectionsUtil.findPrecedingItem;
 import static org.eclipse.sapphire.util.CollectionsUtil.findTrailingItem;
@@ -2062,7 +2061,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         {
             this.composite = parent;
             
-            this.composite.setLayout( twlayout( 1 ) );
+            this.composite.setLayout( glayout( 2 ) );
             this.composite.setBackground( getPart().getSwtResourceCache().color( org.eclipse.sapphire.Color.WHITE ) );
             this.composite.setBackgroundMode( SWT.INHERIT_DEFAULT );
             
