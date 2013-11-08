@@ -26,8 +26,12 @@
             <id>CreateNormalizedXmlSchemaWizard.SourcePage</id>
             <content>
                 <property-editor>SourceFile</property-editor>
-                <property-editor>RootElements</property-editor>
+                <property-editor>
+                    <scale-vertically>true</scale-vertically>
+                    <property>RootElements</property>
+                </property-editor>
             </content>
+            <scale-vertically>true</scale-vertically>
         </page>
         <page>
             <label>Normalized XML Schema</label>
@@ -39,11 +43,13 @@
                     <child-property>Type</child-property>
                     <property>Exclusions</property>
                     <child-property>Name</child-property>
+                    <scale-vertically>true</scale-vertically>
                 </property-editor>
                 <property-editor>
                     <child-property>Before</child-property>
                     <property>TypeSubstitutions</property>
                     <child-property>After</child-property>
+                    <scale-vertically>true</scale-vertically>
                 </property-editor>
                 <property-editor>
                     <hint>
@@ -53,6 +59,7 @@
                     <property>SortSequenceContent</property>
                 </property-editor>
             </content>
+            <scale-vertically>true</scale-vertically>
         </page>
         <page>
             <id>CreateNormalizedXmlSchemaWizard.TargetPage</id>
