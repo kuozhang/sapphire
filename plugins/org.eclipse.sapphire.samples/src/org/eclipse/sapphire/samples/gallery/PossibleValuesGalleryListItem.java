@@ -45,8 +45,8 @@ public interface PossibleValuesGalleryListItem extends Element
     ( 
         {
             @Service( impl = ColorPossibleValuesService.class ),
-            @Service( impl = ColorValueLabelService.class ),
-            @Service( impl = ColorValueImageService.class )
+            @Service( impl = ColorValueLabelService.class, context = Service.Context.METAMODEL ),
+            @Service( impl = ColorValueImageService.class, context = Service.Context.METAMODEL )
         }
     )
     
