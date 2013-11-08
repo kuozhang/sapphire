@@ -430,6 +430,11 @@ public final class CreateNormalizedXmlSchemaOpMethods
         {
             comment.remove();
         }
+        
+        for( XmlElement x : element.getChildElements() )
+        {
+            removeComments( x );
+        }
     }
     
     private static void removeAnnotations( final XmlElement element )
