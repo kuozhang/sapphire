@@ -106,8 +106,7 @@
                                 </separator>
                                 <detail-section>
                                     <property>Attendees</property>
-                                    <panel>
-                                        <key>IAttendee</key>
+                                    <case>
                                         <content>
                                             <property-editor>
                                                 <property>Name</property>
@@ -139,12 +138,7 @@
                                                 </action-handler>
                                             </actuator>
                                         </content>
-                                    </panel>
-                                    <default-panel>
-                                        <content>
-                                            <label>Select an attendee above to view or edit additional parameters.</label>
-                                        </content>
-                                    </default-panel>
+                                    </case>
                                 </detail-section>
                             </content>
                         </section>

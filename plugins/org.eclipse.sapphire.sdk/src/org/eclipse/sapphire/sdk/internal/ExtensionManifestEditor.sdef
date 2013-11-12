@@ -105,8 +105,7 @@
                                 <with>
                                     <path>Signature</path>
                                     <label>specify function signature</label>
-                                    <panel>
-                                        <key>FunctionDef$Signature</key>
+                                    <case>
                                         <content>
                                             <property-editor>
                                                 <property>Parameters</property>
@@ -118,7 +117,7 @@
                                                 </hint>
                                             </property-editor>
                                         </content>
-                                    </panel>
+                                    </case>
                                 </with>
                             </content>
                             <description>A function can be restricted to apply to a specific parameter signature. If not restricted, the function will apply to any number of parameters of arbitrary type.</description>

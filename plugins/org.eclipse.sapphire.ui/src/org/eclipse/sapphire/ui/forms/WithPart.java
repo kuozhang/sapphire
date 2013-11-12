@@ -26,7 +26,6 @@ import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.WithPresentation;
@@ -114,23 +113,6 @@ public final class WithPart extends PageBookPart
     }
 
     @Override
-    protected Object parsePageKey( final String pageKeyString )
-    {
-        final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
-        final Class<?> cl = rootdef.resolveClass( pageKeyString );
-        return ClassBasedKey.create( cl );
-    }
-    
-    @Override
-    protected FormPart createPagePart( final Element modelElementForPage, final FormDef pageDef )
-    {
-        final WithPagePart page = new WithPagePart();
-        page.init( this, modelElementForPage, pageDef, this.params );
-        page.initialize();
-        return page;
-    }
-    
-    @Override
     protected Status computeValidation()
     {
         Status state = super.computeValidation();
@@ -154,15 +136,7 @@ public final class WithPart extends PageBookPart
         if( force == true || this.elementForChildParts != child )
         {
             this.elementForChildParts = child;
-
-            if( this.elementForChildParts == null )
-            {
-                changePage( this.property.element(), null );
-            }
-            else
-            {
-                changePage( this.elementForChildParts, ClassBasedKey.create( this.elementForChildParts ) );
-            }
+            changePage( this.elementForChildParts );
         }
     }
     

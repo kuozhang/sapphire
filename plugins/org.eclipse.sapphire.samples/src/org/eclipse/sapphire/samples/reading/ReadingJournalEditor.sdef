@@ -52,8 +52,7 @@
                         <detail-section>
                             <property>Entries</property>
                             <scale-vertically>true</scale-vertically>
-                            <panel>
-                                <key>Entry</key>
+                            <case>
                                 <content>
                                     <tab-group>
                                         <scale-vertically>true</scale-vertically>
@@ -71,12 +70,7 @@
                                     </tab-group>
                                 </content>
                                 <scale-vertically>true</scale-vertically>
-                            </panel>
-                            <default-panel>
-                                <content>
-                                    <label>Select a reading log entry to view or edit details.</label>
-                                </content>
-                            </default-panel>
+                            </case>
                         </detail-section>
                     </content>
                 </block>

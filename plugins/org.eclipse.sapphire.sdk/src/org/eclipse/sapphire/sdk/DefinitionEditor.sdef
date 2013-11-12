@@ -101,18 +101,18 @@
             <content>
                 <with>
                     <path>Documentation</path>
-                    <panel>
-                        <key>ISapphireDocumentationDef</key>
+                    <case>
+                        <element-type>ISapphireDocumentationDef</element-type>
                         <content>
                             <include>DocumentationForm</include>
                         </content>
-                    </panel>
-                    <panel>
-                        <key>ISapphireDocumentationRef</key>
+                    </case>
+                    <case>
+                        <element-type>ISapphireDocumentationRef</element-type>
                         <content>
                             <property-editor>Id</property-editor>
                         </content>
-                    </panel>
+                    </case>
                 </with>
             </content>
         </section>
@@ -209,7 +209,6 @@
         <node-factory>
             <property>Services</property>
             <case>
-                <model-element-type>ServiceDef</model-element-type>
                 <section>
                     <label>service</label>
                     <content>
@@ -324,7 +323,7 @@
         <property>@{Property}</property>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.PropertyEditorDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.PropertyEditorDef</element-type>
             <label>${ Id == null ? ( Property == null ? "Property Editor" : Property ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -417,7 +416,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.SectionDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.SectionDef</element-type>
             <label>${ Id == null ? ( Label == null ? &quot;Section&quot; : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -467,7 +466,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.SectionRef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.SectionRef</element-type>
             <label>${ Section == null ? &quot;&lt;section-ref&gt;&quot; : Section }</label>
             <section>
                 <label>section reference</label>
@@ -479,7 +478,7 @@
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.LineSeparatorDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.LineSeparatorDef</element-type>
             <label>Line Separator</label>
             <image>${ Image() }</image>
             <section>
@@ -493,7 +492,7 @@
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.WhitespaceSeparatorDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.WhitespaceSeparatorDef</element-type>
             <label>Whitespace Separator</label>
             <image>${ Image() }</image>
             <section>
@@ -507,7 +506,7 @@
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.TextDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.TextDef</element-type>
             <label>Text</label>
             <image>${ Image() }</image>
             <section>
@@ -521,7 +520,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.ActuatorDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.ActuatorDef</element-type>
             <label>Actuator</label>
             <image>${ Image() }</image>
             <section>
@@ -570,7 +569,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.HtmlPanelDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.HtmlPanelDef</element-type>
             <label>HTML Panel</label>
             <image>${ Image() }</image>
             <section>
@@ -626,7 +625,7 @@
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.WizardDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.WizardDef</element-type>
             <label>${ Id == null ? ( Label == null ? "Wizard" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -642,7 +641,6 @@
             <node-factory>
                 <property>Pages</property>
                 <case>
-                    <model-element-type>org.eclipse.sapphire.ui.forms.WizardPageDef</model-element-type>
                     <label>${ Label == null ? "&lt;page&gt;" : Label }</label>
                     <section>
                         <label>Wizard Page</label>
@@ -680,7 +678,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.DialogDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.DialogDef</element-type>
             <label>${ Id == null ? ( Label == null ? "Dialog" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -713,7 +711,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.GroupDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.GroupDef</element-type>
             <label>Group</label>
             <image>${ Image() }</image>
             <section>
@@ -743,7 +741,7 @@
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.CompositeDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.CompositeDef</element-type>
             <label>${ Id == null ? "Composite" : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -774,7 +772,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.FormEditorPageDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.FormEditorPageDef</element-type>
             <label>${ Id == null ? "Form Editor Page" : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -804,7 +802,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.FormDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.FormDef</element-type>
             <label>${ Id == null ? &quot;Form&quot; : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -839,11 +837,11 @@
                 </content>
             </section>
             <node-include>ServicesNode</node-include>
-            <model-element-type>org.eclipse.sapphire.ui.forms.FormComponentInclude</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.FormComponentInclude</element-type>
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.SplitFormDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.SplitFormDef</element-type>
             <label>${ Id == null ? &quot;Split Form&quot; : Id }</label>
             <section>
                 <content>
@@ -896,7 +894,7 @@
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.WithDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.WithDef</element-type>
             <label>With</label>
             <image>${ Image() }</image>
             <section>
@@ -914,13 +912,13 @@
                 </content>
             </section>
             <node-factory>
-                <property>Pages</property>
+                <property>Cases</property>
                 <case>
-                    <label>${ Key == null ? "&lt;case&gt;" : Key }</label>
+                    <label>Case: ${ LastSegment( ElementType, "." ) }</label>
                     <section>
                         <label>Case</label>
                         <content>
-                            <property-editor>Key</property-editor>
+                            <property-editor>ElementType</property-editor>
                         </content>
                     </section>
                     <node-include>
@@ -932,23 +930,6 @@
                     </node-include>
                 </case>
             </node-factory>
-            <node>
-                <label>default</label>
-                <property>DefaultPage</property>
-                <section>
-                    <label>default content</label>
-                    <content>
-                        <label>The content to show if none of the explicit cases match.</label>
-                    </content>
-                </section>
-                <node-include>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>Content</value>
-                    </param>
-                </node-include>
-            </node>
             <section>
                 <label>presentation hints</label>
                 <content>
@@ -963,7 +944,7 @@
         </case>
 
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.DetailSectionDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.DetailSectionDef</element-type>
             <label>Detail Section</label>
             <image>${ Image() }</image>
             <section>
@@ -980,13 +961,13 @@
                 </content>
             </section>
             <node-factory>
-                <property>Pages</property>
+                <property>Cases</property>
                 <case>
-                    <label>${ Key == null ? "&lt;case&gt;" : Key }</label>
+                    <label>Case: ${ LastSegment( ElementType, "." ) }</label>
                     <section>
                         <label>Case</label>
                         <content>
-                            <property-editor>Key</property-editor>
+                            <property-editor>ElementType</property-editor>
                         </content>
                     </section>
                     <node-include>
@@ -998,28 +979,11 @@
                     </node-include>
                 </case>
             </node-factory>
-            <node>
-                <label>default</label>
-                <property>DefaultPage</property>
-                <section>
-                    <label>default content</label>
-                    <content>
-                        <label>The content to show if none of the explicit cases match.</label>
-                    </content>
-                </section>
-                <node-include>
-                    <part>PartsNodeList</part>
-                    <param>
-                        <name>Property</name>
-                        <value>Content</value>
-                    </param>
-                </node-include>
-            </node>
             <node-include>ServicesNode</node-include>
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.TabGroupDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.TabGroupDef</element-type>
             <label>Tab Group</label>
             <image>${ Image() }</image>
             <section>
@@ -1058,7 +1022,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.StaticTextFieldDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.StaticTextFieldDef</element-type>
             <label>Static Text Field</label>
             <image>${ Image() }</image>
             <section>
@@ -1073,7 +1037,7 @@
         </case>
         
         <case>
-            <model-element-type>ISapphireCustomPartDef</model-element-type>
+            <element-type>ISapphireCustomPartDef</element-type>
             <label>Custom Part</label>
             <image>${ Image() }</image>
             <section>
@@ -1086,7 +1050,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeDef</element-type>
             <label>${ Id == null ? ( Label == null ? "Content Outline Node" : Label ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1126,7 +1090,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeFactoryDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeFactoryDef</element-type>
             <label>${ Id == null ? ( Property == null ? &quot;Content Outline Node Factory&quot; : Property ) : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1140,11 +1104,11 @@
             <node-factory>
                 <property>Cases</property>
                 <case>
-                    <label>${ Type == null ? "Default Case" : Type }</label>
+                    <label>Case: ${ LastSegment( ElementType, "." ) }</label>
                     <section>
                         <label>Case</label>
                         <content>
-                            <property-editor>Type</property-editor>
+                            <property-editor>ElementType</property-editor>
                             <property-editor>Label</property-editor>
                             <property-editor>Image</property-editor>
                         </content>
@@ -1178,7 +1142,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeInclude</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeInclude</element-type>
             <label>${ Part == null ? &quot;Content Outline Node Include&quot; : Part }</label>
             <image>${ Image() }</image>
             <section>
@@ -1192,7 +1156,7 @@
         </case>
         
         <case>
-            <model-element-type>org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef</model-element-type>
+            <element-type>org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef</element-type>
             <label>${ Id == null ? "Form Editor Page" : Id }</label>
             <image>${ Image() }</image>
             <section>
@@ -1225,7 +1189,7 @@
         </case>
         
         <case>
-            <model-element-type>IDiagramEditorPageDef</model-element-type>
+            <element-type>IDiagramEditorPageDef</element-type>
             <label>${ Id == null ? &quot;Diagram Editor Page&quot; : Id }</label>
             <section>
                 <label>diagram editor page</label>
@@ -1240,8 +1204,7 @@
                     <property-editor>LayoutPersistence</property-editor>
                     <with>
                         <path>GridDefinition</path>
-                        <panel>
-                            <key>IDiagramGridDef</key>
+                        <case>
                             <content>
                                 <property-editor>
                                     <hint>
@@ -1251,12 +1214,11 @@
                                     <property>Visible</property>
                                 </property-editor>
                             </content>
-                        </panel>
+                        </case>
                     </with>
                     <with>
                         <path>GuidesDefinition</path>
-                        <panel>
-                            <key>IDiagramGuidesDef</key>
+                        <case>
                             <content>
                                 <property-editor>
                                     <hint>
@@ -1266,7 +1228,7 @@
                                     <property>Visible</property>
                                 </property-editor>
                             </content>
-                        </panel>
+                        </case>
                     </with>
                 </content>
             </section>
@@ -1336,14 +1298,13 @@
                                             <with>
                                                 <path>Label</path>
                                                 <label>show connection label</label>
-                                                <panel>
-                                                    <key>IDiagramLabelDef</key>
+                                                <case>
                                                     <content>
                                                         <property-editor>Text</property-editor>
                                                         <property-editor>Width</property-editor>
                                                         <property-editor>Height</property-editor>
                                                     </content>
-                                                </panel>
+                                                </case>
                                             </with>
                                         </content>
                                         <label>label</label>
@@ -1356,13 +1317,12 @@
                                             <with>
                                                 <path>Endpoint1</path>
                                                 <label>Define endpoint.</label>
-                                                <panel>
-                                                    <key>IDiagramConnectionEndpointBindingDef</key>
+                                                <case>
                                                     <content>
                                                         <property-editor>Property</property-editor>
                                                         <property-editor>Value</property-editor>
                                                     </content>
-                                                </panel>
+                                                </case>
                                             </with>
                                         </content>
                                     </section>
@@ -1372,13 +1332,12 @@
                                             <with>
                                                 <path>Endpoint2</path>
                                                 <label>Define endpoint.</label>
-                                                <panel>
-                                                    <key>IDiagramConnectionEndpointBindingDef</key>
+                                                <case>
                                                     <content>
                                                         <property-editor>Property</property-editor>
                                                         <property-editor>Value</property-editor>
                                                     </content>
-                                                </panel>
+                                                </case>
                                             </with>
                                         </content>
                                     </section>
@@ -1394,11 +1353,11 @@
 		                    <section>
 		                        <content>
 		                            <with>
-		                                <default-panel>
+		                                <case>
 		                                    <content>
 		                                        <include>LinePresentationForm</include>
 		                                    </content>
-		                                </default-panel>
+		                                </case>
 		                                <path>SelectionPresentation</path>
 		                            </with>                        
 		                        </content>
@@ -1407,11 +1366,11 @@
 		                    <section>
 		                        <content>
 		                            <with>
-		                                <default-panel>
+		                                <case>
 		                                    <content>
 		                                        <include>BackgroundForm</include>
 		                                    </content>
-		                                </default-panel>
+		                                </case>
 		                                <path>SelectionPresentation</path>
 		                            </with>                        
 		                        </content>
@@ -1460,11 +1419,11 @@
                             <content>
                                 <with>
                                     <path>Endpoint1</path>
-                                    <default-panel>
+                                    <case>
                                         <content>
                                             <property-editor>Type</property-editor>
                                         </content>
-                                    </default-panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>
@@ -1473,11 +1432,11 @@
                             <content>
                                 <with>
                                     <path>Endpoint2</path>
-                                    <default-panel>
+                                    <case>
                                         <content>
                                             <property-editor>Type</property-editor>
                                         </content>
-                                    </default-panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>
@@ -1504,14 +1463,13 @@
                                 <with>
                                     <path>Label</path>
                                     <label>show connection label</label>
-                                    <panel>
-                                        <key>IDiagramLabelDef</key>
+                                    <case>
                                         <content>
                                             <property-editor>Text</property-editor>
                                             <property-editor>Width</property-editor>
                                             <property-editor>Height</property-editor>
                                         </content>
-                                    </panel>
+                                    </case>
                                 </with>
                             </content>
                             <label>label</label>
@@ -1523,13 +1481,12 @@
                                 <with>
                                     <path>Endpoint1</path>
                                     <label>Define endpoint</label>
-                                    <panel>
-                                        <key>IDiagramConnectionEndpointBindingDef</key>
+                                    <case>
                                         <content>
                                             <property-editor>Property</property-editor>
                                             <property-editor>Value</property-editor>
                                         </content>
-                                    </panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>
@@ -1539,13 +1496,12 @@
                                 <with>
                                     <path>Endpoint2</path>
                                     <label>Define endpoint.</label>
-                                    <panel>
-                                        <key>IDiagramConnectionEndpointBindingDef</key>
+                                    <case>
                                         <content>
                                             <property-editor>Property</property-editor>
                                             <property-editor>Value</property-editor>
                                         </content>
-                                    </panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>
@@ -1610,7 +1566,9 @@
         <section>
             <content>
                 <with>
-                    <default-panel>
+                    <path>SequenceLayoutConstraint</path>
+                    <label>layout constraint</label>
+                    <case>
                         <content>
                             <label>Margins provide extra space in the layout cell around the contained shape.</label>
                             <spacer></spacer>
@@ -1676,9 +1634,7 @@
                                 <property>Height</property>
                             </property-editor>
                         </content>
-                    </default-panel>
-                    <path>SequenceLayoutConstraint</path>
-                    <label>layout constraint</label>
+                    </case>
                 </with>
             </content>
             <label>layout constraint</label>
@@ -1690,7 +1646,7 @@
         <id>DiagramShapeNodeFactory</id>
         <property>@{Property}</property>
         <case>
-            <model-element-type>TextDef</model-element-type>
+            <element-type>TextDef</element-type>
             <label>Text</label>
             <section>
                 <content>
@@ -1708,7 +1664,7 @@
                     <with>
                         <label>font</label>
                         <path>Font</path>
-                        <default-panel>
+                        <case>
                             <content>
                                 <property-editor>Name</property-editor>
                                 <property-editor>Size</property-editor>
@@ -1727,14 +1683,14 @@
                                     <property>Italic</property>
                                 </property-editor>
                             </content>
-                        </default-panel>
+                        </case>
                     </with>
                     <property-editor>Truncatable</property-editor>
                 </content>
             </section>
         </case>
         <case>
-            <model-element-type>ImageDef</model-element-type>
+            <element-type>ImageDef</element-type>
             <label>Image</label>
             <section>
                 <content>
@@ -1747,7 +1703,7 @@
             <node-include>ActionsOverallNode</node-include>
         </case>
         <case>
-            <model-element-type>ValidationMarkerDef</model-element-type>
+            <element-type>ValidationMarkerDef</element-type>
             <label>Validation Marker</label>
             <section>
                 <content>
@@ -1758,7 +1714,7 @@
             <node-include>DiagramShapeLayoutConstraintNode</node-include>
         </case>
         <case>
-            <model-element-type>RectangleDef</model-element-type>
+            <element-type>RectangleDef</element-type>
             <label>Rectangle</label>
             <section>
                 <label>rectangle</label>
@@ -1774,19 +1730,19 @@
                 <content>
                     <with>
                         <label>background</label>
-                        <panel>
+                        <case>
                             <content>
                                 <property-editor>Color</property-editor>
                             </content>
-                            <key>SolidBackgroundDef</key>
-                        </panel>
-                        <panel>
+                            <element-type>SolidBackgroundDef</element-type>
+                        </case>
+                        <case>
                             <content>
                                 <property-editor>GradientSegments</property-editor>
                                 <property-editor>Vertical</property-editor>
                             </content>
-                            <key>GradientBackgroundDef</key>
-                        </panel>
+                            <element-type>GradientBackgroundDef</element-type>
+                        </case>
                         <path>Background</path>
                     </with>
                 </content>
@@ -1798,7 +1754,7 @@
                     <content>
                         <with>
                             <label>layout</label>
-                            <default-panel>
+                            <case>
                                 <content>
                                     <property-editor>Orientation</property-editor>
                                     <property-editor>
@@ -1810,7 +1766,7 @@
                                     <spacer></spacer>
                                     <include>MarginsForm</include>
                                 </content>
-                            </default-panel>
+                            </case>
                             <path>Layout</path>
                         </with>
                     </content>
@@ -1823,11 +1779,11 @@
                 <section>
                     <content>
                         <with>
-                            <default-panel>
+                            <case>
                                 <content>
                                     <include>LinePresentationForm</include>
                                 </content>
-                            </default-panel>
+                            </case>
                             <path>Border</path>
                         </with>
                     </content>
@@ -1836,11 +1792,11 @@
                 <section>
                     <content>
                         <with>
-                            <default-panel>
+                            <case>
                                 <content>
                                     <include>LinePresentationForm</include>
                                 </content>
-                            </default-panel>
+                            </case>
                             <path>TopBorder</path>
                         </with>
                     </content>
@@ -1849,11 +1805,11 @@
                 <section>
                     <content>
                         <with>
-                            <default-panel>
+                            <case>
                                 <content>
                                     <include>LinePresentationForm</include>
                                 </content>
-                            </default-panel>
+                            </case>
                             <path>BottomBorder</path>
                         </with>
                     </content>
@@ -1862,11 +1818,11 @@
                 <section>
                     <content>
                         <with>
-                            <default-panel>
+                            <case>
                                 <content>
                                     <include>LinePresentationForm</include>
                                 </content>
-                            </default-panel>
+                            </case>
                             <path>LeftBorder</path>
                         </with>
                     </content>
@@ -1875,11 +1831,11 @@
                 <section>
                     <content>
                         <with>
-                            <default-panel>
+                            <case>
                                 <content>
                                     <include>LinePresentationForm</include>
                                 </content>
-                            </default-panel>
+                            </case>
                             <path>RightBorder</path>
                         </with>
                     </content>
@@ -1902,7 +1858,7 @@
             <image>${ Image() }</image>
         </case>
         <case>
-            <model-element-type>LineShapeDef</model-element-type>
+            <element-type>LineShapeDef</element-type>
             <label>Line</label>
             <image>${ Orientation == 'horizontal' ? 'LineShapeHorizontal.png' : 'LineShapeVertical.png' }</image>
             <section>
@@ -1917,17 +1873,17 @@
                 <content>
                     <with>
                         <path>Presentation</path>
-                        <default-panel>
+                        <case>
                             <content>
                                 <include>LinePresentationForm</include>
                             </content>
-                        </default-panel>
+                        </case>
                     </with>
                 </content>
             </section>
         </case>
         <case>
-            <model-element-type>ShapeFactoryDef</model-element-type>
+            <element-type>ShapeFactoryDef</element-type>
             <label>Shape Factory</label>
             <section>
                 <content>
@@ -1947,12 +1903,12 @@
                     <section>
                         <content>
                             <with>
-                                <default-panel>
+                                <case>
                                     <content>
                                         <include>LinePresentationForm</include>
                                         <property-editor>Offset</property-editor>
                                     </content>
-                                </default-panel>
+                                </case>
                                 <path>SelectionPresentation</path>
                             </with>                        
                         </content>
@@ -1961,17 +1917,16 @@
                     <section>
                         <content>
                             <with>
-                                <default-panel>
+                                <case>
                                     <content>
                                         <include>BackgroundForm</include>
                                     </content>
-                                </default-panel>
+                                </case>
                                 <path>SelectionPresentation</path>
                             </with>                        
                         </content>
                         <label>selection background</label>
                     </section>
-                    <model-element-type>ShapeFactoryCaseDef</model-element-type>
                     <node-include>
                         <param>
                             <name>Property</name>
@@ -2003,7 +1958,7 @@
             <node-include>PropertiesViewContributionNode</node-include>
         </case>
         <case>
-            <model-element-type>SpacerDef</model-element-type>
+            <element-type>SpacerDef</element-type>
             <label>Spacer</label>
             <image>${ Image() }</image>
             <section>
@@ -2026,19 +1981,19 @@
         <content>
             <with>
                 <label>background</label>
-                <panel>
+                <case>
                     <content>
                         <property-editor>Color</property-editor>
                     </content>
-                    <key>SolidBackgroundDef</key>
-                </panel>
-                <panel>
+                    <element-type>SolidBackgroundDef</element-type>
+                </case>
+                <case>
                     <content>
                         <property-editor>GradientSegments</property-editor>
                         <property-editor>Vertical</property-editor>
                     </content>
-                    <key>GradientBackgroundDef</key>
-                </panel>
+                    <element-type>GradientBackgroundDef</element-type>
+                </case>
                 <path>Background</path>
             </with>
         </content>

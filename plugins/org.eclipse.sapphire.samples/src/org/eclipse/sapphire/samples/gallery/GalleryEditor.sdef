@@ -435,7 +435,7 @@
                         <content>
                             <with>
                                 <path>WhitespaceHandlingGallery</path>
-                                <default-panel>
+                                <case>
                                     <content>
                                         <property-editor>
                                             <property>Preserved</property>
@@ -474,7 +474,7 @@
                                             </related-content>
                                         </property-editor>
                                     </content>
-                                </default-panel>
+                                </case>
                             </with>
                         </content>
                     </section>
@@ -485,13 +485,13 @@
                         <content>
                             <with>
                                 <path>DefaultValueGallery</path>
-                                <default-panel>
+                                <case>
                                     <content>
                                         <label>The default value is used when null is read from the backing resource, such as an XML document.</label>
                                         <spacer></spacer>
                                         <property-editor>String</property-editor>
                                     </content>
-                                </default-panel>
+                                </case>
                             </with>
                         </content>
                     </section>
@@ -505,12 +505,11 @@
                             <spacer></spacer>
                             <with>
                                 <path>InitialValueGallery</path>
-                                <panel>
-                                    <key>InitialValueGallery</key>
+                                <case>
                                     <content>
                                         <property-editor>String</property-editor>
                                     </content>
-                                </panel>
+                                </case>
                             </with>
                         </content>
                     </section>
@@ -522,7 +521,7 @@
                         <content>
                             <with>
                                 <path>PossibleValuesGallery</path>
-                                <default-panel>
+                                <case>
                                     <content>
                                         <label>Properties with possible values constraint can be presented in a number of different ways. The default presentation is a text field with a browse button and content assist.</label>
                                         <spacer></spacer>
@@ -564,7 +563,7 @@
                                             <style>Sapphire.PropertyEditor.PopUpListField</style>
                                         </property-editor>
                                     </content>
-                                </default-panel>
+                                </case>
                             </with>
                         </content>
                     </section>
@@ -574,7 +573,7 @@
                         <content>
                             <with>
                                 <path>PossibleValuesGallery</path>
-                                <default-panel>
+                                <case>
                                     <content>
                                         <property-editor>
                                             <property>ColoredShapes</property>
@@ -590,7 +589,7 @@
                                             </child-property>
                                         </property-editor>
                                     </content>
-                                </default-panel>
+                                </case>
                             </with>
                         </content>
                     </section>
@@ -608,12 +607,11 @@
                             <with>
                                 <path>Homogeneous</path>
                                 <label>include child element</label>
-                                <panel>
-                                    <key>IChildElement</key>
+                                <case>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                     </content>
-                                </panel>
+                                </case>
                             </with>
                         </content>
                     </section>
@@ -638,33 +636,33 @@
                             <spacer></spacer>
                             <with>
                                 <path>Heterogeneous</path>
-                                <panel>
-                                    <key>IChildElementWithEnum</key>
+                                <case>
+                                    <element-type>IChildElementWithEnum</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>EnumValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElementWithInteger</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElementWithInteger</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>IntegerValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElement</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElement</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                     </content>
-                                </panel>
+                                </case>
                             </with>
                         </content>
                     </section>
                     <node-factory>
                         <property>Heterogeneous</property>
                         <case>
-                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <element-type>IChildElementWithEnum</element-type>
                             <section>
                                 <content>
                                     <property-editor>StringValue</property-editor>
@@ -675,7 +673,7 @@
                             <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
                         </case>
                         <case>
-                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <element-type>IChildElementWithInteger</element-type>
                             <section>
                                 <content>
                                     <property-editor>StringValue</property-editor>
@@ -686,7 +684,7 @@
                             <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
                         </case>
                         <case>
-                            <model-element-type>IChildElement</model-element-type>
+                            <element-type>IChildElement</element-type>
                             <section>
                                 <content>
                                     <property-editor>StringValue</property-editor>
@@ -710,33 +708,33 @@
                             <spacer></spacer>
                             <with>
                                 <path>Element</path>
-                                <panel>
-                                    <key>IChildElementWithEnum</key>
+                                <case>
+                                    <element-type>IChildElementWithEnum</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>EnumValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElementWithInteger</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElementWithInteger</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>IntegerValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElement</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElement</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                     </content>
-                                </panel>
+                                </case>
                             </with>
                         </content>
                     </section>
                     <node-factory>
                         <property>Element</property>
                         <case>
-                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <element-type>IChildElementWithEnum</element-type>
                             <section>
                                 <content>
                                     <property-editor>StringValue</property-editor>
@@ -747,7 +745,7 @@
                             <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
                         </case>
                         <case>
-                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <element-type>IChildElementWithInteger</element-type>
                             <section>
                                 <content>
                                     <property-editor>StringValue</property-editor>
@@ -758,7 +756,7 @@
                             <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
                         </case>
                         <case>
-                            <model-element-type>IChildElement</model-element-type>
+                            <element-type>IChildElement</element-type>
                             <section>
                                 <content>
                                     <property-editor>StringValue</property-editor>
@@ -788,12 +786,12 @@
                             <property-editor>IntegerValue</property-editor>
                             <with>
                                 <path>Implied</path>
-                                <default-panel>
+                                <case>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>IntegerValue</property-editor>
                                     </content>
-                                </default-panel>
+                                </case>
                             </with>
                         </content>
                     </section>
@@ -904,38 +902,33 @@
                             </separator>
                             <detail-section>
                                 <property>Heterogeneous</property>
-                                <panel>
-                                    <key>IChildElementWithEnum</key>
+                                <case>
+                                    <element-type>IChildElementWithEnum</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>EnumValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElementWithInteger</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElementWithInteger</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>IntegerValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElement</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElement</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                     </content>
-                                </panel>
-                                <default-panel>
-                                    <content>
-                                        <label>Select a list item above to view or edit additional parameters.</label>
-                                    </content>
-                                </default-panel>
+                                </case>
                             </detail-section>
                         </content>
                     </section>
                     <node-factory>
                         <property>Heterogeneous</property>
                         <case>
-                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <element-type>IChildElementWithInteger</element-type>
                             <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
                             <section>
                                 <label>child element with integer</label>
@@ -946,7 +939,7 @@
                             </section>
                         </case>
                         <case>
-                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <element-type>IChildElementWithEnum</element-type>
                             <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
                             <section>
                                 <label>child element with enum</label>
@@ -957,7 +950,7 @@
                             </section>
                         </case>
                         <case>
-                            <model-element-type>IChildElement</model-element-type>
+                            <element-type>IChildElement</element-type>
                             <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
                             <section>
                                 <label>child element</label>
@@ -974,7 +967,7 @@
                     <node-factory>
                         <property>List</property>
                         <case>
-                            <model-element-type>IChildElementWithInteger</model-element-type>
+                            <element-type>IChildElementWithInteger</element-type>
                             <label>${ StringValue == null ? &quot;&lt;child-with-integer&gt;&quot; : StringValue }</label>
                             <section>
                                 <label>child element with integer</label>
@@ -985,7 +978,7 @@
                             </section>
                         </case>
                         <case>
-                            <model-element-type>IChildElementWithEnum</model-element-type>
+                            <element-type>IChildElementWithEnum</element-type>
                             <label>${ StringValue == null ? &quot;&lt;child-with-enum&gt;&quot; : StringValue }</label>
                             <section>
                                 <label>child element with enum</label>
@@ -996,7 +989,7 @@
                             </section>
                         </case>
                         <case>
-                            <model-element-type>IChildElement</model-element-type>
+                            <element-type>IChildElement</element-type>
                             <label>${ StringValue == null ? &quot;&lt;child&gt;&quot; : StringValue }</label>
                             <section>
                                 <label>child element</label>
@@ -1045,31 +1038,26 @@
                             </separator>
                             <detail-section>
                                 <property>List</property>
-                                <panel>
-                                    <key>IChildElementWithEnum</key>
+                                <case>
+                                    <element-type>IChildElementWithEnum</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>EnumValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElementWithInteger</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElementWithInteger</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                         <property-editor>IntegerValue</property-editor>
                                     </content>
-                                </panel>
-                                <panel>
-                                    <key>IChildElement</key>
+                                </case>
+                                <case>
+                                    <element-type>IChildElement</element-type>
                                     <content>
                                         <property-editor>StringValue</property-editor>
                                     </content>
-                                </panel>
-                                <default-panel>
-                                    <content>
-                                        <label>Select a list item above to view or edit additional parameters.</label>
-                                    </content>
-                                </default-panel>
+                                </case>
                             </detail-section>
                         </content>
                     </section>
@@ -2166,12 +2154,12 @@
                                     <content>
                                         <with>
                                             <path>..</path>
-                                            <default-panel>
+                                            <case>
                                                 <content>
                                                     <property-editor>../Text</property-editor>
                                                     <property-editor>Text</property-editor>
                                                 </content>
-                                            </default-panel>
+                                            </case>
                                         </with>
                                     </content>
                                 </section>
@@ -2180,11 +2168,11 @@
                                     <content>
                                         <with>
                                             <path>../..</path>
-                                            <default-panel>
+                                            <case>
                                                 <content>
                                                     <property-editor>Text</property-editor>
                                                 </content>
-                                            </default-panel>
+                                            </case>
                                         </with>
                                     </content>
                                 </section>
@@ -2193,13 +2181,13 @@
                                     <content>
                                         <with>
                                             <path>../Child</path>
-                                            <default-panel>
+                                            <case>
                                                 <content>
                                                     <property-editor>../../Text</property-editor>
                                                     <property-editor>../Text</property-editor>
                                                     <property-editor>Text</property-editor>
                                                 </content>
-                                            </default-panel>
+                                            </case>
                                         </with>
                                     </content>
                                 </section>
@@ -2249,8 +2237,7 @@
                                             </separator>
                                             <detail-section>
                                                 <property>List1</property>
-                                                <panel>
-                                                    <key>SplitFormGalleryListEntry</key>
+                                                <case>
                                                     <content>
                                                         <property-editor>
                                                             <property>Description</property>
@@ -2258,12 +2245,7 @@
                                                             <span>true</span>
                                                         </property-editor>
                                                     </content>
-                                                </panel>
-                                                <default-panel>
-                                                    <content>
-                                                        <label>Select an entry above to view or edit description.</label>
-                                                    </content>
-                                                </default-panel>
+                                                </case>
                                             </detail-section>
                                         </content>
                                     </composite>
@@ -2342,13 +2324,7 @@
                         </separator>
                         <detail-section>
                             <property>List1</property>
-                            <default-panel>
-                                <content>
-                                    <label>Select an entry above to view or edit description.</label>
-                                </content>
-                            </default-panel>
-                            <panel>
-                                <key>SplitFormGalleryListEntry</key>
+                            <case>
                                 <content>
                                     <property-editor>
                                         <property>Description</property>
@@ -2357,7 +2333,7 @@
                                         <scale-vertically>true</scale-vertically>
                                     </property-editor>
                                 </content>
-                            </panel>
+                            </case>
                             <scale-vertically>true</scale-vertically>
                         </detail-section>
                     </content>

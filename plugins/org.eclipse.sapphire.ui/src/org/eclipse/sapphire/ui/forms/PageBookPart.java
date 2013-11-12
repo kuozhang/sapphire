@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
@@ -42,8 +43,7 @@ public abstract class PageBookPart extends FormComponentPart
 {
     private static FormDef systemDefaultPageDef;
     
-    private Map<Object,FormDef> pageDefs;
-    private FormDef defaultPageDef;
+    private Map<ElementType,FormDef> pageDefs;
     private FormPart currentPage;
     private Map<PageCacheKey,FormPart> pages = Collections.synchronizedMap( new HashMap<PageCacheKey,FormPart>() );
     private boolean exposePageValidationState = false;
@@ -56,25 +56,18 @@ public abstract class PageBookPart extends FormComponentPart
         
         final PageBookDef def = (PageBookDef) this.definition;
         
-        this.pageDefs = new LinkedHashMap<Object,FormDef>();
+        this.pageDefs = new LinkedHashMap<ElementType,FormDef>();
         
-        for( PageBookKeyMapping page : def.getPages() )
+        for( final PageBookCaseDef cs : def.getCases() )
         {
-            final Object key = parsePageKey( page.getKey().text() );
-            this.pageDefs.put( key, page );
+            final ElementType type = ElementType.read( (Class<?>) cs.getElementType().resolve().artifact() );
+            this.pageDefs.put( type, cs );
         }
         
-        this.defaultPageDef = def.getDefaultPage();
-        
-        if( this.defaultPageDef.getContent().isEmpty() )
+        if( systemDefaultPageDef == null )
         {
-            if( systemDefaultPageDef == null )
-            {
-                final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
-                systemDefaultPageDef = (CompositeDef) root.getPartDefs().insert( CompositeDef.TYPE );
-            }
-            
-            this.defaultPageDef = systemDefaultPageDef;
+            final ISapphireUiDef root = ISapphireUiDef.TYPE.instantiate();
+            systemDefaultPageDef = (CompositeDef) root.getPartDefs().insert( CompositeDef.TYPE );
         }
     }
     
@@ -170,32 +163,22 @@ public abstract class PageBookPart extends FormComponentPart
         return this.currentPage;
     }
 
-    protected final void changePage( final Element modelElementForPage,
-                                     final Object pageKey )
+    protected final void changePage( final Element elementForPage )
     {
-        FormDef pageDef = this.defaultPageDef;
+        Element pageElement = getLocalModelElement();
+        FormDef pageDef = systemDefaultPageDef;
         
-        if( pageKey != null )
+        if( elementForPage != null )
         {
-            for( Map.Entry<Object,FormDef> entry : this.pageDefs.entrySet() )
+            for( final Map.Entry<ElementType,FormDef> entry : this.pageDefs.entrySet() )
             {
-                if( entry.getKey().equals( pageKey ) )
+                if( entry.getKey().getModelElementClass().isAssignableFrom( elementForPage.getClass() ) )
                 {
                     pageDef = entry.getValue();
+                    pageElement = elementForPage;
                     break;
                 }
             }
-        }
-        
-        changePage( modelElementForPage, pageDef );
-    }
-
-    private void changePage( final Element modelElementForPage,
-                             final FormDef pageDef )
-    {
-        if( modelElementForPage == null )
-        {
-            throw new IllegalArgumentException();
         }
         
         final FormPart oldPage = this.currentPage;
@@ -207,17 +190,20 @@ public abstract class PageBookPart extends FormComponentPart
 
         this.currentPage = null;
         
-        if( pageDef != null )
+        final PageCacheKey key = new PageCacheKey( pageDef, pageElement );
+        
+        this.currentPage = this.pages.get( key );
+        
+        if( this.currentPage == null )
         {
-            final PageCacheKey key = new PageCacheKey( pageDef, modelElementForPage );
+            this.currentPage = new PageBookCasePart();
+            this.currentPage.init( this, pageElement, pageDef, this.params );
+            this.currentPage.initialize();
             
-            this.currentPage = this.pages.get( key );
+            this.pages.put( key, this.currentPage );
             
-            if( this.currentPage == null )
+            if( elementForPage != null )
             {
-                this.currentPage = createPagePart( modelElementForPage, pageDef );
-                this.pages.put( key, this.currentPage );
-                
                 final Listener elementDisposeListener = new FilteredListener<ElementDisposeEvent>()
                 {
                     @Override
@@ -232,24 +218,24 @@ public abstract class PageBookPart extends FormComponentPart
                     }
                 };
                 
-                modelElementForPage.attach( elementDisposeListener );
+                elementForPage.attach( elementDisposeListener );
                 
                 final Listener pageDisposeListener = new FilteredListener<org.eclipse.sapphire.DisposeEvent>()
                 {
                     @Override
                     protected void handleTypedEvent( final org.eclipse.sapphire.DisposeEvent event )
                     {
-                        modelElementForPage.detach( elementDisposeListener );
+                        elementForPage.detach( elementDisposeListener );
                     }
                 };
                 
                 this.currentPage.attach( pageDisposeListener );
             }
-            
-            if( this.childPartValidationListener != null )
-            {
-                this.currentPage.attach( this.childPartValidationListener );
-            }
+        }
+        
+        if( this.childPartValidationListener != null )
+        {
+            this.currentPage.attach( this.childPartValidationListener );
         }
         
         refreshValidation();
@@ -257,13 +243,6 @@ public abstract class PageBookPart extends FormComponentPart
         broadcast( new PageChangedEvent( this ) );
     }
     
-    protected abstract Object parsePageKey( final String pageKeyString );
-    
-    protected FormPart createPagePart( final Element modelElementForPage, final FormDef pageDef )
-    {
-        return (FormPart) create( this, modelElementForPage, pageDef, this.params );
-    }
-
     @Override
     protected Status computeValidation()
     {
@@ -328,7 +307,6 @@ public abstract class PageBookPart extends FormComponentPart
         }
         
         this.pageDefs = null;
-        this.defaultPageDef = null;
         this.currentPage = null;
         this.pages = null;
         this.childPartValidationListener = null;
@@ -339,44 +317,6 @@ public abstract class PageBookPart extends FormComponentPart
         public PageChangedEvent( final SapphirePart part )
         {
             super( part );
-        }
-    }
-    
-    protected static final class ClassBasedKey
-    {
-        private final Class<?> cl;
-        
-        private ClassBasedKey( final Class<?> cl )
-        {
-            this.cl = cl;
-        }
-        
-        public static ClassBasedKey create( final Class<?> cl )
-        {
-            return ( cl == null ? null : new ClassBasedKey( cl ) );
-        }
-        
-        public static ClassBasedKey create( final Object obj )
-        {
-            return ( obj == null ? null : new ClassBasedKey( obj.getClass() ) );
-        }
-        
-        public int hashCode()
-        {
-            return this.cl == null ? -1 : this.cl.hashCode();
-        }
-        
-        public boolean equals( final Object obj )
-        {
-            if( ! ( obj instanceof ClassBasedKey ) )
-            {
-                return false;
-            }
-            else
-            {
-                final Class<?> cl2 = ( (ClassBasedKey) obj ).cl;
-                return this.cl.isAssignableFrom( cl2 ) || cl2.isAssignableFrom( this.cl );
-            }
         }
     }
     

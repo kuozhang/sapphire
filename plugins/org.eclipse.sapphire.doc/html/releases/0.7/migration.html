@@ -2343,6 +2343,14 @@ element.</span>visit
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeFactoryCaseDef</span></code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected"><i>property</i></span> Type</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected"><i>property</i></span> ElementType</code></pre>
+    </td>
+  </tr>
 </table>
 
 
@@ -2832,6 +2840,22 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PageBookDef</span></code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected"><i>property</i></span> Pages</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected"><i>property</i></span> Cases</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected"><i>property</i></span> DefaultPage</code></pre>
+    </td>
+    <td>
+<p>This property is not longer available and no analog has been provided.</p>
+    </td>
+  </tr>
 </table>
 
 
@@ -2862,10 +2886,18 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.PageBookKeyMapping</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.PageBook</span>KeyMapping</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PageBookKeyMapping</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PageBook</span>CaseDef</code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected"><i>property</i></span> Key</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected"><i>property</i></span> ElementType</code></pre>
     </td>
   </tr>
 </table>
@@ -4579,7 +4611,7 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
                             Class&lt;?> target )
     <span class="unaffected">{
         Version result = null;
-		
+        
         try
         {
             result = new Version(</span> (String) value <span class="unaffected">);
@@ -4588,7 +4620,7 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
         {
             // Intentionally ignored.
         }
-		
+        
         return null;
     }
 }</span></code></pre>
@@ -5235,49 +5267,29 @@ metamodel context will need an adjustment.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>&lt;hint>
-    &lt;name>prefer.form.style&lt;/name>
-    &lt;value>true&lt;/value>
-&lt;/hint></code></pre>
+<pre class="source-code"><code>&lt;if>
+    &lt;condition><span class="unaffected">${ ... }</span>&lt;/condition>
+    &lt;then>
+        <span class="unaffected">...</span>
+    &lt;/then>
+    &lt;else>
+        <span class="unaffected">...</span>
+    &lt;/else>
+&lt;/if></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>&lt;background-color>white&lt;/background-color></code></pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-<pre class="source-code"><code>&lt;switching-panel>
-    &lt;list-selection-controller>
-        <span class="unaffected">&lt;property>...&lt;/property></span>
-    &lt;/list-selection-controller>
-    <span class="unaffected">&lt;panel>
-        &lt;key>...&lt;/key>
-        &lt;content>
-	        ...
-        &lt;/content>
-    &lt;/panel>
-    &lt;default-panel>
-        &lt;content>
-            ...
-        &lt;/content>
-    &lt;/default-panel></span>
-&lt;/switching-panel></code></pre>
-    </td>
-    <td>
-<pre class="source-code"><code>&lt;detail-section>
-    <span class="unaffected">&lt;property>...&lt;/property>
-    &lt;panel>
-        &lt;key>...&lt;/key>
-        &lt;content>
-	        ...
-        &lt;/content>
-    &lt;/panel>
-    &lt;default-panel>
-        &lt;content>
-            ...
-        &lt;/content>
-    &lt;/default-panel></span>
-&lt;/detail-section></code></pre>
+<pre class="source-code"><code>&lt;form>
+    &lt;visible-when><span class="unaffected">${ ... }</span>&lt;/visible-when>
+    &lt;content>
+        <span class="unaffected">...</span>
+    &lt;/content>
+&lt;/form>
+&lt;form>
+    &lt;visible-when><span class="unaffected">${</span> ! ( <span class="unaffected">...</span> ) <span class="unaffected">}</span>&lt;/visible-when>
+    &lt;content>
+        <span class="unaffected">...</span>
+    &lt;/content>
+&lt;/form></code></pre>
     </td>
   </tr>
   <tr>
@@ -5300,7 +5312,7 @@ metamodel context will need an adjustment.</p>
     &lt;/panel>
     &lt;default-panel>
         <span class="unaffected">&lt;content>
-	        ...
+            ...
         &lt;/content></span>
     &lt;/default-panel>
 &lt;switching-panel></code></pre>
@@ -5332,29 +5344,145 @@ by @EnumSerialization annotations (if present) rather than names of enum items i
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>&lt;if>
-    &lt;condition><span class="unaffected">${ ... }</span>&lt;/condition>
-    &lt;then>
-        <span class="unaffected">...</span>
-    &lt;/then>
-    &lt;else>
-        <span class="unaffected">...</span>
-    &lt;/else>
-&lt;/if></code></pre>
+<pre class="source-code"><code>&lt;switching-panel>
+    &lt;list-selection-controller>
+        <span class="unaffected">&lt;property>...&lt;/property></span>
+    &lt;/list-selection-controller>
+    &lt;panel>
+        &lt;key><span class="unaffected">...</span>&lt;/key>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/panel>
+    &lt;panel>
+        &lt;key><span class="unaffected">...</span>&lt;/key>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/panel>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/switching-panel></code></pre>
     </td>
     <td>
-<pre class="source-code"><code>&lt;form>
-    &lt;visible-when><span class="unaffected">${ ... }</span>&lt;/visible-when>
-    &lt;content>
-        <span class="unaffected">...</span>
-    &lt;/content>
-&lt;/form>
-&lt;form>
-    &lt;visible-when><span class="unaffected">${</span> ! ( <span class="unaffected">...</span> ) <span class="unaffected">}</span>&lt;/visible-when>
-    &lt;content>
-        <span class="unaffected">...</span>
-    &lt;/content>
-&lt;/form></code></pre>
+<pre class="source-code"><code>&lt;detail-section>
+    <span class="unaffected">&lt;property>...&lt;/property></span>
+    &lt;case>
+        &lt;element-type><span class="unaffected">...</span>&lt;/element-type>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/case>
+    &lt;case>
+        &lt;element-type><span class="unaffected">...</span>&lt;/element-type>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/case>
+&lt;/detail-section></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;with>
+    <span class="unaffected">&lt;path>...&lt;/path></span>
+    &lt;panel>
+        &lt;key><span class="unaffected">...</span>&lt;/key>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/panel>
+    &lt;panel>
+        &lt;key><span class="unaffected">...</span>&lt;/key>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/panel>
+    &lt;default-panel>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/default-panel>
+&lt;/with></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;with>
+    <span class="unaffected">&lt;path>...&lt;/path></span>
+    &lt;case>
+        &lt;element-type><span class="unaffected">...</span>&lt;/element-type>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/case>
+    &lt;case>
+        &lt;element-type><span class="unaffected">...</span>&lt;/element-type>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/case>
+&lt;/with></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;with>
+    <span class="unaffected">&lt;path>...&lt;/path></span>
+    &lt;default-panel>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/default-panel>
+&lt;/with></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;with>
+    <span class="unaffected">&lt;path>...&lt;/path></span>
+    &lt;case>
+        <span class="unaffected">&lt;content>
+            ...
+        &lt;/content></span>
+    &lt;/case>
+&lt;/with></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">&lt;node-factory>
+    &lt;property>...&lt;/property>
+    &lt;case></span>
+        &lt;model-element-type><span class="unaffected">...</span>&lt;/model-element-type>
+        <span class="unaffected">&lt;label>...&lt;/label>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/case>
+&lt;/node-factory></span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">&lt;node-factory>
+    &lt;property>...&lt;/property>
+    &lt;case></span>
+        &lt;element-type><span class="unaffected">...</span>&lt;/element-type>
+        <span class="unaffected">&lt;label>...&lt;/label>
+        &lt;content>
+            ...
+        &lt;/content>
+    &lt;/case>
+&lt;/node-factory></span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>&lt;hint>
+    &lt;name>prefer.form.style&lt;/name>
+    &lt;value>true&lt;/value>
+&lt;/hint></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;background-color>white&lt;/background-color></code></pre>
     </td>
   </tr>
 </table>

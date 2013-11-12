@@ -13,11 +13,9 @@ package org.eclipse.sapphire.ui.forms;
 
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
 /**
@@ -30,24 +28,14 @@ public interface PageBookDef extends FormComponentDef
 {
     ElementType TYPE = new ElementType( PageBookDef.class );
     
-    // *** Pages ***
+    // *** Cases ***
     
-    @Label( standard = "pages" )
-    @Type( base = PageBookKeyMapping.class )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "panel", type = PageBookKeyMapping.class ) )
+    @Label( standard = "cases" )
+    @Type( base = PageBookCaseDef.class )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "case", type = PageBookCaseDef.class ) )
     
-    ListProperty PROP_PAGES = new ListProperty( TYPE, "Pages" );
+    ListProperty PROP_CASES = new ListProperty( TYPE, "Cases" );
     
-    ElementList<PageBookKeyMapping> getPages();
-
-    // *** DefaultPage ***
-    
-    @Type( base = FormDef.class )
-    @Label( standard = "default page" )
-    @XmlBinding( path = "default-panel" )
-    
-    ImpliedElementProperty PROP_DEFAULT_PAGE = new ImpliedElementProperty( TYPE, "DefaultPage" );
-    
-    FormDef getDefaultPage();
+    ElementList<PageBookCaseDef> getCases();
 
 }

@@ -80,16 +80,7 @@ public final class WithImpliedPart extends ContainerPart<FormComponentPart>
             {
                 final Element element = getLocalModelElement();
                 final WithDef def = definition();
-                final FormDef formdef;
-                
-                if( def.getDefaultPage().getContent().size() > 0 )
-                {
-                    formdef = def.getDefaultPage();
-                }
-                else
-                {
-                    formdef = def.getPages().get( 0 );
-                }
+                final FormDef formdef = def.getCases().get( 0 );
                 
                 for( final FormComponentDef childPartDef : formdef.getContent() )
                 {

@@ -39,7 +39,7 @@
                     <content>
                         <detail-section>
                             <property>Entries</property>
-                            <panel>
+                            <case>
                                 <content>
                                     <tab-group>
                                         <scale-vertically>true</scale-vertically>
@@ -79,8 +79,7 @@
                                                         <content>
                                                             <detail-section>
                                                                 <property>Files</property>
-                                                                <panel>
-                                                                    <key>File</key>
+                                                                <case>
                                                                     <content>
                                                                         <html>
                                                                             <content>&lt;html&gt;
@@ -97,12 +96,7 @@
                                                                         </label>
                                                                     </content>
                                                                     <scale-vertically>true</scale-vertically>
-                                                                </panel>
-                                                                <default-panel>
-                                                                    <content>
-                                                                        <label>Select a file to see the content.</label>
-                                                                    </content>
-                                                                </default-panel>
+                                                                </case>
                                                                 <scale-vertically>true</scale-vertically>
                                                             </detail-section>
                                                         </content>
@@ -113,15 +107,9 @@
                                         </tab>
                                     </tab-group>
                                 </content>
-                                <key>Entry</key>
                                 <scale-vertically>true</scale-vertically>
-                            </panel>
+                            </case>
                             <scale-vertically>true</scale-vertically>
-                            <default-panel>
-                                <content>
-                                    <label>Select a journal entry to view or edit details.</label>
-                                </content>
-                            </default-panel>
                         </detail-section>
                     </content>
                     <weight>25</weight>

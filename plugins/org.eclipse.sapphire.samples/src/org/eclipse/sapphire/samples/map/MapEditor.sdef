@@ -209,17 +209,11 @@
                         </separator>
                         <detail-section>
                             <property>Locations</property>
-                            <panel>
-                                <key>Location</key>
+                            <case>
                                 <content>
                                     <property-editor>RailwayRoutes</property-editor>
                                 </content>                    
-                            </panel>
-                            <default-panel>
-                                <content>
-                                    <label>Select a location above to configure additional properties.</label>
-                                </content>
-                            </default-panel>
+                            </case>
                         </detail-section>                        
                     </content>
                 </section>

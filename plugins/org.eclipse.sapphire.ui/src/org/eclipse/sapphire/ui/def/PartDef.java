@@ -22,6 +22,8 @@ import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
+import org.eclipse.sapphire.java.JavaTypeConstraint;
+import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.Label;
@@ -59,6 +61,7 @@ public interface PartDef extends Element
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )
     @Label( standard = "element type" )
+    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.Element" )
     @MustExist
     @XmlBinding( path = "element-type" )
     

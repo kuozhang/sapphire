@@ -190,7 +190,7 @@
             <image>${ CatalogItemImage() }</image>
             <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }${ State().ShowPrice ? Concat( &quot; - $&quot;, Price ) : &quot;&quot; }</label>
             <section-ref>CatalogItemMainSection</section-ref>
-            <model-element-type>SingleVariantItem</model-element-type>
+            <element-type>SingleVariantItem</element-type>
             <section>
                 <label>pricing</label>
                 <content>
@@ -224,8 +224,7 @@
                     </separator>
                     <detail-section>
                         <property>Variants</property>
-                        <panel>
-                            <key>ItemVariant</key>
+                        <case>
                             <content>
                                 <property-editor>
                                     <span>true</span>
@@ -233,17 +232,12 @@
                                     <show-label>false</show-label>
                                 </property-editor>
                             </content>
-                        </panel>
-                        <default-panel>
-                            <content>
-                                <label>Select variant above to view or edit the description.</label>
-                            </content>
-                        </default-panel>
+                        </case>
                     </detail-section>
                 </content>
                 <label>variants</label>
             </section>
-            <model-element-type>MultiVariantItem</model-element-type>
+            <element-type>MultiVariantItem</element-type>
         </case>
     </node-factory>
     <section>

@@ -55,8 +55,7 @@
                     </separator>
                     <detail-section>
                         <property>Hardware</property>
-                        <panel>
-                            <key>HardwareItem</key>
+                        <case>
                             <content>
                                 <property-editor>
                                     <property>Description</property>
@@ -65,12 +64,7 @@
                                     <show-label>false</show-label>
                                 </property-editor>
                             </content>
-                        </panel>
-                        <default-panel>
-                            <content>
-                                <label>Select a hardware item above to view or edit description.</label>
-                            </content>
-                        </default-panel>
+                        </case>
                     </detail-section>
                 </content>
             </composite>
@@ -121,11 +115,11 @@
             <content>
                 <with>
                     <path>BugReport</path>
-                    <default-panel>
+                    <case>
                         <content>
                             <include>BugReportForm</include>
                         </content>
-                    </default-panel>
+                    </case>
                 </with>
             </content>
             <scale-vertically>true</scale-vertically>

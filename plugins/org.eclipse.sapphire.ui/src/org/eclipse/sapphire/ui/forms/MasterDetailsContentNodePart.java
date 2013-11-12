@@ -929,7 +929,7 @@ public final class MasterDetailsContentNodePart
                     
                     for( MasterDetailsContentNodeFactoryCaseDef entry : this.definition.getCases() )
                     {
-                        final JavaType type = entry.getType().resolve();
+                        final JavaType type = entry.getElementType().resolve();
                         
                         if( type == null )
                         {

@@ -64,8 +64,8 @@
                             <content>
                                 <with>
                                     <path>Payment</path>
-                                    <panel>
-                                        <key>CreditCardPayment</key>
+                                    <case>
+                                        <element-type>CreditCardPayment</element-type>
                                         <content>
                                             <property-editor>Number</property-editor>
                                             <property-editor>Expiration</property-editor>
@@ -75,14 +75,14 @@
                                             </property-editor>
                                             <property-editor>Bank</property-editor>
                                         </content>
-                                    </panel>
-                                    <panel>
-                                        <key>CheckPayment</key>
+                                    </case>
+                                    <case>
+                                        <element-type>CheckPayment</element-type>
                                         <content>
                                             <property-editor>Number</property-editor>
                                             <property-editor>Bank</property-editor>
                                         </content>
-                                    </panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>
@@ -95,7 +95,7 @@
                             <content>
                                 <with>
                                     <path>BillingInformation</path>
-                                    <default-panel>
+                                    <case>
                                         <content>
                                             <property-editor>Name</property-editor>
                                             <property-editor>Organization</property-editor>
@@ -104,7 +104,7 @@
                                             <property-editor>State</property-editor>
                                             <property-editor>ZipCode</property-editor>
                                         </content>
-                                    </default-panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>
@@ -114,7 +114,7 @@
                             <content>
                                 <with>
                                     <path>ShippingInformation</path>
-                                    <default-panel>
+                                    <case>
                                         <content>
                                             <property-editor>Name</property-editor>
                                             <property-editor>Organization</property-editor>
@@ -123,7 +123,7 @@
                                             <property-editor>State</property-editor>
                                             <property-editor>ZipCode</property-editor>
                                         </content>
-                                    </default-panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>

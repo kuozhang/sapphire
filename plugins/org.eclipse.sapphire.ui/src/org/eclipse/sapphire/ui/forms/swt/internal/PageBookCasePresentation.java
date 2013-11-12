@@ -19,7 +19,7 @@ import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdwhint;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
-import org.eclipse.sapphire.ui.forms.WithPagePart;
+import org.eclipse.sapphire.ui.forms.PageBookCasePart;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.text.SapphireFormText;
 import org.eclipse.swt.SWT;
@@ -29,25 +29,25 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class WithPagePresentation extends FormPresentation
+public final class PageBookCasePresentation extends FormPresentation
 {
     @Text( "No additional properties are currently available." )
     private static LocalizableText noAdditionalPropertiesMessage;
     
     static
     {
-        LocalizableText.init( WithPagePresentation.class );
+        LocalizableText.init( PageBookCasePresentation.class );
     }
 
-    public WithPagePresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+    public PageBookCasePresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
     {
         super( part, parent, composite );
     }
 
     @Override
-    public WithPagePart part()
+    public PageBookCasePart part()
     {
-        return (WithPagePart) super.part();
+        return (PageBookCasePart) super.part();
     }
     
     @Override

@@ -97,14 +97,14 @@
                             <content>
                                 <with>
                                     <path>Address</path>
-                                    <default-panel>
+                                    <case>
                                         <content>
                                             <property-editor>Street</property-editor>
                                             <property-editor>City</property-editor>
                                             <property-editor>State</property-editor>
                                             <property-editor>ZipCode</property-editor>
                                         </content>
-                                    </default-panel>
+                                    </case>
                                 </with>
                             </content>
                         </section>
@@ -158,8 +158,7 @@
                                     <with>
                                         <path>Assistant</path>
                                         <label>delegate some tasks to an assistant</label>
-                                        <panel>
-                                            <key>Assistant</key>
+                                        <case>
                                             <content>
                                                 <property-editor>
                                                     <property>Name</property>
@@ -177,7 +176,7 @@
                                                     </hint>
                                                 </property-editor>
                                             </content>
-                                        </panel>
+                                        </case>
                                     </with>
                                 </content>
                             </section>
@@ -200,8 +199,8 @@
                                 <content>
                                     <with>
                                         <path>PrimaryOccupation</path>
-                                        <panel>
-                                            <key>JobOccupation</key>
+                                        <case>
+                                            <element-type>JobOccupation</element-type>
                                             <content>
                                                 <property-editor>Employer</property-editor>
                                                 <property-editor>Title</property-editor>
@@ -213,14 +212,14 @@
                                                     </action-handler>
                                                 </property-editor>
                                             </content>
-                                        </panel>
-                                        <panel>
-                                            <key>StudentOccupation</key>
+                                        </case>
+                                        <case>
+                                            <element-type>StudentOccupation</element-type>
                                             <content>
                                                 <property-editor>EducationalInstitution</property-editor>
                                                 <property-editor>Program</property-editor>
                                             </content>
-                                        </panel>
+                                        </case>
                                     </with>
                                 </content>
                             </section>

@@ -11,28 +11,26 @@
 
 package org.eclipse.sapphire.ui.forms;
 
-import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
-import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
-import org.eclipse.sapphire.ui.forms.swt.internal.WithPagePresentation;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class WithPagePart extends FormPart
-{
-    @Override
-    protected Function initVisibleWhenFunction()
-    {
-        return null;
-    }
+@Label( standard = "case" )
 
-    @Override
-    public FormComponentPresentation createPresentation( final SwtPresentation parent, final Composite composite )
-    {
-        return new WithPagePresentation( this, parent, composite );
-    }
+public interface PageBookCaseDef extends FormDef
+{
+    ElementType TYPE = new ElementType( PageBookCaseDef.class );
+    
+    // *** ElementType ***
+    
+    @DefaultValue( text = "org.eclipse.sapphire.Element" )
+    
+    ValueProperty PROP_ELEMENT_TYPE = new ValueProperty( TYPE, PartDef.PROP_ELEMENT_TYPE );
 
 }

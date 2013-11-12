@@ -29,7 +29,6 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ListSelectionService;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.util.IdentityHashSet;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.widgets.Display;
@@ -132,37 +131,25 @@ public final class DetailSectionPart extends PageBookPart
         
         final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
         
-        final MutableReference<Element> selectedModelElementRef = new MutableReference<Element>();
+        final MutableReference<Element> selectedElementRef = new MutableReference<Element>();
 
         final Listener listSelectionServiceListener = new Listener()
         {
             @Override
             public void handle( final Event event )
             {
-                final List<Element> selection = listSelectionService.selection();
-                final Element newModelElement;
-                final ClassBasedKey newPageKey;
+                final List<Element> selectedElements = listSelectionService.selection();
+                final Element selectedElement = ( selectedElements.isEmpty() ? null : selectedElements.get( 0 ) );
                 
-                if( ! selection.isEmpty() )
+                if( selectedElementRef.get() != selectedElement )
                 {
-                    newModelElement = selection.get( 0 );
-                    newPageKey = ClassBasedKey.create( newModelElement );
-                }
-                else
-                {
-                    newModelElement = DetailSectionPart.this.element;
-                    newPageKey = null;
-                }
-                
-                if( selectedModelElementRef.get() != newModelElement )
-                {
-                    selectedModelElementRef.set( newModelElement );
+                    selectedElementRef.set( selectedElement );
                     
                     final Runnable inputChangeOperation = new Runnable()
                     {
                         public void run()
                         {
-                            changePage( newModelElement, newPageKey );
+                            changePage( selectedElement );
                         }
                     };
                     
@@ -188,17 +175,9 @@ public final class DetailSectionPart extends PageBookPart
             }
         );
         
-        changePage( this.element, (String) null );
+        changePage( null );
     }
     
-    @Override
-    protected Object parsePageKey( final String pageKeyString )
-    {
-        final ISapphireUiDef rootdef = this.definition.nearest( ISapphireUiDef.class );
-        final Class<?> cl = rootdef.resolveClass( pageKeyString );
-        return ClassBasedKey.create( cl );
-    }
-
     private PropertyEditorPart findPropertyEditor( final ISapphirePart part,
                                                    final Element element,
                                                    final PropertyDef property )
