@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.ui.def.PartDef;
 
@@ -22,6 +23,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
  */
 
 @Label( standard = "case" )
+@Image( path = "PageBookCaseDef.png" )
 
 public interface PageBookCaseDef extends FormDef
 {

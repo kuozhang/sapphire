@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.ui.def.PartDef;
 
@@ -21,7 +22,8 @@ import org.eclipse.sapphire.ui.def.PartDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node factory case" )
+@Label( standard = "case" )
+@Image( path = "MasterDetailsContentNodeFactoryCaseDef.png" )
 
 public interface MasterDetailsContentNodeFactoryCaseDef extends MasterDetailsContentNodeDef
 {
