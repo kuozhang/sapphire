@@ -270,13 +270,12 @@ public abstract class PropertyEditorPresentation extends PropertyEditorPresentat
         
         public boolean getShowLabel()
         {
-            return this.part.getShowLabel();
+            return ( this.part.label() != null );
         }
         
-        public String getLabel( final CapitalizationType capitalizationType,
-                                final boolean includeMnemonic )
+        public String getLabel( final CapitalizationType capitalizationType, final boolean includeMnemonic )
         {
-            return this.part.getLabel( capitalizationType, includeMnemonic );
+            return this.part.label( capitalizationType, includeMnemonic );
         }
         
         public int getLeftMargin()

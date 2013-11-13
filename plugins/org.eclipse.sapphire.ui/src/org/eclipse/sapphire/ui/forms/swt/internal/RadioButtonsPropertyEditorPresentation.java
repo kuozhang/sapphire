@@ -58,7 +58,7 @@ public final class RadioButtonsPropertyEditorPresentation extends ValuePropertyE
     {
         final PropertyEditorPart part = part();
         
-        final boolean showLabel = part.getShowLabel();
+        final boolean showLabel = ( part.label() != null );
         final int leftMargin = part.getMarginLeft();
         final boolean preferVerticalRadioButtonBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS, false );
         
@@ -101,7 +101,7 @@ public final class RadioButtonsPropertyEditorPresentation extends ValuePropertyE
                 {
                     public void run()
                     {
-                        label.setText( part.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) );
+                        label.setText( part.label( CapitalizationType.FIRST_WORD_ONLY, true ) );
                     }
                 };
                 

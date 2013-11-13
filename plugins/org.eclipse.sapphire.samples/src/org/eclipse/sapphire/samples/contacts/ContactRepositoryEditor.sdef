@@ -199,6 +199,7 @@
                                 <content>
                                     <with>
                                         <path>PrimaryOccupation</path>
+                                        <show-label>false</show-label>
                                         <case>
                                             <element-type>JobOccupation</element-type>
                                             <content>

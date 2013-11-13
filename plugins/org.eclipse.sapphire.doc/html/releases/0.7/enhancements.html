@@ -80,6 +80,7 @@
     <li><a href="#ExpressionLanguage-OverloadedFunctions">Overloaded Functions</a></li>
     <li><a href="#ExpressionLanguage-UseForValidation">Use for Validation</a></li>
     <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
+    <li><a href="#ExpressionLanguage-UseInWithLabel">Use in With Directive Label</a></li>
     <li><a href="#ExpressionLanguage-AbsolutePathFunction">Absolute Function for Paths</a></li>
     <li><a href="#ExpressionLanguage-ContentFunction">Content Function</a></li>
     <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
@@ -108,6 +109,7 @@
     <li><a href="#Forms-ConditionalWizardPages">Conditional Wizard Pages</a></li>
     <li><a href="#Forms-NestedPropertiesInListPropertyEditor">Nested Properties in List Property Editor</a></li>
     <li><a href="#Forms-RadioButtonImages">Radio Buttons with Images</a></li>
+    <li><a href="#Forms-WithDirectiveLabel">With Directive Label</a></li>
   </ol>
   <li><a href="#Diagrams">Diagrams</a></li>
   <ol type="A">
@@ -119,6 +121,8 @@
     <li><a href="#Miscellaneous-ImageData">ImageData</a></li>
     <li><a href="#Miscellaneous-ModernizedPopups">Modernized Popups</a></li>
     <li><a href="#Miscellaneous-CreateWorkspaceFileOp">CreateWorkspaceFileOp</a></li>
+    <li><a href="#Miscellaneous-PropertyEditorPart">PropertyEditorPart</a></li>
+    <li><a href="#Miscellaneous-WithPart">WithPart</a></li>
   </ol>
 </ol>
 
@@ -1208,6 +1212,24 @@ Value&lt;String> getCategory();
 void setCategory( String value );</font></code></pre>
 
 
+<h2><a name="ExpressionLanguage-UseInWithLabel">Use EL in With Directive Label</a></h2>
+
+<p>Use the expression language when overriding the label in a with directive.</p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<pre class="source-code"><code><font color="#888888">&lt;with>
+    &lt;path>Spouse/PrimaryOccupation&lt;/path></font>
+    &lt;label>${ Spouse.Name.First }'s primary occupation&lt;/label>
+    <font color="#888888">&lt;case>
+        ...
+    &lt;/case>
+    &lt;case>
+        ...
+    &lt;/case>
+&lt;/with></font></code></pre>
+
+
 <h2><a name="ExpressionLanguage-AbsolutePathFunction">Absolute Function for Paths</a></h2>
 
 <p>Returns the absolute path of a value for properties with a RelativePathService.</p>
@@ -1685,6 +1707,18 @@ void setType( FileType value );</font></code></pre>
 <p style="margin-left: 20px;"><img src="images/RadioButtonImages.png"/></p>
 
 
+<h2><a name="Forms-WithDirectiveLabel">With Directive Label</a></h2>
+
+<p>The handling of labels by the with directive is now consistent with the property editor.</p>
+
+<ol>
+  <li>The label can be shown for any presentation style</li>
+  <li>The property label is used by default, but this can be overridden in sdef</li>
+  <li><a href="#ExpressionLanguage-UseInWithLabel">EL can be used</a> when overriding the label in sdef</li> 
+  <li>An explicit show label flag in sdef provides developer with control over label visibility</li>
+</ol>
+
+
 <h2><a name="Diagrams"><a name="Diagrams-ConnectionService">ConnectionService</a></a></h2>
 
 <p>ConnectionService is responsible for listing and establishing connections in a diagram.</p>
@@ -1809,6 +1843,26 @@ corresponding IResource.</p>
     void setFile( String value );
     void setFile( FileName value );
 }</font></code></pre>
+
+
+<h2><a name="Miscellaneous-PropertyEditorPart">PropertyEditorPart</a></h2>
+
+<pre class="source-code"><code><font color="#888888">PropertyEditorPart
+{</font>
+    String label()
+    <font color="#888888">String label( CapitalizationType capitalizationType, boolean includeMnemonic )
+}</font></code></pre>
+
+
+<h2><a name="Miscellaneous-WithPart">WithPart</a></h2>
+
+<p>The with directive has an <a href="#Forms-WithDirectiveLabel">improved handling of labels</a>.</p>
+
+<pre class="source-code"><code><font color="#888888">WithPart
+{</font>
+    String label()
+    String label( CapitalizationType capitalizationType, boolean includeMnemonic )
+<font color="#888888">}</font></code></pre>
 
 
 <div class="copyright">Copyright (c) 2013 Oracle<br/>

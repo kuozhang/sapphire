@@ -101,6 +101,7 @@
             <content>
                 <with>
                     <path>Documentation</path>
+                    <show-label>false</show-label>
                     <case>
                         <element-type>ISapphireDocumentationDef</element-type>
                         <content>
@@ -900,7 +901,6 @@
             <section>
                 <content>
                     <property-editor>Path</property-editor>
-                    <property-editor>Label</property-editor>
                     <property-editor>VisibleWhen</property-editor>
                     <property-editor>
                         <property>ScaleVertically</property>
@@ -909,6 +909,15 @@
                             <value>leading.label</value>
                         </hint>
                     </property-editor>
+                    <spacer></spacer>
+                    <property-editor>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                        <property>ShowLabel</property>
+                    </property-editor>
+                    <property-editor>Label</property-editor>
                 </content>
             </section>
             <node-factory>
@@ -1316,7 +1325,7 @@
                                         <content>
                                             <with>
                                                 <path>Endpoint1</path>
-                                                <label>Define endpoint.</label>
+                                                <label>define endpoint</label>
                                                 <case>
                                                     <content>
                                                         <property-editor>Property</property-editor>
@@ -1331,7 +1340,7 @@
                                         <content>
                                             <with>
                                                 <path>Endpoint2</path>
-                                                <label>Define endpoint.</label>
+                                                <label>define endpoint</label>
                                                 <case>
                                                     <content>
                                                         <property-editor>Property</property-editor>
@@ -1480,7 +1489,7 @@
                             <content>
                                 <with>
                                     <path>Endpoint1</path>
-                                    <label>Define endpoint</label>
+                                    <label>define endpoint</label>
                                     <case>
                                         <content>
                                             <property-editor>Property</property-editor>
@@ -1495,7 +1504,7 @@
                             <content>
                                 <with>
                                     <path>Endpoint2</path>
-                                    <label>Define endpoint.</label>
+                                    <label>define endpoint</label>
                                     <case>
                                         <content>
                                             <property-editor>Property</property-editor>
@@ -1567,7 +1576,6 @@
             <content>
                 <with>
                     <path>SequenceLayoutConstraint</path>
-                    <label>layout constraint</label>
                     <case>
                         <content>
                             <label>Margins provide extra space in the layout cell around the contained shape.</label>
@@ -1662,7 +1670,6 @@
                 <content>
                     <property-editor>Color</property-editor>
                     <with>
-                        <label>font</label>
                         <path>Font</path>
                         <case>
                             <content>
@@ -1729,7 +1736,7 @@
                 <label>background</label>
                 <content>
                     <with>
-                        <label>background</label>
+                        <show-label>false</show-label>
                         <case>
                             <content>
                                 <property-editor>Color</property-editor>
@@ -1753,7 +1760,6 @@
                 <section>
                     <content>
                         <with>
-                            <label>layout</label>
                             <case>
                                 <content>
                                     <property-editor>Orientation</property-editor>
@@ -1980,7 +1986,7 @@
     <form>
         <content>
             <with>
-                <label>background</label>
+                <show-label>false</show-label>
                 <case>
                     <content>
                         <property-editor>Color</property-editor>

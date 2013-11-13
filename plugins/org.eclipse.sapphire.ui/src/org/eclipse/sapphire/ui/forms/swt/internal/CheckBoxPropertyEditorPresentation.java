@@ -132,7 +132,7 @@ public final class CheckBoxPropertyEditorPresentation extends ValuePropertyEdito
             {
                 public void run()
                 {
-                    CheckBoxPropertyEditorPresentation.this.checkbox.setText( part.getLabel( CapitalizationType.FIRST_WORD_ONLY, true ) );
+                    CheckBoxPropertyEditorPresentation.this.checkbox.setText( part.label( CapitalizationType.FIRST_WORD_ONLY, true ) );
                 }
             };
             

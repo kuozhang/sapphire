@@ -636,6 +636,7 @@
                             <spacer></spacer>
                             <with>
                                 <path>Heterogeneous</path>
+                                <show-label>false</show-label>
                                 <case>
                                     <element-type>IChildElementWithEnum</element-type>
                                     <content>
@@ -708,6 +709,7 @@
                             <spacer></spacer>
                             <with>
                                 <path>Element</path>
+                                <show-label>false</show-label>
                                 <case>
                                     <element-type>IChildElementWithEnum</element-type>
                                     <content>

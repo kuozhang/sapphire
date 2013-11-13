@@ -321,20 +321,6 @@ public final class PropertyEditorPart extends FormComponentPart
         }
         
         this.relatedContentParts = relatedContentPartsListFactory.result();
-        
-        this.labelFunctionResult = initExpression
-        (
-            propertyEditorPartDef.getLabel().content(), 
-            String.class,
-            Literal.create( this.property.definition().getLabel( false, CapitalizationType.NO_CAPS, true ) ),
-            new Runnable()
-            {
-                public void run()
-                {
-                    broadcast( new LabelChangedEvent( PropertyEditorPart.this ) );
-                }
-            }
-        );
     }
 
     @Override
@@ -427,16 +413,39 @@ public final class PropertyEditorPart extends FormComponentPart
         return childPropertyEditorPart;
     }
     
-    public String getLabel( final CapitalizationType capitalizationType,
-                            final boolean includeMnemonic )
+    public String label()
     {
-        final String label = (String) this.labelFunctionResult.value();
-        return LabelTransformer.transform( label, capitalizationType, includeMnemonic );
+        return label( CapitalizationType.NO_CAPS, true );
     }
     
-    public boolean getShowLabel()
+    public String label( final CapitalizationType capitalizationType, final boolean includeMnemonic )
     {
-        return definition().getShowLabel().content();
+        final PropertyEditorDef def = definition();
+        
+        if( def.getShowLabel().content() )
+        {
+            if( this.labelFunctionResult == null )
+            {
+                this.labelFunctionResult = initExpression
+                (
+                    def.getLabel().content(), 
+                    String.class,
+                    Literal.create( this.property.definition().getLabel( false, CapitalizationType.NO_CAPS, true ) ),
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            broadcast( new LabelChangedEvent( PropertyEditorPart.this ) );
+                        }
+                    }
+                );
+            }
+            
+            final String label = (String) this.labelFunctionResult.value();
+            return LabelTransformer.transform( label, capitalizationType, includeMnemonic );
+        }
+        
+        return null;
     }
     
     public boolean getSpanBothColumns()

@@ -64,6 +64,7 @@
                             <content>
                                 <with>
                                     <path>Payment</path>
+                                    <show-label>false</show-label>
                                     <case>
                                         <element-type>CreditCardPayment</element-type>
                                         <content>

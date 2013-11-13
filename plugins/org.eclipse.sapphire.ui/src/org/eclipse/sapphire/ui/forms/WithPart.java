@@ -21,10 +21,14 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.Literal;
+import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
@@ -41,6 +45,7 @@ public final class WithPart extends PageBookPart
     private ElementHandle<?> property;
     private Element elementForChildParts;
     private Listener listener;
+    private FunctionResult labelFunctionResult;
     
     @Override
     protected void init()
@@ -111,7 +116,42 @@ public final class WithPart extends PageBookPart
     {
         return this.property;
     }
-
+    
+    public String label()
+    {
+        return label( CapitalizationType.NO_CAPS, true );
+    }
+    
+    public String label( final CapitalizationType capitalizationType, final boolean includeMnemonic )
+    {
+        final WithDef def = definition();
+        
+        if( def.getShowLabel().content() )
+        {
+            if( this.labelFunctionResult == null )
+            {
+                this.labelFunctionResult = initExpression
+                (
+                    def.getLabel().content(), 
+                    String.class,
+                    Literal.create( this.property.definition().getLabel( false, CapitalizationType.NO_CAPS, true ) ),
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            broadcast( new LabelChangedEvent( WithPart.this ) );
+                        }
+                    }
+                );
+            }
+            
+            final String label = (String) this.labelFunctionResult.value();
+            return LabelTransformer.transform( label, capitalizationType, includeMnemonic );
+        }
+        
+        return null;
+    }
+    
     @Override
     protected Status computeValidation()
     {

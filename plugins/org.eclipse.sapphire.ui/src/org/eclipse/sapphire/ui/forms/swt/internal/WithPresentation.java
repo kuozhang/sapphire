@@ -39,6 +39,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.EditFailedException;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
+import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.WithDef;
@@ -105,7 +106,6 @@ public final class WithPresentation extends PageBookPresentation
 
         final Composite typeSelectorComposite = new Composite( composite, SWT.NONE );
         typeSelectorComposite.setLayoutData( gdhfill() );
-        typeSelectorComposite.setLayout( glayout( 1, 0, 0 ) );
         
         final Runnable renderTypeSelectorOp = new Runnable()
         {
@@ -115,10 +115,6 @@ public final class WithPresentation extends PageBookPresentation
                 {
                     control.dispose();
                 }
-                
-                final Composite innerTypeSelectorComposite = new Composite( typeSelectorComposite, SWT.NONE );
-                innerTypeSelectorComposite.setLayoutData( gdvalign( gdhfill(), SWT.CENTER ) );
-                innerTypeSelectorComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
                 
                 final SortedSet<ElementType> allPossibleTypes = possibleTypesService.types();
                 final int allPossibleTypesCount = allPossibleTypes.size();
@@ -150,27 +146,39 @@ public final class WithPresentation extends PageBookPresentation
                 final SapphireActionPresentationManager actionPresentationManager = new SapphireActionPresentationManager( WithPresentation.this, actions );
                 final SapphireKeyboardActionPresentation actionPresentationKeyboard = new SapphireKeyboardActionPresentation( actionPresentationManager );
                 
-                final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( part, property, innerTypeSelectorComposite );
-                decorator.control().setLayoutData( gdvalign( gd(), ( style == Style.DROP_DOWN_LIST ? SWT.TOP : SWT.CENTER ) ) );
+                final boolean showLabel = ( part.label() != null );
 
                 if( style == Style.CHECKBOX )
                 {
-                    final ElementType type = allPossibleTypes.first();
+                    typeSelectorComposite.setLayout( glspacing( glayout( 2, 0, 0 ), 2 ) );
                     
-                    String masterCheckBoxText = def.getLabel().localized( CapitalizationType.FIRST_WORD_ONLY, true );
+                    final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( part, property, typeSelectorComposite );
+                    decorator.control().setLayoutData( gd() );
                     
-                    if( masterCheckBoxText == null )
-                    {
-                        masterCheckBoxText = enableElementLabel.format( type.getLabel( true, CapitalizationType.NO_CAPS, false ) ); 
-                    }
-                    
-                    final Button masterCheckBox = new Button( innerTypeSelectorComposite, SWT.CHECK );
+                    final Button masterCheckBox = new Button( typeSelectorComposite, SWT.CHECK );
                     masterCheckBox.setLayoutData( gd() );
-                    masterCheckBox.setText( masterCheckBoxText );
                     decorator.addEditorControl( masterCheckBox );
                     actionPresentationKeyboard.attach( masterCheckBox );
                     attachHelp( masterCheckBox, property );
-        
+                    
+                    if( showLabel )
+                    {
+                        masterCheckBox.setText( part.label( CapitalizationType.FIRST_WORD_ONLY, true ) );
+                        
+                        attachPartListener
+                        (
+                            new FilteredListener<LabelChangedEvent>()
+                            {
+                                @Override
+                                protected void handleTypedEvent( final LabelChangedEvent event )
+                                {
+                                    masterCheckBox.setText( part.label( CapitalizationType.FIRST_WORD_ONLY, true ) );
+                                    layout();
+                                }
+                            }
+                        );
+                    }
+                    
                     updateUserInterfaceOp = new Runnable()
                     {
                         public void run()
@@ -225,206 +233,234 @@ public final class WithPresentation extends PageBookPresentation
                         }
                     );
                 }
-                else if( style == Style.RADIO_BUTTONS )
+                else
                 {
-                    final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( innerTypeSelectorComposite, false );
-                    radioButtonsGroup.setLayoutData( gdhfill() );
+                    typeSelectorComposite.setLayout( glspacing( glayout( 3, 0, 0 ), 2 ) );
                     
-                    final Map<ElementType,Button> typeToButton = new HashMap<ElementType,Button>();
-                    final Map<Button,ElementType> buttonToType = new HashMap<Button,ElementType>();
-                    
-                    for( final ElementType type : allPossibleTypes )
+                    if( showLabel )
                     {
-                        final String label = type.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
-                        final Button button = radioButtonsGroup.addRadioButton( label );
-                        typeToButton.put( type, button );
-                        buttonToType.put( button, type );
-                        decorator.addEditorControl( button );
-                        actionPresentationKeyboard.attach( button );
-                        attachHelp( button, property );
-                    }
-                    
-                    final Button noneButton = radioButtonsGroup.addRadioButton( noneSelection.text() );
-                    noneButton.setVisible( false );
-                    decorator.addEditorControl( noneButton );
-                    actionPresentationKeyboard.attach( noneButton );
-                    attachHelp( noneButton, property );
-                    
-                    updateUserInterfaceOp = new Runnable()
-                    {
-                        public void run()
-                        {
-                            if( Display.getCurrent() == null )
-                            {
-                                radioButtonsGroup.getDisplay().asyncExec( this );
-                                return;
-                            }
-                            
-                            final Element subModelElement = ( (ElementHandle<?>) property ).content();
-                            final Button button;
-                            
-                            if( subModelElement == null )
-                            {
-                                button = noneButton;
-                                noneButton.setVisible( true );
-                            }
-                            else
-                            {
-                                button = typeToButton.get( subModelElement.type() );
-                                noneButton.setVisible( false );
-                            }
-                            
-                            if( radioButtonsGroup.getSelection() != button )
-                            {
-                                radioButtonsGroup.setSelection( button );
-                            }
-                            
-                            radioButtonsGroup.setEnabled( property.enabled() );
-                        }
-                    };
-                            
-                    radioButtonsGroup.addSelectionListener
-                    (
-                        new SelectionAdapter()
-                        {
-                            @Override
-                            public void widgetSelected( final SelectionEvent event )
-                            {
-                                try
-                                {
-                                    final ElementHandle<?> handle = (ElementHandle<?>) property;
-                                    final Button button = radioButtonsGroup.getSelection();
-                                    
-                                    if( button == noneButton )
-                                    {
-                                        handle.clear();
-                                    }
-                                    else
-                                    {
-                                        final ElementType type = buttonToType.get( button );
-                                        handle.content( true, type );
-                                    }
-                                }
-                                catch( Exception e )
-                                {
-                                    // Note that the EditFailedException is ignored here because the user has already
-                                    // been notified and likely has taken action that led to the exception (such as
-                                    // declining to make a file writable).
-                                    
-                                    final EditFailedException editFailedException = EditFailedException.findAsCause( e );
-                                    
-                                    if( editFailedException == null )
-                                    {
-                                        Sapphire.service( LoggingService.class ).log( e );
-                                    }
-                                }
-                            }
-                        }
-                    );
-                }
-                else if( style == Style.DROP_DOWN_LIST )
-                {
-                    final Combo combo = new Combo( innerTypeSelectorComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
-                    combo.setLayoutData( gdhfill() );
-                    decorator.addEditorControl( combo );
-                    actionPresentationKeyboard.attach( combo );
-                    attachHelp( combo, property );
-                    
-                    final Map<ElementType,Integer> typeToIndex = new HashMap<ElementType,Integer>();
-                    final Map<Integer,ElementType> indexToType = new HashMap<Integer,ElementType>();
-                    
-                    int index = 0;
-                    
-                    for( ElementType type : allPossibleTypes )
-                    {
-                        final String label = type.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
-                        combo.add( label );
-                        typeToIndex.put( type, index );
-                        indexToType.put( index, type );
+                        final Label label = new Label( typeSelectorComposite, SWT.NONE );
+                        label.setLayoutData( gdhindent( gd(), 9 ) );
+                        label.setText( part.label( CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
                         
-                        index++;
+                        attachPartListener
+                        (
+                            new FilteredListener<LabelChangedEvent>()
+                            {
+                                @Override
+                                protected void handleTypedEvent( final LabelChangedEvent event )
+                                {
+                                    label.setText( part.label( CapitalizationType.FIRST_WORD_ONLY, true ) + ":" );
+                                    layout();
+                                }
+                            }
+                        );
                     }
                     
-                    updateUserInterfaceOp = new Runnable()
+                    final PropertyEditorAssistDecorator decorator = new PropertyEditorAssistDecorator( part, property, typeSelectorComposite );
+                    decorator.control().setLayoutData( gdhindent( gdvalign( gd(), ( style == Style.DROP_DOWN_LIST ? SWT.TOP : SWT.CENTER ) ), ( showLabel ? 3 : 0 ) ) );
+                    
+                    if( style == Style.RADIO_BUTTONS )
                     {
-                        public void run()
+                        final RadioButtonsGroup radioButtonsGroup = new RadioButtonsGroup( typeSelectorComposite, false );
+                        radioButtonsGroup.setLayoutData( gdhfill() );
+                        
+                        final Map<ElementType,Button> typeToButton = new HashMap<ElementType,Button>();
+                        final Map<Button,ElementType> buttonToType = new HashMap<Button,ElementType>();
+                        
+                        for( final ElementType type : allPossibleTypes )
                         {
-                            if( Display.getCurrent() == null )
+                            final String label = type.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
+                            final Button button = radioButtonsGroup.addRadioButton( label );
+                            typeToButton.put( type, button );
+                            buttonToType.put( button, type );
+                            decorator.addEditorControl( button );
+                            actionPresentationKeyboard.attach( button );
+                            attachHelp( button, property );
+                        }
+                        
+                        final Button noneButton = radioButtonsGroup.addRadioButton( noneSelection.text() );
+                        noneButton.setVisible( false );
+                        decorator.addEditorControl( noneButton );
+                        actionPresentationKeyboard.attach( noneButton );
+                        attachHelp( noneButton, property );
+                        
+                        updateUserInterfaceOp = new Runnable()
+                        {
+                            public void run()
                             {
-                                combo.getDisplay().asyncExec( this );
-                                return;
-                            }
-                            
-                            final Element subModelElement = ( (ElementHandle<?>) property ).content();
-                            final int index;
-                            
-                            if( subModelElement == null )
-                            {
-                                index = -1;
-                            }
-                            else
-                            {
-                                index = typeToIndex.get( subModelElement.type() );
-                            }
-                            
-                            if( combo.getSelectionIndex() != index )
-                            {
-                                if( index == -1 )
+                                if( Display.getCurrent() == null )
                                 {
-                                    combo.deselectAll();
+                                    radioButtonsGroup.getDisplay().asyncExec( this );
+                                    return;
+                                }
+                                
+                                final Element subModelElement = ( (ElementHandle<?>) property ).content();
+                                final Button button;
+                                
+                                if( subModelElement == null )
+                                {
+                                    button = noneButton;
+                                    noneButton.setVisible( true );
                                 }
                                 else
                                 {
-                                    combo.select( index );
+                                    button = typeToButton.get( subModelElement.type() );
+                                    noneButton.setVisible( false );
+                                }
+                                
+                                if( radioButtonsGroup.getSelection() != button )
+                                {
+                                    radioButtonsGroup.setSelection( button );
+                                }
+                                
+                                radioButtonsGroup.setEnabled( property.enabled() );
+                            }
+                        };
+                                
+                        radioButtonsGroup.addSelectionListener
+                        (
+                            new SelectionAdapter()
+                            {
+                                @Override
+                                public void widgetSelected( final SelectionEvent event )
+                                {
+                                    try
+                                    {
+                                        final ElementHandle<?> handle = (ElementHandle<?>) property;
+                                        final Button button = radioButtonsGroup.getSelection();
+                                        
+                                        if( button == noneButton )
+                                        {
+                                            handle.clear();
+                                        }
+                                        else
+                                        {
+                                            final ElementType type = buttonToType.get( button );
+                                            handle.content( true, type );
+                                        }
+                                    }
+                                    catch( Exception e )
+                                    {
+                                        // Note that the EditFailedException is ignored here because the user has already
+                                        // been notified and likely has taken action that led to the exception (such as
+                                        // declining to make a file writable).
+                                        
+                                        final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                                        
+                                        if( editFailedException == null )
+                                        {
+                                            Sapphire.service( LoggingService.class ).log( e );
+                                        }
+                                    }
                                 }
                             }
-                            
-                            combo.setEnabled( property.enabled() );
-                        }
-                    };
-
-                    combo.addSelectionListener
-                    (
-                        new SelectionAdapter()
+                        );
+                    }
+                    else if( style == Style.DROP_DOWN_LIST )
+                    {
+                        final Combo combo = new Combo( typeSelectorComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY );
+                        combo.setLayoutData( gdhfill() );
+                        decorator.addEditorControl( combo );
+                        actionPresentationKeyboard.attach( combo );
+                        attachHelp( combo, property );
+                        
+                        final Map<ElementType,Integer> typeToIndex = new HashMap<ElementType,Integer>();
+                        final Map<Integer,ElementType> indexToType = new HashMap<Integer,ElementType>();
+                        
+                        int index = 0;
+                        
+                        for( ElementType type : allPossibleTypes )
                         {
-                            @Override
-                            public void widgetSelected( final SelectionEvent event )
+                            final String label = type.getLabel( true, CapitalizationType.FIRST_WORD_ONLY, false );
+                            combo.add( label );
+                            typeToIndex.put( type, index );
+                            indexToType.put( index, type );
+                            
+                            index++;
+                        }
+                        
+                        updateUserInterfaceOp = new Runnable()
+                        {
+                            public void run()
                             {
-                                try
+                                if( Display.getCurrent() == null )
                                 {
-                                    final ElementHandle<?> handle = (ElementHandle<?>) property;
-                                    final int index = combo.getSelectionIndex();
-                                    
+                                    combo.getDisplay().asyncExec( this );
+                                    return;
+                                }
+                                
+                                final Element subModelElement = ( (ElementHandle<?>) property ).content();
+                                final int index;
+                                
+                                if( subModelElement == null )
+                                {
+                                    index = -1;
+                                }
+                                else
+                                {
+                                    index = typeToIndex.get( subModelElement.type() );
+                                }
+                                
+                                if( combo.getSelectionIndex() != index )
+                                {
                                     if( index == -1 )
                                     {
-                                        handle.clear();
+                                        combo.deselectAll();
                                     }
                                     else
                                     {
-                                        final ElementType type = indexToType.get( index );
-                                        handle.content( true, type );
+                                        combo.select( index );
                                     }
                                 }
-                                catch( Exception e )
+                                
+                                combo.setEnabled( property.enabled() );
+                            }
+                        };
+    
+                        combo.addSelectionListener
+                        (
+                            new SelectionAdapter()
+                            {
+                                @Override
+                                public void widgetSelected( final SelectionEvent event )
                                 {
-                                    // Note that the EditFailedException is ignored here because the user has already
-                                    // been notified and likely has taken action that led to the exception (such as
-                                    // declining to make a file writable).
-                                    
-                                    final EditFailedException editFailedException = EditFailedException.findAsCause( e );
-                                    
-                                    if( editFailedException == null )
+                                    try
                                     {
-                                        Sapphire.service( LoggingService.class ).log( e );
+                                        final ElementHandle<?> handle = (ElementHandle<?>) property;
+                                        final int index = combo.getSelectionIndex();
+                                        
+                                        if( index == -1 )
+                                        {
+                                            handle.clear();
+                                        }
+                                        else
+                                        {
+                                            final ElementType type = indexToType.get( index );
+                                            handle.content( true, type );
+                                        }
+                                    }
+                                    catch( Exception e )
+                                    {
+                                        // Note that the EditFailedException is ignored here because the user has already
+                                        // been notified and likely has taken action that led to the exception (such as
+                                        // declining to make a file writable).
+                                        
+                                        final EditFailedException editFailedException = EditFailedException.findAsCause( e );
+                                        
+                                        if( editFailedException == null )
+                                        {
+                                            Sapphire.service( LoggingService.class ).log( e );
+                                        }
                                     }
                                 }
                             }
-                        }
-                    );
-                }
-                else
-                {
-                    throw new IllegalStateException();
+                        );
+                    }
+                    else
+                    {
+                        throw new IllegalStateException();
+                    }
                 }
                 
                 actionPresentationKeyboard.render();
@@ -444,7 +480,7 @@ public final class WithPresentation extends PageBookPresentation
                 
                 typeSelectorComposite.layout( true, true );
                 
-                innerTypeSelectorComposite.addDisposeListener
+                typeSelectorComposite.getChildren()[ 0 ].addDisposeListener
                 (
                     new DisposeListener()
                     {
