@@ -218,6 +218,7 @@
                     </content>
                 </section>
                 <label>${ Implementation == null ? &quot;&lt;service&gt;&quot; : LastSegment( Implementation, &quot;.&quot; ) }</label>
+                <image>${ Image() }</image>
             </case>
         </node-factory>
         <section>
@@ -230,6 +231,7 @@
                 </actuator>
             </content>
         </section>
+        <image>org/eclipse/sapphire/ui/def/ServiceDef.png</image>
     </node>
 
     <node>

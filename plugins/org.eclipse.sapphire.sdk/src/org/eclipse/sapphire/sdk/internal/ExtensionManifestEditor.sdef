@@ -70,8 +70,10 @@
                                 </property-editor>
                             </content>
                         </section>
+                        <image>${ Image() }</image>
                     </case>
                 </node-factory>
+                <image>org/eclipse/sapphire/sdk/extensibility/ServiceDef.png</image>
             </node>
             <node>
                 <label>functions</label>
