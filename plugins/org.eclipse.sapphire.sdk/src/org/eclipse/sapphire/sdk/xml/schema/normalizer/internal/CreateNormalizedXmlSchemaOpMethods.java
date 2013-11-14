@@ -101,10 +101,11 @@ public final class CreateNormalizedXmlSchemaOpMethods
             {
                 try
                 {
-                    state.property( PersistedState.PROP_ROOT_ELEMENTS ).copy( operation );
-                    state.property( PersistedState.PROP_EXCLUSIONS ).copy( operation );
-                    state.property( PersistedState.PROP_TYPE_SUBSTITUTIONS ).copy( operation );
-                    state.property( PersistedState.PROP_SORT_SEQUENCE_CONTENT ).copy( operation );
+                    state.getRootElements().copy( operation );
+                    state.getExclusions().copy( operation );
+                    state.getTypeSubstitutions().copy( operation );
+                    state.getSortSequenceContent().copy( operation );
+                    state.getRemoveWildcards().copy( operation );
                     state.resource().save();
                 }
                 catch( ResourceStoreException e )
@@ -183,6 +184,11 @@ public final class CreateNormalizedXmlSchemaOpMethods
                 removeComments( root );
                 removeAnnotations( root );
                 removeDefaultMinMaxOccurs( root );
+                
+                if( operation.getRemoveWildcards().content() )
+                {
+                    removeWildcards( root );
+                }
                 
                 exclude( root, operation.getExclusions() );
                 
@@ -280,8 +286,8 @@ public final class CreateNormalizedXmlSchemaOpMethods
                         || inlineSequenceInSequence( root )
                         || inlineSequenceInChoice( root )
                         || inlineTypes( root, types, SetFactory.<String>empty() )
-                        || inlineElements( root, elements )
-                        || inlineGroups( root, groups )
+                        || inlineElements( root, elements, SetFactory.<String>empty() )
+                        || inlineGroups( root, groups, SetFactory.<String>empty() )
                         || removeRedundantMinMaxOccursInChoice( root );
                 }
                 
@@ -465,6 +471,24 @@ public final class CreateNormalizedXmlSchemaOpMethods
             }
             
             removeDefaultMinMaxOccurs( x );
+        }
+    }
+    
+    private static void removeWildcards( final XmlElement element )
+    {
+        for( XmlElement x : element.getChildElements( "anyAttribute" ) )
+        {
+            x.remove();
+        }
+
+        for( XmlElement x : element.getChildElements( "any" ) )
+        {
+            x.remove();
+        }
+
+        for( XmlElement x : element.getChildElements() )
+        {
+            removeWildcards( x );
         }
     }
     
@@ -793,8 +817,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
         return changed;
     }
     
-    private static boolean inlineElements( final XmlElement element,
-                                           final Map<String,XmlElement> elements )
+    private static boolean inlineElements( final XmlElement element, final Map<String,XmlElement> elements, final Set<String> inlined  )
     {
         boolean changed = false;
 
@@ -803,9 +826,11 @@ public final class CreateNormalizedXmlSchemaOpMethods
         
         for( XmlElement x : element.getChildElements() )
         {
+            String ename = null;
+            
             if( x.getLocalName().equals( "element" ) )
             {
-                final String ename = x.getAttributeText( "ref" );
+                ename = x.getAttributeText( "ref" );
                 
                 if( ename.length() > 0 )
                 {
@@ -813,24 +838,28 @@ public final class CreateNormalizedXmlSchemaOpMethods
                     
                     if( reftarget != null )
                     {
-                        final Element xdom = x.getDomNode();
-                        
-                        for( XmlElement refTargetContentElement : reftarget.getChildElements() )
-                        {
-                            final Element idom = (Element) document.importNode( refTargetContentElement.getDomNode(), true );
-                            xdom.insertBefore( idom, null );
-                        }
-                        
                         x.setAttributeText( "ref", null, true );
-                        x.setAttributeText( "name", reftarget.getAttributeText( "name" ), false );
-                        x.setAttributeText( "type", reftarget.getAttributeText( "type" ), false );
-                        
-                        changed = true;
+
+                        if( ! inlined.contains( ename ) )
+                        {
+                            final Element xdom = x.getDomNode();
+                            
+                            for( XmlElement refTargetContentElement : reftarget.getChildElements() )
+                            {
+                                final Element idom = (Element) document.importNode( refTargetContentElement.getDomNode(), true );
+                                xdom.insertBefore( idom, null );
+                            }
+                            
+                            x.setAttributeText( "name", reftarget.getAttributeText( "name" ), false );
+                            x.setAttributeText( "type", reftarget.getAttributeText( "type" ), false );
+                            
+                            changed = true;
+                        }
                     }
                 }
             }
             
-            if( inlineElements( x, elements ) )
+            if( inlineElements( x, elements, SetFactory.<String>start().add( inlined ).add( ename ).result() ) )
             {
                 changed = true;
             }
@@ -839,15 +868,14 @@ public final class CreateNormalizedXmlSchemaOpMethods
         return changed;
     }
 
-    private static boolean inlineGroups( final XmlElement element,
-                                         final Map<String,XmlElement> groups )
+    private static boolean inlineGroups( final XmlElement element, final Map<String,XmlElement> groups, final Set<String> inlined )
     {
         boolean changed = false;
 
         final Element elementDomNode = element.getDomNode();
         final Document document = elementDomNode.getOwnerDocument();
         
-        for( XmlElement x : element.getChildElements() )
+        for( final XmlElement x : element.getChildElements() )
         {
             if( x.getLocalName().equals( "group" ) )
             {
@@ -859,12 +887,18 @@ public final class CreateNormalizedXmlSchemaOpMethods
                     
                     if( group != null )
                     {
+                        final boolean repeat = inlined.contains( gname );
                         final Element xdom = x.getDomNode();
                         
-                        for( XmlElement groupContentElement : group.getChildElements() )
+                        for( final XmlElement groupContentElement : group.getChildElements() )
                         {
-                            final Element gdom = (Element) document.importNode( groupContentElement.getDomNode(), true );
+                            final Element gdom = (Element) document.importNode( groupContentElement.getDomNode(), ! repeat );
                             elementDomNode.insertBefore( gdom, xdom );
+                            
+                            if( ! repeat )
+                            {
+                                inlineGroups( element.getChildElement( gdom ), groups, SetFactory.<String>start().add( inlined ).add( gname ).result() );
+                            }
                         }
                         
                         elementDomNode.removeChild( xdom );
@@ -873,8 +907,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
                     }
                 }
             }
-            
-            if( inlineGroups( x, groups ) )
+            else if( inlineGroups( x, groups, inlined ) )
             {
                 changed = true;
             }

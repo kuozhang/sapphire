@@ -126,10 +126,11 @@ public final class CreateNormalizedXmlSchemaOpServices
             {
                 try
                 {
-                    op.property( CreateNormalizedXmlSchemaOp.PROP_ROOT_ELEMENTS ).copy( state );
-                    op.property( CreateNormalizedXmlSchemaOp.PROP_EXCLUSIONS ).copy( state );
-                    op.property( CreateNormalizedXmlSchemaOp.PROP_TYPE_SUBSTITUTIONS ).copy( state );
-                    op.property( CreateNormalizedXmlSchemaOp.PROP_SORT_SEQUENCE_CONTENT ).copy( state );
+                    op.getRootElements().copy( state );
+                    op.getExclusions().copy( state );
+                    op.getTypeSubstitutions().copy( state );
+                    op.getSortSequenceContent().copy( state );
+                    op.getRemoveWildcards().copy( state );
                 }
                 finally
                 {

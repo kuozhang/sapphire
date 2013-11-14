@@ -65,5 +65,16 @@ public interface PersistedState extends Element
     Value<Boolean> getSortSequenceContent();
     void setSortSequenceContent( String value );
     void setSortSequenceContent( Boolean value );
+    
+    // *** RemoveWildcards ***
+    
+    @Type( base = Boolean.class )
+    @DefaultValue( text = "false" )
+
+    ValueProperty PROP_REMOVE_WILDCARDS = new ValueProperty( TYPE, "RemoveWildcards" );
+    
+    Value<Boolean> getRemoveWildcards();
+    void setRemoveWildcards( String value );
+    void setRemoveWildcards( Boolean value );
 
 }

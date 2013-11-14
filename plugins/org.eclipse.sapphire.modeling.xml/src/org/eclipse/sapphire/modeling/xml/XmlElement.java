@@ -457,6 +457,24 @@ public final class XmlElement extends XmlNode
         return getChildElements( createQualifiedName( name ) );
     }
 
+    public XmlElement getChildElement( final Element element )
+    {
+        if( element.getParentNode() != getDomNode() )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        XmlElement xmlElement = this.elementsCache.get( element );
+        
+        if( xmlElement == null )
+        {
+            xmlElement = new XmlElement( this, element );
+            this.elementsCache.put( element, xmlElement );
+        }
+        
+        return xmlElement;
+    }
+
     public XmlElement getChildElement( final QName name,
                                        final boolean createIfNecessary )
     {

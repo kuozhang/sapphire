@@ -190,6 +190,18 @@ public interface CreateNormalizedXmlSchemaOp extends CreateWorkspaceFileOp
     void setSortSequenceContent( String value );
     void setSortSequenceContent( Boolean value );
     
+    // *** RemoveWildcards ***
+    
+    @Type( base = Boolean.class )
+    @Label( standard = "remove wildcards" )
+    @DefaultValue( text = "false" )
+
+    ValueProperty PROP_REMOVE_WILDCARDS = new ValueProperty( TYPE, "RemoveWildcards" );
+    
+    Value<Boolean> getRemoveWildcards();
+    void setRemoveWildcards( String value );
+    void setRemoveWildcards( Boolean value );
+    
     // *** Method: execute ***
     
     @DelegateImplementation( CreateNormalizedXmlSchemaOpMethods.class )
