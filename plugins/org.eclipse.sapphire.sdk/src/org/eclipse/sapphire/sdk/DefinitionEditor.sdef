@@ -1905,10 +1905,10 @@
             </section>
             <node-factory>
                 <case>
-                    <label>Case${ Type != null ? Concat( &quot; : &quot;, Type ) : &quot;&quot; }</label>
+                    <label>Case: ${ LastSegment( ElementType, &quot;.&quot; ) }</label>
                     <section>
                         <content>
-                            <property-editor>Type</property-editor>
+                            <property-editor>ElementType</property-editor>
                         </content>
                         <label>case</label>
                     </section>

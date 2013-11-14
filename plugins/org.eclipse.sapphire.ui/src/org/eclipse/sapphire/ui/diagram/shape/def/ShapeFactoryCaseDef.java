@@ -12,51 +12,36 @@
 
 package org.eclipse.sapphire.ui.diagram.shape.def;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
-import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.java.JavaType;
-import org.eclipse.sapphire.java.JavaTypeConstraint;
-import org.eclipse.sapphire.java.JavaTypeKind;
-import org.eclipse.sapphire.java.JavaTypeName;
+import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
+import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "shape factory case" )
+@Label( standard = "case" )
 @Image( path = "ShapeFactoryCaseDef.png" )
 
-public interface ShapeFactoryCaseDef extends Element 
+public interface ShapeFactoryCaseDef extends PartDef 
 {
 	ElementType TYPE = new ElementType( ShapeFactoryCaseDef.class );
 	
-    // *** Type ***
+    // *** ElementType ***
     
-    @Type( base = JavaTypeName.class )
-    @Reference( target = JavaType.class )
-    @Label( standard = "type" )
-    @JavaTypeConstraint( kind = JavaTypeKind.INTERFACE, type = "org.eclipse.sapphire.Element" )
-    @MustExist
-    @XmlBinding( path = "type" )
+    @DefaultValue( text = "org.eclipse.sapphire.Element" )
     
-    ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );
-    
-    ReferenceValue<JavaTypeName,JavaType> getType();
-    void setType( String value );
-    void setType( JavaTypeName value );
+    ValueProperty PROP_ELEMENT_TYPE = new ValueProperty( TYPE, PartDef.PROP_ELEMENT_TYPE );
 
     // *** Shape ***
     

@@ -196,20 +196,12 @@ public class ShapeFactoryPart extends ShapePart
 	{
         for( ShapeFactoryCaseDef shapeFactoryCaseDef : this.shapeFactoryDef.getCases() )
         {
-            final JavaType type = shapeFactoryCaseDef.getType().resolve();
-            
-            if( type == null )
+            final JavaType type = shapeFactoryCaseDef.getElementType().resolve();
+            final Class<?> cl = (Class<?>) type.artifact();
+
+            if(cl.isAssignableFrom( element.getClass() ) )
             {
                 return shapeFactoryCaseDef;
-            }
-            else
-            {
-                final Class<?> cl = (Class<?>) type.artifact();
-
-                if( cl == null || cl.isAssignableFrom( element.getClass() ) )
-                {
-                    return shapeFactoryCaseDef;
-                }
             }
         }
 
