@@ -1057,6 +1057,13 @@
             <section>
                 <content>
                     <property-editor>ImplClass</property-editor>
+                    <property-editor>
+                        <hint>
+                            <name>checkbox.layout</name>
+                            <value>leading.label</value>
+                        </hint>
+                        <property>ScaleVertically</property>
+                    </property-editor>
                 </content>
             </section>
             <node-include>ServicesNode</node-include>
