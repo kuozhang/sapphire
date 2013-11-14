@@ -620,7 +620,7 @@ public class StandardDiagramConnectionPart
     {
         if( this.propertiesViewContributionManager == null )
         {
-            this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, getLocalModelElement(), this.bindingDef );
+            this.propertiesViewContributionManager = new PropertiesViewContributionManager( this, getLocalModelElement(), getConnectionDef() );
         }
         
         return this.propertiesViewContributionManager.getPropertiesViewContribution();

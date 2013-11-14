@@ -31,6 +31,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossibleValuesService;
+import org.eclipse.sapphire.ui.forms.PropertiesViewContributorDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -38,7 +39,7 @@ import org.eclipse.sapphire.ui.diagram.def.internal.ToolPaletteCompartmentPossib
 
 @Label( standard = "diagram connection" )
 
-public interface IDiagramConnectionDef extends PartDef
+public interface IDiagramConnectionDef extends PartDef, PropertiesViewContributorDef
 {
     ElementType TYPE = new ElementType( IDiagramConnectionDef.class );
     

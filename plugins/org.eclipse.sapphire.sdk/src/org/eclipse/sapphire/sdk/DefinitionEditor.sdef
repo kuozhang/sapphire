@@ -1364,7 +1364,6 @@
                                         </content>
                                     </section>
                                     <image>${ Image() }</image>
-                                    <node-include>PropertiesViewContributionNode</node-include>
                                 </case>
                             </node-factory>
                         </node>
@@ -1464,6 +1463,7 @@
                         </section>
                         <label>${ ToolPaletteLabel == null ? &quot;&lt;connection&gt;&quot; : ToolPaletteLabel }</label>
                         <image>${ Image() }</image>
+                        <node-include>PropertiesViewContributionNode</node-include>
                     </case>
                 </node-factory>
             </node>
@@ -1528,7 +1528,6 @@
                             </content>
                         </section>
                         <image>${ Image() }</image>
-                        <node-include>PropertiesViewContributionNode</node-include>
                     </case>
                 </node-factory>
             </node>

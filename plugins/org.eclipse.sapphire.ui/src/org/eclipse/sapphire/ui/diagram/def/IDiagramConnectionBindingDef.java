@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.forms.PropertiesViewContributorDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -30,7 +29,7 @@ import org.eclipse.sapphire.ui.forms.PropertiesViewContributorDef;
 
 public interface IDiagramConnectionBindingDef 
 
-    extends Element, PropertiesViewContributorDef
+    extends Element
     
 {
     ElementType TYPE = new ElementType( IDiagramConnectionBindingDef.class );
