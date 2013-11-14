@@ -21,7 +21,6 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardContainer2;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.PartValidationEvent;
@@ -63,12 +62,17 @@ public class SapphireWizardPage extends WizardPage
                 {
                     refreshImage();
                 }
+                else if( event instanceof PartValidationEvent )
+                {
+                    refreshValidation();
+                }
             }
         };
         
         this.part.attach( this.listener );
         
         refreshImage();
+        refreshValidation();
     }
     
     public void createControl( final Composite parent )
@@ -98,44 +102,6 @@ public class SapphireWizardPage extends WizardPage
         };
         
         presentation.render();
-        
-        final Runnable messageUpdateOperation = new Runnable()
-        {
-            public void run()
-            {
-                final Status st = SapphireWizardPage.this.part.validation();
-                
-                if( st.severity() == Status.Severity.ERROR )
-                {
-                    setMessage( st.message(), ERROR );
-                    setPageComplete( false );
-                }
-                else if( st.severity() == Status.Severity.WARNING )
-                {
-                    setMessage( st.message(), WARNING );
-                    setPageComplete( true );
-                }
-                else
-                {
-                    setMessage( null );
-                    setPageComplete( true );
-                }
-            }
-        };
-        
-        messageUpdateOperation.run();
-        
-        this.part.attach
-        (
-            new FilteredListener<PartValidationEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( PartValidationEvent event )
-                {
-                    messageUpdateOperation.run();
-                }
-            }
-        );
         
         final ISapphireDocumentation doc = this.part.definition().getDocumentation().content();
         
@@ -194,6 +160,27 @@ public class SapphireWizardPage extends WizardPage
     private final void refreshImage()
     {
         setImageDescriptor( toImageDescriptor( this.part.getImage() ) );
+    }
+    
+    private final void refreshValidation()
+    {
+        final Status st = this.part.validation();
+        
+        if( st.severity() == Status.Severity.ERROR )
+        {
+            setMessage( st.message(), ERROR );
+            setPageComplete( false );
+        }
+        else if( st.severity() == Status.Severity.WARNING )
+        {
+            setMessage( st.message(), WARNING );
+            setPageComplete( true );
+        }
+        else
+        {
+            setMessage( null );
+            setPageComplete( true );
+        }
     }
 
     @Override
