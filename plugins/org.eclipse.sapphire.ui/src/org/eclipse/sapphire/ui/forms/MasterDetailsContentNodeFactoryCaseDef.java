@@ -16,6 +16,7 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
+import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.ui.def.PartDef;
 
 /**
@@ -32,6 +33,7 @@ public interface MasterDetailsContentNodeFactoryCaseDef extends MasterDetailsCon
     // *** ElementType ***
     
     @DefaultValue( text = "org.eclipse.sapphire.Element" )
+    @NoDuplicates
     
     ValueProperty PROP_ELEMENT_TYPE = new ValueProperty( TYPE, PartDef.PROP_ELEMENT_TYPE );
 
