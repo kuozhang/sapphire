@@ -187,7 +187,8 @@ public class DiagramNodePart
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
         factory.merge(getShapePart().validation());
-        factory.merge(getPropertiesViewContribution().validation());
+        if (getPropertiesViewContribution() != null)
+        	factory.merge(getPropertiesViewContribution().validation());
         return factory.create();
     }
     
