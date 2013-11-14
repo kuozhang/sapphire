@@ -124,8 +124,10 @@
                             </content>
                             <description>A function can be restricted to apply to a specific parameter signature. If not restricted, the function will apply to any number of parameters of arbitrary type.</description>
                         </section>
+                        <image>${ Image() }</image>
                     </case>
                 </node-factory>
+                <image>org/eclipse/sapphire/sdk/extensibility/FunctionDef.png</image>
             </node>
             <node-include>
                 <part>ActionsNode</part>
