@@ -898,7 +898,7 @@
 
         <case>
             <element-type>org.eclipse.sapphire.ui.forms.WithDef</element-type>
-            <label>With</label>
+            <label>${ Path == null ? &quot;With&quot; : Concat( &quot;With: &quot;, Path ) }</label>
             <image>${ Image() }</image>
             <section>
                 <content>
@@ -921,6 +921,7 @@
                     </property-editor>
                     <property-editor>Label</property-editor>
                 </content>
+                <label>with</label>
             </section>
             <node-factory>
                 <property>Cases</property>
