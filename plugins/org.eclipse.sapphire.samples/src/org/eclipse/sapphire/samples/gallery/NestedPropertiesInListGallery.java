@@ -49,7 +49,7 @@ public interface NestedPropertiesInListGallery extends Element
             @Label( standard = "first name" )
             @Required
             
-            ValueProperty PROP_FIRST_NAME = new ValueProperty( TYPE, "First" );
+            ValueProperty PROP_FIRST = new ValueProperty( TYPE, "First" );
             
             Value<String> getFirst();
             void setFirst( String value );
@@ -59,7 +59,7 @@ public interface NestedPropertiesInListGallery extends Element
             @Label( standard = "last name" )
             @Required
             
-            ValueProperty PROP_LAST_NAME = new ValueProperty( TYPE, "Last" );
+            ValueProperty PROP_LAST = new ValueProperty( TYPE, "Last" );
             
             Value<String> getLast();
             void setLast( String value );
