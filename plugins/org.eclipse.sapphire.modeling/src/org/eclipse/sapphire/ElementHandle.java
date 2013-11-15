@@ -240,18 +240,42 @@ public final class ElementHandle<T extends Element> extends Property
         }
     }
 
+    /**
+     * Returns the element contained by this property.
+     * 
+     * @return the element contained by this property or null
+     */
+    
     public T content()
     {
         return content( false );
     }
     
-    public T content( final boolean createIfNecessary )
+    /**
+     * Returns the element contained by this property, creating it if necessary.
+     * 
+     * @param force controls whether the element should be created if the property is empty
+     * @return the element contained by this property or null
+     * @throws IllegalArgumentException if the set of possible types is greater than one
+     */
+    
+    public T content( final boolean force )
     {
-        return content( createIfNecessary, (ElementType) null );
+        return content( force, (ElementType) null );
     }
     
-    public T content( final boolean createIfNecessary,
-                      final ElementType type )
+    /**
+     * Returns the element contained by this property, creating it if necessary.
+     * 
+     * @param force controls whether the element should be created if the property is empty or it contains the wrong element type
+     * @param type the desired element type
+     * @return the element contained by this property or null
+     * @throws IllegalArgumentException if the type is not among possible types
+     * @throws IllegalArgumentException if a type is not provided and the set of possible types is greater than one
+     * @throws IllegalArgumentException if force flag is set to false and the contained type differs from the desired type
+     */
+    
+    public T content( final boolean force, final ElementType type )
     {
         init();
         
@@ -264,7 +288,7 @@ public final class ElementHandle<T extends Element> extends Property
             throw new IllegalArgumentException();
         }
         
-        if( createIfNecessary )
+        if( force )
         {
             ElementType t = type;
             
@@ -289,7 +313,7 @@ public final class ElementHandle<T extends Element> extends Property
             {
                 binding().create( t );
                 refresh();
-                //initialize
+                t.instantiate();
             }
         }
         else
@@ -306,9 +330,21 @@ public final class ElementHandle<T extends Element> extends Property
         return this.content;
     }
     
+    /**
+     * Returns the element contained by this property, creating it if necessary.
+     * 
+     * @param force controls whether the element should be created if the property is empty or it contains the wrong element type
+     * @param cl the class of the desired element type
+     * @return the element contained by this property or null
+     * @throws IllegalArgumentException if the class does not contain an element type
+     * @throws IllegalArgumentException if the type is not among possible types
+     * @throws IllegalArgumentException if a type is not provided and the set of possible types is greater than one
+     * @throws IllegalArgumentException if force flag is set to false and the contained type differs from the desired type
+     */
+    
     @SuppressWarnings( "unchecked" )
     
-    public <C extends Element> C content( final boolean createIfNecessary, final Class<C> cl )
+    public <C extends Element> C content( final boolean force, final Class<C> cl )
     {
         ElementType type = null;
         
@@ -322,7 +358,7 @@ public final class ElementHandle<T extends Element> extends Property
             }
         }
         
-        return (C) content( createIfNecessary, type );
+        return (C) content( force, type );
     }
     
     @Override
