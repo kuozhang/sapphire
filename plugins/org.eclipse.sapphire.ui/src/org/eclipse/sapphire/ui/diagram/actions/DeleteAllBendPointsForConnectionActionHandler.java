@@ -21,7 +21,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -36,7 +36,7 @@ public class DeleteAllBendPointsForConnectionActionHandler extends SapphireActio
 	public void init(SapphireAction action, ActionHandlerDef def) {
 		super.init(action, def);
 
-    	StandardDiagramConnectionPart part = (StandardDiagramConnectionPart) getPart();
+    	DiagramConnectionPart part = (DiagramConnectionPart) getPart();
 		part.attach(new Listener() {
 			@Override
 			public void handle(final Event e) {
@@ -63,13 +63,13 @@ public class DeleteAllBendPointsForConnectionActionHandler extends SapphireActio
 	@Override
     public boolean isEnabled()
     {
-        return ! ( (StandardDiagramConnectionPart) getPart() ).getConnectionBendpoints().isEmpty();
+        return ! ( (DiagramConnectionPart) getPart() ).getBendpoints().isEmpty();
     }
 
     @Override
     protected Object run( final Presentation context) 
     {
-        ( (StandardDiagramConnectionPart) getPart() ).removeAllBendpoints();
+        ( (DiagramConnectionPart) getPart() ).removeAllBendpoints();
         
         return null;
     }

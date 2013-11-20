@@ -31,7 +31,7 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.def.ConnectionEndpointType;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.DiagramConnectionFigure;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionLabelModel;
@@ -122,7 +122,7 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 	
 	public void updateStyle(PolylineConnection connection) {
 		DiagramResourceCache resourceCache = getCastedModel().getDiagramModel().getResourceCache();
-		StandardDiagramConnectionPart connectionPart = getCastedModel().getModelPart();
+		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
 		IDiagramConnectionDef def = connectionPart.getConnectionDef();
 		connection.setLineStyle(resourceCache.getLinkStyle(def));
 		connection.setLineWidth(def.getLineWidth().content());
@@ -130,10 +130,10 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 	}
 	
 	private void refreshBendpoints() {
-		StandardDiagramConnectionPart connectionPart = getCastedModel().getModelPart();
+		DiagramConnectionPart connectionPart = getCastedModel().getModelPart();
 
 		List<AbsoluteBendpoint> figureConstraint = new ArrayList<AbsoluteBendpoint>();
-		for (Point point : connectionPart.getConnectionBendpoints().getBendPoints()) {
+		for (Point point : connectionPart.getBendpoints()) {
 			AbsoluteBendpoint bendpoint = new AbsoluteBendpoint(point.getX(), point.getY());
 			figureConstraint.add(bendpoint);
 		}

@@ -12,9 +12,9 @@
 package org.eclipse.sapphire.ui.diagram.layout;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.internal.StandardEmbeddedConnectionPart;
 
 /**
@@ -71,9 +71,9 @@ public class ConnectionHashKey
 		}
 	}
 	
-	public static ConnectionHashKey createKey(final StandardDiagramConnectionPart connPart)
+	public static ConnectionHashKey createKey(final DiagramConnectionPart connPart)
 	{
-		SapphireDiagramEditorPagePart diagramPart = connPart.getDiagramConnectionTemplate().getDiagramEditor();
+		SapphireDiagramEditorPagePart diagramPart = connPart.nearest(SapphireDiagramEditorPagePart.class);
 		String connId = connPart.getId();
 		String nodeId = null;
 		if (connPart instanceof StandardEmbeddedConnectionPart)

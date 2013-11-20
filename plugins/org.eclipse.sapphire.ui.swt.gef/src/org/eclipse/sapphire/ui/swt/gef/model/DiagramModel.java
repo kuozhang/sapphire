@@ -24,7 +24,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.layout.DiagramLayoutPersistenceService;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.presentation.DiagramConnectionPresentation;
@@ -88,7 +88,7 @@ public class DiagramModel extends DiagramModelBase {
 		return null;
 	}
 	
-	public DiagramConnectionModel getDiagramConnectionModel(StandardDiagramConnectionPart connectionPart) {
+	public DiagramConnectionModel getDiagramConnectionModel(DiagramConnectionPart connectionPart) {
 		for (DiagramConnectionModel connectionModel : connections) {
 			if (connectionModel.getModelPart() == connectionPart) {
 				return connectionModel;
@@ -127,7 +127,7 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 
-	public void handleDirectEditing(StandardDiagramConnectionPart connectionPart) {
+	public void handleDirectEditing(DiagramConnectionPart connectionPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connectionPart);
 		if (connectionModel != null) {
 			connectionModel.handleStartEditing();
@@ -161,12 +161,12 @@ public class DiagramModel extends DiagramModelBase {
 		ConnectionService connService = getSapphirePart().service(ConnectionService.class);
 		for (DiagramConnectionPart connPart : connService.list())
 		{
-			addConnection((StandardDiagramConnectionPart)connPart);
+			addConnection(connPart);
 		}
 		
 	}
 	
-	public void addConnection(StandardDiagramConnectionPart connPart) {
+	public void addConnection(DiagramConnectionPart connPart) {
 		if (getDiagramConnectionModel(connPart) != null) {
 			return;
 		}
@@ -196,17 +196,18 @@ public class DiagramModel extends DiagramModelBase {
 				// See Bug 374793 - Additional bend points added to connection when visible-when condition on nodes change
 								
 				Point bendPoint = getConfigurationManager().getConnectionRouter().route(connectionModel);
-	        	if (bendPoint != null && connPart.getConnectionBendpoints().isEmpty()) 
+				DiagramLayoutPersistenceService persistenceService = getSapphirePart().service(DiagramLayoutPersistenceService.class);
+	        	if (persistenceService.read(connPart) == null && bendPoint != null && connPart.getBendpoints().isEmpty()) 
 	        	{
 	        		List<org.eclipse.sapphire.ui.Point> bendPoints = new ArrayList<org.eclipse.sapphire.ui.Point>(1);
 	        		bendPoints.add(new org.eclipse.sapphire.ui.Point(bendPoint.x, bendPoint.y));
-        			connectionModel.getModelPart().resetBendpoints(bendPoints, false, true);
+        			connectionModel.getModelPart().resetBendpoints(bendPoints);
 	        	}
 			}
 		}
 	}
 	
-	public void removeConnection(StandardDiagramConnectionPart connPart) {
+	public void removeConnection(DiagramConnectionPart connPart) {
 		DiagramConnectionModel connectionModel = getDiagramConnectionModel(connPart);
 		if (connectionModel != null) {
 			removeConnection(connectionModel);
@@ -223,7 +224,7 @@ public class DiagramModel extends DiagramModelBase {
 		}
 	}
 	
-	public void updateConnectionEndpoint(StandardDiagramConnectionPart connPart) {
+	public void updateConnectionEndpoint(DiagramConnectionPart connPart) {
 		Element endpoint1 = connPart.getEndpoint1();
 		Element endpoint2 = connPart.getEndpoint2();
 		DiagramNodePart nodePart1 = getSapphirePart().getDiagramNodePart(endpoint1);

@@ -28,7 +28,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionLabelModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -78,7 +78,7 @@ public class DiagramConnectionLabelEditPart extends AbstractGraphicalEditPart
 		installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, new ConnectionLabelDirectEditPolicy());
 	}
 
-	public StandardDiagramConnectionPart getDiagramConnectionPart() {
+	public DiagramConnectionPart getDiagramConnectionPart() {
 		return ((DiagramConnectionLabelModel)getModel()).getModelPart();
 	}
 	

@@ -250,6 +250,13 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
     }
     
+    public void autoLayout(boolean horizontal)
+    {
+    	broadcast(new PreAutoLayoutEvent(this));
+    	broadcast(new AutoLayoutEvent(this, horizontal));
+    	broadcast(new PostAutoLayoutEvent(this));
+    }
+    
     public final DiagramEditorPageState state()
     {
         return (DiagramEditorPageState) super.state();
@@ -704,6 +711,39 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         {
             return this.after;
         }
+    }
+    
+    
+    public static final class PreAutoLayoutEvent extends PartEvent
+    {
+    	public PreAutoLayoutEvent(final SapphirePart part)
+    	{
+    		super(part);
+    	}    	    	
+    }
+
+    public static final class AutoLayoutEvent extends PartEvent
+    {
+    	private boolean horizontal;
+    	
+    	public AutoLayoutEvent(final SapphirePart part, boolean horizontal)
+    	{
+    		super(part);
+    		this.horizontal = horizontal;
+    	}
+    	
+    	public boolean horizontal()
+    	{
+    		return this.horizontal;
+    	}
+    }
+    
+    public static final class PostAutoLayoutEvent extends PartEvent
+    {
+    	public PostAutoLayoutEvent(final SapphirePart part)
+    	{
+    		super(part);
+    	}    	    	
     }
     
 }

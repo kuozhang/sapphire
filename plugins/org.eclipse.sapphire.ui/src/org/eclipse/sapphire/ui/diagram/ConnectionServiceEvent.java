@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.diagram;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -22,17 +22,17 @@ import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 
 public class ConnectionServiceEvent extends ServiceEvent 
 {	
-    private StandardDiagramConnectionPart connPart;
+    private DiagramConnectionPart connPart;
     private ConnectionEventType type;
     
-	public ConnectionServiceEvent(Service service, StandardDiagramConnectionPart connPart, ConnectionEventType type)
+	public ConnectionServiceEvent(Service service, DiagramConnectionPart connPart, ConnectionEventType type)
 	{
 		super(service);
 		this.connPart = connPart;
 		this.type = type;
 	}
 	
-	public StandardDiagramConnectionPart getConnectionPart()
+	public DiagramConnectionPart getConnectionPart()
 	{
 		return this.connPart;
 	}

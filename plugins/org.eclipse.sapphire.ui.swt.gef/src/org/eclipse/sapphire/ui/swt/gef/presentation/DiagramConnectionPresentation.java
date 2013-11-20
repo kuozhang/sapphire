@@ -14,7 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -28,7 +28,7 @@ public class DiagramConnectionPresentation extends DiagramPresentation
 {
 	private Listener connectionListener;
 	
-	public DiagramConnectionPresentation(final StandardDiagramConnectionPart connPart, final DiagramPresentation parent, 
+	public DiagramConnectionPresentation(final DiagramConnectionPart connPart, final DiagramPresentation parent, 
 			final Shell shell, final DiagramConfigurationManager configManager, final DiagramResourceCache resourceCache)
 	{
 		super(connPart, parent, configManager, shell);
@@ -74,9 +74,9 @@ public class DiagramConnectionPresentation extends DiagramPresentation
 	}
 
 	@Override
-	public StandardDiagramConnectionPart part()
+	public DiagramConnectionPart part()
 	{
-		return (StandardDiagramConnectionPart)super.part();
+		return (DiagramConnectionPart)super.part();
 	}
 
 }

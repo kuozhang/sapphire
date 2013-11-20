@@ -23,11 +23,11 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.ConnectionServiceEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -76,7 +76,7 @@ public class DiagramPagePresentation extends DiagramPresentation
 		this.connectionServiceListener = new FilteredListener<ConnectionServiceEvent>() {
 			@Override
 			protected void handleTypedEvent(ConnectionServiceEvent event) {
-		    	StandardDiagramConnectionPart connectionPart = event.getConnectionPart();
+		    	DiagramConnectionPart connectionPart = event.getConnectionPart();
 		    	switch(event.getConnectionEventType()) {
 			    	case ConnectionEndpointUpdate:
 			    		diagramModel.updateConnectionEndpoint(connectionPart);

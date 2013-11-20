@@ -12,8 +12,13 @@
 
 package org.eclipse.sapphire.ui.diagram.layout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceEvent;
+import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 
 /**
  * <p>Responsible for persisting layout of the diagram, such a location and size of nodes, connection bend points, etc.</p>
@@ -41,6 +46,14 @@ public abstract class DiagramLayoutPersistenceService extends Service
 	    return false;
 	}
 	
+	/**
+	 * Retrieves a connection's bendpoints.
+	 * @param connection The connection part
+	 * @return The diagram connection info including bend points and label position. 
+	 * Returns null if the connection is not known to the layout persistence service. 
+	 */
+	public abstract DiagramConnectionInfo read(DiagramConnectionPart connection);
+		
 	public static class DirtyStateEvent extends ServiceEvent
 	{
 	    private final boolean before;
@@ -63,6 +76,41 @@ public abstract class DiagramLayoutPersistenceService extends Service
 	    {
 	        return this.after;
 	    }
+	}
+	
+	public static class DiagramConnectionInfo
+	{
+		private List<Point> bendPoints;
+		private Point labelPosition;
+		
+		public DiagramConnectionInfo(List<Point> bendPoints)
+		{
+			this.bendPoints = new ArrayList<Point>();
+			this.bendPoints.addAll(bendPoints);
+		}
+		
+		public DiagramConnectionInfo(List<Point> bendPoints, Point labelPosition)
+		{
+			this.bendPoints = new ArrayList<Point>();
+			if (bendPoints != null)
+			{
+				this.bendPoints.addAll(bendPoints);
+			}
+			if (labelPosition != null)
+			{
+				this.labelPosition = new Point(labelPosition.getX(), labelPosition.getY());
+			}
+		}
+		
+		public List<Point> getBendPoints()
+		{
+			return this.bendPoints;
+		}
+		
+		public Point getLabelPosition()
+		{
+			return this.labelPosition;
+		}
 	}
 	
 }

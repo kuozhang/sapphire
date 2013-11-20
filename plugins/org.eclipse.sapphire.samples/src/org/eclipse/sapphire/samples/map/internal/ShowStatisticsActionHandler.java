@@ -50,10 +50,10 @@ public final class ShowStatisticsActionHandler extends SapphireActionHandler
             {
                 nodes++;
             }
-            else if( selectedPart instanceof StandardDiagramConnectionPart )
+            else if( selectedPart instanceof DiagramConnectionPart )
             {
                 connections++;
-                bendpoints += ( (StandardDiagramConnectionPart) selectedPart ).getConnectionBendpoints().size();
+                bendpoints += ( (DiagramConnectionPart) selectedPart ).getBendpoints().size();
             }
             else if( selectedPart instanceof SapphireDiagramEditorPagePart )
             {
@@ -65,7 +65,7 @@ public final class ShowStatisticsActionHandler extends SapphireActionHandler
                 
                 for( DiagramConnectionPart connection : allConnections )
                 {
-                    bendpoints += ((StandardDiagramConnectionPart)connection).getConnectionBendpoints().size();
+                    bendpoints += connection.getBendpoints().size();
                 }
             }
         }

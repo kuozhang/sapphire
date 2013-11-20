@@ -13,8 +13,9 @@
 package org.eclipse.sapphire.ui.swt.gef.commands;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramNodeModel;
 
@@ -42,8 +43,8 @@ public class ReconnectConnectionCommand extends Command {
 	@Override
 	public boolean canExecute() {
 		// Don't allow reconnect on implicit connections
-		StandardDiagramConnectionPart connectionPart = this.connection.getModelPart();
-		if (connectionPart instanceof StandardImplicitConnectionPart) {
+		DiagramConnectionPart connectionPart = this.connection.getModelPart();
+		if (!connectionPart.removable()) {
 			return false;
 		}
 		if (newSource != null) {
@@ -59,10 +60,9 @@ public class ReconnectConnectionCommand extends Command {
 		if (newSource.equals(oldTarget)) {
 			return false;
 		}
-		StandardDiagramConnectionPart connectionPart = this.connection.getModelPart();
-		
-		if (!(connectionPart.getDiagramConnectionTemplate().canCreateNewConnection(
-				newSource.getModelPart(), oldTarget.getModelPart())))
+		DiagramConnectionPart connectionPart = this.connection.getModelPart();
+		ConnectionService connService = connectionPart.nearest(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
+		if (!connService.valid(newSource.getModelPart(), oldTarget.getModelPart(), connectionPart.getConnectionTypeId()))
 			return false;
 
 		return true;
@@ -73,12 +73,11 @@ public class ReconnectConnectionCommand extends Command {
 		if (newTarget.equals(oldSource)) {
 			return false;
 		}
-		StandardDiagramConnectionPart connectionPart = this.connection.getModelPart();
-		
-		if (!(connectionPart.getDiagramConnectionTemplate().canCreateNewConnection(
-				oldSource.getModelPart(), newTarget.getModelPart())))
+		DiagramConnectionPart connectionPart = this.connection.getModelPart();
+		ConnectionService connService = connectionPart.nearest(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
+		if (!connService.valid(oldSource.getModelPart(), newTarget.getModelPart(), connectionPart.getConnectionTypeId()))
 			return false;
-		
+				
 		return true;
 	}
 
@@ -87,7 +86,7 @@ public class ReconnectConnectionCommand extends Command {
 	{
 		// Tried to reset the endpoint but it turns out to be very complex. It's easier
 		// to delete the connection and recreate a new one
-		StandardDiagramConnectionPart connectionPart = connection.getModelPart();
+		DiagramConnectionPart connectionPart = connection.getModelPart();
 		connectionPart.reconnect(newSource != null ? newSource.getModelPart() : oldSource.getModelPart(), 
 									newTarget != null ? newTarget.getModelPart() : oldTarget.getModelPart());
 	}

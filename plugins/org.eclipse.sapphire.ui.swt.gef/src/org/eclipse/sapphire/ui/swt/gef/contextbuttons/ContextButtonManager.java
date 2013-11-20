@@ -36,10 +36,10 @@ import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.model.ShapeModel;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
@@ -344,7 +344,7 @@ public class ContextButtonManager {
 		Set<DiagramNodePart> selectedNodes = new HashSet<DiagramNodePart>();
 		for (ISapphirePart part : selectedParts)
 		{
-			if (part instanceof StandardDiagramConnectionPart || part instanceof SapphireDiagramEditorPagePart) 
+			if (part instanceof DiagramConnectionPart || part instanceof SapphireDiagramEditorPagePart) 
 			{
 				// Don't display context pad if the selection includes connections
 				return;

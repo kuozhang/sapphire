@@ -31,7 +31,7 @@ public interface Position extends Element
     
     @Type( base = Integer.class )
     @XmlBinding( path = "@x" )
-    @DefaultValue( text = "0" )
+    @DefaultValue( text = "-1" )
     
     ValueProperty PROP_X = new ValueProperty( TYPE, "X");
     
@@ -43,7 +43,7 @@ public interface Position extends Element
     
     @Type( base = Integer.class )
     @XmlBinding( path = "@y" )
-    @DefaultValue( text = "0" )
+    @DefaultValue( text = "-1" )
 
     ValueProperty PROP_Y = new ValueProperty( TYPE, "Y");
     

@@ -160,12 +160,12 @@ public class StandardConnectionService extends ConnectionService
 	}
 
 	@Override
-	public StandardDiagramConnectionPart connect(DiagramNodePart srcNode, DiagramNodePart targetNode, String connectionType) 
+	public DiagramConnectionPart connect(DiagramNodePart srcNode, DiagramNodePart targetNode, String connectionType) 
 	{
 		DiagramConnectionTemplate connectionTemplate = getConnectionTemplate(srcNode, connectionType);
 		if (connectionTemplate != null)
 		{
-			StandardDiagramConnectionPart connection = connectionTemplate.createNewDiagramConnection(srcNode, targetNode);
+			DiagramConnectionPart connection = connectionTemplate.createNewDiagramConnection(srcNode, targetNode);
 			return connection;
 		}
 		return null;
@@ -178,7 +178,7 @@ public class StandardConnectionService extends ConnectionService
         
         for( DiagramConnectionTemplate template : getAllConnectionTemplates() )
         {
-        	for (StandardDiagramConnectionPart connPart : template.getDiagramConnections(null))
+        	for (DiagramConnectionPart connPart : template.getDiagramConnections(null))
         	{
         		connections.add(connPart);
         	}
@@ -186,7 +186,7 @@ public class StandardConnectionService extends ConnectionService
         
         for (DiagramConnectionTemplate embeddedConnectionTemplate : this.embeddedConnectionTemplateMap.values())
         {
-        	for (StandardDiagramConnectionPart connPart : embeddedConnectionTemplate.getDiagramConnections(null))
+        	for (DiagramConnectionPart connPart : embeddedConnectionTemplate.getDiagramConnections(null))
         	{
         		connections.add(connPart);
         	}
@@ -300,63 +300,63 @@ public class StandardConnectionService extends ConnectionService
 	private void notifyConnectionUpdate(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionUpdate);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionUpdate);
     	this.broadcast(serviceEvent);
 	}
 	
 	private void notifyConnectionEndpointUpdate(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionEndpointUpdate);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionEndpointUpdate);
     	this.broadcast(serviceEvent);
 	}
 
     private void notifyConnectionAdd(final DiagramConnectionEvent event)
     {
     	ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAdd);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAdd);
     	this.broadcast(serviceEvent);
     }
 
 	private void notifyConnectionDelete(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionDelete);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionDelete);
     	this.broadcast(serviceEvent);
 	}
 	
 	private void notifyConnectionAddBendpoint(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAddBendpoint);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAddBendpoint);
     	this.broadcast(serviceEvent);
 	}
 
 	private void notifyConnectionRemoveBendpoint(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionRemoveBendpoint);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionRemoveBendpoint);
     	this.broadcast(serviceEvent);
 	}
 
 	private void notifyConnectionMoveBendpoint(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveBendpoint);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveBendpoint);
     	this.broadcast(serviceEvent);
 	}
 	
 	private void notifyConnectionResetBendpoints(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionResetBendpoint);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionResetBendpoint);
     	this.broadcast(serviceEvent);
 	}
 
 	private void notifyConnectionMoveLabel(final DiagramConnectionEvent event)
 	{
 		ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-				(StandardDiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveLabel);
+				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveLabel);
     	this.broadcast(serviceEvent);
 	}
 	

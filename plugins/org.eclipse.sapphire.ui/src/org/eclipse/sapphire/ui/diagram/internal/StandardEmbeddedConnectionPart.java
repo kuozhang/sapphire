@@ -67,6 +67,7 @@ public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPar
                 {
                     public void run()
                     {
+                    	resetEndpoint2();
                     }
                 }
             );
@@ -122,7 +123,7 @@ public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPar
     }
         
     @Override
-    public void resetEndpoint1(DiagramNodePart newSrcNode)
+    protected void resetEndpoint1(DiagramNodePart newSrcNode)
     {
     }
     
@@ -162,10 +163,6 @@ public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPar
     @Override
     public void addModelListener()
     {
-        if (this.labelProperty != null)
-        {
-            this.labelProperty.attach(this.modelPropertyListener);
-        }
         this.modelElement.attach(this.modelPropertyListener, 
                                     this.endpointDef.getProperty().content());
     }
@@ -173,10 +170,6 @@ public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPar
     @Override
     public void removeModelListener()
     {
-        if (this.labelProperty != null)
-        {
-            this.labelProperty.detach(this.modelPropertyListener);
-        }
         this.modelElement.detach(this.modelPropertyListener, 
                                     this.endpointDef.getProperty().content());
     }
@@ -212,6 +205,7 @@ public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPar
                 {
                     public void run()
                     {
+                    	resetEndpoint2();
                     }
                 }
             );

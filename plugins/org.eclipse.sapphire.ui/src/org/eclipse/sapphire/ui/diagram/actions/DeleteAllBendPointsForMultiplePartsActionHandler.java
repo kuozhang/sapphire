@@ -24,8 +24,8 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.ConnectionServiceEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -79,9 +79,9 @@ public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireAc
         
         for( ISapphirePart selectedPart : page.getSelections() )
         {
-            if( selectedPart instanceof StandardDiagramConnectionPart )
+            if( selectedPart instanceof DiagramConnectionPart )
             {
-                if( ! ( (StandardDiagramConnectionPart) selectedPart ).getConnectionBendpoints().isEmpty() )
+                if( ! ( (DiagramConnectionPart) selectedPart ).getBendpoints().isEmpty() )
                 {
                     return true;
                 }
@@ -98,9 +98,9 @@ public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireAc
         
         for( ISapphirePart selectedPart : page.getSelections() )
         {
-            if( selectedPart instanceof StandardDiagramConnectionPart )
+            if( selectedPart instanceof DiagramConnectionPart )
             {
-                ( (StandardDiagramConnectionPart) selectedPart ).removeAllBendpoints();
+                ( (DiagramConnectionPart) selectedPart ).removeAllBendpoints();
             }
         }
         

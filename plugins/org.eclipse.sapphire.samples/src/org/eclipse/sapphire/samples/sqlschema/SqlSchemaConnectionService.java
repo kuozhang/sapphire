@@ -16,9 +16,9 @@ import java.util.List;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.internal.StandardConnectionService;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.ui.forms.swt.SapphireWizard;
 import org.eclipse.swt.widgets.Display;
 
@@ -29,9 +29,9 @@ import org.eclipse.swt.widgets.Display;
 public final class SqlSchemaConnectionService extends StandardConnectionService
 {
     @Override
-    public StandardDiagramConnectionPart connect( final DiagramNodePart node1, final DiagramNodePart node2, final String connectionType )
+    public DiagramConnectionPart connect( final DiagramNodePart node1, final DiagramNodePart node2, final String connectionType )
     {
-        final StandardDiagramConnectionPart fkConnectionPart = super.connect( node1, node2, connectionType );
+        final DiagramConnectionPart fkConnectionPart = super.connect( node1, node2, connectionType );
         final ForeignKey fk = (ForeignKey) fkConnectionPart.getLocalModelElement();
         
         final Table referencedTable = fk.getReferencedTable().resolve();

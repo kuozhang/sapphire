@@ -16,6 +16,7 @@
 
 package org.eclipse.sapphire.ui.diagram.internal;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +41,6 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionBendPoints;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
@@ -82,7 +82,7 @@ public class StandardDiagramConnectionPart
 	protected FunctionResult idFunctionResult;
 	protected Listener modelPropertyListener;
 	private PropertiesViewContributionManager propertiesViewContributionManager;
-	private DiagramConnectionBendPoints bendPoints = new DiagramConnectionBendPoints();
+	private List<Point> bendPoints = new ArrayList<Point>();
 	private Point labelPosition;
 	
 	protected static final String CONNECTION_ID_SEPARATOR = "&";
@@ -156,6 +156,7 @@ public class StandardDiagramConnectionPart
                 {
                     public void run()
                     {
+                    	resetEndpoint1();
                     }
                 }
             );            
@@ -175,6 +176,7 @@ public class StandardDiagramConnectionPart
                 {
                     public void run()
                     {
+                    	resetEndpoint2();
                     }
                 }
             );
@@ -362,14 +364,14 @@ public class StandardDiagramConnectionPart
         }        
     }
 
-    public void resetEndpoint1(DiagramNodePart newSrcNode)
+    protected void resetEndpoint1(DiagramNodePart newSrcNode)
     {
     	this.srcNodeModel = newSrcNode.getLocalModelElement();
     	String endpoint1Value = this.connectionTemplate.getSerializedEndpoint1(newSrcNode);
     	this.connectionTemplate.setSerializedEndpoint1(this.modelElement, endpoint1Value);
     }
     
-    public void resetEndpoint2(DiagramNodePart newTargetNode)
+    protected void resetEndpoint2(DiagramNodePart newTargetNode)
     {
     	this.targetNodeModel = newTargetNode.getLocalModelElement();
     	String endpoint2Value = this.connectionTemplate.getSerializedEndpoint2(newTargetNode);
@@ -535,9 +537,10 @@ public class StandardDiagramConnectionPart
                     {
                         public void run()
                         {
+                        	resetEndpoint1();
                         }
                     }
-                );
+                );                
             }            
         }
         else
@@ -560,9 +563,11 @@ public class StandardDiagramConnectionPart
                     {
                         public void run()
                         {
+                        	resetEndpoint2();
                         }
                     }
                 );
+                
             }            
         }
     }
@@ -628,43 +633,36 @@ public class StandardDiagramConnectionPart
 	
     public void addBendpoint(int index, int x, int y)
     {
-    	this.bendPoints.getBendPoints().add(index, new Point(x, y));
+    	this.bendPoints.add(index, new Point(x, y));
     	notifyAddBendpoint();
     }
     
     public void removeBendpoint(int index)
     {
-    	this.bendPoints.getBendPoints().remove(index);
+    	this.bendPoints.remove(index);
     	notifyRemoveBendpoint();
     }
     
     public void removeAllBendpoints()
     {
-    	this.bendPoints.getBendPoints().clear();
+    	this.bendPoints.clear();
     	notifyRemoveBendpoint();
     }
     
     public void updateBendpoint(int index, int x, int y)
     {
-    	if (index < this.bendPoints.getBendPoints().size())
+    	if (index < this.bendPoints.size())
     	{
-    		this.bendPoints.getBendPoints().set(index, new Point(x, y));
+    		this.bendPoints.set(index, new Point(x, y));
     	}
     	notifyMoveBendpoint();
     }
-    
-    public void resetBendpoints(DiagramConnectionBendPoints bendPoints)
+        
+    public void resetBendpoints(List<Point> bendpoints)
     {
-    	resetBendpoints(bendPoints.getBendPoints(), bendPoints.isAutoLayout(), 
-    			bendPoints.isDefault());
-    }
-    
-    public void resetBendpoints(List<Point> bendpoints, boolean autoLayout , boolean isDefault)
-    {
+    	
     	boolean changed = false;
-    	if (bendpoints.size() != this.bendPoints.getBendPoints().size() || 
-    			autoLayout != this.bendPoints.isAutoLayout() ||
-    			isDefault != this.bendPoints.isDefault())
+    	if (bendpoints.size() != this.bendPoints.size())
     	{
     		changed = true;
     	}
@@ -673,7 +671,7 @@ public class StandardDiagramConnectionPart
 			for (int i = 0; i < bendpoints.size(); i++)
 			{
 				Point newPt = bendpoints.get(i);
-				Point oldPt = this.bendPoints.getBendPoints().get(i);
+				Point oldPt = this.bendPoints.get(i);
 				if (newPt.getX() != oldPt.getX() || newPt.getY() != oldPt.getY())
 				{
 					changed = true;
@@ -683,18 +681,19 @@ public class StandardDiagramConnectionPart
     	}
     	if (changed)
     	{
-    		this.bendPoints.setBendPoints(bendpoints);
-    		this.bendPoints.setDefault(isDefault);
-    		this.bendPoints.setAutoLayout(autoLayout);
+    		this.bendPoints.clear();
+    		this.bendPoints.addAll(bendpoints);
     		notifyResetBendpoints();
     	}
     }
     
-    public DiagramConnectionBendPoints getConnectionBendpoints()
+    public List<Point> getBendpoints()
     {
-    	return new DiagramConnectionBendPoints(this.bendPoints);
+    	List<Point> bendPoints = new ArrayList<Point>();
+    	bendPoints.addAll(this.bendPoints);
+    	return bendPoints;
     }
-
+    
     public Point getLabelPosition()
     {
     	return this.labelPosition;

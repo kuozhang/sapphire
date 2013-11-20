@@ -11,7 +11,12 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import java.util.List;
+
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -25,7 +30,35 @@ public abstract class DiagramConnectionPart extends SapphirePart
 	
 	public abstract String getId();
 	
+	public abstract String getConnectionTypeId();
+	
+	public abstract IDiagramConnectionDef getConnectionDef();
+	
 	public abstract DiagramConnectionPart reconnect(DiagramNodePart newSrc, DiagramNodePart newTarget);
 	
 	public abstract boolean canEditLabel();
+	
+	public abstract List<Point> getBendpoints();
+	
+	public abstract void removeAllBendpoints();
+	
+	public abstract void resetBendpoints(List<Point> bendpoints);
+	
+	public abstract void addBendpoint(int index, int x, int y);
+	
+	public abstract void updateBendpoint(int index, int x, int y);
+	
+	public abstract void removeBendpoint(int index);
+	
+	public abstract String getLabel();
+	
+	public abstract void setLabel(String newValue);
+	
+	public abstract Point getLabelPosition();
+	
+	public abstract void setLabelPosition(Point newPos);
+	
+	public abstract Element getEndpoint1();
+	
+	public abstract Element getEndpoint2();
 }
