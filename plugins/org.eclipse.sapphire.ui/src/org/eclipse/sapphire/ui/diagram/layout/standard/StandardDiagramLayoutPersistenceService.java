@@ -75,7 +75,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private Map<ConnectionHashKey, List<Point>> connectionBendPoints;
 	private Map<ConnectionHashKey, Point> connectionLabelPositions;
 	private boolean dirty;
-	private Map<String, DiagramConnectionPart> connectionIdMap;
+	private Map<ConnectionHashKey, DiagramConnectionPart> connectionIdMap;
 	private boolean autoLayout = false;
 	
     @Override
@@ -157,7 +157,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 			{
 				String connId = connLayout.getConnectionId().content();
 				ElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
-				DiagramConnectionPart connPart = getConnectionPart(connService, connId);
+				DiagramConnectionPart connPart = getConnectionPart(connService, ConnectionHashKey.createKey(nodeId, connId));
 				if (connPart != null)
 				{					
 					int index = 0;
@@ -180,7 +180,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		for (DiagramConnectionLayout connLayout : connList)
 		{
 			String connId = connLayout.getConnectionId().content();
-			DiagramConnectionPart connPart = getConnectionPart(connService, connId);
+			DiagramConnectionPart connPart = getConnectionPart(connService, ConnectionHashKey.createKey(null, connId));
 			ElementList<DiagramBendPointLayout> bps = connLayout.getConnectionBendpoints();
 			if (connPart != null)
 			{
@@ -707,14 +707,14 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
         }
     }
     
-    private DiagramConnectionPart getConnectionPart(ConnectionService connService, String connId)
+    private DiagramConnectionPart getConnectionPart(ConnectionService connService, ConnectionHashKey connId)
     {
     	if (this.connectionIdMap == null)
     	{
-    		this.connectionIdMap = new HashMap<String, DiagramConnectionPart>();
+    		this.connectionIdMap = new HashMap<ConnectionHashKey, DiagramConnectionPart>();
     		for (DiagramConnectionPart connPart : connService.list())
     		{
-    			this.connectionIdMap.put(connPart.getId(), connPart);
+    			this.connectionIdMap.put(ConnectionHashKey.createKey(connPart), connPart);
     		}
     	}
     	return this.connectionIdMap.get(connId);

@@ -47,7 +47,7 @@ public abstract class DiagramLayoutPersistenceService extends Service
 	}
 	
 	/**
-	 * Retrieves a connection's bendpoints.
+	 * Retrieves a connection's bendpoints and label position.
 	 * @param connection The connection part
 	 * @return The diagram connection info including bend points and label position. 
 	 * Returns null if the connection is not known to the layout persistence service. 
