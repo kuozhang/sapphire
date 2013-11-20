@@ -310,9 +310,15 @@ public abstract class SapphireTestCase extends Assert
         }
     }
     
-    protected static void assertInstanceOf( final Object object,
-                                            final Class<?> type )
+    protected static void assertInstanceOf( final Object object, final Class<?> type )
     {
+        if( type == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        assertNotNull( object );
+        
         if( ! type.isInstance( object ) )
         {
             fail( "Expected " + type.getSimpleName() + ". Found " + object.getClass().getSimpleName() + "." );

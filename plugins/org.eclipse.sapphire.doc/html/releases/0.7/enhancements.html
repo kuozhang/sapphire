@@ -678,10 +678,10 @@ ElementHandle was the only one that had no API to retrieve the parent property.<
 
 <pre class="source-code"><code><font color="#888888">ElementHandle
 {
-    T element()
-    T element( boolean createIfNecessary )
-    T element( boolean createIfNecessary, ElementType type )</font>
-    &lt;C extends Element> C element( boolean createIfNecessary, Class&lt;C> cl )
+    T content()
+    T content( boolean force )
+    T content( boolean force, ElementType type )</font>
+    &lt;C extends Element> C content( boolean force, Class&lt;C> cl )
 <font color="#888888">}</font></code></pre>
 
 <p>In certain situations, it is useful to be able to reference a fully typed ElementHandle class object. One such scenario

@@ -14,6 +14,7 @@ package org.eclipse.sapphire.tests.modeling;
 import org.eclipse.sapphire.tests.modeling.el.ExpressionLanguageTests;
 import org.eclipse.sapphire.tests.modeling.events.TestPropertyEvents;
 import org.eclipse.sapphire.tests.modeling.misc.ModelingMiscTests;
+import org.eclipse.sapphire.tests.modeling.properties.element.ElementPropertyTests;
 import org.eclipse.sapphire.tests.modeling.xml.XmlTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -33,7 +34,8 @@ import org.junit.runners.Suite.SuiteClasses;
         TopologicalSorterTests.class,
         ExpressionLanguageTests.class,
         TestPropertyEvents.class,
-        ModelingMiscTests.class
+        ModelingMiscTests.class,
+        ElementPropertyTests.class
     }
 )
 
