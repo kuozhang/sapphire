@@ -600,8 +600,8 @@
     <service>
         <id>Sapphire.Diagrams.ConnectionService.Standard</id>
         <context>Sapphire.Part</context>
-        <implementation>org.eclipse.sapphire.ui.diagram.internal.StandardConnectionService</implementation>
-        <condition>org.eclipse.sapphire.ui.diagram.internal.StandardConnectionService$Condition</condition>
+        <implementation>org.eclipse.sapphire.ui.diagram.StandardConnectionService</implementation>
+        <condition>org.eclipse.sapphire.ui.diagram.StandardConnectionService$Condition</condition>
     </service>    
     <function>
         <name>Part</name>

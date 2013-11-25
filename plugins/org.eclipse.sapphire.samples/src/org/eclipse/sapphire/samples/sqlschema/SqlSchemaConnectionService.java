@@ -16,9 +16,9 @@ import java.util.List;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.diagram.StandardConnectionService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardConnectionService;
 import org.eclipse.sapphire.ui.forms.swt.SapphireWizard;
 import org.eclipse.swt.widgets.Display;
 

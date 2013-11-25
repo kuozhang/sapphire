@@ -27,7 +27,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
 import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SapphireActionPresentationManager;
 import org.eclipse.swt.SWT;
@@ -99,7 +98,8 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 		final SapphireActionPresentationManager manager = getManager();
 		final SapphireActionGroup localGroupOfActions = manager.getActionGroup();
         
-		if (!(this.sapphirePart instanceof StandardImplicitConnectionPart))
+		if (!(this.sapphirePart instanceof DiagramConnectionPart) ||
+				(((DiagramConnectionPart)this.sapphirePart).removable()))
 		{
 			if( handleKeyEvent( event, manager, localGroupOfActions, false ) )
 	        {
