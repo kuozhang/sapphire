@@ -44,6 +44,7 @@ import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.internal.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.util.CollectionsUtil;
 
@@ -61,6 +62,9 @@ public final class DiagramNodeTemplate extends SapphirePart
         {
         }       
         public void handleNodeAdd(final DiagramNodePart nodePart)
+        {            
+        }
+        public void handleNodeAdded(final DiagramNodePart nodePart)
         {            
         }
         public void handleNodeDelete(final DiagramNodePart nodePart)
@@ -358,16 +362,16 @@ public final class DiagramNodeTemplate extends SapphirePart
 	    	DiagramNodePart nodePart = createNewNodePart(newNode);
 	    	if (visible())
 	    	{
-	    		notifyNodeAdd(nodePart);
+	    		notifyNodeAdd(nodePart);	    		
 	    	}
 	    	if (this.embeddedConnTemplate != null)
 	    	{
 	    		this.embeddedConnTemplate.refreshConnections(newNode);
 	    	}
-	    	// If a connection part is created before the two endpoint node parts are created,
-	    	// the connection part hasn't been visually displayed on the diagram canvas.
-	    	// We need to refresh those connections in case they become valid.
-	    	refreshAttachedConnections(nodePart);	    
+	    	if (visible())
+	    	{
+	    		notifyNodeAdded(nodePart);
+	    	}
 		}
     }
     
@@ -443,20 +447,20 @@ public final class DiagramNodeTemplate extends SapphirePart
     {
         return this.diagramEditor;
     }
-    
-    private void notifyNodeValidationEvent(DiagramNodeEvent event)
-    {
-        for( DiagramNodeTemplateListener listener : this.listeners )
-        {
-            listener.handleNodeValidation(event);
-        }        
-    }
-    
+        
     private void notifyNodeAdd(DiagramNodePart nodePart)
     {
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
             listener.handleNodeAdd(nodePart);
+        }                
+    }
+    
+    private void notifyNodeAdded(DiagramNodePart nodePart)
+    {
+        for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleNodeAdded(nodePart);
         }                
     }
     
@@ -483,35 +487,6 @@ public final class DiagramNodeTemplate extends SapphirePart
             listener.handleNodeMove(event);
         }				
 	}
-	
-    /**
-     * In the case where the entire Sapphire model is reconstructed (revert source file in the source editor), 
-     * connection properties may have triggered events before the node properties change events
-     * are sent out. So those connection parts will be created before the endpoint node
-     * parts are created. But those connection parts won't be displayed visually on diagram canvas
-     * until those corresponding endpoint nodes are created on the canvas.
-     * 
-     * [Bug 376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections
-     * in SapphireDiagramEditor
-     * 
-     * @param nodePart
-     */
-    private void refreshAttachedConnections(DiagramNodePart nodePart)
-    {
-    	ConnectionService connService = this.diagramEditor.service(ConnectionService.class);
-    	Element nodeElement = nodePart.getLocalModelElement();
-    	for (DiagramConnectionPart connPart : connService.list())
-    	{
-    		StandardDiagramConnectionPart standardConnPart = (StandardDiagramConnectionPart)connPart;
-			 if (standardConnPart.removable() && 
-					 ((standardConnPart.getEndpoint1() != null && standardConnPart.getEndpoint1() == nodeElement) || 
-							 standardConnPart.getEndpoint2() != null && standardConnPart.getEndpoint2() == nodeElement))
-			 {
-				 standardConnPart.getDiagramConnectionTemplate().notifyConnectionAdd(new DiagramConnectionEvent(connPart));
-			 }
-
-    	}
-    		
-    }
+		
 	
 }

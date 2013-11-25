@@ -25,7 +25,8 @@ public class DiagramNodeEvent extends DiagramPartEvent
         NodeAdd,
         NodeDelete,
         NodeMove,
-        NodeAboutToBeDeleted
+        NodeAboutToBeDeleted,
+        NodeAdded
     }
 	    
     private NodeEventType nodeEventType;

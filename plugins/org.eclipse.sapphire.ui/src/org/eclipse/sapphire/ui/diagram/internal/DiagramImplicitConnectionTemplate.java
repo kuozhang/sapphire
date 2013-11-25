@@ -12,7 +12,7 @@
  *    Konstantin Komissarchik - [378756] Convert ModelElementListener and ModelPropertyListener to common listener infrastructure
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.diagram.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,8 +32,11 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
-import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

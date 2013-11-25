@@ -12,8 +12,6 @@
 package org.eclipse.sapphire.ui.diagram.internal;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
 
 /**

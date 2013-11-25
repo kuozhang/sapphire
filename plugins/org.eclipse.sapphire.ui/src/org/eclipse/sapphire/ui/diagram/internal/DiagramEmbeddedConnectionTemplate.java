@@ -11,7 +11,7 @@
  *    Ling Hao - [383924] Flexible diagram node shapes
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.diagram.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,8 +36,9 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.internal.StandardEmbeddedConnectionPart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

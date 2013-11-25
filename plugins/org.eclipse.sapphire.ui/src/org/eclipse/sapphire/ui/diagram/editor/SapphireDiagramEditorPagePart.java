@@ -576,6 +576,13 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	this.broadcast(event);
 	}
 
+	private void notifyNodeAdded(DiagramNodePart nodePart)
+	{
+		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
+		event.setNodeEventType(NodeEventType.NodeAdded);
+    	this.broadcast(event);
+	}
+
 	private void notifyNodeTemplateVisibilityChange(DiagramNodeTemplate nodeTemplate)
 	{
 		NodeTemplateVisibilityEvent event = new NodeTemplateVisibilityEvent(nodeTemplate);
@@ -645,6 +652,12 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         public void handleNodeAdd(final DiagramNodePart nodePart)
         {
             notifyNodeAdd(nodePart);
+        }
+
+        @Override
+        public void handleNodeAdded(final DiagramNodePart nodePart)
+        {
+            notifyNodeAdded(nodePart);
         }
 
         @Override

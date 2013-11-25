@@ -32,17 +32,17 @@ import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionTemplate.DiagramConnectionTemplateListener;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramEmbeddedConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramImplicitConnectionTemplate.DiagramImplicitConnectionTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.NodeTemplateVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
+import org.eclipse.sapphire.ui.diagram.internal.DiagramConnectionTemplate;
+import org.eclipse.sapphire.ui.diagram.internal.DiagramConnectionTemplate.DiagramConnectionTemplateListener;
+import org.eclipse.sapphire.ui.diagram.internal.DiagramEmbeddedConnectionTemplate;
+import org.eclipse.sapphire.ui.diagram.internal.DiagramImplicitConnectionTemplate;
+import org.eclipse.sapphire.ui.diagram.internal.DiagramImplicitConnectionTemplate.DiagramImplicitConnectionTemplateListener;
 import org.eclipse.sapphire.ui.diagram.internal.StandardImplicitConnectionPart;
 import org.eclipse.sapphire.util.ListFactory;
 
@@ -124,6 +124,10 @@ public class StandardConnectionService extends ConnectionService
 		    	if (event.getNodeEventType() == NodeEventType.NodeAboutToBeDeleted)
 		    	{
 		    		handleNodeAboutToBeDeleted((DiagramNodePart)event.getPart());
+		    	}
+		    	else if (event.getNodeEventType() == NodeEventType.NodeAdded)
+		    	{
+		    		refreshAttachedConnections((DiagramNodePart)event.getPart());
 		    	}
 			}
 		};
@@ -316,6 +320,13 @@ public class StandardConnectionService extends ConnectionService
 				(DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAdd);
     	this.broadcast(serviceEvent);
     }
+    
+    private void notifyConnectionAdd(final DiagramConnectionPart connPart)
+    {
+    	ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
+				connPart, ConnectionEventType.ConnectionAdd);
+    	this.broadcast(serviceEvent);    	
+    }
 
 	private void notifyConnectionDelete(final DiagramConnectionEvent event)
 	{
@@ -377,6 +388,35 @@ public class StandardConnectionService extends ConnectionService
         }
 		
 	}
+	
+    /**
+     * In the case where the entire Sapphire model is reconstructed (revert source file in the source editor), 
+     * connection properties may have triggered events before the node properties change events
+     * are sent out. So those connection parts will be created before the endpoint node
+     * parts are created. But those connection parts won't be displayed visually on diagram canvas
+     * until those corresponding endpoint nodes are created on the canvas.
+     * 
+     * [Bug 376245] Revert action in StructuredTextEditor does not revert diagram nodes and connections
+     * in SapphireDiagramEditor
+     * 
+     * @param nodePart
+     */
+    private void refreshAttachedConnections(DiagramNodePart nodePart)
+    {
+    	Element nodeElement = nodePart.getLocalModelElement();
+    	for (DiagramConnectionPart connPart : list())
+    	{
+			 if (connPart.removable() && 
+					 (connPart.getEndpoint1() == nodeElement || 
+							 connPart.getEndpoint2() == nodeElement))
+			 {
+				 notifyConnectionAdd(connPart);
+			 }
+
+    	}
+    		
+    }
+		
     
 	public class ConnectionTemplateListener extends DiagramConnectionTemplateListener
 	{
