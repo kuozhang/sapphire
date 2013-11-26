@@ -31,7 +31,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireActionSystemPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.forms.swt.ActionBridge;
 import org.eclipse.sapphire.ui.forms.swt.ActionHandlerBridge;
 import org.eclipse.sapphire.ui.forms.swt.ActionSystemPartBridge;

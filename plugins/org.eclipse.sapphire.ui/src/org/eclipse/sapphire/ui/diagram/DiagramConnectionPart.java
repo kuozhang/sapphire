@@ -9,7 +9,7 @@
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.diagram.editor;
+package org.eclipse.sapphire.ui.diagram;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

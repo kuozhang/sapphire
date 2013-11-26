@@ -12,6 +12,8 @@
 
 package org.eclipse.sapphire.ui.diagram.editor;
 
+import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
+
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>

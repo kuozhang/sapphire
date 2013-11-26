@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceEvent;
 import org.eclipse.sapphire.ui.Point;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 
 /**
  * <p>Responsible for persisting layout of the diagram, such a location and size of nodes, connection bend points, etc.</p>

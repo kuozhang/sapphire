@@ -12,7 +12,7 @@
 package org.eclipse.sapphire.ui.diagram.layout;
 
 import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.internal.StandardEmbeddedConnectionPart;

@@ -15,7 +15,6 @@ package org.eclipse.sapphire.ui.diagram;
 import java.util.List;
 
 import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 
 /**
