@@ -1224,6 +1224,7 @@
                     <property-editor>PageHeaderImage</property-editor>
                     <property-editor>PersistentStateElementType</property-editor>
                     <property-editor>LayoutPersistence</property-editor>
+                    <property-editor>ConnectionServiceType</property-editor>
                     <with>
                         <path>GridDefinition</path>
                         <case>

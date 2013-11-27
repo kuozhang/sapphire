@@ -269,6 +269,7 @@
         <page-name>schema</page-name>
         <page-header-text>schema</page-header-text>
         <element-type>Schema</element-type>
+        <connection-service-type>custom</connection-service-type>
         <service>
             <implementation>org.eclipse.sapphire.samples.sqlschema.SqlSchemaConnectionService</implementation>
         </service>
