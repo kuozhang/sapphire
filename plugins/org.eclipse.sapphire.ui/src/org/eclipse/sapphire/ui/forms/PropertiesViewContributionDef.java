@@ -31,12 +31,12 @@ public interface PropertiesViewContributionDef extends PartDef
     
     // *** Pages ***
     
-    @Type( base = PropertiesViewContributionPageDef.class )
+    @Type( base = PropertiesViewPageDef.class )
     @Label( standard = "pages" )
-    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "page", type = PropertiesViewContributionPageDef.class ) )
+    @XmlListBinding( mappings = @XmlListBinding.Mapping( element = "page", type = PropertiesViewPageDef.class ) )
     
     ListProperty PROP_PAGES = new ListProperty( TYPE, "Pages" );
     
-    ElementList<PropertiesViewContributionPageDef> getPages();
+    ElementList<PropertiesViewPageDef> getPages();
 
 }

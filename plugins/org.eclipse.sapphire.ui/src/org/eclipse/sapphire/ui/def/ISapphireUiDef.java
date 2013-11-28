@@ -25,9 +25,10 @@ import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.internal.SapphireUiDefMethods;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.forms.ActuatorDef;
 import org.eclipse.sapphire.ui.forms.CompositeDef;
+import org.eclipse.sapphire.ui.forms.CustomFormComponentDef;
 import org.eclipse.sapphire.ui.forms.DialogDef;
 import org.eclipse.sapphire.ui.forms.FormDef;
 import org.eclipse.sapphire.ui.forms.FormEditorPageDef;
@@ -44,7 +45,7 @@ import org.eclipse.sapphire.ui.forms.SplitFormDef;
 import org.eclipse.sapphire.ui.forms.StaticTextFieldDef;
 import org.eclipse.sapphire.ui.forms.TabGroupDef;
 import org.eclipse.sapphire.ui.forms.TextDef;
-import org.eclipse.sapphire.ui.forms.WhitespaceSeparatorDef;
+import org.eclipse.sapphire.ui.forms.SpacerDef;
 import org.eclipse.sapphire.ui.forms.WithDef;
 import org.eclipse.sapphire.ui.forms.WizardDef;
 
@@ -106,13 +107,13 @@ public interface ISapphireUiDef extends Element
         { 
             PropertyEditorDef.class, 
             LineSeparatorDef.class,
-            WhitespaceSeparatorDef.class,
+            SpacerDef.class,
             TextDef.class,
             GroupDef.class,
             WithDef.class,
             CompositeDef.class,
             ActuatorDef.class,
-            ISapphireCustomPartDef.class,
+            CustomFormComponentDef.class,
             StaticTextFieldDef.class,
             DetailSectionDef.class,
             TabGroupDef.class,
@@ -122,7 +123,7 @@ public interface ISapphireUiDef extends Element
             MasterDetailsContentNodeDef.class,
             MasterDetailsContentNodeFactoryDef.class,
             MasterDetailsEditorPageDef.class,
-            IDiagramEditorPageDef.class,
+            DiagramEditorPageDef.class,
             DialogDef.class,
             WizardDef.class,
             FormEditorPageDef.class,

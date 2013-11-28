@@ -16,6 +16,7 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -26,6 +27,7 @@ import org.eclipse.sapphire.ui.def.MarginPresentation;
  */
 
 @Label( standard = "composite" )
+@Image( path = "CompositeDef.png" )
 @XmlBinding( path = "composite" )
 
 public interface CompositeDef extends FormDef, MarginPresentation

@@ -14,18 +14,19 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
-import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 @Label( standard = "form editor page" )
+@Image( path = "FormEditorPageDef.png" )
 @XmlBinding( path = "form-editor-page" )
 
 public interface FormEditorPageDef extends EditorPageDef
@@ -41,18 +42,18 @@ public interface FormEditorPageDef extends EditorPageDef
         { 
             PropertyEditorDef.class, 
             LineSeparatorDef.class,
-            WhitespaceSeparatorDef.class,
+            SpacerDef.class,
             TextDef.class,
             GroupDef.class,
             WithDef.class,
             CompositeDef.class,
             ActuatorDef.class,
-            ISapphireCustomPartDef.class,
+            CustomFormComponentDef.class,
             StaticTextFieldDef.class,
             DetailSectionDef.class,
             TabGroupDef.class,
             HtmlPanelDef.class,
-            FormComponentInclude.class,
+            FormComponentRef.class,
             FormDef.class,
             SplitFormDef.class,
             SectionDef.class

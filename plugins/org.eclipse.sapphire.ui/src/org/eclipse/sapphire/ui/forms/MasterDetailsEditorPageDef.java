@@ -19,6 +19,7 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -31,6 +32,7 @@ import org.eclipse.sapphire.ui.def.EditorPageDef;
  */
 
 @Label( standard = "master details editor page" )
+@Image( path = "MasterDetailsEditorPageDef.png" )
 @XmlBinding( path = "editor-page" )
 
 public interface MasterDetailsEditorPageDef extends EditorPageDef

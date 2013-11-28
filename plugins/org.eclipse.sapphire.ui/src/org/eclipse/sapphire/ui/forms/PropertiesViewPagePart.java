@@ -18,7 +18,7 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertiesViewContributionPagePart extends FormPart
+public final class PropertiesViewPagePart extends FormPart
 {
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
@@ -28,7 +28,7 @@ public final class PropertiesViewContributionPagePart extends FormPart
     {
         super.init();
 
-        final PropertiesViewContributionPageDef def = definition();
+        final PropertiesViewPageDef def = definition();
         
         this.labelFunctionResult = initExpression
         (
@@ -39,7 +39,7 @@ public final class PropertiesViewContributionPagePart extends FormPart
             {
                 public void run()
                 {
-                    broadcast( new LabelChangedEvent( PropertiesViewContributionPagePart.this ) );
+                    broadcast( new LabelChangedEvent( PropertiesViewPagePart.this ) );
                 }
             }
         );
@@ -48,9 +48,9 @@ public final class PropertiesViewContributionPagePart extends FormPart
     }
 
     @Override
-    public PropertiesViewContributionPageDef definition()
+    public PropertiesViewPageDef definition()
     {
-        return (PropertiesViewContributionPageDef) super.definition();
+        return (PropertiesViewPageDef) super.definition();
     }
     
     public String getLabel()

@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -24,6 +25,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  */
 
 @Label( standard = "tab group" )
+@Image( path = "TabGroupDef.png" )
 @XmlBinding( path = "tab-group" )
 
 public interface TabGroupDef extends FormComponentDef

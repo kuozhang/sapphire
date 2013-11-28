@@ -9,22 +9,28 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.forms.internal;
+package org.eclipse.sapphire.ui.forms;
 
-import org.eclipse.sapphire.ui.def.ISapphireUiDef;
-import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeChildDef;
-import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeInclude;
+import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
+import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.SpacerPresentation;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsContentNodeIncludeMethods
+public final class SpacerPart extends SeparatorPart
 {
-    public static MasterDetailsContentNodeChildDef resolve( final MasterDetailsContentNodeInclude ref )
+    @Override
+    public SpacerDef definition()
     {
-        final ISapphireUiDef rootdef = ref.nearest( ISapphireUiDef.class );
-        return (MasterDetailsContentNodeChildDef) rootdef.getPartDef( ref.getPart().text(), true, MasterDetailsContentNodeChildDef.class );
+        return (SpacerDef) super.definition();
+    }
+    
+    public FormComponentPresentation createPresentation( final SwtPresentation parent, final Composite composite )
+    {
+        return new SpacerPresentation( this, parent, composite );
     }
     
 }

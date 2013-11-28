@@ -238,9 +238,9 @@ public final class MasterDetailsContentNodePart
         {
             final Map<String,String> params = new HashMap<String,String>( this.params );
             
-            if( entry instanceof MasterDetailsContentNodeInclude )
+            if( entry instanceof MasterDetailsContentNodeRef )
             {
-                final MasterDetailsContentNodeInclude inc = (MasterDetailsContentNodeInclude) entry;
+                final MasterDetailsContentNodeRef inc = (MasterDetailsContentNodeRef) entry;
                 entry = inc.resolve();
                 
                 if( entry == null )

@@ -80,7 +80,7 @@ import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramDirectEditPartEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
@@ -332,9 +332,9 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
     	}
 	}
 
-    public IDiagramEditorPageDef getDiagramEditorPageDef()
+    public DiagramEditorPageDef getDiagramEditorPageDef()
     {
-    	return (IDiagramEditorPageDef) this.definition.resolve();
+    	return (DiagramEditorPageDef) this.definition.resolve();
     }
     
     public final SapphireEditor getEditor()

@@ -24,6 +24,7 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.localization.Localizable;
@@ -39,11 +40,12 @@ import org.eclipse.sapphire.ui.forms.PropertiesViewContributorDef;
  */
 
 @Label( standard = "diagram editor page" )
+@Image( path = "DiagramEditorPageDef.png" )
 @XmlBinding( path = "diagram-page" )
 
-public interface IDiagramEditorPageDef extends EditorPageDef, PropertiesViewContributorDef
+public interface DiagramEditorPageDef extends EditorPageDef, PropertiesViewContributorDef
 {
-    ElementType TYPE = new ElementType( IDiagramEditorPageDef.class);
+    ElementType TYPE = new ElementType( DiagramEditorPageDef.class);
     
     // *** GridDefinition ***
     

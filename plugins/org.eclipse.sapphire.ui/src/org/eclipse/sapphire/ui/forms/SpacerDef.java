@@ -15,6 +15,7 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NumericRange;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -24,12 +25,13 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "whitespace separator" )
+@Label( standard = "spacer" )
+@Image( path = "SpacerDef.png" )
 @XmlBinding( path = "spacer" )
 
-public interface WhitespaceSeparatorDef extends SeparatorDef
+public interface SpacerDef extends SeparatorDef
 {
-    ElementType TYPE = new ElementType( WhitespaceSeparatorDef.class );
+    ElementType TYPE = new ElementType( SpacerDef.class );
  
     // *** Size ***
     

@@ -42,7 +42,7 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
@@ -63,7 +63,7 @@ import org.eclipse.sapphire.util.ListFactory;
 public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 {
     private Element modelElement;
-    private IDiagramEditorPageDef diagramPageDef = null;
+    private DiagramEditorPageDef diagramPageDef = null;
     private List<IDiagramNodeDef> nodeDefs;
     private List<IDiagramConnectionDef> connectionDefs;
     private List<DiagramNodeTemplate> nodeTemplates;
@@ -81,7 +81,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     @Override
     protected void init()
     {
-        this.diagramPageDef = (IDiagramEditorPageDef)super.definition;
+        this.diagramPageDef = (DiagramEditorPageDef)super.definition;
         ImpliedElementProperty modelElementProperty = (ImpliedElementProperty)resolve(this.diagramPageDef.getProperty().content());
         if (modelElementProperty != null)
         {
@@ -300,7 +300,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	notifyDiagramSave();
     }
 
-    public IDiagramEditorPageDef getPageDef()
+    public DiagramEditorPageDef getPageDef()
     {
     	return this.diagramPageDef;
     }

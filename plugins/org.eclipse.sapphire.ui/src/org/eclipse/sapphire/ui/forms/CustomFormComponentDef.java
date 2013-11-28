@@ -9,29 +9,30 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.ui.def;
+package org.eclipse.sapphire.ui.forms;
 
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeName;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.ui.forms.FormComponentDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "custom part" )
+@Label( standard = "custom form component" )
+@Image( path = "CustomFormComponentDef.png" )
 @XmlBinding( path = "custom" )
 
-public interface ISapphireCustomPartDef extends FormComponentDef
+public interface CustomFormComponentDef extends FormComponentDef
 {
-    ElementType TYPE = new ElementType( ISapphireCustomPartDef.class );
+    ElementType TYPE = new ElementType( CustomFormComponentDef.class );
  
     // *** ImplClass ***
     

@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -23,6 +24,7 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  */
 
 @Label( standard = "detail section" )
+@Image( path = "DetailSectionDef.png" )
 @XmlBinding( path = "detail-section" )
 
 public interface DetailSectionDef extends PageBookDef

@@ -129,27 +129,48 @@
                 </node-factory>
                 <image>org/eclipse/sapphire/sdk/extensibility/FunctionDef.png</image>
             </node>
-            <node-include>
-                <part>ActionsNode</part>
-                <param>
-                    <name>Extension</name>
-                    <value>true</value>
-                </param>
-            </node-include>
-            <node-include>
-                <part>ActionHandlersNode</part>
-                <param>
-                    <name>Extension</name>
-                    <value>true</value>
-                </param>
-            </node-include>
-            <node-include>
-                <part>ActionHandlerFactoriesNode</part>
-                <param>
-                    <name>Extension</name>
-                    <value>true</value>
-                </param>
-            </node-include>
+            <node>
+                <label>actions</label>
+                <section>
+                    <description>Define actions that should be available globally in the system.</description>
+                    <content>
+                        <actuator>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add an action</label>
+                        </actuator>
+                    </content>
+                </section>
+                <node-include>ActionNodeFactory</node-include>
+                <image>org/eclipse/sapphire/ui/def/ActionDef.png</image>
+            </node>
+            <node>
+                <label>action handlers</label>
+                <section>
+                    <description>Define action handlers that should be available globally in the system.</description>
+                    <content>
+                        <actuator>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add an action handler</label>
+                        </actuator>
+                    </content>
+                </section>
+                <node-include>ActionHandlerNodeFactory</node-include>
+                <image>org/eclipse/sapphire/ui/def/ActionHandlerDef.png</image>
+            </node>
+            <node>
+                <label>action handler factories</label>
+                <section>
+                    <content>
+                        <actuator>
+                            <action-id>Sapphire.Add</action-id>
+                            <label>Add an action handler factory</label>
+                        </actuator>
+                    </content>
+                    <description>Define action handler factories that should be available globally in the system.</description>
+                </section>
+                <node-include>ActionHandlerFactoryNodeFactory</node-include>
+                <image>org/eclipse/sapphire/ui/def/ActionHandlerFactoryDef.png</image>
+            </node>
             <node>
                 <label>presentation styles</label>
                 <node-factory>

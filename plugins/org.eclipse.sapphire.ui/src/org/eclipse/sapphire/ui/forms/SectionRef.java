@@ -16,6 +16,7 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
@@ -36,6 +37,7 @@ import org.eclipse.sapphire.ui.def.internal.SectionReferenceService;
 
 @Label( standard = "section reference" )
 @XmlBinding( path = "section-ref" )
+@Image( path = "SectionRef.png" )
 
 public interface SectionRef extends FormComponentDef
 {

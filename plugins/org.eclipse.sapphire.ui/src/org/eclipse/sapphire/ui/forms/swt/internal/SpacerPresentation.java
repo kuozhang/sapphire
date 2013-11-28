@@ -17,7 +17,7 @@ import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdhspan;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
-import org.eclipse.sapphire.ui.forms.WhitespaceSeparatorPart;
+import org.eclipse.sapphire.ui.forms.SpacerPart;
 import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.swt.SWT;
@@ -27,17 +27,17 @@ import org.eclipse.swt.widgets.Composite;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class WhitespaceSeparatorPresentation extends FormComponentPresentation
+public final class SpacerPresentation extends FormComponentPresentation
 {
-    public WhitespaceSeparatorPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+    public SpacerPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
     {
         super( part, parent, composite );
     }
 
     @Override
-    public WhitespaceSeparatorPart part()
+    public SpacerPart part()
     {
-        return (WhitespaceSeparatorPart) super.part();
+        return (SpacerPart) super.part();
     }
     
     @Override

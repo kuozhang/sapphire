@@ -20,6 +20,7 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Documentation;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -34,6 +35,7 @@ import org.eclipse.sapphire.ui.def.internal.StringToKeySequenceConversionService
  */
 
 @Label( standard = "action" )
+@Image( path = "ActionDef.png" )
 
 public interface ActionDef extends ActionSystemPartDef
 {

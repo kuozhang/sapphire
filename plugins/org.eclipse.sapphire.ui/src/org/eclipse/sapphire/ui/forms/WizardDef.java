@@ -16,6 +16,7 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -31,6 +32,7 @@ import org.eclipse.sapphire.ui.def.PartDef;
  */
 
 @Label( standard = "wizard" )
+@Image( path = "WizardDef.png" )
 @XmlBinding( path = "wizard" )
 
 public interface WizardDef extends PartDef

@@ -28,7 +28,7 @@ import org.eclipse.sapphire.modeling.xml.XmlResourceStore;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.ui.ISapphirePart;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.LayoutPersistence;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.layout.standard.StandardDiagramLayout;
@@ -136,7 +136,7 @@ public class SideBySideDiagramLayoutPersistenceService extends StandardDiagramLa
         	if (part instanceof SapphireDiagramEditorPagePart)
         	{
         		SapphireDiagramEditorPagePart diagramPagePart = (SapphireDiagramEditorPagePart)part;
-        		IDiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
+        		DiagramEditorPageDef pageDef = diagramPagePart.getPageDef();
         		if (pageDef.getLayoutPersistence().content() == LayoutPersistence.SIDE_BY_SIDE)
         		{
         			return true;

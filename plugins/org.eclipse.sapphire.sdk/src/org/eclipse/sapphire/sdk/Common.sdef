@@ -19,20 +19,9 @@
         <package>org.eclipse.sapphire.sdk.internal</package>
         <package>org.eclipse.sapphire.ui.renderers.swt</package>
     </import>
-    
-    <node>
-        <id>ActionsNode</id>
-        <label>actions</label>
-        <section>
-            <description>${ Params.Extension ? "Define actions that should be available globally in the system." : "Define actions." }</description>
-            <content>
-                <actuator>
-                    <action-id>Sapphire.Add</action-id>
-                    <label>Add an action</label>
-                </actuator>
-            </content>
-        </section>
+            
         <node-factory>
+            <id>ActionNodeFactory</id>
             <property>Actions</property>
             <case>
                 <label>${ Id == null ? "&lt;action&gt;" : Id }</label>
@@ -88,23 +77,12 @@
                         <property-editor>LocationHints</property-editor>
                     </content>
                 </section>
+            <image>${ Image() }</image>
             </case>
         </node-factory>
-    </node>
             
-    <node>
-        <id>ActionHandlersNode</id>
-        <label>${ Params.Extension ? "action handlers" : "handlers" }</label>
-        <section>
-            <description>${ Params.Extension ? "Define action handlers that should be available globally in the system." : "Define action handlers." }</description>
-            <content>
-                <actuator>
-                    <action-id>Sapphire.Add</action-id>
-                    <label>Add an action handler</label>
-                </actuator>
-            </content>
-        </section>
         <node-factory>
+            <id>ActionHandlerNodeFactory</id>
             <property>ActionHandlers</property>
             <case>
                 <label>${ Id == null ? "&lt;action-handler&gt;" : Id }</label>
@@ -136,23 +114,12 @@
                         <property-editor>LocationHints</property-editor>
                     </content>
                 </section>
+            <image>${ Image() }</image>
             </case>
         </node-factory>
-    </node>
-            
-    <node>
-        <id>ActionHandlerFactoriesNode</id>
-        <label>${ Params.Extension ? "action handler factories" : "handler factories" }</label>
-        <section>
-            <description>${ Params.Extension ? "Define action handler factories that should be available globally in the system." : "Define action handler factories." }</description>
-            <content>
-                <actuator>
-                    <action-id>Sapphire.Add</action-id>
-                    <label>Add an action handler factory</label>
-                </actuator>
-            </content>
-        </section>
+
         <node-factory>
+            <id>ActionHandlerFactoryNodeFactory</id>
             <property>ActionHandlerFactories</property>
             <case>
                 <label>${ Action == null ? "&lt;action-handler-factory&gt;" : Action }</label>
@@ -175,8 +142,8 @@
                         <property-editor>Contexts</property-editor>
                     </content>
                 </section>
+            <image>${ Image() }</image>
             </case>
         </node-factory>
-    </node>
-
+    
 </definition>

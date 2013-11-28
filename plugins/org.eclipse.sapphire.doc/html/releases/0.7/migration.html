@@ -106,6 +106,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#HyperlinkTable">HyperlinkTable</a></li>
   <li><a href="#ImageData">ImageData</a></li>
   <li><a href="#ImageService">ImageService</a></li>
+  <li><a href="#IDiagramEditorPageDef">IDiagramEditorPageDef</a></li>
   <li><a href="#IExecutableModelElement">IExecutableModelElement</a></li>
   <li><a href="#IFormPartInclude">IFormPartInclude</a></li>
   <li><a href="#IModelElement">IModelElement</a></li>
@@ -115,6 +116,7 @@ to 0.7 release. Only changes from the previous release are covered.</p>
   <li><a href="#IPropertiesViewContributionPageDef">IPropertiesViewContributionPageDef</a></li>
   <li><a href="#IPropertiesViewContributorDef">IPropertiesViewContributorDef</a></li>
   <li><a href="#IPropertiesViewContributorPart">IPropertiesViewContributorPart</a></li>
+  <li><a href="#ISapphireCustomPartDef">ISapphireCustomPartDef</a></li>
   <li><a href="#ISapphireGroupDef">ISapphireGroupDef</a></li>
   <li><a href="#ISapphireLabelDef">ISapphireLabelDef</a></li>
   <li><a href="#ISapphireStaticTextFieldDef">ISapphireStaticTextFieldDef</a></li>
@@ -1617,6 +1619,24 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 </table>
 
 
+<h2><a name="IDiagramEditorPageDef">IDiagramEditorPageDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.diagram.def.</span>IDiagramEditorPageDef</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.diagram.def.</span>DiagramEditorPageDef</code></pre>
+    </td>
+  </tr>
+</table>
+
+
 <h2><a name="IExecutableModelElement">IExecutableModelElement</a></h2>
 
 <table>
@@ -1626,10 +1646,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">modeling.IExecutableModelElement</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.IExecutableModelElement</code></pre>
     </td>
     <td>
-<pre class="source-code"><code>org.eclipse.sapphire.<span class="unaffected">ExecutableElement</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>ExecutableElement</code></pre>
     </td>
   </tr>
 </table>
@@ -1644,10 +1664,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.I<span class="unaffected">Form</span>Part<span class="unaffected">Include</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.IFormPartInclude</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">Form</span>Component<span class="unaffected">Include</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.FormComponentRef</code></pre>
     </td>
   </tr>
 </table>
@@ -1997,10 +2017,10 @@ element.</span>visit
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.I<span class="unaffected">PropertiesViewContributionPageDef</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.IPropertiesViewContributionPageDef</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributionPageDef</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.PropertiesViewPageDef</code></pre>
     </td>
   </tr>
 </table>
@@ -2037,6 +2057,24 @@ element.</span>visit
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributorPart</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ISapphireCustomPartDef">ISapphireCustomPartDef</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.ISapphireCustomPartDef</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.CustomFormComponentDef</code></pre>
     </td>
   </tr>
 </table>
@@ -2381,10 +2419,10 @@ element.</span>visit
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def<span class="unaffected">.MasterDetailsContentNodeInclude</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>form.editors.masterdetails.def.MasterDetailsContentNodeInclude</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.MasterDetailsContentNodeInclude</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.MasterDetailsContentNodeRef</code></pre>
     </td>
   </tr>
 </table>
@@ -3045,10 +3083,10 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.PropertiesViewContributionPagePart</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>PropertiesViewContributionPagePart</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">PropertiesViewContributionPagePart</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.PropertiesViewPagePart</code></pre>
     </td>
   </tr>
 </table>
@@ -5086,10 +5124,10 @@ matches the default implementation of the encode() method.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def<span class="unaffected">.WhitespaceSeparatorDef</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>def.WhitespaceSeparatorDef</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.WhitespaceSeparatorDef</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.SpacerDef</code></pre>
     </td>
   </tr>
 </table>
@@ -5104,10 +5142,10 @@ matches the default implementation of the encode() method.</p>
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.WhitespaceSeparatorPart</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>WhitespaceSeparatorPart</code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">WhitespaceSeparatorPart</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.SpacerPart</code></pre>
     </td>
   </tr>
 </table>

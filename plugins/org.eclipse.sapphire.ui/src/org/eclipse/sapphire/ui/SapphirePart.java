@@ -52,7 +52,6 @@ import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.services.Service;
-import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.ui.def.ISapphirePartListenerDef;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -60,11 +59,12 @@ import org.eclipse.sapphire.ui.forms.ActuatorDef;
 import org.eclipse.sapphire.ui.forms.ActuatorPart;
 import org.eclipse.sapphire.ui.forms.CompositeDef;
 import org.eclipse.sapphire.ui.forms.CompositePart;
+import org.eclipse.sapphire.ui.forms.CustomFormComponentDef;
 import org.eclipse.sapphire.ui.forms.DetailSectionDef;
 import org.eclipse.sapphire.ui.forms.DetailSectionPart;
 import org.eclipse.sapphire.ui.forms.DialogDef;
 import org.eclipse.sapphire.ui.forms.DialogPart;
-import org.eclipse.sapphire.ui.forms.FormComponentInclude;
+import org.eclipse.sapphire.ui.forms.FormComponentRef;
 import org.eclipse.sapphire.ui.forms.FormDef;
 import org.eclipse.sapphire.ui.forms.FormEditorPageDef;
 import org.eclipse.sapphire.ui.forms.FormEditorPagePart;
@@ -92,8 +92,8 @@ import org.eclipse.sapphire.ui.forms.TabGroupDef;
 import org.eclipse.sapphire.ui.forms.TabGroupPart;
 import org.eclipse.sapphire.ui.forms.TextDef;
 import org.eclipse.sapphire.ui.forms.TextPart;
-import org.eclipse.sapphire.ui.forms.WhitespaceSeparatorDef;
-import org.eclipse.sapphire.ui.forms.WhitespaceSeparatorPart;
+import org.eclipse.sapphire.ui.forms.SpacerDef;
+import org.eclipse.sapphire.ui.forms.SpacerPart;
 import org.eclipse.sapphire.ui.forms.WithDef;
 import org.eclipse.sapphire.ui.forms.WithImpliedPart;
 import org.eclipse.sapphire.ui.forms.WithPart;
@@ -1121,17 +1121,17 @@ public abstract class SapphirePart implements ISapphirePart
         {
             part = new LineSeparatorPart();
         }
-        else if( definition instanceof WhitespaceSeparatorDef )
+        else if( definition instanceof SpacerDef )
         {
-            part = new WhitespaceSeparatorPart();
+            part = new SpacerPart();
         }
         else if( definition instanceof ActuatorDef )
         {
             part = new ActuatorPart(); 
         }
-        else if( definition instanceof ISapphireCustomPartDef )
+        else if( definition instanceof CustomFormComponentDef )
         {
-            final JavaType customPartImplClass = ( (ISapphireCustomPartDef) definition ).getImplClass().resolve();
+            final JavaType customPartImplClass = ( (CustomFormComponentDef) definition ).getImplClass().resolve();
             
             if( customPartImplClass != null )
             {
@@ -1219,9 +1219,9 @@ public abstract class SapphirePart implements ISapphirePart
                 return createWithoutInit( parent, element, def, partParams );
             }
         }
-        else if( definition instanceof FormComponentInclude )
+        else if( definition instanceof FormComponentRef )
         {
-            final FormComponentInclude inc = (FormComponentInclude) definition;
+            final FormComponentRef inc = (FormComponentRef) definition;
             def = inc.getPart().resolve();
             
             if( def == null )

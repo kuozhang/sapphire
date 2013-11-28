@@ -16,6 +16,7 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -25,8 +26,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node factory" )
+@Label( standard = "master details node factory" )
 @XmlBinding( path = "node-factory" )
+@Image( path = "MasterDetailsContentNodeFactoryDef.png" )
 
 public interface MasterDetailsContentNodeFactoryDef extends MasterDetailsContentNodeChildDef
 {

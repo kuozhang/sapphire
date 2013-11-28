@@ -35,7 +35,7 @@ public final class SplitFormPart extends ContainerPart<SplitFormSectionPart>
             {
                 final Element element = getLocalModelElement();
                 
-                for( final PartDef childPartDef : definition().getBlocks() )
+                for( final PartDef childPartDef : definition().getSections() )
                 {
                     childPartsListFactory.add( (SplitFormSectionPart) createWithoutInit( SplitFormPart.this, element, childPartDef, SplitFormPart.this.params ) );
                 }

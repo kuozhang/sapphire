@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.forms;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -24,11 +25,12 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "properties view contribution page" )
+@Label( standard = "properties view page" )
+@Image( path = "PropertiesViewPageDef.png" )
 
-public interface PropertiesViewContributionPageDef extends FormDef
+public interface PropertiesViewPageDef extends FormDef
 {
-    ElementType TYPE = new ElementType( PropertiesViewContributionPageDef.class );
+    ElementType TYPE = new ElementType( PropertiesViewPageDef.class );
 
     // *** Label ***
     

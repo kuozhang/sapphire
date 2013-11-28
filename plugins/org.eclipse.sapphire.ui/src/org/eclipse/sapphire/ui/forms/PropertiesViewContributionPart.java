@@ -27,8 +27,8 @@ import org.eclipse.sapphire.util.ListFactory;
 
 public final class PropertiesViewContributionPart extends SapphirePart
 {
-    private List<PropertiesViewContributionPagePart> pages;
-    private PropertiesViewContributionPagePart selectedPage;
+    private List<PropertiesViewPagePart> pages;
+    private PropertiesViewPagePart selectedPage;
     
     @Override
     protected void init()
@@ -36,7 +36,7 @@ public final class PropertiesViewContributionPart extends SapphirePart
         super.init();
 
         final Element element = getModelElement();
-        final ListFactory<PropertiesViewContributionPagePart> pagesListFactory = ListFactory.start();
+        final ListFactory<PropertiesViewPagePart> pagesListFactory = ListFactory.start();
         
         final Listener pagePartListener = new FilteredListener<PartValidationEvent>()
         {
@@ -47,9 +47,9 @@ public final class PropertiesViewContributionPart extends SapphirePart
             }
         };
         
-        for( PropertiesViewContributionPageDef pageDef : ( (PropertiesViewContributionDef) this.definition ).getPages() )
+        for( PropertiesViewPageDef pageDef : ( (PropertiesViewContributionDef) this.definition ).getPages() )
         {
-            final PropertiesViewContributionPagePart pagePart = new PropertiesViewContributionPagePart();
+            final PropertiesViewPagePart pagePart = new PropertiesViewPagePart();
             pagePart.init( this, element, pageDef, this.params );
             pagePart.initialize();
             pagePart.attach( pagePartListener );
@@ -61,17 +61,17 @@ public final class PropertiesViewContributionPart extends SapphirePart
         this.selectedPage = this.pages.get( 0 );
     }
     
-    public List<PropertiesViewContributionPagePart> getPages()
+    public List<PropertiesViewPagePart> getPages()
     {
         return this.pages;
     }
     
-    public PropertiesViewContributionPagePart getSelectedPage()
+    public PropertiesViewPagePart getSelectedPage()
     {
         return this.selectedPage;
     }
     
-    public void setSelectedPage( final PropertiesViewContributionPagePart selectedPage )
+    public void setSelectedPage( final PropertiesViewPagePart selectedPage )
     {
         this.selectedPage = selectedPage;
     }
@@ -81,7 +81,7 @@ public final class PropertiesViewContributionPart extends SapphirePart
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
 
-        for( PropertiesViewContributionPagePart pagePart : this.pages )
+        for( PropertiesViewPagePart pagePart : this.pages )
         {
             factory.merge( pagePart.validation() );
         }
@@ -94,7 +94,7 @@ public final class PropertiesViewContributionPart extends SapphirePart
     {
         super.dispose();
         
-        for( PropertiesViewContributionPagePart pagePart : this.pages )
+        for( PropertiesViewPagePart pagePart : this.pages )
         {
             pagePart.dispose();
         }

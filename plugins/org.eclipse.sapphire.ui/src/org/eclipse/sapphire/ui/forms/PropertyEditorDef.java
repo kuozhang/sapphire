@@ -33,7 +33,6 @@ import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.ui.def.ISapphireCustomPartDef;
 import org.eclipse.sapphire.ui.def.internal.PropertyEditorDefMethods;
 
 /**
@@ -41,7 +40,7 @@ import org.eclipse.sapphire.ui.def.internal.PropertyEditorDefMethods;
  */
 
 @Label( standard = "property editor" )
-@Image( path = "PropertyEditorDef.gif" )
+@Image( path = "PropertyEditorDef.png" )
 @XmlBinding( path = "property-editor" )
 
 public interface PropertyEditorDef extends FormComponentDef
@@ -103,18 +102,18 @@ public interface PropertyEditorDef extends FormComponentDef
         { 
             PropertyEditorDef.class, 
             LineSeparatorDef.class,
-            WhitespaceSeparatorDef.class,
+            SpacerDef.class,
             TextDef.class,
             GroupDef.class,
             WithDef.class,
             CompositeDef.class,
             ActuatorDef.class,
-            ISapphireCustomPartDef.class,
+            CustomFormComponentDef.class,
             StaticTextFieldDef.class,
             DetailSectionDef.class,
             TabGroupDef.class,
             HtmlPanelDef.class,
-            FormComponentInclude.class,
+            FormComponentRef.class,
             FormDef.class,
             SplitFormDef.class,
             SectionDef.class

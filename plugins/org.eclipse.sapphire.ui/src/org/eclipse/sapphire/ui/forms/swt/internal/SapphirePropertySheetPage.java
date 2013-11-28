@@ -30,7 +30,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPagePart;
+import org.eclipse.sapphire.ui.forms.PropertiesViewPagePart;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
 import org.eclipse.sapphire.util.MutableReference;
 import org.eclipse.swt.SWT;
@@ -150,15 +150,15 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
             tabbedPropertiesComposite.setLayoutData( gdfill() );
             
             final LocalizationService localizationService = this.part.definition().adapt( LocalizationService.class );
-            final List<PropertiesViewContributionPagePart> pages = this.part.getPages();
-            final List<PropertiesViewContributionPagePart> visiblePages = new ArrayList<PropertiesViewContributionPagePart>();
+            final List<PropertiesViewPagePart> pages = this.part.getPages();
+            final List<PropertiesViewPagePart> visiblePages = new ArrayList<PropertiesViewPagePart>();
             final List<TabbedPropertyList.Item> elements = new ArrayList<TabbedPropertyList.Item>( pages.size() );
             final TabbedPropertyList list = tabbedPropertiesComposite.getList();
             
-            final Map<PropertiesViewContributionPagePart,TabbedPropertyList.Item> partToTabbedPropertyListItem 
-                = new HashMap<PropertiesViewContributionPagePart,TabbedPropertyList.Item>();
+            final Map<PropertiesViewPagePart,TabbedPropertyList.Item> partToTabbedPropertyListItem 
+                = new HashMap<PropertiesViewPagePart,TabbedPropertyList.Item>();
             
-            for( final PropertiesViewContributionPagePart page : pages )
+            for( final PropertiesViewPagePart page : pages )
             {
                 final int index;
                 
@@ -269,7 +269,7 @@ public final class SapphirePropertySheetPage implements IPropertySheetPage
                                 oldPageComposite.setVisible( false );
                             }
                                     
-                            final PropertiesViewContributionPagePart pagePart = visiblePages.get( newSelectionIndex );
+                            final PropertiesViewPagePart pagePart = visiblePages.get( newSelectionIndex );
                             SapphirePropertySheetPage.this.part.setSelectedPage( pagePart );
                             
                             if( newPageComposite == null )

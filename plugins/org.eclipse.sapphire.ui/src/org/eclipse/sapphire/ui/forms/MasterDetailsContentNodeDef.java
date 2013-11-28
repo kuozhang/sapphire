@@ -16,6 +16,7 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -27,8 +28,9 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Label( standard = "content outline node" )
+@Label( standard = "master details node" )
 @XmlBinding( path = "node" )
+@Image( path = "MasterDetailsContentNodeDef.png" )
 
 public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChildDef, PropertiesViewContributorDef
 {
@@ -91,7 +93,7 @@ public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChi
         { 
             MasterDetailsContentNodeDef.class,
             MasterDetailsContentNodeFactoryDef.class,
-            MasterDetailsContentNodeInclude.class
+            MasterDetailsContentNodeRef.class
         } 
     )
     

@@ -34,7 +34,7 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
 import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -74,7 +74,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 		}
 		
 		// create new entries
-		IDiagramEditorPageDef diagramPageDef = (IDiagramEditorPageDef)diagramPart.definition();
+		DiagramEditorPageDef diagramPageDef = (DiagramEditorPageDef)diagramPart.definition();
 		add(createModelIndependentTools());
 		
 		List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
