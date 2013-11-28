@@ -37,10 +37,9 @@ import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.TransientProperty;
-import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
@@ -776,16 +775,57 @@ public final class MasterDetailsContentNodePart
         public NodeFactory( final MasterDetailsContentNodeFactoryDef definition,
                             final Map<String,String> params )
         {
-            final Element element = getLocalModelElement();
+            final ModelPath path = new ModelPath( substituteParams( definition.getProperty().content(), params ) );
             
-            final PropertyDef pdef = resolve( element, definition.getProperty().content(), params );
+            Element element = getLocalModelElement();
+            Property p = null;
             
-            if( pdef instanceof ValueProperty || pdef instanceof ImpliedElementProperty || pdef instanceof TransientProperty )
+            for( int i = 0, n = path.length(); i < n; i++ )
             {
-                throw new IllegalArgumentException();
+                if( p != null )
+                {
+                    throw new RuntimeException( path.toString() );
+                }
+                
+                final ModelPath.Segment segment = path.segment( i );
+                
+                if( segment instanceof ModelPath.ModelRootSegment )
+                {
+                    element = element.root();
+                }
+                else if( segment instanceof ModelPath.ParentElementSegment )
+                {
+                    element = element.parent().element();
+                }
+                else if( segment instanceof ModelPath.PropertySegment )
+                {
+                    final Property property = element.property( ( (ModelPath.PropertySegment) segment ).getPropertyName() );
+                    
+                    if( property != null && property.definition() instanceof ImpliedElementProperty )
+                    {
+                        element = ( (ElementHandle<?>) property ).content();
+                    }
+                    else if( property instanceof ElementList || property instanceof ElementHandle )
+                    {
+                        p = property;
+                    }
+                    else
+                    {
+                        throw new RuntimeException( path.toString() );
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException( path.toString() );
+                }
             }
             
-            this.property = element.property( pdef );
+            if( p == null )
+            {
+                throw new RuntimeException( path.toString() );
+            }
+            
+            this.property = p;
             
             this.propertyListener = new Listener()
             {
