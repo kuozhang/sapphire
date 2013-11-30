@@ -11,7 +11,10 @@
 
 package org.eclipse.sapphire.ui.forms.internal;
 
+import static java.util.Collections.sort;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.sapphire.DisposeEvent;
@@ -134,6 +137,21 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                     throw new IllegalStateException();
                 }
             }
+            
+            sort
+            (
+                handlers,
+                new Comparator<SapphireActionHandler>()
+                {
+                    @Override
+                    public int compare( final SapphireActionHandler x, SapphireActionHandler y )
+                    {
+                        final String xLabel = ( (AbstractActionHandler) x ).type().getLabel( true, CapitalizationType.NO_CAPS, false );
+                        final String yLabel = ( (AbstractActionHandler) y ).type().getLabel( true, CapitalizationType.NO_CAPS, false );
+                        return xLabel.compareToIgnoreCase( yLabel );
+                    }
+                }
+            );
         }
         
         return handlers;
@@ -215,6 +233,11 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
                     }
                 }
             );
+        }
+        
+        public final ElementType type()
+        {
+            return this.type;
         }
     
         protected final void refreshEnablementState()
