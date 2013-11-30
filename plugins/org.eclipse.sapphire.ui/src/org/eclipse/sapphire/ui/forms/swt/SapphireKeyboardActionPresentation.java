@@ -181,7 +181,7 @@ public final class SapphireKeyboardActionPresentation extends SapphireHotSpotsAc
                                 }
                             };
                             
-                            ( (FormComponentPresentation) getManager().context() ).display().asyncExec( runnable );
+                            ( (SwtPresentation) getManager().context() ).display().asyncExec( runnable );
                         }
                         else
                         {
