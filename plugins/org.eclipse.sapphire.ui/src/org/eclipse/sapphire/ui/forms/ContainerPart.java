@@ -244,6 +244,7 @@ public abstract class ContainerPart<T extends FormComponentPart> extends FormCom
             {
                 this.visible = fresh;
                 broadcast( new VisibleChildrenEvent( ContainerPart.this ) );
+                refreshValidation();
             }
         }
         
