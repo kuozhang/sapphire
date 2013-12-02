@@ -26,8 +26,13 @@ import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.ModelPath;
+import org.eclipse.sapphire.modeling.el.AndFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.ListSelectionService;
+import org.eclipse.sapphire.ui.PartVisibilityEvent;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.util.IdentityHashSet;
 import org.eclipse.sapphire.util.MutableReference;
@@ -50,6 +55,7 @@ public final class DetailSectionPart extends PageBookPart
 
     private Element element;
     private ListProperty property;
+    private PropertyEditorPart listPropertyEditorPart;
 
     @Override
     protected void init()
@@ -118,18 +124,83 @@ public final class DetailSectionPart extends PageBookPart
             );
         }
     }
+    
+    @Override
+    protected Function initVisibleWhenFunction()
+    {
+        final Function function = new Function()
+        {
+            @Override
+            public String name()
+            {
+                return "VisibleIfListEditorVisible";
+            }
+
+            @Override
+            public FunctionResult evaluate( final FunctionContext context )
+            {
+                return new FunctionResult( this, context )
+                {
+                    private Listener listPropertyEditorListener;
+                    
+                    @Override
+                    protected void init()
+                    {
+                        this.listPropertyEditorListener = new FilteredListener<PartVisibilityEvent>()
+                        {
+                            @Override
+                            protected void handleTypedEvent( final PartVisibilityEvent event )
+                            {
+                                refresh();
+                            }
+                        };
+                        
+                        DetailSectionPart.this.listPropertyEditorPart.attach( this.listPropertyEditorListener );
+                    }
+
+                    @Override
+                    protected Object evaluate()
+                    {
+                        return DetailSectionPart.this.listPropertyEditorPart.visible();
+                    }
+
+                    @Override
+                    public void dispose()
+                    {
+                        DetailSectionPart.this.listPropertyEditorPart.detach( this.listPropertyEditorListener );
+                        this.listPropertyEditorListener = null;
+                        
+                        super.dispose();
+                    }
+                };
+            }
+        };
+        
+        function.init();
+        
+        final Function base = super.initVisibleWhenFunction();
+        
+        if( base == null )
+        {
+            return function;
+        }
+        else
+        {
+            return AndFunction.create( base, function );
+        }
+    }
 
     private void initListSelectionServiceListener()
     {
-        final PropertyEditorPart listPropertyEditorPart = findPropertyEditor( this, this.element, this.property );
+        this.listPropertyEditorPart = findPropertyEditor( this, this.element, this.property );
         
-        if( listPropertyEditorPart == null )
+        if( this.listPropertyEditorPart == null )
         {
             final String msg = "DetailsSectionPart did not find " + this.property;
             throw new RuntimeException( msg );
         }
         
-        final ListSelectionService listSelectionService = listPropertyEditorPart.service( ListSelectionService.class );
+        final ListSelectionService listSelectionService = this.listPropertyEditorPart.service( ListSelectionService.class );
         
         final MutableReference<Element> selectedElementRef = new MutableReference<Element>();
 

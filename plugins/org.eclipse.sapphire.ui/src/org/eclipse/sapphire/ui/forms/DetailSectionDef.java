@@ -33,7 +33,7 @@ public interface DetailSectionDef extends PageBookDef
     
     // *** Property ***
     
-    @Label( standard = "label" )
+    @Label( standard = "property" )
     @Required
     @XmlBinding( path = "property" )
     
