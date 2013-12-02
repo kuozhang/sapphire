@@ -28,13 +28,10 @@
             <label>Select the type of file that the wizard should create.</label>
             <spacer></spacer>
             <property-editor>
-                <hint>
-                    <name>prefer.vertical.radio.buttons</name>
-                    <value>true</value>
-                </hint>
                 <property>Type</property>
                 <span>true</span>
                 <show-label>false</show-label>
+                <style>Sapphire.PropertyEditor.RadioButtonGroup.Vertical</style>
                 <hint>
                     <name>aux.text.JAVA</name>
                     <value>Java programming language source file</value>

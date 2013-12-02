@@ -240,16 +240,16 @@ public final class CheckBoxPropertyEditorPresentation extends ValuePropertyEdito
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart part )
-        {
-            final PropertyDef property = part.property().definition();
-            return ( property instanceof ValueProperty && property.isOfType( Boolean.class ) );
-        }
-        
-        @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            return new CheckBoxPropertyEditorPresentation( part, parent, composite );
+            final PropertyDef property = part.property().definition();
+            
+            if( property instanceof ValueProperty && property.isOfType( Boolean.class ) )
+            {
+                return new CheckBoxPropertyEditorPresentation( part, parent, composite );
+            }
+            
+            return null;
         }
     }
     

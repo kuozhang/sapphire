@@ -247,17 +247,11 @@
                         <content>
                             <property-editor>
                                 <property>Simple</property>
-                                <hint>
-                                    <name>prefer.radio.buttons</name>
-                                    <value>true</value>
-                                </hint>
+                                <style>Sapphire.PropertyEditor.RadioButtonGroup</style>
                             </property-editor>
                             <property-editor>
                                 <property>CustomSerializedWithDefault</property>
-                                <hint>
-                                    <name>prefer.radio.buttons</name>
-                                    <value>true</value>
-                                </hint>
+                                <style>Sapphire.PropertyEditor.RadioButtonGroup</style>
                             </property-editor>
                         </content>
                     </section>
@@ -266,18 +260,12 @@
                         <content>
                             <property-editor>
                                 <property>Simple</property>
-                                <hint>
-                                    <name>prefer.vertical.radio.buttons</name>
-                                    <value>true</value>
-                                </hint>
+                                <style>Sapphire.PropertyEditor.RadioButtonGroup.Vertical</style>
                             </property-editor>
                             <spacer />
                             <property-editor>
                                 <property>CustomSerializedWithDefault</property>
-                                <hint>
-                                    <name>prefer.vertical.radio.buttons</name>
-                                    <value>true</value>
-                                </hint>
+                                <style>Sapphire.PropertyEditor.RadioButtonGroup.Vertical</style>
                             </property-editor>
                             <spacer />
                             <group>
@@ -285,10 +273,7 @@
                                 <content>
                                     <property-editor>
                                         <property>CustomSerializedWithDefault</property>
-                                        <hint>
-                                            <name>prefer.vertical.radio.buttons</name>
-                                            <value>true</value>
-                                        </hint>
+                                        <style>Sapphire.PropertyEditor.RadioButtonGroup.Vertical</style>
                                         <show-label>false</show-label>
                                         <span>true</span>
                                     </property-editor>
@@ -300,10 +285,7 @@
                                 <content>
                                     <property-editor>
                                         <property>CustomSerializedWithDefault</property>
-                                        <hint>
-                                            <name>prefer.vertical.radio.buttons</name>
-                                            <value>true</value>
-                                        </hint>
+                                        <style>Sapphire.PropertyEditor.RadioButtonGroup.Vertical</style>
                                         <show-label>false</show-label>
                                         <span>true</span>
                                         <hint>
@@ -2063,10 +2045,7 @@
                                     <spacer/>
                                     <property-editor>
                                         <property>TypeKind</property>
-                                        <hint>
-                                            <name>prefer.radio.buttons</name>
-                                            <value>true</value>
-                                        </hint>
+                                        <style>Sapphire.PropertyEditor.RadioButtonGroup</style>
                                     </property-editor>
                                     <property-editor>Property1</property-editor>
                                     <property-editor>Property2</property-editor>

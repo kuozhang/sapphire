@@ -714,15 +714,14 @@ public final class CompactListPropertyEditorPresentation extends ListPropertyEdi
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
-        {
-            return ( propertyEditorPart.property().definition() instanceof ListProperty );
-        }
-        
-        @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            return new CompactListPropertyEditorPresentation( part, parent, composite );
+            if( part.property().definition() instanceof ListProperty )
+            {
+                return new CompactListPropertyEditorPresentation( part, parent, composite );
+            }
+            
+            return null;
         }
     }
     

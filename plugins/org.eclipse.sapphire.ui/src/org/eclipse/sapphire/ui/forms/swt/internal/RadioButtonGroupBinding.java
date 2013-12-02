@@ -38,21 +38,21 @@ import org.eclipse.swt.widgets.Control;
  * @author <a href="gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public final class RadioButtonsGroupBinding extends AbstractBinding
+public final class RadioButtonGroupBinding extends AbstractBinding
 {
     @Text( "<value not set>" )
     private static LocalizableText nullValueLabel;
     
     static
     {
-        LocalizableText.init( RadioButtonsGroupBinding.class );
+        LocalizableText.init( RadioButtonGroupBinding.class );
     }
 
     private RadioButtonsGroup buttonsGroup;
     private Button badValueButton;
     private Enum<?>[] enumValues;
     
-    public RadioButtonsGroupBinding( final PropertyEditorPresentation propertyEditorPresentation,
+    public RadioButtonGroupBinding( final PropertyEditorPresentation propertyEditorPresentation,
                                      final RadioButtonsGroup buttonsGroup )
     {
         super( propertyEditorPresentation, buttonsGroup );

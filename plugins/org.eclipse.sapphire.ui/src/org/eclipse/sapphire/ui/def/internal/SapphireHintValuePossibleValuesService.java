@@ -81,9 +81,6 @@ public final class SapphireHintValuePossibleValuesService extends PossibleValues
                      hint.equals( PropertyEditorDef.HINT_BROWSE_ONLY ) ||
                      hint.equals( PropertyEditorDef.HINT_READ_ONLY ) ||
                      hint.equals( PropertyEditorDef.HINT_BORDER ) ||
-                     hint.equals( PropertyEditorDef.HINT_PREFER_COMBO ) ||
-                     hint.equals( PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS ) ||
-                     hint.equals( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS ) ||
                      hint.equals( PropertyEditorDef.HINT_FACTORY ) )
             {
                 values.add( Boolean.TRUE.toString() );

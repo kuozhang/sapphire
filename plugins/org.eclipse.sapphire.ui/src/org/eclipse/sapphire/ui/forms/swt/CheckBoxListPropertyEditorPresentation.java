@@ -780,12 +780,6 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
-        {
-            return true;
-        }
-        
-        @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new CheckBoxListPropertyEditorPresentation( part, parent, composite );
@@ -795,7 +789,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
     public static final class EnumFactory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart part )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             final Property property = part.property();
             
@@ -812,18 +806,12 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
                         memberProperty.hasAnnotation( NoDuplicates.class ) &&
                         Enum.class.isAssignableFrom( memberProperty.getTypeClass() ) )
                     {
-                        return true;
+                        return new CheckBoxListPropertyEditorPresentation( part, parent, composite );
                     }
                 }
             }
     
-            return false;
-        }
-        
-        @Override
-        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
-        {
-            return new CheckBoxListPropertyEditorPresentation( part, parent, composite );
+            return null;
         }
     }
     

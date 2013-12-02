@@ -636,4 +636,16 @@
         <description>Returns the root element of editor page's persisted state, allowing access to various state properties. This is particularly useful when the persisted state is extended with custom properties wired to custom actions, as it allows any EL-enabled facility to integrate with the custom state property.</description>
         <impl>org.eclipse.sapphire.ui.internal.StateFunction</impl>
     </function>
+    <presentation-style>
+        <id>Sapphire.PropertyEditor.RadioButtonGroup</id>
+        <part-type>Sapphire.PropertyEditor</part-type>
+    </presentation-style>
+    <presentation-style>
+        <id>Sapphire.PropertyEditor.RadioButtonGroup.Horizontal</id>
+        <part-type>Sapphire.PropertyEditor</part-type>
+    </presentation-style>
+    <presentation-style>
+        <id>Sapphire.PropertyEditor.RadioButtonGroup.Vertical</id>
+        <part-type>Sapphire.PropertyEditor</part-type>
+    </presentation-style>
 </extension>

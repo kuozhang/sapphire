@@ -61,9 +61,6 @@ public interface PropertyEditorDef extends FormComponentDef
     String HINT_SUPPRESS_ASSIST_CONTRIBUTORS = "suppress.assist.contributors";
     String HINT_LISTENERS = "listeners";
     String HINT_COLUMN_WIDTHS = "column.widths";
-    String HINT_PREFER_COMBO = "prefer.combo";
-    String HINT_PREFER_RADIO_BUTTONS = "prefer.radio.buttons";
-    String HINT_PREFER_VERTICAL_RADIO_BUTTONS = "prefer.vertical.radio.buttons";
     String HINT_FACTORY = "factory";
     
     // *** Property ***
@@ -257,7 +254,18 @@ public interface PropertyEditorDef extends FormComponentDef
     
     // *** Style ***
 
-    @PossibleValues( values = { "Sapphire.PropertyEditor.PopUpListField", "Sapphire.PropertyEditor.PopUpListField.Editable", "Sapphire.PropertyEditor.PopUpListField.Strict" } )
+    @PossibleValues
+    (
+        values =
+        {
+             "Sapphire.PropertyEditor.PopUpListField",
+             "Sapphire.PropertyEditor.PopUpListField.Editable",
+             "Sapphire.PropertyEditor.PopUpListField.Strict",
+             "Sapphire.PropertyEditor.RadioButtonGroup",
+             "Sapphire.PropertyEditor.RadioButtonGroup.Horizontal",
+             "Sapphire.PropertyEditor.RadioButtonGroup.Vertical"
+        }
+    )
     
     ValueProperty PROP_STYLE = new ValueProperty( TYPE, FormComponentDef.PROP_STYLE );
 

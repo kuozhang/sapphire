@@ -251,12 +251,6 @@ public final class WorkspaceRelativePathPropertyEditorPresentation extends TextF
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorDefinition )
-        {
-            return true;
-        }
-        
-        @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
             return new WorkspaceRelativePathPropertyEditorPresentation( part, parent, composite );

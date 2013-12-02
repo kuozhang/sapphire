@@ -394,15 +394,14 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
-        {
-            return ( propertyEditorPart.property().definition() instanceof ValueProperty );
-        }
-        
-        @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            return new TextFieldPropertyEditorPresentation( part, parent, composite );
+            if( part.property().definition() instanceof ValueProperty )
+            {
+                return new TextFieldPropertyEditorPresentation( part, parent, composite );
+            }
+            
+            return null;
         }
     }
     

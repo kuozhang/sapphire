@@ -3143,6 +3143,30 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms<span class="unaffected">.PropertyEditorDef</span></code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>HINT_PREFER_COMBO</code></pre>
+    </td>
+    <td>
+This hint has been replaced by <a href="#sdef.prefer.combo">Sapphire.PropertyEditor.PopUpListField</a> style.
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>HINT_PREFER_RADIO_BUTTONS</code></pre>
+    </td>
+    <td>
+This hint has been replaced by <a href="#sdef.prefer.radio.buttons">Sapphire.PropertyEditor.RadioButtonGroup</a> style.
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>HINT_PREFER_VERTICAL_RADIO_BUTTONS</code></pre>
+    </td>
+    <td>
+This hint has been replaced by <a href="#sdef.prefer.vertical.radio.buttons">Sapphire.PropertyEditor.RadioButtonGroup.Vertical</a> style.
+    </td>
+  </tr>
 </table>
 
 
@@ -3292,9 +3316,9 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
   <tr>
     <td>
 <pre class="source-code"><code><span class="unaffected">public class ExamplePropertyEditor</span>Render<span class="unaffected">Factory extends PropertyEditor</span>Renderer<span class="unaffected">Factory
-{
+{</span>
     @Override
-    public boolean isApplicableTo( PropertyEditorPart part ) 
+    public <span class="unaffected">boolean isApplicableTo( PropertyEditorPart part ) 
     {
         ...
     }
@@ -3309,9 +3333,8 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">public class ExamplePropertyEditor</span>Presentation<span class="unaffected">Factory extends PropertyEditor</span>Presentation<span class="unaffected">Factory
-{
-    @Override
-    public boolean isApplicableTo( PropertyEditorPart part ) 
+{</span>
+    private <span class="unaffected">boolean isApplicableTo( PropertyEditorPart part ) 
     {
         ...
     }
@@ -3320,9 +3343,14 @@ on <a href="http://www.eclipse.org/forums/index.php?t=thread&frm_id=192">Sapphir
     public PropertyEditor</span>Presentation <span class="unaffected">create( PropertyEditorPart part</span>, 
                                               SwtPresentation parent,
                                               Composite composite <span class="unaffected">) 
-    {
-        return new ExamplePropertyEditor</span>Presentation<span class="unaffected">(</span> part, parent, composite <span class="unaffected">);
-    }
+    {</span>
+        if( isApplicable( part ) )
+        {
+            <span class="unaffected">return new ExamplePropertyEditor</span>Presentation<span class="unaffected">(</span> part, parent, composite <span class="unaffected">);</span>
+        }
+        
+        return null;
+    <span class="unaffected">}
 }</span></code></pre>
     </td>
   </tr>
@@ -5537,6 +5565,39 @@ by @EnumSerialization annotations (if present) rather than names of enum items i
     </td>
     <td>
 <pre class="source-code"><code>&lt;background-color>white&lt;/background-color></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<a name="sdef.prefer.combo"><pre class="source-code"><code>&lt;hint>
+    &lt;name>prefer.combo&lt;/name>
+    &lt;value>true&lt;/value>
+&lt;/hint></code></pre></a>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;style>Sapphire.PropertyEditor.PopUpListField&lt;/style></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<a name="sdef.prefer.radio.buttons"><pre class="source-code"><code>&lt;hint>
+    &lt;name>prefer.radio.buttons&lt;/name>
+    &lt;value>true&lt;/value>
+&lt;/hint></code></pre></a>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;style>Sapphire.PropertyEditor.RadioButtonGroup&lt;/style></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<a name="sdef.prefer.vertical.radio.buttons"><pre class="source-code"><code>&lt;hint>
+    &lt;name>prefer.vertical.radio.buttons&lt;/name>
+    &lt;value>true&lt;/value>
+&lt;/hint></code></pre></a>
+    </td>
+    <td>
+<pre class="source-code"><code>&lt;style>Sapphire.PropertyEditor.RadioButtonGroup.Vertical&lt;/style></code></pre>
     </td>
   </tr>
 </table>

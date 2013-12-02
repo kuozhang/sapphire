@@ -195,9 +195,9 @@ public final class ScalePropertyEditorPresentation extends ValuePropertyEditorPr
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            final PropertyDef property = propertyEditorPart.property().definition();
+            final PropertyDef property = part.property().definition();
             
             if( property.isOfType( Integer.class ) )
             {
@@ -210,18 +210,12 @@ public final class ScalePropertyEditorPresentation extends ValuePropertyEditorPr
                     
                     if( minStr.length() > 0 && maxStr.length() > 0 )
                     {
-                        return true;
+                        return new ScalePropertyEditorPresentation( part, parent, composite );
                     }
                 }
             }
             
-            return false;
-        }
-        
-        @Override
-        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
-        {
-            return new ScalePropertyEditorPresentation( part, parent, composite );
+            return null;
         }
     }
 

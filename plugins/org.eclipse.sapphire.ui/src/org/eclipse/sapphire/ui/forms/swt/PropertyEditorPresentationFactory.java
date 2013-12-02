@@ -20,7 +20,5 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class PropertyEditorPresentationFactory
 {
-    public abstract boolean isApplicableTo( PropertyEditorPart part );
-    
     public abstract PropertyEditorPresentation create( PropertyEditorPart part, SwtPresentation parent, Composite composite );
 }

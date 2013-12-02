@@ -26,8 +26,8 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.SapphirePart.LabelChangedEvent;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
+import org.eclipse.sapphire.ui.def.Orientation;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
-import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentationFactory;
@@ -44,13 +44,21 @@ import org.eclipse.swt.widgets.Label;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class RadioButtonsPropertyEditorPresentation extends ValuePropertyEditorPresentation
+public final class RadioButtonGroupPropertyEditorPresentation extends ValuePropertyEditorPresentation
 {
+    private final Orientation orientation;
     private RadioButtonsGroup control;
 
-    public RadioButtonsPropertyEditorPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite )
+    public RadioButtonGroupPropertyEditorPresentation( final FormComponentPart part, final SwtPresentation parent, final Composite composite, final Orientation orientation )
     {
         super( part, parent, composite );
+        
+        if( orientation == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.orientation = orientation;
     }
 
     @Override
@@ -60,11 +68,10 @@ public final class RadioButtonsPropertyEditorPresentation extends ValuePropertyE
         
         final boolean showLabel = ( part.label() != null );
         final int leftMargin = part.getMarginLeft();
-        final boolean preferVerticalRadioButtonBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS, false );
         
         PropertyEditorAssistDecorator decorator = null;
         
-        if( preferVerticalRadioButtonBinding )
+        if( this.orientation == Orientation.VERTICAL )
         {
             final Composite composite = createMainComposite
             (
@@ -164,7 +171,7 @@ public final class RadioButtonsPropertyEditorPresentation extends ValuePropertyE
             this.control.setLayoutData( gdhfill() );
         }
     
-        this.binding = new RadioButtonsGroupBinding( this, this.control );            
+        this.binding = new RadioButtonGroupBinding( this, this.control );            
     
         this.control.setData( DATA_BINDING, this.binding );
         decorator.addEditorControl( this.control, true );
@@ -181,27 +188,35 @@ public final class RadioButtonsPropertyEditorPresentation extends ValuePropertyE
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart part )
-        {
-            final Property property = part.property();
-            
-            if( property instanceof Value && property.definition().isOfType( Enum.class ) )
-            {
-                final boolean preferVerticalRadioButtonBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS, false );                
-                final boolean preferRadioButtonBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS, false );
-                final boolean preferComboBinding = part.getRenderingHint( PropertyEditorDef.HINT_PREFER_COMBO, false );
-                final Enum<?>[] enumValues = (Enum<?>[]) property.definition().getTypeClass().getEnumConstants();
-                
-                return ( preferVerticalRadioButtonBinding || preferRadioButtonBinding || ( enumValues.length <= 3 && ! preferComboBinding ) );
-            }
-            
-            return false;
-        }
-        
-        @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            return new RadioButtonsPropertyEditorPresentation( part, parent, composite );
+            final String style = part.definition().getStyle().content();
+            
+            if( style != null && style.startsWith( "Sapphire.PropertyEditor.RadioButtonGroup" ) )
+            {
+                final Property property = part.property();
+                
+                if( property instanceof Value && property.definition().isOfType( Enum.class ) )
+                {
+                    Orientation orientation = null;
+                    
+                    if( style.equals( "Sapphire.PropertyEditor.RadioButtonGroup" ) || style.equals( "Sapphire.PropertyEditor.RadioButtonGroup.Horizontal" ) )
+                    {
+                        orientation = Orientation.HORIZONTAL;
+                    }
+                    else if( style.equals( "Sapphire.PropertyEditor.RadioButtonGroup.Vertical" ) )
+                    {
+                        orientation = Orientation.VERTICAL;
+                    }
+                    
+                    if( orientation != null )
+                    {
+                        return new RadioButtonGroupPropertyEditorPresentation( part, parent, composite, orientation );
+                    }
+                }
+            }
+            
+            return null;
         }
     }
 

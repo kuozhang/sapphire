@@ -43,15 +43,12 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.el.AndFunction;
 import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
@@ -66,10 +63,10 @@ import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.TablePropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.TextFieldPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.CheckBoxPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.EnumPropertyEditorPresentationFactory;
 import org.eclipse.sapphire.ui.forms.swt.internal.NamedValuesPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.PopUpListFieldPropertyEditorPresentation;
-import org.eclipse.sapphire.ui.forms.swt.internal.PopUpListFieldStyle;
-import org.eclipse.sapphire.ui.forms.swt.internal.RadioButtonsPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.RadioButtonGroupPropertyEditorPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Composite;
 
@@ -88,7 +85,9 @@ public final class PropertyEditorPart extends FormComponentPart
     static
     {
         FACTORIES.add( new CheckBoxPropertyEditorPresentation.Factory() );
-        FACTORIES.add( new RadioButtonsPropertyEditorPresentation.Factory() );
+        FACTORIES.add( new RadioButtonGroupPropertyEditorPresentation.Factory() );
+        FACTORIES.add( new PopUpListFieldPropertyEditorPresentation.Factory() );
+        FACTORIES.add( new EnumPropertyEditorPresentationFactory() );
         FACTORIES.add( new NamedValuesPropertyEditorPresentation.Factory() );
         FACTORIES.add( new TextFieldPropertyEditorPresentation.Factory() );
         FACTORIES.add( new CheckBoxListPropertyEditorPresentation.EnumFactory() );
@@ -270,9 +269,6 @@ public final class PropertyEditorPart extends FormComponentPart
             if( name.equals( PropertyEditorDef.HINT_SHOW_HEADER ) ||
                 name.equals( PropertyEditorDef.HINT_BORDER ) ||
                 name.equals( PropertyEditorDef.HINT_BROWSE_ONLY ) ||
-                name.equals( PropertyEditorDef.HINT_PREFER_COMBO ) ||
-                name.equals( PropertyEditorDef.HINT_PREFER_RADIO_BUTTONS ) ||
-                name.equals( PropertyEditorDef.HINT_PREFER_VERTICAL_RADIO_BUTTONS ) ||
                 name.equals( PropertyEditorDef.HINT_READ_ONLY ) )
             {
                 parsedValue = Boolean.parseBoolean( valueString );
@@ -517,87 +513,31 @@ public final class PropertyEditorPart extends FormComponentPart
     {
         PropertyEditorPresentation presentation = null;
         
-        final String style = definition().getStyle().text();
-        
-        if( style == null )
+        try
         {
-            PropertyEditorPresentationFactory factory = null;
+            final Class<PropertyEditorPresentationFactory> factoryClass 
+                = getRenderingHint( PropertyEditorDef.HINT_FACTORY, (Class<PropertyEditorPresentationFactory>) null );
             
-            try
+            if( factoryClass != null )
             {
-                final Class<PropertyEditorPresentationFactory> factoryClass 
-                    = getRenderingHint( PropertyEditorDef.HINT_FACTORY, (Class<PropertyEditorPresentationFactory>) null );
-                
-                if( factoryClass != null )
-                {
-                    factory = factoryClass.newInstance();
-                }
-            }
-            catch( Exception e )
-            {
-                Sapphire.service( LoggingService.class ).log( e );
-            }
-            
-            if( factory == null )
-            {
-                for( PropertyEditorPresentationFactory f : FACTORIES )
-                {
-                    if( f.isApplicableTo( this ) )
-                    {
-                        factory = f;
-                        break;
-                    }
-                }
-            }
-    
-            if( factory != null )
-            {
+                final PropertyEditorPresentationFactory factory = factoryClass.newInstance();
                 presentation = factory.create( this, parent, composite );
             }
         }
-        else
+        catch( Exception e )
         {
-            if( style.startsWith( "Sapphire.PropertyEditor.PopUpListField" ) )
+            Sapphire.service( LoggingService.class ).log( e );
+        }
+
+        if( presentation == null )
+        {
+            for( final PropertyEditorPresentationFactory f : FACTORIES )
             {
-                if( this.property.definition() instanceof ValueProperty && this.property.service( PossibleValuesService.class ) != null )
+                presentation = f.create( this, parent, composite );
+                
+                if( presentation != null )
                 {
-                    PopUpListFieldStyle popUpListFieldPresentationStyle = null;
-                    
-                    if( style.equals( "Sapphire.PropertyEditor.PopUpListField" ) )
-                    {
-                        if( Enum.class.isAssignableFrom( this.property.definition().getTypeClass() ) )
-                        {
-                            popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
-                        }
-                        else
-                        {
-                            final PossibleValues possibleValuesAnnotation = this.property.definition().getAnnotation( PossibleValues.class );
-                            
-                            if( possibleValuesAnnotation != null )
-                            {
-                                popUpListFieldPresentationStyle 
-                                    = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
-                                        ? PopUpListFieldStyle.STRICT : PopUpListFieldStyle.EDITABLE );
-                            }
-                            else
-                            {
-                                popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
-                            }
-                        }
-                    }
-                    else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Editable" ) )
-                    {
-                        popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
-                    }
-                    else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Strict" ) )
-                    {
-                        popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
-                    }
-                    
-                    if( popUpListFieldPresentationStyle != null )
-                    {
-                        presentation = new PopUpListFieldPropertyEditorPresentation( this, parent, composite, popUpListFieldPresentationStyle );
-                    }
+                    break;
                 }
             }
         }

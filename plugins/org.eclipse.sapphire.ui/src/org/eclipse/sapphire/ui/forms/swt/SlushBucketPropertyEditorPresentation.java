@@ -373,9 +373,9 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
     public static final class Factory extends PropertyEditorPresentationFactory
     {
         @Override
-        public boolean isApplicableTo( final PropertyEditorPart propertyEditorPart )
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            final Property property = propertyEditorPart.property();
+            final Property property = part.property();
             
             if( property.definition() instanceof ListProperty &&
                 property.service( PossibleValuesService.class ) != null &&
@@ -389,18 +389,12 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
                     
                     if( memberProperty instanceof ValueProperty && memberProperty.hasAnnotation( NoDuplicates.class ) )
                     {
-                        return true;
+                        return new SlushBucketPropertyEditorPresentation( part, parent, composite );
                     }
                 }
             }
     
-            return false;
-        }
-        
-        @Override
-        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
-        {
-            return new SlushBucketPropertyEditorPresentation( part, parent, composite );
+            return null;
         }
     }
     

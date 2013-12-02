@@ -30,13 +30,19 @@ import java.util.List;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.Status.Severity;
+import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentationFactory;
 import org.eclipse.sapphire.ui.forms.swt.SapphireToolBarActionPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.ValuePropertyEditorPresentation;
@@ -324,6 +330,63 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
         super.dispose();
         
         this.combo = null;
+    }
+    
+    public static final class Factory extends PropertyEditorPresentationFactory
+    {
+        @Override
+        public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
+        {
+            final String style = part.definition().getStyle().content();
+            
+            if( style != null && style.startsWith( "Sapphire.PropertyEditor.PopUpListField" ) )
+            {
+                final Property property = part.property();
+                
+                if( property.definition() instanceof ValueProperty && property.service( PossibleValuesService.class ) != null )
+                {
+                    PopUpListFieldStyle popUpListFieldPresentationStyle = null;
+                    
+                    if( style.equals( "Sapphire.PropertyEditor.PopUpListField" ) )
+                    {
+                        if( Enum.class.isAssignableFrom( property.definition().getTypeClass() ) )
+                        {
+                            popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
+                        }
+                        else
+                        {
+                            final PossibleValues possibleValuesAnnotation =property.definition().getAnnotation( PossibleValues.class );
+                            
+                            if( possibleValuesAnnotation != null )
+                            {
+                                popUpListFieldPresentationStyle 
+                                    = ( possibleValuesAnnotation.invalidValueSeverity() == Severity.ERROR 
+                                        ? PopUpListFieldStyle.STRICT : PopUpListFieldStyle.EDITABLE );
+                            }
+                            else
+                            {
+                                popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
+                            }
+                        }
+                    }
+                    else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Editable" ) )
+                    {
+                        popUpListFieldPresentationStyle = PopUpListFieldStyle.EDITABLE;
+                    }
+                    else if( style.equals( "Sapphire.PropertyEditor.PopUpListField.Strict" ) )
+                    {
+                        popUpListFieldPresentationStyle = PopUpListFieldStyle.STRICT;
+                    }
+                    
+                    if( popUpListFieldPresentationStyle != null )
+                    {
+                        return new PopUpListFieldPropertyEditorPresentation( part, parent, composite, popUpListFieldPresentationStyle );
+                    }
+                }
+            }
+            
+            return null;
+        }
     }
 
 }
