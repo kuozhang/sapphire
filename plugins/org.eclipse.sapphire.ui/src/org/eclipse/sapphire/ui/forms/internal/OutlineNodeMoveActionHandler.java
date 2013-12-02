@@ -12,12 +12,10 @@
 package org.eclipse.sapphire.ui.forms.internal;
 
 import org.eclipse.sapphire.DisposeEvent;
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -64,8 +62,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
             }
         };
         
-        final Element parent = ( (MasterDetailsContentNodePart) getPart().parent() ).getLocalModelElement();
-        final Property property = parent.property( getList().definition() );
+        final ElementList<?> list = getList();
         
         final Listener listPropertyListener = new FilteredListener<PropertyContentEvent>()
         {
@@ -76,7 +73,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
             }
         };
         
-        property.attach( listPropertyListener );
+        list.attach( listPropertyListener );
         
         refreshEnabledState();
         
@@ -89,7 +86,7 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
                 {
                     if( event instanceof DisposeEvent )
                     {
-                        property.detach( listPropertyListener );
+                        list.detach( listPropertyListener );
                         OutlineNodeMoveActionHandler.this.contentTree.detach( contentTreeListener );
                     }
                 }
