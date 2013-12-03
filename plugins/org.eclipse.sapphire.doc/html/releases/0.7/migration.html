@@ -3651,6 +3651,35 @@ This hint has been replaced by <a href="#sdef.prefer.vertical.radio.buttons">Sap
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.ui.</span>forms.<span class="unaffected">swt.SapphireDialog</span></code></pre>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class CustomDialog extends SapphireDialog
+{
+    @Override
+    protected</span> void okPressed<span class="unaffected">()
+    {
+        ...</span>
+        
+        if( <span class="unaffected">success</span> )
+        {
+            super.okPressed();
+        }
+    <span class="unaffected">}
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class CustomDialog extends SapphireDialog
+{
+    @Override
+    protected</span> boolean performOkOperation<span class="unaffected">()
+    {
+        ...</span>
+        
+        return <span class="unaffected">success</span>;
+    <span class="unaffected">}
+}</span></code></pre>
+    </td>
+  </tr>
 </table>
 
 

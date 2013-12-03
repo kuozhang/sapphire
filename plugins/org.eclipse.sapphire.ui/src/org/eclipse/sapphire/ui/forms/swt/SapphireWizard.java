@@ -300,6 +300,11 @@ public class SapphireWizard<M extends Element> implements IWizard
     {
         DelayedTasksExecutor.sweep();
         
+        if( ! canFinish() )
+        {
+            return false;
+        }
+        
         final Status[] result = new Status[ 1 ];
         
         final IRunnableWithProgress runnable = new IRunnableWithProgress()

@@ -168,10 +168,33 @@ public class SapphireDialog extends Dialog
     }
     
     @Override
-    protected void okPressed()
+    protected final void okPressed()
     {
         DelayedTasksExecutor.sweep();
-        super.okPressed();
+        
+        if( this.part.validation().severity() == Status.Severity.ERROR )
+        {
+            return;
+        }
+        
+        if( performOkOperation() )
+        {
+            super.okPressed();
+        }
+    }
+    
+    /**
+     * Performs any custom tasks that need to run when user closes the dialog by pressing on the ok button. The default
+     * implementation does nothing. 
+     *  
+     * @return true if the dialog can be dismissed or false if an issue was encountered that requires user's attention
+     */
+    
+    protected boolean performOkOperation()
+    {
+        // The default implementation does nothing.
+        
+        return true;
     }
 
     private void updateOkButtonEnablement()
