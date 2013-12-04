@@ -13,6 +13,9 @@
 
 package org.eclipse.sapphire.ui.diagram.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
@@ -22,8 +25,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.diagram.ConnectionService;
-import org.eclipse.sapphire.ui.diagram.ConnectionServiceEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
@@ -35,6 +37,21 @@ import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireActionHandler 
 {
+	private List<DiagramConnectionPart> selectedConnectionParts = new ArrayList<DiagramConnectionPart>();
+	private Listener connectionPartListener;
+	
+	public DeleteAllBendPointsForMultiplePartsActionHandler()
+	{
+		this.connectionPartListener = new FilteredListener<ConnectionBendpointEvent>() 
+		{
+			@Override
+			protected void handleTypedEvent(ConnectionBendpointEvent event) 
+			{
+				broadcast( new EnablementChangedEvent() );
+			}
+		};
+	}
+	
 	@Override
 	public void init(SapphireAction action, ActionHandlerDef def) 
 	{
@@ -49,27 +66,11 @@ public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireAc
                 if( e instanceof SelectionChangedEvent ) 
                 {
                     broadcast( new EnablementChangedEvent() );
+                    refreshConnectionPartsListener();
                 }
 			}
 		});
-		part.service(ConnectionService.class).attach( new FilteredListener<ConnectionServiceEvent>()
-		{
-			@Override
-			protected void handleTypedEvent(ConnectionServiceEvent event) 
-			{
-				switch(event.getConnectionEventType()) 
-				{
-		    	case ConnectionAddBendpoint:
-	                broadcast( new EnablementChangedEvent() );
-		    		break;
-		    	case ConnectionRemoveBendpoint:
-	                broadcast( new EnablementChangedEvent() );
-		    		break;
-		    	default:
-		    		break;
-				}
-			}
-		});
+		refreshConnectionPartsListener();
 	}
 
     @Override
@@ -105,6 +106,28 @@ public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireAc
         }
         
         return null;
+    }
+    
+    private void refreshConnectionPartsListener()
+    {
+    	for (DiagramConnectionPart connPart : this.selectedConnectionParts)
+    	{
+    		connPart.detach(this.connectionPartListener);
+    	}
+    	
+    	SapphireDiagramEditorPagePart pagePart = (SapphireDiagramEditorPagePart) getPart();
+    	List<DiagramConnectionPart> newSelectedParts = new ArrayList<DiagramConnectionPart>();
+    	for (ISapphirePart part : pagePart.getSelections())
+    	{
+    		if (part instanceof DiagramConnectionPart)
+    		{
+    			newSelectedParts.add((DiagramConnectionPart)part);
+    			((DiagramConnectionPart) part).attach(this.connectionPartListener);
+    		}
+    	}
+    	this.selectedConnectionParts.clear();
+    	this.selectedConnectionParts.addAll(newSelectedParts);
+    	
     }
 
 }

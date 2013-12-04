@@ -13,8 +13,10 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramConnectionModel;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
@@ -34,32 +36,29 @@ public class DiagramConnectionPresentation extends DiagramPresentation
 		super(connPart, parent, configManager, shell);
 	}
 
-	public void init(final DiagramConnectionModel diagramConnectionModel) {
-		connectionListener = new FilteredListener<DiagramConnectionEvent>() {
+	public void init(final DiagramConnectionModel diagramConnectionModel) 
+	{
+		connectionListener = new FilteredListener<ConnectionEvent>() 
+		{
 			@Override
-			protected void handleTypedEvent(DiagramConnectionEvent event) {
-		    	switch(event.getConnectionEventType()) {
-			    	case ConnectionUpdate:
-			    		diagramConnectionModel.handleUpdateConnection();
-			    		break;
-			    	case ConnectionAddBendpoint:
-			    		diagramConnectionModel.handleUpdateBendPoints();
-			    		break;
-			    	case ConnectionRemoveBendpoint:
-			    		diagramConnectionModel.handleUpdateBendPoints();
-		    		break;
-			    	case ConnectionMoveBendpoint:
-			    		diagramConnectionModel.handleUpdateBendPoints();
-			    		break;
-			    	case ConnectionResetBendpoint:
-			    		diagramConnectionModel.handleUpdateBendPoints();
-			    		break;
-			    	case ConnectionMoveLabel:
-			    		diagramConnectionModel.handleUpdateConnectionMoveLabel();
-			    		break;
-			    	default:
-			    		break;
-		    	}
+			protected void handleTypedEvent(ConnectionEvent event) 
+			{
+				if (event instanceof ConnectionBendpointEvent)
+				{
+					diagramConnectionModel.handleUpdateBendPoints();
+				}
+				else if (event instanceof ConnectionLabelEvent)
+				{
+					ConnectionLabelEvent labelEvent = (ConnectionLabelEvent)event;
+					if (labelEvent.moveLabel())
+					{
+						diagramConnectionModel.handleUpdateConnectionMoveLabel();
+					}
+					else
+					{
+						diagramConnectionModel.handleUpdateConnection();
+					}
+				}
 			}
 		};
 		part().attach(connectionListener);
@@ -69,7 +68,6 @@ public class DiagramConnectionPresentation extends DiagramPresentation
 	public void dispose()
 	{
 		part().detach(connectionListener);
-
 		super.dispose();
 	}
 

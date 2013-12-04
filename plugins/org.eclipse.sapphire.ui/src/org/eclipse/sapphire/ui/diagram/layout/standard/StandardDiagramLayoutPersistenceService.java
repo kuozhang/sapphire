@@ -37,8 +37,12 @@ import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Point;
+import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
-import org.eclipse.sapphire.ui.diagram.ConnectionServiceEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeBounds;
@@ -70,7 +74,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	protected StandardDiagramLayout layoutModel;
 	protected IEditorInput editorInput;
 	private Listener diagramEditorPagePartListener;
-	private Listener connectionServiceListener;
+	private Listener connectionPartListener;
 	private Map<String, DiagramNodeBounds> nodeBounds;
 	private Map<ConnectionHashKey, List<Point>> connectionBendPoints;
 	private Map<ConnectionHashKey, Point> connectionLabelPositions;
@@ -87,6 +91,44 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     	this.connectionBendPoints = new HashMap<ConnectionHashKey, List<Point>>();
     	this.connectionLabelPositions = new HashMap<ConnectionHashKey, Point>();
     	this.dirty = false;
+    	
+		this.connectionPartListener = new FilteredListener<ConnectionEvent>() 
+		{
+			@Override
+			protected void handleTypedEvent(ConnectionEvent event) 
+			{
+				DiagramConnectionPart connPart = (DiagramConnectionPart)event.part();
+				if (event instanceof ConnectionLabelEvent)
+				{
+					if (((ConnectionLabelEvent)event).moveLabel())
+					{
+						write(connPart);
+					}
+				}
+				else if (event instanceof ConnectionBendpointEvent)
+				{
+					ConnectionBendpointEvent bpEvent = (ConnectionBendpointEvent)event;
+					if (bpEvent.reset())
+					{
+				    	if (autoLayout)
+				    	{
+				    		addConnectionToPersistenceCache(event.part());
+				    		refreshDirtyState();
+				    	}
+				    	else
+				    	{
+				    		write(event.part());
+				    	}
+						
+					}
+					else
+					{
+						write(event.part());
+					}										
+				}
+			}
+		};
+    	
 		try
 		{
 			load();
@@ -96,8 +138,8 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		{
 		    Sapphire.service( LoggingService.class ).log( e );
 		}
+		
 		addDiagramPartListener();
-		addConnectionServiceListener();
     }		
 		
 	@Override
@@ -200,6 +242,12 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 					connPart.setLabelPosition(labelPos);
 				}
 			}
+		}
+		
+		// Listen on existing connection parts
+		for (DiagramConnectionPart connPart : connService.list())
+		{
+			connPart.attach(this.connectionPartListener);
 		}
 		
 	}
@@ -471,24 +519,19 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
                 {
                 	autoLayout = false;
                 }
+                else if (event instanceof ConnectionAddEvent)
+                {
+                	handleConnectionAddEvent((ConnectionAddEvent)event);
+                }
+                else if (event instanceof ConnectionDeleteEvent)
+                {
+                	handleConnectionDeleteEvent((ConnectionDeleteEvent)event);
+                }
             }
         };
 		context( SapphireDiagramEditorPagePart.class ).attach(diagramEditorPagePartListener);
 	}
-	
-	private void addConnectionServiceListener()
-	{
-		this.connectionServiceListener = new FilteredListener<ConnectionServiceEvent>() 
-		{
-			@Override
-			protected void handleTypedEvent(ConnectionServiceEvent event) 
-			{
-				handleDiagramConnectionEvent(event);
-			}
-		};
-		context( SapphireDiagramEditorPagePart.class ).service(ConnectionService.class).attach(this.connectionServiceListener);
-	}
-	
+		
     private void handleDiagramNodeEvent(DiagramNodeEvent event) {
     	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
     	switch(event.getNodeEventType()) {
@@ -516,62 +559,25 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     	}
 	}
 
-    protected void handleDiagramConnectionEvent(ConnectionServiceEvent event) {
-		DiagramConnectionPart connPart = event.getConnectionPart();
+    protected void handleConnectionAddEvent(ConnectionAddEvent event) 
+    {
+		DiagramConnectionPart connPart = event.part();
 
-		switch(event.getConnectionEventType()) {
-	    	case ConnectionAdd:
-				DiagramConnectionInfo connInfo = read(connPart);
-				if (connInfo != null)
-				{
-					connPart.resetBendpoints(connInfo.getBendPoints());
-					if (connInfo.getLabelPosition() != null)
-					{
-						connPart.setLabelPosition(connInfo.getLabelPosition());
-					}
-				}
-                break;
-	    	case ConnectionDelete:
-			    refreshDirtyState();
-	    		break;
-	    	case ConnectionAddBendpoint:
-				write(connPart);
-	    		break;
-	    	case ConnectionRemoveBendpoint:
-				write(connPart);
-	    		break;
-	    	case ConnectionMoveBendpoint:
-				write(connPart);
-	    		break;
-	    	case ConnectionResetBendpoint:
-		    	if (autoLayout)
-		    	{
-		    		addConnectionToPersistenceCache(connPart);
-		    		refreshDirtyState();
-		    	}
-		    	else
-		    	{
-//		    		if (bendPoints.isDefault())
-//		    		{
-//		    			// Both the SapphireDiagramEditor and this class listen on connection
-//		    			// events and we don't control who receives the events first.
-//						// During "revert", t=if the default bend point is added after the connection 
-//						// was read, we need to re-read the connection to ensure "revert" works.		    			
-//		    			read(connPart);
-//		    		}
-//		    		else
-//		    		{
-//		    			write(connPart);
-//		    		}
-		    		write(connPart);
-		    	}
-	    		break;
-	    	case ConnectionMoveLabel:
-				write(connPart);
-	    		break;
-	    	default:
-	    		break;
-    	}
+		connPart.attach(this.connectionPartListener);
+		DiagramConnectionInfo connInfo = read(connPart);
+		if (connInfo != null)
+		{
+			connPart.resetBendpoints(connInfo.getBendPoints());
+			if (connInfo.getLabelPosition() != null)
+			{
+				connPart.setLabelPosition(connInfo.getLabelPosition());
+			}
+		}			
+	}
+
+	protected void handleConnectionDeleteEvent(ConnectionDeleteEvent event) 
+	{
+		refreshDirtyState();
 	}
 
     private void handleDiagramPageEvent(DiagramPageEvent event) {

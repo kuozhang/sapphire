@@ -29,8 +29,6 @@ import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -297,81 +295,26 @@ public class StandardConnectionService extends ConnectionService
         {
             template.refreshImplicitConnections();
         }
-    }
-        
-    private void notifyConnectionUpdate(final DiagramConnectionEvent event)
+	}
+	
+	private void notifyConnectionEndpointUpdate(final ConnectionEndpointEvent event)
+	{
+    	this.broadcast(event);
+	}
+		    
+	private void notifyConnectionAddEvent(final ConnectionAddEvent event)
     {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionUpdate);
-        this.broadcast(serviceEvent);
-    }
-    
-    private void notifyConnectionEndpointUpdate(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionEndpointUpdate);
-        this.broadcast(serviceEvent);
-    }
-
-    private void notifyConnectionAdd(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAdd);
-        this.broadcast(serviceEvent);
+    	this.broadcast(event);
     }
     
-    private void notifyConnectionAdd(final DiagramConnectionPart connPart)
+	private void notifyConnectionDeleteEvent(final ConnectionDeleteEvent event)
     {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                connPart, ConnectionEventType.ConnectionAdd);
-        this.broadcast(serviceEvent);       
+    	this.broadcast(event);
     }
 
-    private void notifyConnectionDelete(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionDelete);
-        this.broadcast(serviceEvent);
-    }
-    
-    private void notifyConnectionAddBendpoint(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionAddBendpoint);
-        this.broadcast(serviceEvent);
-    }
-
-    private void notifyConnectionRemoveBendpoint(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionRemoveBendpoint);
-        this.broadcast(serviceEvent);
-    }
-
-    private void notifyConnectionMoveBendpoint(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveBendpoint);
-        this.broadcast(serviceEvent);
-    }
-    
-    private void notifyConnectionResetBendpoints(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionResetBendpoint);
-        this.broadcast(serviceEvent);
-    }
-
-    private void notifyConnectionMoveLabel(final DiagramConnectionEvent event)
-    {
-        ConnectionServiceEvent serviceEvent = new ConnectionServiceEvent(this, 
-                (DiagramConnectionPart)event.getPart(), ConnectionEventType.ConnectionMoveLabel);
-        this.broadcast(serviceEvent);
-    }
-    
-    private void handleNodeAboutToBeDeleted(DiagramNodePart nodePart)
-    {
-        Element nodeModel = nodePart.getLocalModelElement();
+	private void handleNodeAboutToBeDeleted(DiagramNodePart nodePart)
+	{
+		Element nodeModel = nodePart.getLocalModelElement();
         // Check top level connections to see whether we need to remove the connection parent element
         for (DiagramConnectionTemplate connTemplate : getAllConnectionTemplates())
         {
@@ -402,92 +345,57 @@ public class StandardConnectionService extends ConnectionService
      */
     private void refreshAttachedConnections(DiagramNodePart nodePart)
     {
-        Element nodeElement = nodePart.getLocalModelElement();
-        for (DiagramConnectionPart connPart : list())
-        {
-             if (connPart.removable() && 
-                     (connPart.getEndpoint1() == nodeElement || 
-                             connPart.getEndpoint2() == nodeElement))
-             {
-                 notifyConnectionAdd(connPart);
-             }
+    	Element nodeElement = nodePart.getLocalModelElement();
+    	for (DiagramConnectionPart connPart : list())
+    	{
+			 if (connPart.removable() && 
+					 (connPart.getEndpoint1() == nodeElement || 
+							 connPart.getEndpoint2() == nodeElement))
+			 {
+				 ConnectionAddEvent addEvent = new ConnectionAddEvent(connPart);
+				 notifyConnectionAddEvent(addEvent);
+			 }
 
         }
             
     }
         
     
-    public class ConnectionTemplateListener extends DiagramConnectionTemplateListener
-    {
+	public class ConnectionTemplateListener extends DiagramConnectionTemplateListener
+	{
+    	@Override
+    	public void handleConnectionEndpointUpdate(final ConnectionEndpointEvent event)
+    	{
+    		notifyConnectionEndpointUpdate(event);
+    	}
+    	
         @Override
-        public void handleConnectionUpdate(final DiagramConnectionEvent event)
+        public void handleConnectionAddEvent(final ConnectionAddEvent event)
         {
-            notifyConnectionUpdate(event);
+            notifyConnectionAddEvent(event);
+        }
+
+        @Override
+        public void handleConnectionDeleteEvent(final ConnectionDeleteEvent event)
+        {
+            notifyConnectionDeleteEvent(event);
         }
         
-        @Override
-        public void handleConnectionEndpointUpdate(final DiagramConnectionEvent event)
-        {
-            notifyConnectionEndpointUpdate(event);
-        }
-
-        @Override
-        public void handleConnectionAdd(final DiagramConnectionEvent event)
-        {
-            notifyConnectionAdd(event);
-        }
-
-        @Override
-        public void handleConnectionDelete(final DiagramConnectionEvent event)
-        {
-            notifyConnectionDelete(event);
-        }
-        
-        @Override
-        public void handleAddBendpoint(final DiagramConnectionEvent event)
-        {
-            notifyConnectionAddBendpoint(event);
-        }
-
-        @Override
-        public void handleRemoveBendpoint(final DiagramConnectionEvent event)
-        {
-            notifyConnectionRemoveBendpoint(event);
-        }
-
-        @Override
-        public void handleMoveBendpoint(final DiagramConnectionEvent event)
-        {
-            notifyConnectionMoveBendpoint(event);
-        }
-
-        @Override
-        public void handleResetBendpoints(final DiagramConnectionEvent event)
-        {
-            notifyConnectionResetBendpoints(event);
-        }
-
-        @Override
-        public void handleMoveLabel(final DiagramConnectionEvent event)
-        {
-            notifyConnectionMoveLabel(event);
-        }
-    }
+	}
     
     public class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplateListener
     {
-
         @Override
-        public void handleConnectionAdd(final DiagramConnectionEvent event)
+        public void handleConnectionAddEvent(final ConnectionAddEvent event)
         {
-            notifyConnectionAdd(event);
+            notifyConnectionAddEvent(event);
         }
-
+    	
         @Override
-        public void handleConnectionDelete(final DiagramConnectionEvent event)
+        public void handleConnectionDeleteEvent(final ConnectionDeleteEvent event)
         {
-            notifyConnectionDelete(event);
-        }        
+            notifyConnectionDeleteEvent(event);
+        }
     }
     
     public static final class Condition extends ServiceCondition

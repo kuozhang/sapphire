@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.LoggingService;
@@ -123,7 +124,7 @@ public abstract class Service
         return this.listeners.detach( listener );
     }
     
-    protected final void broadcast( final ServiceEvent event )
+    protected final void broadcast( final Event event )
     {
         this.listeners.broadcast( event );
     }

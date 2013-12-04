@@ -41,6 +41,8 @@ import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
+import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
@@ -166,6 +168,16 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         );
         
         refreshPropertiesViewContribution();
+        
+        // Listen on connection service
+		this.service(ConnectionService.class).attach(new FilteredListener<ConnectionEvent>() 
+		{
+			@Override
+			protected void handleTypedEvent(ConnectionEvent event) 
+			{
+				broadcast(event);
+			}
+		});
     }
 
     @Override
@@ -588,6 +600,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 		NodeTemplateVisibilityEvent event = new NodeTemplateVisibilityEvent(nodeTemplate);
     	this.broadcast(event);
 	}
+	
 	private void notifyNodeMove(DiagramNodeEvent event)
 	{
 		event.setNodeEventType(NodeEventType.NodeMove);

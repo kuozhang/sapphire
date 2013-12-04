@@ -21,9 +21,10 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.ConnectionService;
-import org.eclipse.sapphire.ui.diagram.ConnectionServiceEvent;
-import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
+import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEndpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
@@ -42,7 +43,7 @@ public class DiagramPagePresentation extends DiagramPresentation
 	private DiagramResourceCache resourceCache;
 	private List<DiagramNodePresentation> nodes = new ArrayList<DiagramNodePresentation>();
 	private Listener diagramNodeListener;
-	private Listener connectionServiceListener;
+	private Listener connectionListener;
 	
 	public DiagramPagePresentation(final SapphirePart part, final DiagramConfigurationManager configManager, final Shell shell)
 	{
@@ -72,27 +73,27 @@ public class DiagramPagePresentation extends DiagramPresentation
 			}
 		};
 		part().attach(diagramNodeListener);
-
-		this.connectionServiceListener = new FilteredListener<ConnectionServiceEvent>() {
+		
+		connectionListener = new FilteredListener<ConnectionEvent>() 
+		{
 			@Override
-			protected void handleTypedEvent(ConnectionServiceEvent event) {
-		    	DiagramConnectionPart connectionPart = event.getConnectionPart();
-		    	switch(event.getConnectionEventType()) {
-			    	case ConnectionEndpointUpdate:
-			    		diagramModel.updateConnectionEndpoint(connectionPart);
-			    		break;
-			    	case ConnectionAdd:
-		                diagramModel.addConnection(connectionPart);
-			    		break;
-			    	case ConnectionDelete:
-		                diagramModel.removeConnection(connectionPart);
-		    		break;
-			    	default:
-			    		break;
-		    	}
+			protected void handleTypedEvent(ConnectionEvent event) 
+			{
+				if (event instanceof ConnectionEndpointEvent)
+				{
+					diagramModel.updateConnectionEndpoint(event.part());
+				}
+				else if (event instanceof ConnectionAddEvent)
+				{
+					diagramModel.addConnection(event.part());
+				}
+				else if (event instanceof ConnectionDeleteEvent)
+				{
+					diagramModel.removeConnection(event.part());
+				}
 			}
-		};
-		part().service(ConnectionService.class).attach(this.connectionServiceListener);
+		};	
+		part().attach(connectionListener);
 	}
 	
 	@Override
@@ -125,7 +126,7 @@ public class DiagramPagePresentation extends DiagramPresentation
 		resourceCache.dispose();
 		
 		part().detach(diagramNodeListener);
-		part().service(ConnectionService.class).detach(this.connectionServiceListener);
+		part().detach(connectionListener);
 
 		super.dispose();
 	}

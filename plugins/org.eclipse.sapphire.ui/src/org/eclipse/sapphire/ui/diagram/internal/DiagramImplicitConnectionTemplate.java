@@ -29,14 +29,15 @@ import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IModelElementTypeDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
-import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
+import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -47,10 +48,10 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
 {
     public static abstract class DiagramImplicitConnectionTemplateListener
     {
-        public void handleConnectionAdd(final DiagramConnectionEvent event)
+        public void handleConnectionAddEvent(final ConnectionAddEvent event)
         {            
         }
-        public void handleConnectionDelete(final DiagramConnectionEvent event)
+        public void handleConnectionDeleteEvent(final ConnectionDeleteEvent event)
         {            
         }
     }
@@ -270,7 +271,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
         for( DiagramImplicitConnectionTemplateListener listener : this.templateListeners )
         {
-            listener.handleConnectionAdd(new DiagramConnectionEvent(connPart));
+            listener.handleConnectionAddEvent(new ConnectionAddEvent(connPart));
         }        
     }
 
@@ -278,7 +279,7 @@ public class DiagramImplicitConnectionTemplate extends DiagramConnectionTemplate
     {
         for( DiagramImplicitConnectionTemplateListener listener : this.templateListeners )
         {
-            listener.handleConnectionDelete(new DiagramConnectionEvent(connPart));
+            listener.handleConnectionDeleteEvent(new ConnectionDeleteEvent(connPart));
         }        
     }
     

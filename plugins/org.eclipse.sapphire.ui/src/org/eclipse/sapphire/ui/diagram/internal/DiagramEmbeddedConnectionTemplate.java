@@ -33,10 +33,10 @@ import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 
@@ -328,7 +328,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     	connParts.addAll(this.getDiagramConnections(srcNodeModel));
     	for (StandardDiagramConnectionPart connPart : connParts)
     	{
-            notifyConnectionDelete(new DiagramConnectionEvent(connPart));
+            notifyConnectionDeleteEvent(new ConnectionDeleteEvent(connPart));
             disposeConnectionPart(connPart);    		
     	}
     }
@@ -342,7 +342,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
         {
             if (connPart.getEndpoint1() == element || connPart.getEndpoint2() == element)
             {
-                notifyConnectionDelete(new DiagramConnectionEvent(connPart));
+                notifyConnectionDeleteEvent(new ConnectionDeleteEvent(connPart));
                 disposeConnectionPart(connPart);
             }
         }

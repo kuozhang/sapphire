@@ -37,13 +37,14 @@ import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEndpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramConnectionEvent.ConnectionEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -259,7 +260,7 @@ public class StandardDiagramConnectionPart
     
     public void refreshLabel()
     {
-        notifyConnectionUpdate();
+        notifyUpdateLabel();
     }
     
     public String getConnectionTypeId()
@@ -571,53 +572,46 @@ public class StandardDiagramConnectionPart
         }
     }
         
-    protected void notifyConnectionUpdate()
+    protected void notifyUpdateLabel()
     {
-    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-		event.setConnectionEventType(ConnectionEventType.ConnectionUpdate);
-    	this.broadcast(event);
+		ConnectionLabelEvent labelEvent = new ConnectionLabelEvent(this, false);
+    	this.broadcast(labelEvent);
     }
     
     protected void notifyConnectionEndpointUpdate()
     {
-    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-		event.setConnectionEventType(ConnectionEventType.ConnectionEndpointUpdate);
+		ConnectionEndpointEvent event = new ConnectionEndpointEvent(this);
     	this.broadcast(event);
     }
     
     protected void notifyAddBendpoint()
     {
-    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-		event.setConnectionEventType(ConnectionEventType.ConnectionAddBendpoint);
+    	ConnectionBendpointEvent event = new ConnectionBendpointEvent(this);
     	this.broadcast(event);
     }
     
     protected void notifyRemoveBendpoint()
     {
-    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-		event.setConnectionEventType(ConnectionEventType.ConnectionRemoveBendpoint);
+    	ConnectionBendpointEvent event = new ConnectionBendpointEvent(this);
     	this.broadcast(event);
     }
 
     protected void notifyMoveBendpoint()
     {
-    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-		event.setConnectionEventType(ConnectionEventType.ConnectionMoveBendpoint);
+    	ConnectionBendpointEvent event = new ConnectionBendpointEvent(this);
     	this.broadcast(event);
     }
 
     protected void notifyResetBendpoints()
     {
-    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-		event.setConnectionEventType(ConnectionEventType.ConnectionResetBendpoint);
+		ConnectionBendpointEvent event = new ConnectionBendpointEvent(this, true);
     	this.broadcast(event);
     }
 
     protected void notifyMoveConnectionLabel()
     {
-    	DiagramConnectionEvent event = new DiagramConnectionEvent(this);
-		event.setConnectionEventType(ConnectionEventType.ConnectionMoveLabel);
-    	this.broadcast(event);
+		ConnectionLabelEvent labelEvent = new ConnectionLabelEvent(this, true);
+    	this.broadcast(labelEvent);
     }
     
     public PropertiesViewContributionPart getPropertiesViewContribution()

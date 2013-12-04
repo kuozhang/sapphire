@@ -38,6 +38,7 @@ import org.eclipse.sapphire.ui.forms.swt.ActionSystemPartBridge;
 import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionEditPart;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramConnectionLabelEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.SapphireDiagramEditorPageEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
@@ -97,10 +98,15 @@ public final class DiagramEditorContextMenuProvider extends ContextMenuProvider
 				context = SapphireActionSystem.CONTEXT_DIAGRAM_CONNECTION;
 				presentation = ((DiagramConnectionEditPart)editPart).getPresentation();
 			}
+			else if( editPart instanceof DiagramConnectionLabelEditPart )
+			{
+			    return;
+			}
 			else
 			{
 			    throw new IllegalStateException();
 			}
+			
 			part = presentation.part();
 		}
 		else if( selection.size() > 1 )
