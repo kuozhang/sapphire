@@ -65,7 +65,6 @@ public class DiagramConnectionEditPart extends AbstractConnectionEditPart
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE, new DiagramConnectionEndpointEditPolicy(getCastedModel().getDiagramModel().getResourceCache()));
 		installEditPolicy(EditPolicy.CONNECTION_BENDPOINTS_ROLE, new DiagramConnectionBendpointEditPolicy());
-
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramConnectionLayoutEditPolicy());
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DiagramConnectionEditPolicy());
 	}

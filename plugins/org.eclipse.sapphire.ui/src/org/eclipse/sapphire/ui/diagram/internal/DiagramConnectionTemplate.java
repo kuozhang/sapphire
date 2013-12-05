@@ -259,7 +259,7 @@ public class DiagramConnectionTemplate extends SapphirePart
     
     public boolean canStartNewConnection(DiagramNodePart srcNode)
     {
-           boolean canStart = false;
+        boolean canStart = false;
         ElementType srcType = srcNode.getModelElement().type();
         if (this.endpoint1Property.getType() == null && this.endpoint1Property.hasAnnotation(Reference.class))
         {

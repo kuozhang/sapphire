@@ -83,10 +83,13 @@ public abstract class DiagramGraphLayout
 		{
 			DiagramNodeModel sourceNode = connection.getSourceNode();
 			DiagramNodeModel targetNode = connection.getTargetNode();
-			Edge edge = new Edge(connection, shapeToNode.get(sourceNode), shapeToNode.get(targetNode));
-			edge.weight = 2;
-			edge.data = connection;
-			edgeList.add(edge);
+			if (sourceNode != targetNode)
+			{
+				Edge edge = new Edge(connection, shapeToNode.get(sourceNode), shapeToNode.get(targetNode));
+				edge.weight = 2;
+				edge.data = connection;
+				edgeList.add(edge);
+			}
 		}
 		dg.nodes = nodeList;
 		dg.edges = edgeList;

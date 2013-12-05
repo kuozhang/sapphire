@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -43,6 +44,9 @@ import org.eclipse.sapphire.ui.diagram.editor.ShapePart;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.DiagramConfigurationManager;
 import org.eclipse.sapphire.ui.swt.gef.commands.DoubleClickNodeCommand;
+import org.eclipse.sapphire.ui.swt.gef.connections.SelfConnectionTargetAnchor;
+import org.eclipse.sapphire.ui.swt.gef.connections.SelfLoopConnectionRouter;
+import org.eclipse.sapphire.ui.swt.gef.connections.SelfConnectionSourceAnchor;
 import org.eclipse.sapphire.ui.swt.gef.contextbuttons.ContextButtonManager;
 import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
 import org.eclipse.sapphire.ui.swt.gef.internal.DirectEditorManagerFactory;
@@ -295,6 +299,9 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	}
 	
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
+		if (connection.getSource() == connection.getTarget()) {
+			return new SelfConnectionSourceAnchor(getFigure());
+		}
 		if (sourceAnchor == null) {
 			sourceAnchor = new ChopboxAnchor(getFigure());
 		}
@@ -302,6 +309,10 @@ public class DiagramNodeEditPart extends ShapeEditPart
 	}
 
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
+		if (connection.getSource() == connection.getTarget()) {
+			((PolylineConnection)connection.getFigure()).setConnectionRouter(new SelfLoopConnectionRouter());
+			return new SelfConnectionTargetAnchor(getFigure());
+		}
 		if (targetAnchor == null) {
 			targetAnchor = new ChopboxAnchor(getFigure());
 		}

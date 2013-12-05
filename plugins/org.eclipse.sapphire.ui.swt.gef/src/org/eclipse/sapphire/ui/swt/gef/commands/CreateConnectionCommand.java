@@ -64,9 +64,9 @@ public class CreateConnectionCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
 	public boolean canExecute()
-	{
-		// disallow source -> source connections
-		if (target == null /*|| source.equals(target)*/) {
+	{		
+		if (target == null) 
+		{
 			return false;
 		}
 		ConnectionService connService = this.diagramPart.service(ConnectionService.class);

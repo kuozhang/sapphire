@@ -42,7 +42,6 @@ public class ReconnectConnectionCommand extends Command {
 
 	@Override
 	public boolean canExecute() {
-		// Don't allow reconnect on implicit connections
 		DiagramConnectionPart connectionPart = this.connection.getModelPart();
 		if (!connectionPart.removable()) {
 			return false;
@@ -56,10 +55,6 @@ public class ReconnectConnectionCommand extends Command {
 	}
 
 	private boolean checkSourceReconnection() {
-		// connection endpoints must be different 
-		if (newSource.equals(oldTarget)) {
-			return false;
-		}
 		DiagramConnectionPart connectionPart = this.connection.getModelPart();
 		ConnectionService connService = connectionPart.nearest(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
 		if (!connService.valid(newSource.getModelPart(), oldTarget.getModelPart(), connectionPart.getConnectionTypeId()))
@@ -69,10 +64,6 @@ public class ReconnectConnectionCommand extends Command {
 	}
 
 	private boolean checkTargetReconnection() {
-		// connection endpoints must be different 
-		if (newTarget.equals(oldSource)) {
-			return false;
-		}
 		DiagramConnectionPart connectionPart = this.connection.getModelPart();
 		ConnectionService connService = connectionPart.nearest(SapphireDiagramEditorPagePart.class).service(ConnectionService.class);
 		if (!connService.valid(oldSource.getModelPart(), newTarget.getModelPart(), connectionPart.getConnectionTypeId()))
@@ -84,8 +75,9 @@ public class ReconnectConnectionCommand extends Command {
 	@Override
 	public void execute() 
 	{
-		// Tried to reset the endpoint but it turns out to be very complex. It's easier
-		// to delete the connection and recreate a new one
+		if ((newSource != null && newSource == oldSource) || 
+				(newTarget != null && newTarget == oldTarget))
+			return;
 		DiagramConnectionPart connectionPart = connection.getModelPart();
 		connectionPart.reconnect(newSource != null ? newSource.getModelPart() : oldSource.getModelPart(), 
 									newTarget != null ? newTarget.getModelPart() : oldTarget.getModelPart());

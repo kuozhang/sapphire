@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.swt.gef.policies;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,11 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	private Map<Shape, Integer> shapeToLineStyle = new HashMap<Shape, Integer>();
 
 	protected Command getCreateBendpointCommand(BendpointRequest request) {
+		ConnectionEditPart connectionEditPart = (ConnectionEditPart)getHost();
+		if (connectionEditPart.getSource() == connectionEditPart.getTarget())
+		{
+			return null;
+		}
 		CreateBendPointCommand com = new CreateBendPointCommand();
 		Point p = request.getLocation();
 		Connection conn = getConnection();
@@ -66,6 +72,11 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	}
 
 	protected Command getMoveBendpointCommand(BendpointRequest request) {
+		ConnectionEditPart connectionEditPart = (ConnectionEditPart)getHost();
+		if (connectionEditPart.getSource() == connectionEditPart.getTarget())
+		{
+			return null;
+		}
 		MoveBendPointCommand com = new MoveBendPointCommand();
 		Point p = request.getLocation();
 		Connection conn = getConnection();
@@ -87,6 +98,11 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	}
 
 	protected Command getDeleteBendpointCommand(BendpointRequest request) {
+		ConnectionEditPart connectionEditPart = (ConnectionEditPart)getHost();
+		if (connectionEditPart.getSource() == connectionEditPart.getTarget())
+		{
+			return null;
+		}
 		BendPointCommand com = new DeleteBendPointCommand();
 		Point p = request.getLocation();
 		com.setLocation(p);
@@ -98,6 +114,11 @@ public class DiagramConnectionBendpointEditPolicy extends org.eclipse.gef.editpo
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected List createSelectionHandles() {
+		ConnectionEditPart connectionEditPart = (ConnectionEditPart)getHost();
+		if (connectionEditPart.getSource() == connectionEditPart.getTarget())
+		{
+			return Collections.EMPTY_LIST;
+		}
 		List<BendpointHandle> list;
 		boolean automaticallyBending = isAutomaticallyBending();
 		if (automaticallyBending) {
