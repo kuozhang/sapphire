@@ -80,6 +80,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	private Map<ConnectionHashKey, Point> connectionLabelPositions;
 	private boolean dirty;
 	private Map<ConnectionHashKey, DiagramConnectionPart> connectionIdMap;
+	private Map<String, DiagramNodePart> nodeIdMap;
 	private boolean autoLayout = false;
 	
     @Override
@@ -183,7 +184,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 		for (DiagramNodeLayout node : nodes)
 		{
 			String nodeId = node.getNodeId().content();
-			DiagramNodePart nodePart = context( SapphireDiagramEditorPagePart.class ).getNode(nodeId);
+			DiagramNodePart nodePart = getNodePart(nodeId);
 			int x = node.getX().content();
 			int y = node.getY().content();
 			int width = node.getWidth().content();
@@ -724,6 +725,20 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
     		}
     	}
     	return this.connectionIdMap.get(connId);
+    }
+    
+    private DiagramNodePart getNodePart(String nodeId)
+    {
+    	if (this.nodeIdMap == null)
+    	{
+    		this.nodeIdMap = new HashMap<String, DiagramNodePart>();
+    		for (DiagramNodePart nodePart : context( SapphireDiagramEditorPagePart.class ).getNodes())
+    		{
+    			this.nodeIdMap.put(nodePart.getId(), nodePart);
+    		}
+    	}
+    	return this.nodeIdMap.get(nodeId);
+    			
     }
     
 }

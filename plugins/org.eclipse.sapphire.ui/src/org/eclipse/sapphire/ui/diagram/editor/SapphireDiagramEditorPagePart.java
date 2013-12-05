@@ -21,10 +21,8 @@ package org.eclipse.sapphire.ui.diagram.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
@@ -43,8 +41,8 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
@@ -78,7 +76,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private int verticalGridUnit;
 	private List<FunctionResult> connectionImageDataFunctionResults;
 	private Point mouseLocation;
-	private Map<String, DiagramNodePart> nodeIdMap;
 
     @Override
     protected void init()
@@ -503,18 +500,19 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     public DiagramNodePart getNode(String nodeId)
     {
-    	if (this.nodeIdMap == null)
+    	if (nodeId != null)
     	{
-    		this.nodeIdMap = new HashMap<String, DiagramNodePart>();
-    		List<DiagramNodePart> nodes = getNodes();
-    		for (DiagramNodePart node : nodes)
-    		{
-    			this.nodeIdMap.put(node.getId(), node);
-    		}
+			List<DiagramNodePart> nodes = getNodes();
+			for (DiagramNodePart node : nodes)
+			{
+				if (node.getId() != null && node.getId().equals(nodeId))
+				{
+					return node;
+				}
+			}
     	}
-    	return this.nodeIdMap.get(nodeId);
-    }
-    
+		return null;
+    }    
         
     @Override
     public void dispose() 
