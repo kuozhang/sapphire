@@ -31,7 +31,7 @@ public class SelfConnectionSourceAnchor extends AbstractConnectionAnchor
 	{
 		Rectangle r = getOwner().getBounds().getCopy();
 		getOwner().translateToAbsolute(r);
-		Point anchor = new Point(r.x + r.width + 2, r.y + (r.height >> 1) - 3);
+		Point anchor = new Point(r.x + r.width, r.y + (r.height >> 1) - 6);
 		return anchor;
 	}
 }

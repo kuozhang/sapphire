@@ -43,15 +43,15 @@ public class SelfLoopConnectionRouter extends BendpointConnectionRouter
     	conn.translateToRelative(endPoint);
 
     	DoublePoint p1, p2, p3, p4;
-    	p1 = new DoublePoint(startPoint.preciseX, startPoint.preciseY);
-    	p4 = new DoublePoint(endPoint.preciseX, endPoint.preciseY);
+    	p1 = new DoublePoint(startPoint.preciseX(), startPoint.preciseY());
+    	p4 = new DoublePoint(endPoint.preciseX(), endPoint.preciseY());
     	double dist = PathUtil.dist(p1, p4) / 3;
     	if (dist < MIN_CONTROLPT_DIST)
     		dist = MIN_CONTROLPT_DIST;
     	if (dist > MAX_CONTROLPT_DIST)
     		dist = MAX_CONTROLPT_DIST;
-    	p2 = new DoublePoint(startPoint.preciseX + dist * 2, startPoint.y - dist * 5);
-    	p3 = new DoublePoint(endPoint.preciseX + dist * 2, endPoint.y + dist * 5);
+    	p2 = new DoublePoint(startPoint.preciseX() + dist * 2, startPoint.y - dist * 1.5);
+    	p3 = new DoublePoint(endPoint.preciseX() + dist * 2, endPoint.y + dist * 1.5);
     	List<Double> doubles = new ArrayList<Double>();
 		PathUtil.recursiveBezier(p1.x, p1.y,
 				p2.x, p2.y,
