@@ -45,7 +45,7 @@ import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
-import org.eclipse.sapphire.ui.diagram.ConnectionEndpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEndpointsEvent;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
@@ -64,7 +64,7 @@ public class DiagramConnectionTemplate extends SapphirePart
 {
     public static abstract class DiagramConnectionTemplateListener
     {
-        public void handleConnectionEndpointUpdate(final ConnectionEndpointEvent event)
+        public void handleConnectionEndpointUpdate(final ConnectionEndpointsEvent event)
         {            
         }    	
         public void handleConnectionAddEvent(final ConnectionAddEvent event)
@@ -187,10 +187,10 @@ public class DiagramConnectionTemplate extends SapphirePart
            
     protected void initConnPartListener() 
     {
-        this.connPartListener = new FilteredListener<ConnectionEndpointEvent>() 
+        this.connPartListener = new FilteredListener<ConnectionEndpointsEvent>() 
         {
 			@Override
-			public void handleTypedEvent(ConnectionEndpointEvent e) 
+			public void handleTypedEvent(ConnectionEndpointsEvent e) 
 			{
 				notifyConnectionEndpointUpdate(e);				
 			}
@@ -698,7 +698,7 @@ public class DiagramConnectionTemplate extends SapphirePart
         }
     }
     
-    protected void notifyConnectionEndpointUpdate(ConnectionEndpointEvent event)
+    protected void notifyConnectionEndpointUpdate(ConnectionEndpointsEvent event)
     {
         for( DiagramConnectionTemplateListener listener : this.templateListeners )
         {

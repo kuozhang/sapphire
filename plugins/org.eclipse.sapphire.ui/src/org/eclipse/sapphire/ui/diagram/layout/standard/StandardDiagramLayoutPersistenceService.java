@@ -38,7 +38,7 @@ import org.eclipse.sapphire.modeling.StatusException;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
-import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointsEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
@@ -106,9 +106,9 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 						write(connPart);
 					}
 				}
-				else if (event instanceof ConnectionBendpointEvent)
+				else if (event instanceof ConnectionBendpointsEvent)
 				{
-					ConnectionBendpointEvent bpEvent = (ConnectionBendpointEvent)event;
+					ConnectionBendpointsEvent bpEvent = (ConnectionBendpointsEvent)event;
 					if (bpEvent.reset())
 					{
 				    	if (autoLayout)

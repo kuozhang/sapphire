@@ -25,7 +25,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointsEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 
@@ -42,10 +42,10 @@ public class DeleteAllBendPointsForMultiplePartsActionHandler extends SapphireAc
 	
 	public DeleteAllBendPointsForMultiplePartsActionHandler()
 	{
-		this.connectionPartListener = new FilteredListener<ConnectionBendpointEvent>() 
+		this.connectionPartListener = new FilteredListener<ConnectionBendpointsEvent>() 
 		{
 			@Override
-			protected void handleTypedEvent(ConnectionBendpointEvent event) 
+			protected void handleTypedEvent(ConnectionBendpointsEvent event) 
 			{
 				broadcast( new EnablementChangedEvent() );
 			}

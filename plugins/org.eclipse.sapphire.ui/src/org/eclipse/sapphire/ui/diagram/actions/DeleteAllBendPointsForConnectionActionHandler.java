@@ -20,7 +20,7 @@ import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireEditorPagePart.SelectionChangedEvent;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
-import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointsEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 
 /**
@@ -42,7 +42,7 @@ public class DeleteAllBendPointsForConnectionActionHandler extends SapphireActio
 			public void handle(final Event e) {
                 if( e instanceof SelectionChangedEvent ) {
                     broadcast( new EnablementChangedEvent() );
-                } else if (e instanceof ConnectionBendpointEvent) {
+                } else if (e instanceof ConnectionBendpointsEvent) {
                 	broadcast( new EnablementChangedEvent() );
 				}
 

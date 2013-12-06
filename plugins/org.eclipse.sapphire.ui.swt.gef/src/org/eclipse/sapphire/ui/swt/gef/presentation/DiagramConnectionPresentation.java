@@ -13,7 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.presentation;
 
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointsEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
@@ -43,7 +43,7 @@ public class DiagramConnectionPresentation extends DiagramPresentation
 			@Override
 			protected void handleTypedEvent(ConnectionEvent event) 
 			{
-				if (event instanceof ConnectionBendpointEvent)
+				if (event instanceof ConnectionBendpointsEvent)
 				{
 					diagramConnectionModel.handleUpdateBendPoints();
 				}

@@ -23,7 +23,7 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
-import org.eclipse.sapphire.ui.diagram.ConnectionEndpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEndpointsEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -79,7 +79,7 @@ public class DiagramPagePresentation extends DiagramPresentation
 			@Override
 			protected void handleTypedEvent(ConnectionEvent event) 
 			{
-				if (event instanceof ConnectionEndpointEvent)
+				if (event instanceof ConnectionEndpointsEvent)
 				{
 					diagramModel.updateConnectionEndpoint(event.part());
 				}

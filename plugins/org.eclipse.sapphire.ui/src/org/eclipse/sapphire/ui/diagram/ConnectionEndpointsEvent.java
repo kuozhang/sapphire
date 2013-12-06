@@ -15,23 +15,10 @@ package org.eclipse.sapphire.ui.diagram;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class ConnectionBendpointEvent extends ConnectionEvent 
+public class ConnectionEndpointsEvent extends ConnectionEvent 
 {
-	private boolean reset = false;
-	
-	public ConnectionBendpointEvent(DiagramConnectionPart connectionPart)
-	{
-		this(connectionPart, false);
-	}
-	
-	public ConnectionBendpointEvent(DiagramConnectionPart connectionPart, boolean reset)
+	public ConnectionEndpointsEvent(DiagramConnectionPart connectionPart)
 	{
 		super(connectionPart);
-		this.reset = reset;
-	}
-	
-	public boolean reset()
-	{
-		return this.reset;
 	}
 }

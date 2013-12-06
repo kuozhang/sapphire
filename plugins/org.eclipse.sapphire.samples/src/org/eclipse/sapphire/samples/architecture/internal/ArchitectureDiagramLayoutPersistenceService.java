@@ -35,7 +35,7 @@ import org.eclipse.sapphire.samples.architecture.ConnectionBendpoint;
 import org.eclipse.sapphire.ui.Bounds;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
-import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointsEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
@@ -75,10 +75,10 @@ public class ArchitectureDiagramLayoutPersistenceService extends DiagramLayoutPe
     	this.nodeBounds = new HashMap<String, DiagramNodeBounds>();
     	this.connectionBendPoints = new HashMap<ConnectionHashKey, List<Point>>();
     	this.dirty = false;    	
-		this.connectionPartListener = new FilteredListener<ConnectionBendpointEvent>() 
+		this.connectionPartListener = new FilteredListener<ConnectionBendpointsEvent>() 
 		{
 			@Override
-			protected void handleTypedEvent(ConnectionBendpointEvent event) 
+			protected void handleTypedEvent(ConnectionBendpointsEvent event) 
 			{
 				if (event.reset())
 				{

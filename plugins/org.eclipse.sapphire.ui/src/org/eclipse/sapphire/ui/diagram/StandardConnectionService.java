@@ -297,21 +297,6 @@ public class StandardConnectionService extends ConnectionService
         }
 	}
 	
-	private void notifyConnectionEndpointUpdate(final ConnectionEndpointEvent event)
-	{
-    	this.broadcast(event);
-	}
-		    
-	private void notifyConnectionAddEvent(final ConnectionAddEvent event)
-    {
-    	this.broadcast(event);
-    }
-    
-	private void notifyConnectionDeleteEvent(final ConnectionDeleteEvent event)
-    {
-    	this.broadcast(event);
-    }
-
 	private void handleNodeAboutToBeDeleted(DiagramNodePart nodePart)
 	{
 		Element nodeModel = nodePart.getLocalModelElement();
@@ -353,48 +338,47 @@ public class StandardConnectionService extends ConnectionService
 							 connPart.getEndpoint2() == nodeElement))
 			 {
 				 ConnectionAddEvent addEvent = new ConnectionAddEvent(connPart);
-				 notifyConnectionAddEvent(addEvent);
+				 this.broadcast(addEvent);
 			 }
 
         }
             
     }
         
-    
-	public class ConnectionTemplateListener extends DiagramConnectionTemplateListener
+	private final class ConnectionTemplateListener extends DiagramConnectionTemplateListener
 	{
     	@Override
-    	public void handleConnectionEndpointUpdate(final ConnectionEndpointEvent event)
+    	public void handleConnectionEndpointUpdate(final ConnectionEndpointsEvent event)
     	{
-    		notifyConnectionEndpointUpdate(event);
+    	    StandardConnectionService.this.broadcast(event);
     	}
     	
         @Override
         public void handleConnectionAddEvent(final ConnectionAddEvent event)
         {
-            notifyConnectionAddEvent(event);
+            StandardConnectionService.this.broadcast(event);
         }
 
         @Override
         public void handleConnectionDeleteEvent(final ConnectionDeleteEvent event)
         {
-            notifyConnectionDeleteEvent(event);
+            StandardConnectionService.this.broadcast(event);
         }
         
 	}
     
-    public class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplateListener
+    private final class ImplicitConnectionTemplateListener extends DiagramImplicitConnectionTemplateListener
     {
         @Override
         public void handleConnectionAddEvent(final ConnectionAddEvent event)
         {
-            notifyConnectionAddEvent(event);
+            StandardConnectionService.this.broadcast(event);
         }
     	
         @Override
         public void handleConnectionDeleteEvent(final ConnectionDeleteEvent event)
         {
-            notifyConnectionDeleteEvent(event);
+            StandardConnectionService.this.broadcast(event);
         }
     }
     

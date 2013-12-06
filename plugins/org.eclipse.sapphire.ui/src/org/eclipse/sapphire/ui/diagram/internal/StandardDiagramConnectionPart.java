@@ -37,8 +37,8 @@ import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
-import org.eclipse.sapphire.ui.diagram.ConnectionBendpointEvent;
-import org.eclipse.sapphire.ui.diagram.ConnectionEndpointEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionBendpointsEvent;
+import org.eclipse.sapphire.ui.diagram.ConnectionEndpointsEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
@@ -582,31 +582,31 @@ public class StandardDiagramConnectionPart
     
     protected void notifyConnectionEndpointUpdate()
     {
-		ConnectionEndpointEvent event = new ConnectionEndpointEvent(this);
+		ConnectionEndpointsEvent event = new ConnectionEndpointsEvent(this);
     	this.broadcast(event);
     }
     
     protected void notifyAddBendpoint()
     {
-    	ConnectionBendpointEvent event = new ConnectionBendpointEvent(this);
+    	ConnectionBendpointsEvent event = new ConnectionBendpointsEvent(this);
     	this.broadcast(event);
     }
     
     protected void notifyRemoveBendpoint()
     {
-    	ConnectionBendpointEvent event = new ConnectionBendpointEvent(this);
+    	ConnectionBendpointsEvent event = new ConnectionBendpointsEvent(this);
     	this.broadcast(event);
     }
 
     protected void notifyMoveBendpoint()
     {
-    	ConnectionBendpointEvent event = new ConnectionBendpointEvent(this);
+    	ConnectionBendpointsEvent event = new ConnectionBendpointsEvent(this);
     	this.broadcast(event);
     }
 
     protected void notifyResetBendpoints()
     {
-		ConnectionBendpointEvent event = new ConnectionBendpointEvent(this, true);
+		ConnectionBendpointsEvent event = new ConnectionBendpointsEvent(this, true);
     	this.broadcast(event);
     }
 
