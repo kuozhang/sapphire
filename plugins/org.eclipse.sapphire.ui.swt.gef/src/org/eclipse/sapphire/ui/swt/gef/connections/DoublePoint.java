@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui.swt.gef.connections;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.sapphire.util.HashCodeFactory;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -49,8 +50,8 @@ public class DoublePoint
 	
 	public DoublePoint(PrecisionPoint p)
 	{
-		this.x = p.preciseX;
-		this.y = p.preciseY;
+		this.x = p.preciseX();
+		this.y = p.preciseY();
 	}
 	
 	public DoublePoint(Point p)
@@ -66,7 +67,14 @@ public class DoublePoint
 			DoublePoint p = (DoublePoint)o;
 			return p.x == x && p.y == y;
 		}
-		return super.equals(o);
+		
+		return false;
 	}
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeFactory.start().add( this.x ).add( this.y ).result();
+    }
 	
 }
