@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.el.functions.enabled;
 
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.el.FunctionContext;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
@@ -29,12 +30,38 @@ public final class EnabledFunctionTests extends TestExpr
 {
     @Test
     
-    public void testEnabledFunction()
+    public void testEnabledFunctionOnValueProperty()
+    {
+        testEnabledFunctionOnProperty( TestElement.PROP_VALUE );
+    }
+    
+    @Test
+    
+    public void testEnabledFunctionOnListProperty()
+    {
+        testEnabledFunctionOnProperty( TestElement.PROP_LIST );
+    }
+    
+    @Test
+    
+    public void testEnabledFunctionOnElementProperty()
+    {
+        testEnabledFunctionOnProperty( TestElement.PROP_ELEMENT );
+    }
+    
+    @Test
+    
+    public void testEnabledFunctionOnImpliedElementProperty()
+    {
+        testEnabledFunctionOnProperty( TestElement.PROP_ELEMENT_IMPLIED );
+    }
+    
+    private void testEnabledFunctionOnProperty( final PropertyDef property )
     {
         final TestElement element = TestElement.TYPE.instantiate();
         final FunctionContext context = new ModelElementFunctionContext( element );
         
-        final FunctionResult fr = ExpressionLanguageParser.parse( "${ Value.Enabled }" ).evaluate( context );
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ " + property.name() + ".Enabled }" ).evaluate( context );
         
         try
         {

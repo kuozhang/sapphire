@@ -14,7 +14,10 @@ package org.eclipse.sapphire.modeling.el;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
@@ -23,6 +26,7 @@ import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationService;
+import org.eclipse.sapphire.services.PossibleTypesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -102,14 +106,54 @@ public class ModelElementFunctionContext extends FunctionContext
                     @Override
                     protected Object evaluate()
                     {
-                        Object res = this.context;
+                        return this.context;
+                    }
+                };
+                
+                f.init();
+                
+                return f.evaluate( this );
+            }
+        }
+        else if( element instanceof ElementHandle )
+        {
+            final ElementHandle<?> handle = (ElementHandle<?>) element;
+            final ElementProperty elementPropertyDef = handle.definition();
+            
+            boolean ok = false;
+            
+            if( elementPropertyDef instanceof ImpliedElementProperty )
+            {
+                ok = ( elementPropertyDef.getType().property( name ) != null );
+            }
+            else
+            {
+                for( final ElementType possibleChildType : handle.service( PossibleTypesService.class ).types() )
+                {
+                    ok = ( possibleChildType.property( name ) != null );
+                    
+                    if( ok )
+                    {
+                        break;
+                    }
+                }
+            }
+            
+            if( ok )
+            {
+                final Function f = new ReadPropertyFunction( handle, name, PropertyContentEvent.class )
+                {
+                    @Override
+                    protected Object evaluate()
+                    {
+                        final Element child = ( (ElementHandle<?>) this.context ).content();
                         
-                        if( res instanceof ElementHandle<?> )
+                        if( child != null )
                         {
-                            res = ( (ElementHandle<?>) res ).content();
+                            return child.property( name );
                         }
                         
-                        return res;
+                        return null;
                     }
                 };
                 

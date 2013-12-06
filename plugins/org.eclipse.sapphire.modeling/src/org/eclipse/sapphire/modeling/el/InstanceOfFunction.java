@@ -13,6 +13,7 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.List;
 
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.Value;
 
 /**
@@ -73,6 +74,15 @@ public final class InstanceOfFunction
                     if( obj instanceof Value )
                     {
                         obj = ( (Value<?>) obj ).content();
+                    }
+                    else if( obj instanceof ElementHandle )
+                    {
+                        obj = ( (ElementHandle<?>) obj ).content();
+                    }
+                    
+                    if( obj == null )
+                    {
+                        return Boolean.FALSE;
                     }
                     
                     final String type = cast( operand( 1 ), String.class );

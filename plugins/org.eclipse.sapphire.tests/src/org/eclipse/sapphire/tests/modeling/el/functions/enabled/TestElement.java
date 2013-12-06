@@ -12,7 +12,12 @@
 package org.eclipse.sapphire.tests.modeling.el.functions.enabled;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
@@ -44,5 +49,32 @@ public interface TestElement extends Element
     
     Value<String> getValue();
     void setValue( String value );
+    
+    // *** List ***
+    
+    @Type( base = Element.class )
+    @Enablement( expr = "${ Enable }" )
+    
+    ListProperty PROP_LIST = new ListProperty( TYPE, "List" );
+    
+    ElementList<Element> getList();
+    
+    // *** Element ***
+    
+    @Type( base = Element.class )
+    @Enablement( expr = "${ Enable }" )
+    
+    ElementProperty PROP_ELEMENT = new ElementProperty( TYPE, "Element" );
+    
+    ElementHandle<Element> getElement();
+    
+    // *** ElementImplied ***
+    
+    @Type( base = Element.class )
+    @Enablement( expr = "${ Enable }" )
+    
+    ImpliedElementProperty PROP_ELEMENT_IMPLIED = new ImpliedElementProperty( TYPE, "ElementImplied" );
+    
+    Element getElementImplied();
 
 }
