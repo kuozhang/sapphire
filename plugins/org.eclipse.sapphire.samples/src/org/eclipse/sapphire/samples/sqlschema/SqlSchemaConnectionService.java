@@ -92,7 +92,7 @@ public final class SqlSchemaConnectionService extends StandardConnectionService
             }
         }
         
-        final SapphireWizard wizard = new SapphireWizard( fk, DefinitionLoader.sdef( SqlSchemaEditor.class ).wizard( "DefineForeignKeyWizard" ) )
+        final SapphireWizard<ForeignKey> wizard = new SapphireWizard<ForeignKey>( fk, DefinitionLoader.sdef( SqlSchemaEditor.class ).wizard( "DefineForeignKeyWizard" ) )
         {
             @Override
             public boolean performCancel()

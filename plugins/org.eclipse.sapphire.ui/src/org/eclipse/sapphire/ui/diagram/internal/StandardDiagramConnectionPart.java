@@ -230,7 +230,9 @@ public class StandardDiagramConnectionPart
     
     public void remove()
     {
-    	getDiagramConnectionTemplate().deleteConnection(this);
+        final Element element = getLocalModelElement();
+        final ElementList<?> list = (ElementList<?>) element.parent();
+        list.remove(element);       
     }
     
     public String getLabel()

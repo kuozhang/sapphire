@@ -477,13 +477,6 @@ public class DiagramConnectionTemplate extends SapphirePart
         return null;
     }
     
-    public void deleteConnection(StandardDiagramConnectionPart connPart)
-    {
-        final Element element = connPart.getLocalModelElement();
-        final ElementList<?> list = (ElementList<?>) element.parent();
-        list.remove(element);    	
-    }
-    
     protected StandardDiagramConnectionPart createNewConnectionPart(Element connElement, Element srcNodeElement)
     {
         StandardDiagramConnectionPart connPart = new StandardDiagramConnectionPart(this.bindingDef, this.endpoint1Path, this.endpoint2Path);
