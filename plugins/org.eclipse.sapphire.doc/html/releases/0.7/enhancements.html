@@ -55,6 +55,7 @@
     <li><a href="#Key-ExtensiblePersistentState">Extensible Persistent State</a></li>
     <li><a href="#Key-ImprovedJavaLocalization">Improved Localization for Java Code</a></li>
     <li><a href="#Key-ListIndexFacility">List Index Facility</a></li>
+    <li><a href="#Key-PropertyInstanceObjects">Property Instance Objects</a></li>
   </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
@@ -676,6 +677,29 @@ of the list and updates itself automatically. The index can also notify listener
     Index&lt;T> index( ValueProperty property )
     Index&lt;T> index( String property )
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Key-PropertyInstanceObjects">Property Instance Objects</a></h2>
+
+<p>Each property instance is now exposed as an object. This makes it easier to pass them around. Previously, an
+element instance and a property name was necessary to refer to a property instance.<p>
+
+<p style="margin-left: 20px;"><b>Example</b></p>
+
+<p style="margin-left: 20px;">In this example, all integer value properties within an element are incremented.</p>
+
+<pre class="source-code"><code>for( Property property : element.properties( "*" ) )
+{
+    if( property instanceof Value )
+    {
+        Object content = value.content();
+
+        if( content instanceof Integer )
+        {
+            value.write( ( (Integer) content ).intValue() + 1 );
+        }
+    }
+}</code></pre>
 
 
 <h2><a name="Core"><a name="Core-Element">Element</a></a></h2>
