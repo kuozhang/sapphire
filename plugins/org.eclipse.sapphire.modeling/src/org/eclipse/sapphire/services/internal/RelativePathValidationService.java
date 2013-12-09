@@ -13,6 +13,8 @@ package org.eclipse.sapphire.services.internal;
 
 import java.io.File;
 
+import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Text;
@@ -38,16 +40,37 @@ public final class RelativePathValidationService extends PathValidationService
     {
         LocalizableText.init( RelativePathValidationService.class );
     }
+    
+    private RelativePathService relativePathService;
+    private Listener relativePathServiceListener;
+    
+    @Override
+    protected void initValidationService()
+    {
+        super.initValidationService();
+        
+        this.relativePathService = context( Value.class ).service( RelativePathService.class );
+        
+        this.relativePathServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refresh();
+            }
+        };
+        
+        this.relativePathService.attach( this.relativePathServiceListener );
+    }
 
     @Override
     protected Status compute()
     {
-        final Value<?> value = context( Value.class );
-        final Path path = (Path) value.content();
+        final Path path = (Path) context( Value.class ).content();
         
         if( path != null )
         {
-            final Path absolutePath = value.service( RelativePathService.class ).convertToAbsolute( path );
+            final Path absolutePath = this.relativePathService.convertToAbsolute( path );
             
             if( absolutePath == null )
             {
@@ -108,6 +131,19 @@ public final class RelativePathValidationService extends PathValidationService
         return Status.createOkStatus();
     }
     
+    @Override
+    public void dispose()
+    {
+        if( this.relativePathService != null )
+        {
+            this.relativePathService.detach( this.relativePathServiceListener );
+            this.relativePathService = null;
+            this.relativePathServiceListener = null;
+        }
+        
+        super.dispose();
+    }
+
     public static final class Condition extends ServiceCondition
     {
         @Override
