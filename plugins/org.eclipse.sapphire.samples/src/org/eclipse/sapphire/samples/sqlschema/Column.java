@@ -19,7 +19,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -32,9 +31,9 @@ public interface Column extends Element
     
     // *** Name ***
     
-    @XmlBinding( path = "name" )
     @Label( standard = "name" )
     @Required
+    @XmlBinding( path = "name" )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
 
@@ -45,7 +44,7 @@ public interface Column extends Element
     
     @Type( base = ColumnType.class )
     @Label( standard = "type" )
-    @Localizable
+    @Required
     @XmlBinding( path = "type" )
     
     ValueProperty PROP_TYPE = new ValueProperty( TYPE, "Type" );

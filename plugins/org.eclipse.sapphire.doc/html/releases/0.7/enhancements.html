@@ -49,6 +49,7 @@
 <ol>
   <li><a href="#Key">Key Enhancements</a></li>
   <ol type="A">
+    <li><a href="#Key-DiagramNodeShapeLanguage">Diagram Node Shape Language</a></li>
     <li><a href="#Key-OnDemandElementCompilation">On-Demand Element Compilation</a></li>
     <li><a href="#Key-ConsolidatedConversions">Consolidated Conversions</a></li>
     <li><a href="#Key-ExtensiblePersistentState">Extensible Persistent State</a></li>
@@ -126,7 +127,42 @@
   </ol>
 </ol>
 
-<h2><a name="Key"><a name="Key-OnDemandElementCompilation">On-Demand Element Compilation</a></a></h2>
+<h2><a name="Key"><a name="Key-DiagramNodeShapeLanguage">Diagram Node Shape Language</a></a></h2>
+
+<p>Develop complex diagrams as easily as forms with a new diagram node shape language.</p>
+
+<p style="margin-left: 20px;"><img src="images/DiagramNodeShapeLanguage-1.png"/></p>
+
+<p>The language is composed of six primitives.</p>
+
+<ul>
+
+<li style="list-style-image:url('images/TextDef.png')"><b>Text</b> - Displays static text or content from the model, as specified by an expression. If the 
+expression contains a reference to a single property, the property can be edited in place by double-clicking on the text.</li>
+
+<li style="list-style-image:url('images/LineDef.png')"><b>Line</b> - Displays a vertical or a horizontal line. Typically used as a separator. Line style, weight and 
+color can be set as appropriate.</li>
+
+<li style="list-style-image:url('images/SpacerDef.png')"><b>Spacer</b> - Leaves a blank space of specified size. Frequently in conjunction with
+a visibility rule.</li>
+
+<li style="list-style-image:url('images/ImageDef.png')"><b>Image</b> - Displays an image. The image can be produced by an expression for a dynamic effect.</li>
+
+<li style="list-style-image:url('images/ValidationMarkerDef.png')"><b>Validation Marker</b> - Displays an image communicating the validation status of the immediate context. The user
+can click on the image to get the validation details and the related actions.</li>
+
+<li style="list-style-image:url('images/RectangleDef.png')"><b>Rectangle</b> - Contains one or more shape in a rectangular space with an optional border and background. The
+contained shapes are arranged either vertically, horizontally or in a stack, as specified by the rectangle's layout.</li>
+ 
+<li style="list-style-image:url('images/ShapeFactoryDef.png')"><b>Shape Factory</b> - Produces a shape for each entry in a list property using the specified shape templates. The
+list items can be added, removed and re-arranged through actions exposed by the shape factory. Drag-n-drop is also
+supported as a means to re-order the list items.</li>
+
+</ul>
+
+<p style="margin-left: 20px;"><img src="images/DiagramNodeShapeLanguage-2.png"/></p>
+
+<h2><a name="Key-OnDemandElementCompilation">On-Demand Element Compilation</a></h2>
 
 <p>In past releases, Sapphire used a Java annotation processor linked to @GenerateImpl annotation to
 produce implementation classes for model element interfaces at build time. This system has been

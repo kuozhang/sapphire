@@ -20,15 +20,20 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 
 public enum ColumnType 
 {
-    @Label( standard = "varchar" )
-    @EnumSerialization( primary = "VARCHAR" )
+    @Label( standard = "string" )
+    @EnumSerialization( primary = "STRING" )
     
-    VARCHAR,
+    STRING,
     
     @Label( standard = "integer" )
     @EnumSerialization( primary = "INTEGER" )
     
     INTEGER,
+    
+    @Label( standard = "decimal" )
+    @EnumSerialization( primary = "DECIMAL" )
+    
+    DECIMAL,
     
     @Label( standard = "date" )
     @EnumSerialization( primary = "DATE" )

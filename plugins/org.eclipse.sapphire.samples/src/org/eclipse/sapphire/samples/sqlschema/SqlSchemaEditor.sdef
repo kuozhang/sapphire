@@ -132,7 +132,7 @@
                                                     <margin-right>8</margin-right>
                                                     <expand-vertically>false</expand-vertically>
                                                 </sequence-layout-constraint>
-                                                <visible-when>${IsPrimaryKey}</visible-when>
+                                                <visible-when>${ IsPrimaryKey }</visible-when>
                                             </image>
                                             <spacer>
                                                 <sequence-layout-constraint>
