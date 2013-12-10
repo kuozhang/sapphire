@@ -19,6 +19,7 @@ import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
+import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
@@ -41,6 +42,7 @@ public interface ComponentDependency extends Element
     @Reference( target = Component.class )
     @Service( impl = ComponentReferenceService.class )
     @Required
+    @MustExist
     @PossibleValues( property = "/Components/Name" )
     @XmlBinding( path = "name" )
 
