@@ -41,7 +41,8 @@ import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.forms.FormPart;
+import org.eclipse.sapphire.ui.forms.ContainerPart;
+import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.sapphire.ui.forms.WithPart;
 import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
@@ -119,9 +120,9 @@ public final class RestoreDefaultsActionHandler extends SapphireActionHandler
     {
         if( part.visible() )
         {
-            if( part instanceof FormPart )
+            if( part instanceof ContainerPart )
             {
-                for( SapphirePart child : ( (FormPart) part ).children().visible() )
+                for( FormComponentPart child : ( (ContainerPart<?>) part ).children().visible() )
                 {
                     collectProperties( child, result );
                 }
