@@ -12,6 +12,9 @@
 
 package org.eclipse.sapphire.samples.map.internal;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.map.Location;
 import org.eclipse.sapphire.samples.map.Map;
 import org.eclipse.sapphire.services.ReferenceService;
@@ -23,6 +26,25 @@ import org.eclipse.sapphire.services.ReferenceService;
 
 public class LocationReferenceService extends ReferenceService 
 {
+    private Listener listener;
+    
+    @Override
+    protected void init()
+    {
+        super.init();
+        
+        this.listener = new FilteredListener<PropertyContentEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( final PropertyContentEvent event )
+            {
+                broadcast();
+            }
+        };
+        
+        context( Map.class ).attach( this.listener, "Locations/Name" );
+    }
+
     @Override
     public Object resolve(String reference) 
     {
@@ -38,6 +60,14 @@ public class LocationReferenceService extends ReferenceService
             }
         }
         return null;
+    }
+
+    @Override
+    public void dispose()
+    {
+        context( Map.class ).detach( this.listener, "Locations/Name" );
+        
+        super.dispose();
     }
 
 }
