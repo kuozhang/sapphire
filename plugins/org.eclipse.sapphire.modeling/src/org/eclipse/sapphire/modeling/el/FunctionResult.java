@@ -681,12 +681,22 @@ public abstract class FunctionResult
     {
         if( a instanceof Value<?> )
         {
-            a = ( (Value<?>) a ).text();
+            final Value<?> value = (Value<?>) a;
+            
+            if( ! value.disposed() )
+            {
+                a = value.text();
+            }
         }
         
         if( b instanceof Value<?> )
         {
-            b = ( (Value<?>) b ).text();
+            final Value<?> value = (Value<?>) b;
+            
+            if( ! value.disposed() )
+            {
+                b = value.text();
+            }
         }
         
         if( a == b )
