@@ -1553,9 +1553,9 @@ its parent list.</p>
 
 <h2><a name="Forms-ImprovedDateSupport">Improved Date Support</a></h2>
 
-<p>The expected date formats can now be seen as text overlay, in the property editor assistance popup and in the context help.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
+<p>Date value properties are easier to define and the user experience is significantly improved. The formats specified
+by the developer using the new @Serialization annotation are visible as text overlay, in the property editor assistance popup and
+in the context help.</p>
 
 <pre class="source-code"><code><font color="#888888">@Type( base = Date.class )</font>
 @Serialization( primary = "yyyy-MM-dd", alternative = "MM/dd/yyyy" )
@@ -1570,7 +1570,7 @@ void setOrderDate( Date value );</font></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/Dates-2.png"/></p>
 
-<p>The calendar makes it easy to quickly select the correct date.</p>
+<p>The browse button opens a calendar, making it easy to quickly select the correct date.</p>
 
 <p style="margin-left: 20px;"><img src="images/Dates-3.png"/></p>
 
