@@ -41,6 +41,7 @@ import org.eclipse.sapphire.ui.SapphireEditorPagePart;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
+import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
@@ -477,7 +478,12 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
         return nodes.result();
     }
-        
+      
+    public List<DiagramConnectionPart> getConnections()
+    {
+    	return this.service(ConnectionService.class).list();
+    }
+    
     public DiagramNodePart getDiagramNodePart(Element nodeElement)
     {
         if (nodeElement == null)

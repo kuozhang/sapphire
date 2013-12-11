@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
@@ -35,6 +36,7 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.Point;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.diagram.ConnectionBendpointsEvent;
@@ -73,8 +75,10 @@ public class StandardDiagramConnectionPart
 	private IDiagramConnectionEndpointBindingDef endpoint2Def;
 	private Element srcNodeModel;
 	private Element targetNodeModel;
-	private FunctionResult endpoint1FunctionResult;
-	private FunctionResult endpoint2FunctionResult;
+	private ReferenceValue<?, ?> endpointReferenceValue1;
+	private ReferenceValue<?, ?> endpointReferenceValue2;
+	private Listener referenceServiceListener1;
+	private Listener referenceServiceListener2;
 	private PropertyDef endpoint1Property;
 	private PropertyDef endpoint2Property;
 	protected FunctionResult labelFunctionResult;
@@ -144,43 +148,9 @@ public class StandardDiagramConnectionPart
         
         this.endpoint1Def = this.bindingDef.getEndpoint1().content();        
         this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
-        if (this.srcNodeModel != null)
-        {
-            this.endpoint1FunctionResult = initExpression
-            (
-                this.srcNodeModel, 
-                this.endpoint1Def.getValue().content(),
-                String.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                    	resetEndpoint1();
-                    }
-                }
-            );            
-        }
         
         this.endpoint2Def = this.bindingDef.getEndpoint2().content();
         this.targetNodeModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
-        if (this.targetNodeModel != null)
-        {
-            this.endpoint2FunctionResult = initExpression
-            (
-                this.targetNodeModel, 
-                this.endpoint2Def.getValue().content(),
-                String.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                    	resetEndpoint2();
-                    }
-                }
-            );
-        }        
         
         this.endpoint1Property = this.modelElement.property(this.endpoint1Path).definition();
         this.endpoint2Property = this.modelElement.property(this.endpoint2Path).definition();
@@ -194,7 +164,8 @@ public class StandardDiagramConnectionPart
                 handleModelPropertyChange( event );
             }
         };
-        addModelListener();        
+        addModelListener();    
+        addReferenceServiceListeners();
     }
     
     public DiagramConnectionTemplate getDiagramConnectionTemplate()
@@ -319,52 +290,9 @@ public class StandardDiagramConnectionPart
         {
             this.idFunctionResult.dispose();
         }
-        if (this.endpoint1FunctionResult != null)
-        {
-            this.endpoint1FunctionResult.dispose();
-        }
-        if (this.endpoint2FunctionResult != null)
-        {
-            this.endpoint2FunctionResult.dispose();
-        }
         removeModelListener();
     }
     
-    public void resetEndpoint1()
-    {
-        if (this.endpoint1FunctionResult != null)
-        {
-            String value = (String)this.endpoint1FunctionResult.value();
-            if (value == null  || value.length() == 0)
-            {
-                SapphireDiagramEditorPagePart diagramPart = this.getDiagramConnectionTemplate().getDiagramEditor();
-                DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.srcNodeModel);
-                if (nodePart != null)
-                {
-                    value = nodePart.getId();
-                }
-            }
-            setModelProperty(this.modelElement, this.endpoint1Path, value);
-        }        
-    }
-    
-    public void resetEndpoint2()
-    {
-        if (this.endpoint2FunctionResult != null)
-        {
-            String value = (String)this.endpoint2FunctionResult.value();
-            if (value == null  || value.length() == 0)
-            {
-                SapphireDiagramEditorPagePart diagramPart = this.getDiagramConnectionTemplate().getDiagramEditor();
-                DiagramNodePart nodePart = diagramPart.getDiagramNodePart(this.targetNodeModel);
-                if (nodePart != null)
-                {
-                    value = nodePart.getId();
-                }
-            }            
-            setModelProperty(this.modelElement, this.endpoint2Path, value);
-        }        
-    }
 
     protected void resetEndpoint1(DiagramNodePart newSrcNode)
     {
@@ -431,6 +359,44 @@ public class StandardDiagramConnectionPart
         }
     }
     
+    protected ReferenceValue<?, ?> resolveEndpointReferenceValue(Element modelElement, ModelPath endpointPath)
+    {
+        if (endpointPath.length() == 1)
+        {
+            String propertyName = ((ModelPath.PropertySegment)endpointPath.head()).getPropertyName();
+            PropertyDef modelProperty = resolve(modelElement, propertyName);
+            if (!(modelProperty instanceof ValueProperty))
+            {
+                throw new RuntimeException( "Property " + propertyName + " not a ValueProperty");
+            }
+            ValueProperty property = (ValueProperty)modelProperty;
+            Value<?> valObj = modelElement.property(property);
+            if (!(valObj instanceof ReferenceValue))
+            {
+                throw new RuntimeException( "Property " + propertyName + " value not a reference");
+            }
+            ReferenceValue<?,?> refVal = (ReferenceValue<?,?>)valObj;
+            return refVal;
+        }
+        else
+        {
+            ModelPath.Segment head = endpointPath.head();
+            if( head instanceof ParentElementSegment )
+            {
+                final Property parent = modelElement.parent();                
+                if( parent == null )
+                {
+                    throw new RuntimeException("Invalid model path: " + endpointPath);
+                }
+                return resolveEndpointReferenceValue(parent.element(), endpointPath.tail());                
+            }
+            else
+            {
+                throw new RuntimeException("Invalid model path: " + endpointPath);
+            }
+        }
+    }
+    
     protected void setModelProperty(final Element modelElement, 
             String propertyName, Object value)
     {
@@ -480,6 +446,44 @@ public class StandardDiagramConnectionPart
         this.modelElement.detach(this.modelPropertyListener, this.endpoint2Path);
     }
     
+    public void addReferenceServiceListeners()
+    {
+    	this.endpointReferenceValue1 = resolveEndpointReferenceValue(modelElement, this.endpoint1Path);
+    	if (this.endpointReferenceValue1 != null)
+    	{
+    		ReferenceService refService = endpointReferenceValue1.service(ReferenceService.class);
+    		this.referenceServiceListener1 = new Listener()
+			{
+				@Override
+				public void handle( Event event )
+				{
+					handleEndpoint1ReferenceChange();
+				}
+			};
+    		if (refService != null)
+    		{
+    			refService.attach(this.referenceServiceListener1);
+    		}
+    	}
+    	this.endpointReferenceValue2 = resolveEndpointReferenceValue(modelElement, this.endpoint2Path);
+    	if (this.endpointReferenceValue2 != null)
+    	{
+    		ReferenceService refService = endpointReferenceValue2.service(ReferenceService.class);
+    		this.referenceServiceListener2 = new Listener()
+			{
+				@Override
+				public void handle( Event event )
+				{
+					handleEndpoint2ReferenceChange();
+				}
+			};
+    		if (refService != null)
+    		{
+    			refService.attach(this.referenceServiceListener2);
+    		}
+    	}
+    }
+    
     public StandardDiagramConnectionPart reconnect(DiagramNodePart newSrcNode, DiagramNodePart newTargetNode)
     {
         StandardDiagramConnectionPart newConnPart = getDiagramConnectionTemplate().createNewDiagramConnection(newSrcNode, newTargetNode);
@@ -489,7 +493,9 @@ public class StandardDiagramConnectionPart
         // Bug 382912 - Reconnecting an existing connection adds a bend point 
         // After the copy, connection endpoint event is triggered which causes SapphireConnectionRouter
         // to be called. Since the old connection hasn't been deleted, a default bend point will be added. 
-        newConnPart.removeAllBendpoints();
+        //newConnPart.removeAllBendpoints();
+        
+        newConnPart.resetBendpoints(getBendpoints());
 		
 		if (newSrcNode.getLocalModelElement() != getEndpoint1()) 
 		{
@@ -512,66 +518,36 @@ public class StandardDiagramConnectionPart
                 property.name().equals(this.endpoint2Property.name()))
         {
             boolean sourceChange = property.name().equals(this.endpoint1Property.name()) ? true : false;
-            handleEndpointChange(sourceChange);
+            if (sourceChange)
+            {
+            	this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
+            }
+            else
+            {
+            	this.targetNodeModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
+            }
             notifyConnectionEndpointUpdate();
         }
     }    
     
-    private void handleEndpointChange(boolean sourceChange) 
+    protected void handleEndpoint1ReferenceChange()
     {
-        if (sourceChange)
-        {
-            this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
-            if (this.endpoint1FunctionResult != null)
-            {
-                this.endpoint1FunctionResult.dispose();
-                this.endpoint1FunctionResult = null;
-            }
-            if (this.srcNodeModel != null)
-            {
-                this.endpoint1FunctionResult = initExpression
-                (
-                    this.srcNodeModel, 
-                    this.endpoint1Def.getValue().content(), 
-                    String.class,
-                    null,
-                    new Runnable()
-                    {
-                        public void run()
-                        {
-                        	resetEndpoint1();
-                        }
-                    }
-                );                
-            }            
-        }
-        else
-        {
-            this.targetNodeModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
-            if (this.endpoint2FunctionResult != null)
-            {
-                this.endpoint2FunctionResult.dispose();
-                this.endpoint2FunctionResult = null;
-            }
-            if (this.targetNodeModel != null)
-            {
-                this.endpoint2FunctionResult = initExpression
-                (
-                    this.targetNodeModel, 
-                    this.endpoint2Def.getValue().content(),
-                    String.class,
-                    null,
-                    new Runnable()
-                    {
-                        public void run()
-                        {
-                        	resetEndpoint2();
-                        }
-                    }
-                );
-                
-            }            
-        }
+		Element newSourceModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
+		if (newSourceModel != this.srcNodeModel)
+		{
+			this.srcNodeModel = newSourceModel;
+			notifyConnectionEndpointUpdate(); 
+		}    		
+    }
+    
+    protected void handleEndpoint2ReferenceChange()
+    {
+		Element newTargetModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
+		if (newTargetModel != this.targetNodeModel)
+		{
+			this.targetNodeModel = newTargetModel;
+			notifyConnectionEndpointUpdate(); 
+		}    		
     }
         
     protected void notifyUpdateLabel()

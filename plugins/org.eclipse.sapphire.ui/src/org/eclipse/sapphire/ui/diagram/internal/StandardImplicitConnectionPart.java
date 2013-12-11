@@ -54,17 +54,7 @@ public class StandardImplicitConnectionPart extends StandardDiagramConnectionPar
     {
     	return false;
     }
-    
-    @Override
-    public void resetEndpoint1()
-    {        
-    }
-
-    @Override
-    public void resetEndpoint2()
-    {        
-    }
-    
+        
     @Override
     public void dispose()
     {
@@ -90,6 +80,11 @@ public class StandardImplicitConnectionPart extends StandardDiagramConnectionPar
     @Override
     public void removeModelListener()
     {        
+    }
+    
+    @Override
+    public void addReferenceServiceListeners()
+    {    	
     }
     
 }
