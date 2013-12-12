@@ -12,7 +12,9 @@
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Value;
@@ -76,5 +78,13 @@ public interface TestElement extends Element
     ListProperty PROP_EMPTY_LIST = new ListProperty( TYPE, "EmptyList" );
     
     ElementList<Entry> getEmptyList();
+    
+    // *** ChildElement ***
+    
+    @Type( base = Element.class )
+
+    ElementProperty PROP_CHILD_ELEMENT = new ElementProperty( TYPE, "ChildElement" );
+    
+    ElementHandle<Element> getChildElement();
 
 }

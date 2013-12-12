@@ -13,6 +13,7 @@ package org.eclipse.sapphire.modeling.el;
 
 import java.util.Collection;
 
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.Value;
 
 /**
@@ -78,6 +79,10 @@ public final class EmptyFunction
                     return true;
                 }
                 else if( a instanceof Value<?> && ( (Value<?>) a ).content() == null )
+                {
+                    return true;
+                }
+                else if( a instanceof ElementHandle<?> && ( (ElementHandle<?>) a ).content() == null )
                 {
                     return true;
                 }

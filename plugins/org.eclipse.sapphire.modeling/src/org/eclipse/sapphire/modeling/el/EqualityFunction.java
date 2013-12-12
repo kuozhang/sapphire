@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.modeling.el;
 
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.Value;
 
 /**
@@ -61,12 +62,20 @@ public final class EqualityFunction extends Function
                 {
                     a = ( (Value<?>) a ).content();
                 }
+                else if( a instanceof ElementHandle<?> )
+                {
+                    a = ( (ElementHandle<?>) a ).content();
+                }
                 
                 Object b = operand( 1 );
 
                 if( b instanceof Value<?> )
                 {
                     b = ( (Value<?>) b ).content();
+                }
+                else if( b instanceof ElementHandle<?> )
+                {
+                    b = ( (ElementHandle<?>) b ).content();
                 }
                 
                 return equal( a, b );

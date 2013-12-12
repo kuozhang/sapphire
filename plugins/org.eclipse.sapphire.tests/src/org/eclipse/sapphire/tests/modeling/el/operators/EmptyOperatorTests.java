@@ -11,6 +11,10 @@
 
 package org.eclipse.sapphire.tests.modeling.el.operators;
 
+import org.eclipse.sapphire.modeling.el.FunctionContext;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.junit.Test;
 
 /**
@@ -47,6 +51,31 @@ public final class EmptyOperatorTests extends AbstractOperatorTests
     public void testEmptyOperator4()
     {
         test( "${ empty '' }", true );
+    }
+
+    @Test
+    
+    public void EmptyOperator_ElementProperty()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        final FunctionContext context = new ModelElementFunctionContext( element );
+        
+        final FunctionResult fr = ExpressionLanguageParser.parse( "${ empty ChildElement }" ).evaluate( context );
+        
+        try
+        {
+            assertEquals( Boolean.TRUE, fr.value() );
+            
+            element.getChildElement().content( true );
+            assertEquals( Boolean.FALSE, fr.value() );
+            
+            element.getChildElement().clear();
+            assertEquals( Boolean.TRUE, fr.value() );
+        }
+        finally
+        {
+            fr.dispose();
+        }
     }
 
 }
