@@ -44,7 +44,6 @@ import org.eclipse.sapphire.ui.diagram.ConnectionEndpointsEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionEndpointBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramLabelDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
@@ -71,8 +70,6 @@ public class StandardDiagramConnectionPart
 	protected Element modelElement;
 	private ModelPath endpoint1Path;
 	private ModelPath endpoint2Path;
-	private IDiagramConnectionEndpointBindingDef endpoint1Def;
-	private IDiagramConnectionEndpointBindingDef endpoint2Def;
 	private Element srcNodeModel;
 	private Element targetNodeModel;
 	private ReferenceValue<?, ?> endpointReferenceValue1;
@@ -146,10 +143,8 @@ public class StandardDiagramConnectionPart
     {
         initLabelId();
         
-        this.endpoint1Def = this.bindingDef.getEndpoint1().content();        
         this.srcNodeModel = resolveEndpoint(this.modelElement, this.endpoint1Path);
         
-        this.endpoint2Def = this.bindingDef.getEndpoint2().content();
         this.targetNodeModel = resolveEndpoint(this.modelElement, this.endpoint2Path);
         
         this.endpoint1Property = this.modelElement.property(this.endpoint1Path).definition();
