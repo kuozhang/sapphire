@@ -11,13 +11,14 @@
 
 package org.eclipse.sapphire;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.util.IdentityHashSet;
 import org.eclipse.sapphire.util.SetFactory;
 
@@ -56,10 +57,10 @@ public final class Index<T extends Element>
     {
         if( this.keyToElements == null )
         {
-            this.listener = new Listener()
+            this.listener = new FilteredListener<PropertyContentEvent>()
             {
                 @Override
-                public void handle( final Event event )
+                protected void handleTypedEvent( final PropertyContentEvent event )
                 {
                     Index.this.handle( event );
                 }
@@ -237,46 +238,62 @@ public final class Index<T extends Element>
         }
     }
     
-    private void handle( final Event event )
+    private void handle( final PropertyContentEvent event )
     {
         synchronized( this.list.root() )
         {
             boolean changed = false;
             
-            if( event instanceof PropertyContentEvent )
+            final Property property = event.property();
+            
+            if( property instanceof Value )
             {
-                final Property property = ( (PropertyContentEvent) event ).property();
+                final Element element = property.element();
                 
-                if( property instanceof Value )
+                remove( element );
+                insert( element );
+                
+                changed = true;
+            }
+            else
+            {
+                for( final Element element : this.list )
                 {
-                    final Element element = property.element();
-                    
-                    remove( element );
-                    insert( element );
+                    if( ! this.elementToKey.containsKey( element ) )
+                    {
+                        insert( element );
+                        
+                        element.attach( this.listener );
+                        element.property( this.property ).attach( this.listener );
+                        
+                        changed = true;
+                    }
+                }
+                
+                List<Element> disposed = null;
+                
+                for( final Element element : this.elementToKey.keySet() )
+                {
+                    if( element.disposed() )
+                    {
+                        if( disposed == null )
+                        {
+                            disposed = new ArrayList<Element>( 1 );
+                        }
+                        
+                        disposed.add( element );
+                    }
+                }
+                
+                if( disposed != null )
+                {
+                    for( final Element element : disposed )
+                    {
+                        remove( element );
+                    }
                     
                     changed = true;
                 }
-                else
-                {
-                    for( final Element element : this.list )
-                    {
-                        if( ! this.elementToKey.containsKey( element ) )
-                        {
-                            insert( element );
-                            
-                            element.attach( this.listener );
-                            element.property( this.property ).attach( this.listener );
-                            
-                            changed = true;
-                        }
-                    }
-                }
-            }
-            else if( event instanceof ElementDisposeEvent && ! this.list.disposed() )
-            {
-                remove( ( (ElementDisposeEvent) event ).element() );
-                
-                changed = true;
             }
             
             if( changed )
