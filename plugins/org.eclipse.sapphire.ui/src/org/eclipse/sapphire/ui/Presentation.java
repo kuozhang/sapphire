@@ -28,6 +28,11 @@ public abstract class Presentation
     
     public Presentation( final SapphirePart part, final Presentation parent )
     {
+        if( part == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         this.part = part;
         this.parent = parent;
     }
@@ -75,6 +80,11 @@ public abstract class Presentation
         }
         
         this.part = null;
+    }
+    
+    public final boolean disposed()
+    {
+        return ( this.part == null );
     }
 
 }

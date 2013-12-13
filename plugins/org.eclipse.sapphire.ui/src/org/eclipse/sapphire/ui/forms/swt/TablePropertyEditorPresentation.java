@@ -1493,29 +1493,32 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             throw new IllegalArgumentException();
         }
         
-        final Element root = part().getLocalModelElement();
-        
-        Element el = element;
-        TableRow row = null;
-        
-        while( row == null && el != null && el != root )
+        if( ! disposed() )
         {
-            row = this.rows.get( el );
+            final Element root = part().getLocalModelElement();
             
-            if( row == null )
+            Element el = element;
+            TableRow row = null;
+            
+            while( row == null && el != null && el != root )
             {
-                final Property parent = el.parent();
+                row = this.rows.get( el );
                 
-                if( parent != null )
+                if( row == null )
                 {
-                    el = parent.element();
+                    final Property parent = el.parent();
+                    
+                    if( parent != null )
+                    {
+                        el = parent.element();
+                    }
                 }
             }
-        }
-        
-        if( row != null )
-        {
-            update( row );
+            
+            if( row != null )
+            {
+                update( row );
+            }
         }
     }
 
