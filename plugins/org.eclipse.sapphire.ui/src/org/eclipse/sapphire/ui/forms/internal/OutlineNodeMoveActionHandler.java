@@ -79,16 +79,13 @@ public abstract class OutlineNodeMoveActionHandler extends SapphireActionHandler
         
         attach
         (
-            new Listener()
+            new FilteredListener<DisposeEvent>()
             {
                 @Override
-                public void handle( final Event event )
+                protected void handleTypedEvent( final DisposeEvent event )
                 {
-                    if( event instanceof DisposeEvent )
-                    {
-                        list.detach( listPropertyListener );
-                        OutlineNodeMoveActionHandler.this.contentTree.detach( contentTreeListener );
-                    }
+                    list.detach( listPropertyListener );
+                    OutlineNodeMoveActionHandler.this.contentTree.detach( contentTreeListener );
                 }
             }
         );

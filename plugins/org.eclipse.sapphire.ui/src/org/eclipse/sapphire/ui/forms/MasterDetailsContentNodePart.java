@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +55,6 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.def.ISapphireParam;
 import org.eclipse.sapphire.util.ListFactory;
-import org.eclipse.sapphire.util.MapFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -956,8 +956,19 @@ public final class MasterDetailsContentNodePart
         
         public final List<MasterDetailsContentNodePart> nodes()
         {
-            final Map<Element,MasterDetailsContentNodePart> oldCache = MapFactory.unmodifiable( this.nodesCache );
             final ListFactory<MasterDetailsContentNodePart> nodes = ListFactory.start();
+            
+            for( final Iterator<Map.Entry<Element,MasterDetailsContentNodePart>> itr = this.nodesCache.entrySet().iterator(); itr.hasNext(); )
+            {
+                final Map.Entry<Element,MasterDetailsContentNodePart> entry = itr.next();
+                final Element element = entry.getKey();
+                final MasterDetailsContentNodePart node = entry.getValue();
+                
+                if( element.disposed() )
+                {
+                    node.dispose();
+                }
+            }
             
             for( Element element : elements() )
             {
@@ -996,7 +1007,7 @@ public final class MasterDetailsContentNodePart
                     node = new MasterDetailsContentNodePart( this.visibleWhenFunctionForNodes );
                     
                     // It is very important to put the node into the cache prior to initializing the node as
-                    // initialization can case a re-entrant call into this function and we must avoid creating
+                    // initialization can cause a re-entrant call into this function and we must avoid creating
                     // two nodes for the same element.
                     
                     this.nodesCache.put( element, node );
@@ -1008,14 +1019,6 @@ public final class MasterDetailsContentNodePart
                 }
                 
                 nodes.add( node );
-            }
-            
-            for( Map.Entry<Element,MasterDetailsContentNodePart> entry : oldCache.entrySet() )
-            {
-                if( ! this.nodesCache.containsKey( entry.getKey() ) )
-                {
-                    entry.getValue().dispose();
-                }
             }
             
             return nodes.result();
