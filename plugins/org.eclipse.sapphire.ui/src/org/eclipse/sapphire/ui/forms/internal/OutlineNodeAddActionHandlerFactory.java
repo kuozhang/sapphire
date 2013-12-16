@@ -164,12 +164,17 @@ public final class OutlineNodeAddActionHandlerFactory extends SapphireActionHand
         
         final MasterDetailsContentNodePart node = (MasterDetailsContentNodePart) getPart();
 
-        for( MasterDetailsContentNodePart.NodeFactory factory : node.factories() )
+        for( final MasterDetailsContentNodePart.NodeFactory factory : node.factories() )
         {
             factory.detach( this.nodeFactoryListener );
             
-            final PossibleTypesService possibleTypesService = factory.property().service( PossibleTypesService.class );
-            possibleTypesService.detach( this.possibleTypesServiceListener );
+            final Property property = factory.property();
+            
+            if( ! property.disposed() )
+            {
+                final PossibleTypesService possibleTypesService = property.service( PossibleTypesService.class );
+                possibleTypesService.detach( this.possibleTypesServiceListener );
+            }
         }
     }
 
