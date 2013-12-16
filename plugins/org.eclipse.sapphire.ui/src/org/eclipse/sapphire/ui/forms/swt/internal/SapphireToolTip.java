@@ -123,12 +123,11 @@ public abstract class SapphireToolTip
                         && !SapphireToolTip.this.control.isDisposed()) {
                     SapphireToolTip.this.control.getDisplay().asyncExec(new Runnable() {
 
-                        public void run() {
-                            // Check if the new active shell is the tooltip
-                            // itself
-                            if (SapphireToolTip.this.control.getDisplay()
-                                    .getActiveShell() != CURRENT_TOOLTIP.getShell()) {
-                                toolTipHide(CURRENT_TOOLTIP, event);
+                        public void run() 
+                        {
+                            if( CURRENT_TOOLTIP != null && SapphireToolTip.this.control.getDisplay().getActiveShell() != CURRENT_TOOLTIP.getShell() )
+                            {
+                                toolTipHide( CURRENT_TOOLTIP, event );
                             }
                         }
 
