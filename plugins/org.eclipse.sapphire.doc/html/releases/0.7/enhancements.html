@@ -83,25 +83,28 @@
     <li><a href="#ExpressionLanguage-UseForValidation">Use for Validation</a></li>
     <li><a href="#ExpressionLanguage-UseInRequired">Use in @Required</a></li>
     <li><a href="#ExpressionLanguage-UseInWithLabel">Use in With Directive Label</a></li>
-    <li><a href="#ExpressionLanguage-AbsolutePathFunction">Absolute Function for Paths</a></li>
-    <li><a href="#ExpressionLanguage-ContentFunction">Content Function</a></li>
-    <li><a href="#ExpressionLanguage-EnabledFunction">Enabled Function</a></li>
-    <li><a href="#ExpressionLanguage-EndsWithFunction">EndsWith Function</a></li>
-    <li><a href="#ExpressionLanguage-FragmentFunction">Fragment Function</a></li>
-    <li><a href="#ExpressionLanguage-HeadFunction">Head Function</a></li>
-    <li><a href="#ExpressionLanguage-IndexFunction">Index Function</a></li>
-    <li><a href="#ExpressionLanguage-MatchesFunction">Matches Function</a></li>
-    <li><a href="#ExpressionLanguage-MessageFunction">Message Function</a></li>
-    <li><a href="#ExpressionLanguage-ParentFunction">Parent Function</a></li>
-    <li><a href="#ExpressionLanguage-PartFunction">Part Function</a></li>
-    <li><a href="#ExpressionLanguage-SeverityFunction">Severity Function</a></li>
-    <li><a href="#ExpressionLanguage-SizeFunction">Size Function</a></li>
-    <li><a href="#ExpressionLanguage-StartsWithFunction">StartsWith Function</a></li>
-    <li><a href="#ExpressionLanguage-StateFunction">State Function</a></li>
-    <li><a href="#ExpressionLanguage-TailFunction">Tail Function</a></li>
-    <li><a href="#ExpressionLanguage-TextFunction">Text Function</a></li>
-    <li><a href="#ExpressionLanguage-ValidationFunction">Validation Function</a></li>
-    <li><a href="#ExpressionLanguage-ThisProperty">This Property</a></li>
+    <li><a href="#ExpressionLanguage-NewFunctionsAndProperties">New Functions and Properties</a></li>
+    <ol type="a">
+      <li><a href="#ExpressionLanguage-AbsolutePathFunction">Absolute</a></li>
+      <li><a href="#ExpressionLanguage-ContentFunction">Content</a></li>
+      <li><a href="#ExpressionLanguage-EnabledFunction">Enabled</a></li>
+      <li><a href="#ExpressionLanguage-EndsWithFunction">EndsWith</a></li>
+      <li><a href="#ExpressionLanguage-FragmentFunction">Fragment</a></li>
+      <li><a href="#ExpressionLanguage-HeadFunction">Head</a></li>
+      <li><a href="#ExpressionLanguage-IndexFunction">Index</a></li>
+      <li><a href="#ExpressionLanguage-MatchesFunction">Matches</a></li>
+      <li><a href="#ExpressionLanguage-MessageFunction">Message</a></li>
+      <li><a href="#ExpressionLanguage-ParentFunction">Parent</a></li>
+      <li><a href="#ExpressionLanguage-PartFunction">Part</a></li>
+      <li><a href="#ExpressionLanguage-SeverityFunction">Severity</a></li>
+      <li><a href="#ExpressionLanguage-SizeFunction">Size</a></li>
+      <li><a href="#ExpressionLanguage-StartsWithFunction">StartsWith</a></li>
+      <li><a href="#ExpressionLanguage-StateFunction">State</a></li>
+      <li><a href="#ExpressionLanguage-TailFunction">Tail</a></li>
+      <li><a href="#ExpressionLanguage-TextFunction">Text</a></li>
+      <li><a href="#ExpressionLanguage-ThisProperty">This</a></li>
+      <li><a href="#ExpressionLanguage-ValidationFunction">Validation</a></li>
+    </ol>
   </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
@@ -127,6 +130,7 @@
     <li><a href="#Miscellaneous-WithPart">WithPart</a></li>
   </ol>
 </ol>
+
 
 <h2><a name="Key"><a name="Key-DiagramNodeShapeLanguage">Diagram Node Shape Language</a></a></h2>
 
@@ -163,6 +167,7 @@ supported as a means to re-order the list items.</li>
 
 <p style="margin-left: 20px;"><img src="images/DiagramNodeShapeLanguage-2.png"/></p>
 
+
 <h2><a name="Key-OnDemandElementCompilation">On-Demand Element Compilation</a></h2>
 
 <p>In past releases, Sapphire used a Java annotation processor linked to @GenerateImpl annotation to
@@ -171,8 +176,13 @@ replaced by on-demand compilation straight to Java bytecode. When application co
 element for the first time, Sapphire will automatically compile it and use the compiled result for
 the duration of the JVM instance.</p>
 
-<p>The on-demand approach makes it easier to get started with Sapphire as it does not require build
-customization to compile implementation classes.</p>
+<p>This approach has several advantages.</p>
+
+<ol>
+    <li>Easier getting started process since customizing the build to compile implementation classes is no longer necessary</li>
+    <li>Smaller footprint for applications as implementation classes do not need to be distributed and stored</li>
+    <li>Faster element instantiation as the bytecode generator is faster than most disk systems</li>
+</ol>
 
 
 <h2><a name="Key-ConsolidatedConversions">Consolidated Conversions</a></h2>
@@ -598,7 +608,7 @@ from Eclipse platform. The developer experience has been improved.</p>
         }
         else if( max != null && value.intValue() > max.intValue() )
         {
-            return</span> NLS.bind( Resources.<span class="unaffected">mustNobeLargerThanMessage</span>, <span class="unaffected">max</span> )<span class="unaffected">;
+            return</span> NLS.bind( Resources.<span class="unaffected">mustNotBeLargerThanMessage</span>, <span class="unaffected">max</span> )<span class="unaffected">;
         }
 
         return null;
@@ -677,6 +687,35 @@ of the list and updates itself automatically. The index can also notify listener
     Index&lt;T> index( ValueProperty property )
     Index&lt;T> index( String property )
 <font color="#888888">}</font></code></pre>
+
+<p>A quick lookup is easy to write.</p>
+
+<pre class="source-code"><code>Task task = repository.getTasks().index( "Id" ).element( "1234" );</code></pre>
+
+<p>Multiple elements that share the same key value can be retrieved as a group.</p>  
+
+<pre class="source-code"><code>List&lt;Task> tasks = repository.getTasks().index( "Component" ).elements( "SDK" );</code></pre>
+
+<p>Listening for changes to the index as opposed to the whole list can help reduce the number of times an expensive
+operation is performed.</p>
+
+<pre class="source-code"><code>Index&lt;Task> index = repository.getTasks().index( "Component" );
+List&lt;Task> tasks = index.elements( "SDK" );
+
+Listener listener = new Listener()
+{
+    @Override
+    public void handle( Event event )
+    {
+        // Do something when the index has changed.
+    }
+}
+
+index.attach( listener );
+
+...
+
+index.detach( listener );</code></pre>
 
 
 <h2><a name="Key-PropertyInstanceObjects">Property Instance Objects</a></h2>
@@ -1170,9 +1209,7 @@ log if the framework is running in the context of Eclipse.</p>
 <p>Any single argument EL function can now be accessed using property notation. Note that functions have a lower
 precedence than properties. If a conflict with a property is encountered, function notation must be used to disambiguate. </p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">The following expressions are equivalent. The last variant is new for this release.</p>
+<p>The following expressions are equivalent. The last variant is new for this release.</p>
 
 <pre class="source-code"><code>${ Size( PurchaseOrder.Entries ) }</code></pre>
 <pre class="source-code"><code>${ PurchaseOrder.Entries.Size() }</code></pre>
@@ -1226,33 +1263,49 @@ the signature matches their declaration. Sapphire will handle picking the correc
 
 <h2><a name="ExpressionLanguage-UseForValidation">Use EL for Validation</a></h2>
 
-<p>Use EL to specify validation rules.</p>
+<p>The new @Validation annotation allows an expression to be used to define a validation rule rather than
+implementing a custom ValidationService. This leads to a model that is easier to understand and maintain.</p>
 
-<p style="margin-left: 20px;"><b>Examples</b></p>
-
-<pre class="source-code"><code><font color="#888888">@Type( base = BigDecimal.class )</font>
+<pre class="source-code"><code><font color="#888888">@Type( base = BigDecimal.class )
+@DefaultValue( text = &quot;0&quot; )
+@NumericRange( min = &quot;0&quot; )</font>
     
 @Validation
 (
-    rule = "${ Scale( Discount, 2 ) &lt;= Scale( Subtotal, 2 ) + Scale( Delivery, 2 ) }",
-    message = "Discount must not exceed subtotal plus delivery charge."
+    rule = &quot;${ Discount &lt;= Subtotal + Delivery }&quot;,
+    message = &quot;Discount must not exceed subtotal plus delivery charge.&quot;
 )
 
-<font color="#888888">ValueProperty PROP_DISCOUNT = new ValueProperty( TYPE, "Discount" );
+<font color="#888888">ValueProperty PROP_DISCOUNT = new ValueProperty( TYPE, &quot;Discount&quot; );
 
-Value&lt;BigDecimal> getDiscount();
+Value&lt;BigDecimal&gt; getDiscount();
 void setDiscount( String value );
 void setDiscount( BigDecimal value );</font></code></pre>
 
-<pre class="source-code"><code>@Validation
+<p>Multiple rules can be specified by using @Validations annotation, the message can be formulated using
+an expression, and the optional severity attribute allows the developer to make a rule failure either 
+an error or a warning.</p>
+
+<pre class="source-code"><code>@Validations
 (
-    rule = "${ Path == null || Path.StartsWith( '/' ) }",
-    message = "Path \"${ Path }\" must start with a slash."
+    {
+        @Validation
+        (
+            rule = &quot;${ Path == null || Path.StartsWith( '/' ) }&quot;,
+            message = &quot;Path \&quot;${ Path }\&quot; must start with a slash.&quot;
+        ),
+        @Validation
+        (
+            rule = &quot;${ Path == null || Path.StartsWith( HomePath ) }&quot;,
+            message = &quot;Path \&quot;${ Path }\&quot; is not within the home folder.&quot;,
+            severity = Status.Severity.WARNING
+        )
+    }
 )
 
-<font color="#888888">ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );
+<font color="#888888">ValueProperty PROP_PATH = new ValueProperty( TYPE, &quot;Path&quot; );
 
-Value&lt;String> getPath();
+Value&lt;String&gt; getPath();
 void setPath( String value );</font></code></pre>
 
 
@@ -1290,11 +1343,9 @@ void setCategory( String value );</font></code></pre>
 &lt;/with></font></code></pre>
 
 
-<h2><a name="ExpressionLanguage-AbsolutePathFunction">Absolute Function for Paths</a></h2>
+<h2><a name="ExpressionLanguage-NewFunctionsAndProperties"><a name="ExpressionLanguage-AbsolutePathFunction">Absolute Function</a></a></h2>
 
 <p>Returns the absolute path of a value for properties with a RelativePathService.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ Path.Absolute }</code></pre>
 
@@ -1303,8 +1354,6 @@ void setCategory( String value );</font></code></pre>
 
 <p>Returns the content of a value or a transient. For value properties, the default is taken into account, if applicable.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Content }</code></pre>
 
 
@@ -1312,14 +1361,10 @@ void setCategory( String value );</font></code></pre>
 
 <p>Returns the enablement of a property.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Enabled }</code></pre>
 
 <p>In the context of a property editor, Enabled function can also be called with zero arguments. This accesses the
 enablement of the property editor part.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code><font color="#888888">&lt;property-editor>
     &lt;property>FormLoginPage&lt;/property>
@@ -1330,8 +1375,6 @@ enablement of the property editor part.</p>
 <h2><a name="ExpressionLanguage-EndsWithFunction">EndsWith Function</a></h2>
 
 <p>Tests if a string ends with the specified suffix.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ Path.EndsWith( ".png" ) }</code></pre>
 
@@ -1349,10 +1392,8 @@ index.</p>
   <li>An end index that is smaller than the start index is normalized to the start index.</li>
 </ul>
 
-<p style="margin-left: 20px;"><b>Examples</b></p>
-
-<pre class="source-code"><code>${ Value.Fragment( 3, 6 ) }
-${ Fragment( "abcdef", 0, 3 ) }</code></pre>
+<pre class="source-code"><code>${ Value.Fragment( 3, 6 ) }</code></pre>
+<pre class="source-code"><code>${ Fragment( "abcdef", 0, 3 ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-HeadFunction">Head Function</a></h2>
@@ -1364,17 +1405,13 @@ ${ Fragment( "abcdef", 0, 3 ) }</code></pre>
   <li>A fragment length exceeding the length of the input is normalized to the length of the input.</li>
 </ul>
 
-<p style="margin-left: 20px;"><b>Examples</b></p>
-
-<pre class="source-code"><code>${ Value.Head( 3 ) }
-${ Head( "abcdef", 3 ) }</code></pre>
+<pre class="source-code"><code>${ Value.Head( 3 ) }</code></pre>
+<pre class="source-code"><code>${ Head( "abcdef", 3 ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-IndexFunction">Index Function</a></h2>
 
 <p>Determines the index of a model element within its parent list.</p>
-
-<p style="margin-left: 20px;"><b>Examples</b></p>
 
 <pre class="source-code"><code>${ This.Index }</code></pre>
 
@@ -1383,8 +1420,6 @@ ${ Head( "abcdef", 3 ) }</code></pre>
 
 <p>Determines whether a string matches a regular expression. The full semantics are specified by Java's String.matches() function.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
 <pre class="source-code"><code>${ Entity.Name.Matches( "[a-z][a-z0-9]*" ) }</code></pre>
 
 
@@ -1392,16 +1427,12 @@ ${ Head( "abcdef", 3 ) }</code></pre>
 
 <p>Returns the message from a validation result.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation.Message }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-ParentFunction">Parent Function</a></h2>
 
 <p>Returns the parent of the given part. An implementation of this function for model elements was added in an earlier release.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ Part.Parent<font color="#888888">.Validation.Severity</font> }</code></pre>
 <pre class="source-code"><code>${ Part.Parent.Parent<font color="#888888">.Validation.Severity</font> }</code></pre>
@@ -1411,16 +1442,12 @@ ${ Head( "abcdef", 3 ) }</code></pre>
 
 <p>Returns the context part.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
 <pre class="source-code"><code>${ Part<font color="#888888">.Validation.Severity</font> }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-SeverityFunction">Severity Function</a></h2>
 
 <p>Returns the severity of a validation result.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation.Severity }</code></pre>
 
@@ -1429,18 +1456,14 @@ ${ Head( "abcdef", 3 ) }</code></pre>
 
 <p>Determines the size of a collection, a map, an array or a string.</p>
 
-<p style="margin-left: 20px;"><b>Examples</b></p>
-
-<pre class="source-code"><code>${ PurchaseOrder.Entries.Size }
-${ PurchaseOrder.BillingInformation.Name.Size }
-${ Size( "abcdef" ) }</code></pre>
+<pre class="source-code"><code>${ PurchaseOrder.Entries.Size }</code></pre>
+<pre class="source-code"><code>${ PurchaseOrder.BillingInformation.Name.Size }</code></pre>
+<pre class="source-code"><code>${ Size( "abcdef" ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-StartsWithFunction">StartsWith Function</a></h2>
 
 <p>Tests if a string starts with the specified prefix.</p>
-
-<p style="margin-left: 20px;"><b>Example</b></p>
 
 <pre class="source-code"><code>${ Path.StartsWith( ".." ) }</code></pre>
 
@@ -1451,17 +1474,25 @@ ${ Size( "abcdef" ) }</code></pre>
 particularly useful when the persistent state is extended with custom properties wired to custom actions, as it allows
 any EL-enabled facility to integrate with the custom state property.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">In this example, a custom state property is used to control whether content outline node label for an item
+<p>In the following example, a custom state property is used to control whether content outline node label for an item
 in the catalog sample should include the manufacturer.</p>
 
-<pre class="source-code"><code><font color="#888888">&lt;node-factory>
-    &lt;property>Items&lt;/property>
-    &lt;case>
-        &lt;label></font>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }<font color="#888888">&lt;/label>
-    &lt;/case>
-&lt;/node-factory></font></code></pre>
+<pre class="source-code"><code><font color="#888888">&lt;node-factory&gt;
+    &lt;property&gt;Items&lt;/property&gt;
+    &lt;case&gt;
+        &lt;label&gt;</font>
+        ${ 
+             Name == null 
+             ? &quot;Item&quot; 
+             : (
+                   State().ShowManufacturer &amp;&amp; Manufacturer != null 
+                   ? Concat( Manufacturer, &quot; &quot;, Name ) 
+                   : Name
+               )
+         }
+         <font color="#888888">&lt;/label&gt;
+    &lt;/case&gt;
+&lt;/node-factory&gt;</font></code></pre>
 
 
 <h2><a name="ExpressionLanguage-TailFunction">Tail Function</a></h2>
@@ -1473,30 +1504,15 @@ in the catalog sample should include the manufacturer.</p>
   <li>A fragment length exceeding the length of the input is normalized to the length of the input.</li>
 </ul>
 
-<p style="margin-left: 20px;"><b>Examples</b></p>
-
-<pre class="source-code"><code>${ Value.Tail( 3 ) }
-${ Tail( "abcdef", 3 ) }</code></pre>
+<pre class="source-code"><code>${ Value.Tail( 3 ) }</code></pre>
+<pre class="source-code"><code>${ Tail( "abcdef", 3 ) }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-TextFunction">Text Function</a></h2>
 
 <p>Returns the text of a value, taking into account the default, if applicable.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
 <pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Text }</code></pre>
-
-
-<h2><a name="ExpressionLanguage-ValidationFunction">Validation Function</a></h2>
-
-<p>Returns the validation result of a property or a part.</p>
-
-<p style="margin-left: 20px;"><b>Examples</b></p>
-
-<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation }</code></pre>
-
-<pre class="source-code"><code>${ Part.Validation }</code></pre>
 
 
 <h2><a name="ExpressionLanguage-ThisProperty">This Property</a></h2>
@@ -1504,12 +1520,19 @@ ${ Tail( "abcdef", 3 ) }</code></pre>
 <p>In situations where EL context is established by a model element, it can be useful to directly reference that
 element in order to pass it to functions. Mirroring Java, the context now exposes "This" property.</p>
 
-<p style="margin-left: 20px;"><b>Example</b></p>
-
-<p style="margin-left: 20px;">In this example, the expression computes the index of the context model element within
+<p>In this example, the expression computes the index of the context model element within
 its parent list.</p>
 
 <pre class="source-code"><code>${ This.Index }</code></pre>
+
+
+<h2><a name="ExpressionLanguage-ValidationFunction">Validation Function</a></h2>
+
+<p>Returns the validation result of a property or a part.</p>
+
+<pre class="source-code"><code>${ PurchaseOrder.FulfillmentDate.Validation }</code></pre>
+
+<pre class="source-code"><code>${ Part.Validation }</code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-SectionReference">Section Reference</a></a></h2>
