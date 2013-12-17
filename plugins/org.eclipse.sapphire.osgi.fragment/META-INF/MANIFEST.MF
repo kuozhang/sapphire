@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %fragmentName
 Bundle-SymbolicName: org.eclipse.sapphire.osgi.fragment
-Bundle-Version: 0.7.0.qualifier
-Fragment-Host: org.eclipse.sapphire.modeling;bundle-version="[0.7.0,0.7.1)"
+Bundle-Version: 0.8.0.qualifier
+Fragment-Host: org.eclipse.sapphire.modeling;bundle-version="[0.8.0,0.8.1)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %providerName
 Bundle-Localization: fragment
