@@ -39,7 +39,7 @@
    <feature url="features/org.eclipse.sapphire.tests_##version##.jar" id="org.eclipse.sapphire.tests" version="##version##">
       <category name="org.eclipse.sapphire"/>
    </feature>
-   <category-def name="org.eclipse.sapphire" label="Sapphire (Incubation)">
+   <category-def name="org.eclipse.sapphire" label="Sapphire">
       <description>
          Sapphire is a user interface development framework that improves productivity. Instead of focusing on individual widgets, layouts and data binding, the developers focus on modeling the semantics of the data and declaring the general intent of how the data it to be presented.
       </description>
