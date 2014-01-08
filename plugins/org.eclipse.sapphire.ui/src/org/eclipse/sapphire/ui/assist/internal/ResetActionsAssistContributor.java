@@ -11,13 +11,13 @@
 
 package org.eclipse.sapphire.ui.assist.internal;
 
+import org.eclipse.sapphire.DefaultValueService;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.services.DefaultValueService;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContext;
 import org.eclipse.sapphire.ui.assist.PropertyEditorAssistContribution;

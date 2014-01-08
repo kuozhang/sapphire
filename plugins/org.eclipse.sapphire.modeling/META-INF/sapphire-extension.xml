@@ -24,8 +24,8 @@
         <context>Sapphire.Property.Instance</context>
         <id>Sapphire.DefaultValueService.Standard</id>
         <description>Implementation of DefaultValueService that draws the default value from @DefaultValue annotation.</description>
-        <implementation>org.eclipse.sapphire.services.internal.StandardDefaultValueService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.StandardDefaultValueService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.StandardDefaultValueService</implementation>
+        <condition>org.eclipse.sapphire.internal.StandardDefaultValueService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.InitialValueService.Standard</id>

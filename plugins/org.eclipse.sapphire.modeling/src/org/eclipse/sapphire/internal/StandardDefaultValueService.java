@@ -9,8 +9,9 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.DefaultValueService;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -24,8 +25,6 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
-import org.eclipse.sapphire.services.DefaultValueService;
-import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -86,15 +85,15 @@ public final class StandardDefaultValueService extends DefaultValueService
     }
 
     @Override
-    protected DefaultValueServiceData compute()
+    protected String compute()
     {
         if( this.functionResult == null )
         {
-            return new DefaultValueServiceData( null );
+            return null;
         }
         else
         {
-            return new DefaultValueServiceData( (String) this.functionResult.value() );
+            return (String) this.functionResult.value();
         }
     }
 

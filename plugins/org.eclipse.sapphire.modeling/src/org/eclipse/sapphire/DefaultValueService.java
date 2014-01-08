@@ -9,13 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
+
+import org.eclipse.sapphire.services.DataService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DefaultValueService extends DataService<DefaultValueServiceData>
+public abstract class DefaultValueService extends DataService<String>
 {
     @Override
     protected final void initDataService()
@@ -29,7 +31,7 @@ public abstract class DefaultValueService extends DataService<DefaultValueServic
     
     public final String value()
     {
-        return data().value();
+        return data();
     }
     
 }

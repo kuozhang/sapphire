@@ -11,12 +11,11 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
+import org.eclipse.sapphire.DefaultValueService;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.services.DefaultValueService;
-import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeDef;
 import org.eclipse.sapphire.ui.forms.SectionDef;
 
@@ -57,9 +56,9 @@ public final class SectionDefLabelDefaultValueProvider extends DefaultValueServi
     }
 
     @Override
-    protected DefaultValueServiceData compute()
+    protected String compute()
     {
-        return new DefaultValueServiceData( this.node != null ? this.node.getLabel().text() : null );
+        return this.node != null ? this.node.getLabel().text() : null;
     }
     
     @Override

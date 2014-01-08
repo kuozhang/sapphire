@@ -1,0 +1,111 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2014 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Migration Guide for Sapphire 8</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+    .unaffected
+    {
+      color: #888888
+    }
+    .comment
+    {
+      color: #006600;
+      font-style: italic
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Migration Guide for Sapphire 8</h1>
+
+<p>This documents covers code changes that need to be made by Sapphire adopters as part of migrating 
+to Sapphire 8. Only changes from the previous release are covered.</p>
+
+<p>Table of Contents</p>
+
+<ol>
+  <li><a href="#DefaultValueService">DefaultValueService</a></li>
+  <li><a href="#DefaultValueServiceData">DefaultValueServiceData</a></li>
+</ol>
+
+
+<h2><a name="DefaultValueService">DefaultValueService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">DefaultValueService</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.services.DefaultValueService</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleDefaultValueService extends DefaultValueService
+{
+    @Override
+    protected</span> DefaultValueServiceData <span class="unaffected">compute()
+    {
+        return</span> new DefaultValueServiceData( <span class="unaffected">...</span> )<span class="unaffected">;
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleDefaultValueService extends DefaultValueService
+{
+    @Override
+    protected</span> String <span class="unaffected">compute()
+    {
+        return ...;
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="DefaultValueServiceData">DefaultValueServiceData</a></h2>
+
+<p>This class has been removed. See <a href="#DefaultValueService">DefaultValueService</a> migration.
+
+
+<div class="copyright">Copyright (c) 2014 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+
+</body>
+
+</html>

@@ -12,9 +12,8 @@
 package org.eclipse.sapphire.samples.postcard;
 
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.sapphire.DefaultValueService;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.services.DefaultValueService;
-import org.eclipse.sapphire.services.DefaultValueServiceData;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -35,9 +34,9 @@ public final class SenderDefaultValueService extends DefaultValueService
     }
 
     @Override
-    protected DefaultValueServiceData compute()
+    protected String compute()
     {
-        return new DefaultValueServiceData( this.def );
+        return this.def;
     }
 
 }
