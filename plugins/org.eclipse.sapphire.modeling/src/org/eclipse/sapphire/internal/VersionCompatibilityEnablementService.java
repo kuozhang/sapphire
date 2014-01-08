@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.internal;
 
+import org.eclipse.sapphire.EnablementService;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImpliedElementProperty;
@@ -18,8 +19,6 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.MasterVersionCompatibilityService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.services.EnablementService;
-import org.eclipse.sapphire.services.EnablementServiceData;
 
 /**
  * Implementation of EnablementService that determines property's enablement state based on property's 
@@ -72,9 +71,9 @@ public final class VersionCompatibilityEnablementService extends EnablementServi
     }
 
     @Override
-    protected EnablementServiceData compute()
+    protected Boolean compute()
     {
-        return new EnablementServiceData( this.versionCompatibilityService.compatible() || ! context( Property.class ).empty() );
+        return this.versionCompatibilityService.compatible() || ! context( Property.class ).empty();
     }
     
     @Override

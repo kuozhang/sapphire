@@ -9,12 +9,13 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.EnablementService;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LoggingService;
@@ -27,8 +28,6 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
-import org.eclipse.sapphire.services.EnablementService;
-import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -81,7 +80,7 @@ public final class FunctionBasedEnablementService extends EnablementService
     }
 
     @Override
-    protected EnablementServiceData compute()
+    protected Boolean compute()
     {
         boolean state = true;
         
@@ -90,7 +89,7 @@ public final class FunctionBasedEnablementService extends EnablementService
             state = ( state && (Boolean) result.value() );
         }
         
-        return new EnablementServiceData( state );
+        return state;
     }
 
     @Override

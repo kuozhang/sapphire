@@ -23,7 +23,6 @@ import org.eclipse.sapphire.modeling.ModelPath.ParentElementSegment;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.ClearOnDisable;
 import org.eclipse.sapphire.services.DependenciesService;
-import org.eclipse.sapphire.services.EnablementService;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ValidationService;
 import org.eclipse.sapphire.services.internal.PropertyInstanceServiceContext;

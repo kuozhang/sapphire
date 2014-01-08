@@ -9,15 +9,14 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.EnablementService;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyEnablementEvent;
-import org.eclipse.sapphire.services.EnablementService;
-import org.eclipse.sapphire.services.EnablementServiceData;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -48,9 +47,9 @@ public final class ParentBasedEnablementService extends EnablementService
     }
 
     @Override
-    public EnablementServiceData compute()
+    public Boolean compute()
     {
-        return new EnablementServiceData( this.parent.enabled() );
+        return this.parent.enabled();
     }
 
     @Override

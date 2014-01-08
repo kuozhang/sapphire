@@ -146,14 +146,14 @@
     <service>
         <context>Sapphire.Property.Instance</context>
         <id>Sapphire.EnablementService.ParentPropertyState</id>
-        <implementation>org.eclipse.sapphire.services.internal.ParentBasedEnablementService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.ParentBasedEnablementService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.ParentBasedEnablementService</implementation>
+        <condition>org.eclipse.sapphire.internal.ParentBasedEnablementService$Condition</condition>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>
         <id>Sapphire.EnablementService.FunctionBased</id>
-        <implementation>org.eclipse.sapphire.services.internal.FunctionBasedEnablementService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.FunctionBasedEnablementService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.FunctionBasedEnablementService</implementation>
+        <condition>org.eclipse.sapphire.internal.FunctionBasedEnablementService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.EnablementService.VersionCompatibility</id>

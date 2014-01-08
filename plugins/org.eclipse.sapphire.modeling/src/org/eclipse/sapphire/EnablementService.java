@@ -9,13 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
+
+import org.eclipse.sapphire.services.DataService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class EnablementService extends DataService<EnablementServiceData>
+public abstract class EnablementService extends DataService<Boolean>
 {
     @Override
     protected final void initDataService()
@@ -29,8 +31,8 @@ public abstract class EnablementService extends DataService<EnablementServiceDat
     
     public final boolean enablement()
     {
-        final EnablementServiceData data = data();
-        return ( data == null ? true : data.enablement() );
+        final Boolean data = data();
+        return ( data == null ? true : data );
     }
     
 }

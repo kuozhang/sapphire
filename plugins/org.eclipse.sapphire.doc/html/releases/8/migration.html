@@ -56,6 +56,8 @@ to Sapphire 8. Only changes from the previous release are covered.</p>
   <li><a href="#DefaultValueServiceData">DefaultValueServiceData</a></li>
   <li><a href="#DerivedValueService">DerivedValueService</a></li>
   <li><a href="#DerivedValueServiceData">DerivedValueServiceData</a></li>
+  <li><a href="#EnablementService">EnablementService</a></li>
+  <li><a href="#EnablementServiceData">EnablementServiceData</a></li>
   <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#InitialValueServiceData">InitialValueServiceData</a></li>
 </ol>
@@ -149,6 +151,51 @@ to Sapphire 8. Only changes from the previous release are covered.</p>
 <h2><a name="DerivedValueServiceData">DerivedValueServiceData</a></h2>
 
 <p>This class has been removed. See <a href="#DerivedValueService">DerivedValueService</a> migration.
+
+
+<h2><a name="EnablementService">EnablementService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">EnablementService</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.services.EnablementService</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleEnablementService extends EnablementService
+{
+    @Override
+    protected</span> EnablementServiceData <span class="unaffected">compute()
+    {
+        return</span> new EnablementServiceData( <span class="unaffected">...</span> )<span class="unaffected">;
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleEnablementService extends EnablementService
+{
+    @Override
+    protected</span> Boolean <span class="unaffected">compute()
+    {
+        return ...;
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="EnablementServiceData">EnablementServiceData</a></h2>
+
+<p>This class has been removed. See <a href="#EnablementService">EnablementService</a> migration.
 
 
 <h2><a name="InitialValueService">InitialValueService</a></h2>
