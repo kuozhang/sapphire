@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FileName;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.InitialValueService;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyContentEvent;
@@ -35,8 +36,6 @@ import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.platform.PathBridge;
 import org.eclipse.sapphire.services.FileExtensionsService;
-import org.eclipse.sapphire.services.InitialValueService;
-import org.eclipse.sapphire.services.InitialValueServiceData;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.RelativePathService;
 import org.eclipse.sapphire.services.ValidationService;
@@ -278,7 +277,7 @@ public final class CreateWorkspaceFileOpServices
         }
     
         @Override
-        protected InitialValueServiceData compute()
+        protected String compute()
         {
             final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
             
@@ -289,7 +288,7 @@ public final class CreateWorkspaceFileOpServices
                 resource = resource.getParent();
             }
             
-            return new InitialValueServiceData( resource == null ? null : resource.getFullPath().makeRelative().toPortableString() );
+            return resource == null ? null : resource.getFullPath().makeRelative().toPortableString();
         }
     }
     

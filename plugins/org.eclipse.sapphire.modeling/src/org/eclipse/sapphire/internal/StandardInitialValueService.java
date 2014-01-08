@@ -10,10 +10,11 @@
  *    Kamesh Sampath - initial implementation
  *******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
+import org.eclipse.sapphire.InitialValueService;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
@@ -25,8 +26,6 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.Literal;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
-import org.eclipse.sapphire.services.InitialValueService;
-import org.eclipse.sapphire.services.InitialValueServiceData;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -88,15 +87,15 @@ public final class StandardInitialValueService extends InitialValueService
     }
 
     @Override
-    protected InitialValueServiceData compute()
+    protected String compute()
     {
         if( this.functionResult == null )
         {
-            return new InitialValueServiceData( null );
+            return null;
         }
         else
         {
-            return new InitialValueServiceData( (String) this.functionResult.value() );
+            return (String) this.functionResult.value();
         }
     }
 

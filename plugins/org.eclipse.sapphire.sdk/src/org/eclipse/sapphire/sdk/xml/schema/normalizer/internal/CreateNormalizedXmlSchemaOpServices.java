@@ -15,13 +15,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.InitialValueService;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.platform.PathBridge;
 import org.eclipse.sapphire.sdk.xml.schema.normalizer.CreateNormalizedXmlSchemaOp;
-import org.eclipse.sapphire.services.InitialValueService;
-import org.eclipse.sapphire.services.InitialValueServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -51,17 +50,17 @@ public final class CreateNormalizedXmlSchemaOpServices
         }
     
         @Override
-        protected InitialValueServiceData compute()
+        protected String compute()
         {
             final CreateNormalizedXmlSchemaOp op = context( CreateNormalizedXmlSchemaOp.class );
             final IResource resource = op.getContext().content();
             
             if( resource instanceof IFile && resource.getName().toLowerCase().endsWith( ".xsd" ) )
             {
-                return new InitialValueServiceData( resource.getFullPath().makeRelative().toPortableString() );
+                return resource.getFullPath().makeRelative().toPortableString();
             }
             
-            return new InitialValueServiceData( null );
+            return null;
         }
         
         @Override
@@ -143,9 +142,9 @@ public final class CreateNormalizedXmlSchemaOpServices
     public static final class FolderInitialValueService extends InitialValueService 
     {
         @Override
-        protected InitialValueServiceData compute()
+        protected String compute()
         {
-            return new InitialValueServiceData( null );
+            return null;
         }
     }
     

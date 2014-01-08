@@ -20,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.InitialValueService;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyContentEvent;
@@ -29,8 +30,6 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.sdk.CreateExtensionManifestOp;
-import org.eclipse.sapphire.services.InitialValueService;
-import org.eclipse.sapphire.services.InitialValueServiceData;
 import org.eclipse.sapphire.services.ValidationService;
 
 /**
@@ -116,7 +115,7 @@ public final class CreateExtensionManifestOpServices
         }
     
         @Override
-        protected InitialValueServiceData compute()
+        protected String compute()
         {
             final CreateExtensionManifestOp op = context( CreateExtensionManifestOp.class );
     
@@ -132,7 +131,7 @@ public final class CreateExtensionManifestOpServices
                 }
             }
             
-            return new InitialValueServiceData( folder == null ? null : folder.getFullPath().makeRelative().toPortableString() );
+            return folder == null ? null : folder.getFullPath().makeRelative().toPortableString();
         }
         
         @Override

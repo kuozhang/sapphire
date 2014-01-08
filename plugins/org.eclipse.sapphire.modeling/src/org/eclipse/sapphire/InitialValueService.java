@@ -10,7 +10,9 @@
  *    Kamesh Sampath - initial implementation
  *******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
+
+import org.eclipse.sapphire.services.DataService;
 
 /**
  * Produces a value to assign to a property when the containing model element is created.
@@ -19,7 +21,7 @@ package org.eclipse.sapphire.services;
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a>
  */
 
-public abstract class InitialValueService extends DataService<InitialValueServiceData> 
+public abstract class InitialValueService extends DataService<String> 
 {
     @Override
     protected final void initDataService()
@@ -33,6 +35,6 @@ public abstract class InitialValueService extends DataService<InitialValueServic
     
     public final String value()
     {
-        return data().value();
+        return data();
     }
 }

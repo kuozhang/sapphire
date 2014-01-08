@@ -54,6 +54,8 @@ to Sapphire 8. Only changes from the previous release are covered.</p>
 <ol>
   <li><a href="#DefaultValueService">DefaultValueService</a></li>
   <li><a href="#DefaultValueServiceData">DefaultValueServiceData</a></li>
+  <li><a href="#InitialValueService">InitialValueService</a></li>
+  <li><a href="#InitialValueServiceData">InitialValueServiceData</a></li>
 </ol>
 
 
@@ -100,6 +102,51 @@ to Sapphire 8. Only changes from the previous release are covered.</p>
 <h2><a name="DefaultValueServiceData">DefaultValueServiceData</a></h2>
 
 <p>This class has been removed. See <a href="#DefaultValueService">DefaultValueService</a> migration.
+
+
+<h2><a name="InitialValueService">InitialValueService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">InitialValueService</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.services.InitialValueService</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleInitialValueService extends InitialValueService
+{
+    @Override
+    protected</span> InitialValueServiceData <span class="unaffected">compute()
+    {
+        return</span> new InitialValueServiceData( <span class="unaffected">...</span> )<span class="unaffected">;
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleInitialValueService extends InitialValueService
+{
+    @Override
+    protected</span> String <span class="unaffected">compute()
+    {
+        return ...;
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="InitialValueServiceData">InitialValueServiceData</a></h2>
+
+<p>This class has been removed. See <a href="#InitialValueService">InitialValueService</a> migration.
 
 
 <div class="copyright">Copyright (c) 2014 Oracle<br/>
