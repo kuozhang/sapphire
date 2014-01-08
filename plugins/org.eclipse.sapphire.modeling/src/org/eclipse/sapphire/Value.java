@@ -16,7 +16,6 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.annotations.Derived;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
-import org.eclipse.sapphire.services.DerivedValueService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 
 /**

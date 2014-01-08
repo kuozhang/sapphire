@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts.internal;
 
+import org.eclipse.sapphire.DerivedValueService;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
@@ -18,8 +19,6 @@ import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactAddress;
 import org.eclipse.sapphire.samples.contacts.PhoneNumber;
 import org.eclipse.sapphire.samples.contacts.SendContactOp;
-import org.eclipse.sapphire.services.DerivedValueService;
-import org.eclipse.sapphire.services.DerivedValueServiceData;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -43,7 +42,7 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
     }
 
     @Override
-    protected DerivedValueServiceData compute()
+    protected String compute()
     {
         final SendContactOp op = context( SendContactOp.class );
         final Contact contact = op.getContact().content();
@@ -104,7 +103,7 @@ public final class SendContactOpMessageBodyDerivedValueService extends DerivedVa
         
         buf.append( "</body></html>" );
         
-        return new DerivedValueServiceData( buf.toString() );
+        return buf.toString();
     }
 
 }

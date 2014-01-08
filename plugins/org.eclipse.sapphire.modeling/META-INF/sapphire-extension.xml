@@ -713,8 +713,8 @@
     <service>
         <id>Sapphire.DerivedValueService.Standard</id>
         <context>Sapphire.Property.Instance</context>
-        <implementation>org.eclipse.sapphire.services.internal.StandardDerivedValueService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.StandardDerivedValueService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.StandardDerivedValueService</implementation>
+        <condition>org.eclipse.sapphire.internal.StandardDerivedValueService$Condition</condition>
     </service>
     <function>
         <name>Sum</name>

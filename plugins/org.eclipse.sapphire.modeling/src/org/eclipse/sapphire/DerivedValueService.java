@@ -9,13 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
+
+import org.eclipse.sapphire.services.DataService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class DerivedValueService extends DataService<DerivedValueServiceData>
+public abstract class DerivedValueService extends DataService<String>
 {
     @Override
     protected final void initDataService()
@@ -29,8 +31,7 @@ public abstract class DerivedValueService extends DataService<DerivedValueServic
     
     public final String value()
     {
-        final DerivedValueServiceData data = data();
-        return ( data == null ? null : data.value() );
+        return data();
     }
     
 }
