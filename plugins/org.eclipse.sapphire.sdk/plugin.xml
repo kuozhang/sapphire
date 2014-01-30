@@ -58,7 +58,7 @@
   </extension>
   
   <extension point="org.eclipse.ui.editors.templates">
-    <include file="templates/modeling/templates.xml" translations="templates/modeling/templates.properties" /> 
+    <include file="templates/templates.xml" translations="templates/templates.properties" /> 
   </extension>
   
   <extension point="org.eclipse.ui.newWizards">

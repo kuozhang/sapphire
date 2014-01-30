@@ -102,4 +102,17 @@ ${:import(org.eclipse.sapphire.TransientProperty,org.eclipse.sapphire.Transient,
 ${cursor}
   </template>
 
+  <template name="sf-localization-block" description="%LocalizationBlock" id="sapphire.LocalizationBlock" context="java-members" enabled="true">
+@Text( "${text}" )
+private static LocalizableText ${field};
+${cursor}
+static
+{
+    LocalizableText.init( ${enclosing_type}.class );
+}${:import(org.eclipse.sapphire.Text,org.eclipse.sapphire.LocalizableText)}</template>
+
+  <template name="sf-localization-entry" description="%LocalizationEntry" id="sapphire.LocalizationEntry" context="java-members" enabled="true">
+@Text( "${text}" )
+private static LocalizableText ${field};${:import(org.eclipse.sapphire.Text,org.eclipse.sapphire.LocalizableText)}${cursor}</template>
+
 </templates>
