@@ -16,4 +16,5 @@ Require-Bundle: org.eclipse.sapphire.modeling,
  org.eclipse.jdt.ui,
  org.eclipse.ui,
  org.eclipse.jface.text
+Export-Package: org.eclipse.sapphire.java.jdt.ui
 

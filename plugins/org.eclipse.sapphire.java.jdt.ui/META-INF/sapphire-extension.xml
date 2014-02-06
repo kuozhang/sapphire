@@ -31,7 +31,7 @@
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>
-        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeJumpActionHandler</impl>
+        <impl>org.eclipse.sapphire.java.jdt.ui.JavaTypeJumpActionHandler</impl>
         <id>Sapphire.Jump.Java.Type</id>
         <description>Opens the specified Java type using Eclipse Java Editor. Activates if the property is a reference value property from JavaTypeName to JavaType.</description>
         <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeJumpActionHandlerCondition</condition>

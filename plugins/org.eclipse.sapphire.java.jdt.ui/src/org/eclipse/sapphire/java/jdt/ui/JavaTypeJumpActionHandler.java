@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.java.jdt.ui.internal;
+package org.eclipse.sapphire.java.jdt.ui;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -34,8 +34,6 @@ import org.eclipse.sapphire.ui.forms.swt.FormComponentPresentation;
 
 public final class JavaTypeJumpActionHandler extends JumpActionHandler
 {
-    public static final String ID = "Sapphire.Jump.Java.Type";
-
     @Text( "Type Not Found" )
     private static LocalizableText couldNotFindTypeDialogTitle;
     
@@ -45,11 +43,6 @@ public final class JavaTypeJumpActionHandler extends JumpActionHandler
     static 
     {
         LocalizableText.init( JavaTypeJumpActionHandler.class );
-    }
-    
-    public JavaTypeJumpActionHandler()
-    {
-        setId( ID );
     }
     
     @Override
