@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Andreas Weise - initial implementation and ongoing maintenance
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
 package org.eclipse.sapphire.java.jdt.ui.internal;
@@ -34,13 +35,17 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 
 /**
  * @author <a href="mailto:andreas.weise@agito-it.de">Andreas Weise</a>
+ * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class JavaPackageBrowseActionHandler extends BrowseActionHandler {
 
-	@Text("Select ")
-	private static LocalizableText select;
+	@Text( "Select {0}" )
+	private static LocalizableText dialogTitle;
 
+    @Text( "Choose a package:" )
+    private static LocalizableText dialogMessage;
+	
 	static {
 		LocalizableText.init(JavaPackageBrowseActionHandler.class);
 	}
@@ -64,8 +69,8 @@ public final class JavaPackageBrowseActionHandler extends BrowseActionHandler {
 			final SelectionDialog dlg = JavaUI.createPackageDialog(((FormComponentPresentation) context).shell(),
 					project, 0, null);
 
-			final String title = property.definition().getLabel(true, CapitalizationType.TITLE_STYLE, false);
-			dlg.setTitle(select + title);
+			dlg.setTitle( dialogTitle.format( property.definition().getLabel( true, CapitalizationType.TITLE_STYLE, false ) ) );
+			dlg.setMessage( dialogMessage.text() );
 
 			if (dlg.open() == SelectionDialog.OK) {
 				Object results[] = dlg.getResult();
@@ -86,7 +91,12 @@ public final class JavaPackageBrowseActionHandler extends BrowseActionHandler {
 		protected boolean evaluate(final PropertyEditorPart part) {
 			final Property property = part.property();
 
-			return (property instanceof Value && property.definition().isOfType(JavaPackageName.class));
+			return
+            (
+                property instanceof Value && 
+                property.definition().isOfType( JavaPackageName.class ) &&
+                property.element().adapt( IJavaProject.class ) != null
+            );
 		}
 	}
 

@@ -14,7 +14,9 @@ package org.eclipse.sapphire.samples.gallery;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.java.JavaPackageName;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
@@ -238,5 +240,15 @@ public interface IJavaTypeNameValueGallery extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredMixedType2();
     void setRequiredMixedType2( String value );
     void setRequiredMixedType2( JavaTypeName value );
+    
+    // *** Package ***
+    
+    @Type( base = JavaPackageName.class )
+
+    ValueProperty PROP_PACKAGE = new ValueProperty( TYPE, "Package" );
+    
+    Value<JavaPackageName> getPackage();
+    void setPackage( String value );
+    void setPackage( JavaPackageName value );
     
 }

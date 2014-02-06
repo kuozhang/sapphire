@@ -307,7 +307,7 @@
                     </section>
                 </node>
                 <node>
-                    <label>java type names</label>
+                    <label>java</label>
                     <property>JavaTypeNameValueGallery</property>
                     <section>
                         <content>
@@ -362,6 +362,10 @@
                             <label>Takes a name of a class, an interface or an enum, which must exist.</label>
                             <spacer />
                             <property-editor>RequiredMixedType2</property-editor>
+                            <spacer></spacer>
+                            <label>Takes a package name.</label>
+                            <spacer></spacer>
+                            <property-editor>Package</property-editor>
                         </content>
                     </section>
                 </node>

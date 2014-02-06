@@ -47,11 +47,27 @@
 <h1>Enhancements in Sapphire 8</h1>
 
 <ol>
-  <li><a href="#Placeholder">Placeholder</a></li>
+  <li><a href="#Forms">Forms</a></li>
+  <ol type="A">
+    <li><a href="#Forms-JavaPackageBrowsing">Java Package Browsing</a></li>
+  </ol>
 </ol>
 
 
-<h2><a name="Placeholder">Placeholder</a></h2>
+<h2><a name="Forms"><a name="Forms-JavaPackageBrowsing">Java Package Browsing</a></a></h2>
+
+<p>A browse dialog is now provided for value properties of JavaPackageName type when in the context of a Java project.</p>
+
+<pre class="source-code"><code><font color="#888888">@Type( base =</font> JavaPackageName<font color="#888888">.class )
+
+ValueProperty PROP_PACKAGE = new ValueProperty( TYPE, "Package" );
+    
+Value&lt;</font>JavaPackageName<font color="#888888">> getPackage();
+void setPackage( String value );
+void setPackage(</font> JavaPackageName <font color="#888888">value );</font></code></pre>
+
+<p style="margin-left: 20px;"><img src="images/JavaPackageBrowsing.png"/></p>
+
 
 
 <div class="copyright">Copyright (c) 2014 Oracle<br/>
