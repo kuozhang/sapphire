@@ -2,7 +2,7 @@
 
 <!-- 
  ******************************************************************************
- * Copyright (c) 2014 Oracle
+ * Copyright (c) 2014 Oracle and agito
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Andreas Weise - [427447] Browse support for Java packages
  ******************************************************************************
 -->
 
@@ -20,6 +21,13 @@
         <id>Sapphire.Browse.Java.Type</id>
         <description>Opens a browse dialog listing applicable Java types. Activates if the property is a reference value property from JavaTypeName to JavaType.</description>
         <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaTypeBrowseActionHandler$Condition</condition>
+    </action-handler>
+     <action-handler>
+        <action>Sapphire.Browse</action>
+        <impl>org.eclipse.sapphire.java.jdt.ui.internal.JavaPackageBrowseActionHandler</impl>
+        <id>Sapphire.Browse.Java.Package</id>
+        <description>Opens a browse dialog listing applicable Java packages of the current project. Activates if the property is a value property and of type JavaPackageName.</description>
+        <condition>org.eclipse.sapphire.java.jdt.ui.internal.JavaPackageBrowseActionHandler$Condition</condition>
     </action-handler>
     <action-handler>
         <action>Sapphire.Jump</action>
