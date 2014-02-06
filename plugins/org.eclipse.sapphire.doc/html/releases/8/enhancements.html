@@ -51,6 +51,10 @@
   <ol type="A">
     <li><a href="#Forms-JavaPackageBrowsing">Java Package Browsing</a></li>
   </ol>
+  <li><a href="#XML">XML</a></li>
+  <ol type="A">
+    <li><a href="#XML-StandardXmlValueBindingImpl">StandardXmlValueBindingImpl</a></li>
+  </ol>
 </ol>
 
 
@@ -68,6 +72,25 @@ void setPackage(</font> JavaPackageName <font color="#888888">value );</font></c
 
 <p style="margin-left: 20px;"><img src="images/JavaPackageBrowsing.png"/></p>
 
+
+<h2><a name="XML"><a name="XML-StandardXmlValueBindingImpl">StandardXmlValueBindingImpl</a></a></h2>
+
+<p>StandardXmlValueBindingImpl can now be extended to customize standard binding behavior. In some cases, this may be more
+convenient than starting from scratch with XmlValueBindingImpl.</p>
+
+<pre class="source-code"><code>StandardXmlValueBindingImpl extends XmlValueBindingImpl
+{
+    protected XmlPath path
+    protected boolean treatExistanceAsValue
+    protected String valueWhenPresent
+    protected String valueWhenNotPresent
+    protected boolean removeNodeOnSetIfNull
+    
+    protected void initBindingMetadata()
+    public String read()
+    public void write( String value )
+    public XmlNode getXmlNode()
+}</code></pre>
 
 
 <div class="copyright">Copyright (c) 2014 Oracle<br/>
