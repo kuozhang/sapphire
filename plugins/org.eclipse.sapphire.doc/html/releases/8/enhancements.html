@@ -47,6 +47,10 @@
 <h1>Enhancements in Sapphire 8</h1>
 
 <ol>
+  <li><a href="#Core">Core</a></li>
+  <ol type="A">
+    <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
+  </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
     <li><a href="#Forms-JavaPackageBrowsing">Java Package Browsing</a></li>
@@ -56,6 +60,14 @@
     <li><a href="#XML-StandardXmlValueBindingImpl">StandardXmlValueBindingImpl</a></li>
   </ol>
 </ol>
+
+
+<h2><a name="Core"><a name="Core-ListIndexNullLookup">List Index Null Lookup</a></a></h2>
+
+<p>The developer can now lookup elements in an index that have a null value for the indexed property. Previously, null values
+were not indexed and an exception was thrown on lookup.</p>
+
+<pre class="source-code"><code>Set&lt;Task> tasksWithNoComponent = repository.getTasks().index( "Component" ).elements( null );</code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-JavaPackageBrowsing">Java Package Browsing</a></a></h2>

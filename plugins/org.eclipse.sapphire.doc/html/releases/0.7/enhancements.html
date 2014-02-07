@@ -700,7 +700,7 @@ of the list and updates itself automatically. The index can also notify listener
 operation is performed.</p>
 
 <pre class="source-code"><code>Index&lt;Task> index = repository.getTasks().index( "Component" );
-List&lt;Task> tasks = index.elements( "SDK" );
+Set&lt;Task> tasks = index.elements( "SDK" );
 
 Listener listener = new Listener()
 {

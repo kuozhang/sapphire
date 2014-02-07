@@ -39,11 +39,13 @@ public final class Index<T extends Element>
     {
         LocalizableText.init( Index.class );
     }
+    
+    private static final Object NULL = new Object();
 
     private final ElementList<T> list;
     private final ValueProperty property;
-    private Map<String,Object> keyToElements;
-    private Map<Element,String> elementToKey;
+    private Map<Object,Object> keyToElements;
+    private Map<Element,Object> elementToKey;
     private Listener listener;
     private ListenerContext listeners;
     
@@ -68,8 +70,8 @@ public final class Index<T extends Element>
             
             this.list.attach( this.listener );
             
-            this.keyToElements = new HashMap<String,Object>();
-            this.elementToKey = new IdentityHashMap<Element,String>();
+            this.keyToElements = new HashMap<Object,Object>();
+            this.elementToKey = new IdentityHashMap<Element,Object>();
             
             for( final Element element : this.list )
             {
@@ -109,7 +111,6 @@ public final class Index<T extends Element>
      * 
      * @param key the key to use for the lookup
      * @return an element corresponding to the given key or null
-     * @throws IllegalArgumentException if key is null
      * @throws IllegalStateException if the list property is disposed
      */
     
@@ -117,17 +118,12 @@ public final class Index<T extends Element>
     
     public T element( final String key )
     {
-        if( key == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
         synchronized( this.list.root() )
         {
             assertNotDisposed();
             initialize();
             
-            final Object obj = this.keyToElements.get( key );
+            final Object obj = this.keyToElements.get( key == null ? NULL : key );
             
             if( obj != null )
             {
@@ -150,7 +146,6 @@ public final class Index<T extends Element>
      * 
      * @param key the key to use for the lookup
      * @return all the element corresponding to the given key or an empty set
-     * @throws IllegalArgumentException if key is null
      * @throws IllegalStateException if the list property is disposed
      */
     
@@ -158,17 +153,12 @@ public final class Index<T extends Element>
     
     public Set<T> elements( final String key )
     {
-        if( key == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
         synchronized( this.list.root() )
         {
             assertNotDisposed();
             initialize();
             
-            final Object obj = this.keyToElements.get( key );
+            final Object obj = this.keyToElements.get( key == null ? NULL : key );
             
             if( obj != null )
             {
@@ -313,35 +303,37 @@ public final class Index<T extends Element>
             throw new IllegalStateException();
         }
         
-        final String key = element.property( this.property ).text();
+        Object key = element.property( this.property ).text();
         
-        if( key != null )
+        if( key == null )
         {
-            final Object object = this.keyToElements.get( key );
-            
-            if( object == null )
-            {
-                this.keyToElements.put( key, element );
-            }
-            else if( object instanceof Element )
-            {
-                final Set<Element> set = new IdentityHashSet<Element>();
-                
-                set.add( (Element) object );
-                set.add( element );
-                
-                this.keyToElements.put( key, set );
-            }
-            else
-            {
-                @SuppressWarnings( "unchecked" )
-                final Set<Element> set = (Set<Element>) object;
-                
-                set.add( element );
-            }
-            
-            this.elementToKey.put( element, key );
+            key = NULL;
         }
+        
+        final Object object = this.keyToElements.get( key );
+        
+        if( object == null )
+        {
+            this.keyToElements.put( key, element );
+        }
+        else if( object instanceof Element )
+        {
+            final Set<Element> set = new IdentityHashSet<Element>();
+            
+            set.add( (Element) object );
+            set.add( element );
+            
+            this.keyToElements.put( key, set );
+        }
+        else
+        {
+            @SuppressWarnings( "unchecked" )
+            final Set<Element> set = (Set<Element>) object;
+            
+            set.add( element );
+        }
+            
+        this.elementToKey.put( element, key );
     }
     
     private void remove( final Element element )
@@ -351,7 +343,7 @@ public final class Index<T extends Element>
             throw new IllegalStateException();
         }
         
-        final String key = this.elementToKey.remove( element );
+        final Object key = this.elementToKey.remove( element );
         
         if( key != null )
         {

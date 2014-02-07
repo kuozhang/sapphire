@@ -54,24 +54,31 @@ public final class IndexTests extends SapphireTestCase
             testIndexLookup( index, "20", 1 );
             testIndexLookup( index, "97", 1 );
             testIndexLookup( index, "137", 0 );
+            testIndexLookup( index, null, 0 );
 
             for( int i = 100; i < 200; i++ )
             {
                 list.insert().setStringValue( String.valueOf( i ) );
             }
             
+            list.insert();
+            
             testIndexLookup( index, "137", 1 );
+            testIndexLookup( index, null, 1 );
 
             for( int i = 100; i < 200; i++ )
             {
                 list.insert().setStringValue( String.valueOf( i ) );
             }
+            
+            list.insert();
             
             testIndexLookup( index, "20", 1 );
             testIndexLookup( index, "97", 1 );
             testIndexLookup( index, "137", 2 );
             testIndexLookup( index, "182", 2 );
             testIndexLookup( index, "213", 0 );
+            testIndexLookup( index, null, 2 );
         }
         finally
         {
@@ -444,26 +451,6 @@ public final class IndexTests extends SapphireTestCase
     }
     
     /**
-     * Test {@link Index#element(String)} with a null.
-     */
-    
-    @Test( expected = IllegalArgumentException.class )
-    
-    public void testException_Index_Element_Null()
-    {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
-        {
-            element.getList().index( ListEntry.PROP_STRING_VALUE ).element( null );
-        }
-        finally
-        {
-            element.dispose();
-        }
-    }
-    
-    /**
      * Test {@link Index#element(String)} when the list is disposed.
      */
     
@@ -484,26 +471,6 @@ public final class IndexTests extends SapphireTestCase
         }
 
         index.element( "a" );
-    }
-    
-    /**
-     * Test {@link Index#elements(String)} with a null.
-     */
-    
-    @Test( expected = IllegalArgumentException.class )
-    
-    public void testException_Index_Elements_Null()
-    {
-        final TestElement element = TestElement.TYPE.instantiate();
-        
-        try
-        {
-            element.getList().index( ListEntry.PROP_STRING_VALUE ).elements( null );
-        }
-        finally
-        {
-            element.dispose();
-        }
     }
     
     /**
