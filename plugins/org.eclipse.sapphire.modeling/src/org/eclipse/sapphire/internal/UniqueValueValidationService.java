@@ -21,7 +21,6 @@ import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.ServiceCondition;
@@ -34,8 +33,11 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class UniqueValueValidationService extends ValidationService
 {
-    @Text( "Unique {0} required. Another occurrence of \"{1}\" was found" )
+    @Text( "Multiple occurrence of \"{0}\" were found" )
     private static LocalizableText message; 
+    
+    @Text( "Multiple occurrence of a missing value were found" )
+    private static LocalizableText messageForNull; 
     
     static
     {
@@ -43,6 +45,7 @@ public final class UniqueValueValidationService extends ValidationService
     }
     
     private Index<?> index;
+    private boolean checkNullValues;
     private Listener listener;
     
     @Override
@@ -52,6 +55,7 @@ public final class UniqueValueValidationService extends ValidationService
         final ElementList<?> list = (ElementList<?>) value.element().parent();
         
         this.index = list.index( value.definition() );
+        this.checkNullValues = ! value.definition().getAnnotation( NoDuplicates.class ).ignoreNullValues();
         
         this.listener = new Listener()
         {
@@ -73,10 +77,9 @@ public final class UniqueValueValidationService extends ValidationService
         final Value<?> value = context( Value.class );
         final String text = value.text();
         
-        if( text != null && this.index.elements( text ).size() > 1 )
+        if( ( text != null || this.checkNullValues ) && this.index.elements( text ).size() > 1 )
         {
-            final String label = value.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
-            final String msg = message.format( label, text );
+            final String msg = ( text == null ? messageForNull.text() : message.format( text ) );
             return Status.createErrorStatus( msg );
         }
         

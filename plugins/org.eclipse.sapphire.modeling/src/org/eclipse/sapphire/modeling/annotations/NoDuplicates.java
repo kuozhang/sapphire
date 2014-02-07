@@ -25,4 +25,5 @@ import java.lang.annotation.Target;
 
 public @interface NoDuplicates
 {
+    boolean ignoreNullValues() default true;
 }

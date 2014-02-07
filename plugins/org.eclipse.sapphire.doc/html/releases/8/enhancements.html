@@ -50,6 +50,7 @@
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
+    <li><a href="#Core-NoDuplicatesNullCoverage">@NoDuplicates Null Coverage</a></li>
   </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
@@ -68,6 +69,26 @@
 were not indexed and an exception was thrown on lookup.</p>
 
 <pre class="source-code"><code>Set&lt;Task> tasksWithNoComponent = repository.getTasks().index( "Component" ).elements( null );</code></pre>
+
+
+<h2><a name="Core-NoDuplicatesNullCoverage">@NoDuplicates Null Coverage</a></h2>
+
+<p>By default, the @NoDuplicates constraint does not apply to null values. This is appropriate in many cases, but sometimes the semantics
+dictate that at most one null should be allowed. The @NoDuplicates constraint can now be configured to cover this case.</p>
+
+<pre class="source-code"><code><font color="#888888">interface ListEntry extends Element
+{
+    ElementType TYPE = new ElementType( ListEntry.class );
+    
+    // *** Value ***
+    
+    @NoDuplicates</font>( ignoreNullValues = false )
+    
+    <font color="#888888">ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    
+    Value&lt;String> getValue();
+    void setValue( String value );
+}</font></code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-JavaPackageBrowsing">Java Package Browsing</a></a></h2>

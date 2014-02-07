@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.tests.unique;
 
 import org.eclipse.sapphire.Counter;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.internal.UniqueValueValidationService;
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
@@ -35,15 +36,58 @@ public final class UniqueValueTests extends SapphireTestCase
         final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore( generateTestData( 10 ) );
         final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
         final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final ElementList<TestElement.ListEntry> list = element.getList(); 
         
         assertValidationOk( element );
         
-        element.getList().get( 0 ).setValue( "9" );
-        assertValidationError( element.getList().get( 0 ), "Unique value required. Another occurrence of \"9\" was found" );
-        assertValidationError( element.getList().get( 9 ), "Unique value required. Another occurrence of \"9\" was found" );
-        assertValidationOk( element.getList().get( 1 ) );
+        list.get( 0 ).setValue( "9" );
+        assertValidationError( list.get( 0 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationError( list.get( 9 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationOk( list.get( 1 ) );
         
-        element.getList().get( 0 ).setValue( "0" );
+        list.insert();
+        list.insert();
+
+        assertValidationError( list.get( 0 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationError( list.get( 9 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationOk( list.get( 1 ) );
+        assertValidationOk( list.get( 10 ) );
+        assertValidationOk( list.get( 11 ) );
+        
+        list.get( 0 ).setValue( "0" );
+        
+        assertValidationOk( element );
+    }
+
+    @Test
+    
+    public void testUniqueValue_ValidateNull() throws Exception
+    {
+        final ByteArrayResourceStore byteArrayResourceStore = new ByteArrayResourceStore( generateTestData( 10 ) );
+        final XmlResourceStore xmlResourceStore = new XmlResourceStore( byteArrayResourceStore );
+        final TestElementValidateNull element = TestElementValidateNull.TYPE.instantiate( new RootXmlResource( xmlResourceStore ) );
+        final ElementList<TestElementValidateNull.ListEntry> list = element.getList(); 
+        
+        assertValidationOk( element );
+        
+        list.get( 0 ).setValue( "9" );
+        assertValidationError( list.get( 0 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationError( list.get( 9 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationOk( list.get( 1 ) );
+        
+        list.insert();
+        list.insert();
+
+        assertValidationError( list.get( 0 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationError( list.get( 9 ), "Multiple occurrence of \"9\" were found" );
+        assertValidationOk( list.get( 1 ) );
+        assertValidationError( list.get( 10 ), "Multiple occurrence of a missing value were found" );
+        assertValidationError( list.get( 11 ), "Multiple occurrence of a missing value were found" );
+        
+        list.get( 0 ).setValue( "0" );
+        list.remove( list.get( 10 ) );
+        list.remove( list.get( 10 ) );
+        
         assertValidationOk( element );
     }
 
