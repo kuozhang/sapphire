@@ -13,11 +13,11 @@ package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Services;
@@ -60,7 +60,7 @@ public interface ISapphireHint extends Element
             PartDef.HINT_STYLE,
             PropertyEditorDef.HINT_SUPPRESS_ASSIST_CONTRIBUTORS
         },
-        invalidValueMessage = "\"{0}\" is not a valid hint.",
+        invalidValueMessage = "\"${Name}\" is not a valid hint.",
         invalidValueSeverity = Status.Severity.OK
     )
     

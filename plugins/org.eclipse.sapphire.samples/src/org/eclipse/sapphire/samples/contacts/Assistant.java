@@ -15,12 +15,12 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -49,7 +49,7 @@ public interface Assistant extends Element
     ( 
         property = "/Contacts/Name", 
         caseSensitive = false, 
-        invalidValueMessage = "Could not find contact name \"{0}\" in the repository." 
+        invalidValueMessage = "Could not find contact name \"${Name}\" in the repository." 
     )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );

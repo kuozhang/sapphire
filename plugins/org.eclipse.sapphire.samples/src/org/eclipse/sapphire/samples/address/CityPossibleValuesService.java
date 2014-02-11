@@ -16,10 +16,10 @@ import java.util.Set;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.samples.zipcodes.ZipCodeRepository;
-import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,8 +27,8 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 
 public final class CityPossibleValuesService extends PossibleValuesService
 {
-    @Text( "\"{0}\" is not a valid city for the specified state and ZIP code." )
-    private static LocalizableText invalidValueMessage;
+    @Text( "\"${City}\" is not a valid city for the specified state and ZIP code." )
+    private static LocalizableText message;
     
     static
     {
@@ -38,6 +38,9 @@ public final class CityPossibleValuesService extends PossibleValuesService
     @Override
     protected void init()
     {
+        this.invalidValueMessage = message.text();
+        this.caseSensitive = false;
+        
         final Address address = context( Address.class );
         
         final Listener listener = new FilteredListener<PropertyContentEvent>()
@@ -73,18 +76,6 @@ public final class CityPossibleValuesService extends PossibleValuesService
         final String zip = address.getZipCode().text();
         
         values.addAll( ZipCodeRepository.getCities( zip, state ) );
-    }
-
-    @Override
-    public String getInvalidValueMessage( final String invalidValue )
-    {
-        return invalidValueMessage.format( invalidValue );
-    }
-
-    @Override
-    public boolean isCaseSensitive()
-    {
-        return false;
     }
 
 }

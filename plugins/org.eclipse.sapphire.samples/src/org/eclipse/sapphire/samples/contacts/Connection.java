@@ -13,12 +13,12 @@ package org.eclipse.sapphire.samples.contacts;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 
 /**
@@ -41,7 +41,7 @@ public interface Connection extends Element
     ( 
         property = "/Contacts/Name", 
         caseSensitive = false, 
-        invalidValueMessage = "Could not find contact name \"{0}\" in the repository." 
+        invalidValueMessage = "Could not find contact \"${Name}\" in the repository" 
     )
 
     ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );

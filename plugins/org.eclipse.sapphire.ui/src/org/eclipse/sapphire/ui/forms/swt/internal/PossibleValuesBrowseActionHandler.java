@@ -13,9 +13,9 @@ package org.eclipse.sapphire.ui.forms.swt.internal;
 
 import java.util.Collection;
 
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.forms.BrowseActionHandler;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;

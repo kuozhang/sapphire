@@ -38,21 +38,21 @@
         <id>Sapphire.PossibleValuesService.Static</id>
         <context>Sapphire.Property.MetaModel</context>
         <description>Implementation of PossibleValuesService based on @PossibleValues annotation's values attribute..</description>
-        <implementation>org.eclipse.sapphire.services.internal.StaticPossibleValuesService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.StaticPossibleValuesService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.StaticPossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.internal.StaticPossibleValuesService$Condition</condition>
     </service>
     <service>
         <description>Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..</description>
         <id>Sapphire.PossibleValuesService.ModelBased</id>
         <context>Sapphire.Property.Instance</context>
-        <implementation>org.eclipse.sapphire.services.internal.ModelBasedPossibleValuesService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.ModelBasedPossibleValuesService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.ModelBasedPossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.internal.ModelBasedPossibleValuesService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.PossibleValuesService.Enum</id>
         <context>Sapphire.Property.MetaModel</context>
-        <implementation>org.eclipse.sapphire.services.internal.EnumPossibleValuesService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.EnumPossibleValuesService$Condition</condition>
+        <implementation>org.eclipse.sapphire.internal.EnumPossibleValuesService</implementation>
+        <condition>org.eclipse.sapphire.internal.EnumPossibleValuesService$Condition</condition>
     </service>
     <service>
         <id>Sapphire.PossibleValuesService.ListFromValue</id>

@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;

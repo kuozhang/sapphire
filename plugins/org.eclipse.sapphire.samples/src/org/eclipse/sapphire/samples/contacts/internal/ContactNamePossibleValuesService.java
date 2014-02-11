@@ -13,9 +13,9 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import java.util.Set;
 
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
-import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

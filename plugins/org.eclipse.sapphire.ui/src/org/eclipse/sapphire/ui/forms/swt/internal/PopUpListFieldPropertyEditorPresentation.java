@@ -30,13 +30,13 @@ import java.util.List;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PossibleValues;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status.Severity;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ValueNormalizationService;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
@@ -385,7 +385,7 @@ public final class PopUpListFieldPropertyEditorPresentation extends ValuePropert
                         }
                         else
                         {
-                            final PossibleValues possibleValuesAnnotation =property.definition().getAnnotation( PossibleValues.class );
+                            final PossibleValues possibleValuesAnnotation = property.definition().getAnnotation( PossibleValues.class );
                             
                             if( possibleValuesAnnotation != null )
                             {

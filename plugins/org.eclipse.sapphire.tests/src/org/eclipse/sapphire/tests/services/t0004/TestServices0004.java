@@ -15,10 +15,10 @@ package org.eclipse.sapphire.tests.services.t0004;
 import java.util.Collection;
 import java.util.Set;
 
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
+import org.eclipse.sapphire.PossibleValues;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.services.ContentProposal;
 import org.eclipse.sapphire.services.ContentProposalService;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.junit.Test;
 

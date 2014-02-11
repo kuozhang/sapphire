@@ -44,16 +44,14 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -103,9 +101,7 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
         this.memberProperty = (ValueProperty) this.memberType.properties().first();
         this.possibleValuesService = property.service( PossibleValuesService.class );
         
-        final Status.Severity invalidValueSeverity = this.possibleValuesService.getInvalidValueSeverity( null );
-        
-        setAddActionDesired( invalidValueSeverity == Severity.ERROR ? false : true );
+        setAddActionDesired( ! this.possibleValuesService.strict() );
     }
 
     public Control createSourceControl( final Composite parent )

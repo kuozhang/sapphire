@@ -15,9 +15,9 @@ package org.eclipse.sapphire.ui.def.internal;
 import java.util.Set;
 
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ISapphireHint;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -34,6 +34,8 @@ public final class SapphireHintValuePossibleValuesService extends PossibleValues
     @Override
     protected void init()
     {
+        this.invalidValueSeverity = Status.Severity.OK;
+        
         context( ISapphireHint.class ).getName().attach
         (
             new FilteredListener<PropertyContentEvent>()
@@ -87,12 +89,6 @@ public final class SapphireHintValuePossibleValuesService extends PossibleValues
                 values.add( Boolean.FALSE.toString() );
             }
         }
-    }
-    
-    @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
-    {
-        return Status.Severity.OK;
     }
     
 }

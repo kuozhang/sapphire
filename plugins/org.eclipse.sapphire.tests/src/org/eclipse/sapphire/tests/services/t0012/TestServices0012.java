@@ -13,8 +13,8 @@ package org.eclipse.sapphire.tests.services.t0012;
 
 import java.util.List;
 
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.junit.Test;
 

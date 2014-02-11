@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.possible;
 
-import org.eclipse.sapphire.services.PossibleValuesService;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.junit.Test;
 

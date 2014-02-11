@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services;
+package org.eclipse.sapphire;
 
 import java.text.MessageFormat;
 import java.util.Comparator;
@@ -17,11 +17,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.sapphire.LocalizableText;
-import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.Text;
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.modeling.el.FailSafeFunction;
+import org.eclipse.sapphire.modeling.el.Function;
+import org.eclipse.sapphire.modeling.el.FunctionResult;
+import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
+import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
+import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.util.Comparators;
 import org.eclipse.sapphire.util.Filters;
 import org.eclipse.sapphire.util.SetFactory;
@@ -41,34 +43,11 @@ public abstract class PossibleValuesService extends Service
         LocalizableText.init( PossibleValuesService.class );
     }
     
-    private final String invalidValueMessageTemplate;
-    private final Status.Severity invalidValueSeverity;
-    private final boolean caseSensitive;
-    private final boolean ordered;
-    
-    public PossibleValuesService( final String invalidValueMessageTemplate,
-                                  final Status.Severity invalidValueSeverity,
-                                  final boolean caseSensitive,
-                                  final boolean ordered )
-    {
-        if( invalidValueMessageTemplate == null || invalidValueMessageTemplate.length() == 0 )
-        {
-            this.invalidValueMessageTemplate = defaultInvalidValueMessage.text();
-        }
-        else
-        {
-            this.invalidValueMessageTemplate = invalidValueMessageTemplate;
-        }
-
-        this.invalidValueSeverity = ( invalidValueSeverity == null ? Status.Severity.ERROR : invalidValueSeverity );
-        this.caseSensitive = caseSensitive;
-        this.ordered = ordered;
-    }
-    
-    public PossibleValuesService()
-    {
-        this( null, null, true, false );
-    }
+    protected String invalidValueMessage;
+    protected Function invalidValueMessageFunction;
+    protected Status.Severity invalidValueSeverity = Status.Severity.ERROR;
+    protected boolean caseSensitive = true;
+    protected boolean ordered = false;
     
     public final Set<String> values()
     {
@@ -89,14 +68,40 @@ public abstract class PossibleValuesService extends Service
     
     protected abstract void fillPossibleValues( Set<String> values );
     
-    public String getInvalidValueMessage( final String invalidValue )
+    public Status validate( final Value<?> value )
     {
-        return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
-    }
-    
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
-    {
-        return this.invalidValueSeverity;
+        final String text = value.text();
+        
+        if( this.invalidValueSeverity != Status.Severity.OK && ! values().contains( text ))
+        {
+            synchronized( this )
+            {
+                if( this.invalidValueMessageFunction == null )
+                {
+                    final String def = MessageFormat.format( defaultInvalidValueMessage.text(), "${" + value.name() + "}" );
+                    
+                    if( this.invalidValueMessage == null )
+                    {
+                        this.invalidValueMessage = def;
+                    }
+                    
+                    this.invalidValueMessageFunction = FailSafeFunction.create( ExpressionLanguageParser.parse( this.invalidValueMessage ), String.class, def );
+                }
+            }
+            
+            final FunctionResult messageFunctionResult = this.invalidValueMessageFunction.evaluate( new ModelElementFunctionContext( value.element() ) );
+            
+            try
+            {
+                return Status.createStatus( this.invalidValueSeverity, (String) messageFunctionResult.value() );
+            }
+            finally
+            {
+                messageFunctionResult.dispose();
+            }
+        }
+        
+        return Status.createOkStatus();
     }
     
     public boolean isCaseSensitive()
@@ -114,6 +119,17 @@ public abstract class PossibleValuesService extends Service
     public boolean ordered()
     {
         return this.ordered;
+    }
+    
+    /**
+     * Determines whether the property value is strictly constrained to the set of possible values or if deviations are allowed.
+     * 
+     * @return true if the property value is strictly constrained to the set of possible values and false otherwise
+     */
+    
+    public boolean strict()
+    {
+        return ( this.invalidValueSeverity == Status.Severity.ERROR );
     }
     
 }

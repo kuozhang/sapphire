@@ -15,10 +15,10 @@ package org.eclipse.sapphire.services.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.services.ContentProposal;
 import org.eclipse.sapphire.services.ContentProposalService;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 

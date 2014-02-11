@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,6 +19,9 @@ import java.lang.annotation.Target;
 import org.eclipse.sapphire.modeling.Status;
 
 /**
+ * Specifies the possible values for a property either statically or via a reference into the model. If more
+ * flexibility is needed, {@link PossibleValuesService} can be implemented instead.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
@@ -27,24 +30,43 @@ import org.eclipse.sapphire.modeling.Status;
 
 public @interface PossibleValues
 {
+    /**
+     * The static set of possible values. Either this attribute or the "property" attribute should be specified,
+     * but not both. 
+     */
+    
     String[] values() default {};
 
     /**
-     * Specifies that the set of possible values for a given value property comes from values
-     * located at the specified path in the model. The path must resolve to a value property.
-     * 
-     * <p>Note that this annotation creates an implied DependsOn relationship to the specified 
-     * path. It is not necessary to explicitly specify this relationship.</p>
+     * The set of possible values to be drawn from a path into the model. The path end point must be a value
+     * property. Either this attribute or the "values" attribute should be specified, but not both. 
      */
     
     String property() default "";
+    
+    /**
+     * The template for the invalid value message using Sapphire EL syntax. A default template is
+     * provided if an explicit one is not specified.
+     */
+    
     String invalidValueMessage() default "";
+    
+    /**
+     * The severity of an invalid value. By default, the severity of error is used.
+     */
+    
     Status.Severity invalidValueSeverity() default Status.Severity.ERROR;
+    
+    /**
+     * Specifies if the lookup in the set of possible values should strictly match on letter case. By default,
+     * the lookup is strict. 
+     */
+    
     boolean caseSensitive() default true;
     
     /**
-     * Determines if the possible values are already ordered as intended. By default, the order
-     * is not treated as significant and possible values are sorted alphabetically when presented.
+     * Specifies if the possible values are already ordered as intended. By default, the order
+     * is not treated as significant and the possible values are sorted alphabetically when presented.
      */
     
     boolean ordered() default false;

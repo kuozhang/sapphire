@@ -13,10 +13,10 @@ package org.eclipse.sapphire.samples.contacts.internal;
 
 import java.util.Set;
 
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.samples.contacts.Contact;
 import org.eclipse.sapphire.samples.contacts.ContactRepository;
-import org.eclipse.sapphire.services.PossibleValuesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -24,6 +24,12 @@ import org.eclipse.sapphire.services.PossibleValuesService;
 
 public final class ContactCategoryPossibleValueService extends PossibleValuesService
 {
+    @Override
+    protected void init()
+    {
+        this.invalidValueSeverity = Status.Severity.OK;
+    }
+
     @Override
     protected void fillPossibleValues( final Set<String> values )
     {
@@ -42,12 +48,6 @@ public final class ContactCategoryPossibleValueService extends PossibleValuesSer
                 }
             }
         }
-    }
-
-    @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
-    {
-        return Status.Severity.OK;
     }
     
 }

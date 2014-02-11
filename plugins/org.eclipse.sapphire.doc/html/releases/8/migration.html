@@ -60,6 +60,8 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
   <li><a href="#EnablementServiceData">EnablementServiceData</a></li>
   <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#InitialValueServiceData">InitialValueServiceData</a></li>
+  <li><a href="#PossibleValues">PossibleValues</a></li>
+  <li><a href="#PossibleValuesService">PossibleValuesService</a></li>
 </ol>
 
 
@@ -75,7 +77,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">DefaultValueService</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.services.DefaultValueService</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.DefaultValueService</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -120,7 +122,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">DerivedValueService</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.services.DerivedValueService</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.DerivedValueService</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -165,7 +167,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">EnablementService</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.services.EnablementService</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.EnablementService</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -210,7 +212,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">InitialValueService</span></code></pre>
     </td>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.services.InitialValueService</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.InitialValueService</span></code></pre>
     </td>
   </tr>
   <tr>
@@ -241,6 +243,151 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <h2><a name="InitialValueServiceData">InitialValueServiceData</a></h2>
 
 <p>This class has been removed. See <a href="#InitialValueService">InitialValueService</a> migration.
+
+
+<h2><a name="PossibleValues">PossibleValues</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.annotations.<span class="unaffected">PossibleValues</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.PossibleValues</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">@PossibleValues
+(
+    invalidValueMessage = "\"</span>{0}<span class="unaffected">\" is not a known entity"
+)</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">@PossibleValues
+(
+    invalidValueMessage = "\"</span>${Entity}<span class="unaffected">\" is not a known entity"
+)</span></code></pre>
+
+<p>The invalid value message must now be in Sapphire EL syntax, rather than in MessageFormat syntax.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="PossibleValuesService">PossibleValuesService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>services.<span class="unaffected">PossibleValuesService</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.PossibleValuesService</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{</span>
+    @Override
+    public String getInvalidValueMessage( String value)
+    {
+        ...
+    }
+    
+    @Override
+    public Status.Severity getInvalidValueSeverity( String value )
+    {
+        ...
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{</span>
+    @Override
+    public Status validate( Value&lt;?> value )
+    {
+        ...
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{</span>
+    @Override
+    public String getInvalidValueMessage( String value)
+    {
+        return MessageFormat.format( <span class="unaffected">"\"</span>{0}<span class="unaffected">\" is not a known entity"</span>, value );
+    }
+    
+    @Override
+    public Status.Severity getInvalidValueSeverity( String value )
+    {
+        return <span class="unaffected">Status.Severity.WARNING</span>;
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{</span>
+    @Override
+    protected void init()
+    {
+        this.invalidValueMessage = <span class="unaffected">"\"</span>${Entity}<span class="unaffected">\" is not a known entity"</span>;
+        this.invalidValueSeverity = <span class="unaffected">Status.Severity.WARNING</span>;
+    }
+<span class="unaffected">}</span></code></pre>
+
+<p>This simpler migration can be used in many cases where complex heuristics are not required. Note that the invalid value
+message must be in Sapphire EL syntax, rather than in MessageFormat syntax.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{</span>
+    public ExamplePossibleValuesService()
+    {
+        super
+        (
+            <span class="unaffected">"\"</span>{0}<span class="unaffected">\" is not a known entity"</span>,
+            <span class="unaffected">Status.Severity.WARNING</span>,
+            <span class="unaffected">false</span> /* caseSensitive */,
+            <span class="unaffected">true</span> /* ordered */,
+        );
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{</span>
+    @Override
+    protected void init()
+    {
+        this.invalidValueMessage = <span class="unaffected">"\"</span>${Entity}<span class="unaffected">\" is not a known entity"</span>;
+        this.invalidValueSeverity = <span class="unaffected">Status.Severity.WARNING</span>;
+        this.caseSensitive = <span class="unaffected">false</span>;
+        this.ordered = <span class="unaffected">true</span>;
+    }
+<span class="unaffected">}</span></code></pre>
+
+<p>The invalid value message must now be in Sapphire EL syntax, rather than in MessageFormat syntax. Each of these properties
+has a default value, so typically only a subset needs to be set explicitly.</p>
+    </td>
+  </tr>
+</table>
 
 
 <div class="copyright">Copyright (c) 2014 Oracle<br/>

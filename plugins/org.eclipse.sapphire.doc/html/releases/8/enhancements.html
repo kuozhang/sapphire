@@ -52,6 +52,10 @@
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
     <li><a href="#Core-NoDuplicatesNullCoverage">@NoDuplicates Null Coverage</a></li>
   </ol>
+  <li><a href="#ExpressionLanguage">Expression Language</a></li>
+  <ol type="A">
+    <li><a href="#ExpressionLanguage-UseInPossibleValues">Use in @PossibleValues</a></li>
+  </ol>
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
     <li><a href="#Forms-JavaPackageBrowsing">Java Package Browsing</a></li>
@@ -89,6 +93,17 @@ dictate that at most one null should be allowed. The @NoDuplicates constraint ca
     Value&lt;String> getValue();
     void setValue( String value );
 }</font></code></pre>
+
+
+<h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-UseInPossibleValues">Use EL in @PossibleValues</a></a></h2>
+
+<p>Use EL in the @PossibleValues when specifying a custom invalid value message.</p>
+
+<pre class="source-code"><code><font color="#888888">@PossibleValues
+( 
+    property = "/Contacts/Name",
+    invalidValueMessage =</font> "Could not find contact \"${Name}\" in the repository" 
+<font color="#888888">)</font></code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-JavaPackageBrowsing">Java Package Browsing</a></a></h2>

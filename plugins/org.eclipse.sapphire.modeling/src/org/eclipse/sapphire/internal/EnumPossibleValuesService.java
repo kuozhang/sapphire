@@ -9,17 +9,18 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.MasterConversionService;
+import org.eclipse.sapphire.PossibleValuesService;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.EnumValueType;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -52,11 +53,11 @@ public final class EnumPossibleValuesService extends PossibleValuesService
     {
         values.addAll( this.values );
     }
-
+    
     @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
+    public Status validate( final Value<?> value )
     {
-        return Status.Severity.OK;
+        return Status.createOkStatus();
     }
 
     public static final class Condition extends ServiceCondition

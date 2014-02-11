@@ -13,10 +13,10 @@ package org.eclipse.sapphire.samples.gallery;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
@@ -32,7 +32,7 @@ public interface IValuePropertyActionsGalleryReference extends Element
     // *** Reference ***
     
     @Label( standard = "reference" )
-    @PossibleValues( property = "../Entities/Name", invalidValueMessage = "{0} is not a known entity." )
+    @PossibleValues( property = "../Entities/Name", invalidValueMessage = "${Reference} is not a known entity." )
     @XmlValueBinding( path = "" )
     
     ValueProperty PROP_REFERENCE = new ValueProperty( TYPE, "Reference" );

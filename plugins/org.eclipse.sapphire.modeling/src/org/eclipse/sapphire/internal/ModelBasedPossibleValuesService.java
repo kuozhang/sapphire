@@ -10,26 +10,22 @@
  *    Gregory Amerson - [384683] PossibleValuesServiceFromModel does not load values initially
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
-import java.text.MessageFormat;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PossibleValues;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyVisitor;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
-import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.util.SetFactory;
@@ -44,10 +40,6 @@ import org.eclipse.sapphire.util.SetFactory;
 public final class ModelBasedPossibleValuesService extends PossibleValuesService
 {
     private ModelPath path;
-    private String invalidValueMessageTemplate;
-    private Status.Severity invalidValueSeverity;
-    private boolean caseSensitive;
-    private boolean ordered;
     private Set<String> values;
     private boolean initialized;
     private boolean readPriorToInit;
@@ -64,7 +56,14 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         
         this.path = new ModelPath( a.property() );
         this.values = SetFactory.empty();
-        this.invalidValueMessageTemplate = a.invalidValueMessage();
+
+        final String invalidValueMessage = a.invalidValueMessage();
+        
+        if( invalidValueMessage.length() > 0 )
+        {
+            this.invalidValueMessage = invalidValueMessage;
+        }
+        
         this.invalidValueSeverity = a.invalidValueSeverity();
         this.caseSensitive = a.caseSensitive();
         this.ordered = a.ordered();
@@ -115,35 +114,6 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         }
         
         values.addAll( this.values );
-    }
-    
-    @Override
-    public String getInvalidValueMessage( final String invalidValue )
-    {
-        if( this.invalidValueMessageTemplate.length() > 0 )
-        {
-            return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
-        }
-        
-        return super.getInvalidValueMessage( invalidValue );
-    }
-    
-    @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
-    {
-        return this.invalidValueSeverity;
-    }
-    
-    @Override
-    public boolean isCaseSensitive()
-    {
-        return this.caseSensitive;
-    }
-
-    @Override
-    public boolean ordered()
-    {
-        return this.ordered;
     }
 
     private void refresh()

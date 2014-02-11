@@ -9,18 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
-import java.text.MessageFormat;
 import java.util.Set;
 
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PossibleValues;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -33,10 +30,6 @@ import org.eclipse.sapphire.services.ServiceContext;
 public final class StaticPossibleValuesService extends PossibleValuesService
 {
     private String[] values;
-    private String invalidValueMessageTemplate;
-    private Status.Severity invalidValueSeverity;
-    private boolean caseSensitive;
-    private boolean ordered;
     
     @Override
     protected void init()
@@ -46,7 +39,14 @@ public final class StaticPossibleValuesService extends PossibleValuesService
         final PossibleValues a = context( PropertyDef.class ).getAnnotation( PossibleValues.class );
         
         this.values = a.values();
-        this.invalidValueMessageTemplate = a.invalidValueMessage();
+        
+        final String invalidValueMessage = a.invalidValueMessage();
+        
+        if( invalidValueMessage.length() > 0 )
+        {
+            this.invalidValueMessage = invalidValueMessage;
+        }
+        
         this.invalidValueSeverity = a.invalidValueSeverity();
         this.caseSensitive = a.caseSensitive();
         this.ordered = a.ordered();
@@ -61,35 +61,6 @@ public final class StaticPossibleValuesService extends PossibleValuesService
         }
     }
     
-    @Override
-    public String getInvalidValueMessage( final String invalidValue )
-    {
-        if( this.invalidValueMessageTemplate.length() > 0 )
-        {
-            return MessageFormat.format( this.invalidValueMessageTemplate, invalidValue, context( PropertyDef.class ).getLabel( true, CapitalizationType.NO_CAPS, false ) );
-        }
-        
-        return super.getInvalidValueMessage( invalidValue );
-    }
-    
-    @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
-    {
-        return this.invalidValueSeverity;
-    }
-    
-    @Override
-    public boolean isCaseSensitive()
-    {
-        return this.caseSensitive;
-    }
-
-    @Override
-    public boolean ordered()
-    {
-        return this.ordered;
-    }
-
     public static final class Condition extends ServiceCondition
     {
         @Override

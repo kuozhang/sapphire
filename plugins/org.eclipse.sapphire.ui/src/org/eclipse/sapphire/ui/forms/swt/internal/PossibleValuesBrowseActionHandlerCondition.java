@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.forms.swt.internal;
 
-import org.eclipse.sapphire.services.PossibleValuesService;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.ui.forms.PropertyEditorCondition;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 

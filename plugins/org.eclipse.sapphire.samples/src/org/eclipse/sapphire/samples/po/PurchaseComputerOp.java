@@ -13,6 +13,7 @@ package org.eclipse.sapphire.samples.po;
 
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ExecutableElement;
+import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Transient;
 import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.Value;
@@ -24,7 +25,6 @@ import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
 import org.eclipse.sapphire.modeling.annotations.EnumSerialization;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Listeners;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**

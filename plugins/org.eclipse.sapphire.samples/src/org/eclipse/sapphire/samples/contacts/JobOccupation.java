@@ -12,10 +12,10 @@
 package org.eclipse.sapphire.samples.contacts;
 
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -63,7 +63,7 @@ public interface JobOccupation extends Occupation
     ( 
         property = "/Contacts/Name", 
         caseSensitive = false, 
-        invalidValueMessage = "Could not find contact name \"{0}\" in the repository." 
+        invalidValueMessage = "Could not find contact name \"${Manager}\" in the repository." 
     )
 
     ValueProperty PROP_MANAGER = new ValueProperty( TYPE, "Manager" );

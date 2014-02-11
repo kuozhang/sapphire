@@ -18,10 +18,11 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.services.PossibleValuesService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
@@ -77,17 +78,11 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
     {
         values.addAll( this.base.values() );
     }
-
+    
     @Override
-    public Status.Severity getInvalidValueSeverity( final String invalidValue )
+    public Status validate( final Value<?> value )
     {
-        return this.base.getInvalidValueSeverity( invalidValue );
-    }
-
-    @Override
-    public String getInvalidValueMessage( final String invalidValue )
-    {
-        return this.base.getInvalidValueMessage( invalidValue );
+        return this.base.validate( value );
     }
 
     @Override

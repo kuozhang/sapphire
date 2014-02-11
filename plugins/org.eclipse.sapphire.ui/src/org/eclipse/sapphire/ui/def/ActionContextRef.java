@@ -14,10 +14,10 @@ package org.eclipse.sapphire.ui.def;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.PossibleValues;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -66,7 +66,7 @@ public interface ActionContextRef extends Element
             SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS,
             SapphireActionSystem.CONTEXT_WITH_DIRECTIVE
         },
-        invalidValueMessage = "\"{0}\" is not valid action context.",
+        invalidValueMessage = "\"${Context}\" is not valid action context",
         caseSensitive = false
     )
     
