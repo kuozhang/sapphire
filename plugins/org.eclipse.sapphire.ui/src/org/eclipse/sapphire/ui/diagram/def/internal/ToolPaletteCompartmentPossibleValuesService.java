@@ -16,8 +16,8 @@ import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
+import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 
 /**
@@ -29,14 +29,14 @@ public final class ToolPaletteCompartmentPossibleValuesService extends PossibleV
     private Listener listener;
     
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
         this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -44,7 +44,7 @@ public final class ToolPaletteCompartmentPossibleValuesService extends PossibleV
     }
 
 	@Override
-	protected void fillPossibleValues(Set<String> values) 
+	protected void compute(Set<String> values) 
 	{
 		DiagramEditorPageDef diagramPageDef = context(DiagramEditorPageDef.class);
 		ElementList<IDiagramPaletteCompartmentDef> compartments = diagramPageDef.getPaletteCompartments();

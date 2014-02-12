@@ -25,13 +25,13 @@ import org.eclipse.sapphire.samples.contacts.ContactRepository;
 public final class ContactCategoryPossibleValueService extends PossibleValuesService
 {
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
         this.invalidValueSeverity = Status.Severity.OK;
     }
 
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         values.add( "Personal" );
         

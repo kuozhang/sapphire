@@ -23,7 +23,7 @@ import org.eclipse.sapphire.PossibleValuesService;
 public final class ShapePossibleValueService extends PossibleValuesService {
 
     @Override
-    protected void fillPossibleValues(Set<String> values) {
+    protected void compute(Set<String> values) {
         values.add("Circle");
         values.add("Circle1");
         values.add("Circle2");

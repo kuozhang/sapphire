@@ -41,13 +41,11 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
 {
     private PossibleValuesService base;
     private Listener listener;
-    private boolean broadcasting;
+    private boolean refreshing;
     
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
-        super.init();
-        
         final ListProperty listProperty = context( ListProperty.class );
         final ValueProperty listMemberValueProperty = (ValueProperty) listProperty.getType().properties().first();
         
@@ -58,16 +56,16 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
             @Override
             public void handle( final Event event )
             {
-                if( ! ListFromValuePossibleValuesService.this.broadcasting )
+                if( ! ListFromValuePossibleValuesService.this.refreshing )
                 {
                     try
                     {
-                        ListFromValuePossibleValuesService.this.broadcasting = true;
-                        broadcast();
+                        ListFromValuePossibleValuesService.this.refreshing = true;
+                        refresh();
                     }
                     finally
                     {
-                        ListFromValuePossibleValuesService.this.broadcasting = false;
+                        ListFromValuePossibleValuesService.this.refreshing = false;
                     }
                 }
             }
@@ -77,15 +75,15 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
     }
     
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         values.addAll( this.base.values() );
     }
 
     @Override
-    public Status validate( final Value<?> value )
+    public Status problem( final Value<?> value )
     {
-        return this.base.validate( value );
+        return this.base.problem( value );
     }
 
     @Override

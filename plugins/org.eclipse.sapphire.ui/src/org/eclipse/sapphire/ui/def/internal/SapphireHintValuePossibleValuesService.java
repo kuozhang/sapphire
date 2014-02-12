@@ -32,7 +32,7 @@ import org.eclipse.sapphire.ui.forms.WithDef;
 public final class SapphireHintValuePossibleValuesService extends PossibleValuesService
 {
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
         this.invalidValueSeverity = Status.Severity.OK;
         
@@ -43,14 +43,14 @@ public final class SapphireHintValuePossibleValuesService extends PossibleValues
                 @Override
                 protected void handleTypedEvent( final PropertyContentEvent event )
                 {
-                    broadcast();
+                    refresh();
                 }
             }
         );
     }
 
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         final ISapphireHint element = context( ISapphireHint.class );
         final PartDef partdef = element.nearest( PartDef.class );

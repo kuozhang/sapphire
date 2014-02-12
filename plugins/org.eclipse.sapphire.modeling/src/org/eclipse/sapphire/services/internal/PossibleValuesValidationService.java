@@ -52,10 +52,11 @@ public final class PossibleValuesValidationService extends ValidationService
     protected Status compute()
     {
         final Value<?> value = context( Value.class );
+        final String text = value.text();
         
-        if( value.text( true ) != null )
+        if( text != null && ! this.possibleValuesService.values().contains( text ) )
         {
-            return this.possibleValuesService.validate( value );
+            return this.possibleValuesService.problem( value );
         }
         
         return Status.createOkStatus();

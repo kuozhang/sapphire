@@ -31,20 +31,18 @@ public final class ColorPossibleValuesService extends PossibleValuesService
         @Override
         protected void handleTypedEvent( final PropertyContentEvent event )
         {
-            broadcast();
+            refresh();
         }
     };
     
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
-        super.init();
-        
         context( IGallery.class ).attach( this.listener, "/CustomColors/Name" );
     }
 
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         values.add( "Red" );
         values.add( "Orange" );

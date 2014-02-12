@@ -24,7 +24,7 @@ import org.eclipse.sapphire.samples.contacts.ContactRepository;
 public final class ContactNamePossibleValuesService extends PossibleValuesService
 {
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         for( Contact contact : context( ContactRepository.class ).getContacts() )
         {

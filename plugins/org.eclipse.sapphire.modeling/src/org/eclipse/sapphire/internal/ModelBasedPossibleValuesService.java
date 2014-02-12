@@ -24,11 +24,9 @@ import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyVisitor;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
-import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..
@@ -40,22 +38,17 @@ import org.eclipse.sapphire.util.SetFactory;
 public final class ModelBasedPossibleValuesService extends PossibleValuesService
 {
     private ModelPath path;
-    private Set<String> values;
-    private boolean initialized;
-    private boolean readPriorToInit;
+    private Listener listener;
     
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
-        super.init();
-        
         final Property property = context( Property.class );
         final Element element = property.element();
         
         final PossibleValues a = property.definition().getAnnotation( PossibleValues.class );
         
         this.path = new ModelPath( a.property() );
-        this.values = SetFactory.empty();
 
         final String invalidValueMessage = a.invalidValueMessage();
         
@@ -68,7 +61,7 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         this.caseSensitive = a.caseSensitive();
         this.ordered = a.ordered();
         
-        final Listener listener = new FilteredListener<PropertyContentEvent>()
+        this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
@@ -79,19 +72,7 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         
         try
         {
-            element.attach( listener, this.path );
-            
-            element.attach
-            (
-                new FilteredListener<ElementDisposeEvent>()
-                {
-                    @Override
-                    protected void handleTypedEvent( final ElementDisposeEvent event )
-                    {
-                        element.detach( listener, ModelBasedPossibleValuesService.this.path );
-                    }
-                }
-            );
+            element.attach( this.listener, this.path );
         }
         catch( IllegalArgumentException e )
         {
@@ -99,32 +80,16 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
             // outside its typical model context. This service is expected to gracefully degrade by returning an
             // empty set of possible values.
         }
-        
-        refresh();
-        
-        this.initialized = true;
     }
 
     @Override
-    protected void fillPossibleValues( final Set<String> values )
-    {
-        if( ! this.initialized )
-        {
-            this.readPriorToInit = true;
-        }
-        
-        values.addAll( this.values );
-    }
-
-    private void refresh()
+    protected void compute( final Set<String> values )
     {
         final Element element = context( Element.class );
         
         if( ! element.disposed() )
         {
-            final SetFactory<String> newValuesFactory = SetFactory.start();
-            
-            context( Element.class ).visit
+            element.visit
             (
                 this.path,
                 new PropertyVisitor()
@@ -132,26 +97,34 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
                     @Override
                     public boolean visit( final Value<?> property )
                     {
-                        newValuesFactory.add( property.text() );
+                        final String text = property.text();
+                        
+                        if( text != null )
+                        {
+                            values.add( text );
+                        }
+                        
                         return true;
                     }
                 }
             );
-            
-            final Set<String> newValues = newValuesFactory.result();
-            
-            if( ! this.values.equals( newValues ) )
-            {
-                this.values = newValues;
-                
-                if( this.initialized || this.readPriorToInit )
-                {
-                    broadcast();
-                }
-            }
         }
     }
     
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        this.path = null;
+        
+        if( this.listener != null )
+        {
+            context( Element.class ).detach( this.listener, ModelBasedPossibleValuesService.this.path );
+            this.listener = null;
+        }
+    }
+
     public static final class Condition extends ServiceCondition
     {
         @Override

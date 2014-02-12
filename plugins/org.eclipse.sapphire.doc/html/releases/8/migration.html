@@ -297,6 +297,62 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
   <tr>
     <td>
 <pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{
+    @Override
+    protected void</span> init<span class="unaffected">()
+    {</span>
+        super.init();
+        
+        <span class="unaffected">...
+        
+        <i>inside a listener</i>
+        {</span>
+            broadcast<span class="unaffected">();
+        }
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{
+    @Override
+    protected void</span> initPossibleValuesService<span class="unaffected">()
+    {
+        ...
+        
+        <i>inside a listener</i>
+        {</span>
+            refresh<span class="unaffected">();
+        }
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{
+    @Override
+    protected void</span> fillPossibleValues<span class="unaffected">( Set&lt;String> values )
+    {
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{
+    @Override
+    protected void</span> compute<span class="unaffected">( Set&lt;String> values )
+    {
+        ...
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
 {</span>
     @Override
     public String getInvalidValueMessage( String value)
@@ -315,7 +371,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
 {</span>
     @Override
-    public Status validate( Value&lt;?> value )
+    public Status problem( Value&lt;?> value )
     {
         ...
     }
@@ -343,7 +399,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
 {</span>
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
         this.invalidValueMessage = <span class="unaffected">"\"</span>${Entity}<span class="unaffected">\" is not a known entity"</span>;
         this.invalidValueSeverity = <span class="unaffected">Status.Severity.WARNING</span>;
@@ -374,7 +430,7 @@ message must be in Sapphire EL syntax, rather than in MessageFormat syntax.</p>
 <pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
 {</span>
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
         this.invalidValueMessage = <span class="unaffected">"\"</span>${Entity}<span class="unaffected">\" is not a known entity"</span>;
         this.invalidValueSeverity = <span class="unaffected">Status.Severity.WARNING</span>;

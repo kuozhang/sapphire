@@ -33,10 +33,8 @@ public final class EnumPossibleValuesService extends PossibleValuesService
     private final List<String> values = new ArrayList<String>();
     
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
-        super.init();
-        
         final ValueProperty property = context( ValueProperty.class );
         
         final EnumValueType enumType = new EnumValueType( property.getTypeClass() );
@@ -49,13 +47,13 @@ public final class EnumPossibleValuesService extends PossibleValuesService
     }
     
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         values.addAll( this.values );
     }
     
     @Override
-    public Status validate( final Value<?> value )
+    public Status problem( final Value<?> value )
     {
         return Status.createOkStatus();
     }

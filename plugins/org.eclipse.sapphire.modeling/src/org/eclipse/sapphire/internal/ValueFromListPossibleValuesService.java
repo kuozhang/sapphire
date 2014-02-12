@@ -39,13 +39,11 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
 {
     private PossibleValuesService base;
     private Listener listener;
-    private boolean broadcasting;
+    private boolean refreshing;
     
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
-        super.init();
-        
         final Property parent = context( Element.class ).parent();
         
         this.base = parent.service( PossibleValuesService.class );
@@ -55,16 +53,16 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
             @Override
             public void handle( final Event event )
             {
-                if( ! ValueFromListPossibleValuesService.this.broadcasting )
+                if( ! ValueFromListPossibleValuesService.this.refreshing )
                 {
                     try
                     {
-                        ValueFromListPossibleValuesService.this.broadcasting = true;
-                        broadcast();
+                        ValueFromListPossibleValuesService.this.refreshing = true;
+                        refresh();
                     }
                     finally
                     {
-                        ValueFromListPossibleValuesService.this.broadcasting = false;
+                        ValueFromListPossibleValuesService.this.refreshing = false;
                     }
                 }
             }
@@ -74,15 +72,15 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
     }
     
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         values.addAll( this.base.values() );
     }
     
     @Override
-    public Status validate( final Value<?> value )
+    public Status problem( final Value<?> value )
     {
-        return this.base.validate( value );
+        return this.base.problem( value );
     }
 
     @Override

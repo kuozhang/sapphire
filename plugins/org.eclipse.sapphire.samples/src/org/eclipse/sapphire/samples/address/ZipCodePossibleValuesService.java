@@ -35,7 +35,7 @@ public final class ZipCodePossibleValuesService extends PossibleValuesService
         LocalizableText.init( ZipCodePossibleValuesService.class );
     }
 
-    protected void init()
+    protected void initPossibleValuesService()
     {
         this.invalidValueMessage = message.text();
         
@@ -46,7 +46,7 @@ public final class ZipCodePossibleValuesService extends PossibleValuesService
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
                 
                 final Set<String> values = values();
                 
@@ -67,7 +67,7 @@ public final class ZipCodePossibleValuesService extends PossibleValuesService
     }
 
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         final Address address = context( Address.class );
         

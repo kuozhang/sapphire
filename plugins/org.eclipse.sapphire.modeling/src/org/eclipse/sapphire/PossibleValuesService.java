@@ -23,7 +23,7 @@ import org.eclipse.sapphire.modeling.el.Function;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
-import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.services.DataService;
 import org.eclipse.sapphire.util.Comparators;
 import org.eclipse.sapphire.util.Filters;
 import org.eclipse.sapphire.util.SetFactory;
@@ -33,7 +33,7 @@ import org.eclipse.sapphire.util.SortedSetFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PossibleValuesService extends Service
+public abstract class PossibleValuesService extends DataService<Set<String>>
 {
     @Text( "\"{0}\" is not among possible values" )
     private static LocalizableText defaultInvalidValueMessage;
@@ -48,31 +48,45 @@ public abstract class PossibleValuesService extends Service
     protected Status.Severity invalidValueSeverity = Status.Severity.ERROR;
     protected boolean caseSensitive = true;
     protected boolean ordered = false;
+
+    @Override
+    protected final void initDataService()
+    {
+        initPossibleValuesService();
+    }
+
+    protected void initPossibleValuesService()
+    {
+    }
     
     public final Set<String> values()
+    {
+        return data();
+    }
+    
+    @Override
+    protected final Set<String> compute()
     {
         if( ordered() )
         {
             final Set<String> values = new LinkedHashSet<String>();
-            fillPossibleValues( values );
+            compute( values );
             return SetFactory.<String>start().filter( Filters.createNotEmptyFilter() ).add( values ).result();
         }
         else
         {
             final Comparator<String> comparator = ( isCaseSensitive() ? null : Comparators.createIgnoreCaseComparator() );
             final Set<String> values = new TreeSet<String>( comparator );
-            fillPossibleValues( values );
+            compute( values );
             return SortedSetFactory.start( comparator ).filter( Filters.createNotEmptyFilter() ).add( values ).result();
         }
     }
     
-    protected abstract void fillPossibleValues( Set<String> values );
+    protected abstract void compute( Set<String> values );
     
-    public Status validate( final Value<?> value )
+    public Status problem( final Value<?> value )
     {
-        final String text = value.text();
-        
-        if( this.invalidValueSeverity != Status.Severity.OK && ! values().contains( text ))
+        if( this.invalidValueSeverity != Status.Severity.OK )
         {
             synchronized( this )
             {

@@ -22,7 +22,7 @@ import org.eclipse.sapphire.PossibleValuesService;
 public final class TestPossibleValuesService extends PossibleValuesService
 {
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         values.add( "a" );
         values.add( "b" );

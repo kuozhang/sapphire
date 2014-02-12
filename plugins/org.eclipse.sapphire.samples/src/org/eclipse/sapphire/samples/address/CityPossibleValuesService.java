@@ -36,7 +36,7 @@ public final class CityPossibleValuesService extends PossibleValuesService
     }
 
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
         this.invalidValueMessage = message.text();
         this.caseSensitive = false;
@@ -48,7 +48,7 @@ public final class CityPossibleValuesService extends PossibleValuesService
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
                 
                 final Set<String> values = values();
                 
@@ -69,7 +69,7 @@ public final class CityPossibleValuesService extends PossibleValuesService
     }
 
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
         final Address address = context( Address.class );
         final String state = address.getState().text();

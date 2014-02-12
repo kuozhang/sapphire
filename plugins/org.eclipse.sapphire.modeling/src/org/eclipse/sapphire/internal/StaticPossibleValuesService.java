@@ -32,10 +32,8 @@ public final class StaticPossibleValuesService extends PossibleValuesService
     private String[] values;
     
     @Override
-    protected void init()
+    protected void initPossibleValuesService()
     {
-        super.init();
-        
         final PossibleValues a = context( PropertyDef.class ).getAnnotation( PossibleValues.class );
         
         this.values = a.values();
@@ -53,9 +51,9 @@ public final class StaticPossibleValuesService extends PossibleValuesService
     }
 
     @Override
-    protected void fillPossibleValues( final Set<String> values )
+    protected void compute( final Set<String> values )
     {
-        for( String value : this.values )
+        for( final String value : this.values )
         {
             values.add( value );
         }
