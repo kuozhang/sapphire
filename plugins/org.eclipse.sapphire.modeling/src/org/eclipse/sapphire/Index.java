@@ -13,11 +13,12 @@ package org.eclipse.sapphire;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.eclipse.sapphire.util.IdentityHashSet;
 import org.eclipse.sapphire.util.SetFactory;
@@ -44,15 +45,32 @@ public final class Index<T extends Element>
 
     private final ElementList<T> list;
     private final ValueProperty property;
+    private final Comparator<String> comparator;
     private Map<Object,Object> keyToElements;
     private Map<Element,Object> elementToKey;
     private Listener listener;
     private ListenerContext listeners;
     
-    Index( final ElementList<T> list, final ValueProperty property )
+    Index( final ElementList<T> list, final ValueProperty property, final Comparator<String> comparator )
     {
+        if( list == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( comparator == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
         this.list = list;
         this.property = property;
+        this.comparator = comparator;
     }
     
     private void initialize()
@@ -70,7 +88,36 @@ public final class Index<T extends Element>
             
             this.list.attach( this.listener );
             
-            this.keyToElements = new HashMap<Object,Object>();
+            Comparator<Object> comparator = null;
+            
+            if( this.comparator != null )
+            {
+                comparator = new Comparator<Object>()
+                {
+                    @Override
+                    public int compare( final Object x, final Object y )
+                    {
+                        if( x == y )
+                        {
+                            return 0;
+                        }
+                        else if( x == NULL )
+                        {
+                            return -1;
+                        }
+                        else if( y == NULL )
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            return Index.this.comparator.compare( (String) x, (String) y );
+                        }
+                    }
+                };
+            }
+            
+            this.keyToElements = new TreeMap<Object,Object>( comparator );
             this.elementToKey = new IdentityHashMap<Element,Object>();
             
             for( final Element element : this.list )
