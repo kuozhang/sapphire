@@ -701,12 +701,16 @@ public abstract class Property implements Observable
     {
         if( event != null )
         {
+            final ListenerContext listeners;
+            
             synchronized( root() )
             {
-                if( this.listeners != null )
-                {
-                    this.listeners.broadcast( event );
-                }
+                listeners = this.listeners;
+            }
+            
+            if( listeners != null )
+            {
+                listeners.broadcast( event );
             }
         }
     }
