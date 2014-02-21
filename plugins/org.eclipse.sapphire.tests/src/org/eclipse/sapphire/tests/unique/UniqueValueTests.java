@@ -93,6 +93,35 @@ public final class UniqueValueTests extends SapphireTestCase
 
     @Test
     
+    public void testUniqueValueCustomCollation() throws Exception
+    {
+        final TestElementCustomCollation element = TestElementCustomCollation.TYPE.instantiate();
+        final ElementList<TestElementCustomCollation.ListEntry> list = element.getList();
+        
+        assertValidationOk( element );
+        
+        list.insert().setValue( "a" );
+        list.insert().setValue( "b" );
+        list.insert().setValue( "c" );
+        
+        assertValidationOk( element );
+        
+        list.insert().setValue( "A" );
+        
+        assertValidationOk( element );
+        
+        element.setIgnoreCaseDifferences( true );
+        
+        assertValidationError( element.getList().get( 0 ), "Multiple occurrence of \"a\" were found" );
+        assertValidationError( element.getList().get( 3 ), "Multiple occurrence of \"A\" were found" );
+        
+        element.setIgnoreCaseDifferences( false );
+        
+        assertValidationOk( element );
+    }
+
+    @Test
+    
     public void testUniqueValuePerformance10() throws Exception
     {
         testUniqueValuePerformance( 10 );
