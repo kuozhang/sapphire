@@ -13,9 +13,9 @@ package org.eclipse.sapphire.tests.modeling.misc.t0007;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,7 +27,7 @@ public interface TestChildElement extends Element
     
     // *** Id ***
     
-    @NoDuplicates
+    @Unique
     
     ValueProperty PROP_ID = new ValueProperty( TYPE, "Id" );
     

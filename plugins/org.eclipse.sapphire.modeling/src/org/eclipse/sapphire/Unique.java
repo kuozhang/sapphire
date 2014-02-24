@@ -9,29 +9,21 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.services.t0001;
+package org.eclipse.sapphire;
 
-import org.eclipse.sapphire.Element;
-import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestNoDuplicatesChildElement extends Element
-{
-    ElementType TYPE = new ElementType( TestNoDuplicatesChildElement.class );
-    
-    // *** NoDuplicates ***
-    
-    @NoDuplicates
-    
-    ValueProperty PROP_NO_DUPLICATES = new ValueProperty( TYPE, "NoDuplicates" );
-    
-    Value<String> getNoDuplicates();
-    void setNoDuplicates( String value );
+@Retention( RetentionPolicy.RUNTIME )
+@Target( ElementType.FIELD )
 
+public @interface Unique
+{
+    boolean ignoreNullValues() default true;
 }

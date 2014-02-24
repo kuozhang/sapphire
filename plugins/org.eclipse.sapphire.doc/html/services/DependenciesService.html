@@ -37,8 +37,8 @@ configured via @DependsOn annotation should be sufficient.</p>
 Value&lt;String> getId();
 void setId( String value );</font></code></pre>
 
-<p>Other annotations, such as @NoDuplicates can also inject implied dependencies (via their own DependenciesService
-implementations). For instance, placing @NoDuplicates annotation on a Name property automatically
+<p>Other annotations, such as @Unique can also inject implied dependencies (via their own DependenciesService
+implementations). For instance, placing @Unique annotation on a Name property automatically
 adds "#/Name" dependency.</p>
 
 <p>If declarative approach is not sufficient, a custom DependenciesService implementation can be supplied.</p>

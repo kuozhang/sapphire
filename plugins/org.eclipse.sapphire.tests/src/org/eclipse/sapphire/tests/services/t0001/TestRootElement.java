@@ -218,13 +218,13 @@ public interface TestRootElement extends Element
     void setMustExistAbsolutePath( String value );
     void setMustExistAbsolutePath( Path value );
     
-    // *** NoDuplicates ***
+    // *** Unique ***
     
-    @Type( base = TestNoDuplicatesChildElement.class )
+    @Type( base = TestUniqueChildElement.class )
     
-    ListProperty PROP_NO_DUPLICATES = new ListProperty( TYPE, "NoDuplicates" );
+    ListProperty PROP_UNIQUE = new ListProperty( TYPE, "Unique" );
     
-    ElementList<TestNoDuplicatesChildElement> getNoDuplicates();
+    ElementList<TestUniqueChildElement> getUnique();
     
     // *** FileExtensionsOne ***
     

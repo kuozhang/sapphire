@@ -50,7 +50,7 @@
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
-    <li><a href="#Core-NoDuplicatesNullCoverage">@NoDuplicates Null Coverage</a></li>
+    <li><a href="#Core-UniqueNullCoverage">@Unique Null Coverage</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
   <ol type="A">
@@ -75,10 +75,10 @@ were not indexed and an exception was thrown on lookup.</p>
 <pre class="source-code"><code>Set&lt;Task> tasksWithNoComponent = repository.getTasks().index( "Component" ).elements( null );</code></pre>
 
 
-<h2><a name="Core-NoDuplicatesNullCoverage">@NoDuplicates Null Coverage</a></h2>
+<h2><a name="Core-UniqueNullCoverage">@Unique Null Coverage</a></h2>
 
-<p>By default, the @NoDuplicates constraint does not apply to null values. This is appropriate in many cases, but sometimes the semantics
-dictate that at most one null should be allowed. The @NoDuplicates constraint can now be configured to cover this case.</p>
+<p>By default, the @Unique constraint does not apply to null values. This is appropriate in many cases, but sometimes the semantics
+dictate that at most one null should be allowed. The @Unique constraint can now be configured to cover this case.</p>
 
 <pre class="source-code"><code><font color="#888888">interface ListEntry extends Element
 {
@@ -86,7 +86,7 @@ dictate that at most one null should be allowed. The @NoDuplicates constraint ca
     
     // *** Value ***
     
-    @NoDuplicates</font>( ignoreNullValues = false )
+    @Unique</font>( ignoreNullValues = false )
     
     <font color="#888888">ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     

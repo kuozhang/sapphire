@@ -16,12 +16,12 @@ import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ImpliedElementProperty;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
@@ -110,7 +110,7 @@ public interface ListPropertiesGallery extends Element
         // *** Item ***
         
         @Label( standard = "color" )
-        @NoDuplicates
+        @Unique
         
         @Services
         (
@@ -145,7 +145,7 @@ public interface ListPropertiesGallery extends Element
         
         @Type( base = Color.class )
         @Label( standard = "color" )
-        @NoDuplicates
+        @Unique
     
         ValueProperty PROP_ITEM = new ValueProperty( TYPE, "Item" );
         

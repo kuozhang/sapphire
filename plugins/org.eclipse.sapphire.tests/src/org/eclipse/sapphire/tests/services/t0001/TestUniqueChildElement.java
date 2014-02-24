@@ -9,21 +9,29 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire.tests.services.t0001;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Unique;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.FIELD )
-
-public @interface NoDuplicates
+public interface TestUniqueChildElement extends Element
 {
-    boolean ignoreNullValues() default true;
+    ElementType TYPE = new ElementType( TestUniqueChildElement.class );
+    
+    // *** Unique ***
+    
+    @Unique
+    
+    ValueProperty PROP_UNIQUE = new ValueProperty( TYPE, "Unique" );
+    
+    Value<String> getUnique();
+    void setUnique( String value );
+
 }

@@ -48,9 +48,9 @@ import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.PropertyDef;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
@@ -383,7 +383,7 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
                 {
                     final PropertyDef memberProperty = properties.first();
                     
-                    if( memberProperty instanceof ValueProperty && memberProperty.hasAnnotation( NoDuplicates.class ) )
+                    if( memberProperty instanceof ValueProperty && memberProperty.hasAnnotation( Unique.class ) )
                     {
                         return new SlushBucketPropertyEditorPresentation( part, parent, composite );
                     }

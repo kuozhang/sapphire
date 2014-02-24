@@ -20,10 +20,10 @@ import org.eclipse.sapphire.Index;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -56,7 +56,7 @@ public final class UniqueValueValidationService extends ValidationService
     {
         final Value<?> value = context( Value.class );
         
-        this.checkNullValues = ! value.definition().getAnnotation( NoDuplicates.class ).ignoreNullValues();
+        this.checkNullValues = ! value.definition().getAnnotation( Unique.class ).ignoreNullValues();
         
         this.collationService = value.service( CollationService.class );
         
@@ -148,7 +148,7 @@ public final class UniqueValueValidationService extends ValidationService
         {
             final ValueProperty property = context.find( ValueProperty.class );
             final Element element = context.find( Element.class );
-            return ( property != null && property.hasAnnotation( NoDuplicates.class ) && element.parent() instanceof ElementList );
+            return ( property != null && property.hasAnnotation( Unique.class ) && element.parent() instanceof ElementList );
         }
         
     }

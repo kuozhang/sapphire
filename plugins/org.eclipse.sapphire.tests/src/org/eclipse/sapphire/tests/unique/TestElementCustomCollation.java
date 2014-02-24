@@ -16,10 +16,10 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Type;
 
 /**
@@ -49,7 +49,7 @@ public interface TestElementCustomCollation extends Element
         
         // *** Value ***
         
-        @NoDuplicates
+        @Unique
         @Collation( ignoreCaseDifferences = "${ Parent().IgnoreCaseDifferences }" )
         
         ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );

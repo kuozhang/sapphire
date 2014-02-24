@@ -288,11 +288,11 @@
         <condition>org.eclipse.sapphire.services.internal.MustExistFactsService$Condition</condition>
     </service>
     <service>
-        <description>Creates fact statements about value property's uniqueness constraint by using semantical information specified by @NoDuplicates annotation.</description>
+        <description>Creates fact statements about value property's uniqueness constraint by using semantical information specified by @Unique annotation.</description>
         <context>Sapphire.Property.Instance</context>
-        <id>Sapphire.FactsService.NoDuplicates</id>
-        <implementation>org.eclipse.sapphire.services.internal.NoDuplicatesFactsService</implementation>
-        <condition>org.eclipse.sapphire.services.internal.NoDuplicatesFactsService$Condition</condition>
+        <id>Sapphire.FactsService.Unique</id>
+        <implementation>org.eclipse.sapphire.services.internal.UniqueFactsService</implementation>
+        <condition>org.eclipse.sapphire.services.internal.UniqueFactsService$Condition</condition>
     </service>
     <service>
         <description>Creates fact statements about valid file extensions for property's value by using semantical information specified by @FileExtensions annotation.</description>

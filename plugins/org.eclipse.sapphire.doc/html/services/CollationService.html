@@ -27,7 +27,7 @@
 <p>In many situations, collation can be specified using the @Collation annotation rather than through
 a custom CollationService implementation. The annotation supports <a href="../el/index.html">Sapphire EL</a>.</p>
 
-<pre class="source-code"><font color="#888888">@NoDuplicates</font>
+<pre class="source-code"><font color="#888888">@Unique</font>
 @Collation( ignoreCaseDifferences = "true" )
 
 <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );
@@ -37,7 +37,7 @@ void setName( String value );</font></code></pre>
 
 <p>When more control is necessary, a custom implementation of CollationService can be provided.</p>
 
-<pre class="source-code"><font color="#888888">@NoDuplicates</font>
+<pre class="source-code"><font color="#888888">@Unique</font>
 @Service( impl = ExampleCollationService.class )
 
 <font color="#888888">ValueProperty PROP_NAME = new ValueProperty( TYPE, "Name" );

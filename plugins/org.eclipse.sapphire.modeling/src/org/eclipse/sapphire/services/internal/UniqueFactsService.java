@@ -15,27 +15,27 @@ import java.util.SortedSet;
 
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.services.FactsService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
  * Creates fact statements about value property's uniqueness constraint by using semantical 
- * information specified by @NoDuplicates annotation.
+ * information specified by @Unique annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class NoDuplicatesFactsService extends FactsService
+public final class UniqueFactsService extends FactsService
 {
     @Text( "Must be unique" )
     private static LocalizableText statement;
     
     static
     {
-        LocalizableText.init( NoDuplicatesFactsService.class );
+        LocalizableText.init( UniqueFactsService.class );
     }
 
     @Override
@@ -50,7 +50,7 @@ public final class NoDuplicatesFactsService extends FactsService
         public boolean applicable( final ServiceContext context )
         {
             final ValueProperty property = context.find( ValueProperty.class );
-            return ( property != null && property.hasAnnotation( NoDuplicates.class ) );
+            return ( property != null && property.hasAnnotation( Unique.class ) );
         }
     }
     

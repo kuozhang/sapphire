@@ -153,12 +153,12 @@ public final class TestServices0001 extends SapphireTestCase
     
     @Test
     
-    public void testNoDuplicates() throws Exception
+    public void testUnique() throws Exception
     {
         final TestRootElement root = TestRootElement.TYPE.instantiate();
-        final TestNoDuplicatesChildElement child = root.getNoDuplicates().insert();
+        final TestUniqueChildElement child = root.getUnique().insert();
                 
-        test( child.property( TestNoDuplicatesChildElement.PROP_NO_DUPLICATES ), "Must be unique" );
+        test( child.property( TestUniqueChildElement.PROP_UNIQUE ), "Must be unique" );
     }
 
     @Test

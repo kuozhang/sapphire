@@ -64,10 +64,10 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
 import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ValueImageService;
@@ -803,7 +803,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
                     final PropertyDef memberProperty = properties.first();
                     
                     if( memberProperty instanceof ValueProperty &&
-                        memberProperty.hasAnnotation( NoDuplicates.class ) &&
+                        memberProperty.hasAnnotation( Unique.class ) &&
                         Enum.class.isAssignableFrom( memberProperty.getTypeClass() ) )
                     {
                         return new CheckBoxListPropertyEditorPresentation( part, parent, composite );

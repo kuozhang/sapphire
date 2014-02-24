@@ -1055,7 +1055,7 @@
                     <label>multi-select</label>
                     <section>
                         <content>
-                            <label>One common requirement is to allow the user to select zero or more items from a set of possible values. This is modeled with a list property whose entry type has a single value property. The value property must be decorated with @NoDuplicates annotation and must have a PossibleValuesService (either a custom implementation or via @PossibleValues annotation).</label> 
+                            <label>One common requirement is to allow the user to select zero or more items from a set of possible values. This is modeled with a list property whose entry type has a single value property. The value property must be decorated with @Unique annotation and must have a PossibleValuesService (either a custom implementation or via @PossibleValues annotation).</label> 
                             <spacer />
                             <label>Use the following property to experiment with enabling and disabling the lists.</label> 
                             <spacer></spacer>

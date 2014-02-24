@@ -15,9 +15,9 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.annotations.NoDuplicates;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -42,7 +42,7 @@ public interface TestElement extends Element
         
         // *** Value ***
         
-        @NoDuplicates
+        @Unique
         @XmlBinding( path = "" )
         
         ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
