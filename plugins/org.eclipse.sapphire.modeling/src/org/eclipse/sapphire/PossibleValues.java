@@ -58,13 +58,6 @@ public @interface PossibleValues
     Status.Severity invalidValueSeverity() default Status.Severity.ERROR;
     
     /**
-     * Specifies if the lookup in the set of possible values should strictly match on letter case. By default,
-     * the lookup is strict. 
-     */
-    
-    boolean caseSensitive() default true;
-    
-    /**
      * Specifies if the possible values are already ordered as intended. By default, the order
      * is not treated as significant and the possible values are sorted alphabetically when presented.
      */

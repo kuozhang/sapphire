@@ -63,12 +63,6 @@ public final class ColorPossibleValuesService extends PossibleValuesService
             }
         }
     }
-    
-    @Override
-    public boolean isCaseSensitive()
-    {
-        return false;
-    }
 
     @Override
     public void dispose()

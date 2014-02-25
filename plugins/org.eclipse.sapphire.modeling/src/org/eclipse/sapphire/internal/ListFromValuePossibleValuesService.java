@@ -87,12 +87,6 @@ public final class ListFromValuePossibleValuesService extends PossibleValuesServ
     }
 
     @Override
-    public boolean isCaseSensitive()
-    {
-        return this.base.isCaseSensitive();
-    }
-
-    @Override
     public void dispose()
     {
         super.dispose();

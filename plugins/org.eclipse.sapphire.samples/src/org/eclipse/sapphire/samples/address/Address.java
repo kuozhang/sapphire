@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.address;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
@@ -41,6 +42,7 @@ public interface Address extends Element
 
     @Label( standard = "city" )
     @Required
+    @Collation( ignoreCaseDifferences = "true" )
     @Service( impl = CityPossibleValuesService.class )
 
     ValueProperty PROP_CITY = new ValueProperty( TYPE, "City" );
@@ -52,6 +54,7 @@ public interface Address extends Element
 
     @Label( standard = "state" )
     @Required
+    @Collation( ignoreCaseDifferences = "true" )
     @Service( impl = StatePossibleValuesService.class )
 
     ValueProperty PROP_STATE = new ValueProperty( TYPE, "State" );

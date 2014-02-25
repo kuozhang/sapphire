@@ -58,7 +58,6 @@ public final class ModelBasedPossibleValuesService extends PossibleValuesService
         }
         
         this.invalidValueSeverity = a.invalidValueSeverity();
-        this.caseSensitive = a.caseSensitive();
         this.ordered = a.ordered();
         
         this.listener = new FilteredListener<PropertyContentEvent>()

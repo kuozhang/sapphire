@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
@@ -44,11 +45,11 @@ public interface Assistant extends Element
     @Label( standard = "name" )
     @Required
     @Service( impl = AssistantNameValidationService.class )
+    @Collation( ignoreCaseDifferences = "true" )
 
     @PossibleValues
     ( 
         property = "/Contacts/Name", 
-        caseSensitive = false, 
         invalidValueMessage = "Could not find contact name \"${Name}\" in the repository." 
     )
 

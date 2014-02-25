@@ -35,11 +35,18 @@
         <condition>org.eclipse.sapphire.internal.StandardInitialValueService$Condition</condition>
     </service>
     <service>
-        <id>Sapphire.PossibleValuesService.Static</id>
+        <id>Sapphire.PossibleValuesService.Static.Value</id>
         <context>Sapphire.Property.MetaModel</context>
         <description>Implementation of PossibleValuesService based on @PossibleValues annotation's values attribute..</description>
         <implementation>org.eclipse.sapphire.internal.StaticPossibleValuesService</implementation>
-        <condition>org.eclipse.sapphire.internal.StaticPossibleValuesService$Condition</condition>
+        <condition>org.eclipse.sapphire.internal.StaticPossibleValuesService$ValuePropertyCondition</condition>
+    </service>
+    <service>
+        <condition>org.eclipse.sapphire.internal.StaticPossibleValuesService$ListPropertyCondition</condition>
+        <description>Implementation of PossibleValuesService based on @PossibleValues annotation's values attribute..</description>
+        <id>Sapphire.PossibleValuesService.Static.List</id>
+        <implementation>org.eclipse.sapphire.internal.StaticPossibleValuesService</implementation>
+        <context>Sapphire.Property.Instance</context>
     </service>
     <service>
         <description>Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..</description>
@@ -827,6 +834,13 @@
         <id>Sapphire.CollationService.Declarative.Instance</id>
         <implementation>org.eclipse.sapphire.internal.DeclarativeCollationService</implementation>
         <overrides>Sapphire.CollationService.Default</overrides>
+        <context>Sapphire.Property.Instance</context>
+    </service>
+    <service>
+        <id>Sapphire.CollationService.ListFromValue</id>
+        <implementation>org.eclipse.sapphire.internal.ListFromValueCollationService</implementation>
+        <description>Implementation of CollationService for list properties based on CollationService implementation of list member's value property. This service implementation will only activate if the list property has one possible type, and that type has a single property, and that property is a value property.</description>
+        <condition>org.eclipse.sapphire.internal.ListFromValueCollationService$Condition</condition>
         <context>Sapphire.Property.Instance</context>
     </service>
 </extension>

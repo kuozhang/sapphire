@@ -11,76 +11,70 @@
 
 package org.eclipse.sapphire.internal;
 
-import java.util.Set;
+import java.util.Comparator;
+import java.util.SortedSet;
 
-import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.CollationService;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
-import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
-import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.modeling.Status;
+import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
- * Implementation of PossibleValuesService for value properties based on PossibleValuesService implementation
- * of the containing list property. This service implementation will only activate if the value property is
- * the sole property in its type, and the element is contained by a list property, and the list property has
- * a PossibleValueService implementation in the property instance context.  
+ * Implementation of CollationService for list properties based on CollationService implementation
+ * of list member's value property. This service implementation will only activate if the list property has 
+ * one possible type, and that type has a single property, and that property is a value property. 
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ValueFromListPossibleValuesService extends PossibleValuesService
+public final class ListFromValueCollationService extends CollationService
 {
-    private PossibleValuesService base;
+    private CollationService base;
     private Listener listener;
     private boolean refreshing;
     
     @Override
-    protected void initPossibleValuesService()
+    protected void initCollationService()
     {
-        final Property parent = context( Element.class ).parent();
+        final ListProperty listProperty = context( ListProperty.class );
+        final ValueProperty listMemberValueProperty = (ValueProperty) listProperty.getType().properties().first();
         
-        this.base = parent.service( PossibleValuesService.class );
+        this.base = listMemberValueProperty.service( CollationService.class );
         
         this.listener = new Listener()
         {
             @Override
             public void handle( final Event event )
             {
-                if( ! ValueFromListPossibleValuesService.this.refreshing )
+                if( ! ListFromValueCollationService.this.refreshing )
                 {
                     try
                     {
-                        ValueFromListPossibleValuesService.this.refreshing = true;
+                        ListFromValueCollationService.this.refreshing = true;
                         refresh();
                     }
                     finally
                     {
-                        ValueFromListPossibleValuesService.this.refreshing = false;
+                        ListFromValueCollationService.this.refreshing = false;
                     }
                 }
             }
         };
-        
+
         this.base.attach( this.listener );
     }
     
     @Override
-    protected void compute( final Set<String> values )
+    protected Comparator<String> compute()
     {
-        values.addAll( this.base.values() );
-    }
-    
-    @Override
-    public Status problem( final Value<?> value )
-    {
-        return this.base.problem( value );
+        return this.base.comparator();
     }
 
     @Override
@@ -102,20 +96,19 @@ public final class ValueFromListPossibleValuesService extends PossibleValuesServ
         @Override
         public boolean applicable( final ServiceContext context )
         {
-            final ValueProperty property = context.find( ValueProperty.class );
+            final Property property = context.find( Property.class );
             
-            if( property != null )
+            if( property != null && property.definition() instanceof ListProperty && 
+                property.service( PossibleTypesService.class ).types().size() == 1 )
             {
-                final ElementType type = property.getModelElementType();
+                final ElementType memberType = property.definition().getType();
+                final SortedSet<PropertyDef> properties = memberType.properties();
                 
-                if( type.properties().size() == 1 )
+                if( properties.size() == 1 )
                 {
-                    final Property parent = context.find( Element.class ).parent();
+                    final PropertyDef memberProperty = properties.first();
                     
-                    if( parent != null && parent.definition() instanceof ListProperty && parent.service( PossibleValuesService.class ) != null )
-                    {
-                        return true;
-                    }
+                    return ( memberProperty instanceof ValueProperty );
                 }
             }
     

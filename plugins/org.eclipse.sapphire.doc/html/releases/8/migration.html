@@ -295,6 +295,15 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <p>The invalid value message must now be in Sapphire EL syntax, rather than in MessageFormat syntax.</p>
     </td>
   </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">@PossibleValues(</span> caseSensitive = false <span class="unaffected">)</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">@PossibleValues( ... )</span>
+@Collation( ignoreCaseDifferences = "true" )</code></pre>
+    </td>
+  </tr>
 </table>
 
 
@@ -439,7 +448,7 @@ message must be in Sapphire EL syntax, rather than in MessageFormat syntax.</p>
         (
             <span class="unaffected">"\"</span>{0}<span class="unaffected">\" is not a known entity"</span>,
             <span class="unaffected">Status.Severity.WARNING</span>,
-            <span class="unaffected">false</span> /* caseSensitive */,
+            false /* caseSensitive */,
             <span class="unaffected">true</span> /* ordered */,
         );
     }
@@ -453,13 +462,39 @@ message must be in Sapphire EL syntax, rather than in MessageFormat syntax.</p>
     {
         this.invalidValueMessage = <span class="unaffected">"\"</span>${Entity}<span class="unaffected">\" is not a known entity"</span>;
         this.invalidValueSeverity = <span class="unaffected">Status.Severity.WARNING</span>;
-        this.caseSensitive = <span class="unaffected">false</span>;
         this.ordered = <span class="unaffected">true</span>;
     }
-<span class="unaffected">}</span></code></pre>
+<span class="unaffected">}</span>
+
+@Collation( ignoreCaseDifferences = "true" )
+</code></pre>
 
 <p>The invalid value message must now be in Sapphire EL syntax, rather than in MessageFormat syntax. Each of these properties
-has a default value, so typically only a subset needs to be set explicitly.</p>
+has a default value, so typically only a subset needs to be set explicitly. Collation is now specified separately from the possible
+values, either through @Collation annotation or through CollationService.</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{</span>
+    @Override
+    public boolean isCaseSensitive()
+    {
+        return false;
+    }
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExamplePossibleValuesService extends PossibleValuesService
+{
+    ...
+}</span>
+
+@Collation( ignoreCaseDifferences = "true" )
+</code></pre>
+
+<p>Collation is now specified separately from the possible values, either through @Collation annotation or through CollationService.</p>
     </td>
   </tr>
 </table>

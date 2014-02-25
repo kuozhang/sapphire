@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PossibleValues;
@@ -38,8 +39,8 @@ public interface PossibleValuesGalleryListItem extends Element
     
     @Label( standard = "color" )
     @XmlBinding( path = "color" )
-    
     @DefaultValue( text = "Green" )
+    @Collation( ignoreCaseDifferences = "true" )
 
     @Services
     ( 

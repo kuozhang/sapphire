@@ -51,7 +51,6 @@ public final class PossibleValuesBrowseActionHandler extends BrowseActionHandler
             final ElementListSelectionDialog dialog = new ElementListSelectionDialog( ( (FormComponentPresentation) context ).shell(), labelProvider );
             
             dialog.setElements( valuesArray );
-            dialog.setIgnoreCase( ! possibleValuesService.isCaseSensitive() );
             dialog.setMultipleSelection( false );
             dialog.setHelpAvailable( false );
             dialog.setTitle( property.definition().getLabel( false, CapitalizationType.TITLE_STYLE, false ) );

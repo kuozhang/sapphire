@@ -46,7 +46,6 @@ public final class StaticPossibleValuesService extends PossibleValuesService
         }
         
         this.invalidValueSeverity = a.invalidValueSeverity();
-        this.caseSensitive = a.caseSensitive();
         this.ordered = a.ordered();
     }
 
@@ -59,7 +58,7 @@ public final class StaticPossibleValuesService extends PossibleValuesService
         }
     }
     
-    public static final class Condition extends ServiceCondition
+    public static final class ValuePropertyCondition extends ServiceCondition
     {
         @Override
         public boolean applicable( final ServiceContext context )
@@ -68,7 +67,23 @@ public final class StaticPossibleValuesService extends PossibleValuesService
             
             return
             (
-                ( property instanceof ValueProperty || property instanceof ListProperty ) && 
+                ( property instanceof ValueProperty ) && 
+                property.hasAnnotation( PossibleValues.class ) && 
+                property.getAnnotation( PossibleValues.class ).values().length > 0
+            );
+        }
+    }
+    
+    public static final class ListPropertyCondition extends ServiceCondition
+    {
+        @Override
+        public boolean applicable( final ServiceContext context )
+        {
+            final PropertyDef property = context.find( PropertyDef.class );
+            
+            return
+            (
+                ( property instanceof ListProperty ) && 
                 property.hasAnnotation( PossibleValues.class ) && 
                 property.getAnnotation( PossibleValues.class ).values().length > 0
             );

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.Value;
@@ -58,11 +59,11 @@ public interface JobOccupation extends Occupation
     @Label( standard = "manager" )
     @Service( impl = ManagerNameValidationService.class )
     @XmlBinding( path = "manager" )
+    @Collation( ignoreCaseDifferences = "true" )
 
     @PossibleValues
     ( 
         property = "/Contacts/Name", 
-        caseSensitive = false, 
         invalidValueMessage = "Could not find contact name \"${Manager}\" in the repository." 
     )
 

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.catalog;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PossibleValues;
@@ -41,7 +42,8 @@ public interface Item extends Element
     
     // *** Category ***
     
-    @PossibleValues( property = "/Items/Category", caseSensitive = false, invalidValueSeverity = Status.Severity.OK )
+    @PossibleValues( property = "/Items/Category", invalidValueSeverity = Status.Severity.OK )
+    @Collation( ignoreCaseDifferences = "true" )
     @XmlBinding( path = "Category" )
     
     ValueProperty PROP_CATEGORY = new ValueProperty( TYPE, "Category" );
@@ -51,7 +53,8 @@ public interface Item extends Element
     
     // *** Manufacturer ***
     
-    @PossibleValues( property = "/Items/Manufacturer", caseSensitive = false, invalidValueSeverity = Status.Severity.OK )
+    @PossibleValues( property = "/Items/Manufacturer", invalidValueSeverity = Status.Severity.OK )
+    @Collation( ignoreCaseDifferences = "true" )
     @XmlBinding( path = "Manufacturer" )
     
     ValueProperty PROP_MANUFACTURER = new ValueProperty( TYPE, "Manufacturer" );

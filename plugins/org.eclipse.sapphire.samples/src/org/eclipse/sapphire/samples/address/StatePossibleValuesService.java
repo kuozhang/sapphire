@@ -39,7 +39,6 @@ public final class StatePossibleValuesService extends PossibleValuesService
     protected void initPossibleValuesService()
     {
         this.invalidValueMessage = message.text();
-        this.caseSensitive = false;
         
         final Address address = context( Address.class );
         

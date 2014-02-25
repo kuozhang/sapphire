@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.gallery;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
@@ -129,6 +130,7 @@ public interface ListPropertiesGallery extends Element
     @Type( base = MultiSelectStringItem.class )
     @Label( standard = "multi-select string" )
     @Enablement( expr = "${ Enabled }" )
+    @Collation( ignoreCaseDifferences = "true" )
     @Service( impl = ColorPossibleValuesService.class )
     
     ListProperty PROP_MULTI_SELECT_STRING = new ListProperty( TYPE, "MultiSelectString" );

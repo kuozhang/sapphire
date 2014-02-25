@@ -24,7 +24,6 @@ import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.modeling.el.ModelElementFunctionContext;
 import org.eclipse.sapphire.modeling.el.parser.ExpressionLanguageParser;
 import org.eclipse.sapphire.services.DataService;
-import org.eclipse.sapphire.util.Comparators;
 import org.eclipse.sapphire.util.Filters;
 import org.eclipse.sapphire.util.SetFactory;
 import org.eclipse.sapphire.util.SortedSetFactory;
@@ -46,12 +45,26 @@ public abstract class PossibleValuesService extends DataService<Set<String>>
     protected String invalidValueMessage;
     protected Function invalidValueMessageFunction;
     protected Status.Severity invalidValueSeverity = Status.Severity.ERROR;
-    protected boolean caseSensitive = true;
     protected boolean ordered = false;
+    private CollationService collationService;
+    private Listener collationServiceListener;
 
     @Override
     protected final void initDataService()
     {
+        this.collationService = service( CollationService.class );
+        
+        this.collationServiceListener = new Listener()
+        {
+            @Override
+            public void handle( final Event event )
+            {
+                refresh();
+            }
+        };
+        
+        this.collationService.attach( this.collationServiceListener );
+        
         initPossibleValuesService();
     }
 
@@ -75,7 +88,7 @@ public abstract class PossibleValuesService extends DataService<Set<String>>
         }
         else
         {
-            final Comparator<String> comparator = ( isCaseSensitive() ? null : Comparators.createIgnoreCaseComparator() );
+            final Comparator<String> comparator = this.collationService.comparator();
             final Set<String> values = new TreeSet<String>( comparator );
             compute( values );
             return SortedSetFactory.start( comparator ).filter( Filters.createNotEmptyFilter() ).add( values ).result();
@@ -118,11 +131,6 @@ public abstract class PossibleValuesService extends DataService<Set<String>>
         return Status.createOkStatus();
     }
     
-    public boolean isCaseSensitive()
-    {
-        return this.caseSensitive;
-    }
-    
     /**
      * Determines if the possible values are already ordered as intended. If the possible values
      * are not ordered, they will sorted alphabetically when presented.
@@ -144,6 +152,19 @@ public abstract class PossibleValuesService extends DataService<Set<String>>
     public boolean strict()
     {
         return ( this.invalidValueSeverity == Status.Severity.ERROR );
+    }
+
+    @Override
+    public void dispose()
+    {
+        if( this.collationService != null )
+        {
+            this.collationService.detach( this.collationServiceListener );
+            this.collationService = null;
+            this.collationServiceListener = null;
+        }
+        
+        super.dispose();
     }
     
 }

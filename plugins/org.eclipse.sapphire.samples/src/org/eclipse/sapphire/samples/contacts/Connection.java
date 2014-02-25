@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.contacts;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PossibleValues;
@@ -36,11 +37,11 @@ public interface Connection extends Element
     @Label( standard = "name" )
     @Required
     @Unique
+    @Collation( ignoreCaseDifferences = "true" )
     
     @PossibleValues
     ( 
         property = "/Contacts/Name", 
-        caseSensitive = false, 
         invalidValueMessage = "Could not find contact \"${Name}\" in the repository" 
     )
 

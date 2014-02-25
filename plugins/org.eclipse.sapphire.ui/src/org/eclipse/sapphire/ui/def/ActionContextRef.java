@@ -12,6 +12,7 @@
 
 package org.eclipse.sapphire.ui.def;
 
+import org.eclipse.sapphire.Collation;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.PossibleValues;
@@ -37,6 +38,7 @@ public interface ActionContextRef extends Element
     @Label( standard = "context" )
     @Required
     @XmlBinding( path = "" )
+    @Collation( ignoreCaseDifferences = "true" )
     
     // TODO: Need way to dynamically list available action contexts.
     
@@ -66,8 +68,7 @@ public interface ActionContextRef extends Element
             SapphireActionSystem.CONTEXT_DIAGRAM_MULTIPLE_PARTS,
             SapphireActionSystem.CONTEXT_WITH_DIRECTIVE
         },
-        invalidValueMessage = "\"${Context}\" is not valid action context",
-        caseSensitive = false
+        invalidValueMessage = "\"${Context}\" is not valid action context"
     )
     
     ValueProperty PROP_CONTEXT = new ValueProperty( TYPE, "Context" );
