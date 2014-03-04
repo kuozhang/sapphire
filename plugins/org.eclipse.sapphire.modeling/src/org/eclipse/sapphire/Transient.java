@@ -133,6 +133,30 @@ public final class Transient<T> extends Property
     }
     
     @Override
+    
+    public boolean holds( final Element element )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return false;
+    }
+    
+    @Override
+    
+    public boolean holds( final Property property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return ( this == property );
+    }
+    
+    @Override
     public String toString()
     {
         final T content = content();

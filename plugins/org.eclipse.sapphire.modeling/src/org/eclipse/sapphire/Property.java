@@ -304,6 +304,57 @@ public abstract class Property implements Observable
     }
     
     /**
+     * Determines whether an element is located within a model tree that has this property as the root. Always returns
+     * false if this property is a value or a transient property.
+     * 
+     * @param element the element
+     * @return true if the element is contained by this property and false otherwise
+     */
+    
+    public boolean holds( final Element element )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        for( Property p = element.parent(); p != null; p = p.element().parent() )
+        {
+            if( this == p )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Determines whether a property is located within a model tree that has this property as the root.
+     * 
+     * @param property the property
+     * @return true if the property is contained by this property and false otherwise
+     */
+    
+    public boolean holds( final Property property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        for( Property p = property; p != null; p = p.element().parent() )
+        {
+            if( this == p )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Returns the property definition.
      * 
      * @return the property definition

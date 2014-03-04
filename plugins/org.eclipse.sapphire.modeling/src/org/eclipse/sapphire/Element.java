@@ -32,6 +32,25 @@ public interface Element extends Observable
     Resource resource();
     Element root();
     Property parent();
+    
+    /**
+     * Determines whether an element is located within a model tree that has this element as the root.
+     * 
+     * @param element the element
+     * @return true if the element is contained by this element and false otherwise
+     */
+    
+    boolean holds( Element element );
+    
+    /**
+     * Determines whether a property is located within a model tree that has this element as the root.
+     * 
+     * @param property the property
+     * @return true if the property is contained by this element and false otherwise
+     */
+    
+    boolean holds( Property property );
+    
     <T> T nearest( Class<T> type );    
     Status validation();
     <A> A adapt( Class<A> adapterType );

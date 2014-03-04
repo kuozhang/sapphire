@@ -159,6 +159,46 @@ public abstract class ElementImpl implements Element
         return this.parent;
     }
     
+    @Override
+    
+    public final boolean holds( final Element element )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        for( Property p = element.parent(); p != null; p = p.element().parent() )
+        {
+            if( this == p.element() )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    @Override
+    
+    public final boolean holds( final Property property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        for( Property p = property; p != null; p = p.element().parent() )
+        {
+            if( this == p.element() )
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public final <T> T nearest( final Class<T> type )
     {
         if( type.isAssignableFrom( getClass() ) )

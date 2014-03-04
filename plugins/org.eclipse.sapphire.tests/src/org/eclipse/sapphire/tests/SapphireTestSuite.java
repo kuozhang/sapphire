@@ -15,6 +15,7 @@ import org.eclipse.sapphire.tests.binding.list.LayeredListPropertyBindingTests;
 import org.eclipse.sapphire.tests.collation.CollationTests;
 import org.eclipse.sapphire.tests.concurrency.ConcurrencyTests;
 import org.eclipse.sapphire.tests.conversion.ConversionTestSuite;
+import org.eclipse.sapphire.tests.element.ElementTests;
 import org.eclipse.sapphire.tests.index.IndexTests;
 import org.eclipse.sapphire.tests.java.JavaTestSuite;
 import org.eclipse.sapphire.tests.misc.TestMisc;
@@ -22,6 +23,7 @@ import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
 import org.eclipse.sapphire.tests.observable.ObservableTests;
 import org.eclipse.sapphire.tests.path.relative.RelativePathTests;
 import org.eclipse.sapphire.tests.possible.PossibleValuesTest;
+import org.eclipse.sapphire.tests.property.PropertyTests;
 import org.eclipse.sapphire.tests.services.ServicesTestSuite;
 import org.eclipse.sapphire.tests.ui.UiTestSuite;
 import org.eclipse.sapphire.tests.unique.UniqueValueTests;
@@ -39,21 +41,23 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses
 (
     {
-        LayeredListPropertyBindingTests.class,
         CollationTests.class,
-        ConversionTestSuite.class,
-        TestMisc.class,
-        SapphireModelingFrameworkTests.class,
-        JavaTestSuite.class,
-        UiTestSuite.class,
-        WorkspaceTestSuite.class,
-        ServicesTestSuite.class,
-        UniqueValueTests.class,
-        IndexTests.class,
         ConcurrencyTests.class,
+        ConversionTestSuite.class,
+        ElementTests.class,
+        IndexTests.class,
+        JavaTestSuite.class,
+        LayeredListPropertyBindingTests.class,
         ObservableTests.class,
         PossibleValuesTest.class,
-        RelativePathTests.class
+        PropertyTests.class,
+        RelativePathTests.class,
+        SapphireModelingFrameworkTests.class,
+        ServicesTestSuite.class,
+        TestMisc.class,
+        UiTestSuite.class,
+        UniqueValueTests.class,
+        WorkspaceTestSuite.class
     }
 )
 

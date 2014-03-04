@@ -441,6 +441,30 @@ public class Value<T> extends Property
     }
     
     @Override
+    
+    public boolean holds( final Element element )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return false;
+    }
+    
+    @Override
+    
+    public boolean holds( final Property property )
+    {
+        if( property == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return ( this == property );
+    }
+    
+    @Override
     public final String toString()
     {
         final String text = text( false );

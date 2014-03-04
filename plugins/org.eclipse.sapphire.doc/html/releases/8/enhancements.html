@@ -49,6 +49,7 @@
 <ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
+    <li><a href="#Core-ContainmentDetermination">Containment Determination</a></li>
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
     <li><a href="#Core-UniqueNullCoverage">@Unique Null Coverage</a></li>
   </ol>
@@ -67,7 +68,25 @@
 </ol>
 
 
-<h2><a name="Core"><a name="Core-ListIndexNullLookup">List Index Null Lookup</a></a></h2>
+<h2><a name="Core"><a name="Core-ContainmentDetermination">Containment Determination</a></a></h2>
+
+<p>The developer can now easily determine whether an element or a property is located within a model tree
+that has another element or a property as the root.</p>
+
+<pre class="source-code"><code><font color="#888888">Element
+{</font>
+    public boolean holds( Element element )
+    public boolean holds( Property property )
+<font color="#888888">}</font></code></pre>
+
+<pre class="source-code"><code><font color="#888888">Property
+{</font>
+    public boolean holds( Element element )
+    public boolean holds( Property property )
+<font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Core-ListIndexNullLookup">List Index Null Lookup</a></h2>
 
 <p>The developer can now lookup elements in an index that have a null value for the indexed property. Previously, null values
 were not indexed and an exception was thrown on lookup.</p>
