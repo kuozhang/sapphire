@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Filter;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.PropertyDef;
@@ -48,7 +49,6 @@ import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.PresentationStyleDef;
-import org.eclipse.sapphire.util.Filter;
 import org.osgi.framework.Bundle;
 
 /**

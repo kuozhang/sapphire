@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.util;
 
+import org.eclipse.sapphire.Filter;
+
 /**
  * A collection of common filters.
  * 

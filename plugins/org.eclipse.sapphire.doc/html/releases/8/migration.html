@@ -58,6 +58,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
   <li><a href="#DerivedValueServiceData">DerivedValueServiceData</a></li>
   <li><a href="#EnablementService">EnablementService</a></li>
   <li><a href="#EnablementServiceData">EnablementServiceData</a></li>
+  <li><a href="#Filter">Filter</a></li>
   <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#InitialValueServiceData">InitialValueServiceData</a></li>
   <li><a href="#NoDuplicates">NoDuplicates</a></li>
@@ -235,6 +236,38 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
     {
         return ...;
     }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="Filter">Filter</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>util.<span class="unaffected">Filter</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.Filter</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleFilter</span> extends <span class="unaffected">Filter&lt;Object>
+{
+    ...
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleFilter</span> implements <span class="unaffected">Filter&lt;Object>
+{
+    ...
 }</span></code></pre>
     </td>
   </tr>

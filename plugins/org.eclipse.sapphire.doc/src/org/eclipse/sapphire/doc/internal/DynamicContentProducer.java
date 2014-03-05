@@ -29,6 +29,7 @@ import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.ConversionService;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Filter;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.java.JavaType;
@@ -49,7 +50,6 @@ import org.eclipse.sapphire.ui.def.ActionDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
 import org.eclipse.sapphire.ui.def.ActionHandlerFilterDef;
-import org.eclipse.sapphire.util.Filter;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

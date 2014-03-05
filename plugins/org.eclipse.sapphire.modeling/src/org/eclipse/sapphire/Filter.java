@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.util;
+package org.eclipse.sapphire;
 
 /**
  * Generic filter interface that can be parameterized for different element types.
@@ -17,7 +17,7 @@ package org.eclipse.sapphire.util;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class Filter<E>
+public interface Filter<E>
 {
     /**
      * Evaluates whether the given element passes the criteria implemented by the filter.
@@ -26,6 +26,6 @@ public abstract class Filter<E>
      * @return true if the given element is allowed by the filter, false otherwise
      */
     
-    public abstract boolean allows( E element );
+    boolean allows( E element );
     
 }
