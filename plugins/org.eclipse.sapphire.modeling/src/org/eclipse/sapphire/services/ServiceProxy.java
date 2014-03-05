@@ -14,6 +14,7 @@ package org.eclipse.sapphire.services;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.util.MapFactory;
@@ -23,7 +24,7 @@ import org.eclipse.sapphire.util.SetFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ServiceProxy
+public final class ServiceProxy implements Disposable
 {
     private final ServiceContext context;
     private final String id;
@@ -122,6 +123,7 @@ public final class ServiceProxy
         return this.service;
     }
     
+    @Override
     public void dispose()
     {
         if( this.service != null )

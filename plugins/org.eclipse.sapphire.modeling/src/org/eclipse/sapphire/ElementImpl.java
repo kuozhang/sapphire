@@ -1041,6 +1041,7 @@ public abstract class ElementImpl implements Element
         }
     }
     
+    @Override
     public final void dispose()
     {
         synchronized( root() )

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
@@ -29,7 +30,7 @@ import org.eclipse.sapphire.ui.SapphireActionGroup;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireActionPresentationManager
+public final class SapphireActionPresentationManager implements Disposable
 {
     @Text( "actions" )
     private static LocalizableText defaultLabel;
@@ -97,6 +98,7 @@ public final class SapphireActionPresentationManager
         return this.actions.getActions();
     }
     
+    @Override
     public void dispose()
     {
         for( SapphireActionPresentation presentation : this.presentations )

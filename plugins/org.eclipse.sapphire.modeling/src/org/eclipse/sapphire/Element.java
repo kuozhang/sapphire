@@ -25,7 +25,7 @@ import org.eclipse.sapphire.services.Service;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public interface Element extends Observable
+public interface Element extends Observable, Disposable
 {
     ElementType TYPE = new ElementType( Element.class );
     
@@ -209,6 +209,5 @@ public interface Element extends Observable
     void detach( Listener listener, String path );
     void detach( Listener listener, ModelPath path );
     
-    void dispose();
     boolean disposed();
 }

@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -38,7 +39,7 @@ import org.eclipse.sapphire.modeling.Status;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class FunctionResult
+public abstract class FunctionResult implements Disposable
 {
     @Text( "Cannot convert {0} to {1}." )
     private static LocalizableText cannotCastMessage;
@@ -306,6 +307,7 @@ public abstract class FunctionResult
         return this.listeners.detach( listener );
     }
     
+    @Override
     public void dispose()
     {
         for( FunctionResult operand : this.operands )

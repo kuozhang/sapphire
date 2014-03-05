@@ -778,9 +778,7 @@ public abstract class Property implements Observable
      * Only to be called by the framework.
      */
     
-    // TODO: Hide
-    
-    public final void dispose()
+    final void dispose()
     {
         synchronized( root() )
         {

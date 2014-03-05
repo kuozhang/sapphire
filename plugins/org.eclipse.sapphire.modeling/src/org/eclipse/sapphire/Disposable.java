@@ -12,32 +12,16 @@
 package org.eclipse.sapphire;
 
 /**
+ * Implemented if an object must be disposed when no longer needed.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PropertyBinding implements Disposable
+public interface Disposable
 {
-    private Property property;
-
-    public void init( final Property property )
-    {
-        if( property == null )
-        {
-            throw new IllegalArgumentException();
-        }
-        
-        this.property = property;
-    }
+    /**
+     * Performs the necessary disposal steps.
+     */
     
-    public Property property()
-    {
-        return this.property;
-    }
-    
-    @Override
-    public void dispose()
-    {
-        // The default implementation doesn't do anything.
-    }
-
+    void dispose();
 }

@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.ui.forms.swt;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -25,7 +26,7 @@ import org.eclipse.sapphire.ui.def.SapphireActionType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ActionSystemPartBridge extends Action 
+public abstract class ActionSystemPartBridge extends Action implements Disposable
 {
 	private SapphireActionSystemPart sapphireActionSystemPart;
 	private Listener listener;
@@ -91,6 +92,7 @@ public abstract class ActionSystemPartBridge extends Action
 	    setImageDescriptor( SwtUtil.toImageDescriptor( this.sapphireActionSystemPart.getImage( 16 ) ) );
 	}
 
+	@Override
 	public void dispose()
 	{
 	    this.sapphireActionSystemPart.detach( this.listener );

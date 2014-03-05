@@ -20,6 +20,7 @@ import org.eclipse.help.IContext;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardContainer2;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.modeling.Status;
@@ -39,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizardPage extends WizardPage
+public class SapphireWizardPage extends WizardPage implements Disposable
 {
     private final WizardPagePart part;
     private final Listener listener;

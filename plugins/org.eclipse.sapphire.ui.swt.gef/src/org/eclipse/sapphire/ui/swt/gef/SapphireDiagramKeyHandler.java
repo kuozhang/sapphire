@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.KeyHandler;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -37,7 +38,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
  */
 
-public class SapphireDiagramKeyHandler extends KeyHandler
+public class SapphireDiagramKeyHandler extends KeyHandler implements Disposable
 {		
 	private KeyHandler parent;
 	private SapphireDiagramEditor diagramEditor;
@@ -213,6 +214,7 @@ public class SapphireDiagramKeyHandler extends KeyHandler
 		return this;
 	}
 	
+	@Override
 	public void dispose()
 	{
 		if (this.actionPresentationManager != null)

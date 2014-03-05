@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementImpl;
@@ -657,7 +658,7 @@ public final class ElementCompiler
         {
             final Class<?> cl = method.getDeclaringClass();
                     
-            if( ! this.implementedMethods.contains( method ) && cl != Element.class && cl != Observable.class && cl != Object.class )
+            if( ! this.implementedMethods.contains( method ) && cl != Element.class && cl != Observable.class && cl != Disposable.class && cl != Object.class )
             {
                 final MethodVisitor mv = cw.visitMethod
                 (

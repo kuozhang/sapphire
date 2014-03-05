@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.ProblemOverlayImageDescriptor;
@@ -28,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SwtResourceCache
+public final class SwtResourceCache implements Disposable
 {
     private final Map<ImageDescriptor,ImageHandle> imageDescToImageHandle = new HashMap<ImageDescriptor,ImageHandle>();
     
@@ -111,6 +112,7 @@ public final class SwtResourceCache
         return null;
     }
     
+    @Override
     public void dispose()
     {
         for( ImageHandle imageHandle : this.imageDescToImageHandle.values() )

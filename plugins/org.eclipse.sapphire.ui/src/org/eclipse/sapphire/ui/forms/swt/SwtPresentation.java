@@ -65,6 +65,7 @@ public abstract class SwtPresentation extends Presentation
         }
     }
     
+    @Override
     public void dispose()
     {
         super.dispose();

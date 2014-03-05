@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.MasterConversionService;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.modeling.localization.LocalizationService;
@@ -24,7 +25,7 @@ import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationServ
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ResourceStore
+public abstract class ResourceStore implements Disposable
 {
     private final Map<Locale,LocalizationService> localizationServices = new HashMap<Locale,LocalizationService>();
     
@@ -106,6 +107,7 @@ public abstract class ResourceStore
         return SourceLanguageLocalizationService.INSTANCE;
     }
     
+    @Override
     public void dispose()
     {
     }

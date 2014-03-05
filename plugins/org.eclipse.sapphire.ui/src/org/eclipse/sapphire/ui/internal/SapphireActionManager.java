@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -31,7 +32,7 @@ import org.eclipse.sapphire.ui.SapphireActionGroup;
  * interface is eliminated and all parts extend SapphirePart.
  */
 
-public final class SapphireActionManager
+public final class SapphireActionManager implements Disposable
 {
     private final ISapphirePart part;
     private final Set<String> contexts;
@@ -109,6 +110,7 @@ public final class SapphireActionManager
         return null;
     }
     
+    @Override
     public void dispose()
     {
         if( this.actions != null )

@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
@@ -21,7 +22,7 @@ import org.eclipse.sapphire.Sapphire;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireCondition
+public abstract class SapphireCondition implements Disposable
 {
     private ISapphirePart part;
     private boolean conditionState;
@@ -91,6 +92,7 @@ public abstract class SapphireCondition
         }
     }
     
+    @Override
     public void dispose()
     {
     }

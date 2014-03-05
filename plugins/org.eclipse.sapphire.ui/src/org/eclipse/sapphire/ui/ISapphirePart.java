@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.help.IContext;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
@@ -28,7 +29,7 @@ import org.eclipse.sapphire.ui.forms.swt.SwtResourceCache;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public interface ISapphirePart
+public interface ISapphirePart extends Disposable
 {
     ISapphirePart parent();
     <T> T nearest( final Class<T> partType );
@@ -37,7 +38,6 @@ public interface ISapphirePart
     Status validation();
     IContext getDocumentationContext();
     SwtResourceCache getSwtResourceCache();
-    void dispose();
     PartDef definition();
     
     Set<String> getActionContexts();

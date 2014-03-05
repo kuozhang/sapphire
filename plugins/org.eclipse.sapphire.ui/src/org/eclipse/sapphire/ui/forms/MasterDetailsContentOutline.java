@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class MasterDetailsContentOutline
+public final class MasterDetailsContentOutline implements Disposable
 {
     private final MasterDetailsEditorPagePart editorPagePart;
     private final MasterDetailsEditorPageDef editorPageDef;
@@ -285,6 +286,7 @@ public final class MasterDetailsContentOutline
         this.listeners.broadcast( new NodeExpandedStateChangedEvent( node ) );
     }
     
+    @Override
     public void dispose()
     {
         if( this.root != null )

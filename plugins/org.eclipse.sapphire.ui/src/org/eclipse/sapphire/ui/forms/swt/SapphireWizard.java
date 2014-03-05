@@ -30,6 +30,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ExecutableElement;
@@ -62,7 +63,7 @@ import org.eclipse.ui.ide.IDE;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class SapphireWizard<M extends Element> implements IWizard
+public class SapphireWizard<M extends Element> implements IWizard, Disposable
 {
     private Element element;
     private boolean elementInstantiatedLocally;

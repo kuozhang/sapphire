@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.assist;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.ListenerContext;
@@ -20,7 +21,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PropertyEditorAssistContributor
+public abstract class PropertyEditorAssistContributor implements Disposable
 {
     public static final String ID_INFO_SECTION_CONTRIBUTOR = "System.InfoSectionContributor";
     public static final String ID_FACTS_CONTRIBUTOR = "System.FactsContributor";
@@ -96,6 +97,7 @@ public abstract class PropertyEditorAssistContributor
         broadcast( new Event() );
     }
     
+    @Override
     public void dispose()
     {
         // Nothing to do by default.

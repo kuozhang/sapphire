@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.ListenerContext;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ServiceExtension;
@@ -27,7 +28,7 @@ import org.eclipse.sapphire.util.ListFactory;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class ServiceContext
+public class ServiceContext implements Disposable
 {
     public static final String ID_ROOT = "Sapphire";
     public static final String ID_ELEMENT_INSTANCE = "Sapphire.Element.Instance";
@@ -254,6 +255,7 @@ public class ServiceContext
         return Collections.emptyList();
     }
     
+    @Override
     public final void dispose()
     {
         this.disposed = true;

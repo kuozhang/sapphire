@@ -14,13 +14,14 @@ package org.eclipse.sapphire.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Listener;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class Presentation
+public abstract class Presentation implements Disposable
 {
     private SapphirePart part;
     private Presentation parent;
@@ -65,6 +66,7 @@ public abstract class Presentation
         this.part.attach( listener );
     }
     
+    @Override
     public void dispose()
     {
         this.parent = null;

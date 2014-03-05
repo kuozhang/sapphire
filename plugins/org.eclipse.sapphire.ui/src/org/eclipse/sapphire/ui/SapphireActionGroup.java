@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.java.JavaType;
@@ -37,7 +38,7 @@ import org.eclipse.sapphire.ui.util.TopologicalSorter;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SapphireActionGroup
+public final class SapphireActionGroup implements Disposable
 {
     private final ISapphirePart part;
     private final String context;
@@ -194,6 +195,7 @@ public final class SapphireActionGroup
         }
     }
     
+    @Override
     public void dispose()
     {
         for( SapphireAction action : this.actions )

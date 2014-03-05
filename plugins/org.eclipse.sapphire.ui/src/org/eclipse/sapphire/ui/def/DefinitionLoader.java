@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.sapphire.Context;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.Sapphire;
@@ -313,7 +314,7 @@ public final class DefinitionLoader
         }
     }
     
-    public static final class Reference<T extends Element>
+    public static final class Reference<T extends Element> implements Disposable
     {
         // Must reference loader to make sure it doesn't go away while this reference is still in use.
         // When the loader goes away, the sdef is disposed.
@@ -367,6 +368,7 @@ public final class DefinitionLoader
             return this.def;
         }
         
+        @Override
         public void dispose()
         {
             this.loader = null;

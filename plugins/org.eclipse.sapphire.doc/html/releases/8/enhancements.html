@@ -50,6 +50,7 @@
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-ContainmentDetermination">Containment Determination</a></li>
+    <li><a href="#Core-Disposable">Disposable</a></li>
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
     <li><a href="#Core-UniqueNullCoverage">@Unique Null Coverage</a></li>
   </ol>
@@ -84,6 +85,16 @@ that has another element or a property as the root.</p>
     public boolean holds( Element element )
     public boolean holds( Property property )
 <font color="#888888">}</font></code></pre>
+
+
+<h2><a name="Core-Disposable">Disposable</a></h2>
+
+<p>Sapphire classes and interfaces that have a dispose() method now extend a common interface Disposable.</p>
+
+<pre class="source-code"><code>interface Disposable
+{
+    void dispose()
+}</code></pre>
 
 
 <h2><a name="Core-ListIndexNullLookup">List Index Null Lookup</a></h2>

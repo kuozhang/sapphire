@@ -25,7 +25,7 @@ import org.eclipse.sapphire.modeling.localization.SourceLanguageLocalizationServ
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class Resource
+public abstract class Resource implements Disposable
 {
     private final Resource parent;
     private Element element;
@@ -214,6 +214,7 @@ public abstract class Resource
         return false;
     }
     
+    @Override
     public void dispose()
     {
         for( PropertyBinding binding : this.bindings.values() )

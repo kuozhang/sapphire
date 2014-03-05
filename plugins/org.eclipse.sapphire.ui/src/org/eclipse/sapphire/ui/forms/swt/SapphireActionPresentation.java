@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.Listener;
@@ -47,7 +48,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireActionPresentation
+public abstract class SapphireActionPresentation implements Disposable
 {
     private final SapphireActionPresentationManager manager;
     private final List<SapphireActionHandlerFilter> filters = new CopyOnWriteArrayList<SapphireActionHandlerFilter>();
@@ -291,6 +292,7 @@ public abstract class SapphireActionPresentation
         menuItem.setImage( image );
     }
     
+    @Override
     public void dispose()
     {
     }

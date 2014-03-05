@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.ImageData;
@@ -40,7 +41,7 @@ import org.eclipse.sapphire.ui.def.ImageReference;
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
-public abstract class SapphireActionSystemPart
+public abstract class SapphireActionSystemPart implements Disposable
 {
     private FunctionContext functionContext;
     private String id;
@@ -350,6 +351,7 @@ public abstract class SapphireActionSystemPart
         this.listeners.broadcast( event );
     }
     
+    @Override
     public final void dispose()
     {
         if( this.labelFunctionResult != null )

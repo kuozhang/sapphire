@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.FontDef;
@@ -30,7 +31,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
  */
 
-public class DiagramResourceCache {
+public class DiagramResourceCache implements Disposable {
 	
 	private List<Color> colors = new ArrayList<Color>();
 	private List<Font> fonts = new ArrayList<Font>();
@@ -128,7 +129,8 @@ public class DiagramResourceCache {
     	fonts.add(newFont);
     	return newFont;
     }
-    
+
+    @Override
     public void dispose() {
     	for (Color existingColor : colors) {
     		existingColor.dispose();

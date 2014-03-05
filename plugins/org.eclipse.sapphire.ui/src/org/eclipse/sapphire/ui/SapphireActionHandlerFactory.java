@@ -13,6 +13,7 @@ package org.eclipse.sapphire.ui;
 
 import java.util.List;
 
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -23,7 +24,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerFactoryDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class SapphireActionHandlerFactory
+public abstract class SapphireActionHandlerFactory implements Disposable
 {
     private SapphireAction action;
     private final ListenerContext listeners = new ListenerContext();
@@ -71,6 +72,7 @@ public abstract class SapphireActionHandlerFactory
         this.listeners.broadcast( event );
     }
     
+    @Override
     public void dispose()
     {
     }
