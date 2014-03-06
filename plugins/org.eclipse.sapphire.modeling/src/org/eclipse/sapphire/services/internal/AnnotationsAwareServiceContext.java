@@ -16,6 +16,8 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.sapphire.EventDeliveryJob;
+import org.eclipse.sapphire.JobQueue;
 import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.services.Service;
 import org.eclipse.sapphire.services.ServiceContext;
@@ -30,11 +32,9 @@ import org.eclipse.sapphire.util.SetFactory;
 
 public abstract class AnnotationsAwareServiceContext extends ServiceContext
 {
-    public AnnotationsAwareServiceContext( final String type,
-                                           final ServiceContext parent,
-                                           final Object lock )
+    public AnnotationsAwareServiceContext( final String type, final ServiceContext parent, final Object lock, final JobQueue<EventDeliveryJob> queue )
     {
-        super( type, parent, lock );
+        super( type, parent, lock, queue );
     }
     
     @Override

@@ -22,7 +22,7 @@ public final class ElementMetaModelServiceContext extends ElementServiceContext
 {
     public ElementMetaModelServiceContext( final ElementType elementMetaModel )
     {
-        super( ID_ELEMENT_METAMODEL, Sapphire.services(), elementMetaModel, null );
+        super( ID_ELEMENT_METAMODEL, Sapphire.services(), elementMetaModel, null, null );
     }
     
 }

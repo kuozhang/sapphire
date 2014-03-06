@@ -15,7 +15,9 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.eclipse.sapphire.ElementProperty;
+import org.eclipse.sapphire.EventDeliveryJob;
 import org.eclipse.sapphire.ImpliedElementProperty;
+import org.eclipse.sapphire.JobQueue;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.TransientProperty;
@@ -33,9 +35,10 @@ public abstract class PropertyServiceContext extends AnnotationsAwareServiceCont
     public PropertyServiceContext( final String type,
                                    final ServiceContext parent,
                                    final PropertyDef property,
-                                   final Object lock )
+                                   final Object lock,
+                                   final JobQueue<EventDeliveryJob> queue )
     {
-        super( type, parent, lock );
+        super( type, parent, lock, queue );
         
         this.property = property;
     }

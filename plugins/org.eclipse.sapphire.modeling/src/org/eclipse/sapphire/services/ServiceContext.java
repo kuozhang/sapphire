@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.sapphire.Disposable;
-import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.EventDeliveryJob;
+import org.eclipse.sapphire.JobQueue;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem;
 import org.eclipse.sapphire.modeling.internal.SapphireModelingExtensionSystem.ServiceExtension;
 import org.eclipse.sapphire.modeling.util.DependencySorter;
@@ -46,7 +47,7 @@ public class ServiceContext implements Disposable
     
     private Map<Class<?>,List<? extends Service>> cache;
     
-    private ListenerContext coordinatingListenerContext;
+    private final JobQueue<EventDeliveryJob> queue;
     
     /**
      * The object that should be used for synchronization by all of this context's services.
@@ -58,22 +59,20 @@ public class ServiceContext implements Disposable
     
     public ServiceContext( final String type )
     {
-        this( type, null, null );
+        this( type, null, null, null );
     }
 
-    public ServiceContext( final String type,
-                           final ServiceContext parent )
+    public ServiceContext( final String type, final ServiceContext parent )
     {
-        this( type, parent, null );
+        this( type, parent, null, null );
     }
 
-    public ServiceContext( final String type,
-                           final ServiceContext parent,
-                           final Object lock )
+    public ServiceContext( final String type, final ServiceContext parent, final Object lock, final JobQueue<EventDeliveryJob> queue )
     {
         this.type = type;
         this.parent = parent;
         this.lock = ( lock == null ? this : lock );
+        this.queue = ( queue == null ? new JobQueue<EventDeliveryJob>() : queue );
     }
 
     public final String type()
@@ -182,11 +181,6 @@ public class ServiceContext implements Disposable
                         }
                         else
                         {
-                            if( this.coordinatingListenerContext != null )
-                            {
-                                service.coordinate( this.coordinatingListenerContext );
-                            }
-                            
                             sorter.add( service.id(), service );
                             
                             for( final String override : service.overrides() )
@@ -245,9 +239,9 @@ public class ServiceContext implements Disposable
         return this.lock;
     }
     
-    public final void coordinate( final ListenerContext context )
+    final JobQueue<EventDeliveryJob> queue()
     {
-        this.coordinatingListenerContext = context;
+        return this.queue;
     }
 
     protected List<ServiceProxy> local()

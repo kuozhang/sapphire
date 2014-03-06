@@ -14,6 +14,7 @@ package org.eclipse.sapphire;
 
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.internal.NonSuspendableListener;
 import org.eclipse.sapphire.modeling.ElementPropertyBinding;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
@@ -469,7 +470,7 @@ public final class ElementHandle<T extends Element> extends Property
         }
     }
     
-    private static final class PropagationListener extends FilteredListener<PropertyContentEvent>
+    private static final class PropagationListener extends FilteredListener<PropertyContentEvent> implements NonSuspendableListener
     {
         private final Listener listener;
         private final ModelPath path;

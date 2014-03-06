@@ -39,6 +39,10 @@
       color: #006600;
       font-style: italic
     }
+    .javadoc
+    {
+      color: #7F7F9F
+    }
   </style>
 </head>
 
@@ -47,10 +51,16 @@
 <h1>Enhancements in Sapphire 8</h1>
 
 <ol>
+  <li><a href="#Key">Key Enhancements</a></li>
+  <ol type="A">
+    <li><a href="#Key-EventSuspension">Event Suspension</a></li>
+  </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-ContainmentDetermination">Containment Determination</a></li>
     <li><a href="#Core-Disposable">Disposable</a></li>
+    <li><a href="#Core-EventDeliveryJob">EventDeliveryJob</a></li>
+    <li><a href="#Core-JobQueue">JobQueue</a></li>
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
     <li><a href="#Core-UniqueNullCoverage">@Unique Null Coverage</a></li>
   </ol>
@@ -69,22 +79,67 @@
 </ol>
 
 
+<h2><a name="Key"><a name="Key-EventSuspension">Event Suspension</a></a></h2>
+
+<p>Model events can now be suspended while performing a multi-step operation. This can be helpful in avoiding
+distracting flashing of the UI as the model goes through the intermediate states.</p>
+
+<pre class="source-code"><code><span class="unaffected">Element
+{</span>
+    <span class="javadoc">/**
+     * Suspends all events related to this element and everything beneath it in the model tree. The suspended
+     * events will be delivered when the suspension is released.
+     * 
+     * @return a handle that must be used to release the event suspension
+     */</span>
+    
+    Disposable suspend()
+<span class="unaffected">}</span></code></pre>
+
+<pre class="source-code"><code><span class="unaffected">Property
+{</span>
+    <span class="javadoc">/**
+     * Suspends all events related to this property and everything beneath it in the model tree. The suspended
+     * events will be delivered when the suspension is released.
+     * 
+     * @return a handle that must be used to release the event suspension
+     */</span>
+    
+    Disposable suspend()
+<span class="unaffected">}</span></code></pre>
+
+<pre class="source-code"><code><span class="unaffected">final ElementList&lt;PurchaseOrderEntry> entries = po.getEntries();</span>
+final Disposable suspension = entries.suspend();
+
+try
+{
+    <span class="unaffected">final PurchaseOrderEntry entry = entries.insert();
+    entry.setItem( "USB Cable" );
+    entry.setQuantity( 2 );
+    entry.setUnitPrice( "2.5" );</span>
+}
+finally
+{
+    suspension.dispose();
+}</code></pre>
+
+
 <h2><a name="Core"><a name="Core-ContainmentDetermination">Containment Determination</a></a></h2>
 
 <p>The developer can now easily determine whether an element or a property is located within a model tree
 that has another element or a property as the root.</p>
 
-<pre class="source-code"><code><font color="#888888">Element
-{</font>
+<pre class="source-code"><code><span class="unaffected">Element
+{</span>
     public boolean holds( Element element )
     public boolean holds( Property property )
-<font color="#888888">}</font></code></pre>
+<span class="unaffected">}</span></code></pre>
 
-<pre class="source-code"><code><font color="#888888">Property
-{</font>
+<pre class="source-code"><code><span class="unaffected">Property
+{</span>
     public boolean holds( Element element )
     public boolean holds( Property property )
-<font color="#888888">}</font></code></pre>
+<span class="unaffected">}</span></code></pre>
 
 
 <h2><a name="Core-Disposable">Disposable</a></h2>
@@ -93,7 +148,76 @@ that has another element or a property as the root.</p>
 
 <pre class="source-code"><code>interface Disposable
 {
+    <span class="javadoc">/**
+     * Performs the necessary disposal steps.
+     */</span>
+     
     void dispose()
+}</code></pre>
+
+
+<h2><a name="Core-EventDeliveryJob">EventDeliveryJob</a></h2>
+
+<p>Used by ListenerContext to deliver an Event to a Listener through a JobQueue.</p>
+
+<pre class="source-code"><code>final class EventDeliveryJob implements Runnable
+{
+    <span class="javadoc">/**
+     * Returns the listener to which the event is to be delivered.
+     */</span>
+    
+    public Listener listener()
+    
+    <span class="javadoc">/**
+     * Returns the event which is to be delivered to the listener.
+     */</span>
+    
+    public Event event()
+}</code></pre>
+
+
+<h2><a name="Core-JobQueue">JobQueue</a></h2>
+
+<p>A generic queue for processing jobs. Used by ListenerContext to deliver events to listeners. A single JobQueue can be shared
+by multiple ListenerContext instances in order to synchronize event delivery.</p>
+
+<pre class="source-code"><code>final class JobQueue&lt;T extends Runnable>
+{
+    <span class="javadoc">/**
+     * Adds a job to the end of the queue.
+     * 
+     * @param job the job
+     * @throws IllegalArgumentException if the job is null
+     */</span>
+    
+    public void add( T job )
+    
+    <span class="javadoc">/**
+     * Processes all of the jobs in the queue until the queue is empty or all of the remaining jobs are suspended
+     * through the attached filters.
+     */</span>
+    
+    public void process()
+    
+    <span class="javadoc">/**
+     * Removes jobs from the queue that are rejected by the filter.
+     * 
+     * @param filter the filter
+     * @throws IllegalArgumentException if the filter is null
+     */</span>
+    
+    public void prune( Filter&lt;T> filter )
+    
+    <span class="javadoc">/**
+     * Suspends jobs that are rejected by the filter. The suspended jobs will again become available for
+     * processing once the suspension is released. 
+     * 
+     * @param filter the filter
+     * @return a handle that must be disposed to release the suspension
+     * @throws IllegalArgumentException if the filter is null
+     */</span>
+    
+    public Disposable suspend( Filter&lt;T> filter )
 }</code></pre>
 
 
@@ -110,43 +234,43 @@ were not indexed and an exception was thrown on lookup.</p>
 <p>By default, the @Unique constraint does not apply to null values. This is appropriate in many cases, but sometimes the semantics
 dictate that at most one null should be allowed. The @Unique constraint can now be configured to cover this case.</p>
 
-<pre class="source-code"><code><font color="#888888">interface ListEntry extends Element
+<pre class="source-code"><code><span class="unaffected">interface ListEntry extends Element
 {
     ElementType TYPE = new ElementType( ListEntry.class );
     
     // *** Value ***
     
-    @Unique</font>( ignoreNullValues = false )
+    @Unique</span>( ignoreNullValues = false )
     
-    <font color="#888888">ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
+    <span class="unaffected">ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     
     Value&lt;String> getValue();
     void setValue( String value );
-}</font></code></pre>
+}</span></code></pre>
 
 
 <h2><a name="ExpressionLanguage"><a name="ExpressionLanguage-UseInPossibleValues">Use EL in @PossibleValues</a></a></h2>
 
 <p>Use EL in the @PossibleValues when specifying a custom invalid value message.</p>
 
-<pre class="source-code"><code><font color="#888888">@PossibleValues
+<pre class="source-code"><code><span class="unaffected">@PossibleValues
 ( 
     property = "/Contacts/Name",
-    invalidValueMessage =</font> "Could not find contact \"${Name}\" in the repository" 
-<font color="#888888">)</font></code></pre>
+    invalidValueMessage =</span> "Could not find contact \"${Name}\" in the repository" 
+<span class="unaffected">)</span></code></pre>
 
 
 <h2><a name="Forms"><a name="Forms-JavaPackageBrowsing">Java Package Browsing</a></a></h2>
 
 <p>A browse dialog is now provided for value properties of JavaPackageName type when in the context of a Java project.</p>
 
-<pre class="source-code"><code><font color="#888888">@Type( base =</font> JavaPackageName<font color="#888888">.class )
+<pre class="source-code"><code><span class="unaffected">@Type( base =</span> JavaPackageName<span class="unaffected">.class )
 
 ValueProperty PROP_PACKAGE = new ValueProperty( TYPE, "Package" );
     
-Value&lt;</font>JavaPackageName<font color="#888888">> getPackage();
+Value&lt;</span>JavaPackageName<span class="unaffected">> getPackage();
 void setPackage( String value );
-void setPackage(</font> JavaPackageName <font color="#888888">value );</font></code></pre>
+void setPackage(</span> JavaPackageName <span class="unaffected">value );</span></code></pre>
 
 <p style="margin-left: 20px;"><img src="images/JavaPackageBrowsing.png"/></p>
 

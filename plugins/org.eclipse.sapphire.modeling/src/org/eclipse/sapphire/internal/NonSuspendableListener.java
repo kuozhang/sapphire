@@ -9,20 +9,15 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
-
-import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.Sapphire;
+package org.eclipse.sapphire.internal;
 
 /**
+ * Marker interface for listeners that should continue to receive events when event deliver to other listeners is suspended.
+ * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class PropertyMetaModelServiceContext extends PropertyServiceContext
+public interface NonSuspendableListener
 {
-    public PropertyMetaModelServiceContext( final PropertyDef property )
-    {
-        super( ID_PROPERTY_METAMODEL, Sapphire.services(), property, null, null );
-    }
     
 }

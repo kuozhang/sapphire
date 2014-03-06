@@ -15,7 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.sapphire.internal.NonSuspendableListener;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
+import org.eclipse.sapphire.modeling.ElementEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.ModelRootSegment;
@@ -513,10 +515,27 @@ public abstract class Property implements Observable
         {
             if( this.services == null )
             {
-                this.services = new PropertyInstanceServiceContext( this, ( (ElementImpl) element() ).listeners() );
+                this.services = new PropertyInstanceServiceContext( this, ( (ElementImpl) element() ).queue() );
             }
             
             return this.services.services( type );
+        }
+    }
+    
+    private ListenerContext listeners( final boolean createIfNecessary )
+    {
+        final Element root = root();
+        
+        synchronized( root )
+        {
+            if( this.listeners == null && createIfNecessary )
+            {
+                assertNotDisposed();
+                
+                this.listeners = new ListenerContext( this == root ? null : ( (ElementImpl) root ).queue() );
+            }
+            
+            return this.listeners;
         }
     }
     
@@ -535,18 +554,7 @@ public abstract class Property implements Observable
             throw new IllegalArgumentException();
         }
         
-        synchronized( root() )
-        {
-            assertNotDisposed();
-            
-            if( this.listeners == null )
-            {
-                this.listeners = new ListenerContext();
-                this.listeners.coordinate( ( (ElementImpl) this.element ).listeners() );
-            }
-            
-            this.listeners.attach( listener );
-        }
+        listeners( true ).attach( listener );
     }
     
     /**
@@ -654,12 +662,11 @@ public abstract class Property implements Observable
             throw new IllegalArgumentException();
         }
         
-        synchronized( root() )
+        final ListenerContext listeners = listeners( false );
+        
+        if( listeners != null )
         {
-            if( this.listeners != null )
-            {
-                this.listeners.detach( listener );
-            }
+            listeners.detach( listener );
         }
     }
     
@@ -752,18 +759,36 @@ public abstract class Property implements Observable
     {
         if( event != null )
         {
-            final ListenerContext listeners;
-            
-            synchronized( root() )
-            {
-                listeners = this.listeners;
-            }
+            final ListenerContext listeners = listeners( false );
             
             if( listeners != null )
             {
                 listeners.broadcast( event );
             }
         }
+    }
+    
+    /**
+     * Suspends all events related to this property and everything beneath it in the model tree. The suspended
+     * events will be delivered when the suspension is released.
+     * 
+     * @return a handle that must be used to release the event suspension
+     */
+    
+    public final Disposable suspend()
+    {
+        final JobQueue<EventDeliveryJob> queue = listeners( true ).queue();
+        final Disposable suspension = queue.suspend( new SuspendFilter() );
+        
+        return new Disposable()
+        {
+            @Override
+            public void dispose()
+            {
+                suspension.dispose();
+                queue.process();
+            }
+        };
     }
     
     public final boolean disposed()
@@ -824,6 +849,29 @@ public abstract class Property implements Observable
         );
         
         return new IllegalArgumentException( message );
+    }
+    
+    private final class SuspendFilter implements Filter<EventDeliveryJob>
+    {
+        @Override
+        public boolean allows( final EventDeliveryJob job )
+        {
+            if( ! ( job.listener() instanceof NonSuspendableListener ) )
+            {
+                final Event event = job.event();
+                
+                if( event instanceof PropertyEvent )
+                {
+                    return ! ( Property.this.holds( ( (PropertyEvent) event ).property() ) );
+                }
+                else if( event instanceof ElementEvent )
+                {
+                    return ! ( Property.this.holds( ( (ElementEvent) event ).element() ) );
+                }
+            }
+            
+            return true;
+        }
     }
     
 }

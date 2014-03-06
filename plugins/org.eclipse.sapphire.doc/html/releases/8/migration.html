@@ -61,6 +61,7 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
   <li><a href="#Filter">Filter</a></li>
   <li><a href="#InitialValueService">InitialValueService</a></li>
   <li><a href="#InitialValueServiceData">InitialValueServiceData</a></li>
+  <li><a href="#ListenerContext">ListenerContext</a></li>
   <li><a href="#NoDuplicates">NoDuplicates</a></li>
   <li><a href="#PossibleValues">PossibleValues</a></li>
   <li><a href="#PossibleValuesService">PossibleValuesService</a></li>
@@ -277,6 +278,62 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
 <h2><a name="InitialValueServiceData">InitialValueServiceData</a></h2>
 
 <p>This class has been removed. See <a href="#InitialValueService">InitialValueService</a> migration.
+
+
+<h2><a name="ListenerContext">ListenerContext</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ListenerContext context = new ListenerContext();</span>
+context.coordinate( another );</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">ListenerContext context = new ListenerContext(</span> another.queue() <span class="unaffected">);</span></code></pre>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>context.suspend( ExampleEvent.class );
+
+<span class="unaffected">try
+{
+    ...
+}
+finally
+{</span>
+    context.resume( ExampleEvent.class );
+<span class="unaffected">}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>final Disposable suspension = context.queue().suspend
+(
+    new Filter&lt;EventDeliveryJob>()
+    {
+        @Override
+        public boolean allows( final EventDeliveryJob job )
+        {
+            return ! ( job.event() instanceof ExampleEvent );
+        }
+    }
+);
+
+<span class="unaffected">try
+{
+    ...
+}
+finally
+{</span>
+    suspension.dispose();
+    context.queue().process();
+<span class="unaffected">}</span></code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="NoDuplicates">NoDuplicates</a></h2>

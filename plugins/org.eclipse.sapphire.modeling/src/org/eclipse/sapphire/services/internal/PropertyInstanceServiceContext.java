@@ -12,8 +12,10 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementImpl;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.ListenerContext;
+import org.eclipse.sapphire.EventDeliveryJob;
+import org.eclipse.sapphire.JobQueue;
 import org.eclipse.sapphire.Property;
 
 /**
@@ -24,17 +26,11 @@ public final class PropertyInstanceServiceContext extends PropertyServiceContext
 {
     private final Property property;
     
-    public PropertyInstanceServiceContext( final Property instance,
-                                           final ListenerContext listenerContextForCoordination )
+    public PropertyInstanceServiceContext( final Property instance, final JobQueue<EventDeliveryJob> queue )
     {
-        super( ID_PROPERTY_INSTANCE, instance.definition().services(), instance.definition(), instance.root() );
+        super( ID_PROPERTY_INSTANCE, instance.definition().services(), instance.definition(), instance.root(), ( (ElementImpl) instance.element() ).queue() );
         
         this.property = instance;
-        
-        if( listenerContextForCoordination != null )
-        {
-            coordinate( listenerContextForCoordination );
-        }
     }
     
     @Override

@@ -82,6 +82,8 @@ import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.sapphire.ui.forms.SectionDef;
 import org.eclipse.sapphire.ui.forms.SectionPart;
 import org.eclipse.sapphire.ui.forms.SectionRef;
+import org.eclipse.sapphire.ui.forms.SpacerDef;
+import org.eclipse.sapphire.ui.forms.SpacerPart;
 import org.eclipse.sapphire.ui.forms.SplitFormDef;
 import org.eclipse.sapphire.ui.forms.SplitFormPart;
 import org.eclipse.sapphire.ui.forms.SplitFormSectionDef;
@@ -92,8 +94,6 @@ import org.eclipse.sapphire.ui.forms.TabGroupDef;
 import org.eclipse.sapphire.ui.forms.TabGroupPart;
 import org.eclipse.sapphire.ui.forms.TextDef;
 import org.eclipse.sapphire.ui.forms.TextPart;
-import org.eclipse.sapphire.ui.forms.SpacerDef;
-import org.eclipse.sapphire.ui.forms.SpacerPart;
 import org.eclipse.sapphire.ui.forms.WithDef;
 import org.eclipse.sapphire.ui.forms.WithImpliedPart;
 import org.eclipse.sapphire.ui.forms.WithPart;
@@ -134,7 +134,7 @@ public abstract class SapphirePart implements ISapphirePart
     protected PartDef definition;
     protected Map<String,String> params;
     private Status validation;
-    private final ListenerContext listeners = new ListenerContext();
+    private ListenerContext listeners;
     private Set<SapphirePartListener> listenersDeprecated;
     private SwtResourceCache imageCache;
     private Map<String,SapphireActionGroup> actions;
@@ -168,7 +168,7 @@ public abstract class SapphirePart implements ISapphirePart
     
     public final void initialize()
     {
-        this.listeners.coordinate( ( (ElementImpl) this.modelElement ).listeners() );
+        this.listeners = new ListenerContext( ( (ElementImpl) this.modelElement ).queue() );
         
         for( ISapphirePartListenerDef listenerDefinition : this.definition.getListeners() )
         {

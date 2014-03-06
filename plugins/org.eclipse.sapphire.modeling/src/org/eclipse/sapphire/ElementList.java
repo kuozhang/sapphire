@@ -21,6 +21,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.internal.NonSuspendableListener;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
@@ -1052,7 +1053,7 @@ public final class ElementList<T extends Element> extends Property implements Li
         }
     }
     
-    private static final class PropagationListener extends FilteredListener<PropertyContentEvent>
+    private static final class PropagationListener extends FilteredListener<PropertyContentEvent> implements NonSuspendableListener
     {
         private final Listener listener;
         private final ModelPath path;

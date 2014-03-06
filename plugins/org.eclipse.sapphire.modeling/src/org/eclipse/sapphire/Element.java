@@ -209,5 +209,14 @@ public interface Element extends Observable, Disposable
     void detach( Listener listener, String path );
     void detach( Listener listener, ModelPath path );
     
+    /**
+     * Suspends all events related to this element and everything beneath it in the model tree. The suspended
+     * events will be delivered when the suspension is released.
+     * 
+     * @return a handle that must be used to release the event suspension
+     */
+    
+    Disposable suspend();
+    
     boolean disposed();
 }

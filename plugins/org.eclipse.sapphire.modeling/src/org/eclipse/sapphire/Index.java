@@ -244,8 +244,7 @@ public final class Index<T extends Element>
             
             if( this.listeners == null )
             {
-                this.listeners = new ListenerContext();
-                this.listeners.coordinate( ( (ElementImpl) this.list.element() ).listeners() );
+                this.listeners = new ListenerContext( ( (ElementImpl) this.list.element() ).queue() );
             }
             
             this.listeners.attach( listener );

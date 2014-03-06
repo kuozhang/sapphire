@@ -18,7 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
+import org.eclipse.sapphire.internal.NonSuspendableListener;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
+import org.eclipse.sapphire.modeling.ElementEvent;
 import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.AllSiblingsSegment;
@@ -69,7 +71,7 @@ public abstract class ElementImpl implements Element
     private final Resource resource;
     private final SortedSet<Property> properties;
     private final Map<String,Property> propertiesByName;
-    private final ListenerContext listeners = new ListenerContext();
+    private ListenerContext listeners;
     private ElementInstanceServiceContext elementServiceContext;
     private boolean disposed = false;
     
@@ -124,12 +126,6 @@ public abstract class ElementImpl implements Element
         
         this.properties = propertiesSetFactory.result();
         this.propertiesByName = propertiesByNameMapFactory.result();
-        
-        if( parent != null )
-        {
-            final ElementImpl p = (ElementImpl) parent.element();
-            this.listeners.coordinate( p.listeners );
-        }
         
         resource.init( this );
         
@@ -782,7 +778,6 @@ public abstract class ElementImpl implements Element
             if( this.elementServiceContext == null )
             {
                 this.elementServiceContext = new ElementInstanceServiceContext( this );
-                this.elementServiceContext.coordinate( this.listeners );
             }
             
             return this.elementServiceContext.services( type );
@@ -826,16 +821,44 @@ public abstract class ElementImpl implements Element
         }
     }
     
-    public ListenerContext listeners()
+    public JobQueue<EventDeliveryJob> queue()
     {
-        return this.listeners;
+        return ( (ElementImpl) root() ).listeners( true ).queue();
     }
+    
+    private ListenerContext listeners( final boolean createIfNecessary )
+    {
+        final Element root = root();
+        
+        synchronized( root )
+        {
+            if( this.listeners == null && createIfNecessary )
+            {
+                assertNotDisposed();
+                
+                this.listeners = new ListenerContext( this == root ? null : ( (ElementImpl) root ).listeners( true ).queue() );
+            }
+            
+            return this.listeners;
+        }
+    }
+    
+    /**
+     * Attaches a listener to this element.
+     * 
+     * @param listener the listener
+     * @throws IllegalArgumentException if the listener is null
+     * @throws IllegalStateException if this element is disposed
+     */
     
     public final void attach( final Listener listener )
     {
-        assertNotDisposed();
-
-        this.listeners.attach( listener );
+        if( listener == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        listeners( true ).attach( listener );
     }
     
     public final void attach( final Listener listener,
@@ -920,14 +943,26 @@ public abstract class ElementImpl implements Element
         }
     }
     
+    /**
+     * Detaches a listener from this element.
+     * 
+     * @param listener the listener
+     * @throws IllegalArgumentException if the listener is null
+     */
+    
     public final void detach( final Listener listener )
     {
-        if( disposed() )
+        if( listener == null )
         {
-            return;
+            throw new IllegalArgumentException();
         }
         
-        this.listeners.detach( listener );
+        final ListenerContext listeners = listeners( false );
+        
+        if( listeners != null )
+        {
+            listeners.detach( listener );
+        }
     }
     
     public final void detach( final Listener listener,
@@ -1020,17 +1055,55 @@ public abstract class ElementImpl implements Element
         
     protected final void post( final Event event )
     {
-        this.listeners.post( event );
+        if( event != null )
+        {
+            final ListenerContext listeners = listeners( false );
+            
+            if( listeners != null )
+            {
+                listeners.post( event );
+            }
+        }
     }
 
     protected final void broadcast()
     {
-        this.listeners.broadcast();
+        final ListenerContext listeners = listeners( false );
+        
+        if( listeners != null )
+        {
+            listeners.broadcast();
+        }
     }
     
     protected final void broadcast( final Event event )
     {
-        this.listeners.broadcast( event );
+        if( event != null )
+        {
+            final ListenerContext listeners = listeners( false );
+            
+            if( listeners != null )
+            {
+                listeners.broadcast( event );
+            }
+        }
+    }
+    
+    @Override
+    public final Disposable suspend()
+    {
+        final JobQueue<EventDeliveryJob> queue = listeners( true ).queue();
+        final Disposable suspension = queue.suspend( new SuspendFilter() );
+        
+        return new Disposable()
+        {
+            @Override
+            public void dispose()
+            {
+                suspension.dispose();
+                queue.process();
+            }
+        };
     }
     
     public final boolean disposed()
@@ -1070,6 +1143,8 @@ public abstract class ElementImpl implements Element
                 {
                     Sapphire.service( LoggingService.class ).log( e );
                 }
+                
+                this.listeners = null;
             }
         }
     }
@@ -1144,6 +1219,29 @@ public abstract class ElementImpl implements Element
         }
         
         return value;
+    }
+    
+    private final class SuspendFilter implements Filter<EventDeliveryJob>
+    {
+        @Override
+        public boolean allows( final EventDeliveryJob job )
+        {
+            if( ! ( job.listener() instanceof NonSuspendableListener ) )
+            {
+                final Event event = job.event();
+                
+                if( event instanceof PropertyEvent )
+                {
+                    return ! ( ElementImpl.this.holds( ( (PropertyEvent) event ).property() ) );
+                }
+                else if( event instanceof ElementEvent )
+                {
+                    return ! ( ElementImpl.this.holds( ( (ElementEvent) event ).element() ) );
+                }
+            }
+            
+            return true;
+        }
     }
     
 }

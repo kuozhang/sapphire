@@ -58,9 +58,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.EventDeliveryJob;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Filter;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ListProperty;
@@ -1137,11 +1140,11 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             {
                                 selectionPostDelete = parentNode;
                             }
+
+                            final Disposable suspension = outline.listeners().queue().suspend( SelectionChangedEventFilter.INSTANCE );
                             
                             try
                             {
-                                outline.listeners().suspend( MasterDetailsContentOutline.SelectionChangedEvent.class );
-                            
                                 for( Element dragElement : dragElements )
                                 {
                                     final ElementList<?> dragElementContainer = (ElementList<?>) dragElement.parent();
@@ -1163,7 +1166,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             }
                             finally
                             {
-                                outline.listeners().resume( MasterDetailsContentOutline.SelectionChangedEvent.class );
+                                suspension.dispose();
+                                outline.listeners().queue().process();
                             }
                             
                             parentNode.getContentTree().setSelectedNode( selectionPostDelete );
@@ -1426,10 +1430,10 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     
                     // Perform the removal and insertion into the new location.
                     
+                    final Disposable suspension = outline.listeners().queue().suspend( SelectionChangedEventFilter.INSTANCE );
+                    
                     try
                     {
-                        outline.listeners().suspend( MasterDetailsContentOutline.SelectionChangedEvent.class );
-                    
                         if( event.detail == DND.DROP_MOVE )
                         {
                             for( Element dragElement : dragElements )
@@ -1476,7 +1480,8 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     }
                     finally
                     {
-                        outline.listeners().resume( MasterDetailsContentOutline.SelectionChangedEvent.class );
+                        suspension.dispose();
+                        outline.listeners().queue().process();
                     }
                 }
             }
@@ -2179,6 +2184,17 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
         public void run()
         {
             this.tree.update( this.element, null );
+        }
+    }
+    
+    private static final class SelectionChangedEventFilter implements Filter<EventDeliveryJob>
+    {
+        public static SelectionChangedEventFilter INSTANCE = new SelectionChangedEventFilter();
+
+        @Override
+        public boolean allows( final EventDeliveryJob job )
+        {
+            return ! ( job.event() instanceof MasterDetailsContentOutline.SelectionChangedEvent );
         }
     }
     

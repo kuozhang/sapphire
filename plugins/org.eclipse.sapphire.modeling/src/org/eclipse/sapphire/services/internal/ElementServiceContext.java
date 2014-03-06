@@ -15,6 +15,8 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.EventDeliveryJob;
+import org.eclipse.sapphire.JobQueue;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
@@ -28,9 +30,10 @@ public abstract class ElementServiceContext extends AnnotationsAwareServiceConte
     public ElementServiceContext( final String contextType,
                                   final ServiceContext parent,
                                   final ElementType elementMetaModel,
-                                  final Object lock )
+                                  final Object lock,
+                                  final JobQueue<EventDeliveryJob> queue )
     {
-        super( contextType, parent, lock );
+        super( contextType, parent, lock, queue );
         
         this.elementMetaModel = elementMetaModel;
     }

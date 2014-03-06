@@ -59,7 +59,6 @@ public interface PurchaseOrderEntry extends Element
     
     @Type( base = Integer.class )
     @Label( standard = "quantity" )
-    @Required
     @DefaultValue( text = "1" )
     
     ValueProperty PROP_QUANTITY = new ValueProperty( TYPE, "Quantity" );

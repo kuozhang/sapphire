@@ -11,12 +11,8 @@
 
 package org.eclipse.sapphire;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,15 +23,21 @@ public final class ListenerContext
     private static final boolean TRACE = false;
     
     private final Set<Listener> listeners = new LinkedHashSet<Listener>();
-    private Queue<BroadcastJob> queue = new ConcurrentLinkedQueue<BroadcastJob>();
-    private final Map<Class<? extends Event>,Event> suspended = new HashMap<Class<? extends Event>,Event>();
+    private final JobQueue<EventDeliveryJob> queue;
     
-    public void coordinate( final ListenerContext context )
+    public ListenerContext()
     {
-        synchronized( this )
-        {
-            this.queue = ( context == null ? new ConcurrentLinkedQueue<BroadcastJob>() : context.queue );
-        }
+        this( null );
+    }
+    
+    public ListenerContext( final JobQueue<EventDeliveryJob> queue )
+    {
+        this.queue = ( queue == null ? new JobQueue<EventDeliveryJob>() : queue );
+    }
+    
+    public JobQueue<EventDeliveryJob> queue()
+    {
+        return this.queue;
     }
     
     public boolean attach( final Listener listener )
@@ -67,13 +69,18 @@ public final class ListenerContext
         
         if( removed )
         {
-            for( BroadcastJob job : this.queue )
-            {
-                if( job.listener().equals( listener ) )
+            this.queue.prune
+            (
+                new Filter<EventDeliveryJob>()
                 {
-                    this.queue.remove( job );
+                    @Override
+                    public boolean allows( final EventDeliveryJob job )
+                    {
+                        return ! job.listener().equals( listener );
+                    }
+                    
                 }
-            }
+            );
             
             return true;
         }
@@ -83,120 +90,46 @@ public final class ListenerContext
     
     public void post( final Event event )
     {
-        final Class<? extends Event> eventType = event.getClass();
-        final boolean post;
+        if( event == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        this.queue.prune
+        (
+            new Filter<EventDeliveryJob>()
+            {
+                @Override
+                public boolean allows( final EventDeliveryJob job )
+                {
+                    return ! event.supersedes( job.event() );
+                }
+            }
+        );
         
         synchronized( this )
         {
-            if( this.suspended.containsKey( eventType ) )
+            if( TRACE )
             {
-                this.suspended.put( eventType, event );
-                post = false;
-            }
-            else
-            {
-                post = true;
-            }
-        }
-        
-        if( post )
-        {
-            for( BroadcastJob job : this.queue )
-            {
-                if( event.supersedes( job.event() ) )
-                {
-                    this.queue.remove( job );
-                }
+                event.trace( this.listeners.size() );
             }
             
-            synchronized( this )
+            for( Listener listener : this.listeners )
             {
-                if( TRACE )
-                {
-                    event.trace( this.listeners.size() );
-                }
-                
-                for( Listener listener : this.listeners )
-                {
-                    this.queue.add( new BroadcastJob( listener, event ) );
-                }
+                this.queue.add( new EventDeliveryJob( listener, event ) );
             }
         }
     }
     
     public void broadcast()
     {
-        for( BroadcastJob job = this.queue.poll(); job != null; job = this.queue.poll() )
-        {
-            job.run();
-        }
+        this.queue.process();
     }
 
     public void broadcast( final Event event )
     {
         post( event );
         broadcast();
-    }
-    
-    public void suspend( final Class<? extends Event> eventType )
-    {
-        synchronized( this )
-        {
-            if( ! this.suspended.containsKey( eventType ) )
-            {
-                this.suspended.put( eventType, null );
-            }
-        }
-    }
-    
-    public void resume( final Class<? extends Event> eventType )
-    {
-        Event event = null;
-        
-        synchronized( this )
-        {
-            event = this.suspended.remove( eventType );
-        }
-        
-        if( event != null )
-        {
-            broadcast( event );
-        }
-    }
-    
-    private static final class BroadcastJob
-    {
-        private final Listener listener;
-        private final Event event;
-         
-        public BroadcastJob( final Listener listener,
-                             final Event event )
-        {
-            this.listener = listener;
-            this.event = event;
-        }
-        
-        public Listener listener()
-        {
-            return this.listener;
-        }
-        
-        public Event event()
-        {
-            return this.event;
-        }
-
-        public void run()
-        {
-            try
-            {
-                this.listener.handle( this.event );
-            }
-            catch( Exception e )
-            {
-                Sapphire.service( LoggingService.class ).log( e );
-            }
-        }
     }
 
 }

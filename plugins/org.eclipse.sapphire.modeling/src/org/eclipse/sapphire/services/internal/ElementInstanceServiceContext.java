@@ -12,6 +12,7 @@
 package org.eclipse.sapphire.services.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementImpl;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -23,7 +24,7 @@ public final class ElementInstanceServiceContext extends ElementServiceContext
     
     public ElementInstanceServiceContext( final Element element )
     {
-        super( ID_ELEMENT_INSTANCE, element.type().services(), element.type(), element.root() );
+        super( ID_ELEMENT_INSTANCE, element.type().services(), element.type(), element.root(), ( (ElementImpl) element ).queue() );
         
         this.element = element;
     }

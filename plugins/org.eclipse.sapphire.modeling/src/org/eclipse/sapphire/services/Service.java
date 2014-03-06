@@ -35,7 +35,7 @@ public abstract class Service implements Disposable
     private String id;
     private Map<String,String> params;
     private Set<String> overrides;
-    private final ListenerContext listeners = new ListenerContext();
+    private ListenerContext listeners;
     
     final void init( final ServiceContext context,
                      final String id,
@@ -46,6 +46,7 @@ public abstract class Service implements Disposable
         this.id = id;
         this.params = MapFactory.unmodifiable( params );
         this.overrides = SetFactory.unmodifiable( overrides );
+        this.listeners = new ListenerContext( context.queue() );
     }
     
     final void initIfNecessary()
@@ -108,11 +109,6 @@ public abstract class Service implements Disposable
     final Set<String> overrides()
     {
         return this.overrides;
-    }
-    
-    final void coordinate( final ListenerContext context )
-    {
-        this.listeners.coordinate( context );
     }
     
     public final boolean attach( final Listener listener )
