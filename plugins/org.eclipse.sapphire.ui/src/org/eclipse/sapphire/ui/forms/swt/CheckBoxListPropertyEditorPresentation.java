@@ -47,7 +47,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
@@ -754,10 +756,21 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
         
         public void flip()
         {
+            final ElementList<?> list = property();
+            
             if( this.element == null )
             {
-                rebase( property().insert() );
-                this.property.write( this.value );
+                final Disposable suspension = list.suspend();
+                
+                try
+                {
+                    rebase( list.insert() );
+                    this.property.write( this.value );
+                }
+                finally
+                {
+                    suspension.dispose();
+                }
             }
             else
             {
@@ -767,7 +780,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
                 
                 final Element el = this.element;
                 rebase( null );
-                property().remove( el );
+                list.remove( el );
             }
         }
         

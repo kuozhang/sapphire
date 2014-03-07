@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -38,20 +37,17 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
-import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyContentEvent;
-import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
-import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireAction;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
@@ -59,6 +55,7 @@ import org.eclipse.sapphire.ui.def.ActionHandlerDef;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
+import org.eclipse.sapphire.ui.forms.swt.internal.PossibleValuesListPresentationFactory;
 import org.eclipse.sapphire.ui.forms.swt.internal.ValueLabelProvider;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.sapphire.util.SetFactory;
@@ -366,28 +363,14 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
         }
     }
     
-    public static final class Factory extends PropertyEditorPresentationFactory
+    public static final class Factory extends PossibleValuesListPresentationFactory
     {
         @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            final Property property = part.property();
-            
-            if( property.definition() instanceof ListProperty &&
-                property.service( PossibleValuesService.class ) != null &&
-                property.service( PossibleTypesService.class ).types().size() == 1 )
+            if( check( part ) )
             {
-                final SortedSet<PropertyDef> properties = property.definition().getType().properties();
-                
-                if( properties.size() == 1 )
-                {
-                    final PropertyDef memberProperty = properties.first();
-                    
-                    if( memberProperty instanceof ValueProperty && memberProperty.hasAnnotation( Unique.class ) )
-                    {
-                        return new SlushBucketPropertyEditorPresentation( part, parent, composite );
-                    }
-                }
+                return new SlushBucketPropertyEditorPresentation( part, parent, composite );
             }
     
             return null;
@@ -420,12 +403,20 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
             if( list != null )
             {
                 final ListFactory<Element> elements = ListFactory.start();
+                final Disposable suspension = list.suspend();
                 
-                for( String str : this.input )
+                try
                 {
-                    final Element element = list.insert();
-                    element.property( SlushBucketPropertyEditorPresentation.this.memberProperty ).write( str );
-                    elements.add( element );
+                    for( String str : this.input )
+                    {
+                        final Element element = list.insert();
+                        element.property( SlushBucketPropertyEditorPresentation.this.memberProperty ).write( str );
+                        elements.add( element );
+                    }
+                }
+                finally
+                {
+                    suspension.dispose();
                 }
                 
                 setSelectedElements( elements.result() );

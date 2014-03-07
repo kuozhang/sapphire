@@ -62,6 +62,7 @@ import org.eclipse.sapphire.ui.forms.swt.SlushBucketPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.SwtPresentation;
 import org.eclipse.sapphire.ui.forms.swt.TablePropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.TextFieldPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.CheckBoxGroupPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.CheckBoxPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.EnumPropertyEditorPresentationFactory;
 import org.eclipse.sapphire.ui.forms.swt.internal.NamedValuesPropertyEditorPresentation;
@@ -90,6 +91,8 @@ public final class PropertyEditorPart extends FormComponentPart
         FACTORIES.add( new EnumPropertyEditorPresentationFactory() );
         FACTORIES.add( new NamedValuesPropertyEditorPresentation.Factory() );
         FACTORIES.add( new TextFieldPropertyEditorPresentation.Factory() );
+        FACTORIES.add( new CheckBoxGroupPropertyEditorPresentation.HorizontalFactory() );
+        FACTORIES.add( new CheckBoxGroupPropertyEditorPresentation.VerticalFactory() );
         FACTORIES.add( new CheckBoxListPropertyEditorPresentation.EnumFactory() );
         FACTORIES.add( new SlushBucketPropertyEditorPresentation.Factory() );
         FACTORIES.add( new TablePropertyEditorPresentation.Factory() );

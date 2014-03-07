@@ -1,0 +1,76 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2014 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Check Box Group</title>
+  <link rel="StyleSheet" href="../../../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>Check Box Group</h1>
+
+<p>The check box group is one of the presentation alternatives for a possible values list. This
+presentation has the advantage of being compact, but should only be used in cases where the set
+of possible values is known to always be small.</p>
+
+<p>The check boxes can be arranged either horizontally or vertically.</p>
+
+<p style="margin-left: 20px;"><img src="Example-Horizontal-1.png"/></p>
+
+<p style="margin-left: 20px;"><img src="Example-Vertical-1.png"/></p>
+
+<p>The presentation will utilize ValueImageService and ValueLabelService, if present on the list entry's
+value property. The services must be attached to the value property's global service context.</p>
+
+<p style="margin-left: 20px;"><img src="Example-Horizontal-2.png"/></p>
+
+<p style="margin-left: 20px;"><img src="Example-Vertical-2.png"/></p>
+
+<h2>Applicability</h2>
+
+<ol>
+  <li>The property is a list property</li>
+  <li>The list property has a PossibleValuesService</li>
+  <li>There is exactly one possible member type</li>
+  <li>The member type has exactly one property and that property is a value property</li>
+  <li>The value property has @Unique annotation</li>
+</ol>
+
+<h2>Automatic Activation</h2>
+
+<p>This presentation does not activate automatically.</p>
+
+<h2>Manual Activation</h2>
+
+<p>The following style codes will activate this presentation as long as the applicability conditions are met.</p>
+
+<ul>
+  <li>Sapphire.PropertyEditor.CheckBoxGroup <span class="deemphasized">- <i>produces horizontal presentation</i></span></li>
+  <li>Sapphire.PropertyEditor.CheckBoxGroup.Horizontal</li>
+  <li>Sapphire.PropertyEditor.CheckBoxGroup.Vertical</li>
+</ul>
+
+<pre class="source-code"><code><span class="deemphasized">&lt;property-editor>
+    &lt;property>Colors&lt;/property></span>
+    &lt;style>Sapphire.PropertyEditor.CheckBoxGroup.Vertical&lt;/style>
+<span class="deemphasized">&lt;/property-editor></span></code></pre>
+
+<div class="copyright">Copyright (c) 2014 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

@@ -1094,6 +1094,24 @@
                                     <value>false</value>
                                 </hint>
                             </property-editor>
+                            <spacer></spacer>
+                            <label>The check box group presentation is useful when compactness is desired and the list of possible values is known to always be small.</label>
+                            <spacer></spacer>
+                            <label>Style: Sapphire.PropertyEditor.CheckBoxGroup.Horizontal</label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <style>Sapphire.PropertyEditor.CheckBoxGroup.Horizontal</style>
+                                <property>MultiSelectString</property>
+                                <show-label>false</show-label>
+                            </property-editor>
+                            <spacer></spacer>
+                            <label>Style: Sapphire.PropertyEditor.CheckBoxGroup.Vertical</label>
+                            <spacer></spacer>
+                            <property-editor>
+                                <style>Sapphire.PropertyEditor.CheckBoxGroup.Vertical</style>
+                                <property>MultiSelectString</property>
+                                <show-label>false</show-label>
+                            </property-editor>
                         </content>
                     </section>
                 </node>

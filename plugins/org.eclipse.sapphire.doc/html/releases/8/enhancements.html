@@ -71,6 +71,7 @@
   <li><a href="#Forms">Forms</a></li>
   <ol type="A">
     <li><a href="#Forms-JavaPackageBrowsing">Java Package Browsing</a></li>
+    <li><a href="#Forms-CheckBoxGroup">Check Box Group</a></li>
   </ol>
   <li><a href="#XML">XML</a></li>
   <ol type="A">
@@ -272,7 +273,62 @@ Value&lt;</span>JavaPackageName<span class="unaffected">> getPackage();
 void setPackage( String value );
 void setPackage(</span> JavaPackageName <span class="unaffected">value );</span></code></pre>
 
-<p style="margin-left: 20px;"><img src="images/JavaPackageBrowsing.png"/></p>
+<p style="margin-left: 20px;"><img src="JavaPackageBrowsing.png"/></p>
+
+
+<h2><a name="Forms-CheckBoxGroup">Check Box Group</a></h2>
+
+<p>Sapphire already includes a slush bucket and a check box list presentation alternatives for a possible
+values list.</p> 
+
+<p style="margin-left: 20px;"><img src="SlushBucket.png"/></p>
+
+<p style="margin-left: 20px;"><img src="CheckBoxList.png"/></p>
+
+<p>However, in some cases where the set of possible values is known to always be small, a more
+compact presentation is desired. The new check box group presentation fills this need.</p> 
+
+<p>The check boxes can be arranged either horizontally or vertically.</p>
+
+<p style="margin-left: 20px;"><img src="CheckBoxGroup-Horizontal-1.png"/></p>
+
+<p style="margin-left: 20px;"><img src="CheckBoxGroup-Vertical-1.png"/></p>
+
+<p>The presentation will utilize ValueImageService and ValueLabelService, if present on the list entry's
+value property. The services must be attached to the value property's global service context.</p>
+
+<p style="margin-left: 20px;"><img src="CheckBoxGroup-Horizontal-2.png"/></p>
+
+<p style="margin-left: 20px;"><img src="CheckBoxGroup-Vertical-2.png"/></p>
+
+<h3>Applicability</h3>
+
+<ol>
+  <li>The property is a list property</li>
+  <li>The list property has a PossibleValuesService</li>
+  <li>There is exactly one possible member type</li>
+  <li>The member type has exactly one property and that property is a value property</li>
+  <li>The value property has @Unique annotation</li>
+</ol>
+
+<h3>Automatic Activation</h3>
+
+<p>This presentation does not activate automatically.</p>
+
+<h3>Manual Activation</h3>
+
+<p>The following style codes will activate this presentation as long as the applicability conditions are met.</p>
+
+<ul>
+  <li>Sapphire.PropertyEditor.CheckBoxGroup <span class="deemphasized">- <i>produces horizontal presentation</i></span></li>
+  <li>Sapphire.PropertyEditor.CheckBoxGroup.Horizontal</li>
+  <li>Sapphire.PropertyEditor.CheckBoxGroup.Vertical</li>
+</ul>
+
+<pre class="source-code"><code><span class="deemphasized">&lt;property-editor>
+    &lt;property>Colors&lt;/property></span>
+    &lt;style>Sapphire.PropertyEditor.CheckBoxGroup.Vertical&lt;/style>
+<span class="deemphasized">&lt;/property-editor></span></code></pre>
 
 
 <h2><a name="XML"><a name="XML-StandardXmlValueBindingImpl">StandardXmlValueBindingImpl</a></a></h2>

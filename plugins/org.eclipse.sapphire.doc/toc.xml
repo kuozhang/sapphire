@@ -60,6 +60,12 @@
      <topic href="html/services/VersionCompatibilityService.html" label="VersionCompatibilityService"/>
      <topic href="html/services/VersionCompatibilityTargetService.html" label="VersionCompatibilityTargetService"/>
   </topic>
+  <topic href="html/Forms/index.html" label="Forms">
+     <topic href="html/Forms/SWT/index.html" label="SWT">
+       <topic href="html/Forms/SWT/CheckBoxGroup/index.html" label="Check Box Group">
+       </topic>
+     </topic>
+  </topic>
   <topic href="html/samples/index.html" label="Samples">
      <topic href="html/samples/catalog.html" label="Catalog Editor">
      </topic>

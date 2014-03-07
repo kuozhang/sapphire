@@ -27,3 +27,8 @@ div.copyright
     font: message-box;
     margin-bottom: 10px;
 }
+
+.deemphasized
+{
+   color: #888888
+}
