@@ -532,7 +532,7 @@ public abstract class Property implements Observable
             {
                 assertNotDisposed();
                 
-                this.listeners = new ListenerContext( this == root ? null : ( (ElementImpl) root ).queue() );
+                this.listeners = new ListenerContext( ( (ElementImpl) root ).queue() );
             }
             
             return this.listeners;
