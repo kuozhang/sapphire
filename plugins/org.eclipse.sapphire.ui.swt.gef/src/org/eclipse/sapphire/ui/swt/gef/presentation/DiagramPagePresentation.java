@@ -25,7 +25,10 @@ import org.eclipse.sapphire.ui.diagram.ConnectionAddEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionEndpointsEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeAddEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeMoveEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
@@ -56,19 +59,15 @@ public class DiagramPagePresentation extends DiagramPresentation
 		diagramNodeListener = new FilteredListener<DiagramNodeEvent>() {
 			@Override
 			protected void handleTypedEvent(DiagramNodeEvent event) {
-		    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
-		    	switch(event.getNodeEventType()) {
-			    	case NodeAdd:
-		                diagramModel.handleAddNode(nodePart);
-			    		break;
-			    	case NodeDelete:
-		                diagramModel.handleRemoveNode(nodePart);
-		    		break;
-			    	case NodeMove:
-		                diagramModel.handleMoveNode(nodePart);
-			    		break;
-			    	default:
-			    		break;
+		    	DiagramNodePart nodePart = (DiagramNodePart)event.part();
+		    	if (event instanceof DiagramNodeAddEvent) {
+		    		diagramModel.handleAddNode(nodePart);
+		    	}
+		    	else if (event instanceof DiagramNodeDeleteEvent) {
+		    		diagramModel.handleRemoveNode(nodePart);
+		    	}
+		    	else if (event instanceof DiagramNodeMoveEvent) {
+		    		diagramModel.handleMoveNode(nodePart);
 		    	}
 			}
 		};

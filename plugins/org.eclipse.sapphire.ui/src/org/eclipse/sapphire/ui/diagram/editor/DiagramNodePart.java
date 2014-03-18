@@ -32,7 +32,6 @@ import org.eclipse.sapphire.ui.SapphireActionHandler;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.shape.def.ImageDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.RectangleDef;
 import org.eclipse.sapphire.ui.diagram.shape.def.ShapeDef;
@@ -326,8 +325,7 @@ public class DiagramNodePart
 	
 	private void notifyNodeMove()
 	{
-		DiagramNodeEvent event = new DiagramNodeEvent(this);
-		event.setNodeEventType(NodeEventType.NodeMove);
+		DiagramNodeMoveEvent event = new DiagramNodeMoveEvent(this);
 		this.broadcast(event);
 	}
 	

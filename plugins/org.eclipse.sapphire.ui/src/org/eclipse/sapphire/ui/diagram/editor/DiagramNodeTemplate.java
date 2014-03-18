@@ -27,25 +27,23 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
-import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.el.FunctionResult;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.SapphirePart;
-import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.internal.DiagramEmbeddedConnectionTemplate;
-import org.eclipse.sapphire.ui.diagram.internal.StandardDiagramConnectionPart;
 import org.eclipse.sapphire.util.CollectionsUtil;
 
 /**
@@ -58,22 +56,25 @@ public final class DiagramNodeTemplate extends SapphirePart
 {
     public static abstract class DiagramNodeTemplateListener
     {
-        public void handleNodeValidation(final DiagramNodeEvent event)
-        {
-        }       
         public void handleNodeAdd(final DiagramNodePart nodePart)
         {            
         }
-        public void handleNodeAdded(final DiagramNodePart nodePart)
+        public void handlePostNodeAdd(final DiagramNodePart nodePart)
         {            
         }
         public void handleNodeDelete(final DiagramNodePart nodePart)
         {            
         }
-        public void handleNodeAboutToBeDeleted(final DiagramNodePart nodePart)
+        public void handlePreNodeDelete(final DiagramNodePart nodePart)
         {            
         }
-        public void handleNodeMove(final DiagramNodeEvent event)
+        public void handleNodeMove(final DiagramNodeMoveEvent event)
+        {        	
+        }
+        public void handleNodePreDirectEdit(final DiagramNodePart nodePart)
+        {        	
+        }
+        public void handleNodePostDirectEdit(final DiagramNodePart nodePart)
         {        	
         }
     }
@@ -161,19 +162,10 @@ public final class DiagramNodeTemplate extends SapphirePart
     }
 	
 	private void initNodePartListener() {
-        this.nodePartListener = new Listener() {
+        this.nodePartListener = new FilteredListener<DiagramNodeMoveEvent>() {
 			@Override
-			public void handle(Event e) {
-                if (e instanceof DiagramNodeEvent) {
-                	DiagramNodeEvent event = (DiagramNodeEvent)e;
-                	switch(event.getNodeEventType()) {
-		    	    	case NodeMove:
-		            		notifyNodeMoveEvent(event);
-		    	    		break;
-		    	    	default:
-		    	    		break;
-                	}
-				}
+			public void handleTypedEvent(final DiagramNodeMoveEvent event) {
+	            notifyNodeMoveEvent(event);                	
 			}
         };
 		
@@ -266,6 +258,15 @@ public final class DiagramNodeTemplate extends SapphirePart
 		Element nodeModel = nodePart.getLocalModelElement();		
         ElementList<?> list = (ElementList<?>) nodeModel.parent();
         list.remove(nodeModel);                	
+    }
+    
+    public void directEditNode(TextPart textPart, String newValue)
+    {
+    	notifyPreNodeDirectEdit(textPart.nearest(DiagramNodePart.class));
+		Value<?> prop = FunctionUtil.getFunctionProperty(textPart.getLocalModelElement(), 
+				textPart.getContentFunction());
+		prop.write(newValue);
+		notifyPostNodeDirectEdit(textPart.nearest(DiagramNodePart.class));
     }
     
     public PropertyDef getModelProperty()
@@ -460,7 +461,7 @@ public final class DiagramNodeTemplate extends SapphirePart
     {
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
-            listener.handleNodeAdded(nodePart);
+            listener.handlePostNodeAdd(nodePart);
         }                
     }
     
@@ -468,7 +469,7 @@ public final class DiagramNodeTemplate extends SapphirePart
     {
         for( DiagramNodeTemplateListener listener : this.listeners )
         {
-            listener.handleNodeAboutToBeDeleted(nodePart);
+            listener.handlePreNodeDelete(nodePart);
         }				
 	}
 
@@ -480,7 +481,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         }				
 	}
 
-	private void notifyNodeMoveEvent(DiagramNodeEvent event)
+	private void notifyNodeMoveEvent(DiagramNodeMoveEvent event)
 	{
 		for( DiagramNodeTemplateListener listener : this.listeners )
         {
@@ -488,5 +489,19 @@ public final class DiagramNodeTemplate extends SapphirePart
         }				
 	}
 		
+	private void notifyPreNodeDirectEdit(DiagramNodePart nodePart)
+	{
+		for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleNodePreDirectEdit(nodePart);
+        }				
+	}
 	
+	private void notifyPostNodeDirectEdit(DiagramNodePart nodePart)
+	{
+		for( DiagramNodeTemplateListener listener : this.listeners )
+        {
+            listener.handleNodePostDirectEdit(nodePart);
+        }				
+	}
 }

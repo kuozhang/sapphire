@@ -45,7 +45,6 @@ import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventType;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
@@ -573,30 +572,36 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     
     private void notifyNodeAdd(DiagramNodePart nodePart)
 	{
-		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
-		event.setNodeEventType(NodeEventType.NodeAdd);
+		DiagramNodeAddEvent event = new DiagramNodeAddEvent(nodePart);
     	this.broadcast(event);
 	}
 	
 	private void notifyNodeDelete(DiagramNodePart nodePart)
 	{
-		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
-		event.setNodeEventType(NodeEventType.NodeDelete);
+		DiagramNodeDeleteEvent event = new DiagramNodeDeleteEvent(nodePart);
     	this.broadcast(event);
 	}
 	
 	private void notifyNodeAboutToBeDeleted(DiagramNodePart nodePart)
 	{
-		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
-		event.setNodeEventType(NodeEventType.NodeAboutToBeDeleted);
+		DiagramNodePreDeleteEvent event = new DiagramNodePreDeleteEvent(nodePart);
     	this.broadcast(event);
 	}
 
 	private void notifyNodeAdded(DiagramNodePart nodePart)
 	{
-		DiagramNodeEvent event = new DiagramNodeEvent(nodePart);
-		event.setNodeEventType(NodeEventType.NodeAdded);
+		DiagramNodePostAddEvent event = new DiagramNodePostAddEvent(nodePart);
     	this.broadcast(event);
+	}
+
+	private void notifyPreNodeDirectEdit(DiagramNodePart nodePart)
+	{
+    	this.broadcast(new NodePreDirectEditEvent(nodePart));
+	}
+
+	private void notifyPostNodeDirectEdit(DiagramNodePart nodePart)
+	{
+    	this.broadcast(new NodePostDirectEditEvent(nodePart));
 	}
 
 	private void notifyNodeTemplateVisibilityChange(DiagramNodeTemplate nodeTemplate)
@@ -605,9 +610,8 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	this.broadcast(event);
 	}
 	
-	private void notifyNodeMove(DiagramNodeEvent event)
+	private void notifyNodeMove(DiagramNodeMoveEvent event)
 	{
-		event.setNodeEventType(NodeEventType.NodeMove);
     	this.broadcast(event);
 	}
 
@@ -672,7 +676,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }
 
         @Override
-        public void handleNodeAdded(final DiagramNodePart nodePart)
+        public void handlePostNodeAdd(final DiagramNodePart nodePart)
         {
             notifyNodeAdded(nodePart);
         }
@@ -684,17 +688,28 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         }		
 
         @Override
-        public void handleNodeAboutToBeDeleted(final DiagramNodePart nodePart)
+        public void handlePreNodeDelete(final DiagramNodePart nodePart)
         {
         	notifyNodeAboutToBeDeleted(nodePart);
         }		
 
         @Override
-        public void handleNodeMove(final DiagramNodeEvent event)
+        public void handleNodeMove(final DiagramNodeMoveEvent event)
         {
         	notifyNodeMove(event);
         }	
         
+        @Override
+        public void handleNodePreDirectEdit(final DiagramNodePart nodePart)
+        {
+        	notifyPreNodeDirectEdit(nodePart);
+        }
+
+        @Override
+        public void handleNodePostDirectEdit(final DiagramNodePart nodePart)
+        {
+        	notifyPostNodeDirectEdit(nodePart);
+        }
 	}
 	
     public final static class ConnectionPalette {

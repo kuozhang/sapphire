@@ -45,8 +45,11 @@ import org.eclipse.sapphire.ui.diagram.ConnectionLabelEvent;
 import org.eclipse.sapphire.ui.diagram.ConnectionService;
 import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeAddEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeBounds;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeMoveEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent;
@@ -534,29 +537,25 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	}
 		
     private void handleDiagramNodeEvent(DiagramNodeEvent event) {
-    	DiagramNodePart nodePart = (DiagramNodePart)event.getPart();
-    	switch(event.getNodeEventType()) {
-	    	case NodeAdd:
-				read(nodePart);
-	    		break;
-	    	case NodeDelete:
-			    refreshDirtyState();
-			    break;
-	    	case NodeMove:
-				DiagramNodeBounds nodeBounds = nodePart.getNodeBounds();
-				if (nodeBounds.isAutoLayout())
-				{
-					// need to add the node bounds to the persistence cache so that "revert" could work
-					addNodeToPersistenceCache(nodePart);
-					refreshDirtyState();
-				}
-				else if (!nodeBounds.isDefaultPosition())
-				{
-					write((DiagramNodePart)event.getPart());
-				}
-	    		break;
-	    	default:
-	    		break;
+    	DiagramNodePart nodePart = (DiagramNodePart)event.part();
+    	if (event instanceof DiagramNodeAddEvent) {
+    		read(nodePart);
+    	}
+    	else if (event instanceof DiagramNodeDeleteEvent) {
+    		refreshDirtyState();
+    	}
+    	else if (event instanceof DiagramNodeMoveEvent) {
+			DiagramNodeBounds nodeBounds = nodePart.getNodeBounds();
+			if (nodeBounds.isAutoLayout())
+			{
+				// need to add the node bounds to the persistence cache so that "revert" could work
+				addNodeToPersistenceCache(nodePart);
+				refreshDirtyState();
+			}
+			else if (!nodeBounds.isDefaultPosition())
+			{
+				write((DiagramNodePart)event.part());
+			}
     	}
 	}
 
@@ -582,7 +581,7 @@ public abstract class StandardDiagramLayoutPersistenceService extends DiagramLay
 	}
 
     private void handleDiagramPageEvent(DiagramPageEvent event) {
-    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.getPart();
+    	SapphireDiagramEditorPagePart diagramPart = (SapphireDiagramEditorPagePart)event.part();
     	switch(event.getDiagramPageEventType()) {
 	    	case GridStateChange:
 		    	setGridVisible(diagramPart.isGridVisible());

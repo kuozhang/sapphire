@@ -19,18 +19,7 @@ package org.eclipse.sapphire.ui.diagram.editor;
  */
 
 public class DiagramNodeEvent extends DiagramPartEvent 
-{
-    public static enum NodeEventType
-    {
-        NodeAdd,
-        NodeDelete,
-        NodeMove,
-        NodeAboutToBeDeleted,
-        NodeAdded
-    }
-	    
-    private NodeEventType nodeEventType;
-
+{    
     public DiagramNodeEvent(final DiagramNodePart part)
     {
        super(part);
@@ -41,12 +30,9 @@ public class DiagramNodeEvent extends DiagramPartEvent
        super(part);
     }
 
-	public NodeEventType getNodeEventType() {
-		return nodeEventType;
-	}
-
-	public void setNodeEventType(NodeEventType nodeEventType) {
-		this.nodeEventType = nodeEventType;
-	}
-
+    public DiagramNodePart part()
+    {
+    	return (DiagramNodePart)super.part();
+    }
+    
 }

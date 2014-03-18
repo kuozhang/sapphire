@@ -246,7 +246,7 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	                } 
                     else if ( event instanceof DiagramDirectEditPartEvent )
 	                {
-	    		    	selectAndDirectEditPart(((DiagramDirectEditPartEvent)event).getPart());
+	    		    	selectAndDirectEditPart(((DiagramDirectEditPartEvent)event).part());
 	                }
                 }
             }

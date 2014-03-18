@@ -23,16 +23,8 @@ import org.eclipse.sapphire.ui.SapphirePart.PartEvent;
 
 public class DiagramPartEvent extends PartEvent
 {
-    private final ISapphirePart part;
-    
     public DiagramPartEvent( final ISapphirePart part )
     {
     	super((SapphirePart)part);
-        this.part = part;
-    }
-    
-    public final ISapphirePart getPart()
-    {
-        return this.part;
-    }
+    }    
 }

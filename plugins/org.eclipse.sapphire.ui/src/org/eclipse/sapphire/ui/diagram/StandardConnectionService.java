@@ -29,10 +29,13 @@ import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramImplicitConnectionBindingDef;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePostAddEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent;
-import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeEvent.NodeEventType;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
+import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePreDeleteEvent;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
+import org.eclipse.sapphire.ui.diagram.editor.NodePostDirectEditEvent;
+import org.eclipse.sapphire.ui.diagram.editor.NodePreDirectEditEvent;
 import org.eclipse.sapphire.ui.diagram.editor.NodeTemplateVisibilityEvent;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.diagram.internal.DiagramConnectionTemplate;
@@ -59,6 +62,8 @@ public class StandardConnectionService extends ConnectionService
     private ImplicitConnectionTemplateListener implicitConnTemplateListener;
     private Listener diagramNodeListener;
     private Listener diagramNodeTemplateListener;
+    private List<DiagramConnectionPart> attachedConns1 = new ArrayList<DiagramConnectionPart>();
+    private List<DiagramConnectionPart> attachedConns2 = new ArrayList<DiagramConnectionPart>();
     
     @Override
     protected void init()
@@ -118,13 +123,23 @@ public class StandardConnectionService extends ConnectionService
             @Override
             protected void handleTypedEvent(DiagramNodeEvent event) 
             {
-                if (event.getNodeEventType() == NodeEventType.NodeAboutToBeDeleted)
+                if (event instanceof DiagramNodePreDeleteEvent)
                 {
-                    handleNodeAboutToBeDeleted((DiagramNodePart)event.getPart());
+                    handleNodeAboutToBeDeleted(event.part());
                 }
-                else if (event.getNodeEventType() == NodeEventType.NodeAdded)
+                else if (event instanceof DiagramNodePostAddEvent)
                 {
-                    refreshAttachedConnections((DiagramNodePart)event.getPart());
+                    refreshAttachedConnections(event.part());
+                }
+                else if (event instanceof NodePreDirectEditEvent)
+                {
+                	DiagramNodePart nodePart = event.part();
+                	handleNodePreDirectEdit(nodePart);
+                }
+                else if (event instanceof NodePostDirectEditEvent)
+                {
+                	DiagramNodePart nodePart = event.part();
+                	reconnectAttachedConnections(nodePart);
                 }
             }
         };
@@ -345,6 +360,48 @@ public class StandardConnectionService extends ConnectionService
             
     }
         
+    /**
+     * When direct editing a node, we may need to reconnect attached connections. 
+     * This function gathers all the connections attached to a node.
+     * @param nodePart
+     */
+    private void handleNodePreDirectEdit(DiagramNodePart nodePart)
+    {
+    	attachedConns1.clear();
+    	attachedConns2.clear();
+    	for (DiagramConnectionPart connPart : list())
+    	{
+			if (!connPart.removable())
+				continue;
+			if (connPart.getEndpoint1() == nodePart.getLocalModelElement())
+			{
+				attachedConns1.add(connPart);
+			}
+			if (connPart.getEndpoint2() == nodePart.getLocalModelElement())
+			{
+				attachedConns2.add(connPart);
+			}
+    	}
+    }
+
+    /**
+     * Reconnect all the connections if needed after a node which the connections are attached to
+     * is direct edited. The logic to handle whether to reconnect or not is encapsulated inside
+     * DiagramConnectionPart.reconnect() method.
+     * @param nodePart
+     */
+    private void reconnectAttachedConnections(DiagramNodePart nodePart)
+    {
+		for (DiagramConnectionPart connPart : attachedConns1)
+		{
+			connPart.reconnect(nodePart, diagramPagePart.getDiagramNodePart(connPart.getEndpoint2()));
+		}
+		for (DiagramConnectionPart connPart : attachedConns2)
+		{
+			connPart.reconnect(diagramPagePart.getDiagramNodePart(connPart.getEndpoint1()), nodePart);
+		}				
+    }
+    
 	private final class ConnectionTemplateListener extends DiagramConnectionTemplateListener
 	{
     	@Override
