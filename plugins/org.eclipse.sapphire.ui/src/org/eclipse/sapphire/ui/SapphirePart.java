@@ -738,11 +738,6 @@ public abstract class SapphirePart implements ISapphirePart
         return null;
     }
     
-    public boolean isSingleLinePart()
-    {
-        return false;
-    }
-    
     public <A> A adapt( final Class<A> adapterType )
     {
         A result = service( MasterConversionService.class ).convert( this, adapterType );

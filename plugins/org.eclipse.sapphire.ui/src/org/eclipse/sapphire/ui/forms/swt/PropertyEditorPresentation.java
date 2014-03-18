@@ -36,10 +36,13 @@ import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.CapitalizationType;
+import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionGroup;
@@ -302,7 +305,7 @@ public abstract class PropertyEditorPresentation extends PropertyEditorPresentat
         final boolean showLabel = delegate.getShowLabel();
         final int leftMargin = delegate.getLeftMargin();
         final boolean spanBothColumns = delegate.getSpanBothColumns();
-        final boolean singleLinePart = part.isSingleLinePart();
+        final boolean singleLinePresentation = isSingleLine();
         final List<FormComponentPart> relatedContentParts = part.getRelatedContent();
         final int count = relatedContentParts.size();
         
@@ -335,7 +338,7 @@ public abstract class PropertyEditorPresentation extends PropertyEditorPresentat
             
             updateLabelOp.run();
             
-            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), singleLinePart ? SWT.CENTER : SWT.TOP ), spanBothColumns ? 2 : 1 ), leftMargin + 9 ) );
+            label.setLayoutData( gdhindent( gdhspan( gdvalign( gd(), singleLinePresentation ? SWT.CENTER : SWT.TOP ), spanBothColumns ? 2 : 1 ), leftMargin + 9 ) );
             
             addControl( label );
         }
@@ -380,21 +383,15 @@ public abstract class PropertyEditorPresentation extends PropertyEditorPresentat
         {
             composite.setLayout( glspacing( glayout( 3, 0, 0 ), 0 ) );
             
-            final boolean vcenter
-                = ( part.isSingleLinePart() && relatedContentParts.size() == 1 && relatedContentParts.get( 0 ).isSingleLinePart() );
-            
             final Composite mainPropertyEditorOuterComposite = new Composite( composite, SWT.NONE );
             mainPropertyEditorOuterComposite.setLayout( glayout( 1, 0, 4, 0, 0 ) );
-            mainPropertyEditorOuterComposite.setLayoutData( vcenter ? gdhfill() : gdfill() );
 
             final Composite mainPropertyEditorComposite = new Composite( mainPropertyEditorOuterComposite, SWT.NONE );
-            mainPropertyEditorComposite.setLayoutData( vcenter ? gdvalign( gdhfill(), GridData.CENTER ) : gdfill() );
             
             final Sash sash = new Sash( composite, SWT.VERTICAL );
             sash.setLayoutData( gdhhint( gdvfill(), 1 ) );
             
             final Composite relatedContentComposite = new Composite( composite, SWT.NONE );
-            relatedContentComposite.setLayoutData( vcenter ? gdvalign( gdhfill(), GridData.CENTER ) : gdfill() );
             relatedContentComposite.setLayout( glayout( 2, 0, 0 ) );
             
             relatedContentComposite.setData( RELATED_CONTENT_WIDTH, ( (double) part.getRelatedContentWidth() ) / ( (double) 100 ) );
@@ -448,10 +445,30 @@ public abstract class PropertyEditorPresentation extends PropertyEditorPresentat
             
             this.relatedContentPresentations = relatedContentPresentations.result();
             
+            final boolean vcenter
+                = ( singleLinePresentation && relatedContentParts.size() == 1 && relatedContentPresentations.get( 0 ).isSingleLine() );
+            
+            mainPropertyEditorOuterComposite.setLayoutData( vcenter ? gdhfill() : gdfill() );
+            mainPropertyEditorComposite.setLayoutData( vcenter ? gdvalign( gdhfill(), GridData.CENTER ) : gdfill() );
+            relatedContentComposite.setLayoutData( vcenter ? gdvalign( gdhfill(), GridData.CENTER ) : gdfill() );
+        
             this.mainPropertyEditorComposite = mainPropertyEditorComposite;
         }
         
         return mainPropertyEditorComposite;
+    }
+    
+    @Override
+    public boolean isSingleLine()
+    {
+        final PropertyDef pdef = property().definition();
+        
+        if( pdef instanceof ValueProperty && ! pdef.hasAnnotation( LongString.class ) )
+        {
+            return true;
+        }
+        
+        return false;
     }
     
     private static final void refreshSashFormLayout( final Composite rootComposite,

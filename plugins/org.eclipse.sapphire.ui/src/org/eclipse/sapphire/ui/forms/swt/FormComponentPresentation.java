@@ -68,6 +68,11 @@ public abstract class FormComponentPresentation extends SwtPresentation
         return this.composite;
     }
     
+    protected boolean isSingleLine()
+    {
+        return false;
+    }
+    
     protected static final void attachHelp( final Control control, final Property property )
     {
         final SapphireHelpContext context = new SapphireHelpContext( property.element(), property.definition() );

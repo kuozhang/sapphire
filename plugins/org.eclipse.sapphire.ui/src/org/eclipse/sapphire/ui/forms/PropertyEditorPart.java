@@ -641,17 +641,6 @@ public final class PropertyEditorPart extends FormComponentPart
         return Collections.singleton( getActionContext() );
     }
     
-    @Override
-    public boolean isSingleLinePart()
-    {
-        if( this.property.definition() instanceof ValueProperty && ! this.property.definition().hasAnnotation( LongString.class ) )
-        {
-            return true;
-        }
-        
-        return false;
-    }
-    
     public boolean isReadOnly()
     {
         return ( this.property.definition().isReadOnly() || getRenderingHint( PropertyEditorDef.HINT_READ_ONLY, false ) );        
