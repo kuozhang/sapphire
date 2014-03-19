@@ -132,6 +132,9 @@
                                 </actuator>
                             </content>
                         </section>
+                        <text-decoration>
+                            <text>${ ( Items.Size == 0 ? null : Concat( &quot;(&quot;, Items.Size, &quot;)&quot; ) ) }</text>
+                        </text-decoration>
                     </case>
                 </node-factory>
                 <section>
@@ -169,6 +172,9 @@
                                 </actuator>
                             </content>
                         </section>
+                        <text-decoration>
+                            <text>${ ( Items.Size == 0 ? null : Concat( &quot;(&quot;, Items.Size, &quot;)&quot; ) ) }</text>
+                        </text-decoration>
                     </case>
                 </node-factory>
                 <section>
@@ -188,7 +194,7 @@
         <property>Items</property>
         <case>
             <image>${ CatalogItemImage() }</image>
-            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }${ State().ShowPrice ? Concat( &quot; - $&quot;, Price ) : &quot;&quot; }</label>
+            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }</label>
             <section-ref>CatalogItemMainSection</section-ref>
             <element-type>SingleVariantItem</element-type>
             <section>
@@ -199,10 +205,13 @@
                     <property-editor>Price</property-editor>
                 </content>
             </section>
+            <text-decoration>
+                <text>${ State().ShowPrice ? Concat( &quot;- $&quot;, Price ) : null }</text>
+            </text-decoration>
         </case>
         <case>
             <image>${ CatalogItemImage() }</image>
-            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }${ State().ShowPrice ? Concat( &quot; - &quot;, ( Min( Variants, &quot;Price&quot; ) == Max( Variants, &quot;Price&quot; ) ? Concat( &quot;$&quot;, Scale( Min( Variants, &quot;Price&quot; ), 2 ) ) : Concat( &quot;$&quot;, Scale( Min( Variants, &quot;Price&quot; ), 2 ), &quot; to $&quot;, Scale( Max( Variants, &quot;Price&quot; ), 2 ) ) ) ) : &quot;&quot; }</label>
+            <label>${ Name == null ? &quot;&lt;item&gt;&quot; : ( State().ShowManufacturer &amp;&amp; Manufacturer != null ? Concat( Manufacturer, &quot; &quot;, Name ) : Name ) }</label>
             <section-ref>CatalogItemMainSection</section-ref>
             <section>
                 <content>
@@ -238,6 +247,9 @@
                 <label>variants</label>
             </section>
             <element-type>MultiVariantItem</element-type>
+            <text-decoration>
+                <text>${ State().ShowPrice ? Concat( &quot; - &quot;, ( Min( Variants, &quot;Price&quot; ) == Max( Variants, &quot;Price&quot; ) ? Concat( &quot;$&quot;, Scale( Min( Variants, &quot;Price&quot; ), 2 ) ) : Concat( &quot;$&quot;, Scale( Min( Variants, &quot;Price&quot; ), 2 ), &quot; to $&quot;, Scale( Max( Variants, &quot;Price&quot; ), 2 ) ) ) ) : null }</text>
+            </text-decoration>
         </case>
     </node-factory>
     <section>

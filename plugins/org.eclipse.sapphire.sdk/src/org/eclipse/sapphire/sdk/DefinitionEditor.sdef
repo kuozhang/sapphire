@@ -979,10 +979,15 @@
                 <label>master-details node</label>
                 <content>
                     <include>PartId</include>
-                    <property-editor>Label</property-editor>
-                    <property-editor>Image</property-editor>
                     <property-editor>Property</property-editor>
                     <property-editor>VisibleWhen</property-editor>
+                    <property-editor>Label</property-editor>
+                    <property-editor>Image</property-editor>
+                    <property-editor>
+                        <child-property>Text</child-property>
+                        <child-property>Color</child-property>
+                        <property>Decorations</property>
+                    </property-editor>
                 </content>
             </section>
             <node-include>
@@ -1024,11 +1029,16 @@
                 <case>
                     <label>Case: ${ LastSegment( ElementType, "." ) }</label>
                     <section>
-                        <label>Case</label>
+                        <label>case</label>
                         <content>
                             <property-editor>ElementType</property-editor>
                             <property-editor>Label</property-editor>
                             <property-editor>Image</property-editor>
+                            <property-editor>
+                                <child-property>Text</child-property>
+                                <child-property>Color</child-property>
+                                <property>Decorations</property>
+                            </property-editor>
                         </content>
                     </section>
                     <node-include>

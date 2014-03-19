@@ -52,17 +52,20 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.sapphire.EventDeliveryJob;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.EventDeliveryJob;
 import org.eclipse.sapphire.Filter;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.ImageData;
@@ -97,12 +100,14 @@ import org.eclipse.sapphire.ui.def.ISapphireDocumentationDef;
 import org.eclipse.sapphire.ui.def.ISapphireDocumentationRef;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodeList;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodePart;
+import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodePart.DecorationEvent;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentNodePart.NodeListEvent;
 import org.eclipse.sapphire.ui.forms.MasterDetailsContentOutline;
 import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart;
 import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPagePart.OutlineHeaderTextEvent;
 import org.eclipse.sapphire.ui.forms.SectionPart;
+import org.eclipse.sapphire.ui.forms.TextDecoration;
 import org.eclipse.sapphire.ui.forms.swt.internal.ElementsTransfer;
 import org.eclipse.sapphire.ui.forms.swt.internal.SapphireToolTip;
 import org.eclipse.sapphire.ui.forms.swt.internal.SectionPresentation;
@@ -127,6 +132,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -644,7 +650,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             {
                                 if( node.visible() )
                                 {
-                                    if( event instanceof LabelChangedEvent || event instanceof ImageChangedEvent )
+                                    if( event instanceof LabelChangedEvent || event instanceof ImageChangedEvent || event instanceof DecorationEvent )
                                     {
                                         Display.getCurrent().asyncExec( new TreeViewerUpdateJob( treeViewer, node ) );
                                     }
@@ -714,25 +720,67 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
             }
         };
         
-        final LabelProvider labelProvider = new LabelProvider()
+        final StyledCellLabelProvider labelProvider = new StyledCellLabelProvider ()
         {
             private final Map<ImageDescriptor,Image> images = new HashMap<ImageDescriptor,Image>();
+            private final Map<org.eclipse.sapphire.Color,Color> colors = new HashMap<org.eclipse.sapphire.Color,Color>();
             
-            @Override
-            public String getText( final Object element ) 
+            public void update( final ViewerCell cell )
             {
-                return ( (MasterDetailsContentNodePart) element ).getLabel();
-            }
-        
-            @Override
-            public Image getImage( final Object element ) 
-            {
-                return getImage( (MasterDetailsContentNodePart) element );
+                final MasterDetailsContentNodePart node = (MasterDetailsContentNodePart) cell.getElement();
+                
+                final StyledString styledString = new StyledString( node.getLabel() );
+                
+                for( final TextDecoration decoration : node.decorations() )
+                {
+                    String text = decoration.text();
+                    
+                    if( text != null )
+                    {
+                        text = text.trim();
+                        
+                        if( text.length() > 0 )
+                        {
+                            final Color color = color( decoration.color() );
+                            
+                            styledString.append
+                            (
+                                " " + text,
+                                new Styler()
+                                {
+                                    @Override
+                                    public void applyStyles( final TextStyle style )
+                                    {
+                                        style.foreground = color;
+                                    }
+                                }
+                            );
+                        }
+                    }
+                }
+
+                cell.setText( styledString.toString() );
+                cell.setStyleRanges( styledString.getStyleRanges() );
+                cell.setImage( image( node.getImage() ) );
+                
+                super.update( cell );
             }
             
-            private Image getImage( final MasterDetailsContentNodePart node )
+            private Color color( final org.eclipse.sapphire.Color c )
             {
-                final ImageDescriptor imageDescriptor = node.getImage();
+                Color color = this.colors.get( c );
+                
+                if( color == null )
+                {
+                    color = new Color( tree.getDisplay(), c.red(), c.green(), c.blue() );
+                    this.colors.put( c, color );
+                }
+                
+                return color;
+            }
+            
+            private Image image( final ImageDescriptor imageDescriptor )
+            {
                 Image image = this.images.get( imageDescriptor );
                 
                 if( image == null )
@@ -743,11 +791,11 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 
                 return image;
             }
-
+            
             @Override
             public void dispose()
             {
-                for( Image image : this.images.values() )
+                for( final Image image : this.images.values() )
                 {
                     image.dispose();
                 }
@@ -1547,7 +1595,27 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                                            final int treeStyle,
                                            final MasterDetailsContentOutline contentTree )
         {
-            super( parent, treeStyle, new PatternFilter(), true );
+            super
+            (
+                parent, 
+                treeStyle,
+                new PatternFilter()
+                {
+                    @Override
+                    protected boolean isLeafMatch( final Viewer viewer, final Object element )
+                    {
+                        final String text = ( (MasterDetailsContentNodePart) element ).getLabel();
+                        
+                        if( text == null )
+                        {
+                            return false;
+                        }
+
+                        return wordMatches( text );  
+                    }
+                },
+                true
+            );
             
             this.contentTree = contentTree;
             

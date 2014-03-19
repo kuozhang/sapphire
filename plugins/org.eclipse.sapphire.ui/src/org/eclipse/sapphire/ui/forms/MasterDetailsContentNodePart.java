@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.sapphire.Color;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
@@ -90,6 +91,8 @@ public final class MasterDetailsContentNodePart
     private MasterDetailsContentNodePart parentNode;
     private FunctionResult labelFunctionResult;
     private ImageManager imageManager;
+    private List<TextDecoration> decorations;
+
     private Listener childPartListener;
     private List<Object> rawChildren;
     private MasterDetailsContentNodeList nodes;
@@ -176,6 +179,45 @@ public final class MasterDetailsContentNodePart
         final Function imageFunction = this.definition.getImage().content();
         
         this.imageManager = new ImageManager( imageFunction, defaultImageLiteral );
+        
+        // Decorations
+        
+        final ListFactory<TextDecoration> decorationsListFactory = ListFactory.start();
+        
+        for( final TextDecorationDef ddef : this.definition.getDecorations() )
+        {
+            final FunctionResult text = initExpression
+            ( 
+                ddef.getText().content(),
+                String.class,
+                null,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        broadcast( new DecorationEvent( MasterDetailsContentNodePart.this ) );
+                    }
+                }
+            );
+
+            final FunctionResult color = initExpression
+            ( 
+                ddef.getColor().content(),
+                Color.class,
+                null,
+                new Runnable()
+                {
+                    public void run()
+                    {
+                        broadcast( new DecorationEvent( MasterDetailsContentNodePart.this ) );
+                    }
+                }
+            );
+            
+            decorationsListFactory.add( new TextDecoration( text, color ) );
+        }
+        
+        this.decorations = decorationsListFactory.result();
         
         // Sections and Child Nodes
         
@@ -460,6 +502,11 @@ public final class MasterDetailsContentNodePart
     {
         return this.imageManager.getImage();
     }
+    
+    public List<TextDecoration> decorations()
+    {
+        return this.decorations;
+    }
 
     public boolean isExpanded()
     {
@@ -715,12 +762,12 @@ public final class MasterDetailsContentNodePart
     {
         super.dispose();
         
-        for( SapphirePart section : this.sections )
+        for( final SapphirePart section : this.sections )
         {
             section.dispose();
         }
         
-        for( SapphirePart node : nodes() )
+        for( final SapphirePart node : nodes() )
         {
             node.dispose();
         }
@@ -735,7 +782,17 @@ public final class MasterDetailsContentNodePart
             this.imageManager.dispose();
         }
         
-        for( Object object : this.rawChildren )
+        if( this.decorations != null )
+        {
+            for( final TextDecoration decoration : this.decorations )
+            {
+                decoration.dispose();
+            }
+            
+            this.decorations = null;
+        }
+        
+        for( final Object object : this.rawChildren )
         {
             if( object instanceof NodeFactory )
             {
@@ -1050,9 +1107,23 @@ public final class MasterDetailsContentNodePart
         }
     }
     
+    public static final class DecorationEvent extends PartEvent
+    {
+        private DecorationEvent( final MasterDetailsContentNodePart node )
+        {
+            super( node );
+        }
+
+        @Override
+        public MasterDetailsContentNodePart part()
+        {
+            return (MasterDetailsContentNodePart) super.part();
+        }
+    }
+
     public static final class NodeListEvent extends PartEvent
     {
-        public NodeListEvent( final MasterDetailsContentNodePart node )
+        private NodeListEvent( final MasterDetailsContentNodePart node )
         {
             super( node );
         }

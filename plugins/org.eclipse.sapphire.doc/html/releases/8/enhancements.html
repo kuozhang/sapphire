@@ -54,6 +54,7 @@
   <li><a href="#Key">Key Enhancements</a></li>
   <ol type="A">
     <li><a href="#Key-EventSuspension">Event Suspension</a></li>
+    <li><a href="#Key-OutlineDecorations">Outline Decorations</a></li>
   </ol>
   <li><a href="#Core">Core</a></li>
   <ol type="A">
@@ -123,6 +124,87 @@ finally
 {
     suspension.dispose();
 }</code></pre>
+
+
+<h2><a name="Key-OutlineDecorations">Outline Decorations</a></h2>
+
+<p>Multiple text decorations can now be added to the nodes in the master-details editor page outline in order to show
+additional information in a way that is set apart from the main node label.</p>
+
+<p style="margin-left: 20px;"><img src="OutlineDecorations.png"/></p>
+
+<p>A definition of a text decoration is composed of text and an optional color. Both of these properties support Sapphire EL.
+When text is null, the decoration is not shown. Multiple decorations can be specified for one node.</p>
+
+<pre class="source-code"><code><span class="unaffected">&lt;node-factory>
+    &lt;property>Categories&lt;/property>
+    &lt;case>
+        &lt;label>${ Name == null ? "Uncategorized" : Name }&lt;/label></span>
+        &lt;text-decoration>
+            &lt;text>${ ( Items.Size == 0 ? null : Concat( "(", Items.Size, ")" ) ) }&lt;/text>
+        &lt;/text-decoration>
+    <span class="unaffected">&lt;/case>
+&lt;/node-factory></span></code></pre>
+
+<p>The framework API has changed accordingly.</p>
+
+<pre class="source-code"><code>@Label( standard = "text decoration" )
+@XmlBinding( path = "text-decoration" )
+
+public interface TextDecorationDef extends Element
+{
+    ElementType TYPE = new ElementType( TextDecorationDef.class );
+    
+    // *** Text ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "text" )
+    @Required
+    @XmlBinding( path = "text" )
+    
+    ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );
+    
+    Value&lt;Function> getText();
+    void setText( String value );
+    void setText( Function value );
+    
+    // *** Color ***
+    
+    @Type( base = Function.class )
+    @Label( standard = "color" )
+    @DefaultValue( text = "#957D47")
+    @XmlBinding( path = "color" )
+    
+    ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
+    
+    Value&lt;Function> getColor();
+    void setColor( String value );
+    void setColor( Function value );
+}</code></pre>
+
+<pre class="source-code"><code><span class="unaffected">public interface MasterDetailsContentNodeDef
+{</span>
+    // *** Decorations ***
+    
+    @Type( base = TextDecorationDef.class )
+    @Label( standard = "decorations" )
+    @XmlListBinding( path = "" )
+    
+    ListProperty PROP_DECORATIONS = new ListProperty( TYPE, "Decorations" );
+    
+    ElementList&lt;TextDecorationDef> getDecorations();
+<span class="unaffected">}</span></code></pre>
+
+<pre class="source-code"><code>public final class TextDecoration
+{
+    public String text()
+    public Color color()
+}</code></pre>
+
+<pre class="source-code"><code><span class="unaffected">public final class MasterDetailsContentNodePart
+{</span>
+    public List&lt;TextDecoration> decorations()
+<span class="unaffected">}</span></code></pre>
 
 
 <h2><a name="Core"><a name="Core-ContainmentDetermination">Containment Determination</a></a></h2>

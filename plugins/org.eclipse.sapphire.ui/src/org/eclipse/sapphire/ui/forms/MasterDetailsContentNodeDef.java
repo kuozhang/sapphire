@@ -71,6 +71,16 @@ public interface MasterDetailsContentNodeDef extends MasterDetailsContentNodeChi
     void setImage( String value );
     void setImage( Function value );
     
+    // *** Decorations ***
+    
+    @Type( base = TextDecorationDef.class )
+    @Label( standard = "decorations" )
+    @XmlListBinding( path = "" )
+    
+    ListProperty PROP_DECORATIONS = new ListProperty( TYPE, "Decorations" );
+    
+    ElementList<TextDecorationDef> getDecorations();
+    
     // *** Sections ***
     
     @Label( standard = "sections" )
