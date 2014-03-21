@@ -1604,14 +1604,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     @Override
                     protected boolean isLeafMatch( final Viewer viewer, final Object element )
                     {
-                        final String text = ( (MasterDetailsContentNodePart) element ).getLabel();
-                        
-                        if( text == null )
-                        {
-                            return false;
-                        }
-
-                        return wordMatches( text );  
+                        return wordMatches( ( (MasterDetailsContentNodePart) element ).getLabel() );  
                     }
                 },
                 true
