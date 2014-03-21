@@ -120,7 +120,7 @@ public abstract class FormComponentPresentation extends SwtPresentation
             composite = composite.getParent();
         }
         
-        if( composite instanceof SharedScrolledComposite )
+        if( composite != null )
         {
             ( (SharedScrolledComposite) composite ).reflow( true );
         }
