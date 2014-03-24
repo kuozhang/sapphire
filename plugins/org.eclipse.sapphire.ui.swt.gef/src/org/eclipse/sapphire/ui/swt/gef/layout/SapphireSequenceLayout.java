@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.draw2d.AbstractHintLayout;
-import org.eclipse.draw2d.GridData;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
@@ -44,7 +42,7 @@ import org.eclipse.swt.SWT;
 public class SapphireSequenceLayout extends AbstractHintLayout {
 
 	/** The layout contraints */
-	private Map constraints = new HashMap();
+	private Map<IFigure,Object> constraints = new HashMap<IFigure,Object>();
 
 	/**
 	 * Transposer object that may be used in layout calculations. Will be
@@ -94,12 +92,12 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		return horizontal;
 	}
 
-	private Dimension calculateChildrenSize(List children, int wHint, int hHint, boolean preferred) {
+	private Dimension calculateChildrenSize(List<IFigure> children, int wHint, int hHint, boolean preferred) {
 		Dimension childSize;
 		IFigure child;
 		int height = 0, width = 0;
 		for (int i = 0; i < children.size(); i++) {
-			child = (IFigure) children.get(i);
+			child = children.get(i);
 			childSize = transposer.t(preferred ? getChildPreferredSize(child,
 					wHint, hHint) : getChildMinimumSize(child, wHint, hHint));
 			Insets inset = new Insets();
@@ -114,12 +112,12 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		return new Dimension(width, height);
 	}
 
-	private Dimension calculateChildrenMaximumSize(List children) {
+	private Dimension calculateChildrenMaximumSize(List<IFigure> children) {
 		Dimension childSize;
 		IFigure child;
 		int height = 0, width = Integer.MAX_VALUE;
 		for (int i = 0; i < children.size(); i++) {
-			child = (IFigure) children.get(i);
+			child = children.get(i);
 			childSize = transposer.t(getChildCellMaximumSize(child));
 			Insets inset = new Insets();
 			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
@@ -158,7 +156,10 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * @see #getMinimumSize(IFigure, int, int)
 	 * @since 2.1
 	 */
-	protected Dimension calculateMinimumSize(IFigure container, int wHint, int hHint) {
+	
+	@SuppressWarnings( "unchecked" )
+	
+    protected Dimension calculateMinimumSize(IFigure container, int wHint, int hHint) {
 		Insets insets = container.getInsets();
 		if (isHorizontal()) {
 			wHint = -1;
@@ -170,7 +171,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				wHint = Math.max(0, wHint - insets.getWidth());
 		}
 
-		List children = container.getChildren();
+		List<IFigure> children = container.getChildren();
 		Dimension minSize = calculateChildrenSize(children, wHint, hHint, false);
 		// Do a second pass, if necessary
 		if (wHint >= 0 && minSize.width > wHint) {
@@ -209,7 +210,10 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	 * @see #getPreferredSize(IFigure, int, int)
 	 * @since 2.0
 	 */
-	protected Dimension calculatePreferredSize(IFigure container, int wHint,
+	
+	@SuppressWarnings( "unchecked" )
+	
+    protected Dimension calculatePreferredSize(IFigure container, int wHint,
 			int hHint) {
 		Insets insets = container.getInsets();
 		if (isHorizontal()) {
@@ -222,7 +226,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				wHint = Math.max(0, wHint - insets.getWidth());
 		}
 
-		List children = container.getChildren();
+		List<IFigure> children = container.getChildren();
 		Dimension prefSize = calculateChildrenSize(children, wHint, hHint, true);
 		// Do a second pass, if necessary
 		if (wHint >= 0 && prefSize.width > wHint) {
@@ -248,8 +252,9 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				.union(getBorderPreferredSize(container));
 	}
 
-	public Dimension calculateMaximumSize(IFigure container) {
-		List children = container.getChildren();
+	@SuppressWarnings( "unchecked" )
+    public Dimension calculateMaximumSize(IFigure container) {
+		List<IFigure> children = container.getChildren();
 		Dimension maxSize = calculateChildrenMaximumSize(children);
 		Insets marginInsets = transposer.t(this.marginInsets);
 		if (maxSize.width < Integer.MAX_VALUE) {
@@ -382,8 +387,11 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 	/**
 	 * @see org.eclipse.draw2d.LayoutManager#layout(IFigure)
 	 */
-	public void layout(IFigure parent) {
-		List children = parent.getChildren();
+	
+	@SuppressWarnings( "unchecked" )
+	
+    public void layout(IFigure parent) {
+		List<IFigure> children = parent.getChildren();
 		int numChildren = children.size();
 		Rectangle clientArea = transposer.t(parent.getClientArea());
 		Insets margins = transposer.t(this.marginInsets);
@@ -428,7 +436,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		int expandCount = 0;
 		
 		for (int i = 0; i < numChildren; i++) {
-			child = (IFigure) children.get(i);
+			child = children.get(i);
 			
 			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)getConstraint(child);
 			if (constraint == null)
@@ -475,7 +483,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 				for (int i = 0; i < numChildren; i++) {				
 					int prefHeight = prefSizes[i].height;
 					int maxCellHeight = maxCellSizes[i].height;
-					child = (IFigure) children.get(i);
+					child = children.get(i);
 					SapphireSequenceLayoutConstraint constraint = constraints[i];
 					if (getMajorExpand(constraint) || maxCellHeight > prefHeight) {
 						// only limited expansion since the child figure has max size constraint.
@@ -492,7 +500,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 			for (int i = 0; i < numChildren; i++) {				
 				int prefHeight = prefSizes[i].height;
 				int maxCellHeight = maxCellSizes[i].height;
-				child = (IFigure) children.get(i);
+				child = children.get(i);
 				SapphireSequenceLayoutConstraint constraint = constraints[i];
 				if (getMajorExpand(constraint) || maxCellHeight > prefHeight) {
 					// only limited expansion
@@ -514,7 +522,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 		for (int i = 0; i < numChildren; i++) {
 			int amntShrinkCurrentHeight = 0;
-			child = (IFigure) children.get(i);
+			child = children.get(i);
 
 			int prefHeight = prefSizes[i].height;
 			int minHeight = minSizes[i].height;
@@ -632,10 +640,6 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 		return isHorizontal() ? constraint.expandHorizontally : constraint.expandVertically;
 	}
 	
-	private boolean getMinorExpand(SapphireSequenceLayoutConstraint constraint) {
-		return isHorizontal() ? constraint.expandVertically : constraint.expandHorizontally;
-	}
-
 	/**
 	 * Sets the amount of space between children.
 	 * 
@@ -660,9 +664,7 @@ public class SapphireSequenceLayout extends AbstractHintLayout {
 
 	/**
 	 * Sets the layout constraint of the given figure. The constraints can only
-	 * be of type {@link GridData}.
-	 * 
-	 * @see LayoutManager#setConstraint(IFigure, Object)
+	 * be of type {@link org.eclipse.draw2d.GridData}.
 	 */
 	public void setConstraint(IFigure figure, Object newConstraint) {
 		super.setConstraint(figure, newConstraint);

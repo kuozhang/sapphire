@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
@@ -43,11 +42,13 @@ public class SapphireStackLayout extends AbstractLayout
 		this.marginInsets = LayoutUtil.calculateMargin(def);
 	}
 	
-	@Override
+    @Override
+    @SuppressWarnings( "unchecked" )
+    
 	protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) 
 	{
 		Insets insets = container.getInsets();
-		Dimension size = getStackedChildrenSize(container.getChildren());
+		Dimension size = getStackedChildrenSize((List<IFigure>)container.getChildren());
 		size.width += this.marginInsets.left + this.marginInsets.right;
 		size.height += this.marginInsets.top + this.marginInsets.bottom;
 		return size.expand(insets.getWidth(), insets.getHeight())
@@ -70,10 +71,10 @@ public class SapphireStackLayout extends AbstractLayout
 		return parent.getClientArea().getLocation();
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings( "unchecked" )
 	public void layout(IFigure parent) 
 	{
-		List children = parent.getChildren();
+		List<IFigure> children = parent.getChildren();
 		if (children.size() == 0)
 		{
 			return;
@@ -103,17 +104,11 @@ public class SapphireStackLayout extends AbstractLayout
 		}
 	}
 	
-	/**
-	 * @see LayoutManager#getConstraint(IFigure)
-	 */
 	public Object getConstraint(IFigure figure) 
 	{
 		return constraints.get(figure);
 	}
 	
-	/**
-	 * @see LayoutManager#remove(IFigure)
-	 */
 	public void remove(IFigure figure) 
 	{
 		super.remove(figure);
@@ -124,7 +119,6 @@ public class SapphireStackLayout extends AbstractLayout
 	 * Sets the layout constraint of the given figure. The constraints can only
 	 * be of type {@link Rectangle}.
 	 * 
-	 * @see LayoutManager#setConstraint(IFigure, Object)
 	 * @since 2.0
 	 */
 	public void setConstraint(IFigure figure, Object newConstraint) 
@@ -169,7 +163,7 @@ public class SapphireStackLayout extends AbstractLayout
 		return new Point(offsetX, offsetY);
 	}
 	
-	private Dimension getStackedChildrenSize(List children)
+	private Dimension getStackedChildrenSize(List<IFigure> children)
 	{
 		Dimension size = new Dimension(0, 0);
 		for (Object child : children)

@@ -228,17 +228,19 @@ public final class DiagramNodeTemplate extends SapphirePart
         return ret;
     }
     
+    @SuppressWarnings( "unchecked" )
+    
     public DiagramNodePart createNewDiagramNode()
     {
     	Element newElement = null;
-		ElementList<?> list = this.modelElement.property(this.modelProperty);
+		ElementList<Element> list = this.modelElement.property(this.modelProperty);
 		if (this.modelElementType == null)
 		{
 			newElement = list.insert();
 		}
 		else
 		{
-			final Class cl = (Class<?>) this.modelElementType.artifact();
+			final Class<Element> cl = (Class<Element>) this.modelElementType.artifact();
 			if (cl != null)
 			{
 				newElement = list.insert(cl);

@@ -48,11 +48,11 @@ public class DummyEdgeCreator
 		this.edgeList = graph.edges;
 	}
 
-	protected void setDummyEdges()
+	@SuppressWarnings( "unchecked" )
+	
+    protected void setDummyEdges()
 	{
-
 		int nodeCount = nodeList.size();
-
 
 		//if node count is only one then we don't have to worry about whether
 		// the nodes are connected
@@ -82,7 +82,7 @@ public class DummyEdgeCreator
 				{
 					Node sourceNode = candidateList.getNode(index++);
 					Node targetNode = candidateList.getNode(index);
-					Edge edge = newDummyEdge(targetNode, sourceNode);
+					newDummyEdge(targetNode, sourceNode);
 				}
 			}
 		}
@@ -91,7 +91,10 @@ public class DummyEdgeCreator
 	/**
 	 * creates a new dummy edge to be used in the graph
 	 */
-	private Edge newDummyEdge(Node targetNode, Node sourceNode)
+	
+	@SuppressWarnings( "unchecked" )
+	
+    private Edge newDummyEdge(Node targetNode, Node sourceNode)
 	{
 		DummyEdgePart edgePart = new DummyEdgePart();
 		Edge edge = new Edge(edgePart, sourceNode, targetNode);

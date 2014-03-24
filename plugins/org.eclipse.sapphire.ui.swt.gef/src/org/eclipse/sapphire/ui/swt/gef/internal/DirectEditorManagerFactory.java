@@ -16,7 +16,6 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.sapphire.PossibleValuesService;
-import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
@@ -32,7 +31,6 @@ public class DirectEditorManagerFactory
 	{
 		Value<?> property = FunctionUtil.getFunctionProperty(textPart.getLocalModelElement(), 
 				textPart.getContentFunction());
-		PropertyDef definition = property.definition();
 		PossibleValuesService possibleValuesService = property.service(PossibleValuesService.class);
 		if (possibleValuesService != null)
 		{
