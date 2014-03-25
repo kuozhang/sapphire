@@ -17,7 +17,6 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -35,7 +34,6 @@ public interface DialogDef extends CompositeDef
     // *** Label ***
     
     @Label( standard = "label" )
-    @Localizable
     @Required
     @XmlBinding( path = "label" )
     

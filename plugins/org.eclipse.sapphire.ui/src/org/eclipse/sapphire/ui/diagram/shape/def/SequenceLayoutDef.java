@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.MarginPresentation;
 
@@ -36,7 +35,6 @@ public interface SequenceLayoutDef extends ShapeLayoutDef, MarginPresentation
     
     @Type( base = SequenceLayoutOrientation.class )
     @Label( standard = "orientation" )
-    @Localizable
     @XmlBinding( path = "orientation" )
     @DefaultValue( text = "vertical" )
     

@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.MarginPresentation;
@@ -63,7 +62,6 @@ public interface LayoutConstraintDef extends MarginPresentation
     
     @Type( base = HorizontalAlignment.class )
     @Label( standard = "horizontal alignment")
-    @Localizable
     @XmlBinding( path = "horizontal-alignment" )
     @DefaultValue( text = "left" )
     
@@ -77,7 +75,6 @@ public interface LayoutConstraintDef extends MarginPresentation
     
     @Type( base = VerticalAlignment.class )
     @Label( standard = "vertical alignment")
-    @Localizable
     @XmlBinding( path = "vertical-alignment" )
     @DefaultValue( text = "center" )
     

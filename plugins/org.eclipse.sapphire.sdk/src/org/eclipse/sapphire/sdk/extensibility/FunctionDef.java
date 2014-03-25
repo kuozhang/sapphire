@@ -33,7 +33,6 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -128,7 +127,6 @@ public interface FunctionDef extends Element
     
     @LongString
     @Label( standard = "description" )
-    @Localizable
     @Whitespace( collapse = true )
     @XmlBinding( path = "description" )
     

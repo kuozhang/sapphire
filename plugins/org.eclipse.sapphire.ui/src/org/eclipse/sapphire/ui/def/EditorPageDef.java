@@ -29,7 +29,6 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -52,7 +51,6 @@ public interface EditorPageDef extends PartDef
     
     @Label( standard = "page name" )
     @DefaultValue( text = "design" )
-    @Localizable
     @XmlBinding( path = "page-name" )
     
     ValueProperty PROP_PAGE_NAME = new ValueProperty( TYPE, "PageName" );
@@ -65,7 +63,6 @@ public interface EditorPageDef extends PartDef
     @Type( base = Function.class )
     @Label( standard = "page header text" )
     @DefaultValue( text = "design view" )
-    @Localizable
     @XmlBinding( path = "page-header-text" )
     
     ValueProperty PROP_PAGE_HEADER_TEXT = new ValueProperty( TYPE, "PageHeaderText" );

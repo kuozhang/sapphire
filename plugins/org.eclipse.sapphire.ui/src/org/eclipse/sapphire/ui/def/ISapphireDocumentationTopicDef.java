@@ -17,7 +17,6 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -34,7 +33,6 @@ public interface ISapphireDocumentationTopicDef extends Element
     
     @Label( standard = "label" )
     @Required
-    @Localizable
     @XmlBinding( path = "label" )
 
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );

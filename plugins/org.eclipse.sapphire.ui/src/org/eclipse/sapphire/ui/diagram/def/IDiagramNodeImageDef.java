@@ -19,7 +19,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -46,7 +45,6 @@ public interface IDiagramNodeImageDef extends IDiagramDimension
     
     @Type( base = ImagePlacement.class )
     @Label( standard = "placement")
-    @Localizable
     @XmlBinding( path = "placement" )
     @DefaultValue( text = "top" )
     

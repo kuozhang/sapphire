@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -75,7 +74,6 @@ public interface HtmlPanelDef extends FormComponentDef
     @Required
     @Enablement( expr = "${ ContentSourceType == 'EMBEDDED' }" )
     @LongString
-    @Localizable
     @XmlValueBinding( path = "content", removeNodeOnSetIfNull = false )
     
     ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );

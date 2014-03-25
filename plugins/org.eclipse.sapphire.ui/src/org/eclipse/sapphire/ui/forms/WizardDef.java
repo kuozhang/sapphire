@@ -22,7 +22,6 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -48,7 +47,6 @@ public interface WizardDef extends PartDef
     // *** Label ***
     
     @Label( standard = "label" )
-    @Localizable
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
@@ -60,7 +58,6 @@ public interface WizardDef extends PartDef
     
     @Label( standard = "description" )
     @LongString
-    @Localizable
     @XmlBinding( path = "description" )
     
     ValueProperty PROP_DESCRIPTION = new ValueProperty( TYPE, "Description" );

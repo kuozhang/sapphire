@@ -27,7 +27,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
@@ -76,7 +75,6 @@ public interface DiagramEditorPageDef extends EditorPageDef, PropertiesViewContr
     
     @Type( base = LayoutPersistence.class )
     @Label( standard = "layout persistence")
-    @Localizable
     @XmlBinding( path = "layout-persistence" )
     @DefaultValue( text = "workspace" )
     
@@ -90,7 +88,6 @@ public interface DiagramEditorPageDef extends EditorPageDef, PropertiesViewContr
     
     @Type( base = ConnectionServiceType.class )
     @Label( standard = "connection service type")
-    @Localizable
     @XmlBinding( path = "connection-service-type" )
     @DefaultValue( text = "standard" )
     

@@ -21,7 +21,6 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -44,7 +43,6 @@ public interface TextDef extends FormComponentDef
     @Label( standard = "text" )
     @Required
     @LongString
-    @Localizable
     @Whitespace( collapse = true )
     @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "text" )
     

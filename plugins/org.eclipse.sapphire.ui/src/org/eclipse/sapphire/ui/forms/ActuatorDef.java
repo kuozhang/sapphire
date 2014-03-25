@@ -25,7 +25,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
@@ -95,7 +94,6 @@ public interface ActuatorDef extends FormComponentDef
     @Label( standard = "label" )
     @Enablement( expr = "${ ShowLabel }" )
     @XmlBinding( path = "label" )
-    @Localizable
     
     @Documentation
     (

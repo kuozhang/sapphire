@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 
 /**
@@ -76,7 +75,6 @@ public interface PresentationStyleDef extends Element
     
     @LongString
     @Label( standard = "description" )
-    @Localizable
     @Whitespace( collapse = true )
     @XmlValueBinding( path = "description" )
     

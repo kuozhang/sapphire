@@ -17,7 +17,6 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
@@ -36,7 +35,6 @@ public interface StaticTextFieldDef extends FormComponentDef
     
     @Label( standard = "label" )
     @Required
-    @Localizable
     @XmlBinding( path = "label" )
     
     ValueProperty PROP_LABEL = new ValueProperty( TYPE, "Label" );
@@ -48,7 +46,6 @@ public interface StaticTextFieldDef extends FormComponentDef
     
     @Label( standard = "text" )
     @Required
-    @Localizable
     @XmlBinding( path = "text" )
     
     ValueProperty PROP_TEXT = new ValueProperty( TYPE, "Text" );

@@ -20,7 +20,6 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 
@@ -47,7 +46,6 @@ public interface ISapphireDocumentationDef extends ISapphireDocumentation
     // *** Title ***
     
     @Label( standard = "title" )
-    @Localizable
     @XmlBinding( path = "title" )
     
     ValueProperty PROP_TITLE = new ValueProperty( TYPE, "Title" );
@@ -59,7 +57,6 @@ public interface ISapphireDocumentationDef extends ISapphireDocumentation
     
     @Label( standard = "content" )
     @LongString
-    @Localizable
     @XmlBinding( path = "content" )
  
     ValueProperty PROP_CONTENT = new ValueProperty( TYPE, "Content" );

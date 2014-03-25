@@ -23,7 +23,6 @@ import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
 import org.eclipse.sapphire.ui.def.internal.SectionDefLabelDefaultValueProvider;
@@ -44,7 +43,6 @@ public interface SectionDef extends CompositeDef
     
     @Type( base = Function.class )
     @Label( standard = "label" )
-    @Localizable
     @Service( impl = SectionDefLabelDefaultValueProvider.class )
     @XmlBinding( path = "label" )
     
@@ -59,7 +57,6 @@ public interface SectionDef extends CompositeDef
     @Type( base = Function.class )
     @Label( standard = "description" )
     @LongString
-    @Localizable
     @Whitespace( collapse = true )
     @XmlValueBinding( path = "description" )
     

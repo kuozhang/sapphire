@@ -18,7 +18,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.FoldingXmlValueBindingImpl;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlValueBinding;
 
@@ -34,7 +33,6 @@ public interface IDiagramLabelDef extends IDiagramDimension
     
     @Type( base = Function.class )
     @Label( standard = "text" )
-    @Localizable
     @Required
     @CustomXmlValueBinding( impl = FoldingXmlValueBindingImpl.class, params = "text" )
     

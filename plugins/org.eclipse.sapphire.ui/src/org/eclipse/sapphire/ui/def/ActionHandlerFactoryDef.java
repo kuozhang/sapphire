@@ -31,7 +31,6 @@ import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
@@ -65,7 +64,6 @@ public interface ActionHandlerFactoryDef extends ISapphireConditionHostDef, Acti
     // *** Description ***
     
     @LongString
-    @Localizable
     @Label( standard = "description" )
     @Whitespace( collapse = true )
     @XmlValueBinding( path = "description" )

@@ -23,7 +23,6 @@ import org.eclipse.sapphire.modeling.annotations.LongString;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.Whitespace;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -52,7 +51,6 @@ public interface ActionSystemPartDef extends ISapphireConditionHostDef, ActionCo
     // *** Label ***
     
     @Type( base = Function.class )
-    @Localizable
     @Label( standard = "label" )
     @XmlBinding( path = "label" )
     
@@ -65,7 +63,6 @@ public interface ActionSystemPartDef extends ISapphireConditionHostDef, ActionCo
     // *** ToolTip ***
     
     @Type( base = Function.class )
-    @Localizable
     @Label( standard = "tool tip" )
     @DefaultValue( text = "${ Label }" )
     @XmlBinding( path = "tooltip" )
@@ -89,7 +86,6 @@ public interface ActionSystemPartDef extends ISapphireConditionHostDef, ActionCo
     // *** Description ***
     
     @LongString
-    @Localizable
     @Label( standard = "description" )
     @Whitespace( collapse = true )
     @XmlValueBinding( path = "description" )

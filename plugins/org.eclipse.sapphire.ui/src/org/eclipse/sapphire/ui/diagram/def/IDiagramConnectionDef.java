@@ -26,7 +26,6 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.LineStyle;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -65,7 +64,6 @@ public interface IDiagramConnectionDef extends PartDef, PropertiesViewContributo
     // *** ToolPaletteLabel ***
     
     @Label( standard = "tool palette item label" )
-    @Localizable
     @XmlBinding( path = "tool-palette-label" )
     @Enablement( expr = "${!ImplicitConnection}" )
     
@@ -77,7 +75,6 @@ public interface IDiagramConnectionDef extends PartDef, PropertiesViewContributo
     // *** ToolPaletteDescription ***
     
     @Label( standard = "tool palette item description" )
-    @Localizable
     @LongString
     @XmlBinding( path = "tool-palette-desc" )
     @Enablement( expr = "${!ImplicitConnection}" )

@@ -36,7 +36,6 @@ import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -108,7 +107,6 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, PropertiesV
     
     @Label( standard = "tool palette item label" )
     @Required
-    @Localizable
     @XmlBinding( path = "tool-palette-label" )
     
     ValueProperty PROP_TOOL_PALETTE_LABEL = new ValueProperty( TYPE, "ToolPaletteLabel" );
@@ -120,7 +118,6 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, PropertiesV
     
     @Label( standard = "tool palette item description" )
     @LongString
-    @Localizable
     @XmlBinding( path = "tool-palette-desc" )
     
     ValueProperty PROP_TOOL_PALETTE_DESCRIPTION = new ValueProperty( TYPE, "ToolPaletteDescription" );

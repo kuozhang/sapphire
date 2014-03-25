@@ -23,7 +23,6 @@ import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.el.Function;
-import org.eclipse.sapphire.modeling.localization.Localizable;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 
@@ -44,7 +43,6 @@ public interface MasterDetailsEditorPageDef extends EditorPageDef
     @Type( base = Function.class )
     @Label( standard = "outline header text" )
     @DefaultValue( text = "outline" )
-    @Localizable
     @XmlBinding( path = "outline-header-text" )
     
     ValueProperty PROP_OUTLINE_HEADER_TEXT = new ValueProperty( TYPE, "OutlineHeaderText" );
