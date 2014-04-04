@@ -232,7 +232,7 @@
         </then>
         <else>
           <delete file="@{dest}.tar" quiet="true"/>
-          <tar basedir="@{src}" destfile="@{dest}.tar"/>
+          <tar basedir="@{src}" destfile="@{dest}.tar" longfile="posix"/>
           <gzip src="@{dest}.tar" destfile="@{dest}"/>
           <delete file="@{dest}.tar"/>
         </else>
