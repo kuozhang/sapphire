@@ -77,6 +77,10 @@
        <topic href="html/releases/8/migration.html" label="Migration Guide">
        </topic>
     </topic>
+    <topic href="html/releases/0.7.2/index.html" label="0.7.2">
+       <topic href="html/releases/0.7.2/enhancements.html" label="Enhancements">
+       </topic>
+    </topic>
     <topic href="html/releases/0.7.1/index.html" label="0.7.1">
        <topic href="html/releases/0.7.1/enhancements.html" label="Enhancements">
        </topic>
