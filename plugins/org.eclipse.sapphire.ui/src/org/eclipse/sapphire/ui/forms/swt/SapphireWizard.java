@@ -547,8 +547,8 @@ public class SapphireWizard<M extends Element> implements IWizard, Disposable
     	if (getContainer() instanceof WizardDialog)
     	{
     		((WizardDialog)getContainer()).setTitle(part().getLabel());
-    	}
-    	getContainer().updateWindowTitle();
+    		getContainer().updateWindowTitle();
+    	}    	
     }
 
     private final void refreshDescription()
@@ -556,8 +556,8 @@ public class SapphireWizard<M extends Element> implements IWizard, Disposable
     	if (getContainer() instanceof WizardDialog)
     	{
     		((WizardDialog)getContainer()).setMessage(part().getDescription());
-    	}
-    	getContainer().updateMessage();
+    		getContainer().updateMessage();
+    	}  	
     }
 
     @Override
