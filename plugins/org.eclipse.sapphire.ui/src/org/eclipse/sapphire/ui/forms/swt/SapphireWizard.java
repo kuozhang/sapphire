@@ -544,19 +544,21 @@ public class SapphireWizard<M extends Element> implements IWizard, Disposable
     
     private final void refreshTitle()
     {
-    	if (getContainer() instanceof WizardDialog)
+    	IWizardContainer container = getContainer();
+    	if (container instanceof WizardDialog)
     	{
-    		((WizardDialog)getContainer()).setTitle(part().getLabel());
-    		getContainer().updateWindowTitle();
+    		((WizardDialog)container).setTitle(part().getLabel());
+    		container.updateWindowTitle();
     	}    	
     }
 
     private final void refreshDescription()
     {
-    	if (getContainer() instanceof WizardDialog)
+    	IWizardContainer container = getContainer();
+    	if (container instanceof WizardDialog)
     	{
-    		((WizardDialog)getContainer()).setMessage(part().getDescription());
-    		getContainer().updateMessage();
+    		((WizardDialog)container).setMessage(part().getDescription());
+    		container.updateMessage();
     	}  	
     }
 
