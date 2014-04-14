@@ -45,7 +45,7 @@
     <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-dsl-kepler-SR2"/>
     <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-rcp-kepler-SR2"/>
     <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-modeling-kepler-SR2"/>
-    <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-reporting-kepler-SR2"/>
+    <!-- <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-reporting-kepler-SR2"/> -->
     <!-- <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-parallel-kepler-SR2"/> -->
     <!-- <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-testing-kepler-SR2"/> -->
     <var name="packages" value="${packages},/technology/epp/downloads/release/kepler/SR2/eclipse-scout-kepler-SR2"/>
@@ -112,9 +112,7 @@
     <delete dir="eclipse" quiet="true"/>
 
     <with-download-from-eclipse file="/technology/epp/downloads/release/kepler/SR2/eclipse-standard-kepler-SR2-${current.platform}.${current.platform.archive.type}">
-      <expand src="${.download}" dest="eclipse">
-        <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
-      </expand>
+      <expand src="${basedir}/${.download}" dest="${basedir}"/>
     </with-download-from-eclipse>
 
     <property name="eclipse" value="eclipse"/>
@@ -142,7 +140,7 @@
 
               <delete dir="package" quiet="true"/>
 
-              <expand src="${.download}" alias="@{package}@{variant}" dest="package"/>
+              <expand src="${basedir}/${.download}" alias="@{package}@{variant}" dest="${basedir}/package"/>
 
               <install-update
                 dest="package/eclipse"
@@ -172,7 +170,7 @@
                 repositories="http://download.eclipse.org/technology/m2e/releases/1.4/1.4.1.20140328-1905/"
                 installables="org.eclipse.m2e.feature.feature.group,org.eclipse.m2e.logback.feature.feature.group"/>
 
-              <compress src="package" dest="packages/${.file.name.base}-Java8@{variant}"/>
+              <compress src="${basedir}/package" dest="${basedir}/packages/${.file.name.base}-Java8@{variant}"/>
 
               <delete dir="package"/>
 
@@ -196,22 +194,21 @@
     <attribute name="src"/>
     <attribute name="dest"/>
     <attribute name="alias" default="@{src}"/>
-    <element name="mapper" optional="true" implicit="true"/>
     <sequential>
 
       <if>
         <contains string="@{alias}" substring=".zip"/>
         <then>
-          <unzip src="@{src}" dest="@{dest}">
-            <mapper/>
-          </unzip>
+          <unzip src="@{src}" dest="@{dest}"/>
         </then>
         <else>
           <delete file="@{src}.tar" quiet="true"/>
           <gunzip src="@{src}" dest="@{src}.tar"/>
-          <untar src="@{src}.tar" dest="@{dest}">
-            <mapper/>
-          </untar>
+          <mkdir dir="@{dest}"/>
+          <exec executable="tar" dir="@{dest}" failonerror="true">
+            <arg value="xpf"/>
+            <arg value="@{src}.tar"/>
+          </exec>
           <delete file="@{src}.tar"/>
         </else>
       </if>
@@ -232,7 +229,18 @@
         </then>
         <else>
           <delete file="@{dest}.tar" quiet="true"/>
-          <tar basedir="@{src}" destfile="@{dest}.tar" longfile="gnu"/>
+          <var name=".content" unset="true"/>
+          <pathconvert pathsep=" " property=".content">
+            <dirset dir="@{src}" includes="*"/>
+            <fileset dir="@{src}" includes="*"/>
+            <mapper type="flatten"/>
+          </pathconvert>
+          <exec executable="tar" dir="@{src}" failonerror="true">
+            <arg value="cf"/>
+            <arg value="@{dest}.tar"/>
+            <arg value="${.content}"/>
+          </exec>
+          <var name=".content" unset="true"/>
           <gzip src="@{dest}.tar" destfile="@{dest}"/>
           <delete file="@{dest}.tar"/>
         </else>
