@@ -71,11 +71,11 @@ public class SapphireWizardPage extends WizardPage implements Disposable
                 }
                 else if( event instanceof LabelChangedEvent )
                 {
-                	refreshTitle();
+                    refreshTitle();
                 }
                 else if( event instanceof DescriptionChangedEvent )
                 {
-                	refreshDescription();
+                    refreshDescription();
                 }
             }
         };
@@ -175,13 +175,14 @@ public class SapphireWizardPage extends WizardPage implements Disposable
     
     private final void refreshTitle()
     {
-    	setTitle( this.part.getLabel() );
+        setTitle( this.part.getLabel() );
     }
     
     private final void refreshDescription()
     {
-    	setDescription( this.part.getDescription() );
+        setDescription( this.part.getDescription() );
     }
+    
     private final void refreshValidation()
     {
         final Status st = this.part.validation();
