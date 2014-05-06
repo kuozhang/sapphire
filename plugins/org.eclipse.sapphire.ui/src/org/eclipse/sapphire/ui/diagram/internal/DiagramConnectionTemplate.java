@@ -198,6 +198,11 @@ public class DiagramConnectionTemplate extends SapphirePart
         };
     }
     
+    public IDiagramConnectionDef getConnectionDef()
+    {
+    	return this.connectionDef;
+    }
+    
     public String getConnectionTypeId()
     {
         return this.connectionDef.getId().content();

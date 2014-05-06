@@ -36,7 +36,8 @@
             <line-width>2</line-width>
             <endpoint2>
                 <type>arrow</type>
-            </endpoint2>            
+            </endpoint2>
+            <tool-palette-desc>create a railway route between two cities.</tool-palette-desc>            
         </connection>
         <connection>
             <id>highway_routes</id>
@@ -44,7 +45,8 @@
             <endpoint2>
                 <type>arrow</type>
             </endpoint2>
-            <line-color>#333399</line-color>        
+            <line-color>#333399</line-color>
+            <tool-palette-desc>create a highway route between two cities.</tool-palette-desc>        
         </connection>
         <node>
             <id>locations</id>

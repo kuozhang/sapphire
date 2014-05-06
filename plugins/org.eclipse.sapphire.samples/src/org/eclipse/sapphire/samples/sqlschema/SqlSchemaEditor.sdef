@@ -267,6 +267,7 @@
                         <image>ForeignKey.gif</image>
                     </page>
                 </properties-view>
+            <tool-palette-desc>create a foreign key relationship between two tables.</tool-palette-desc>
             
         </connection>
         <id>DiagramPage</id>

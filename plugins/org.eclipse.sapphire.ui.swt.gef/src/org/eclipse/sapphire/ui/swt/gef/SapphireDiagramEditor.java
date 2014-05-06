@@ -509,15 +509,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	}
 
 	@Override
-	protected void setInput(IEditorInput input) {
-		super.setInput(input);
-
-		// Is this the right place?
-		setEditDomain(new DefaultEditDomain(this));
-				
-	}
-
-	@Override
 	protected void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
 
@@ -715,6 +706,17 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 				super.configurePaletteViewer(viewer);
 				viewer.addDragSourceListener(new TemplateTransferDragSourceListener(viewer));
 			}
+			
+			@Override
+			public PaletteViewer createPaletteViewer(Composite parent) 
+			{
+				PaletteViewer pViewer = new SapphirePaletteViewer();
+				pViewer.createControl(parent);
+				configurePaletteViewer(pViewer);
+				hookPaletteViewer(pViewer);
+				return pViewer;
+			}
+			
 		};
 	}
 	

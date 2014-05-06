@@ -317,7 +317,16 @@
         <context>Sapphire.Diagram.Editor</context>
         <context>Sapphire.Diagram.Header</context>
     </action>
-   
+    <action>
+        <id>Sapphire.Diagram.Connect</id>
+        <context>Sapphire.Diagram.Node</context>
+        <label>connect</label>
+        <image>org/eclipse/sapphire/ui/actions/connection.png</image>
+        <description>Create connection with the current node as the connection source.</description>
+        <group>Sapphire.AddDeleteGroup</group>
+        <location>after:Sapphire.Delete</location>
+    </action>
+       
     <action-handler>
         <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFilePathBrowseActionHandler</impl>

@@ -483,6 +483,11 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return this.service(ConnectionService.class).list();
     }
     
+    public List<IDiagramConnectionDef> possibleConnectionDefs(DiagramNodePart nodePart)
+    {
+    	return this.service(ConnectionService.class).possibleConnectionDefs(nodePart);
+    }
+
     public DiagramNodePart getDiagramNodePart(Element nodeElement)
     {
         if (nodeElement == null)

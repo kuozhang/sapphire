@@ -15,6 +15,7 @@ package org.eclipse.sapphire.ui.diagram;
 import java.util.List;
 
 import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodePart;
 
 /**
@@ -55,5 +56,12 @@ public abstract class ConnectionService extends Service
      */
     
     public abstract List<DiagramConnectionPart> list();
+    
+    /**
+     * Lists all the possible connection definitions that can originate from a diagram node
+     * @param srcNode diagram node
+     * @return list of IDiagramConnectionDef
+     */
+    public abstract List<IDiagramConnectionDef> possibleConnectionDefs( DiagramNodePart srcNode );
 
 }

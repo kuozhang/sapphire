@@ -60,4 +60,10 @@
         <context>Sapphire.Diagram.Header</context>
         <impl>org.eclipse.sapphire.ui.swt.gef.actions.SaveAsImageDiagramActionHandler</impl>
     </action-handler>
+    <action-handler-factory>
+        <action>Sapphire.Diagram.Connect</action>
+        <impl>org.eclipse.sapphire.ui.swt.gef.actions.ConnectActionHandlerFactory</impl>
+        <context>Sapphire.Diagram.Node</context>
+    </action-handler-factory>
+
 </extension>

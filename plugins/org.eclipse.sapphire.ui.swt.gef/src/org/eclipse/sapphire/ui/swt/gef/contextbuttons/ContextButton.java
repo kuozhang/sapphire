@@ -135,11 +135,12 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 			}			
 			tooltip.setHeader(label);
 		}
-		if (getSapphireAction().getToolTip() != null && getSapphireAction().getToolTip().length() > 0) {
+		String description = getToolTip(getSapphireAction());
+		if (description != null && description.length() > 0 && !description.equalsIgnoreCase(label)) {
 			if (tooltip == null) {
 				tooltip = new Tooltip();
 			}
-			tooltip.setDescription(getSapphireAction().getToolTip());
+			tooltip.setDescription(description);
 		}
 		setToolTip(tooltip);
 
@@ -504,32 +505,34 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 	private Image getActionHandlerImage(SapphireActionHandler handler)
 	{
 	    ImageData imageData = handler.getImage(16);
-	    
-        ImageDescriptor imageDescriptor;
-		if (imageData == null)
+	            
+		if (imageData != null)
 		{
-			return DefaultActionImage.getDefaultActionImage();
-		}
-		else
-		{
-			imageDescriptor = SwtUtil.toImageDescriptor(imageData);
+			ImageDescriptor imageDescriptor = SwtUtil.toImageDescriptor(imageData);
 			return imageDescriptor.createImage();
 		}
-		
+		return DefaultActionImage.getDefaultActionImage();
 	}
 
 	private Image getActionImage(SapphireAction action)
-	{
-	    ImageData imageData = action.getImage(16);
+	{		
+		ImageData imageData = null;
+		List<SapphireActionHandler> handlers = action.getActiveHandlers();
+		if (handlers.size() == 1)
+		{		
+			imageData = action.getFirstActiveHandler().getImage(16);
+		}
+		
+	    if (imageData == null)
+	    	imageData = action.getImage(16);
 	    
-        ImageDescriptor imageDescriptor;
 		if (imageData == null)
 		{
 			return DefaultActionImage.getDefaultActionImage();
 		}
 		else
 		{
-			imageDescriptor = SwtUtil.toImageDescriptor(imageData);
+	        ImageDescriptor imageDescriptor = SwtUtil.toImageDescriptor(imageData);
 			return imageDescriptor.createImage();
 		}		
 	}
@@ -546,6 +549,25 @@ public class ContextButton extends Clickable implements MouseMotionListener, Act
 		String label = handler.getLabel();
 	    label = LabelTransformer.transform( label, CapitalizationType.TITLE_STYLE, false );
 	    return label;		
+	}
+	
+	private String getToolTip(SapphireAction action)
+	{
+		String tooltip = null;
+		List<SapphireActionHandler> handlers = action.getActiveHandlers();
+		if (handlers.size() == 1)
+		{
+			tooltip = handlers.get(0).getToolTip();
+		}
+		if (tooltip == null)
+		{
+			tooltip = action.getToolTip();
+		}
+		if (tooltip != null)
+		{
+			tooltip = LabelTransformer.transform( tooltip, CapitalizationType.FIRST_WORD_ONLY, false );
+		}
+	    return tooltip;		
 	}
 	
 	private void executeActionHandler(SapphireActionHandler handler)

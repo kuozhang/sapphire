@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
-import org.eclipse.gef.palette.ConnectionCreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteEntry;
@@ -32,14 +31,15 @@ import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ImageData;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.localization.LabelTransformer;
+import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.DiagramPaletteCompartmentConstants;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
-import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramPaletteCompartmentDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
+import org.eclipse.sapphire.ui.swt.gef.internal.SapphireConnectionCreationToolEntry;
 import org.eclipse.sapphire.ui.swt.gef.tools.SapphireMarqueeSelectionTool;
 
 /**
@@ -75,7 +75,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 		
 		// create new entries
 		DiagramEditorPageDef diagramPageDef = (DiagramEditorPageDef)diagramPart.definition();
-		add(createModelIndependentTools());
+		//add(createModelIndependentTools());
 		
 		List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
 		if (nodeTemplates.isEmpty())
@@ -130,7 +130,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 								tpDesc, CapitalizationType.TITLE_STYLE, false);
 			}
 			if (tpLabel != null) {
-	    		ToolEntry tool = new ConnectionCreationToolEntry(tpLabel, tpDesc, factory, imageDescriptor, imageDescriptor);
+	    		ToolEntry tool = new SapphireConnectionCreationToolEntry(tpLabel, tpDesc, factory, imageDescriptor, imageDescriptor);
 	    		
 	    		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, connDef.getToolPaletteCompartment().content());
 	    		List<ToolEntry> list = entries.get(drawer.getId());

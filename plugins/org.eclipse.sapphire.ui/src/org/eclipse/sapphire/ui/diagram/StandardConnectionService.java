@@ -202,7 +202,28 @@ public class StandardConnectionService extends ConnectionService
 
         return connections.result();
     }
-                    
+          
+    @Override
+    public  List<IDiagramConnectionDef> possibleConnectionDefs( DiagramNodePart srcNode )
+    {
+    	List<IDiagramConnectionDef> connectionDefs = new ArrayList<IDiagramConnectionDef>();
+    	
+        DiagramEmbeddedConnectionTemplate embeddedConnTemplate = 
+                this.embeddedConnectionTemplateMap.get(srcNode.getDiagramNodeTemplate());
+        if (embeddedConnTemplate != null)
+        {
+            connectionDefs.add(embeddedConnTemplate.getConnectionDef());
+        }
+        for (DiagramConnectionTemplate connectionTemplate2 : getAllConnectionTemplates())
+        {
+        	if (connectionTemplate2.canStartNewConnection(srcNode))
+            {
+        		connectionDefs.add(connectionTemplate2.getConnectionDef());
+            }
+        }
+        return connectionDefs;    	
+    }
+    
     private void showAllAttachedConnections(DiagramNodeTemplate nodeTemplate)
     {
         if (nodeTemplate != null)
