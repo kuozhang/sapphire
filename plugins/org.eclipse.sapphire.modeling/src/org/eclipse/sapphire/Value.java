@@ -127,12 +127,14 @@ public class Value<T> extends Property
                 
                 synchronized( this )
                 {
+                    final String beforeText = this.text;
+                    
                     this.text = afterText;
                     this.content = afterContent;
                     
                     if( initialized )
                     {
-                        event = new PropertyContentEvent( this );
+                        event = new ValuePropertyContentEvent( this, beforeText, afterText );
                     }
                     else
                     {

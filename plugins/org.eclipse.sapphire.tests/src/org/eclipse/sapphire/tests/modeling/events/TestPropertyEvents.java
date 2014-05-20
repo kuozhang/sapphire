@@ -80,7 +80,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.setValuePlain( "a" );
             
             assertEquals( 1, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getValuePlain() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getValuePlain(), null, "a" );
             
             events.clear();
             
@@ -88,7 +88,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.setValuePlain( "b" );
             
             assertEquals( 1, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getValuePlain() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getValuePlain(), "a", "b" );
             
             events.clear();
 
@@ -96,7 +96,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.setValuePlain( "c" );
             
             assertEquals( 1, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getValuePlain() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getValuePlain(), "b", "c" );
         }
         finally
         {
@@ -120,7 +120,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.setValueConstrained( "a" );
             
             assertEquals( 1, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getValueConstrained() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getValueConstrained(), null, "a" );
             
             events.clear();
             
@@ -128,14 +128,14 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.setValueConstrained( "b" );
             
             assertEquals( 1, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getValueConstrained() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getValueConstrained(), "a", "b" );
             
             events.clear();
             
             element.setValueConstrained( null );
             
             assertEquals( 2, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getValueConstrained() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getValueConstrained(), "b", null );
             assertPropertyValidationEvent( events.get( 1 ), element.getValueConstrained(), Status.createOkStatus(), Status.createErrorStatus( "Value constrained must be specified" ) );
             
             events.clear();
@@ -144,7 +144,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.setValueConstrained( "c" );
             
             assertEquals( 2, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getValueConstrained() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getValueConstrained(), null, "c" );
             assertPropertyValidationEvent( events.get( 1 ), element.getValueConstrained(), Status.createErrorStatus( "Value constrained must be specified" ), Status.createOkStatus() );
             
             events.clear();
@@ -152,7 +152,7 @@ public final class TestPropertyEvents extends SapphireTestCase
             element.setEnablement( false );
             
             assertEquals( 2, events.size() );
-            assertPropertyContentEvent( events.get( 0 ), element.getEnablement() );
+            assertValuePropertyContentEvent( events.get( 0 ), element.getEnablement(), null, "false" );
             assertPropertyEnablementEvent( events.get( 1 ), element.getValueConstrained(), true, false );
         }
         finally

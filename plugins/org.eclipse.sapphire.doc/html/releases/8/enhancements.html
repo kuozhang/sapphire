@@ -63,6 +63,7 @@
     <li><a href="#Core-EventDeliveryJob">EventDeliveryJob</a></li>
     <li><a href="#Core-JobQueue">JobQueue</a></li>
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
+    <li><a href="#Core-ValuePropertyContentEvent">ValuePropertyContentEvent</a></li>
     <li><a href="#Core-UniqueNullCoverage">@Unique Null Coverage</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
@@ -310,6 +311,17 @@ by multiple ListenerContext instances in order to synchronize event delivery.</p
 were not indexed and an exception was thrown on lookup.</p>
 
 <pre class="source-code"><code>Set&lt;Task> tasksWithNoComponent = repository.getTasks().index( "Component" ).elements( null );</code></pre>
+
+
+<h2><a name="Core-ValuePropertyContentEvent">ValuePropertyContentEvent</a></h2>
+
+<p>A listener can now access before and after text when a value property changes.</p>
+
+<pre class="source-code"><code>final class ValuePropertyContentEvent extends PropertyContentEvent
+{
+    String before()
+    String after()
+}</code></pre>
 
 
 <h2><a name="Core-UniqueNullCoverage">@Unique Null Coverage</a></h2>

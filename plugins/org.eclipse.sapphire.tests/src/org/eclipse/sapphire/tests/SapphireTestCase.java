@@ -36,6 +36,7 @@ import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEnablementEvent;
 import org.eclipse.sapphire.PropertyValidationEvent;
 import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValuePropertyContentEvent;
 import org.eclipse.sapphire.modeling.ElementDisposeEvent;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.util.MiscUtil;
@@ -232,6 +233,17 @@ public abstract class SapphireTestCase extends Assert
         final PropertyContentEvent evt = (PropertyContentEvent) event;
         
         assertSame( property, evt.property() );
+    }
+    
+    protected static void assertValuePropertyContentEvent( final Event event, final Property property, final String before, final String after )
+    {
+        assertInstanceOf( event, ValuePropertyContentEvent.class );
+        
+        final ValuePropertyContentEvent evt = (ValuePropertyContentEvent) event;
+        
+        assertSame( property, evt.property() );
+        assertEquals( before, evt.before() );
+        assertEquals( after, evt.after() );
     }
     
     protected static void assertPropertyValidationEvent( final Event event,
