@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.ui.def.internal;
 
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
 import org.eclipse.sapphire.ui.forms.SectionDef;
@@ -19,12 +20,13 @@ import org.eclipse.sapphire.ui.forms.SectionDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class SectionReferenceService extends ReferenceService
+public final class SectionReferenceService extends ReferenceService<SectionDef>
 {
     @Override
-    public Object resolve( final String reference )
+    protected SectionDef compute()
     {
-        return context( ISapphireUiDef.class ).getPartDef( reference, true, SectionDef.class );
+        final String reference = context( Value.class ).text();
+        return (SectionDef) context( ISapphireUiDef.class ).getPartDef( reference, true, SectionDef.class );
     }
     
 }

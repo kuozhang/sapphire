@@ -235,7 +235,7 @@ public class DiagramConnectionTemplate extends SapphirePart
                 if (valObj instanceof ReferenceValue)
                 {
                     ReferenceValue<?,?> reference = (ReferenceValue<?,?>)valObj;
-                    Element model = (Element)reference.resolve();
+                    Element model = (Element)reference.target();
                     if (model == null)
                     {
                         if (reference.text() != null)

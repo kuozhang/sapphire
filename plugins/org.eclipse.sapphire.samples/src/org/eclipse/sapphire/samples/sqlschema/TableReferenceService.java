@@ -15,6 +15,7 @@ package org.eclipse.sapphire.samples.sqlschema;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
@@ -22,21 +23,19 @@ import org.eclipse.sapphire.services.ReferenceService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class TableReferenceService extends ReferenceService 
+public final class TableReferenceService extends ReferenceService<Table>
 {
     private Listener listener;
     
 	@Override
-    protected void init()
+    protected void initReferenceService()
     {
-        super.init();
-        
         this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -44,8 +43,10 @@ public class TableReferenceService extends ReferenceService
     }
 
     @Override
-    public Object resolve( final String reference ) 
+    protected Table compute() 
     {
+        final String reference = context( Value.class ).text();
+        
         if( reference != null )
         {
             final Schema schema = context( Schema.class );

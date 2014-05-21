@@ -97,7 +97,7 @@ public final class FKColumnAssociationValidator extends ValidationService
 
     private Column column( final ReferenceValue<String,Column> property, final Column cached )
     {
-        final Column current = property.resolve();
+        final Column current = property.target();
         
         if( cached != current )
         {

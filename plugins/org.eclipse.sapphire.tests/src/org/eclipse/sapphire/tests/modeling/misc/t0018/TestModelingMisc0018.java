@@ -45,10 +45,10 @@ public final class TestModelingMisc0018 extends SapphireTestCase
             assertEquals( Integer.valueOf( 2 ), element.getIntegerValue().content() );
             
             element.setJavaTypeReferenceValue( List.class.getName() );
-            assertSame( List.class, element.getJavaTypeReferenceValue().resolve().artifact() );
+            assertSame( List.class, element.getJavaTypeReferenceValue().target().artifact() );
             
             element.setJavaTypeReferenceValue( new JavaTypeName( Map.class.getName() ) );
-            assertSame( Map.class, element.getJavaTypeReferenceValue().resolve().artifact() );
+            assertSame( Map.class, element.getJavaTypeReferenceValue().target().artifact() );
             
             element.setTransient( System.out );
             assertSame( System.out, element.getTransient().content() );

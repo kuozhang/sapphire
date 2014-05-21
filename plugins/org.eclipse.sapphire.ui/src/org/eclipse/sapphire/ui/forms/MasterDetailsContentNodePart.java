@@ -239,7 +239,7 @@ public final class MasterDetailsContentNodePart
             {
                 final SectionRef sectionReference = (SectionRef) s;
                 
-                sectionDefinition = sectionReference.getSection().resolve();
+                sectionDefinition = sectionReference.getSection().target();
                 
                 if( sectionDefinition == null )
                 {
@@ -1037,7 +1037,7 @@ public final class MasterDetailsContentNodePart
                     
                     for( MasterDetailsContentNodeFactoryCaseDef entry : this.definition.getCases() )
                     {
-                        final JavaType type = entry.getElementType().resolve();
+                        final JavaType type = entry.getElementType().target();
                         
                         if( type == null )
                         {

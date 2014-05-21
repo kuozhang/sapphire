@@ -34,7 +34,7 @@ public final class SqlSchemaConnectionService extends StandardConnectionService
         final DiagramConnectionPart fkConnectionPart = super.connect( node1, node2, connectionType );
         final ForeignKey fk = (ForeignKey) fkConnectionPart.getLocalModelElement();
         
-        final Table referencedTable = fk.getReferencedTable().resolve();
+        final Table referencedTable = fk.getReferencedTable().target();
         
         if( referencedTable != null )
         {
@@ -73,7 +73,7 @@ public final class SqlSchemaConnectionService extends StandardConnectionService
                 {
                     final Column candidateLocalColumn = find( table.getColumns(), prefix + association.getReferencedColumn().content() );
                     
-                    if( candidateLocalColumn == null || ! equal( candidateLocalColumn.getType().content(), association.getReferencedColumn().resolve().getType().content() ) )
+                    if( candidateLocalColumn == null || ! equal( candidateLocalColumn.getType().content(), association.getReferencedColumn().target().getType().content() ) )
                     {
                         match = false;
                         break;

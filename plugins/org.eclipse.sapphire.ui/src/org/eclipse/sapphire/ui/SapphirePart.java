@@ -172,7 +172,7 @@ public abstract class SapphirePart implements ISapphirePart
         
         for( ISapphirePartListenerDef listenerDefinition : this.definition.getListeners() )
         {
-            final JavaType listenerClass = listenerDefinition.getListenerClass().resolve();
+            final JavaType listenerClass = listenerDefinition.getListenerClass().target();
             
             if( listenerClass != null )
             {
@@ -1134,7 +1134,7 @@ public abstract class SapphirePart implements ISapphirePart
         }
         else if( definition instanceof CustomFormComponentDef )
         {
-            final JavaType customPartImplClass = ( (CustomFormComponentDef) definition ).getImplClass().resolve();
+            final JavaType customPartImplClass = ( (CustomFormComponentDef) definition ).getImplClass().target();
             
             if( customPartImplClass != null )
             {
@@ -1197,7 +1197,7 @@ public abstract class SapphirePart implements ISapphirePart
         else if( definition instanceof SectionRef )
         {
             final SectionRef ref = (SectionRef) definition;
-            def = ref.getSection().resolve();
+            def = ref.getSection().target();
             
             if( def == null )
             {
@@ -1225,7 +1225,7 @@ public abstract class SapphirePart implements ISapphirePart
         else if( definition instanceof FormComponentRef )
         {
             final FormComponentRef inc = (FormComponentRef) definition;
-            def = inc.getPart().resolve();
+            def = inc.getPart().target();
             
             if( def == null )
             {

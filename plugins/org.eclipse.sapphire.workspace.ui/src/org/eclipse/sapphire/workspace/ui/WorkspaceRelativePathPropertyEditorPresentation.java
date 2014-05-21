@@ -174,7 +174,7 @@ public final class WorkspaceRelativePathPropertyEditorPresentation extends TextF
         
         if( element instanceof CreateWorkspaceFileOp )
         {
-            root = ( (CreateWorkspaceFileOp) element ).getRoot().resolve();
+            root = ( (CreateWorkspaceFileOp) element ).getRoot().target();
         }
         else
         {

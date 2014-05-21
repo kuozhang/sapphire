@@ -15,6 +15,7 @@ import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 
 import org.eclipse.sapphire.Context;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
@@ -23,14 +24,16 @@ import org.eclipse.sapphire.ui.def.ISapphireUiDef;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class DefinitionReferenceService extends ReferenceService
+public final class DefinitionReferenceService extends ReferenceService<ISapphireUiDef>
 {
     private String reference;
     private DefinitionLoader.Reference<ISapphireUiDef> handle;
 
     @Override
-    public Object resolve( final String reference )
+    protected ISapphireUiDef compute()
     {
+        final String reference = context( Value.class ).text();
+        
         if( ! equal( this.reference, reference ) )
         {
             if( this.handle != null )

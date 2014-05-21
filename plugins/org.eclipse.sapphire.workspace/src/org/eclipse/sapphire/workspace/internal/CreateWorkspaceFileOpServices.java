@@ -73,11 +73,12 @@ public final class CreateWorkspaceFileOpServices
 
     public CreateWorkspaceFileOpServices() {}
     
-    public static final class RootReferenceService extends ReferenceService
+    public static final class RootReferenceService extends ReferenceService<IContainer>
     {
         @Override
-        public Object resolve( final String reference )
+        protected IContainer compute()
         {
+            final String reference = context( Value.class ).text();
             final IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
             
             if( reference == null )
@@ -100,13 +101,11 @@ public final class CreateWorkspaceFileOpServices
         }
     }
     
-    public static final class FolderReferenceService extends ReferenceService
+    public static final class FolderReferenceService extends ReferenceService<IContainer>
     {
         @Override
-        protected void init()
+        protected void initReferenceService()
         {
-            super.init();
-         
             context( CreateWorkspaceFileOp.class ).getRoot().attach
             (
                 new FilteredListener<PropertyContentEvent>()
@@ -114,17 +113,18 @@ public final class CreateWorkspaceFileOpServices
                     @Override
                     protected void handleTypedEvent( final PropertyContentEvent event )
                     {
-                        broadcast();
+                        refresh();
                     }
                 }
             );
         }
 
         @Override
-        public Object resolve( final String reference )
+        protected IContainer compute()
         {
+            final String reference = context( Value.class ).text();
             final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-            final IContainer root = op.getRoot().resolve();
+            final IContainer root = op.getRoot().target();
             
             if( reference == null )
             {
@@ -152,7 +152,7 @@ public final class CreateWorkspaceFileOpServices
         public List<Path> roots()
         {
             final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-            final IContainer root = op.getRoot().resolve();
+            final IContainer root = op.getRoot().target();
             
             if( root == null )
             {
@@ -168,7 +168,7 @@ public final class CreateWorkspaceFileOpServices
         public Path convertToRelative( final Path path )
         {
             final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-            final IContainer root = op.getRoot().resolve();
+            final IContainer root = op.getRoot().target();
             
             if( root instanceof IWorkspaceRoot )
             {
@@ -194,7 +194,7 @@ public final class CreateWorkspaceFileOpServices
         public Path convertToAbsolute( final Path path )
         {
             final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-            final IContainer root = op.getRoot().resolve();
+            final IContainer root = op.getRoot().target();
             
             if( root instanceof IWorkspaceRoot )
             {
@@ -225,7 +225,7 @@ public final class CreateWorkspaceFileOpServices
                     @Override
                     protected void handleTypedEvent( final PropertyContentEvent event )
                     {
-                        broadcast();
+                        refresh();
                     }
                 }
             );
@@ -242,7 +242,7 @@ public final class CreateWorkspaceFileOpServices
                 return Status.createErrorStatus( folderMustBeSpecified.text() );
             }
             
-            final IContainer folder = context( ReferenceValue.of( Path.class, IContainer.class ) ).resolve();
+            final IContainer folder = context( ReferenceValue.of( Path.class, IContainer.class ) ).target();
             
             if( folder != null )
             {
@@ -292,19 +292,17 @@ public final class CreateWorkspaceFileOpServices
         }
     }
     
-    public static final class FileReferenceService extends ReferenceService
+    public static final class FileReferenceService extends ReferenceService<IFile>
     {
         @Override
-        protected void init()
+        protected void initReferenceService()
         {
-            super.init();
-            
             final Listener listener = new FilteredListener<PropertyContentEvent>()
             {
                 @Override
                 protected void handleTypedEvent( final PropertyContentEvent event )
                 {
-                    broadcast();
+                    refresh();
                 }
             };
             
@@ -315,10 +313,11 @@ public final class CreateWorkspaceFileOpServices
         }
 
         @Override
-        public Object resolve( final String reference )
+        protected IFile compute()
         {
+            final String reference = context( Value.class ).text();
             final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-            final IContainer folder = op.getFolder().resolve();
+            final IContainer folder = op.getFolder().target();
             
             if( reference == null || folder == null || folder instanceof IWorkspaceRoot )
             {
@@ -437,7 +436,7 @@ public final class CreateWorkspaceFileOpServices
                     }
                 }
                 
-                final IFile fileHandle = op.getFile().resolve();
+                final IFile fileHandle = op.getFile().target();
                 
                 if( fileHandle != null && fileHandle.exists() && op.getOverwriteExistingFile().content() == false )
                 {

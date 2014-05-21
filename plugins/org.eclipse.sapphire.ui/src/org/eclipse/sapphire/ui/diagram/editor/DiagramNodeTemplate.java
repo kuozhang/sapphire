@@ -107,7 +107,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         
         this.propertyName = this.definition.getProperty().content();
         this.modelProperty = (ListProperty)resolve(this.modelElement, this.propertyName);
-        this.modelElementType = this.definition.getElementType().resolve();
+        this.modelElementType = this.definition.getElementType().target();
         
 		initNodePartListener();
 		

@@ -56,7 +56,7 @@ public final class CreateWorkspaceFileOpMethods
         
         try
         {
-            final IFile newFileHandle = operation.getFile().resolve();
+            final IFile newFileHandle = operation.getFile().target();
             
             try
             {

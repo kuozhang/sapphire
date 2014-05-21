@@ -14,16 +14,18 @@ package org.eclipse.sapphire.ui.def.internal;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.ui.def.IDefinitionReference;
 import org.eclipse.sapphire.ui.def.ISapphireUiDef;
+import org.eclipse.sapphire.ui.def.PartDef;
 import org.eclipse.sapphire.ui.forms.FormComponentDef;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class FormPartIncludeReferenceService extends ReferenceService
+public final class FormPartIncludeReferenceService extends ReferenceService<PartDef>
 {
     private static final String LISTENER_PATH = ISapphireUiDef.PROP_IMPORTED_DEFINITIONS.name() + "/" + IDefinitionReference.PROP_PATH.name();
     
@@ -31,10 +33,8 @@ public final class FormPartIncludeReferenceService extends ReferenceService
     private Listener listener;
     
     @Override
-    protected void init()
+    protected void initReferenceService()
     {
-        super.init();
-        
         this.sdef = context( ISapphireUiDef.class );
         
         this.listener = new FilteredListener<PropertyContentEvent>()
@@ -42,7 +42,7 @@ public final class FormPartIncludeReferenceService extends ReferenceService
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -50,8 +50,9 @@ public final class FormPartIncludeReferenceService extends ReferenceService
     }
     
     @Override
-    public Object resolve( final String reference )
+    protected PartDef compute()
     {
+        final String reference = context( Value.class ).text();
         return context( ISapphireUiDef.class ).getPartDef( reference, true, FormComponentDef.class );
     }
 

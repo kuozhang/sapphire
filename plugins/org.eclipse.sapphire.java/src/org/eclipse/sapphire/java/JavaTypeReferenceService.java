@@ -11,18 +11,21 @@
 
 package org.eclipse.sapphire.java;
 
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class JavaTypeReferenceService
-
-    extends ReferenceService
-    
+public abstract class JavaTypeReferenceService extends ReferenceService<JavaType>
 {
-    @Override
     public abstract JavaType resolve( String name );
+
+    @Override
+    protected final JavaType compute()
+    {
+        return resolve( context( Value.class ).text() );
+    }
     
 }

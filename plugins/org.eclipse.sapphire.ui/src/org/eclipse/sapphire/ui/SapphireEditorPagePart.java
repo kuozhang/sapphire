@@ -132,7 +132,7 @@ public class SapphireEditorPagePart
             file = new File( file, ".metadata/.plugins/org.eclipse.sapphire.ui/state" );
             file = new File( file, digest );
             
-            final JavaType persistedStateElementJavaType = definition().getPersistentStateElementType().resolve();
+            final JavaType persistedStateElementJavaType = definition().getPersistentStateElementType().target();
             
             if( persistedStateElementJavaType == null )
             {

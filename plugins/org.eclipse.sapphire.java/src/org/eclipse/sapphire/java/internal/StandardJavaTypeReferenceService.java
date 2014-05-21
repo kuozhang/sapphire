@@ -44,10 +44,8 @@ public final class StandardJavaTypeReferenceService extends JavaTypeReferenceSer
     }
     
     @Override
-    protected void init()
+    protected void initReferenceService()
     {
-        super.init();
-        
         final Element element = context( Element.class );
         
         this.context = element.adapt( Context.class );

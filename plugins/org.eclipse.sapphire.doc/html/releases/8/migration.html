@@ -66,6 +66,8 @@ to Sapphire 8 from a prior release. Only changes from the previous major release
   <li><a href="#NoDuplicates">NoDuplicates</a></li>
   <li><a href="#PossibleValues">PossibleValues</a></li>
   <li><a href="#PossibleValuesService">PossibleValuesService</a></li>
+  <li><a href="#ReferenceService">ReferenceService</a></li>
+  <li><a href="#ReferenceValue">ReferenceValue</a></li>
   <li><a href="#StatusException">StatusException</a></li>
 </ol>
 
@@ -592,6 +594,72 @@ values, either through @Collation annotation or through CollationService.</p>
 </code></pre>
 
 <p>Collation is now specified separately from the possible values, either through @Collation annotation or through CollationService.</p>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ReferenceService">ReferenceService</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleReferenceService extends ReferenceService 
+{
+    @Override
+    protected void</span> init<span class="unaffected">()
+    {</span>
+        super.init();
+
+        <span class="unaffected">...
+    }
+
+    @Override</span>
+    public Object resolve( final String reference ) 
+    <span class="unaffected">{
+        ...
+    }
+}</span></code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">public class ExampleReferenceService extends ReferenceService</span>&lt;ExampleEntity>
+<span class="unaffected">{
+    @Override
+    protected void</span> initReferenceService<span class="unaffected">()
+    {
+        ...
+    }
+
+    @Override</span>
+    protected ExampleEntity compute() 
+    <span class="unaffected">{</span>
+        final String reference = context( Value.class ).text();
+
+        <span class="unaffected">...
+    }
+}</span></code></pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2><a name="ReferenceValue">ReferenceValue</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code><span class="unaffected">reference.</span>resolve() </code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code><span class="unaffected">reference.</span>target() </code></pre>
     </td>
   </tr>
 </table>

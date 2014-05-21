@@ -413,7 +413,7 @@ public abstract class JavaTypeCreateActionHandler extends PropertyEditorActionHa
             {
                 final String typeName = ref.text();
                 
-                if( typeName != null && typeName.indexOf( '$' ) == -1 && ref.resolve() == null )
+                if( typeName != null && typeName.indexOf( '$' ) == -1 && ref.target() == null )
                 {
                     enabled = true;
                 }

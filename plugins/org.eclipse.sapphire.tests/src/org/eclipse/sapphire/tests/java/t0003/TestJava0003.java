@@ -38,7 +38,7 @@ public final class TestJava0003 extends SapphireTestCase
         final TestElement element = TestElement.TYPE.instantiate();
         element.setSomeClass( PACKAGE_NAME + ".TestClass" );
         
-        final JavaType type = element.getSomeClass().resolve();
+        final JavaType type = element.getSomeClass().target();
 
         assertNotNull( type );
     }
@@ -50,7 +50,7 @@ public final class TestJava0003 extends SapphireTestCase
         final TestElement element = TestElement.TYPE.instantiate();
         element.setSomeClass( PACKAGE_NAME + ".TestClass$Inner" );
         
-        final JavaType type = element.getSomeClass().resolve();
+        final JavaType type = element.getSomeClass().target();
 
         assertNotNull( type );
     }
@@ -104,11 +104,11 @@ public final class TestJava0003 extends SapphireTestCase
         JavaType type;
         
         element.setSomeClass( PACKAGE_NAME + ".TestClass" );
-        type = element.getSomeClass().resolve();
+        type = element.getSomeClass().target();
         assertNull( type );
         
         element.setSomeClass( "org.eclipse.core.resources.IFile" );
-        type = element.getSomeClass().resolve();
+        type = element.getSomeClass().target();
         assertNotNull( type );
     }
 

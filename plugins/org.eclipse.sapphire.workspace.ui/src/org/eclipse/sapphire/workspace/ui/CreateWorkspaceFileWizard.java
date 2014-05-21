@@ -114,7 +114,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
             final String sdef = (String) properties.get( "sdef" );
             final DefinitionLoader.Reference<WizardDef> definition = DefinitionLoader.context( context ).sdef( sdef ).wizard();
             
-            final JavaType operationJavaType = definition.resolve().getElementType().resolve();
+            final JavaType operationJavaType = definition.resolve().getElementType().target();
             final ElementType operationElementType = ElementType.read( (Class<?>) operationJavaType.artifact(), true );
     
             init( operationElementType, definition );
@@ -126,7 +126,7 @@ public class CreateWorkspaceFileWizard<M extends CreateWorkspaceFileOp>
     @Override
     protected void performPostFinish() 
     {
-        openFileEditor( element().getFile().resolve(), editor() );
+        openFileEditor( element().getFile().target(), editor() );
     }
     
     protected String editor()

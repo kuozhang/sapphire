@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.samples.uml.internal;
 
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.samples.uml.Entity;
 import org.eclipse.sapphire.services.ReferenceService;
 
@@ -18,11 +19,13 @@ import org.eclipse.sapphire.services.ReferenceService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class EntityReferenceService extends ReferenceService
+public final class EntityReferenceService extends ReferenceService<Entity>
 {
     @Override
-    public Object resolve( final String reference ) 
+    protected Entity compute() 
     {
+        final String reference = context( Value.class ).text();
+        
         if( reference != null )
         {
             for( final Entity entity : context( org.eclipse.sapphire.samples.uml.System.class ).getEntities() )

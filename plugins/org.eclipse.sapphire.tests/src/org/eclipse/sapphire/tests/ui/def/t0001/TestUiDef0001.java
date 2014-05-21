@@ -46,7 +46,7 @@ public final class TestUiDef0001 extends SapphireTestCase
             JavaType type;
             Class<?> cl;
             
-            type = handlers.get( 0 ).getImplClass().resolve();
+            type = handlers.get( 0 ).getImplClass().target();
             assertNotNull( type );
             cl = (Class<?>) type.artifact();
             assertNotNull( cl );

@@ -19,7 +19,7 @@ import org.eclipse.sapphire.services.ReferenceService;
 
 public final class ReferenceValue<R,T> extends Value<R>
 {
-    private ReferenceService service;
+    private ReferenceService<T> service;
     
     public ReferenceValue( final Element element, final ValueProperty property )
     {
@@ -47,32 +47,26 @@ public final class ReferenceValue<R,T> extends Value<R>
     
     @SuppressWarnings( "unchecked" )
     
-    public T resolve()
+    public T target()
     {
-        assertNotDisposed();
-        
-        if( this.service == null )
+        synchronized( root() )
         {
-            this.service = service( ReferenceService.class );
-        }
-        
-        T result = null;
-        
-        if( this.service != null )
-        {
-            final String ref = text();
+            assertNotDisposed();
             
-            try
+            if( this.service == null )
             {
-                result = (T) this.service.resolve( ref );
+                this.service = service( ReferenceService.class );
             }
-            catch( Exception e )
+            
+            T result = null;
+            
+            if( this.service != null )
             {
-                Sapphire.service( LoggingService.class ).log( e );
+                result = this.service.target();
             }
+            
+            return result;
         }
-        
-        return result;
     }
     
 }

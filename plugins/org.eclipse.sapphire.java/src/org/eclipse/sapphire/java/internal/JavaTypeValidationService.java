@@ -28,6 +28,7 @@ import org.eclipse.sapphire.java.JavaTypeName;
 import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.modeling.annotations.Reference;
+import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 import org.eclipse.sapphire.services.ValidationService;
@@ -75,22 +76,30 @@ public final class JavaTypeValidationService extends ValidationService
     protected void initValidationService()
     {
         final Property property = context( Property.class );
-        final JavaTypeConstraintService javaTypeConstraintService = property.service( JavaTypeConstraintService.class );
-        
-        if( javaTypeConstraintService != null )
-        {
-            javaTypeConstraintService.attach
-            (
-                new Listener()
+
+        property.service( JavaTypeConstraintService.class ).attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
                 {
-                    @Override
-                    public void handle( final Event event )
-                    {
-                        refresh();
-                    }
+                    refresh();
                 }
-            );
-        }
+            }
+        );
+        
+        property.service( ReferenceService.class ).attach
+        (
+            new Listener()
+            {
+                @Override
+                public void handle( final Event event )
+                {
+                    refresh();
+                }
+            }
+        );
     }
     
     @Override
@@ -112,7 +121,7 @@ public final class JavaTypeValidationService extends ValidationService
         
         if( val != null )
         {
-            final JavaType type = (JavaType) value.resolve();
+            final JavaType type = (JavaType) value.target();
             
             if( type == null )
             {

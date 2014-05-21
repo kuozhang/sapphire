@@ -69,13 +69,13 @@ public final class ReferenceValidationService extends ValidationService
     @Override
     protected Status compute()
     {
-        final ReferenceValue<?,?> value = context( ReferenceValue.class );
+        final ReferenceValue<?,?> reference = context( ReferenceValue.class );
         
-        if( value.resolve() == null && value.text() != null )
+        if( reference.target() == null && reference.text() != null )
         {
-            final ValueProperty property = value.definition();
+            final ValueProperty property = reference.definition();
             final String label = property.getLabel( true, CapitalizationType.NO_CAPS, false );
-            final String str = value.text();
+            final String str = reference.text();
             final String msg = message.format( label, str );
             return Status.createErrorStatus( msg );
         }

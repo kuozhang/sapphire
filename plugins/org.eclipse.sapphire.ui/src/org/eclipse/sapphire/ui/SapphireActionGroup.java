@@ -227,7 +227,7 @@ public final class SapphireActionGroup implements Disposable
             {
                 try
                 {
-                    final JavaType implType = def.getImplClass().resolve();
+                    final JavaType implType = def.getImplClass().target();
                     
                     if( implType != null )
                     {
@@ -259,7 +259,7 @@ public final class SapphireActionGroup implements Disposable
             {
                 try
                 {
-                    final JavaType implType = def.getImplClass().resolve();
+                    final JavaType implType = def.getImplClass().target();
                     
                     if( implType != null )
                     {
@@ -289,7 +289,7 @@ public final class SapphireActionGroup implements Disposable
             {
                 try
                 {
-                    final JavaType implClass = def.getImplClass().resolve();
+                    final JavaType implClass = def.getImplClass().target();
                     
                     if( implClass != null )
                     {
@@ -309,7 +309,7 @@ public final class SapphireActionGroup implements Disposable
     {
         try
         {
-            final JavaType conditionType = def.getConditionClass().resolve();
+            final JavaType conditionType = def.getConditionClass().target();
             
             if( conditionType != null )
             {

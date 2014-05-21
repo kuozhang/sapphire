@@ -120,7 +120,7 @@ public final class CreateNormalizedXmlSchemaOpMethods
             
             final IWorkspaceRoot wsroot = ResourcesPlugin.getWorkspace().getRoot();
             final IFile sourceSchemaFile = wsroot.getFile( PathBridge.create( sourceSchemaFilePath ) );
-            final IFile targetSchemaFile = operation.getFile().resolve();
+            final IFile targetSchemaFile = operation.getFile().target();
             
             try
             {

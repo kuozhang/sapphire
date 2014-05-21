@@ -67,7 +67,7 @@ public final class SapphireUiDefMethods
             {
                 for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
                 {
-                    final ISapphireUiDef sdef = ref.getPath().resolve();
+                    final ISapphireUiDef sdef = ref.getPath().target();
                     
                     if( sdef != null )
                     {
@@ -98,7 +98,7 @@ public final class SapphireUiDefMethods
             {
                 for( IDefinitionReference ref : rootdef.getImportedDefinitions() )
                 {
-                    final ISapphireUiDef sdef = ref.getPath().resolve();
+                    final ISapphireUiDef sdef = ref.getPath().target();
                     
                     if( sdef != null )
                     {

@@ -12,27 +12,27 @@
 package org.eclipse.sapphire.sdk.extensibility.internal;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ClassReferenceService
-
-    extends ReferenceService
-
+public final class ClassReferenceService extends ReferenceService<Class<?>>
 {
     @Override
-    public Class<?> resolve( final String className )
+    protected Class<?> compute()
     {
+        final String reference = context( Value.class ).text();
+        
         Class<?> cl = null;
 
-        if( className != null )
+        if( reference != null )
         {
             try
             {
-                cl = Element.class.getClassLoader().loadClass( className );
+                cl = Element.class.getClassLoader().loadClass( reference );
             }
             catch( ClassNotFoundException e ) {}
         }

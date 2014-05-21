@@ -337,7 +337,7 @@ public class StandardDiagramConnectionPart
                 throw new RuntimeException( "Property " + propertyName + " value not a reference");
             }
             ReferenceValue<?,?> refVal = (ReferenceValue<?,?>)valObj;
-            Object targetObj = refVal.resolve();
+            Object targetObj = refVal.target();
             if (targetObj == null)
             {
                 if (refVal.text() != null)

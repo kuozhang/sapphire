@@ -11,12 +11,41 @@
 
 package org.eclipse.sapphire.services;
 
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyContentEvent;
+
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class ReferenceService extends Service
+public abstract class ReferenceService<T> extends DataService<T>
 {
-    public abstract Object resolve( String reference );
-                                     
+    @Override
+    protected final void initDataService()
+    {
+        context( Property.class ).attach
+        (
+            new FilteredListener<PropertyContentEvent>()
+            {
+                @Override
+                protected void handleTypedEvent( final PropertyContentEvent event )
+                {
+                    refresh();
+                }
+            }
+        );
+        
+        initReferenceService();
+    }
+    
+    protected void initReferenceService()
+    {
+    }
+    
+    public final T target()
+    {
+        return data();
+    }
+
 }

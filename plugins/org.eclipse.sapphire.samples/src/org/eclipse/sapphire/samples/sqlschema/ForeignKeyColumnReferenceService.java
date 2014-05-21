@@ -28,16 +28,14 @@ public final class ForeignKeyColumnReferenceService extends ColumnReferenceServi
     private Listener referenceServiceListener;
     
     @Override
-    protected void init()
+    protected void initReferenceService()
     {
-        super.init();
-        
         this.propertyContentListener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -46,7 +44,7 @@ public final class ForeignKeyColumnReferenceService extends ColumnReferenceServi
             @Override
             public void handle( final Event event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -58,7 +56,7 @@ public final class ForeignKeyColumnReferenceService extends ColumnReferenceServi
 
     protected Table table()
     {
-        return context( ForeignKey.class ).getReferencedTable().resolve();
+        return context( ForeignKey.class ).getReferencedTable().target();
     }
 
     @Override

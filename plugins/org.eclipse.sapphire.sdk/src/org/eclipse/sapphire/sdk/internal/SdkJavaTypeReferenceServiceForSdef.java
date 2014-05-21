@@ -40,10 +40,8 @@ public final class SdkJavaTypeReferenceServiceForSdef extends JavaTypeReferenceS
     private IJavaProject project;
     
     @Override
-    protected void init()
+    protected void initReferenceService()
     {
-        super.init();
-        
         this.project = JavaCore.create( context( Element.class ).adapt( IProject.class ) );
     }
 

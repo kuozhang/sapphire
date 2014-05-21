@@ -60,7 +60,7 @@ public abstract class PageBookPart extends FormComponentPart
         
         for( final PageBookCaseDef cs : def.getCases() )
         {
-            final ElementType type = ElementType.read( (Class<?>) cs.getElementType().resolve().artifact() );
+            final ElementType type = ElementType.read( (Class<?>) cs.getElementType().target().artifact() );
             this.pageDefs.put( type, cs );
         }
         

@@ -15,6 +15,7 @@ package org.eclipse.sapphire.samples.map.internal;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyContentEvent;
+import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.samples.map.Location;
 import org.eclipse.sapphire.samples.map.Map;
 import org.eclipse.sapphire.services.ReferenceService;
@@ -24,21 +25,19 @@ import org.eclipse.sapphire.services.ReferenceService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public class LocationReferenceService extends ReferenceService 
+public class LocationReferenceService extends ReferenceService<Location>
 {
     private Listener listener;
     
     @Override
-    protected void init()
+    protected void initReferenceService()
     {
-        super.init();
-        
         this.listener = new FilteredListener<PropertyContentEvent>()
         {
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                broadcast();
+                refresh();
             }
         };
         
@@ -46,8 +45,10 @@ public class LocationReferenceService extends ReferenceService
     }
 
     @Override
-    public Object resolve(String reference) 
+    protected Location compute() 
     {
+        final String reference = context( Value.class ).text();
+        
         if (reference != null)
         {
             Map map = context( Map.class );

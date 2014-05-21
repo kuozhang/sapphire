@@ -39,7 +39,7 @@ public final class TestJavaJdt0003 extends JavaJdtTestCase
         final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
         element.setSomeClass( "foo.bar.TestClass" );
         
-        final JavaType type = element.getSomeClass().resolve();
+        final JavaType type = element.getSomeClass().target();
 
         assertNotNull( type );
     }
@@ -55,7 +55,7 @@ public final class TestJavaJdt0003 extends JavaJdtTestCase
         final TestElement element = TestElement.TYPE.instantiate( new RootXmlResource( new XmlResourceStore( new WorkspaceFileResourceStore( file ) ) ) );
         element.setSomeClass( "foo.bar.TestClass$Inner" );
         
-        final JavaType type = element.getSomeClass().resolve();
+        final JavaType type = element.getSomeClass().target();
 
         assertNotNull( type );
     }

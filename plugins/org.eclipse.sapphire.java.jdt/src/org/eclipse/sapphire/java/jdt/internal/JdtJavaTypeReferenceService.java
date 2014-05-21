@@ -55,10 +55,8 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
     }
     
     @Override
-    protected void init()
+    protected void initReferenceService()
     {
-        super.init();
-        
         this.project = JavaCore.create( context( Element.class ).adapt( IProject.class ) );
         
         final Value<?> value = context( Value.class );
@@ -85,7 +83,7 @@ public final class JdtJavaTypeReferenceService extends JavaTypeReferenceService
                         {
                             if( ! value.disposed() && ! value.root().disposed() )
                             {
-                                broadcast();
+                                refresh();
                             }
                         }
                     };

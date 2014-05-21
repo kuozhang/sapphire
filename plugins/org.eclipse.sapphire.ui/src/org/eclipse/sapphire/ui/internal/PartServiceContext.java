@@ -124,7 +124,7 @@ public final class PartServiceContext extends ServiceContext
     @SuppressWarnings( "unchecked" )
     private static <T> Class<T> resolve( final ReferenceValue<JavaTypeName,JavaType> ref )
     {
-        final JavaType type = ref.resolve();
+        final JavaType type = ref.target();
         return ( type != null ? (Class<T>) type.artifact() : null );
     }
     
