@@ -49,8 +49,7 @@ public class TextFigure extends Label implements IShapeFigure
 	}
 	
 	public Rectangle getAvailableArea() {
-		IFigure nodeFigure = this.textPresentation.getNodeFigure();
-		Rectangle nodeBounds = nodeFigure.getBounds();
+		Rectangle nodeBounds = getClientArea();
 		if (this.availableArea != null) {
 			return new Rectangle(this.availableArea.x + nodeBounds.x, this.availableArea.y + nodeBounds.y,
 					this.availableArea.width, this.availableArea.height);
@@ -60,10 +59,9 @@ public class TextFigure extends Label implements IShapeFigure
 	}
 
 	public void setAvailableArea(Rectangle availableArea) {
-		// Translate the available area to relative to the node. We don't need to
+		// Translate the available area to relative to the client area. We don't need to
 		// adjust the available area when node is moved.
-		IFigure nodeFigure = this.textPresentation.getNodeFigure();
-		Rectangle nodeBounds = nodeFigure.getBounds();
+		Rectangle nodeBounds = getClientArea();
 		this.availableArea = new Rectangle(availableArea.x - nodeBounds.x, availableArea.y - nodeBounds.y,
 				availableArea.width, availableArea.height);
 		
@@ -92,7 +90,10 @@ public class TextFigure extends Label implements IShapeFigure
 	 */
 	public Dimension getMinimumSize(int w, int h) 
 	{
-		Dimension minSize = new Dimension();
+		if (minSize != null)
+			return minSize;
+		
+		minSize = new Dimension();
 		if (getLayoutManager() != null)
 			minSize.setSize(getLayoutManager().getMinimumSize(this, w, h));
 
@@ -117,15 +118,9 @@ public class TextFigure extends Label implements IShapeFigure
 	@Override
 	public Dimension getMaximumSize()
 	{
-		return calculateLabelSize(getTextUtilities().getTextExtents(getText(), getFont()));
+		return getPreferredSize();
 	}
 	
-	@Override
-	public Dimension getPreferredSize(int wHint, int hHint) 
-	{
-		return calculateLabelSize(getTextUtilities().getTextExtents(getText(), getFont()));
-	}
-
 	private int getSwtTextAlignment(HorizontalAlignment horizontalAlign)
 	{
 		int alignment = PositionConstants.CENTER;

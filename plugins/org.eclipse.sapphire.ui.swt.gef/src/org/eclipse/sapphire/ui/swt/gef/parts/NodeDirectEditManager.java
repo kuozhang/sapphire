@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -23,6 +24,7 @@ import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
@@ -31,6 +33,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.CellEditorActionHandler;
@@ -56,6 +59,8 @@ public class NodeDirectEditManager extends DirectEditManager {
 	private SapphireDiagramEditor diagramEditor;
 	protected TextPart textPart;
 	protected Value<?> property;
+	private String initValue;
+	private boolean committed = false;
 
 	public NodeDirectEditManager(GraphicalEditPart source, TextPart textPart, CellEditorLocator locator, Label label) {
 		super(source, null, locator);
@@ -71,6 +76,13 @@ public class NodeDirectEditManager extends DirectEditManager {
 	 * @see org.eclipse.gef.tools.DirectEditManager#bringDown()
 	 */
 	protected void bringDown() {
+		if (!committed && isDirty()) {
+			if (getCellEditor() instanceof TextCellEditor) {
+				Text text = (Text) getCellEditor().getControl();
+				text.setText(initValue);
+				internalCommit();
+			}
+		}
 		this.diagramEditor.setDirectEditingActive(false);
 		ZoomManager zoomMgr = (ZoomManager) this.diagramEditor.getGraphicalViewer()
 				.getProperty(ZoomManager.class.toString());
@@ -115,7 +127,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 	@Override
 	protected void initCellEditor() {
 		// update text
-		String initValue = this.property.text();
+		initValue = this.property.text();
 		if (initValue == null)
 		{
 			initValue = this.textPart.getContent();
@@ -168,13 +180,29 @@ public class NodeDirectEditManager extends DirectEditManager {
 		// triggers a focus lost event which causes direct edit manager's bringDown() method to be called.
 		// The overridden bringDown() method would set the label to be visible again. Resetting the label's
 		// visibility here is a workaround.
+		internalCommit();
+		
 		label.setVisible(false);
 		super.handleValueChanged();
 	}
 
+	@Override
+	protected void commit() 
+	{
+		this.committed = true;
+		super.commit();
+	}
+	
 	public TextPart getTextPart()
 	{
 		return this.textPart;
+	}
+	
+	private void internalCommit()
+	{
+		CommandStack stack = getEditPart().getViewer().getEditDomain()
+				.getCommandStack();
+		stack.execute(getEditPart().getCommand(getDirectEditRequest()));						
 	}
 	
 	private void restoreSavedActions(IActionBars actionBars) {

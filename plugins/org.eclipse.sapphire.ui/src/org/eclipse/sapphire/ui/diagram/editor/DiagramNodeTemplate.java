@@ -33,7 +33,6 @@ import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.PropertyEvent;
-import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.modeling.CapitalizationType;
@@ -69,12 +68,6 @@ public final class DiagramNodeTemplate extends SapphirePart
         {            
         }
         public void handleNodeMove(final DiagramNodeMoveEvent event)
-        {        	
-        }
-        public void handleNodePreDirectEdit(final DiagramNodePart nodePart)
-        {        	
-        }
-        public void handleNodePostDirectEdit(final DiagramNodePart nodePart)
         {        	
         }
     }
@@ -261,16 +254,7 @@ public final class DiagramNodeTemplate extends SapphirePart
         ElementList<?> list = (ElementList<?>) nodeModel.parent();
         list.remove(nodeModel);                	
     }
-    
-    public void directEditNode(TextPart textPart, String newValue)
-    {
-    	notifyPreNodeDirectEdit(textPart.nearest(DiagramNodePart.class));
-		Value<?> prop = FunctionUtil.getFunctionProperty(textPart.getLocalModelElement(), 
-				textPart.getContentFunction());
-		prop.write(newValue);
-		notifyPostNodeDirectEdit(textPart.nearest(DiagramNodePart.class));
-    }
-    
+        
     public PropertyDef getModelProperty()
     {
         return this.modelProperty;
@@ -489,21 +473,5 @@ public final class DiagramNodeTemplate extends SapphirePart
         {
             listener.handleNodeMove(event);
         }				
-	}
-		
-	private void notifyPreNodeDirectEdit(DiagramNodePart nodePart)
-	{
-		for( DiagramNodeTemplateListener listener : this.listeners )
-        {
-            listener.handleNodePreDirectEdit(nodePart);
-        }				
-	}
-	
-	private void notifyPostNodeDirectEdit(DiagramNodePart nodePart)
-	{
-		for( DiagramNodeTemplateListener listener : this.listeners )
-        {
-            listener.handleNodePostDirectEdit(nodePart);
-        }				
-	}
+	}		
 }

@@ -594,16 +594,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	this.broadcast(event);
 	}
 
-	private void notifyPreNodeDirectEdit(DiagramNodePart nodePart)
-	{
-    	this.broadcast(new NodePreDirectEditEvent(nodePart));
-	}
-
-	private void notifyPostNodeDirectEdit(DiagramNodePart nodePart)
-	{
-    	this.broadcast(new NodePostDirectEditEvent(nodePart));
-	}
-
 	private void notifyNodeTemplateVisibilityChange(DiagramNodeTemplate nodeTemplate)
 	{
 		NodeTemplateVisibilityEvent event = new NodeTemplateVisibilityEvent(nodeTemplate);
@@ -699,17 +689,6 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         	notifyNodeMove(event);
         }	
         
-        @Override
-        public void handleNodePreDirectEdit(final DiagramNodePart nodePart)
-        {
-        	notifyPreNodeDirectEdit(nodePart);
-        }
-
-        @Override
-        public void handleNodePostDirectEdit(final DiagramNodePart nodePart)
-        {
-        	notifyPostNodeDirectEdit(nodePart);
-        }
 	}
 	
     public final static class ConnectionPalette {
