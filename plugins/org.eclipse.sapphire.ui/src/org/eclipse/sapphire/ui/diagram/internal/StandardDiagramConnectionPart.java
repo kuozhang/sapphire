@@ -503,35 +503,39 @@ public class StandardDiagramConnectionPart
     	 * elements don't change. Connection listens on endpoint's ReferenceService and its
     	 * endpoint model elements are refreshed when the attaching nodes's elements change.
     	 */
-    	if (newSrcNode.getLocalModelElement() == getEndpoint1() && 
-    			newTargetNode.getLocalModelElement() == getEndpoint2())
+    	if (newSrcNode != null && newSrcNode.getLocalModelElement() == getEndpoint1() && 
+    			newTargetNode != null && newTargetNode.getLocalModelElement() == getEndpoint2())
     	{
     		return this;
     	}
-        StandardDiagramConnectionPart newConnPart = getDiagramConnectionTemplate().createNewDiagramConnection(newSrcNode, newTargetNode);
-
-        final Element oldConnElement = this.getLocalModelElement();
-        newConnPart.getLocalModelElement().copy(oldConnElement);
-        // Bug 382912 - Reconnecting an existing connection adds a bend point 
-        // After the copy, connection endpoint event is triggered which causes SapphireConnectionRouter
-        // to be called. Since the old connection hasn't been deleted, a default bend point will be added. 
-        //newConnPart.removeAllBendpoints();
-        
-        newConnPart.resetBendpoints(getBendpoints());
-		
-		if (newSrcNode.getLocalModelElement() != getEndpoint1()) 
-		{
-			newConnPart.resetEndpoint1(newSrcNode);
-		} 
-		if (newTargetNode.getLocalModelElement() != getEndpoint2())
-		{
-			newConnPart.resetEndpoint2(newTargetNode);
-		}
-        final ElementList<?> list = (ElementList<?>) oldConnElement.parent();
-        list.remove(oldConnElement);
-        pruneListParentIfNecessary(list);
-        
-        return newConnPart;
+    	if (newSrcNode != null && newTargetNode != null)
+    	{
+	        StandardDiagramConnectionPart newConnPart = getDiagramConnectionTemplate().createNewDiagramConnection(newSrcNode, newTargetNode);
+	
+	        final Element oldConnElement = this.getLocalModelElement();
+	        newConnPart.getLocalModelElement().copy(oldConnElement);
+	        // Bug 382912 - Reconnecting an existing connection adds a bend point 
+	        // After the copy, connection endpoint event is triggered which causes SapphireConnectionRouter
+	        // to be called. Since the old connection hasn't been deleted, a default bend point will be added. 
+	        //newConnPart.removeAllBendpoints();
+	        
+	        newConnPart.resetBendpoints(getBendpoints());
+			
+			if (newSrcNode.getLocalModelElement() != getEndpoint1()) 
+			{
+				newConnPart.resetEndpoint1(newSrcNode);
+			} 
+			if (newTargetNode.getLocalModelElement() != getEndpoint2())
+			{
+				newConnPart.resetEndpoint2(newTargetNode);
+			}
+	        final ElementList<?> list = (ElementList<?>) oldConnElement.parent();
+	        list.remove(oldConnElement);
+	        pruneListParentIfNecessary(list);
+	        
+	        return newConnPart;
+    	}
+    	return null;
     }
     
     protected void handleModelPropertyChange(final PropertyEvent event)

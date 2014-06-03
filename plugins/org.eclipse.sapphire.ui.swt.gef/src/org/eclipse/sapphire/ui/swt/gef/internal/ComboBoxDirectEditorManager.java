@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.internal;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.CommandStack;
@@ -23,7 +24,13 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayout;
+import org.eclipse.sapphire.ui.swt.gef.layout.SapphireSequenceLayoutConstraint;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
+import org.eclipse.sapphire.ui.swt.gef.parts.DiagramNodeEditPart;
 import org.eclipse.sapphire.ui.swt.gef.parts.NodeDirectEditManager;
+import org.eclipse.sapphire.ui.swt.gef.parts.ShapeEditPart;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -36,10 +43,26 @@ public class ComboBoxDirectEditorManager extends NodeDirectEditManager
 	private ICellEditorListener cellEditorListener;
 	private boolean committing = false;
 	private String initialValue;
+	private IFigure parentFigure;
+	private IFigure textFigure;
+	private int initMinWidth;
 	
 	public ComboBoxDirectEditorManager(GraphicalEditPart source, TextPart textPart, CellEditorLocator locator, Label label)
 	{
 		super(source, textPart, locator, label);
+		ShapeEditPart shapeEditPart = (ShapeEditPart)source;
+		DiagramNodeEditPart nodeEditPart = shapeEditPart.getNodeEditPart();
+		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(
+				nodeEditPart.getCastedModel().getShapePresentation(), textPart);
+		this.textFigure = shapePresentation.getFigure();
+		this.parentFigure = shapePresentation.getParentFigure();
+		if (parentFigure.getLayoutManager() instanceof SapphireSequenceLayout)
+		{
+			SapphireSequenceLayout sequenceLayout = (SapphireSequenceLayout)parentFigure.getLayoutManager();
+			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)sequenceLayout.getConstraint(textFigure);
+			this.initMinWidth = constraint.minWidth;
+		}
+		
 		initCellEditorListener();
 	}
 	
@@ -74,6 +97,7 @@ public class ComboBoxDirectEditorManager extends NodeDirectEditManager
 		}
 		getCellEditor().setValue(index);
 		initCellEditorPresentation();
+		fitComboCellEditor();
 		this.comboCellEditor.addListener(cellEditorListener);
 	}	
 	
@@ -88,7 +112,7 @@ public class ComboBoxDirectEditorManager extends NodeDirectEditManager
 	protected void commit()
 	{
 	}
-	
+		
 	private void initCellEditorListener() 
 	{
 		cellEditorListener = new ICellEditorListener() 
@@ -123,13 +147,36 @@ public class ComboBoxDirectEditorManager extends NodeDirectEditManager
 				CommandStack stack = getEditPart().getViewer().getEditDomain()
 						.getCommandStack();
 				stack.execute(getEditPart().getCommand(getDirectEditRequest()));
-			}
+			}			
 		}
 		finally
 		{
 			bringDown();
 			committing = false;
 		}
+	}
+	
+	@Override
+	protected void bringDown() 
+	{
+		if (parentFigure.getLayoutManager() instanceof SapphireSequenceLayout)
+		{
+			SapphireSequenceLayout sequenceLayout = (SapphireSequenceLayout)parentFigure.getLayoutManager();
+			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)sequenceLayout.getConstraint(textFigure);
+			constraint.minWidth = this.initMinWidth;
+		}
+		super.bringDown();
+	}
+	
+	private void fitComboCellEditor()
+	{
+		if (parentFigure.getLayoutManager() instanceof SapphireSequenceLayout)
+		{
+			SapphireSequenceLayout sequenceLayout = (SapphireSequenceLayout)parentFigure.getLayoutManager();
+			SapphireSequenceLayoutConstraint constraint = (SapphireSequenceLayoutConstraint)sequenceLayout.getConstraint(textFigure);
+			CellEditor.LayoutData layoutData = getCellEditor().getLayoutData();
+			constraint.minWidth = layoutData.minimumWidth;
+		}		
 	}
 		
 }
