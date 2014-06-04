@@ -49,7 +49,7 @@
         <context>Sapphire.Property.Instance</context>
     </service>
     <service>
-        <description>Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..</description>
+        <description>PossibleValuesService implementation that derives its behavior from @PossibleValues annotation.</description>
         <id>Sapphire.PossibleValuesService.ModelBased</id>
         <context>Sapphire.Property.Instance</context>
         <implementation>org.eclipse.sapphire.internal.ModelBasedPossibleValuesService</implementation>
@@ -74,6 +74,13 @@
         <description>Implementation of PossibleValuesService for value properties based on PossibleValuesService implementation of the containing list property. This service implementation will only activate if the value property is the sole property in its type, and the element is contained by a list property, and the list property has a PossibleValueService implementation in the property instance context.</description>
         <implementation>org.eclipse.sapphire.internal.ValueFromListPossibleValuesService</implementation>
         <condition>org.eclipse.sapphire.internal.ValueFromListPossibleValuesService$Condition</condition>
+    </service>
+    <service>
+        <condition>org.eclipse.sapphire.internal.ElementReferencePossibleValuesService$Condition</condition>
+        <context>Sapphire.Property.Instance</context>
+        <description>PossibleValuesService implementation that derives its behavior from ElementReferenceService.</description>
+        <id>Sapphire.PossibleValuesService.ElementReference</id>
+        <implementation>org.eclipse.sapphire.internal.ElementReferencePossibleValuesService</implementation>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>
@@ -842,5 +849,12 @@
         <description>Implementation of CollationService for list properties based on CollationService implementation of list member's value property. This service implementation will only activate if the list property has one possible type, and that type has a single property, and that property is a value property.</description>
         <condition>org.eclipse.sapphire.internal.ListFromValueCollationService$Condition</condition>
         <context>Sapphire.Property.Instance</context>
+    </service>
+    <service>
+        <id>Sapphire.ReferenceService.ElementReference</id>
+        <context>Sapphire.Property.Instance</context>
+        <implementation>org.eclipse.sapphire.internal.DeclarativeElementReferenceService</implementation>
+        <condition>org.eclipse.sapphire.internal.DeclarativeElementReferenceService$Condition</condition>
+        <description>ReferenceService implementation that derives its behavior from @ElementReference annotation.</description>
     </service>
 </extension>

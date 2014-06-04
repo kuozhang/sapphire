@@ -44,6 +44,7 @@
      <topic href="html/services/DependenciesService.html" label="DependenciesService"/>
      <topic href="html/services/DiagramLayoutPersistenceService.html" label="DiagramLayoutPersistenceService"/>
      <topic href="html/services/DragAndDropService.html" label="DragAndDropService"/>
+     <topic href="html/services/ElementReferenceService.html" label="ElementReferenceService"/>
      <topic href="html/services/EqualityService.html" label="EqualityService"/>
      <topic href="html/services/FactsAggregationService.html" label="FactsAggregationService"/>
      <topic href="html/services/FactsService.html" label="FactsService"/>

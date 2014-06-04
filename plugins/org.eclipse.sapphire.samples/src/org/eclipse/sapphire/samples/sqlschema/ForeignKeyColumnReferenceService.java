@@ -11,6 +11,8 @@
 
 package org.eclipse.sapphire.samples.sqlschema;
 
+import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementReferenceService;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
@@ -22,7 +24,7 @@ import org.eclipse.sapphire.services.ReferenceService;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public final class ForeignKeyColumnReferenceService extends ColumnReferenceService
+public final class ForeignKeyColumnReferenceService extends ElementReferenceService
 {
     private Listener propertyContentListener;
     private Listener referenceServiceListener;
@@ -35,7 +37,7 @@ public final class ForeignKeyColumnReferenceService extends ColumnReferenceServi
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
-                refresh();
+                broadcast( new ListEvent() );
             }
         };
         
@@ -44,7 +46,7 @@ public final class ForeignKeyColumnReferenceService extends ColumnReferenceServi
             @Override
             public void handle( final Event event )
             {
-                refresh();
+                broadcast( new ListEvent() );
             }
         };
         
@@ -52,11 +54,21 @@ public final class ForeignKeyColumnReferenceService extends ColumnReferenceServi
         
         rt.attach( this.propertyContentListener );
         rt.service( ReferenceService.class ).attach( this.referenceServiceListener );
+        
+        super.initReferenceService();
+    }
+    
+    @Override
+    public ElementList<?> list()
+    {
+        final Table table = context( ForeignKey.class ).getReferencedTable().target();
+        return ( table == null ? null : table.getColumns() );
     }
 
-    protected Table table()
+    @Override
+    public String key()
     {
-        return context( ForeignKey.class ).getReferencedTable().target();
+        return "Name";
     }
 
     @Override

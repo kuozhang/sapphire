@@ -13,6 +13,7 @@
 package org.eclipse.sapphire.samples.map;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementReference;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.Value;
@@ -20,9 +21,7 @@ import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
-import org.eclipse.sapphire.modeling.annotations.Service;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
-import org.eclipse.sapphire.samples.map.internal.LocationReferenceService;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -47,7 +46,7 @@ public interface RailwayRoute extends Element
     // *** ToLocation ***
     
     @Reference( target = Location.class )
-    @Service( impl = LocationReferenceService.class )
+    @ElementReference( list = "/Locations", key = "Name" )
     @XmlBinding( path = "to")
     @Required
     @Label(standard = "to location")

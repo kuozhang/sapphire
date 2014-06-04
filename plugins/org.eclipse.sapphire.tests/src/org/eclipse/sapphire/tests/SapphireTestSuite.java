@@ -24,6 +24,7 @@ import org.eclipse.sapphire.tests.observable.ObservableTests;
 import org.eclipse.sapphire.tests.path.relative.RelativePathTests;
 import org.eclipse.sapphire.tests.possible.PossibleValuesTest;
 import org.eclipse.sapphire.tests.property.PropertyTests;
+import org.eclipse.sapphire.tests.reference.element.ElementReferenceTests;
 import org.eclipse.sapphire.tests.services.ServicesTestSuite;
 import org.eclipse.sapphire.tests.ui.UiTestSuite;
 import org.eclipse.sapphire.tests.unique.UniqueValueTests;
@@ -44,6 +45,7 @@ import org.junit.runners.Suite.SuiteClasses;
         CollationTests.class,
         ConcurrencyTests.class,
         ConversionTestSuite.class,
+        ElementReferenceTests.class,
         ElementTests.class,
         IndexTests.class,
         JavaTestSuite.class,

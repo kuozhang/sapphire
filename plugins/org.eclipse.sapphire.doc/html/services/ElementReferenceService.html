@@ -1,0 +1,90 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2014 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>ElementReferenceService</title>
+  <link rel="StyleSheet" href="../style.css" TYPE="text/css"/>
+</head>
+
+<body>
+
+<h1>ElementReferenceService</h1>
+
+<p>ElementReferenceService provides a common implementation base for ReferenceService implementations that resolve to an Element.</p>
+ 
+<p>In many situations, the reference semantics can be specified using the @ElementReference annotation rather than through
+a custom ElementReferenceService implementation.</p>
+
+<pre class="source-code"><code><font color="#888888">@Reference( target = Table.class )</font>
+@ElementReference( list = "/Tables", key = "Name" )
+
+<font color="#888888">ValueProperty PROP_TABLE = new ValueProperty( TYPE, "Table" );
+
+ReferenceValue&lt;String,Table> getTable();
+void setTable( String value );</font></code></pre>
+
+<p>When more control is necessary, a custom implementation of ElementReferenceService can be provided. This is necessary, for example,
+when the referenced elements are located in a different model or when the list and key are variable.</p>
+
+<pre class="source-code"><code><font color="#888888">@Reference( target = Table.class )</font>
+@Service( impl = ExampleElementReferenceService.class )
+
+<font color="#888888">ValueProperty PROP_TABLE = new ValueProperty( TYPE, "Table" );
+
+ReferenceValue&lt;String,Table> getTable();
+void setTable( String value );</font></code></pre>
+
+<pre class="source-code"><code>public class ExampleElementReferenceService extends ElementReferenceService
+{
+    @Override
+    protected void initReferenceService()
+    {
+        // Attach a listener if list or key are variable.
+        // Call broadcast( new ListEvent() ) if the list changes.
+        // Call broadcast( new KeyEvent() ) if the key changes.
+        
+        super.initReferenceService();
+    }
+    
+    @Override
+    protected ElementList&lt;?> list()
+    {
+        ...
+    }
+
+    @Override
+    protected String key()
+    {
+        ...
+    }
+
+    @Override
+    public void dispose()
+    {
+        // Detach any listeners that were added during init.
+        
+        super.dispose();
+    }
+}</code></pre>
+
+<p>A PossibleValuesService implementation is automatically provided when @ElementReference annotation is used or ElementReferenceService
+is implemented.</p>
+
+<div class="copyright">Copyright (c) 2014 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

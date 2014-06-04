@@ -13,9 +13,9 @@ package org.eclipse.sapphire.samples.sqlschema;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementReference;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
-import org.eclipse.sapphire.PossibleValues;
 import org.eclipse.sapphire.ReferenceValue;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.CountConstraint;
@@ -38,10 +38,9 @@ public interface ForeignKey extends Element
     // *** ReferencedTable ***
     
     @Reference( target = Table.class )
-    @Service( impl = TableReferenceService.class )
+    @ElementReference( list = "/Tables", key = "Name" )
     @Required
     @MustExist
-    @PossibleValues( property = "/Tables/Name" )
     @XmlBinding( path = "referenced-table" )
 
     ValueProperty PROP_REFERENCED_TABLE = new ValueProperty( TYPE, "ReferencedTable" );
@@ -58,10 +57,10 @@ public interface ForeignKey extends Element
         // *** LocalColumn ***
         
         @Reference( target = Column.class )
+        @ElementReference( list = "../../Columns", key = "Name" )
         @Required
         @MustExist
-        @PossibleValues( property = "../../Columns/Name" )
-        @Services( { @Service( impl = ColumnReferenceService.class ), @Service( impl = FKColumnAssociationValidator.class ) } )
+        @Service( impl = FKColumnAssociationValidator.class )
         
         ValueProperty PROP_LOCAL_COLUMN = new ValueProperty( TYPE, "LocalColumn" );
         

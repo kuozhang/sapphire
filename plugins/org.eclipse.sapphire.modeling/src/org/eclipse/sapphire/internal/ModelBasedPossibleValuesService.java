@@ -29,7 +29,7 @@ import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
- * Implementation of PossibleValuesService based on @PossibleValues annotation's property attribute..
+ * {@link PossibleValuesService} implementation that derives its behavior from @{@link PossibleValues} annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
