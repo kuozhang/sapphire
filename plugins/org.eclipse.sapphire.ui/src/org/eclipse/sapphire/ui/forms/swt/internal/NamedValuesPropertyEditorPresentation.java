@@ -328,7 +328,7 @@ public final class NamedValuesPropertyEditorPresentation extends ValuePropertyEd
     {
         try
         {
-            property().write( value );
+            property().write( value, true );
         }
         catch( Exception e )
         {

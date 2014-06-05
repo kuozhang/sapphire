@@ -1835,7 +1835,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                 public void setValue( final Object obj,
                                       final Object value )
                 {
-                    property( ( (TableRow) obj ).element() ).write( value );
+                    property( ( (TableRow) obj ).element() ).write( value, true );
                 }
             };
         }
@@ -1981,7 +1981,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                 public void setValue( final Object obj,
                                       final Object value )
                 {
-                    property( ( (TableRow) obj ).element() ).write( value );
+                    property( ( (TableRow) obj ).element() ).write( value, true );
                 }
             };
         }
@@ -2080,7 +2080,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                                       final Object value )
                 {
                     final String str = String.valueOf( ( (Boolean) value ).booleanValue() );
-                    property( ( (TableRow) obj ).element() ).write( str );
+                    property( ( (TableRow) obj ).element() ).write( str, true );
                 }
             };
         }

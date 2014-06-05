@@ -87,7 +87,7 @@ public final class RestoreInitialValueActionsAssistContributor extends PropertyE
                         {
                             public void run()
                             {
-                                value.write( initialText );
+                                value.write( initialText, true );
                             }
                         }
                     );

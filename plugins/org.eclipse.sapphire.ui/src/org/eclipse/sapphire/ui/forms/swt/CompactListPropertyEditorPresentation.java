@@ -581,7 +581,7 @@ public final class CompactListPropertyEditorPresentation extends ListPropertyEdi
                 
                 final Element element = getActualElement(true/*create*/);
                 final ValueProperty property = getValueProperty();
-                element.property( property ).write( value );
+                element.property( property ).write( value, true );
             }
         }
 
@@ -700,7 +700,7 @@ public final class CompactListPropertyEditorPresentation extends ListPropertyEdi
                         setModelElement(newElement);
                         createNew = true;
                     }
-                    this.resource.element().property( this.resource.getValueProperty() ).write( value );
+                    this.resource.element().property( this.resource.getValueProperty() ).write( value, true );
                     if (createNew) {
                         this.text.setSelection(value.length(), value.length());
                     }

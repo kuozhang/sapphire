@@ -145,7 +145,7 @@ public final class RadioButtonGroupBinding extends AbstractBinding
         
         if( index >= 0 && index < this.enumValues.length )
         {
-            property().write( this.enumValues[ index ] );
+            property().write( this.enumValues[ index ], true );
             removeMalformedItem();
         }
     }

@@ -482,7 +482,7 @@ public final class CheckBoxGroupPropertyEditorPresentation extends ListPropertyE
     
     private void writeMemberProperty( final Element element, final String text )
     {
-        element.property( this.memberProperty ).write( text );
+        element.property( this.memberProperty ).write( text, true );
     }
     
     @Override

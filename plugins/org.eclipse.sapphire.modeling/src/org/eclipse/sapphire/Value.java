@@ -30,6 +30,7 @@ public class Value<T> extends Property
     private T content;
     private String defaultText;
     private T defaultContent;
+    private boolean writing;
     
     public Value( final Element element,
                   final ValueProperty property )
@@ -58,18 +59,31 @@ public class Value<T> extends Property
     @Override
     public final void refresh()
     {
+        refresh( false );
+    }
+    
+    private void refresh( final boolean refactor )
+    {
         synchronized( root() )
         {
-            init();
-            
-            refreshContent( false );
-            refreshDefaultContent( false );
-            refreshEnablement( false );
-            refreshValidation( false );
+            if( ! this.writing )
+            {
+                init();
+                
+                refreshContent( false, refactor );
+                refreshDefaultContent( false );
+                refreshEnablement( false );
+                refreshValidation( false );
+            }
         }
     }
     
     private void refreshContent( final boolean onlyIfNotInitialized )
+    {
+        refreshContent( onlyIfNotInitialized, false );
+    }
+
+    private void refreshContent( final boolean onlyIfNotInitialized, final boolean refactor )
     {
         boolean initialized;
         
@@ -134,7 +148,7 @@ public class Value<T> extends Property
                     
                     if( initialized )
                     {
-                        event = new ValuePropertyContentEvent( this, beforeText, afterText );
+                        event = new ValuePropertyContentEvent( this, beforeText, afterText, refactor );
                     }
                     else
                     {
@@ -379,7 +393,25 @@ public class Value<T> extends Property
         }
     }
     
+    /**
+     * Updates the value of the property. This method variant does not allow further model refactoring.
+     * 
+     * @param content the new value for the property, either in typed form or as an equivalent string; null is allowed
+     */
+    
     public final void write( final Object content )
+    {
+        write( content, false );
+    }
+    
+    /**
+     * Updates the value of the property.
+     * 
+     * @param content the new value for the property, either in typed form or as an equivalent string; null is allowed
+     * @param refactor indicates whether refactoring actions can be taken as the result of the property change
+     */
+    
+    public final void write( final Object content, final boolean refactor )
     {
         init();
         
@@ -410,8 +442,21 @@ public class Value<T> extends Property
         
         if( ! equal( text( false ), text ) )
         {
-            binding().write( text );
-            refresh();
+            synchronized( root() )
+            {
+                this.writing = true;
+                
+                try
+                {
+                    binding().write( text );
+                }
+                finally
+                {
+                    this.writing = false;
+                }
+                
+                refresh( refactor );
+            }
         }
     }
     

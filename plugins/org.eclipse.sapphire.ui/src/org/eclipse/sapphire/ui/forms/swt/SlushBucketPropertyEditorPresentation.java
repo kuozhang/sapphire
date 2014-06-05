@@ -410,7 +410,7 @@ public final class SlushBucketPropertyEditorPresentation extends AbstractSlushBu
                     for( String str : this.input )
                     {
                         final Element element = list.insert();
-                        element.property( SlushBucketPropertyEditorPresentation.this.memberProperty ).write( str );
+                        element.property( SlushBucketPropertyEditorPresentation.this.memberProperty ).write( str, true );
                         elements.add( element );
                     }
                 }

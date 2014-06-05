@@ -234,7 +234,7 @@ public class StandardDiagramConnectionPart
     {
         if (this.labelProperty != null)
         {
-            this.labelProperty.write( newValue );
+            this.labelProperty.write( newValue, true );
         }        
     }
     
@@ -425,7 +425,7 @@ public class StandardDiagramConnectionPart
                 throw new RuntimeException( "Property " + propertyName + " not a ValueProperty");
             }
         
-            modelElement.property( (ValueProperty) property ).write( value );
+            modelElement.property( (ValueProperty) property ).write( value, true );
         }        
     }
     

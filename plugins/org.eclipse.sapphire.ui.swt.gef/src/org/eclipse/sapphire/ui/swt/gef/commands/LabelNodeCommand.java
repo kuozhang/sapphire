@@ -61,7 +61,7 @@ public class LabelNodeCommand extends Command {
 			
 		Value<?> prop = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
 				this.textPart.getContentFunction());
-		prop.write( this.labelText );
+		prop.write( this.labelText, true );
 		
 		for (DiagramConnectionPart connPart : attachedConns)
 		{

@@ -74,6 +74,17 @@ public abstract class ElementReferenceService extends ReferenceService<Element>
             @Override
             protected void handleTypedEvent( final PropertyContentEvent event )
             {
+                if( event instanceof ValuePropertyContentEvent )
+                {
+                    final ValuePropertyContentEvent evt = (ValuePropertyContentEvent) event;
+                    final Element element = evt.property().element();
+                    
+                    if( element == target() && evt.refactor() )
+                    {
+                        context( Value.class ).write( evt.after() );
+                    }
+                }
+                
                 refresh();
             }
         };

@@ -48,7 +48,7 @@ public abstract class BrowseActionHandler extends PropertyEditorActionHandler
         {
             try
             {
-                property().write( text );
+                property().write( text, true );
             }
             catch( Exception e )
             {

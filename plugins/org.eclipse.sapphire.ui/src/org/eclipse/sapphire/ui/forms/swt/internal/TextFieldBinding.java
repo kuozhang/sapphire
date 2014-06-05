@@ -95,7 +95,7 @@ public class TextFieldBinding extends AbstractBinding
     {
         if( ! this.text.isDisposed() && ( this.text.getStyle() & SWT.READ_ONLY ) == 0 ) 
         {
-            property().write( this.textContent );
+            property().write( this.textContent, true );
         }
     }
     

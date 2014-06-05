@@ -64,7 +64,7 @@ public abstract class ValuePropertyEditorPresentation extends PropertyEditorPres
             {
                 try
                 {
-                    property().write( value );
+                    property().write( value, true );
                 }
                 catch( Exception e )
                 {

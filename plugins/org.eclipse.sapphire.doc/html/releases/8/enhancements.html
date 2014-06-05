@@ -54,6 +54,7 @@
   <li><a href="#Key">Key Enhancements</a></li>
   <ol type="A">
     <li><a href="#Key-SimplerElementReferences">Simpler Element References</a></li>
+    <li><a href="#Key-Refactoring">Refactoring</a></li>
     <li><a href="#Key-EventSuspension">Event Suspension</a></li>
     <li><a href="#Key-OutlineDecorations">Outline Decorations</a></li>
   </ol>
@@ -64,7 +65,6 @@
     <li><a href="#Core-EventDeliveryJob">EventDeliveryJob</a></li>
     <li><a href="#Core-JobQueue">JobQueue</a></li>
     <li><a href="#Core-ListIndexNullLookup">List Index Null Lookup</a></li>
-    <li><a href="#Core-ValuePropertyContentEvent">ValuePropertyContentEvent</a></li>
     <li><a href="#Core-UniqueNullCoverage">@Unique Null Coverage</a></li>
   </ol>
   <li><a href="#ExpressionLanguage">Expression Language</a></li>
@@ -146,6 +146,58 @@ void setTable( String value );</font></code></pre>
 
 <p>A PossibleValuesService implementation is automatically provided when @ElementReference annotation is used or ElementReferenceService
 is implemented.</p>
+
+
+<h2><a name="Key-Refactoring">Refactoring</a></h2>
+
+<p>When writing a value property, the originator of the change can now indicate that further model refactoring should be
+allowed. This flag is carried by the new ValuePropertyContentEvent and any listener can take action accordingly.</p>
+
+<p>For instance, a ReferenceService implementation can update the reference when the target changes. The new @ElementReference
+and ElementReferenceService facilities provide such refactoring out of the box.</p>
+
+<pre class="source-code"><code><span class="unaffected">public class Value&lt;T> extends Property
+{
+    <span class="javadoc">/**
+     * Updates the value of the property. This method variant does not allow further model refactoring.
+     * 
+     * @param content the new value for the property, either in typed form or as an equivalent string; null is allowed
+     */</span>
+    
+    void write( Object content )</span>
+    
+    <span class="javadoc">/**
+     * Updates the value of the property.
+     * 
+     * @param content the new value for the property, either in typed form or as an equivalent string; null is allowed
+     * @param refactor indicates whether refactoring actions can be taken as the result of the property change
+     */</span>
+    
+    void write( Object content, boolean refactor )
+<span class="unaffected">}</span></code></pre>
+
+<pre class="source-code"><code>public final class ValuePropertyContentEvent extends PropertyContentEvent
+{
+    <span class="javadoc">/**
+     * Returns the property content before the change.
+     */</span>
+    
+    String before()
+    
+    <span class="javadoc">/**
+     * Returns the property content after the change.
+     */</span>
+    
+    String after()
+    
+    <span class="javadoc">/**
+     * Indicates whether the originating property change was flagged to allow refactoring. If true is returned, any listeners
+     * can take action accordingly. For example, a ReferenceService implementation can update the reference when the target changes.
+     */</span>
+    
+    boolean refactor()
+<span class="unaffected">}</code></pre>
+
 
 
 <h2><a name="Key-EventSuspension">Event Suspension</a></h2>
@@ -377,17 +429,6 @@ by multiple ListenerContext instances in order to synchronize event delivery.</p
 were not indexed and an exception was thrown on lookup.</p>
 
 <pre class="source-code"><code>Set&lt;Task> tasksWithNoComponent = repository.getTasks().index( "Component" ).elements( null );</code></pre>
-
-
-<h2><a name="Core-ValuePropertyContentEvent">ValuePropertyContentEvent</a></h2>
-
-<p>A listener can now access before and after text when a value property changes.</p>
-
-<pre class="source-code"><code>final class ValuePropertyContentEvent extends PropertyContentEvent
-{
-    String before()
-    String after()
-}</code></pre>
 
 
 <h2><a name="Core-UniqueNullCoverage">@Unique Null Coverage</a></h2>

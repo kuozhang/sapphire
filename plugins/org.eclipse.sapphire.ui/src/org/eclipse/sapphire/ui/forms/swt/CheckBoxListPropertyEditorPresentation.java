@@ -762,7 +762,7 @@ public final class CheckBoxListPropertyEditorPresentation extends ListPropertyEd
                 try
                 {
                     rebase( list.insert() );
-                    this.property.write( this.value );
+                    this.property.write( this.value, true );
                 }
                 finally
                 {

@@ -11,7 +11,10 @@
 
 package org.eclipse.sapphire.tests.reference.element;
 
+import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.PossibleValuesService;
+import org.eclipse.sapphire.ReferenceValue;
+import org.eclipse.sapphire.modeling.CapitalizationType;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.junit.Test;
 
@@ -71,6 +74,22 @@ public final class ElementReferenceTests extends SapphireTestCase
         }
     }
 
+    @Test
+    
+    public void testDeclarativeElementReferenceRefactoring()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        
+        try
+        {
+            testRefactoring( element.getItemList1(), element.getDeclarativeReference() );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+    
     @Test
     
     public void testCustomElementReference()
@@ -152,12 +171,12 @@ public final class ElementReferenceTests extends SapphireTestCase
             assertSame( z, element.getCustomReference().target() );
             assertValidationOk( element.getCustomReference() );
             
-            z.setValue( "z6" );
+            z.setValue( "67" );
             
             assertValidationError( element.getCustomReference(), "Could not resolve custom reference \"6\"" );
-            assertEquals( set( "4", "5", "z6" ), possibleValuesService.values() );
+            assertEquals( set( "4", "5", "67" ), possibleValuesService.values() );
             
-            element.setCustomReference( "z6" );
+            element.setCustomReference( "67" );
             
             assertValidationOk( element.getCustomReference() );
         }
@@ -167,6 +186,22 @@ public final class ElementReferenceTests extends SapphireTestCase
         }
     }
 
+    @Test
+    
+    public void testCustomElementReferenceRefactoring()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        
+        try
+        {
+            testRefactoring( element.getItemList1(), element.getCustomReference() );
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+    
     @Test
     
     public void testExternalElementReference()
@@ -214,6 +249,12 @@ public final class ElementReferenceTests extends SapphireTestCase
                 
                 assertEquals( set( "a", "b", "c", "d" ), possibleValuesService.values() );
                 assertValidationOk( element.getExternalReference() );
+                
+                d.getName().write( "dd", true );
+                
+                assertEquals( set( "a", "b", "c", "dd" ), possibleValuesService.values() );
+                assertEquals( "dd", element.getExternalReference().content() );
+                assertValidationOk( element.getExternalReference() );
             }
             finally
             {
@@ -224,6 +265,83 @@ public final class ElementReferenceTests extends SapphireTestCase
         {
             element.dispose();
         }
+    }
+
+    @Test
+    
+    public void testExternalElementReferenceRefactoring()
+    {
+        final TestElement element = TestElement.TYPE.instantiate();
+        
+        try
+        {
+            final TestElement external = TestElement.TYPE.instantiate();
+            
+            try
+            {
+                element.getExternalReference().service( ExternalElementReferenceService.class ).list( external.getItemList1() );
+                
+                testRefactoring( external.getItemList1(), element.getExternalReference() );
+            }
+            finally
+            {
+                external.dispose();
+            }
+        }
+        finally
+        {
+            element.dispose();
+        }
+    }
+
+    private void testRefactoring( final ElementList<TestElement.Item> list, final ReferenceValue<String,TestElement.Item> reference )
+    {
+        final String referenceLabel = reference.definition().getLabel( true, CapitalizationType.NO_CAPS, false );
+        final PossibleValuesService possibleValuesService = reference.service( PossibleValuesService.class );
+        
+        final TestElement.Item a = list.insert();
+        a.setName( "a" );
+        
+        final TestElement.Item b = list.insert();
+        b.setName( "b" );
+        
+        final TestElement.Item c = list.insert();
+        c.setName( "c" );
+        
+        final TestElement.Item d = list.insert();
+        d.setName( "d" );
+        
+        reference.write( "d" );
+        
+        assertValidationOk( reference );
+        
+        d.getName().write( "dd", true );
+        
+        assertEquals( set( "a", "b", "c", "dd" ), possibleValuesService.values() );
+        assertEquals( "dd", reference.content() );
+        assertValidationOk( reference );
+        
+        d.getName().write( "ddd", false );
+        
+        assertEquals( set( "a", "b", "c", "ddd" ), possibleValuesService.values() );
+        assertEquals( "dd", reference.content() );
+        assertValidationError( reference, "Could not resolve " + referenceLabel + " \"dd\"" );
+        
+        reference.write( "ddd" );
+        
+        assertValidationOk( reference );
+    
+        d.getName().write( "dddd", true );
+        
+        assertEquals( set( "a", "b", "c", "dddd" ), possibleValuesService.values() );
+        assertEquals( "dddd", reference.content() );
+        assertValidationOk( reference );
+        
+        d.getName().write( "ddddd" );
+        
+        assertEquals( set( "a", "b", "c", "ddddd" ), possibleValuesService.values() );
+        assertEquals( "dddd", reference.content() );
+        assertValidationError( reference, "Could not resolve " + referenceLabel + " \"dddd\"" );
     }
 
 }
