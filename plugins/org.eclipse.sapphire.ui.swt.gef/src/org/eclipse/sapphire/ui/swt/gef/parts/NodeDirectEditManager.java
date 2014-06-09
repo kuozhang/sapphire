@@ -14,6 +14,7 @@ package org.eclipse.sapphire.ui.swt.gef.parts;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.CommandStack;
@@ -29,6 +30,9 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ui.diagram.editor.FunctionUtil;
 import org.eclipse.sapphire.ui.diagram.editor.TextPart;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
+import org.eclipse.sapphire.ui.swt.gef.figures.TextFigure;
+import org.eclipse.sapphire.ui.swt.gef.model.ShapeModelUtil;
+import org.eclipse.sapphire.ui.swt.gef.presentation.ShapePresentation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -56,9 +60,12 @@ public class NodeDirectEditManager extends DirectEditManager {
 		}
 	};
 	private Label label;
-	private SapphireDiagramEditor diagramEditor;
+	protected SapphireDiagramEditor diagramEditor;
 	protected TextPart textPart;
 	protected Value<?> property;
+	protected IFigure textFigure;
+	protected IFigure parentFigure;
+	
 	private String initValue;
 	private boolean committed = false;
 
@@ -66,6 +73,14 @@ public class NodeDirectEditManager extends DirectEditManager {
 		super(source, null, locator);
 		this.textPart = textPart;
 		this.label = label; 
+
+		ShapeEditPart shapeEditPart = (ShapeEditPart)source;		
+		DiagramNodeEditPart nodeEditPart = shapeEditPart.getNodeEditPart();		
+		ShapePresentation shapePresentation = ShapeModelUtil.getChildShapePresentation(
+				nodeEditPart.getCastedModel().getShapePresentation(), textPart);
+		this.textFigure = shapePresentation.getFigure();
+		this.parentFigure = shapePresentation.getParentFigure();
+		
 		this.diagramEditor = ((ShapeEditPart)source).getConfigurationManager().getDiagramEditor();
 		this.property = FunctionUtil.getFunctionProperty(this.textPart.getLocalModelElement(), 
 				this.textPart.getContentFunction());
@@ -176,12 +191,21 @@ public class NodeDirectEditManager extends DirectEditManager {
 	@Override
 	protected void handleValueChanged() 
 	{
+		internalCommit();
+
+		// TextPart's content might be a function with default values for empty String property.
+		// But we don't want the cell size to jump. So resetting TextFigure's content again to avoid
+		// cell size jump.
+		String cellText = (String)getCellEditor().getValue();
+		if (cellText == null || cellText.isEmpty())
+		{
+			((TextFigure)textFigure).setText(" ");
+		}
+		
 		// In Kepler when the cell editor is brought up and the focus is set on the text, the text
 		// triggers a focus lost event which causes direct edit manager's bringDown() method to be called.
 		// The overridden bringDown() method would set the label to be visible again. Resetting the label's
 		// visibility here is a workaround.
-		internalCommit();
-		
 		label.setVisible(false);
 		super.handleValueChanged();
 	}
@@ -191,6 +215,7 @@ public class NodeDirectEditManager extends DirectEditManager {
 	{
 		this.committed = true;
 		super.commit();
+		((TextFigure)textFigure).setText(textPart.getContent());
 	}
 	
 	public TextPart getTextPart()

@@ -18,10 +18,19 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.editparts.ZoomListener;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.sapphire.ui.def.HorizontalAlignment;
 import org.eclipse.sapphire.ui.def.VerticalAlignment;
 import org.eclipse.sapphire.ui.swt.gef.model.DiagramResourceCache;
 import org.eclipse.sapphire.ui.swt.gef.presentation.TextPresentation;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -34,6 +43,16 @@ public class TextFigure extends Label implements IShapeFigure
 	private Rectangle availableArea;
 	private int horizontalAlignment;
 	private int verticalAlignment;
+	private org.eclipse.draw2d.geometry.Point textLocation;
+	private Text swtText;
+	private double cachedZoom = -1.0;
+	private Font scaledFont;
+	private ZoomManager zoomMgr;
+	private ZoomListener zoomListener = new ZoomListener() {
+		public void zoomChanged(double newZoom) {
+			updateScaledFont(newZoom);
+		}
+	};	
 	
 	public TextFigure(DiagramResourceCache resourceCache, TextPresentation textPresentation)
 	{
@@ -41,10 +60,20 @@ public class TextFigure extends Label implements IShapeFigure
 		this.textPresentation = textPresentation;
 		setForegroundColor(resourceCache.getColor(textPresentation.getTextColor()));
 		this.horizontalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getHorizontalAlignment().content());
-		setLabelAlignment(this.horizontalAlignment);
+		setLabelAlignment(PositionConstants.CENTER);
 		// TODO how to reconcile both horizontal and vertical alignment with draw2d label alignment
 		this.verticalAlignment = getSwtTextAlignment(textPresentation.getLayoutConstraint().getVerticalAlignment().content());
 		setFont(this.resourceCache.getFont(textPresentation.getFontDef()));
+		
+		GraphicalViewer viewer = textPresentation.getConfigurationManager().getDiagramEditor().getGraphicalViewer();
+		Composite composite = (Composite)viewer.getControl();
+		swtText = new Text(composite, SWT.NONE);
+		zoomMgr = (ZoomManager) viewer.getProperty(ZoomManager.class.toString());
+		// this will force the font to be set
+		cachedZoom = -1.0;
+		updateScaledFont(zoomMgr.getZoom());
+		zoomMgr.addZoomListener(zoomListener);
+		
 		setText(textPresentation.getContent());
 	}
 	
@@ -85,6 +114,17 @@ public class TextFigure extends Label implements IShapeFigure
 		return this.textPresentation;
 	}
 	
+	@Override
+	public void setText(String s) {
+		// "text" will never be null.
+		if (s == null)
+			s = "";//$NON-NLS-1$
+		if (getText().equals(s))
+			return;
+		swtText.setText(s);
+		super.setText(s);
+	}
+
 	/**
 	 * @see IFigure#getMinimumSize(int, int)
 	 */
@@ -119,6 +159,79 @@ public class TextFigure extends Label implements IShapeFigure
 	public Dimension getMaximumSize()
 	{
 		return getPreferredSize();
+	}
+	
+	@Override
+	public Dimension getPreferredSize(int wHint, int hHint) {
+		if (prefSize == null) {
+			Point textSize = swtText.computeSize(-1, -1);
+			double zoom = zoomMgr.getZoom();
+			if (zoom != 1.0) {
+				textSize.x = (int)(textSize.x / zoom);
+				textSize.y = (int)(textSize.y / zoom);
+			}
+			prefSize = new Dimension(textSize.x, textSize.y);
+			Insets insets = getInsets();
+			prefSize.expand(insets.getWidth(), insets.getHeight());
+			if (getLayoutManager() != null)
+				prefSize.union(getLayoutManager().getPreferredSize(this, wHint,
+						hHint));
+		}
+		if (wHint >= 0 && wHint < prefSize.width) {
+			Dimension minSize = getMinimumSize(wHint, hHint);
+			Dimension result = prefSize.getCopy();
+			result.width = Math.min(result.width, wHint);
+			result.width = Math.max(minSize.width, result.width);
+			return result;
+		}
+		return prefSize;
+	}
+	
+	/**
+	 * Returns the location of the label's text relative to the label.
+	 * 
+	 * @return the text location
+	 * @since 2.0
+	 */
+	@Override
+	protected org.eclipse.draw2d.geometry.Point getTextLocation() {
+		if (textLocation != null)
+			return textLocation;
+		
+		textLocation = new org.eclipse.draw2d.geometry.Point();
+		Dimension offset = getSize().getDifference(getTextSize());
+		offset.width += getTextSize().width - getSubStringTextSize().width;
+		switch (getLabelAlignment()) {
+		case CENTER:
+			offset.scale(0.5f);
+			break;
+		case LEFT:
+			offset.scale(0.0f);
+			break;
+		case RIGHT:
+			offset.scale(1.0f);
+			break;
+		case TOP:
+			offset.height = 0;
+			offset.scale(0.5f);
+			break;
+		case BOTTOM:
+			offset.height = offset.height * 2;
+			offset.scale(0.5f);
+			break;
+		default:
+			offset.scale(0.5f);
+			break;
+		}
+
+		textLocation.translate(offset);
+		return textLocation;
+	}
+	
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		textLocation = null;
 	}
 	
 	private int getSwtTextAlignment(HorizontalAlignment horizontalAlign)
@@ -164,4 +277,31 @@ public class TextFigure extends Label implements IShapeFigure
 	public void setFocus(boolean b) 
 	{
 	}
+	
+	private void updateScaledFont(double zoom) {
+		if (cachedZoom == zoom)
+			return;
+		Font font = this.getFont();
+
+		disposeScaledFont();
+		cachedZoom = zoom;
+		if (zoom == 1.0) {
+			swtText.setFont(font);
+		}
+		else {
+			FontData fd = font.getFontData()[0];
+			fd.setHeight((int) (fd.getHeight() * zoom));
+			this.scaledFont = new Font(null, fd);
+			swtText.setFont(this.scaledFont);
+		}
+	}
+	
+	private void disposeScaledFont() {
+		if (scaledFont != null) {
+			scaledFont.dispose();
+			scaledFont = null;
+		}
+	}
+	
+	
 }

@@ -68,6 +68,7 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		
 		Text text = (Text) celleditor.getControl();
 		Point textSize = text.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				
 		if (text.getText().length() == 0) {
 			textSize.x = 10;
 		}
@@ -108,15 +109,6 @@ final public class NodeCellEditorLocator implements CellEditorLocator {
 		}
 				
 		textFigure.translateToAbsolute(labelRect);
-		// Hack: Sequence layout's calculation for text's available area is
-		// narrower than swt's text width due to swt's Text pads the OS margin. See
-		// org.eclipse.swt.widgets.Text's computeTrim().
-		// Pad 3 pixels to the width to avoid cutting off a letter in the cell editor.
-		// But the 3 pixel only works for text figures that use the default font. 
-		if (size.x < textSize.x)
-		{
-			size.x += 3;
-		}
 		text.setBounds(labelRect.x + horizontalOffet, labelRect.y + verticalOffet, size.x, size.y);
 		
 	}
