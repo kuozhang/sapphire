@@ -501,7 +501,7 @@
   
   <macrodef name="start-help-server">
     <attribute name="eclipse"/>
-    <attribute name="port" default="12345"/>
+    <attribute name="port" default="65332"/>
     <sequential>
     
       <echo message="Starting Eclipse help server on port @{port}..."/>
