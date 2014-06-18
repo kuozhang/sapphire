@@ -41,7 +41,7 @@ public final class ReferenceValidationService extends ValidationService
         LocalizableText.init( ReferenceValidationService.class );
     }
 
-    private ReferenceService referenceService;
+    private ReferenceService<?> referenceService;
     private Listener referenceServiceListener;
     
     @Override

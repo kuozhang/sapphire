@@ -463,7 +463,7 @@ public class StandardDiagramConnectionPart
     	this.endpointReferenceValue1 = resolveEndpointReferenceValue(modelElement, this.endpoint1Path);
     	if (this.endpointReferenceValue1 != null)
     	{
-    		ReferenceService refService = endpointReferenceValue1.service(ReferenceService.class);
+    		ReferenceService<?> refService = endpointReferenceValue1.service(ReferenceService.class);
     		this.referenceServiceListener1 = new Listener()
 			{
 				@Override
@@ -480,7 +480,7 @@ public class StandardDiagramConnectionPart
     	this.endpointReferenceValue2 = resolveEndpointReferenceValue(modelElement, this.endpoint2Path);
     	if (this.endpointReferenceValue2 != null)
     	{
-    		ReferenceService refService = endpointReferenceValue2.service(ReferenceService.class);
+    		ReferenceService<?> refService = endpointReferenceValue2.service(ReferenceService.class);
     		this.referenceServiceListener2 = new Listener()
 			{
 				@Override

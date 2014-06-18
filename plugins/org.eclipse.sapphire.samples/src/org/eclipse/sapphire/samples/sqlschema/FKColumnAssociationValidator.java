@@ -38,9 +38,9 @@ public final class FKColumnAssociationValidator extends ValidationService
     }
     
     private ColumnAssociation association;
-    private ReferenceService localColumnReferenceService;
+    private ReferenceService<?> localColumnReferenceService;
     private Column localColumn;
-    private ReferenceService referencedColumnReferenceService;
+    private ReferenceService<?> referencedColumnReferenceService;
     private Column referencedColumn;
     private Listener referenceServiceListener;
     private Listener columnTypeListener;

@@ -129,7 +129,7 @@ public final class JavaTypeConstraintFactsService extends FactsService
                 final String typeName = types.get( 0 );
                 String verb = verbImplementOrExtend.text();
                 
-                final ReferenceService referenceService = property.service( ReferenceService.class );
+                final ReferenceService<?> referenceService = property.service( ReferenceService.class );
                 
                 if( referenceService != null && referenceService instanceof JavaTypeReferenceService )
                 {
