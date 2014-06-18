@@ -125,7 +125,7 @@ public class StandardEmbeddedConnectionPart extends StandardDiagramConnectionPar
     	this.endpointReferenceValue = resolveEndpointReferenceValue(modelElement, endpointPath);
     	if (endpointReferenceValue != null)
     	{
-    		ReferenceService refService = endpointReferenceValue.service(ReferenceService.class);
+    		ReferenceService<?> refService = endpointReferenceValue.service(ReferenceService.class);
     		this.referenceServiceListener = new Listener()
 			{
 				@Override

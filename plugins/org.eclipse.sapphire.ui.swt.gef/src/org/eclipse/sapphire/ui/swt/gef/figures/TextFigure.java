@@ -12,7 +12,6 @@
 
 package org.eclipse.sapphire.ui.swt.gef.figures;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -125,9 +124,6 @@ public class TextFigure extends Label implements IShapeFigure
 		super.setText(s);
 	}
 
-	/**
-	 * @see IFigure#getMinimumSize(int, int)
-	 */
 	public Dimension getMinimumSize(int w, int h) 
 	{
 		if (minSize != null)

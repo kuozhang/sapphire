@@ -16,12 +16,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.eclipse.sapphire.services.ReferenceService;
-
 /**
  * Specifies how a reference value property should be resolved when the target of the reference is an
  * element in the same model as the reference. When more flexibility is necessary, {@link ElementReferenceService} or
- * {@link ReferenceService} can be implemented instead.
+ * {@link org.eclipse.sapphire.services.ReferenceService} can be implemented instead.
  * 
  * <p>A PossibleValuesService implementation is automatically provided when this annotation is used.</p>
  * 

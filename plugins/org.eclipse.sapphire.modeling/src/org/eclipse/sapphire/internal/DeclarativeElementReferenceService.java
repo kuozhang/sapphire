@@ -17,12 +17,12 @@ import org.eclipse.sapphire.ElementReference;
 import org.eclipse.sapphire.ElementReferenceService;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.ReferenceValue;
-import org.eclipse.sapphire.services.ReferenceService;
 import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
- * {@link ReferenceService} implementation that derives its behavior from @{@link ElementReference} annotation.
+ * {@link org.eclipse.sapphire.services.ReferenceService} implementation that derives its behavior 
+ * from @{@link ElementReference} annotation.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
