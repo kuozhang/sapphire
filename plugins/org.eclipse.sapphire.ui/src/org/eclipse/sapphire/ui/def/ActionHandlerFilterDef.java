@@ -51,6 +51,7 @@ public interface ActionHandlerFilterDef extends ActionContextsHostDef
     ReferenceValue<JavaTypeName,JavaType> getImplClass();
     void setImplClass( String value );
     void setImplClass( JavaTypeName value );
+    void setImplClass( JavaType value );
     
     // *** Contexts ***
     

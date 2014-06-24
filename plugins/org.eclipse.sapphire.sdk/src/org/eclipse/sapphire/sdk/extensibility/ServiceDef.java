@@ -99,6 +99,7 @@ public interface ServiceDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getImplementation();
     void setImplementation( String value );
     void setImplementation( JavaTypeName value );
+    void setImplementation( JavaType value );
     
     // *** Condition ***
     
@@ -119,6 +120,7 @@ public interface ServiceDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getCondition();
     void setCondition( String value );
     void setCondition( JavaTypeName value );
+    void setCondition( JavaType value );
     
     // *** Contexts ***
 

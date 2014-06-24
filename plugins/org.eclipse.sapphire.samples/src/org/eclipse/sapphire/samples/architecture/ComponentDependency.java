@@ -47,6 +47,7 @@ public interface ComponentDependency extends Element
 
     ReferenceValue<String,Component> getName();
     void setName( String value );
+    void setName( Component component );
     
     // *** Description ***
     

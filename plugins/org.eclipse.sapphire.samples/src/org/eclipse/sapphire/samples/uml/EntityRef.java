@@ -37,5 +37,6 @@ public interface EntityRef extends Element
 
     ReferenceValue<String,Entity> getEntity();
     void setEntity( String value );
+    void setEntity( Entity value );
     
 }

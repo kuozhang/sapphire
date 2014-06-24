@@ -56,7 +56,8 @@ public interface FormComponentRef extends FormComponentDef
     ValueProperty PROP_PART = new ValueProperty( TYPE, "Part" );
     
     ReferenceValue<String,FormComponentDef> getPart();
-    void setPart( String part );
+    void setPart( String value );
+    void setPart( FormComponentDef value );
     
     // *** Params ***
     

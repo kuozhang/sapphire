@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire;
 
+import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.services.ReferenceService;
 
 /**
@@ -67,6 +68,25 @@ public final class ReferenceValue<R,T> extends Value<R>
             
             return result;
         }
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    
+    protected String convertToText( final Object content )
+    {
+        String text;
+        
+        if( definition().getAnnotation( Reference.class ).target().isInstance( content ) )
+        {
+            text = service( ReferenceService.class ).reference( content );
+        }
+        else
+        {
+            text = super.convertToText( content );
+        }
+        
+        return text;
     }
     
 }

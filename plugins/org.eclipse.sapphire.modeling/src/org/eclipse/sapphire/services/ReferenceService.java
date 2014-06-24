@@ -47,5 +47,20 @@ public abstract class ReferenceService<T> extends DataService<T>
     {
         return data();
     }
+    
+    /**
+     * Returns the key that can be used to reference the provided object. The default implementation
+     * throws UnsupportedOperationException.
+     * 
+     * @param object the object
+     * @return the key
+     * @throws UnsupportedOperationException if this service does not support key extraction
+     * @throws IllegalArgumentException if the object is not a valid target for this reference
+     */
+    
+    public String reference( final T object )
+    {
+        throw new UnsupportedOperationException();
+    }
 
 }

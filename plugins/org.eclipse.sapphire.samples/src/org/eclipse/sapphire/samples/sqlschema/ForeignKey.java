@@ -47,6 +47,7 @@ public interface ForeignKey extends Element
 
     ReferenceValue<String,Table> getReferencedTable();
     void setReferencedTable( String value );
+    void setReferencedTable( Table value );
     
     // *** ColumnAssociations ***
     
@@ -66,6 +67,7 @@ public interface ForeignKey extends Element
         
         ReferenceValue<String,Column> getLocalColumn();
         void setLocalColumn( String value );
+        void setLocalColumn( Column value );
         
         // *** ReferencedColumn ***
         
@@ -78,6 +80,7 @@ public interface ForeignKey extends Element
         
         ReferenceValue<String,Column> getReferencedColumn();
         void setReferencedColumn( String value );
+        void setReferencedColumn( Column value );
     }
     
     @Type( base = ColumnAssociation.class )

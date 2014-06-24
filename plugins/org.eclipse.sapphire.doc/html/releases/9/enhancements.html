@@ -1,0 +1,117 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2014 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 9</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code-compare 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+    .unaffected
+    {
+      color: #888888
+    }
+    .comment
+    {
+      color: #006600;
+      font-style: italic
+    }
+    .javadoc
+    {
+      color: #7F7F9F
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Enhancements in Sapphire 9</h1>
+
+<ol>
+  <li><a href="#Core">Core</a></li>
+  <ol type="A">
+    <li><a href="#Core-TransparentReferenceSetting">Transparent Reference Setting</a></li>
+  </ol>
+</ol>
+
+
+<h2><a name="Core"><a name="Core-TransparentReferenceSetting">Transparent Reference Setting</a></a></h2>
+
+<p>Set a reference property to the target object and let the system figure out the key to write to the model. This facility
+is made possible by a new API in ReferenceService.</p>
+
+<pre class="source-code"><code><span class="unaffected">public abstract class ReferenceService&lt;T> extends DataService&lt;T>
+{</span>
+    <span class="javadoc">/**
+     * Returns the key that can be used to reference the provided object. The default implementation
+     * throws UnsupportedOperationException.
+     * 
+     * @param object the object
+     * @return the key
+     * @throws UnsupportedOperationException if this service does not support key extraction
+     * @throws IllegalArgumentException if the object is not a valid target for this reference
+     */</span>
+    
+    public String reference( T object )
+<span class="unaffected">}</span></code></pre>
+
+<p>ElementReferenceService and JavaTypeReferenceService implement the new API out of the box. Other ReferenceService
+implementations will need to be updated before model consumers can take advantage of this facility.</p>
+
+<p>To use this facility, simply call the existing property write method with the target object.</p>
+
+<pre class="source-code"><code><span class="unaffected">@Reference( target = Table.class )
+@ElementReference( list = "/Tables", key = "Name" )
+
+ValueProperty PROP_TABLE = new ValueProperty( TYPE, "Table" );
+
+ReferenceValue&lt;String,Table> getTable();
+void setTable( String value );</span></code></pre>
+
+<pre class="source-code"><code><span class="unaffected">Table table = ...</span>
+element.getTable().write( table );</code></pre>
+
+<p>Alternatively, add a typed setter method to the interface and Sapphire will implement it.</p>
+
+<pre class="source-code"><code><span class="unaffected">@Reference( target = Table.class )
+@ElementReference( list = "/Tables", key = "Name" )
+
+ValueProperty PROP_TABLE = new ValueProperty( TYPE, "Table" );
+
+ReferenceValue&lt;String,Table> getTable();
+void setTable( String value );</span>
+void setTable( Table value );</code></pre>
+
+<pre class="source-code"><code><span class="unaffected">Table table = ...</span>
+element.setTable( table );</code></pre>
+
+
+<div class="copyright">Copyright (c) 2014 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

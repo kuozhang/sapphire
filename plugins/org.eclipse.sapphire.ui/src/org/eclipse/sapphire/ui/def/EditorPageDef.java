@@ -108,5 +108,6 @@ public interface EditorPageDef extends PartDef
     ReferenceValue<JavaTypeName,JavaType> getPersistentStateElementType();
     void setPersistentStateElementType( String value );
     void setPersistentStateElementType( JavaTypeName value );
+    void setPersistentStateElementType( JavaType value );
     
 }

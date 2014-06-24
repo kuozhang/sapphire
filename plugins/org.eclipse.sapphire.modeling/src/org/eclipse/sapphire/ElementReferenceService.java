@@ -131,7 +131,7 @@ public abstract class ElementReferenceService extends ReferenceService<Element>
         {
             for( final Element element : list )
             {
-                final String n = ( (Value<?>) element.property( this.key ) ).text();
+                final String n = reference( element );
                 
                 if( n != null && n.equals( text ) )
                 {
@@ -141,6 +141,17 @@ public abstract class ElementReferenceService extends ReferenceService<Element>
         }
         
         return null;
+    }
+    
+    @Override
+    public final String reference( final Element element )
+    {
+        if( ! list().contains( element ) )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return ( (Value<?>) element.property( key() ) ).text();
     }
 
     @Override

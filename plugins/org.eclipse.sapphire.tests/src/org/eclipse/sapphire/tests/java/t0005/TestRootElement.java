@@ -42,6 +42,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getKindOne();
     void setKindOne( String value );
     void setKindOne( JavaTypeName value );
+    void setKindOne( JavaType value );
 
     // *** KindTwo ***
     
@@ -54,6 +55,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getKindTwo();
     void setKindTwo( String value );
     void setKindTwo( JavaTypeName value );
+    void setKindTwo( JavaType value );
 
     // *** KindThree ***
     
@@ -66,6 +68,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getKindThree();
     void setKindThree( String value );
     void setKindThree( JavaTypeName value );
+    void setKindThree( JavaType value );
 
     // *** KindFour ***
     
@@ -78,6 +81,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getKindFour();
     void setKindFour( String value );
     void setKindFour( JavaTypeName value );
+    void setKindFour( JavaType value );
 
     // *** TypeOne ***
     
@@ -90,6 +94,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getTypeOne();
     void setTypeOne( String value );
     void setTypeOne( JavaTypeName value );
+    void setTypeOne( JavaType value );
 
     // *** TypeOneOf ***
     
@@ -102,6 +107,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getTypeOneOf();
     void setTypeOneOf( String value );
     void setTypeOneOf( JavaTypeName value );
+    void setTypeOneOf( JavaType value );
 
     // *** TypeAll ***
     
@@ -114,6 +120,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getTypeAll();
     void setTypeAll( String value );
     void setTypeAll( JavaTypeName value );
+    void setTypeAll( JavaType value );
 
     // *** Combo1 ***
     
@@ -126,6 +133,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getCombo1();
     void setCombo1( String value );
     void setCombo1( JavaTypeName value );
+    void setCombo1( JavaType value );
 
     // *** Combo2 ***
     
@@ -138,6 +146,7 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getCombo2();
     void setCombo2( String value );
     void setCombo2( JavaTypeName value );
+    void setCombo2( JavaType value );
 
     // *** Combo3 ***
     
@@ -150,5 +159,6 @@ public interface TestRootElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getCombo3();
     void setCombo3( String value );
     void setCombo3( JavaTypeName value );
+    void setCombo3( JavaType value );
 
 }

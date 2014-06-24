@@ -100,6 +100,7 @@ public interface TestElement extends Element
     
     ReferenceValue<String,Item> getDeclarativeReference();
     void setDeclarativeReference( String value );
+    void setDeclarativeReference( Item value );
 
     // *** CustomReference ***
     
@@ -111,6 +112,7 @@ public interface TestElement extends Element
     
     ReferenceValue<String,Item> getCustomReference();
     void setCustomReference( String value );
+    void setCustomReference( Item value );
 
     // *** ExternalReference ***
     
@@ -122,5 +124,6 @@ public interface TestElement extends Element
     
     ReferenceValue<String,Item> getExternalReference();
     void setExternalReference( String value );
+    void setExternalReference( Item value );
 
 }

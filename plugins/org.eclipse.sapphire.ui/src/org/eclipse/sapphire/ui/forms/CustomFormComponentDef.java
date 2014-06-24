@@ -46,5 +46,6 @@ public interface CustomFormComponentDef extends FormComponentDef
     ReferenceValue<JavaTypeName,JavaType> getImplClass();
     void setImplClass( String value );
     void setImplClass( JavaTypeName value );
+    void setImplClass( JavaType value );
     
 }

@@ -50,5 +50,6 @@ public interface ISapphireConditionHostDef
     ReferenceValue<JavaTypeName,JavaType> getConditionClass();
     void setConditionClass( String value );
     void setConditionClass( JavaTypeName value );
+    void setConditionClass( JavaType value );
     
 }

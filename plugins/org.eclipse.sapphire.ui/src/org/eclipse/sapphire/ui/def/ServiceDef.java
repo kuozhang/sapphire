@@ -63,6 +63,7 @@ public interface ServiceDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getImplementation();
     void setImplementation( String value );
     void setImplementation( JavaTypeName value );
+    void setImplementation( JavaType value );
     
     // *** Overrides ***
     

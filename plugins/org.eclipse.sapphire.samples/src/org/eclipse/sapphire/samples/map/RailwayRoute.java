@@ -54,6 +54,7 @@ public interface RailwayRoute extends Element
     ValueProperty PROP_TO_LOCATION = new ValueProperty( TYPE, "ToLocation" );
 
     ReferenceValue<String,Location> getToLocation();
-    void setToLocation( String name );
+    void setToLocation( String value );
+    void setToLocation( Location value );
     
 }

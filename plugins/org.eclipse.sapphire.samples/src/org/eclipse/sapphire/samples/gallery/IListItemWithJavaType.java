@@ -44,5 +44,6 @@ public interface IListItemWithJavaType extends Element
     ReferenceValue<JavaTypeName,JavaType> getJavaType();
     void setJavaType( String value );
     void setJavaType( JavaTypeName value );
+    void setJavaType( JavaType value );
 
 }

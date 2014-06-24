@@ -70,6 +70,7 @@ public interface PartDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getElementType();
     void setElementType( String value );
     void setElementType( JavaTypeName value );
+    void setElementType( JavaType value );
     
     // *** VisibleWhen ***
     

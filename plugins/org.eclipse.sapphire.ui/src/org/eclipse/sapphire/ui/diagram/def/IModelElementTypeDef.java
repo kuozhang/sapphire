@@ -47,5 +47,6 @@ public interface IModelElementTypeDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getType();
     void setType( String value );
     void setType( JavaTypeName value );
+    void setType( JavaType value );
     
 }

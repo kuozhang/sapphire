@@ -409,13 +409,17 @@ public class Value<T> extends Property
      * 
      * @param content the new value for the property, either in typed form or as an equivalent string; null is allowed
      * @param refactor indicates whether refactoring actions can be taken as the result of the property change
+     * @throws UnsupportedOperationException is the property is not modifiable
      */
     
     public final void write( final Object content, final boolean refactor )
     {
         init();
         
-        // TODO: Read-only?
+        if( definition().isReadOnly() )
+        {
+            throw new UnsupportedOperationException();
+        }
 
         final ValueProperty p = definition();
         
@@ -423,19 +427,7 @@ public class Value<T> extends Property
         
         if( content != null )
         {
-            if( content instanceof String )
-            {
-                text = (String) content;
-            }
-            else
-            {
-                text = service( MasterConversionService.class ).convert( content, String.class );
-                
-                if( text == null )
-                {
-                    throw new IllegalArgumentException();
-                }
-            }
+            text = convertToText( content );
         }
         
         text = normalize( service( ValueNormalizationService.class ).normalize( p.decodeKeywords( text ) ) );
@@ -458,6 +450,27 @@ public class Value<T> extends Property
                 refresh( refactor );
             }
         }
+    }
+    
+    protected String convertToText( final Object content )
+    {
+        final String text;
+        
+        if( content instanceof String )
+        {
+            text = (String) content;
+        }
+        else
+        {
+            text = service( MasterConversionService.class ).convert( content, String.class );
+            
+            if( text == null )
+            {
+                throw new IllegalArgumentException();
+            }
+        }
+        
+        return text;
     }
     
     @Override

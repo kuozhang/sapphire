@@ -27,5 +27,11 @@ public abstract class JavaTypeReferenceService extends ReferenceService<JavaType
     {
         return resolve( context( Value.class ).text() );
     }
+
+    @Override
+    public final String reference( final JavaType type )
+    {
+        return type.name();
+    }
     
 }

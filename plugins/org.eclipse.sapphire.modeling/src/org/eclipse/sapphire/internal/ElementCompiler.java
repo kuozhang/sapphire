@@ -54,8 +54,6 @@ import org.eclipse.sapphire.TransientProperty;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DelegateImplementation;
-import org.eclipse.sapphire.modeling.annotations.Derived;
-import org.eclipse.sapphire.modeling.annotations.ReadOnly;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -168,6 +166,8 @@ public final class ElementCompiler
                                        final ValueProperty property )
     {
         final String propertyFieldName = findPropertyField( property ).getName();
+        final Reference referenceAnnotation = property.getAnnotation( Reference.class );
+        final boolean reference = ( referenceAnnotation != null );
         
         Method getter = findMethod( "get" + property.name() );
         
@@ -179,8 +179,6 @@ public final class ElementCompiler
         if( getter != null )
         {
             this.implementedMethods.add( getter );
-            
-            final boolean reference = property.hasAnnotation( Reference.class );
             
             final MethodVisitor mv = cw.visitMethod
             (
@@ -222,114 +220,74 @@ public final class ElementCompiler
             mv.visitEnd();
         }
         
-        if( ! property.hasAnnotation( Derived.class ) && ! property.hasAnnotation( ReadOnly.class ) )
-        {
-            Method setter = findMethod( "set" + property.name(), String.class );
-            
-            if( setter != null )
-            {
-                this.implementedMethods.add( setter );
-                
-                final MethodVisitor mv = cw.visitMethod
-                (
-                    ACC_PUBLIC,
-                    setter.getName(),
-                    Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( String.class ) } ),
-                    null,
-                    null
-                );
-                
-                mv.visitCode();
-    
-                mv.visitVarInsn( ALOAD, 0 );
-                
-                mv.visitFieldInsn
-                (
-                    GETSTATIC,
-                    this.typeInterfaceClassInternalName,
-                    propertyFieldName,
-                    Type.getDescriptor( ValueProperty.class )
-                );
-                
-                mv.visitMethodInsn
-                (
-                    INVOKEVIRTUAL,
-                    this.typeImplClassInternalName,
-                    "property",
-                    Type.getMethodDescriptor( Type.getType( Value.class ), new Type[] { Type.getType( ValueProperty.class ) } )
-                );
-                
-                mv.visitVarInsn( ALOAD, 1 );
-                
-                mv.visitMethodInsn
-                (
-                    INVOKEVIRTUAL,
-                    Type.getInternalName( Value.class ),
-                    "write",
-                    Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( Object.class ) } )
-                );
-                
-                mv.visitInsn( RETURN );
-                
-                mv.visitMaxs( 0, 0 );
-                mv.visitEnd();
-            }
-            
-            final Class<?> propertyTypeClass = property.getTypeClass();
-            
-            if( propertyTypeClass != String.class )
-            {
-                Method typedSetter = findMethod( "set" + property.name(), propertyTypeClass );
-                
-                if( typedSetter != null )
-                {
-                    this.implementedMethods.add( typedSetter );
-                    
-                    final MethodVisitor mv = cw.visitMethod
-                    (
-                        ACC_PUBLIC,
-                        typedSetter.getName(),
-                        Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( propertyTypeClass ) } ),
-                        null,
-                        null
-                    );
-                    
-                    mv.visitCode();
+        implementSetterMethod( cw, property, String.class );
         
-                    mv.visitVarInsn( ALOAD, 0 );
-                    
-                    mv.visitFieldInsn
-                    (
-                        GETSTATIC,
-                        this.typeInterfaceClassInternalName,
-                        propertyFieldName,
-                        Type.getDescriptor( ValueProperty.class )
-                    );
-                    
-                    mv.visitMethodInsn
-                    (
-                        INVOKEVIRTUAL,
-                        this.typeImplClassInternalName,
-                        "property",
-                        Type.getMethodDescriptor( Type.getType( Value.class ), new Type[] { Type.getType( ValueProperty.class ) } )
-                    );
-                    
-                    mv.visitVarInsn( ALOAD, 1 );
-                    
-                    mv.visitMethodInsn
-                    (
-                        INVOKEVIRTUAL,
-                        Type.getInternalName( Value.class ),
-                        "write",
-                        Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( Object.class ) } )
-                    );
-                    
-                    mv.visitInsn( RETURN );
-                    
-                    mv.visitMaxs( 0, 0 );
-                    mv.visitEnd();
-                }
-            }
+        final Class<?> propertyTypeClass = property.getTypeClass();
+        
+        if( propertyTypeClass != String.class )
+        {
+            implementSetterMethod( cw, property, propertyTypeClass );
+        }
+        
+        if( reference )
+        {
+            implementSetterMethod( cw, property, referenceAnnotation.target() );
+        }
+    }
+
+    private void implementSetterMethod( final ClassWriter cw, final ValueProperty property, final Class<?> type )
+    {
+        final String propertyFieldName = findPropertyField( property ).getName();
+        
+        Method setter = findMethod( "set" + property.name(), type );
+        
+        if( setter != null )
+        {
+            this.implementedMethods.add( setter );
+            
+            final MethodVisitor mv = cw.visitMethod
+            (
+                ACC_PUBLIC,
+                setter.getName(),
+                Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( type ) } ),
+                null,
+                null
+            );
+            
+            mv.visitCode();
+  
+            mv.visitVarInsn( ALOAD, 0 );
+            
+            mv.visitFieldInsn
+            (
+                GETSTATIC,
+                this.typeInterfaceClassInternalName,
+                propertyFieldName,
+                Type.getDescriptor( ValueProperty.class )
+            );
+            
+            mv.visitMethodInsn
+            (
+                INVOKEVIRTUAL,
+                this.typeImplClassInternalName,
+                "property",
+                Type.getMethodDescriptor( Type.getType( Value.class ), new Type[] { Type.getType( ValueProperty.class ) } )
+            );
+            
+            mv.visitVarInsn( ALOAD, 1 );
+            
+            mv.visitMethodInsn
+            (
+                INVOKEVIRTUAL,
+                Type.getInternalName( Value.class ),
+                "write",
+                Type.getMethodDescriptor( Type.VOID_TYPE, new Type[] { Type.getType( Object.class ) } )
+            );
+            
+            mv.visitInsn( RETURN );
+            
+            mv.visitMaxs( 0, 0 );
+            mv.visitEnd();
         }
     }
     

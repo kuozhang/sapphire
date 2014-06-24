@@ -97,6 +97,7 @@ public interface FunctionDef extends Element
             ReferenceValue<JavaTypeName,JavaType> getType();
             void setType( String value );
             void setType( JavaTypeName value );
+            void setType( JavaType value );
         }
         
         @Type( base = Parameter.class )
@@ -155,5 +156,6 @@ public interface FunctionDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getImplClass();
     void setImplClass( String value );
     void setImplClass( JavaTypeName value );
+    void setImplClass( JavaType value );
     
 }

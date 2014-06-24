@@ -75,6 +75,7 @@ public interface CreateWorkspaceFileOp extends ExecutableElement
     ReferenceValue<Path,IContainer> getRoot();
     void setRoot( String value );
     void setRoot( Path value );
+    void setRoot( IContainer value );
     
     // *** Folder ***
     
@@ -97,6 +98,7 @@ public interface CreateWorkspaceFileOp extends ExecutableElement
     ReferenceValue<Path,IContainer> getFolder();
     void setFolder( String value );
     void setFolder( Path value );
+    void setFolder( IContainer value );
     
     // *** File ***
 
@@ -118,6 +120,7 @@ public interface CreateWorkspaceFileOp extends ExecutableElement
     ReferenceValue<FileName,IFile> getFile();
     void setFile( String value );
     void setFile( FileName value );
+    void setFile( IFile value );
     
     // *** OverwriteExistingFile ***
 

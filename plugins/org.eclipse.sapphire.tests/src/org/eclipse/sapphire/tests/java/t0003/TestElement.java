@@ -39,5 +39,6 @@ public interface TestElement extends Element
     
     void setSomeClass( String value );
     void setSomeClass( JavaTypeName value );
+    void setSomeClass( JavaType value );
     
 }

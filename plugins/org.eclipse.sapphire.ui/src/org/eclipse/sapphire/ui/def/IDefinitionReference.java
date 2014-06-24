@@ -43,6 +43,7 @@ public interface IDefinitionReference extends Element
     ValueProperty PROP_PATH = new ValueProperty( TYPE, "Path" );
     
     ReferenceValue<String,ISapphireUiDef> getPath();
-    void setPath( String path );
+    void setPath( String value );
+    void setPath( ISapphireUiDef value );
     
 }

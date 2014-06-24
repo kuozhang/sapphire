@@ -48,6 +48,38 @@ void set${name}( ${type} value );
 ${:import(org.eclipse.sapphire.ValueProperty,org.eclipse.sapphire.Value,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type)}
 ${cursor}
   </template>
+
+  <template name="sf-reference" description="%ReferenceProperty" id="sapphire.ReferenceProperty" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Reference( target = ${target}.class )
+@Label( standard = "${label}" )
+    
+ValueProperty PROP_${field} = new ValueProperty( TYPE, "${name}" );
+    
+ReferenceValue&lt;String,${target}&gt; get${name}();
+void set${name}( String value );
+void set${name}( ${target} value );
+${:import(org.eclipse.sapphire.ValueProperty,org.eclipse.sapphire.ReferenceValue,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Reference)}
+${cursor}
+  </template>
+
+  <template name="sf-reference-typed" description="%ReferencePropertyTyped" id="sapphire.ReferencePropertyTyped" context="java-members" enabled="true">
+// *** ${name} ***
+
+@Type( base = ${type}.class )
+@Reference( target = ${target}.class )
+@Label( standard = "${label}" )
+    
+ValueProperty PROP_${field} = new ValueProperty( TYPE, "${name}" );
+    
+ReferenceValue&lt;${type},${target}&gt; get${name}();
+void set${name}( String value );
+void set${name}( ${type} value );
+void set${name}( ${target} value );
+${:import(org.eclipse.sapphire.ValueProperty,org.eclipse.sapphire.ReferenceValue,org.eclipse.sapphire.modeling.annotations.Label,org.eclipse.sapphire.modeling.annotations.Type,org.eclipse.sapphire.modeling.annotations.Reference)}
+${cursor}
+  </template>
   
   <template name="sf-element" description="%ElementProperty" id="sapphire.ElementProperty" context="java-members" enabled="true">
 // *** ${name} ***

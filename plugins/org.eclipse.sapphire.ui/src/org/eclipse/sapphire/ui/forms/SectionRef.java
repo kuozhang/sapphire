@@ -57,6 +57,7 @@ public interface SectionRef extends FormComponentDef
     
     ReferenceValue<String,SectionDef> getSection();
     void setSection( String value );
+    void setSection( SectionDef value );
     
     // *** Params ***
     

@@ -47,6 +47,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getOptionalAnyType();
     void setOptionalAnyType( String value );
     void setOptionalAnyType( JavaTypeName value );
+    void setOptionalAnyType( JavaType value );
 
     // *** RequiredClass1 ***
     
@@ -63,6 +64,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredClass1();
     void setRequiredClass1( String value );
     void setRequiredClass1( JavaTypeName value );
+    void setRequiredClass1( JavaType value );
     
     // *** RequiredClass2 ***
     
@@ -79,6 +81,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredClass2();
     void setRequiredClass2( String value );
     void setRequiredClass2( JavaTypeName value );
+    void setRequiredClass2( JavaType value );
     
     // *** RequiredClass3 ***
     
@@ -95,6 +98,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredClass3();
     void setRequiredClass3( String value );
     void setRequiredClass3( JavaTypeName value );
+    void setRequiredClass3( JavaType value );
     
     // *** RequiredClass4 ***
     
@@ -111,6 +115,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredClass4();
     void setRequiredClass4( String value );
     void setRequiredClass4( JavaTypeName value );
+    void setRequiredClass4( JavaType value );
     
     // *** RequiredClass5 ***
     
@@ -127,6 +132,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredClass5();
     void setRequiredClass5( String value );
     void setRequiredClass5( JavaTypeName value );
+    void setRequiredClass5( JavaType value );
 
     // *** RequiredClass6 ***
     
@@ -143,6 +149,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredClass6();
     void setRequiredClass6( String value );
     void setRequiredClass6( JavaTypeName value );
+    void setRequiredClass6( JavaType value );
 
     // *** RequiredInterface1 ***
     
@@ -159,6 +166,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredInterface1();
     void setRequiredInterface1( String value );
     void setRequiredInterface1( JavaTypeName value );
+    void setRequiredInterface1( JavaType value );
     
     // *** RequiredInterface2 ***
     
@@ -175,6 +183,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredInterface2();
     void setRequiredInterface2( String value );
     void setRequiredInterface2( JavaTypeName value );
+    void setRequiredInterface2( JavaType value );
     
     // *** RequiredInterface3 ***
     
@@ -191,6 +200,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredInterface3();
     void setRequiredInterface3( String value );
     void setRequiredInterface3( JavaTypeName value );
+    void setRequiredInterface3( JavaType value );
     
     // *** RequiredAnnotation1 ***
     
@@ -207,6 +217,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredAnnotation1();
     void setRequiredAnnotation1( String value );
     void setRequiredAnnotation1( JavaTypeName value );
+    void setRequiredAnnotation1( JavaType value );
     
     // *** RequiredEnum1 ***
     
@@ -223,6 +234,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredEnum1();
     void setRequiredEnum1( String value );
     void setRequiredEnum1( JavaTypeName value );
+    void setRequiredEnum1( JavaType value );
     
     // *** RequiredMixedType1 ***
     
@@ -239,6 +251,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredMixedType1();
     void setRequiredMixedType1( String value );
     void setRequiredMixedType1( JavaTypeName value );
+    void setRequiredMixedType1( JavaType value );
     
     // *** RequiredMixedType2 ***
     
@@ -255,5 +268,6 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getRequiredMixedType2();
     void setRequiredMixedType2( String value );
     void setRequiredMixedType2( JavaTypeName value );
+    void setRequiredMixedType2( JavaType value );
     
 }

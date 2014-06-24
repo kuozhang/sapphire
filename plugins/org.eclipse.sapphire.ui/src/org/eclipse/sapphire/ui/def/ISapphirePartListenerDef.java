@@ -44,5 +44,6 @@ public interface ISapphirePartListenerDef extends Element
     ReferenceValue<JavaTypeName,JavaType> getListenerClass();
     void setListenerClass( String value );
     void setListenerClass( JavaTypeName value );
+    void setListenerClass( JavaType value );
 
 }

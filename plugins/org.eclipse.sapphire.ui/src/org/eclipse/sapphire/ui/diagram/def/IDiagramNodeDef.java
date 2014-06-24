@@ -174,6 +174,7 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, PropertiesV
     ReferenceValue<JavaTypeName,JavaType> getElementType();
     void setElementType( String value );
     void setElementType( JavaTypeName value );
+    void setElementType( JavaType value );
     
     // *** Resizable ***
     

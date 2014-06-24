@@ -68,6 +68,7 @@ public interface TestElement extends Element
     ReferenceValue<JavaTypeName,JavaType> getJavaTypeReferenceValue();
     void setJavaTypeReferenceValue( String value );
     void setJavaTypeReferenceValue( JavaTypeName value );
+    void setJavaTypeReferenceValue( JavaType value );
     
     // *** Transient ***
     
