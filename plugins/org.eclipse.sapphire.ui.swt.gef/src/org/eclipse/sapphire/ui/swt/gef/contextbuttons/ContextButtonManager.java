@@ -225,6 +225,10 @@ public class ContextButtonManager {
 	{
 		ContextButtonPadData contextButtonPadData = new ContextButtonPadData();		
 		DiagramNodeEditPart nodeEditPart = ((ShapeEditPart)editParts.get(0)).getNodeEditPart();
+		if (nodeEditPart == null)
+		{
+			return contextButtonPadData;
+		}
 		org.eclipse.draw2d.geometry.Rectangle bounds = nodeEditPart.getFigure().getBounds();
 		Point loc = bounds.getLocation();
 		Point botRight = bounds.getBottomRight();

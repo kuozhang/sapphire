@@ -121,7 +121,7 @@ public class ShapeEditPart extends AbstractGraphicalEditPart
 	public DiagramNodeEditPart getNodeEditPart()
 	{
 		EditPart parent = this;
-		while (!(parent instanceof DiagramNodeEditPart))
+		while (parent != null && !(parent instanceof DiagramNodeEditPart))
 		{
 			parent = parent.getParent();
 		}
