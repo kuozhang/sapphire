@@ -56,15 +56,17 @@ public class ShapeUtil {
 				// add it
 				updateShape.render();
 				updateFigure = updateShape.getFigure();
-
-				Object layoutConstraint = getLayoutConstraint(updateShape, containerPresentation.getLayout());
-				if (layoutConstraint != null)
+				if (updateFigure != null)
 				{
-					containerFigure.add(updateFigure, layoutConstraint, index);
-				}
-				else
-				{
-					containerFigure.add(updateFigure, index);
+					Object layoutConstraint = getLayoutConstraint(updateShape, containerPresentation.getLayout());
+					if (layoutConstraint != null)
+					{
+						containerFigure.add(updateFigure, layoutConstraint, index);
+					}
+					else
+					{
+						containerFigure.add(updateFigure, index);
+					}
 				}
 				containerFigure.revalidate();
 			}
