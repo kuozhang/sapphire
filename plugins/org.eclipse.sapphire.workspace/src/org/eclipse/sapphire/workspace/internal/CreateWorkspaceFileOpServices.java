@@ -106,12 +106,12 @@ public final class CreateWorkspaceFileOpServices
         @Override
         protected void initReferenceService()
         {
-            context( CreateWorkspaceFileOp.class ).getRoot().attach
+            context( CreateWorkspaceFileOp.class ).getRoot().service( ReferenceService.class ).attach
             (
-                new FilteredListener<PropertyContentEvent>()
+                new Listener()
                 {
                     @Override
-                    protected void handleTypedEvent( final PropertyContentEvent event )
+                    public void handle( final Event event )
                     {
                         refresh();
                     }
@@ -218,12 +218,12 @@ public final class CreateWorkspaceFileOpServices
         @Override
         protected void initValidationService()
         {
-            context( CreateWorkspaceFileOp.class ).getRoot().attach
+            context( Value.class ).service( ReferenceService.class ).attach
             (
-                new FilteredListener<PropertyContentEvent>()
+                new Listener()
                 {
                     @Override
-                    protected void handleTypedEvent( final PropertyContentEvent event )
+                    public void handle( final Event event )
                     {
                         refresh();
                     }
@@ -297,19 +297,17 @@ public final class CreateWorkspaceFileOpServices
         @Override
         protected void initReferenceService()
         {
-            final Listener listener = new FilteredListener<PropertyContentEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( final PropertyContentEvent event )
+            context( CreateWorkspaceFileOp.class ).getFolder().service( ReferenceService.class ).attach
+            (
+                new Listener()
                 {
-                    refresh();
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        refresh();
+                    }
                 }
-            };
-            
-            final CreateWorkspaceFileOp op = context( CreateWorkspaceFileOp.class );
-            
-            op.getRoot().attach( listener );
-            op.getFolder().attach( listener );
+            );
         }
 
         @Override
@@ -338,17 +336,29 @@ public final class CreateWorkspaceFileOpServices
             final Value<?> value = context( Value.class );
             final CreateWorkspaceFileOp op = value.nearest( CreateWorkspaceFileOp.class );
 
-            final Listener listener = new FilteredListener<PropertyContentEvent>()
-            {
-                @Override
-                protected void handleTypedEvent( final PropertyContentEvent event )
+            op.getOverwriteExistingFile().attach
+            (
+                new FilteredListener<PropertyContentEvent>()
                 {
-                    refresh();
+                    @Override
+                    protected void handleTypedEvent( final PropertyContentEvent event )
+                    {
+                        refresh();
+                    }
                 }
-            };
+            );
             
-            op.getFolder().attach( listener );
-            op.getOverwriteExistingFile().attach( listener );
+            value.service( ReferenceService.class ).attach
+            (
+                new Listener()
+                {
+                    @Override
+                    public void handle( final Event event )
+                    {
+                        refresh();
+                    }
+                }
+            );
             
             final FileExtensionsService fileExtensionsService = value.service( FileExtensionsService.class );
             
