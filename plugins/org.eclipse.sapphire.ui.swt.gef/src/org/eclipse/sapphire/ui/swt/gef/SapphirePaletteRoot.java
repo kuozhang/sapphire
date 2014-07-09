@@ -17,12 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
-import org.eclipse.gef.palette.MarqueeToolEntry;
-import org.eclipse.gef.palette.PaletteContainer;
 import org.eclipse.gef.palette.PaletteEntry;
-import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.palette.PanningSelectionToolEntry;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
@@ -40,7 +36,6 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.internal.SapphireConnectionCreationToolEntry;
-import org.eclipse.sapphire.ui.swt.gef.tools.SapphireMarqueeSelectionTool;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -75,7 +70,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 		
 		// create new entries
 		DiagramEditorPageDef diagramPageDef = (DiagramEditorPageDef)diagramPart.definition();
-		//add(createModelIndependentTools());
 		
 		List<DiagramNodeTemplate> nodeTemplates = diagramPart.getVisibleNodeTemplates();
 		if (nodeTemplates.isEmpty())
@@ -207,24 +201,6 @@ public class SapphirePaletteRoot extends PaletteRoot
 			}
 		}
 		return drawers.get(0);
-	}
-	
-	/** Create the "Tools" group. */
-	private PaletteContainer createModelIndependentTools() 
-	{
-		PaletteGroup group = new PaletteGroup("Tools");
-
-		// Add a selection tool to the group
-		ToolEntry tool = new PanningSelectionToolEntry();
-		group.add(tool);
-		setDefaultEntry(tool);
-
-		// Add a marquee tool to the group
-		MarqueeToolEntry toolEntry = new MarqueeToolEntry();
-		toolEntry.setToolClass(SapphireMarqueeSelectionTool.class);
-		group.add(toolEntry);
-
-		return group;
 	}
 	
 }
