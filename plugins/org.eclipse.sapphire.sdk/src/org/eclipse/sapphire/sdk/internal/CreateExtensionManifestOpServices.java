@@ -141,7 +141,12 @@ public final class CreateExtensionManifestOpServices
             
             if( this.listener != null )
             {
-                context( CreateExtensionManifestOp.class ).property( CreateExtensionManifestOp.PROP_CONTEXT ).detach( this.listener );
+                final CreateExtensionManifestOp op = context( CreateExtensionManifestOp.class );
+                
+                if( ! op.disposed() )
+                {
+                    op.property( CreateExtensionManifestOp.PROP_CONTEXT ).detach( this.listener );
+                }
             }
         }
     }
