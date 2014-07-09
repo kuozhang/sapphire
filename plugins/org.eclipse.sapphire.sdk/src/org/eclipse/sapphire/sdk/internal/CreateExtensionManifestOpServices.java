@@ -11,14 +11,14 @@
 
 package org.eclipse.sapphire.sdk.internal;
 
-import static org.eclipse.sapphire.java.jdt.JdtUtil.findSourceFolder;
 import static org.eclipse.sapphire.java.jdt.JdtUtil.findSourceFolders;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.InitialValueService;
 import org.eclipse.sapphire.Listener;
@@ -26,7 +26,6 @@ import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.Value;
-import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.sdk.CreateExtensionManifestOp;
@@ -38,7 +37,7 @@ import org.eclipse.sapphire.services.ValidationService;
 
 public final class CreateExtensionManifestOpServices
 {
-    @Text( "Sapphire extension manifest should be placed in a META-INF folder under a Java source folder. Folder \"{0}\" is invalid" )
+    @Text( "Sapphire extension manifest should be placed in the META-INF folder" )
     private static LocalizableText invalidFolder;  
     
     static
@@ -53,41 +52,15 @@ public final class CreateExtensionManifestOpServices
         @Override
         protected Status compute()
         {
-            final Value<Path> target = context( Element.class ).property( context( ValueProperty.class ) );
-            final Path path = target.content();
+            final Path path = context( Value.of( Path.class ) ).content();
             
             if( path != null )
             {
-                final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( path.toPortableString() );
+                final String lastSegment = path.lastSegment();
                 
-                if( resource != null )
+                if( lastSegment != null && ! lastSegment.equals( "META-INF" ) )
                 {
-                    final IPath pathRelativeToWorkspace = resource.getFullPath();
-                    boolean locatedInSourceFolder = false;
-                    
-                    for( IContainer sourceFolder : findSourceFolders( resource ) )
-                    {
-                        final IPath sourceFolderFullPath = sourceFolder.getFullPath();
-                        
-                        if( sourceFolderFullPath.isPrefixOf( pathRelativeToWorkspace ) )
-                        {
-                            locatedInSourceFolder = true;
-                            
-                            final IPath pathRelativeToSourceFolder = pathRelativeToWorkspace.makeRelativeTo( sourceFolderFullPath );
-                            
-                            if( ! pathRelativeToSourceFolder.equals( new org.eclipse.core.runtime.Path( "META-INF" ) ) )
-                            {
-                                final String msg = invalidFolder.format( path.toPortableString() );
-                                return Status.createWarningStatus( msg );
-                            }
-                        }
-                    }
-                        
-                    if( ! locatedInSourceFolder )
-                    {
-                        final String msg = invalidFolder.format( path.toPortableString() );
-                        return Status.createWarningStatus( msg );
-                    }
+                    return Status.createWarningStatus( invalidFolder.text() );
                 }
             }
             
@@ -118,20 +91,56 @@ public final class CreateExtensionManifestOpServices
         protected String compute()
         {
             final CreateExtensionManifestOp op = context( CreateExtensionManifestOp.class );
-    
-            IResource folder = op.getContext().content();
+            final IResource context = op.getContext().content();
             
-            if( folder != null )
+            IContainer result = null;
+            
+            if( context != null )
             {
-                final IContainer sourceFolder = findSourceFolder( folder );
+                final IProject project = context.getProject();
+                final List<IContainer> sourceFolders = findSourceFolders( project );
+                final IPath resourceFullPath = context.getFullPath();
                 
-                if( sourceFolder != null )
+                IContainer contextSourceFolder = null;
+                
+                for( final IContainer sourceFolder : sourceFolders )
                 {
-                    folder = sourceFolder.getFolder( new org.eclipse.core.runtime.Path( "META-INF" ) );
+                    if( sourceFolder.getFullPath().isPrefixOf( resourceFullPath ) )
+                    {
+                        contextSourceFolder = sourceFolder;
+                        break;
+                    }
+                }
+                
+                if( contextSourceFolder != null )
+                {
+                    result = contextSourceFolder.getFolder( new org.eclipse.core.runtime.Path( "META-INF" ) );
+                    
+                    if( ! result.isAccessible() )
+                    {
+                        result = null;
+                    }
+                }
+                
+                if( result == null )
+                {
+                    result = project.getFolder( new org.eclipse.core.runtime.Path( "META-INF" ) );
+                    
+                    if( ! result.isAccessible() )
+                    {
+                        if( context instanceof IContainer )
+                        {
+                            result = (IContainer) context;
+                        }
+                        else
+                        {
+                            result = context.getParent();
+                        }
+                    }
                 }
             }
             
-            return folder == null ? null : folder.getFullPath().makeRelative().toPortableString();
+            return result == null ? null : result.getFullPath().makeRelative().toPortableString();
         }
         
         @Override
