@@ -67,6 +67,7 @@ public class TextFigure extends Label implements IShapeFigure
 		GraphicalViewer viewer = textPresentation.getConfigurationManager().getDiagramEditor().getGraphicalViewer();
 		Composite composite = (Composite)viewer.getControl();
 		swtText = new Text(composite, SWT.NONE);
+		swtText.setVisible(false);
 		zoomMgr = (ZoomManager) viewer.getProperty(ZoomManager.class.toString());
 		// this will force the font to be set
 		cachedZoom = -1.0;
