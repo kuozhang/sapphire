@@ -101,6 +101,8 @@
               </content>
             </rectangle>
             <tool-palette-label>component</tool-palette-label>
+            <tool-palette-image>Architecture.png</tool-palette-image>
+            <tool-palette-image>Component.png</tool-palette-image>
             <property>Components</property>
             <connection-binding>
                 <connection-id>Dependency</connection-id>
@@ -164,6 +166,8 @@
                 <type>arrow</type>
             </endpoint2>
             <line-color>#333399</line-color>
+            <tool-palette-image>DependsOn-16.png</tool-palette-image>
+            <tool-palette-image>DependsOn-large.png</tool-palette-image>
             <properties-view>
                 <page>
                     <label>description</label>

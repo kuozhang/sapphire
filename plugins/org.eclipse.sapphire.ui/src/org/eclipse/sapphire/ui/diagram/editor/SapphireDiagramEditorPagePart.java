@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.FilteredListener;
@@ -45,12 +46,14 @@ import org.eclipse.sapphire.ui.diagram.DiagramConnectionPart;
 import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.def.ToolPaletteImageDef;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate.DiagramNodeTemplateListener;
 import org.eclipse.sapphire.ui.diagram.editor.DiagramPageEvent.DiagramPageEventType;
 import org.eclipse.sapphire.ui.diagram.state.DiagramEditorPageState;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionManager;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributorPart;
+import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**
@@ -74,7 +77,7 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     private boolean showGuides;
     private int gridUnit;
     private int verticalGridUnit;
-	private List<FunctionResult> connectionImageDataFunctionResults;
+	private List<List<FunctionResult>> connectionImageDataFunctionResults;
 	private Point mouseLocation;
 
     @Override
@@ -126,23 +129,30 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
             );
         }
                                 
-        this.connectionImageDataFunctionResults = new ArrayList<FunctionResult>();
+        this.connectionImageDataFunctionResults = new ArrayList<List<FunctionResult>>();
         for (IDiagramConnectionDef connectionDef : this.connectionDefs)
         {
-            FunctionResult imageResult = initExpression
-            ( 
-                connectionDef.getToolPaletteImage().content(),
-                ImageData.class,
-                null,
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        broadcast( new ImageChangedEvent( SapphireDiagramEditorPagePart.this ) );
-                    }
-                }
-            );
-            this.connectionImageDataFunctionResults.add(imageResult);
+        	List<ToolPaletteImageDef> imageDefs = connectionDef.getToolPaletteImages();
+        	List<FunctionResult> frs = new ArrayList<FunctionResult>();
+        	
+        	for (ToolPaletteImageDef imageDef : imageDefs)
+        	{
+	            FunctionResult imageResult = initExpression
+	            ( 
+	            	imageDef.getToolPaletteImage().content(),
+	                ImageData.class,
+	                null,
+	                new Runnable()
+	                {
+	                    public void run()
+	                    {
+	                        broadcast( new ImageChangedEvent( SapphireDiagramEditorPagePart.this ) );
+	                    }
+	                }
+	            );
+	            frs.add(imageResult);
+        	}
+            this.connectionImageDataFunctionResults.add(frs);
         }
 
         this.selections = new ArrayList<ISapphirePart>();
@@ -332,18 +342,20 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
     	return visibleNodeTemplates;
     }
     
-    public List<ConnectionPalette> getConnectionPalettes() {
+    public List<ConnectionPalette> getConnectionPalettes() 
+    {
         List<ConnectionPalette> list = new ArrayList<ConnectionPalette>();
         for (int i = 0; i < this.connectionImageDataFunctionResults.size(); i++)
         {
-            FunctionResult result = this.connectionImageDataFunctionResults.get(i);
-            ImageData imageData = null;
-            if (result != null)
+            List<FunctionResult> results = this.connectionImageDataFunctionResults.get(i);
+            List<ImageData> imageDatas = new ArrayList<ImageData>();
+            for (FunctionResult result : results)
             {
-               	imageData = (ImageData)result.value();
+               	ImageData imageData = (ImageData)result.value();
+               	imageDatas.add(imageData);
             }
         	IDiagramConnectionDef def = this.connectionDefs.get(i);
-            ConnectionPalette palette = new ConnectionPalette(imageData, def);
+            ConnectionPalette palette = new ConnectionPalette(imageDatas, def);
             list.add(palette);
         }
         return list;
@@ -531,10 +543,13 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
 
         for (int i = 0; i < this.connectionImageDataFunctionResults.size(); i++)
         {
-            FunctionResult result = this.connectionImageDataFunctionResults.get(i);
-            if (result != null)
+            List<FunctionResult> results = this.connectionImageDataFunctionResults.get(i);
+            for (FunctionResult result : results)
             {
-                result.dispose();
+                if (result != null)
+                {
+                	result.dispose();
+                }
             }
         }
         
@@ -696,21 +711,55 @@ public final class SapphireDiagramEditorPagePart extends SapphireEditorPagePart
         
 	}
 	
-    public final static class ConnectionPalette {
+    public final static class ConnectionPalette 
+    {
+    	private IDiagramConnectionDef connectionDef;
+    	private ImageData smallImage;
+    	private ImageData largeImage;
     	
-    	ImageData imageData;
-    	IDiagramConnectionDef connectionDef;
-    	
-    	public ConnectionPalette(ImageData imageData, IDiagramConnectionDef connectionDef) {
-    		this.imageData = imageData;
+    	public ConnectionPalette(List<ImageData> imageDatas, IDiagramConnectionDef connectionDef) 
+    	{
     		this.connectionDef = connectionDef;
+            if (imageDatas.size() == 1)
+            {
+            	smallImage = largeImage = imageDatas.get(0);
+            }
+            else if (imageDatas.size() == 2)
+            {
+                List<ImageDescriptor> imageDescriptors = new ArrayList<ImageDescriptor>();
+                for (ImageData imageData : imageDatas)
+                {
+                	imageDescriptors.add(SwtUtil.toImageDescriptor(imageData));
+                }
+
+            	org.eclipse.swt.graphics.ImageData id1 = imageDescriptors.get(0).getImageData();
+            	org.eclipse.swt.graphics.ImageData id2 = imageDescriptors.get(1).getImageData();
+            	if (id1.width > id2.width || id1.height > id2.height)
+            	{
+            		smallImage = imageDatas.get(1);
+            		largeImage = imageDatas.get(0);
+            	}
+            	else
+            	{
+            		smallImage = imageDatas.get(0);
+            		largeImage = imageDatas.get(1);            		
+            	}
+            }
+    		
     	}
     	
-    	public ImageData getImageData() {
-    		return this.imageData;
+    	public ImageData getSmallIcon()
+    	{
+    		return this.smallImage;
     	}
     	
-    	public IDiagramConnectionDef getConnectionDef() {
+    	public ImageData getLargeIcon()
+    	{
+    		return this.largeImage;
+    	}
+
+    	public IDiagramConnectionDef getConnectionDef() 
+    	{
     		return this.connectionDef;
     	}
     	

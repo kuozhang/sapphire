@@ -62,7 +62,7 @@ public class NodeCreateConnectionActionHandler extends SapphireActionHandler
 		{
 			if (conn.getConnectionDef() == this.connectionDef)
 			{
-				connImage = conn.getImageData();
+				connImage = conn.getSmallIcon();
 				break;
 			}
 		}

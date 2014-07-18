@@ -1194,7 +1194,18 @@
                             <content>
                                 <property-editor>ToolPaletteCompartment</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
-                                <property-editor>ToolPaletteImage</property-editor>
+                                <property-editor>
+                                    <child-property>
+                                        <show-label>false</show-label>
+                                        <property>ToolPaletteImage</property>
+                                    </child-property>
+                                    <property>ToolPaletteImages</property>
+                                    <hint>
+                                        <name>show.header</name>
+                                        <value>false</value>
+                                    </hint>
+                                    <height>50</height>
+                                </property-editor>
                                 <property-editor>
                                     <property>ToolPaletteDescription</property>
                                     <height>90</height>
@@ -1331,7 +1342,18 @@
                             <content>
                                 <property-editor>ToolPaletteCompartment</property-editor>
                                 <property-editor>ToolPaletteLabel</property-editor>
-                                <property-editor>ToolPaletteImage</property-editor>
+                                <property-editor>
+                                    <child-property>
+                                        <show-label>false</show-label>
+                                        <property>ToolPaletteImage</property>
+                                    </child-property>
+                                    <property>ToolPaletteImages</property>
+                                    <hint>
+                                        <name>show.header</name>
+                                        <value>false</value>
+                                    </hint>
+                                    <height>50</height>
+                                </property-editor>
                                 <property-editor>
                                     <property>ToolPaletteDescription</property>
                                     <height>90</height>

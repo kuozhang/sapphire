@@ -36,6 +36,7 @@ import org.eclipse.sapphire.ui.diagram.editor.DiagramNodeTemplate;
 import org.eclipse.sapphire.ui.diagram.editor.SapphireDiagramEditorPagePart;
 import org.eclipse.sapphire.ui.forms.swt.SwtUtil;
 import org.eclipse.sapphire.ui.swt.gef.internal.SapphireConnectionCreationToolEntry;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
@@ -107,8 +108,10 @@ public class SapphirePaletteRoot extends PaletteRoot
 		for (SapphireDiagramEditorPagePart.ConnectionPalette connectionPalette : diagramPart.getConnectionPalettes()) 
 		{
 			IDiagramConnectionDef connDef = connectionPalette.getConnectionDef();
-			ImageData imageData = connectionPalette.getImageData();
-            ImageDescriptor imageDescriptor = SwtUtil.toImageDescriptor(imageData);
+			ImageData imageData = connectionPalette.getSmallIcon();
+            ImageDescriptor smallImage = SwtUtil.toImageDescriptor(imageData);
+			ImageData imageData2 = connectionPalette.getLargeIcon();
+            ImageDescriptor largeImage = SwtUtil.toImageDescriptor(imageData2);
 
             CreationFactory factory = new ConnectionCreationFactory(connDef);
 			String tpLabel = connDef.getToolPaletteLabel().content();
@@ -124,7 +127,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 								tpDesc, CapitalizationType.TITLE_STYLE, false);
 			}
 			if (tpLabel != null) {
-	    		ToolEntry tool = new SapphireConnectionCreationToolEntry(tpLabel, tpDesc, factory, imageDescriptor, imageDescriptor);
+	    		ToolEntry tool = new SapphireConnectionCreationToolEntry(tpLabel, tpDesc, factory, smallImage, largeImage);
 	    		
 	    		DiagramPaletteDrawer drawer = getDiagramPaletteDrawer(drawers, connDef.getToolPaletteCompartment().content());
 	    		List<ToolEntry> list = entries.get(drawer.getId());
@@ -144,9 +147,33 @@ public class SapphirePaletteRoot extends PaletteRoot
         {
         	IDiagramNodeDef nodeDef = nodeTemplate.definition();
 
-            final ImageData imageData = nodeTemplate.getToolPaletteImage();
-            ImageDescriptor imageDescriptor = SwtUtil.toImageDescriptor(imageData);
-
+            List<ImageData> imageDatas = nodeTemplate.getToolPaletteImages();
+            List<ImageDescriptor> imageDescriptors = new ArrayList<ImageDescriptor>();
+            for (ImageData imageData : imageDatas)
+            {
+            	imageDescriptors.add(SwtUtil.toImageDescriptor(imageData));
+            }
+            ImageDescriptor smallImage = null;
+            ImageDescriptor largeImage = null;
+            if (imageDescriptors.size() == 1)
+            {
+            	smallImage = largeImage = imageDescriptors.get(0);
+            }
+            else if (imageDescriptors.size() == 2)
+            {
+            	org.eclipse.swt.graphics.ImageData id1 = imageDescriptors.get(0).getImageData();
+            	org.eclipse.swt.graphics.ImageData id2 = imageDescriptors.get(1).getImageData();
+            	if (id1.width > id2.width || id1.height > id2.height)
+            	{
+            		smallImage = imageDescriptors.get(1);
+            		largeImage = imageDescriptors.get(0);
+            	}
+            	else
+            	{
+            		smallImage = imageDescriptors.get(0);
+            		largeImage = imageDescriptors.get(1);            		
+            	}
+            }
             CreationFactory factory = new NodeCreationFactory(nodeTemplate);
 
 			String tpLabel = nodeDef.getToolPaletteLabel().content();
@@ -161,7 +188,7 @@ public class SapphirePaletteRoot extends PaletteRoot
 				tpDesc = IDiagramNodeDef.PROP_TOOL_PALETTE_DESCRIPTION.getLocalizationService().text(
 								tpDesc, CapitalizationType.TITLE_STYLE, false);
 			}
-    		ToolEntry tool = new CombinedTemplateCreationEntry(tpLabel, tpDesc, factory, imageDescriptor, imageDescriptor);
+    		ToolEntry tool = new CombinedTemplateCreationEntry(tpLabel, tpDesc, factory, smallImage, largeImage);
     		tool.setToolClass(CreationTool.class);
 
     		// find the right drawer

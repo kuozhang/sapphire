@@ -27,6 +27,7 @@ import org.eclipse.sapphire.java.JavaType;
 import org.eclipse.sapphire.java.JavaTypeConstraint;
 import org.eclipse.sapphire.java.JavaTypeKind;
 import org.eclipse.sapphire.java.JavaTypeName;
+import org.eclipse.sapphire.modeling.annotations.CountConstraint;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -125,17 +126,16 @@ public interface IDiagramNodeDef extends PartDef, IDiagramDimension, PropertiesV
     Value<String> getToolPaletteDescription();
     void setToolPaletteDescription( String paletteDesc );
     
-    // *** ToolPaletteImage ***
+    // *** ToolPaletteImages ***
 
-    @Type( base = Function.class )
-    @Label( standard = "tool palette item image" )
-    @XmlBinding( path = "tool-palette-image" )
+    @Type( base = ToolPaletteImageDef.class )
+    @Label( standard = "tool palette images" )
+    @XmlListBinding( path = "", mappings = @XmlListBinding.Mapping( element = "tool-palette-image", type = ToolPaletteImageDef.class ) )
+    @CountConstraint( max = 2 )
 
-    ValueProperty PROP_TOOL_PALETTE_IMAGE = new ValueProperty( TYPE, "ToolPaletteImage" );
+    ListProperty PROP_TOOL_PALETTE_IMAGES = new ListProperty( TYPE, "ToolPaletteImages" );
     
-    Value<Function> getToolPaletteImage();
-    void setToolPaletteImage( String value );
-    void setToolPaletteImage( Function value );
+    ElementList<ToolPaletteImageDef> getToolPaletteImages();
         
     // *** ToolPaletteCompartment ***
 

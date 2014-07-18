@@ -55,6 +55,10 @@
   <ol type="A">
     <li><a href="#Core-TransparentReferenceSetting">Transparent Reference Setting</a></li>
   </ol>
+  <li><a href="#Diagram">Core</a></li>
+  <ol type="A">
+    <li><a href="#DiagramPaletteImage">Diagram Editor Palette Icons</a></li>
+  </ol>  
 </ol>
 
 
@@ -107,6 +111,15 @@ void setTable( Table value );</code></pre>
 
 <pre class="source-code"><code><span class="unaffected">Table table = ...</span>
 element.setTable( table );</code></pre>
+
+<h2><a name="Diagram"><a name="DiagramPaletteImage">Diagram Editor Palette Icons</a></a></h2>
+
+<p>Developers can specify up to two icons for a node or connection to be used in diagram editor's palette.
+It compares the icon size and passes the small/large icons respectively to GEF to switch between them using GEF palette's "Use Large Icon"
+context menu.</p>
+
+<pre class="source-code"><code><span class="unaffected">&lt;tool-palette-image&gt;DependsOn-16.png&lt;/tool-palette-image&gt;</span>
+&lt;tool-palette-image&gt;DependsOn-large.png&lt;/tool-palette-image&gt;</code></pre>
 
 
 <div class="copyright">Copyright (c) 2014 Oracle<br/>

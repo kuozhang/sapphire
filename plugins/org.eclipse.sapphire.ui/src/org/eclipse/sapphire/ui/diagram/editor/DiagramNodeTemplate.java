@@ -42,6 +42,7 @@ import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramConnectionDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramExplicitConnectionBindingDef;
 import org.eclipse.sapphire.ui.diagram.def.IDiagramNodeDef;
+import org.eclipse.sapphire.ui.diagram.def.ToolPaletteImageDef;
 import org.eclipse.sapphire.ui.diagram.internal.DiagramEmbeddedConnectionTemplate;
 import org.eclipse.sapphire.util.CollectionsUtil;
 
@@ -80,7 +81,7 @@ public final class DiagramNodeTemplate extends SapphirePart
 	private JavaType modelElementType;
 	private String toolPaletteLabel;
 	private String toolPaletteDesc;
-	private FunctionResult toolPaletteImageFunctionResult;
+	private List<FunctionResult> toolPaletteImageFunctionResults;
 	private DiagramEmbeddedConnectionTemplate embeddedConnTemplate;
 	private Listener modelPropertyListener;
 	private Listener nodePartListener;
@@ -128,20 +129,26 @@ public final class DiagramNodeTemplate extends SapphirePart
             }
         }
 
-        this.toolPaletteImageFunctionResult = initExpression
-        (
-            this.definition.getToolPaletteImage().content(),
-            ImageData.class,
-            null,
-            new Runnable()
-            {
-                public void run()
-                {
-                    broadcast( new ImageChangedEvent( DiagramNodeTemplate.this ) );
-                }
-            }
-        );
-
+        this.toolPaletteImageFunctionResults = new ArrayList<FunctionResult>();
+        List<ToolPaletteImageDef> imageDefs = this.definition.getToolPaletteImages();
+        for (ToolPaletteImageDef imageDef : imageDefs)
+        {
+        	FunctionResult fr = initExpression
+	        (
+	            imageDef.getToolPaletteImage().content(),
+	            ImageData.class,
+	            null,
+	            new Runnable()
+	            {
+	                public void run()
+	                {
+	                    broadcast( new ImageChangedEvent( DiagramNodeTemplate.this ) );
+	                }
+	            }
+	        );
+        	this.toolPaletteImageFunctionResults.add(fr);
+        }
+        
         // Add model property listener
         this.modelPropertyListener = new FilteredListener<PropertyEvent>()
         {
@@ -202,9 +209,14 @@ public final class DiagramNodeTemplate extends SapphirePart
         return this.toolPaletteDesc;
     }
     
-    public ImageData getToolPaletteImage()
+    public List<ImageData> getToolPaletteImages()
     {
-        return (ImageData) this.toolPaletteImageFunctionResult.value();
+    	List<ImageData> imageDatas = new ArrayList<ImageData>();
+    	for (FunctionResult fr : this.toolPaletteImageFunctionResults)
+    	{
+    		imageDatas.add((ImageData)fr.value());
+    	}
+    	return imageDatas;
     }
     
     public String getNodeTypeId()
@@ -424,9 +436,9 @@ public final class DiagramNodeTemplate extends SapphirePart
             this.embeddedConnTemplate.dispose();
         }
         
-        if( this.toolPaletteImageFunctionResult != null )
+        for (FunctionResult fr : this.toolPaletteImageFunctionResults )
         {
-            this.toolPaletteImageFunctionResult.dispose();
+            fr.dispose();
         }
     }
     
