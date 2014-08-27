@@ -23,7 +23,7 @@ public final class IdentityCache<K,V>
     private Map<K,V> map = new IdentityHashMap<K,V>();
     private Map<K,V> next = null;
     
-    public V get( final K key )
+    public synchronized V get( final K key )
     {
         final V value = this.map.get( key );
         
@@ -35,8 +35,7 @@ public final class IdentityCache<K,V>
         return value;
     }
     
-    public void put( final K key,
-                     final V value )
+    public synchronized void put( final K key, final V value )
     {
         if( value == null )
         {
@@ -51,13 +50,18 @@ public final class IdentityCache<K,V>
         this.map.put( key, value );
     }
     
-    public void track()
+    public synchronized void track()
     {
         this.next = new IdentityHashMap<K,V>();
     }
     
-    public void purge()
+    public synchronized void purge()
     {
+        if( this.next == null )
+        {
+            throw new IllegalStateException();
+        }
+        
         this.map = this.next;
         this.next = null;
     }
