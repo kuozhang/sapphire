@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementHandle;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
@@ -225,7 +226,7 @@ public final class PropertyEditorPart extends FormComponentPart
         
         // Listen for PropertyValidationEvent and update property editor's validation.
         
-        if( this.property instanceof ElementList )
+        if( this.property instanceof ElementList || this.property instanceof ElementHandle )
         {
             this.propertyValidationListener = new FilteredListener<PropertyEvent>()
             {
@@ -564,6 +565,15 @@ public final class PropertyEditorPart extends FormComponentPart
             if( this.property instanceof ElementList )
             {
                 for( final Element child : (ElementList<?>) this.property )
+                {
+                    factory.merge( child.validation() );
+                }
+            }
+            else if( this.property instanceof ElementHandle )
+            {
+                final Element child = ( (ElementHandle<?>) this.property ).content();
+                
+                if( child != null )
                 {
                     factory.merge( child.validation() );
                 }
