@@ -221,9 +221,6 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 		
         this.configManager = new DiagramConfigurationManager(this);
         
-        this.diagramPresentation = new DiagramPagePresentation(this.part, this.configManager, Display.getCurrent().getActiveShell());
-        this.diagramModel = new DiagramModel(this.diagramPresentation);
-
 		setEditDomain(new DefaultEditDomain(this));
 		
 		this.part.attach
@@ -622,9 +619,10 @@ public class SapphireDiagramEditor extends GraphicalEditorWithFlyoutPalette impl
 	protected void configureGraphicalViewer() 
 	{
 		super.configureGraphicalViewer();
-				
 		GraphicalViewer viewer = getGraphicalViewer();		
-		
+        this.diagramPresentation = new DiagramPagePresentation(this.part, this.configManager, viewer.getControl().getShell());
+        this.diagramModel = new DiagramModel(this.diagramPresentation);		
+						
 		viewer.setEditPartFactory(new SapphireDiagramEditorEditPartFactory(getConfigurationManager()));
 		
 		viewer.setRootEditPart(new ScalableFreeformRootEditPart()
