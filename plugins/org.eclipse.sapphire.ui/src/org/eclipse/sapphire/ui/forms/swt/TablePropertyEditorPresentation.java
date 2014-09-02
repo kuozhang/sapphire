@@ -27,6 +27,7 @@ import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdvfill;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gdwhint;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glspacing;
+import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.runOnDisplayThread;
 import static org.eclipse.sapphire.ui.forms.swt.SwtUtil.suppressDashedTableEntryBorder;
 import static org.eclipse.sapphire.ui.util.MiscUtil.findSelectionPostDelete;
 import static org.eclipse.sapphire.util.CollectionsUtil.equalsBasedOnEntryIdentity;
@@ -1329,16 +1330,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         
         if( ! this.table.isDisposed() )
         {
-            this.table.getDisplay().asyncExec
-            (
-                new Runnable()
-                {
-                    public void run()
-                    {
-                        update( ( (PropertyEvent) event ).property().element() );
-                    }
-                }
-            );
+            update( ( (PropertyEvent) event ).property().element() );
         }
     }
     
@@ -1527,7 +1519,17 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             throw new IllegalArgumentException();
         }
         
-        this.tableViewer.update( row, null );
+        runOnDisplayThread
+        (
+            new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    TablePropertyEditorPresentation.this.tableViewer.update( row, null );
+                }
+            }
+        );
     }
     
     private Element findTableRowElement( final Element element )
