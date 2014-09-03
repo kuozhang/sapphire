@@ -449,6 +449,12 @@ public final class MasterDetailsContentOutline implements Disposable
         {
             return this.selection;
         }
+
+        @Override
+        public boolean supersedes( final Event event )
+        {
+            return ( event instanceof SelectionChangedEvent );
+        }
     }
     
     public static final class FilterChangedEvent extends Event
