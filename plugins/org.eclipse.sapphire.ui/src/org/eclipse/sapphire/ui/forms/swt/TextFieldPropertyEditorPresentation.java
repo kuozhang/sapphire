@@ -218,7 +218,7 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
             @Override
             public String overlay()
             {
-                String def = property.getDefaultText();
+                String def = property.disposed() ? null : property.getDefaultText();
                 
                 if( def != null && isSensitiveData )
                 {
