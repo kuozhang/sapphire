@@ -326,7 +326,16 @@
         <group>Sapphire.AddDeleteGroup</group>
         <location>after:Sapphire.Delete</location>
     </action>
-       
+    <action>       
+        <id>Sapphire.Diagram.ShowPropertiesPage</id>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
+        <context>Sapphire.Diagram.Connection</context>        
+        <location>after:Sapphire.ShowInShource</location>
+        <label>show in properties view</label>
+    </action>
+   
     <action-handler>
         <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFilePathBrowseActionHandler</impl>
@@ -531,6 +540,15 @@
         <context>Sapphire.Diagram.Header</context>
         <impl>org.eclipse.sapphire.ui.diagram.actions.ZoomActualDiagramActionHandler</impl>
     </action-handler>
+    <action-handler>
+        <action>Sapphire.Diagram.ShowPropertiesPage</action>  
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
+        <context>Sapphire.Diagram.Connection</context>                
+        <impl>org.eclipse.sapphire.ui.diagram.actions.ShowPropertiesPageHandler</impl>
+        <condition>org.eclipse.sapphire.ui.diagram.actions.internal.ShowPropertiesPageCondition</condition>        
+    </action-handler>    
     <action-handler>
         <action>Sapphire.Move.Down</action>
         <impl>org.eclipse.sapphire.ui.diagram.actions.MoveShapeDownActionHandler</impl>
