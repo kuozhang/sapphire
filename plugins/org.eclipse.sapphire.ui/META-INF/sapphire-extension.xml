@@ -179,6 +179,16 @@
         <context>Sapphire.Diagram.Node.Shape</context>
     </action>
     <action>
+        <id>Sapphire.ShowInPropertiesView</id>
+        <label>show in properties view</label>
+        <image>org/eclipse/sapphire/ui/actions/ShowInPropertiesView.png</image>
+        <location>after:Sapphire.ShowInSource</location>
+        <context>Sapphire.Diagram.Editor</context>
+        <context>Sapphire.Diagram.Node</context>
+        <context>Sapphire.Diagram.Node.Shape</context>
+        <context>Sapphire.Diagram.Connection</context>
+    </action>
+    <action>
         <id>Sapphire.Restore.Defaults</id>
         <context>Sapphire.Section</context>
         <label>restore defaults</label>
@@ -326,16 +336,6 @@
         <group>Sapphire.AddDeleteGroup</group>
         <location>after:Sapphire.Delete</location>
     </action>
-    <action>       
-        <id>Sapphire.Diagram.ShowPropertiesPage</id>
-        <context>Sapphire.Diagram.Editor</context>
-        <context>Sapphire.Diagram.Node</context>
-        <context>Sapphire.Diagram.Node.Shape</context>
-        <context>Sapphire.Diagram.Connection</context>        
-        <location>after:Sapphire.ShowInShource</location>
-        <label>show in properties view</label>
-    </action>
-   
     <action-handler>
         <action>Sapphire.Browse</action>
         <impl>org.eclipse.sapphire.ui.forms.swt.AbsoluteFilePathBrowseActionHandler</impl>
@@ -540,13 +540,14 @@
         <context>Sapphire.Diagram.Header</context>
         <impl>org.eclipse.sapphire.ui.diagram.actions.ZoomActualDiagramActionHandler</impl>
     </action-handler>
-    <action-handler>
-        <action>Sapphire.Diagram.ShowPropertiesPage</action>  
+    <action-handler>  
         <context>Sapphire.Diagram.Editor</context>
         <context>Sapphire.Diagram.Node</context>
         <context>Sapphire.Diagram.Node.Shape</context>
         <context>Sapphire.Diagram.Connection</context>                
         <impl>org.eclipse.sapphire.ui.diagram.actions.ShowPropertiesPageHandler</impl>
+        <action>Sapphire.ShowInPropertiesView</action>
+        <id>Sapphire.Diagram.ShowInPropertiesView</id>
         <condition>org.eclipse.sapphire.ui.diagram.actions.internal.ShowPropertiesPageCondition</condition>        
     </action-handler>    
     <action-handler>
