@@ -13,8 +13,11 @@ package org.eclipse.sapphire.ui.diagram.actions;
 
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
+import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.Presentation;
 import org.eclipse.sapphire.ui.SapphireActionHandler;
+import org.eclipse.sapphire.ui.SapphireEditor;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -30,7 +33,12 @@ public class ShowPropertiesPageHandler extends SapphireActionHandler
 	{
 		try
 		{
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.ui.views.PropertySheet");
+			IViewPart propertiesView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.ui.views.PropertySheet");
+			
+			ISapphirePart sapphirePart = getPart();
+			SapphireEditor editor = sapphirePart.nearest(SapphireEditor.class);
+			editor.setFocus();
+			propertiesView.setFocus();
 		}
 		catch (PartInitException e)
 		{
