@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.ui.ISapphirePart;
 import org.eclipse.sapphire.ui.PartValidationEvent;
 import org.eclipse.sapphire.ui.SapphireActionSystem;
@@ -168,4 +169,18 @@ public class ShapePart extends SapphirePart implements PropertiesViewContributor
     	return this.selectionPresentation;
     }
         
+    @Override
+    protected Status computeValidation()
+    {
+        final Status.CompositeStatusFactory factory = Status.factoryForComposite();
+        factory.merge(super.computeValidation());
+        PropertiesViewContributionPart propertiesPage = getPropertiesViewContribution();
+        if (propertiesPage != null)
+        {
+        	factory.merge(propertiesPage.validation());
+        }
+        
+        return factory.create();
+    }
+    
 }

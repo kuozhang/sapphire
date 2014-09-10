@@ -183,20 +183,13 @@ public class ContainerShapePart extends ShapePart
     protected Status computeValidation()
     {
         final Status.CompositeStatusFactory factory = Status.factoryForComposite();
-        factory.merge(this.modelElement.validation());
+        factory.merge(super.computeValidation());
 
         for( SapphirePart child : this.children )
         {
         	if (!(child instanceof ValidationMarkerPart))
         	{
         		factory.merge( child.validation() );
-        		if (child instanceof PropertiesViewContributorPart)
-        		{
-        			if (((PropertiesViewContributorPart)child).getPropertiesViewContribution() != null)
-        			{
-        				factory.merge(((PropertiesViewContributorPart)child).getPropertiesViewContribution().validation());
-        			}
-        		}
         	}
         }
         
