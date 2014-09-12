@@ -79,6 +79,7 @@ public interface Column extends Element
 	@XmlBinding( path = "size" )
 	@NumericRange( min = "1" )
 	@Enablement( expr = "${ Type == 'STRING' }" )
+	@Required
 	
 	ValueProperty PROP_SIZE = new ValueProperty( TYPE, "Size" );
 	
