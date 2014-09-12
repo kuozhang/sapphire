@@ -708,7 +708,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                             {
                                 TablePropertyEditorPresentation.this.refreshOperation.run();
                                 
-                                final TableRow row = TablePropertyEditorPresentation.this.rows.get( newListElement );
+                                final TableRow row = findTableRow( newListElement );
                                 
                                 TablePropertyEditorPresentation.this.tableViewer.setSelection( new StructuredSelection( row ), true );
                                 
@@ -1232,7 +1232,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             
             for( Element element : elements )
             {
-                final TableRow row = this.rows.get( element );
+                final TableRow row = findTableRow( element );
                 
                 if( row != null )
                 {
@@ -1492,7 +1492,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             
             while( row == null && el != null && el != root )
             {
-                row = this.rows.get( el );
+                row = findTableRow( el );
                 
                 if( row == null )
                 {
@@ -1543,6 +1543,16 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
         }
         
         return result;
+    }
+    
+    private TableRow findTableRow( final Element element )
+    {
+        if( element == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        return this.rows.get( element );
     }
     
     public static final class Factory extends PropertyEditorPresentationFactory
@@ -2288,7 +2298,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             final Element element = getSelectedElement();
 
             list().moveUp( element );
-            TablePropertyEditorPresentation.this.tableViewer.reveal( element );
+            TablePropertyEditorPresentation.this.tableViewer.reveal( findTableRow( element ) );
             
             return null;
         }
@@ -2318,7 +2328,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             final Element element = getSelectedElement();
 
             list().moveDown( element );
-            TablePropertyEditorPresentation.this.tableViewer.reveal( element );
+            TablePropertyEditorPresentation.this.tableViewer.reveal( findTableRow( element ) );
             
             return null;
         }
