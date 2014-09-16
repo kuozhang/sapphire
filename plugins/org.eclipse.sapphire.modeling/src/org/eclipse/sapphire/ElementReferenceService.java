@@ -114,7 +114,11 @@ public abstract class ElementReferenceService extends ReferenceService<Element>
         {
             if( this.list != null )
             {
-                this.list.detach( this.listener, this.key );
+                if( ! this.list.disposed() )
+                {
+                    this.list.detach( this.listener, this.key );
+                }
+                
                 this.list = null;
             }
 
