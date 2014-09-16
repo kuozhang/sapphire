@@ -84,16 +84,23 @@ public final class ElementReferencePossibleValuesService extends PossibleValuesS
 
             this.list = list;
             this.key = key;
-            this.list.attach( this.listListener, this.key );
+            
+            if( this.list != null )
+            {
+                this.list.attach( this.listListener, this.key );
+            }
         }
         
-        for( final Element element : this.list )
+        if( this.list != null )
         {
-            final String text = ( (Value<?>) element.property( this.key ) ).text();
-            
-            if( text != null )
+            for( final Element element : this.list )
             {
-                values.add( text );
+                final String text = ( (Value<?>) element.property( this.key ) ).text();
+                
+                if( text != null )
+                {
+                    values.add( text );
+                }
             }
         }
     }
