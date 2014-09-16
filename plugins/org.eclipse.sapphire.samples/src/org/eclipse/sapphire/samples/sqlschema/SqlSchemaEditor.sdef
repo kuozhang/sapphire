@@ -245,6 +245,35 @@
                         <property-editor>Name</property-editor>
                     </content>
                 </page>
+                <page>
+                    <label>foreign keys</label>
+                    <content>
+                        <property-editor>
+                            <show-label>false</show-label>
+                            <property>ForeignKeys</property>
+                            <span>true</span>
+                            <scale-vertically>true</scale-vertically>
+                        </property-editor>
+                        <separator>
+                            <label>column associations</label>
+                        </separator>
+                        <detail-section>
+                            <case>
+                                <content>
+                                    <property-editor>
+                                        <show-label>false</show-label>
+                                        <property>ColumnAssociations</property>
+                                        <span>true</span>
+                                        <scale-vertically>true</scale-vertically>
+                                    </property-editor>
+                                </content>
+                            </case>
+                            <property>ForeignKeys</property>
+                            <scale-vertically>true</scale-vertically>
+                        </detail-section>
+                    </content>
+                    <image>ForeignKey.gif</image>
+                </page>
             </properties-view>
         </node>
         <connection>
@@ -288,7 +317,6 @@
                 <label>Tables</label>
                 <section>
                   <content>
-                    <label>tables</label>
                     <label>Define tables.</label>
                     <spacer></spacer>
                     <actuator>
@@ -315,10 +343,36 @@
                                         <name>column.widths</name>
                                         <value>100:40,100:40,100:20</value>
                                     </hint>
-                                </property-editor>                                
-                                <property-editor>ForeignKeys</property-editor>
+                                </property-editor>
                             </content>
                         </section>
+                        <node>
+                            <label>foreign keys</label>
+                            <section>
+                                <content>
+                                    <property-editor>
+                                        <show-label>false</show-label>
+                                        <property>ForeignKeys</property>
+                                        <span>true</span>
+                                    </property-editor>
+                                    <separator>
+                                        <label>column associations</label>
+                                    </separator>
+                                    <detail-section>
+                                        <case>
+                                            <content>
+                                                <property-editor>
+                                                    <show-label>false</show-label>
+                                                    <property>ColumnAssociations</property>
+                                                    <span>true</span>
+                                                </property-editor>
+                                            </content>
+                                        </case>
+                                        <property>ForeignKeys</property>
+                                    </detail-section>
+                                </content>
+                            </section>
+                        </node>
                     </case>
                 </node-factory>
             </node>
