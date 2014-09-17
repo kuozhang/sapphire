@@ -50,7 +50,6 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
 {
     private DiagramNodeTemplate nodeTemplate;
     private Map<Element, List<StandardDiagramConnectionPart>> diagramConnectionMap;
-    private Listener modelElementListener;
     private ModelPath endpointPath;
         
     public DiagramEmbeddedConnectionTemplate(IDiagramExplicitConnectionBindingDef connBindingDef)
@@ -82,16 +81,7 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
             {
                 handleModelPropertyChange( event );
             }
-        };
-        
-        this.modelElementListener = new FilteredListener<ElementDisposeEvent>() 
-        {
-            @Override
-            protected void handleTypedEvent( final ElementDisposeEvent event )
-            {
-                handleModelElementDispose(event);
-            }
-        };
+        };        
         
         String endpointPropStr = this.bindingDef.getEndpoint2().content().getProperty().content();
         this.endpointPath = new ModelPath(endpointPropStr);
@@ -240,13 +230,11 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     public void addModelListener(Element srcNodeModel)
     {
         srcNodeModel.attach(this.modelPropertyListener, this.propertyName);
-        srcNodeModel.attach(this.modelElementListener);
     }
     
     public void removeModelListener(Element srcNodeModel)
     {
         srcNodeModel.detach(this.modelPropertyListener, this.propertyName);
-        srcNodeModel.detach(this.modelElementListener);
     } 
     
     @Override
@@ -338,21 +326,5 @@ public class DiagramEmbeddedConnectionTemplate extends DiagramConnectionTemplate
     {
     	return ConnectionType.Embedded;
     }
-    
-    private void handleModelElementDispose(final ElementDisposeEvent event)
-    {
-        Element element = event.element();
-        List<StandardDiagramConnectionPart> connParts = getDiagramConnections(null);
         
-        for (StandardDiagramConnectionPart connPart : connParts)
-        {
-            if (connPart.getEndpoint1() == element || connPart.getEndpoint2() == element)
-            {
-                notifyConnectionDeleteEvent(new ConnectionDeleteEvent(connPart));
-                disposeConnectionPart(connPart);
-            }
-        }
-        removeModelListener(element);
-    } 
-    
 }
