@@ -170,7 +170,7 @@ public interface Element extends Observable, Disposable
     void clear();
     
     /**
-     * Copies all properties of the provided source element to this element. The source element does not
+     * Copies all properties from the provided source element to this element. The source element does not
      * have to be of the same type as target. Only properties that match on name and type will be copied.
      * 
      * @param source the element to copy from
@@ -180,6 +180,19 @@ public interface Element extends Observable, Disposable
     
     void copy( Element source );
     
+    /**
+     * Copies all properties from the provided source element data to this element. The source element data
+     * does not have to be of the same type as target. Any property that is not found in source or is of the wrong
+     * type, will be cleared in target.
+     * 
+     * @since 8.1
+     * @param source the element data to copy from
+     * @throws IllegalArgumentException if source is null
+     * @throws IllegalStateException if this element is already disposed
+     */
+    
+    void copy( ElementData source );
+
     /**
      * Returns the service of the specified type from the element instance service context.
      * 

@@ -19,12 +19,15 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementData;
 import org.eclipse.sapphire.ElementHandle;
-import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.Property;
+import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
@@ -163,14 +166,14 @@ public final class ElementsTransfer extends ByteArrayTransfer
         
         try
         {
-            final ListFactory<Element> elementsListFactory = ListFactory.start();
+            final ListFactory<ElementData> elementsListFactory = ListFactory.start();
             final int size = in.readInt();
             
             for( int i = 0; i < size; i++ )
             {
                 final String qualifiedTypeName = in.readUTF();
                 final ElementType type = ElementType.read( this.classLoader, qualifiedTypeName );
-                final Element element = type.instantiate();
+                final ElementData element = new ElementData( type );
                 nativeToJava( in, element );
                 elementsListFactory.add( element );
             }
@@ -183,43 +186,43 @@ public final class ElementsTransfer extends ByteArrayTransfer
         }
     }
     
-    private void nativeToJava( final DataInputStream in,
-                               final Element element )
-    
-        throws IOException
-        
+    private void nativeToJava( final DataInputStream in, final ElementData element ) throws IOException
     {
         while( in.readByte() != 0 )
         {
             final String propertyName = in.readUTF();
-            final Property property = element.property( propertyName );
+            final PropertyDef property = element.type().property( propertyName );
 
             if( property != null )
             {
-                if( property instanceof Value )
+                if( property instanceof ValueProperty )
                 {
                     final String value = in.readUTF();
-                    ( (Value<?>) property ).write( value );
+                    element.write( propertyName, value );
                 }
-                else if( property instanceof ElementHandle )
+                else if( property instanceof ElementProperty )
                 {
                     final String qualifiedTypeName = in.readUTF();
                     final ElementType type = ElementType.read( this.classLoader, qualifiedTypeName );
-                    final Element child = ( (ElementHandle<?>) property ).content( true, type );
+                    final ElementData child = new ElementData( type );
+                    element.write( propertyName, child );
                     nativeToJava( in, child );
                 }
-                else if( property instanceof ElementList )
+                else if( property instanceof ListProperty )
                 {
-                    final ElementList<?> list = (ElementList<?>) property;
+                    final ListFactory<ElementData> listFactory = ListFactory.start();
                     final int size = in.readInt();
                     
                     for( int i = 0; i < size; i++ )
                     {
                         final String qualifiedTypeName = in.readUTF();
                         final ElementType type = ElementType.read( this.classLoader, qualifiedTypeName );
-                        final Element child = list.insert( type );
+                        final ElementData child = new ElementData( type );
+                        listFactory.add( child );
                         nativeToJava( in, child );
                     }
+                    
+                    element.write( propertyName, listFactory.result() );
                 }
             }
         }

@@ -70,6 +70,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.sapphire.DisposeEvent;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementData;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Event;
@@ -985,10 +986,10 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                                 return;
                             }
                             
-                            final List<Element> droppedElements = (List<Element>) event.data;
+                            final List<ElementData> droppedElements = (List<ElementData>) event.data;
                             final Set<ElementType> possibleTypesService = property.service( PossibleTypesService.class ).types();
                             
-                            for( Element droppedElement : droppedElements )
+                            for( final ElementData droppedElement : droppedElements )
                             {
                                 if( ! possibleTypesService.contains( droppedElement.type() ) )
                                 {
@@ -1041,7 +1042,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
             
                                 final List<Element> newSelection = new ArrayList<Element>();
                                 
-                                for( Element droppedElement : droppedElements )
+                                for( final ElementData droppedElement : droppedElements )
                                 {
                                     final Element insertedElement = list.insert( droppedElement.type(), position );
                                     insertedElement.copy( droppedElement );

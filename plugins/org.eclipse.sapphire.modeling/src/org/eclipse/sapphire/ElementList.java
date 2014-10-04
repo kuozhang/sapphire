@@ -475,6 +475,43 @@ public final class ElementList<T extends Element> extends Property implements Li
         }
     }
 
+    @Override
+    public void copy( final ElementData source )
+    {
+        synchronized( root() )
+        {
+            init();
+            refreshContent( true );
+            ensureNotReadOnly();
+            
+            if( source == null )
+            {
+                throw new IllegalArgumentException();
+            }
+        
+            final Object content = source.read( name() );
+            
+            clear$();
+            
+            if( content instanceof List )
+            {
+                final SortedSet<ElementType> possibleTypes = service( PossibleTypesService.class ).types();
+                
+                for( final Object item : (List<?>) content )
+                {
+                    final ElementData sourceChildElementData = (ElementData) item ;
+                    final ElementType sourceChildElementType = sourceChildElementData.type();
+                    
+                    if( possibleTypes.contains( sourceChildElementType ) )
+                    {
+                        final Element targetChildElement = insert$( sourceChildElementData.type(), size$() );
+                        targetChildElement.copy( sourceChildElementData );
+                    }
+                }
+            }
+        }
+    }
+
     public void move( final Element element, final int position )
     {
         synchronized( root() )

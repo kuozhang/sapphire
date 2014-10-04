@@ -9,9 +9,8 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0012;
+package org.eclipse.sapphire.tests.element;
 
-import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
@@ -20,15 +19,15 @@ import org.eclipse.sapphire.ValueProperty;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElementChild extends Element
+public interface CopyTestElementChildEx extends CopyTestElementChild
 {
-    ElementType TYPE = new ElementType( TestElementChild.class );
+    ElementType TYPE = new ElementType( CopyTestElementChildEx.class );
     
-    // *** ValueProperty1 ***
+    // *** ValueProperty2 ***
     
-    ValueProperty PROP_VALUE_PROPERTY_1 = new ValueProperty( TYPE, "ValueProperty1" );
+    ValueProperty PROP_VALUE_PROPERTY_2 = new ValueProperty( TYPE, "ValueProperty2" );
     
-    Value<String> getValueProperty1();
-    void setValueProperty1( String value );
+    Value<String> getValueProperty2();
+    void setValueProperty2( String value );
 
 }

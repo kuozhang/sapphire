@@ -63,6 +63,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.sapphire.Disposable;
 import org.eclipse.sapphire.Element;
+import org.eclipse.sapphire.ElementData;
 import org.eclipse.sapphire.ElementList;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.EventDeliveryJob;
@@ -1326,7 +1327,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                     
                     // Determine where something was dropped.
                     
-                    final List<Element> droppedElements = (List<Element>) event.data;
+                    final List<ElementData> droppedElements = (List<ElementData>) event.data;
                     final TreeItem dropTargetItem = (TreeItem) event.item;
                     final MasterDetailsContentNodePart dropTargetNode = (MasterDetailsContentNodePart) dropTargetItem.getData();
                     final MasterDetailsContentNodePart parentNode = dropTargetNode.getParentNode();
@@ -1383,7 +1384,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             
                             final Set<ElementType> possibleListElementTypes = list.definition().service( PossibleTypesService.class ).types();
                             
-                            for( Element droppedElement : droppedElements )
+                            for( final ElementData droppedElement : droppedElements )
                             {
                                 if( ! possibleListElementTypes.contains( droppedElement.type() ) )
                                 {
@@ -1410,7 +1411,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                             
                             final Set<ElementType> possibleListElementTypes = list.definition().service( PossibleTypesService.class ).types();
                             
-                            for( Element droppedElement : droppedElements )
+                            for( final ElementData droppedElement : droppedElements )
                             {
                                 if( ! possibleListElementTypes.contains( droppedElement.type() ) )
                                 {
@@ -1438,7 +1439,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                                 
                                 final Set<ElementType> possibleListElementTypes = dropTargetChildListProperty.service( PossibleTypesService.class ).types();
                                 
-                                for( Element droppedElement : droppedElements )
+                                for( final ElementData droppedElement : droppedElements )
                                 {
                                     if( ! possibleListElementTypes.contains( droppedElement.type() ) )
                                     {
@@ -1499,7 +1500,7 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
     
                         final List<MasterDetailsContentNodePart> newSelection = new ArrayList<MasterDetailsContentNodePart>();
                         
-                        for( Element droppedElement : droppedElements )
+                        for( final ElementData droppedElement : droppedElements )
                         {
                             final Element insertedElement = list.insert( droppedElement.type(), position );
                             insertedElement.copy( droppedElement );

@@ -11,7 +11,11 @@
 
 package org.eclipse.sapphire.tests.element;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.sapphire.Disposable;
+import org.eclipse.sapphire.ElementData;
 import org.eclipse.sapphire.tests.EventLog;
 import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.junit.Test;
@@ -186,6 +190,181 @@ public final class ElementTests extends SapphireTestCase
         {
             a.dispose();
         }
+    }
+
+    @Test
+    
+    public void CopyElement() throws Exception
+    {
+        final CopyTestElementRoot a = CopyTestElementRoot.TYPE.instantiate();
+        CopyTestElementChild ac1;
+        CopyTestElementChildEx ac2;
+        
+        a.setValueProperty1( "abc" );
+        a.setValueProperty2( 5 );
+        a.setValueProperty3( (String) null );
+        
+        ac1 = a.getImpliedElementProperty1();
+        ac1.setValueProperty1( "implied-1" );
+        
+        ac2 = a.getImpliedElementProperty2();
+        ac2.setValueProperty1( "implied-2-a" );
+        ac2.setValueProperty2( "implied-2-b" );
+        
+        ac1 = a.getElementProperty1().content( true );
+        ac1.setValueProperty1( "element-1" );
+        
+        ac2 = (CopyTestElementChildEx) a.getElementProperty2().content( true, CopyTestElementChildEx.TYPE );
+        ac2.setValueProperty1( "element-2-a" );
+        ac2.setValueProperty2( "element-2-b" );
+        
+        ac1 = a.getListProperty1().insert();
+        ac1.setValueProperty1( "list-1-a" );
+        
+        ac1 = a.getListProperty1().insert();
+        ac1.setValueProperty1( "list-1-b" );
+        
+        ac1 = a.getListProperty1().insert();
+        ac1.setValueProperty1( "list-1-c" );
+        
+        ac1 = a.getListProperty2().insert( CopyTestElementChild.TYPE );
+        ac1.setValueProperty1( "list-2-a" );
+
+        ac2 = (CopyTestElementChildEx) a.getListProperty2().insert( CopyTestElementChildEx.TYPE );
+        ac2.setValueProperty1( "list-2-b-a" );
+        ac2.setValueProperty2( "list-2-b-b" );
+        
+        ac2 = (CopyTestElementChildEx) a.getListProperty2().insert( CopyTestElementChildEx.TYPE );
+        ac2.setValueProperty1( "list-2-c-a" );
+        ac2.setValueProperty2( "list-2-c-b" );
+        
+        final Object t = new Object();
+        a.setTransientProperty( t );
+        
+        final CopyTestElementRoot b = CopyTestElementRoot.TYPE.instantiate();
+        b.copy( a );
+        
+        assertEquals( b.getValueProperty1().text( false ), "abc" );
+        assertEquals( b.getValueProperty2().text( false ), "5" );
+        assertEquals( b.getValueProperty3().text( false ), null );
+        
+        assertEquals( b.getImpliedElementProperty1().getValueProperty1().text( false ), "implied-1" );
+        assertEquals( b.getImpliedElementProperty2().getValueProperty1().text( false ), "implied-2-a" );
+        assertEquals( b.getImpliedElementProperty2().getValueProperty2().text( false ), "implied-2-b" );
+        
+        assertEquals( b.getElementProperty1().content().getValueProperty1().text( false ), "element-1" );
+        assertEquals( ( (CopyTestElementChildEx) b.getElementProperty2().content() ).getValueProperty1().text( false ), "element-2-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getElementProperty2().content() ).getValueProperty2().text( false ), "element-2-b" );
+        
+        assertEquals( b.getListProperty1().size(), 3 );
+        assertEquals( b.getListProperty1().get( 0 ).getValueProperty1().text( false ), "list-1-a" );
+        assertEquals( b.getListProperty1().get( 1 ).getValueProperty1().text( false ), "list-1-b" );
+        assertEquals( b.getListProperty1().get( 2 ).getValueProperty1().text( false ), "list-1-c" );
+        
+        assertEquals( b.getListProperty2().size(), 3 );
+        assertEquals( b.getListProperty2().get( 0 ).getValueProperty1().text( false ), "list-2-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 1 ) ).getValueProperty1().text( false ), "list-2-b-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 1 ) ).getValueProperty2().text( false ), "list-2-b-b" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 2 ) ).getValueProperty1().text( false ), "list-2-c-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 2 ) ).getValueProperty2().text( false ), "list-2-c-b" );
+        
+        assertEquals( b.getTransientProperty().content(), t );
+    }
+
+    @Test
+    
+    public void CopyElementData() throws Exception
+    {
+        final ElementData a = new ElementData( CopyTestElementRoot.TYPE );
+        ElementData ac1;
+        ElementData ac2;
+        List<ElementData> list;
+        
+        a.write( "ValueProperty1", "abc" );
+        a.write( "ValueProperty2", 5 );
+        a.write( "ValueProperty3", null );
+        
+        ac1 = new ElementData( CopyTestElementChild.TYPE );
+        a.write( "ImpliedElementProperty1", ac1 );
+        ac1.write( "ValueProperty1", "implied-1" );
+        
+        ac2 = new ElementData( CopyTestElementChildEx.TYPE );
+        a.write( "ImpliedElementProperty2", ac2 );
+        ac2.write( "ValueProperty1", "implied-2-a" );
+        ac2.write( "ValueProperty2", "implied-2-b" );
+        
+        ac1 = new ElementData( CopyTestElementChild.TYPE );
+        a.write( "ElementProperty1", ac1 );
+        ac1.write( "ValueProperty1", "element-1" );
+        
+        ac2 = new ElementData( CopyTestElementChildEx.TYPE );
+        a.write( "ElementProperty2", ac2 );
+        ac2.write( "ValueProperty1", "element-2-a" );
+        ac2.write( "ValueProperty2", "element-2-b" );
+        
+        list = new ArrayList<ElementData>();
+        a.write( "ListProperty1", list );
+        
+        ac1 = new ElementData( CopyTestElementChild.TYPE );
+        list.add( ac1 );
+        ac1.write( "ValueProperty1", "list-1-a" );
+        
+        ac1 = new ElementData( CopyTestElementChild.TYPE );
+        list.add( ac1 );
+        ac1.write( "ValueProperty1", "list-1-b" );
+        
+        ac1 = new ElementData( CopyTestElementChild.TYPE );
+        list.add( ac1 );
+        ac1.write( "ValueProperty1", "list-1-c" );
+        
+        list = new ArrayList<ElementData>();
+        a.write( "ListProperty2", list );
+        
+        ac1 = new ElementData( CopyTestElementChild.TYPE );
+        list.add( ac1 );
+        ac1.write( "ValueProperty1", "list-2-a" );
+
+        ac2 = new ElementData( CopyTestElementChildEx.TYPE );
+        list.add( ac2 );
+        ac2.write( "ValueProperty1", "list-2-b-a" );
+        ac2.write( "ValueProperty2", "list-2-b-b" );
+        
+        ac2 = new ElementData( CopyTestElementChildEx.TYPE );
+        list.add( ac2 );
+        ac2.write( "ValueProperty1", "list-2-c-a" );
+        ac2.write( "ValueProperty2", "list-2-c-b" );
+        
+        final Object t = new Object();
+        a.write( "TransientProperty", t );
+        
+        final CopyTestElementRoot b = CopyTestElementRoot.TYPE.instantiate();
+        b.copy( a );
+        
+        assertEquals( b.getValueProperty1().text( false ), "abc" );
+        assertEquals( b.getValueProperty2().text( false ), "5" );
+        assertEquals( b.getValueProperty3().text( false ), null );
+        
+        assertEquals( b.getImpliedElementProperty1().getValueProperty1().text( false ), "implied-1" );
+        assertEquals( b.getImpliedElementProperty2().getValueProperty1().text( false ), "implied-2-a" );
+        assertEquals( b.getImpliedElementProperty2().getValueProperty2().text( false ), "implied-2-b" );
+        
+        assertEquals( b.getElementProperty1().content().getValueProperty1().text( false ), "element-1" );
+        assertEquals( ( (CopyTestElementChildEx) b.getElementProperty2().content() ).getValueProperty1().text( false ), "element-2-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getElementProperty2().content() ).getValueProperty2().text( false ), "element-2-b" );
+        
+        assertEquals( b.getListProperty1().size(), 3 );
+        assertEquals( b.getListProperty1().get( 0 ).getValueProperty1().text( false ), "list-1-a" );
+        assertEquals( b.getListProperty1().get( 1 ).getValueProperty1().text( false ), "list-1-b" );
+        assertEquals( b.getListProperty1().get( 2 ).getValueProperty1().text( false ), "list-1-c" );
+        
+        assertEquals( b.getListProperty2().size(), 3 );
+        assertEquals( b.getListProperty2().get( 0 ).getValueProperty1().text( false ), "list-2-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 1 ) ).getValueProperty1().text( false ), "list-2-b-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 1 ) ).getValueProperty2().text( false ), "list-2-b-b" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 2 ) ).getValueProperty1().text( false ), "list-2-c-a" );
+        assertEquals( ( (CopyTestElementChildEx) b.getListProperty2().get( 2 ) ).getValueProperty2().text( false ), "list-2-c-b" );
+        
+        assertEquals( b.getTransientProperty().content(), t );
     }
 
 }

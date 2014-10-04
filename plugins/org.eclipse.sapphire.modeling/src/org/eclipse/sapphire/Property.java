@@ -412,7 +412,21 @@ public abstract class Property implements Observable
      * @throws IllegalStateException if this property or the source element is already disposed
      */
     
-    public abstract void copy( final Element source );
+    public abstract void copy( Element source );
+    
+    /**
+     * Copies property content from the provided source element data. The source element data does not
+     * have to be of the same type as target. Any property that is not found in source or is of the wrong
+     * type, will be cleared in target.
+     * 
+     * @since 8.1
+     * @param source the element to copy from
+     * @throws IllegalArgumentException if source is null
+     * @throws UnsupportedOperationException if this property is read-only
+     * @throws IllegalStateException if this property is already disposed
+     */
+    
+    public abstract void copy( ElementData source );
     
     /**
      * Determines if this property is empty. The empty state is defined as follows:
