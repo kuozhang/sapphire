@@ -133,6 +133,28 @@ public final class Transient<T> extends Property
     }
     
     @Override
+    @SuppressWarnings( "unchecked" )
+    
+    public void copy( final ElementData source )
+    {
+        if( source == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final Object content = source.read( name() );
+        
+        if( definition().getTypeClass().isInstance( content ) )
+        {
+            write( (T) content );
+        }
+        else
+        {
+            clear();
+        }
+    }
+    
+    @Override
     
     public boolean holds( final Element element )
     {

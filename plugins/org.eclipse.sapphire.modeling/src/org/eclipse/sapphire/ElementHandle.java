@@ -454,6 +454,52 @@ public final class ElementHandle<T extends Element> extends Property
     }
     
     @Override
+    public void copy( final ElementData source )
+    {
+        init();
+        
+        refreshContent( true );
+        
+        if( source == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition().isReadOnly() )
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        final Object content = source.read( name() );
+        boolean copied = false;
+        
+        if( content instanceof ElementData )
+        {
+            final ElementData sourceChildElementData = (ElementData) content;
+            final ElementType sourceChildElementType = sourceChildElementData.type();
+            
+            if( service( PossibleTypesService.class ).types().contains( sourceChildElementType ) )
+            {
+                if( definition() instanceof ImpliedElementProperty )
+                {
+                    content().copy( sourceChildElementData );
+                }
+                else
+                {
+                    content( true, sourceChildElementType ).copy( sourceChildElementData );
+                }
+                
+                copied = true;
+            }
+        }
+        
+        if( ! copied )
+        {
+            clear();
+        }
+    }
+    
+    @Override
     public String toString()
     {
         final T content = content();

@@ -1,0 +1,173 @@
+<!-- 
+ ******************************************************************************
+ * Copyright (c) 2014 Oracle
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ ******************************************************************************
+-->
+
+<html>
+
+<head>
+  <title>Enhancements in Sapphire 8.1</title>
+  <link rel="StyleSheet" href="../../style.css" TYPE="text/css"/>
+  <style type="text/css">
+    pre.source-code-compare 
+    {
+      font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace; 
+      color: #000000;
+      background-color: #ffffff;
+      font-size: 12px;
+      border: 0px;
+      line-height: 14px;
+      padding: 5px;
+      margin-left: 0px;
+      margin-right: 0px;
+      overflow: auto
+    }
+    .unaffected
+    {
+      color: #888888
+    }
+    .comment
+    {
+      color: #006600;
+      font-style: italic
+    }
+    .javadoc
+    {
+      color: #7F7F9F
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Enhancements in Sapphire 8.1</h1>
+
+<ol>
+  <li><a href="#ElementData">ElementData</a></li>
+</ol>
+
+
+<h2><a name="ElementData">ElementData</a></h2>
+
+<p>Sometimes one needs to represent in memory the content of an element without creating an element instance. Besides the issue
+of efficiency, some elements simply cannot be instantiated outside of their model because their services depend on the surrounding
+context. The new ElementData class provides a data structure for this purpose.</p> 
+
+<pre class="source-code"><code><span class="javadoc">/**
+ * A light-weight container for element content. It does not provide the rich facilities of an actual
+ * element in a model, but can be useful when element content needs to be represented in memory without
+ * adding it to a model (at least not immediately). 
+ * 
+ * @since 8.1
+ */</span>
+
+public final class ElementData
+{
+    <span class="javadoc">/**
+     * Creates a new {@link ElementData} object.
+     * 
+     * @param type the element type
+     * @throws IllegalArgumentException if element type is null
+     */</span>
+    
+    public ElementData( ElementType type )
+    
+    <span class="javadoc">/**
+     * Returns the element type.
+     */</span>
+    
+    public ElementType type()
+    
+    <span class="javadoc">/**
+     * Reads a property.
+     * 
+     * @param property the property name
+     * @return the property content or null
+     * @throws IllegalArgumentException if property is null
+     */</span>
+    
+    public Object read( String property )
+    
+    <span class="javadoc">/**
+     * Writes a property.
+     * 
+     * @param property the property name
+     * @param content the property content
+     * @throws IllegalArgumentException if property is null
+     */</span>
+    
+    public void write( String property, Object content )
+}</code></pre>
+
+<pre class="source-code"><code><span class="unaffected">public interface Element
+{
+    /**
+     * Copies all properties from the provided source element to this element. The source element does not
+     * have to be of the same type as target. Only properties that match on name and type will be copied.
+     * 
+     * @param source the element to copy from
+     * @throws IllegalArgumentException if source is null
+     * @throws IllegalStateException if this element or the source element is already disposed
+     */
+    
+    void copy( Element source )</span>
+    
+    <span class="javadoc">/**
+     * Copies all properties from the provided source element data to this element. The source element data
+     * does not have to be of the same type as target. Any property that is not found in source or is of the wrong
+     * type, will be cleared in target.
+     * 
+     * @since 8.1
+     * @param source the element data to copy from
+     * @throws IllegalArgumentException if source is null
+     * @throws IllegalStateException if this element is already disposed
+     */</span>
+    
+    void copy( ElementData source )
+<span class="unaffected">}</span></code></pre>
+
+<pre class="source-code"><code><span class="unaffected">public abstract class Property
+{
+    /**
+     * Copies property content from the provided source element. The source element does not have to
+     * be of the same type as target. The copy will happen if the source element has a property with
+     * the same name and type as this property. Otherwise, no change will be performed.
+     * 
+     * @param source the element to copy from
+     * @throws IllegalArgumentException if source is null
+     * @throws UnsupportedOperationException if this property is read-only
+     * @throws IllegalStateException if this property or the source element is already disposed
+     */
+    
+    public abstract void copy( Element source )</span>
+    
+    <span class="javadoc">/**
+     * Copies property content from the provided source element data. The source element data does not
+     * have to be of the same type as target. Any property that is not found in source or is of the wrong
+     * type, will be cleared in target.
+     * 
+     * @since 8.1
+     * @param source the element to copy from
+     * @throws IllegalArgumentException if source is null
+     * @throws UnsupportedOperationException if this property is read-only
+     * @throws IllegalStateException if this property is already disposed
+     */</span>
+    
+    public abstract void copy( ElementData source )
+<span class="unaffected">}</span></code></pre>
+
+
+<div class="copyright">Copyright (c) 2014 Oracle<br/>
+Content made available under the terms of <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License</a>.</div>
+
+</body>
+
+</html>

@@ -498,6 +498,35 @@ public class Value<T> extends Property
         {
             write( ( (Value<?>) p ).text( false ) );
         }
+        else
+        {
+            clear();
+        }
+    }
+    
+    @Override
+    public final void copy( final ElementData source )
+    {
+        if( source == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( definition().isReadOnly() )
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        final Object content = source.read( name() );
+        
+        if( content != null )
+        {
+            write( content.toString() );
+        }
+        else
+        {
+            clear();
+        }
     }
     
     @Override

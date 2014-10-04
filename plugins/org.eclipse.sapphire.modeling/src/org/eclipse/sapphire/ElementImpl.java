@@ -688,7 +688,25 @@ public abstract class ElementImpl implements Element
             throw new IllegalArgumentException();
         }
         
-        for( Property property : properties() )
+        for( final Property property : properties() )
+        {
+            if( ! property.definition().isReadOnly() )
+            {
+                property.copy( source );
+            }
+        }
+    }
+
+    public final void copy( final ElementData source )
+    {
+        assertNotDisposed();
+
+        if( source == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        for( final Property property : properties() )
         {
             if( ! property.definition().isReadOnly() )
             {

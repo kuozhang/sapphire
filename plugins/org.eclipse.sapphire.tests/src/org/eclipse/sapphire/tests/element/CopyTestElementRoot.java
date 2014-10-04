@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.tests.modeling.misc.t0012;
+package org.eclipse.sapphire.tests.element;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
@@ -29,9 +29,9 @@ import org.eclipse.sapphire.modeling.annotations.Type;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public interface TestElementRoot extends Element
+public interface CopyTestElementRoot extends Element
 {
-    ElementType TYPE = new ElementType( TestElementRoot.class );
+    ElementType TYPE = new ElementType( CopyTestElementRoot.class );
     
     // *** ValueProperty1 ***
     
@@ -63,51 +63,51 @@ public interface TestElementRoot extends Element
     
     // *** ImpliedElementProperty1 ***
     
-    @Type( base = TestElementChild.class )
+    @Type( base = CopyTestElementChild.class )
     
     ImpliedElementProperty PROP_IMPLIED_ELEMENT_PROPERTY_1 = new ImpliedElementProperty( TYPE, "ImpliedElementProperty1" );
     
-    TestElementChild getImpliedElementProperty1();
+    CopyTestElementChild getImpliedElementProperty1();
     
     // *** ImpliedElementProperty2 ***
     
-    @Type( base = TestElementChildEx.class )
+    @Type( base = CopyTestElementChildEx.class )
     
     ImpliedElementProperty PROP_IMPLIED_ELEMENT_PROPERTY_2 = new ImpliedElementProperty( TYPE, "ImpliedElementProperty2" );
     
-    TestElementChildEx getImpliedElementProperty2();
+    CopyTestElementChildEx getImpliedElementProperty2();
     
     // *** ElementProperty1 ***
     
-    @Type( base = TestElementChild.class )
+    @Type( base = CopyTestElementChild.class )
     
     ElementProperty PROP_ELEMENT_PROPERTY_1 = new ElementProperty( TYPE, "ElementProperty1" );
     
-    ElementHandle<TestElementChild> getElementProperty1();
+    ElementHandle<CopyTestElementChild> getElementProperty1();
     
     // *** ElementProperty2 ***
     
-    @Type( base = TestElementChild.class, possible = { TestElementChild.class, TestElementChildEx.class } )
+    @Type( base = CopyTestElementChild.class, possible = { CopyTestElementChild.class, CopyTestElementChildEx.class } )
     
     ElementProperty PROP_ELEMENT_PROPERTY_2 = new ElementProperty( TYPE, "ElementProperty2" );
     
-    ElementHandle<TestElementChild> getElementProperty2();
+    ElementHandle<CopyTestElementChild> getElementProperty2();
     
     // *** ListProperty1 ***
     
-    @Type( base = TestElementChild.class )
+    @Type( base = CopyTestElementChild.class )
     
     ListProperty PROP_LIST_PROPERTY_1 = new ListProperty( TYPE, "ListProperty1" );
     
-    ElementList<TestElementChild> getListProperty1();
+    ElementList<CopyTestElementChild> getListProperty1();
     
     // *** ListProperty2 ***
     
-    @Type( base = TestElementChild.class, possible = { TestElementChild.class, TestElementChildEx.class } )
+    @Type( base = CopyTestElementChild.class, possible = { CopyTestElementChild.class, CopyTestElementChildEx.class } )
     
     ListProperty PROP_LIST_PROPERTY_2 = new ListProperty( TYPE, "ListProperty2" );
     
-    ElementList<TestElementChild> getListProperty2();
+    ElementList<CopyTestElementChild> getListProperty2();
     
     // *** TransientProperty ***
     
