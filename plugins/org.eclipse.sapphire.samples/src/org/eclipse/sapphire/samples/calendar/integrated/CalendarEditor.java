@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2014 Oracle
+ * Copyright (c) 2014 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [444202] lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.calendar.integrated;
@@ -24,20 +25,27 @@ import org.eclipse.sapphire.samples.contacts.ContactRepository;
 import org.eclipse.sapphire.ui.CorruptedResourceExceptionInterceptorImpl;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
+import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.forms.swt.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public final class CalendarEditor extends SapphireEditor
 {
-    @Text( "Contacts" )
+    private static final String PAGE_CONTACTS = "Contacts";
+    private static final String PAGE_CALENDAR = "Calendar";
+
+    @Text( PAGE_CONTACTS )
     private static LocalizableText contactsPageName;
     
     static
@@ -54,6 +62,8 @@ public final class CalendarEditor extends SapphireEditor
     
     private MasterDetailsEditorPage calendarDesignPage;
     private MasterDetailsEditorPage contactsDesignPage;
+    private Reference<EditorPageDef> calendarDef;
+    private Reference<EditorPageDef> contactsDef;
 
     @Override
     protected void createSourcePages()
@@ -77,7 +87,14 @@ public final class CalendarEditor extends SapphireEditor
         index = addPage( this.contactsSourceEditor, new FileEditorInput( contactsFile ) );
         setPageText( index, "contacts.xml" );
     }
-    
+
+    @Override
+    protected void createFormPages() throws PartInitException
+    {
+        addInitialPage( 0, PAGE_CALENDAR );
+        addInitialPage( 1, PAGE_CONTACTS );
+    }
+
     @Override
     protected Element createModel()
     {
@@ -99,24 +116,46 @@ public final class CalendarEditor extends SapphireEditor
     }
     
     @Override
-    protected final void createFormPages() throws PartInitException
+    protected Reference<EditorPageDef> getDefinition( String pageName )
     {
-        this.calendarDesignPage = new MasterDetailsEditorPage
-        (
-            this, this.modelCalendarIntegrated,
-            DefinitionLoader.sdef( getClass() ).page()
-        );
-        
-        addPage( 0, this.calendarDesignPage );
+        if( PAGE_CALENDAR.equals( pageName ) )
+        {
+            if( this.calendarDef == null )
+            {
+                this.calendarDef = DefinitionLoader.sdef( getClass() ).page();
+            }
 
-        this.contactsDesignPage = new MasterDetailsEditorPage
-        (
-            this, this.modelContacts,
-            DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).page(),
-            contactsPageName.text()
-        );
-        
-        addPage( 1, this.contactsDesignPage );
+            return this.calendarDef;
+        }
+        else if ( PAGE_CONTACTS.equals( pageName ) )
+        {
+            if( this.contactsDef == null )
+            {
+                this.contactsDef = DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).page();
+            }
+
+            return this.contactsDef;
+        }
+
+        return null;
+    }
+
+    @Override
+    protected IFormPage createFormPage( String pageName )
+    {
+        if( PAGE_CALENDAR.equals( pageName ) )
+        {
+            this.calendarDesignPage = new MasterDetailsEditorPage( this, getModelElement(), getDefinition( pageName ) );
+            return this.calendarDesignPage;
+        }
+        else if ( PAGE_CONTACTS.equals( pageName ) )
+        {
+            getModelElement(); // make sure createModel() has been called
+            this.contactsDesignPage = new MasterDetailsEditorPage( this, this.modelContacts, getDefinition( pageName ) );
+            return this.contactsDesignPage;
+        }
+
+        return null;
     }
 
     @Override

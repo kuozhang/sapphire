@@ -11,6 +11,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [444202] lazy loading of editor pages
  ******************************************************************************
 -->
 
@@ -25,6 +26,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.sdk.DefinitionEditor"/>
+        <parameter name="formPageName" value="Design"/>
       </class>
     </editor>
   </extension>
@@ -50,11 +52,15 @@
   <extension point="org.eclipse.ui.editors">
     <editor
       id="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor"
-      class="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor"
       name="%sapphireExtensionEditorName"
       icon="org/eclipse/sapphire/sdk/SapphireFile.png"
       filenames="sapphire-extension.xml"
-      default="true"/>
+      default="true">
+      <class class="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor">
+        <parameter name="sdef" value="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor"/>
+        <parameter name="formPageName" value="Design"/>
+      </class>
+    </editor>
   </extension>
   
   <extension point="org.eclipse.ui.editors.templates">
