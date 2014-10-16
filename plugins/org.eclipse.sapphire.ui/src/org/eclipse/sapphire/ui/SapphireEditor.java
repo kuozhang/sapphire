@@ -10,7 +10,8 @@
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Shenxue Zhou - [365019] SapphireDiagramEditor does not work on non-workspace files 
  *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart
- *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
+ *                      [346172] Support zoom, print and save as image actions in the diagram editor
+ *                      [444202] lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -18,8 +19,10 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +36,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.help.IContext;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -45,9 +50,15 @@ import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.PartDef;
+import org.eclipse.sapphire.ui.diagram.def.DiagramEditorPageDef;
+import org.eclipse.sapphire.ui.forms.FormEditorPageDef;
+import org.eclipse.sapphire.ui.forms.MasterDetailsEditorPageDef;
 import org.eclipse.sapphire.ui.forms.PropertiesViewContributionPart;
 import org.eclipse.sapphire.ui.forms.swt.EditorPagePresentation;
+import org.eclipse.sapphire.ui.forms.swt.FormEditorPage;
 import org.eclipse.sapphire.ui.forms.swt.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.forms.swt.SapphireEditorFormPage;
 import org.eclipse.sapphire.ui.forms.swt.SwtResourceCache;
@@ -68,8 +79,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.internal.EditorActionBars;
-import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorPart;
@@ -93,6 +104,8 @@ public abstract class SapphireEditor
     implements ISapphirePart
     
 {
+    private static final String INITIAL_PAGE = "_INITIAL_PAGE_";
+
     @Text( "Associated resources are not accessible." )
     private static LocalizableText resourceNotAccessible;
     
@@ -188,7 +201,8 @@ public abstract class SapphireEditor
     private SapphirePropertySheetPage propertiesViewPage;
     private Listener propertiesViewContributionChangeListener;
     private PartServiceContext serviceContext;
-    
+    private boolean ignorePageChange = false;
+
     public SapphireEditor()
     {
         this.pluginId = FrameworkUtil.getBundle( getClass() ).getSymbolicName();
@@ -210,12 +224,18 @@ public abstract class SapphireEditor
     
     public final Element getModelElement()
     {
+        if( this.model == null )
+        {
+            this.model = createModel();
+            adaptModel( this.model );
+        }
+
         return this.model;
     }
 
     public final Element getLocalModelElement()
     {
-        return this.model;
+        return getModelElement();
     }
 
     protected abstract Element createModel();
@@ -312,7 +332,7 @@ public abstract class SapphireEditor
         return null;
     }
 
-    private final int getLastActivePage()
+    protected final int getLastActivePage()
     {
         int lastActivePage = 0;
         
@@ -399,12 +419,12 @@ public abstract class SapphireEditor
     {
         setPartName( input.getName() );
     }
-    
-    public int addEditorPage(EditorPart page) throws PartInitException {
+
+    public int addEditorPage(IEditorPart page) throws PartInitException {
         return addPage(page, getEditorInput());
     }
 
-    public void addEditorPage(int index, EditorPart page) throws PartInitException {
+    public void addEditorPage(int index, IEditorPart page) throws PartInitException {
         addPage(index, page, getEditorInput());
     }
     
@@ -434,6 +454,57 @@ public abstract class SapphireEditor
         setPageText( index, page.getTitle() );
     }
 
+    /**
+     * Adds a initial blank page that will be lazily swapped with the real page when the user first switches
+     * to this page. Clients that call this method need to be prepared to override the following two methods
+     * to help load the "real" page:
+     *
+     * getDefinition( pageName ) to the real definition to be loaded when user clicks on this page
+     *
+     * @param index
+     * @param pageName
+     */
+    protected final void addInitialPage( final int index, String pageName )
+    {
+        final Composite initialPage = new Composite( getContainer(), SWT.NONE );
+        initialPage.setData( INITIAL_PAGE );
+
+        super.addPage( index, initialPage );
+        setPageText( index, pageName );
+    }
+
+    protected abstract void createSourcePages() throws PartInitException;
+
+    /**
+     * In order to lazy load editors pages clients should only add the initial pages for their forms using
+     * the addInitialPage( index, pageName ) API
+     * For example, if I have a [ Details ][ Diagram ][ Source ] layout for my editor, then
+     * the client must implement it like this:
+     *
+     * createFormPages()
+     * {
+     *     addInitialPage( 0, "Details" );
+     * }
+     *
+     * createDiagramPages()
+     * {
+     *     addInitialPage( 1, "Diagram" );
+     * }
+     *
+     * Then the client must also implement the following to load the real definition:
+     * getDefinition( pageName );
+     */
+    protected abstract void createFormPages() throws PartInitException;
+
+    /**
+     * See {@link #createFormPages()}
+     *
+     * @throws PartInitException
+     */
+    protected void createDiagramPages() throws PartInitException
+    {
+    }
+
     @Override
     protected final void addPages() 
     {
@@ -455,48 +526,32 @@ public abstract class SapphireEditor
         {
             error = resourceNotAccessible.text();
         }
-        
+
+        try
+        {
+            createSourcePages();
+        }
+        catch( PartInitException e )
+        {
+            Sapphire.service( LoggingService.class ).log( e );
+        }
+
         if( error == null )
         {
-            try 
+            try
             {
-                createSourcePages();
-                
-                this.model = createModel();
+                createFormPages();
+
+                createDiagramPages();
             }
-            catch( PartInitException e ) 
+            catch( PartInitException e )
             {
                 Sapphire.service( LoggingService.class ).log( e );
             }
-                
-            if( this.model == null )
-            {
-                error = failedToCreateModel.format( getClass().getName() );
-                
-                for( int i = 0, n = getPageCount(); i < n; i++ )
-                {
-                    removePage( i );
-                }
-            }
-            else
-            {
-                try
-                {
-                    adaptModel( this.model );
-                    
-                    createDiagramPages();
-                    
-                    createFormPages();
-        
-                    createFileChangeListener();
-                }
-                catch( PartInitException e ) 
-                {
-                    Sapphire.service( LoggingService.class ).log( e );
-                }
-                
-                setActivePage( getLastActivePage() );
-            }
+
+            createFileChangeListener();
+
+            setActivePage( getLastActivePage() );
         }
         
         if( error != null )
@@ -514,16 +569,57 @@ public abstract class SapphireEditor
             setPageText( 0, errorPageTitle.text() );
         }
     }
-    
-    protected abstract void createSourcePages() throws PartInitException;
-    protected abstract void createFormPages() throws PartInitException;
-    
-    // default impl does nothing, subclass may override it to add diagram pages
-    protected void createDiagramPages() throws PartInitException
+
+    //protected abstract void createInitialPages();
+
+    /**
+     * Gets the real definition of the page by name
+     *
+     * @param pageName
+     * @return
+     */
+    protected abstract Reference<EditorPageDef> getDefinition( String pageName );
+
+    /**
+     * Create the real form page that is called when the page first becomes active
+     *
+     * @param pageName
+     * @return
+     */
+    protected IFormPage createFormPage( String pageName )
     {
-        
+        IFormPage retval = null;
+
+        final Reference<EditorPageDef> definition = getDefinition( pageName );
+
+        if( definition != null )
+        {
+            final EditorPageDef pageDef = definition.resolve();
+
+            if( pageDef instanceof MasterDetailsEditorPageDef )
+            {
+                retval = new MasterDetailsEditorPage( this, getModelElement(), definition );
+            }
+            else if( pageDef instanceof FormEditorPageDef )
+            {
+                retval = new FormEditorPage( this, getModelElement(), definition );
+            }
+        }
+
+        return retval;
     }
-    
+
+    /**
+    * Create the real diagram page that is called when the page first becomes active
+    *
+    * @param pageName
+    * @return
+    */
+   protected IEditorPart createDiagramPage( String pageName )
+   {
+       return null;
+   }
+
     public final Object getPage()
     {
         final int pageIndex = getActivePage();
@@ -561,6 +657,63 @@ public abstract class SapphireEditor
     @Override
     protected void pageChange( final int pageIndex )
     {
+        if( ignorePageChange )
+        {
+            return;
+        }
+
+        Object newPage = this.pages.get( pageIndex );
+
+        if( newPage instanceof Composite )
+        {
+            final Composite comp = (Composite) newPage;
+
+            if( INITIAL_PAGE.equals( comp.getData() ) )
+            {
+                try
+                {
+                    final IRunnableWithProgress op = new IRunnableWithProgress()
+                    {
+                        @Override
+                        public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+                        {
+                            monitor.beginTask( "Loading page please wait...", IProgressMonitor.UNKNOWN );
+
+                            try
+                            {
+                                createRealPage( pageIndex, getPageText( pageIndex ) );
+
+                                for( int i = 0; i < pages.size(); i++ )
+                                {
+                                    Object page = pages.get( i );
+
+                                    if( comp.equals( page ) )
+                                    {
+                                        ignorePageChange = true;
+                                        removePage( i );
+                                        ignorePageChange = false;
+                                        break;
+                                    }
+                                }
+
+                                setActivePage( pageIndex );
+                            }
+                            catch( PartInitException e )
+                            {
+                                Sapphire.service( LoggingService.class ).log( e );
+                            }
+                        }
+                    };
+
+                    new ProgressMonitorDialog( comp.getShell() ).run( false, false, op );
+                }
+                catch( Exception e )
+                {
+                    Sapphire.service( LoggingService.class ).log( e );
+                }
+            }
+        }
+
         super.pageChange( pageIndex );
         
         setLastActivePage( pageIndex );
@@ -579,16 +732,58 @@ public abstract class SapphireEditor
             ( (SapphireEditorFormPage) page ).setFocus();
         }
     }
-    
-    public void doSave( final IProgressMonitor monitor ) 
+
+
+    private void createRealPage( int pageIndex, String pageName  ) throws PartInitException
     {
-        try
+        final Reference<EditorPageDef> newDefinition = getDefinition( getPageText( pageIndex ) );
+
+        if( newDefinition == null )
         {
-            this.model.resource().save();
+            throw new PartInitException( "Unable to create real page for " + pageName +
+                " because definition is null" );
         }
-        catch( ResourceStoreException e )
+
+        final EditorPageDef def = newDefinition.resolve();
+
+        if( def instanceof DiagramEditorPageDef )
         {
-            Sapphire.service( LoggingService.class ).log( e );
+            addEditorPage( pageIndex, createDiagramPage( pageName ) );
+        }
+        else if( def instanceof EditorPageDef )
+        {
+            addPage( pageIndex, createFormPage( pageName ) );
+        }
+    }
+
+    public void doSave( final IProgressMonitor monitor )
+    {
+        if( this.model != null )
+        {
+            try
+            {
+                this.model.resource().save();
+            }
+            catch( ResourceStoreException e )
+            {
+                Sapphire.service( LoggingService.class ).log( e );
+            }
+        }
+        else
+        {
+            // get source editor
+            final Iterator<?> pages = this.pages.iterator();
+
+            while( pages.hasNext() )
+            {
+                Object page = pages.next();
+
+                if( page instanceof ITextEditor )
+                {
+                    final ITextEditor editor = (ITextEditor) page;
+                    editor.doSave( monitor );;
+                }
+            }
         }
     }
 

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
+ *    Gregory Amerson - [444202] lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.sqlschema;
@@ -16,23 +17,30 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.forms.swt.MasterDetailsEditorPage;
+import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * @author <a href="mailto:shenxue.zhou@oracle.com">Shenxue Zhou</a>
+ * @author <a href="mailto:gregory.amerson@liferay.com">Gregory Amerson</a>
  */
 
 public class SqlSchemaEditor extends SapphireEditor 
 {
+    private static final String PAGE_DETAILS = "Details";
+    private static final String PAGE_SCHEMA = "Schema";
+
     private Schema schemaModel;
     private StructuredTextEditor schemaSourceEditor;
     private SapphireDiagramEditor schemaDiagram;
-    private MasterDetailsEditorPage schemaDetails;
-	    
+    private Reference<EditorPageDef> schemaDef;
+    private Reference<EditorPageDef> detailsDef;
+
     @Override
     protected void createSourcePages() throws PartInitException 
     {
@@ -44,37 +52,52 @@ public class SqlSchemaEditor extends SapphireEditor
     }
 
     @Override
-    protected Element createModel() 
+    protected void createFormPages() throws PartInitException
+    {
+        addInitialPage( 0, PAGE_SCHEMA );
+    }
+
+    @Override
+    protected void createDiagramPages() throws PartInitException
+    {
+        addInitialPage( 1, PAGE_DETAILS );
+    }
+
+    @Override
+    protected Element createModel()
     {
         this.schemaModel = Schema.TYPE.instantiate(new RootXmlResource(new XmlEditorResourceStore(this, this.schemaSourceEditor)));
         return this.schemaModel;
     }
 
     @Override
-    protected void createDiagramPages() throws PartInitException
-    {		
-        this.schemaDiagram = new SapphireDiagramEditor
-		(
-		    this, this.schemaModel, 
-		    DefinitionLoader.sdef( getClass() ).page( "DiagramPage" )
-		);
-		
-        addEditorPage( 0, this.schemaDiagram );
-        
+    protected Reference<EditorPageDef> getDefinition( String pageName )
+    {
+        if( PAGE_SCHEMA.equals( pageName ) )
+        {
+            this.schemaDef = DefinitionLoader.sdef( getClass() ).page( "DiagramPage" );
+            return this.schemaDef;
+        }
+        else if( PAGE_DETAILS.equals( pageName ) )
+        {
+            this.detailsDef = DefinitionLoader.sdef( getClass() ).page( "DetailsPage" );
+            return this.detailsDef;
+        }
+
+        return null;
     }
     
     @Override
-    protected void createFormPages() throws PartInitException 
+    protected IEditorPart createDiagramPage( String pageName )
     {
-        this.schemaDetails = new MasterDetailsEditorPage
-        (
-            this, this.schemaModel,
-            DefinitionLoader.sdef( getClass() ).page( "DetailsPage" )
-        );
-        
-        addPage( 1, this.schemaDetails );
+        if( PAGE_SCHEMA.equals( pageName ) )
+        {
+            this.schemaDiagram = new SapphireDiagramEditor( this, getModelElement(), getDefinition( pageName ) );
+            return this.schemaDiagram;
+        }
+
+        return super.createDiagramPage( pageName );
     }
-    
 
     public Schema getSchema()
     {

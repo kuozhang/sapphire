@@ -8,6 +8,7 @@
  * Contributors:
  *    Shenxue Zhou - initial implementation and ongoing maintenance
  *    Gregory Amerson - [374022] SapphireGraphicalEditor init with SapphireEditor
+ *                      [444202] lazy loading of editor pages
  *    Konstantin Komissarchik - miscellaneous improvements
  ******************************************************************************/
 
@@ -18,9 +19,11 @@ import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.forms.swt.MasterDetailsEditorPage;
+import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
+import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
@@ -32,11 +35,15 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public final class MapEditor extends SapphireEditor 
 {
+    private static final String PAGE_DETAILS = "Details";
+    private static final String PAGE_MAP = "Map";
+
     private Map modelMap;
     private StructuredTextEditor mapSourceEditor;
     private SapphireDiagramEditor mapDiagram;
-    private MasterDetailsEditorPage mapDetailsPage;
-    
+    private Reference<EditorPageDef> mapDef;
+    private Reference<EditorPageDef> detailsDef;
+
     @Override
     protected void createSourcePages() throws PartInitException 
     {
@@ -55,27 +62,52 @@ public final class MapEditor extends SapphireEditor
     }
 
     @Override
+    protected void createFormPages() throws PartInitException
+    {
+        addInitialPage( 0, PAGE_DETAILS );
+    }
+
+    @Override
     protected void createDiagramPages() throws PartInitException
     {
-		this.mapDiagram = new SapphireDiagramEditor
-		(
-		    this, this.modelMap, 
-		    DefinitionLoader.sdef( getClass() ).page( "DiagramPage" )
-		);
-		
-        addEditorPage( 0, this.mapDiagram );
+        addInitialPage( 0, PAGE_MAP );
     }
-    
+
     @Override
-    protected void createFormPages() throws PartInitException 
+    protected Reference<EditorPageDef> getDefinition( String pageName )
     {
-        this.mapDetailsPage = new MasterDetailsEditorPage
-        (
-            this, this.modelMap,
-            DefinitionLoader.sdef( getClass() ).page( "DetailsPage" )
-        );
-        
-        addPage( 1, this.mapDetailsPage );
+        if( PAGE_MAP.equals( pageName ) )
+        {
+            if( this.mapDef == null )
+            {
+                this.mapDef = DefinitionLoader.sdef( getClass() ).page( "DiagramPage" );
+            }
+
+            return this.mapDef;
+        }
+        else if( PAGE_DETAILS.equals( pageName ) )
+        {
+            if( this.detailsDef == null )
+            {
+                this.detailsDef = DefinitionLoader.sdef( getClass() ).page( "DetailsPage" );
+            }
+
+            return this.detailsDef;
+        }
+
+        return null;
+    }
+
+    @Override
+    protected IEditorPart createDiagramPage( String pageName )
+    {
+        if( PAGE_MAP.equals( pageName ) )
+        {
+            this.mapDiagram = new SapphireDiagramEditor( this, getModelElement(), getDefinition( pageName ) );
+            return this.mapDiagram;
+        }
+
+        return super.createDiagramPage( pageName );
     }
 
     public Map getMap()
