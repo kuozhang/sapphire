@@ -553,7 +553,7 @@ public abstract class SapphireEditor
                 return true;
             }
         }
-        catch( final ReflectiveOperationException e ) {}
+        catch( final Exception e ) {}
         
         return false;
     }

@@ -173,7 +173,7 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
                 return true;
             }
         }
-        catch( final ReflectiveOperationException e ) {}
+        catch( final Exception e ) {}
         
         return false;
     }
