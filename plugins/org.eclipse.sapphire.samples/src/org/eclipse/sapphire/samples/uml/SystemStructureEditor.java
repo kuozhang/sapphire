@@ -7,21 +7,15 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Gregory Amerson - [444202] lazy loading of editor pages
+ *    Gregory Amerson - [444202] Lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.uml;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.modeling.xml.RootXmlResource;
 import org.eclipse.sapphire.ui.SapphireEditor;
-import org.eclipse.sapphire.ui.def.DefinitionLoader;
-import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
-import org.eclipse.sapphire.ui.def.EditorPageDef;
-import org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
@@ -32,17 +26,13 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 public class SystemStructureEditor extends SapphireEditor 
 {
-    private static final String PAGE_DIAGRAM = "Diagram";
-
-    private System model;
     private StructuredTextEditor sourceEditorPage;
-    private SapphireDiagramEditor diagramEditorPage;
-    //private MasterDetailsEditorPage schemaDetails;
-    private Reference<EditorPageDef> diagramDef;
 
     @Override
-    protected void createSourcePages() throws PartInitException 
+    protected void createEditorPages() throws PartInitException 
     {
+        addDeferredPage( "Diagram", "DiagramPage" );
+        
         this.sourceEditorPage = new StructuredTextEditor();
         this.sourceEditorPage.setEditorPart( this );
         
@@ -50,59 +40,10 @@ public class SystemStructureEditor extends SapphireEditor
         setPageText( index, "Source" );
     }
 
-
-    @Override
-    protected void createFormPages() throws PartInitException
-    {
-    }
-
-    @Override
-    protected void createDiagramPages() throws PartInitException
-    {
-        addInitialPage( 0, PAGE_DIAGRAM );
-    }
-
     @Override
     protected Element createModel()
     {
-        this.model = System.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.sourceEditorPage ) ) );
-        return this.model;
+        return System.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.sourceEditorPage ) ) );
     }
-
-    @Override
-    protected Reference<EditorPageDef> getDefinition( String pageName )
-    {
-        if( PAGE_DIAGRAM.equals( pageName ) )
-        {
-            if( this.diagramDef == null )
-            {
-                this.diagramDef = DefinitionLoader.sdef( getClass() ).page( "DiagramPage" );
-            }
-
-            return this.diagramDef;
-        }
-
-        return null;
-    }
-
-    @Override
-    protected IEditorPart createDiagramPage( String pageName )
-    {
-        if( PAGE_DIAGRAM.equals( pageName ) )
-        {
-            this.diagramEditorPage = new SapphireDiagramEditor( this, getModelElement(), getDefinition( pageName ) );
-            return this.diagramEditorPage;
-        }
-
-        return null;
-    }
-
-    @Override
-    public void doSave( final IProgressMonitor monitor )
-    {
-        this.diagramEditorPage.doSave( monitor );
-        super.doSave(monitor);        
-    }
-    
 
 }

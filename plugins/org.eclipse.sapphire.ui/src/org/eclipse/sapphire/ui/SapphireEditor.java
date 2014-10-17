@@ -10,8 +10,8 @@
  *    Ling Hao - [329114] rewrite context help binding feature
  *    Shenxue Zhou - [365019] SapphireDiagramEditor does not work on non-workspace files 
  *    Gregory Amerson - [372816] Provide adapt mechanism for SapphirePart
- *                      [346172] Support zoom, print and save as image actions in the diagram editor
- *                      [444202] lazy loading of editor pages
+ *    Gregory Amerson - [346172] Support zoom, print and save as image actions in the diagram editor
+ *    Gregory Amerson - [444202] Lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui;
@@ -19,7 +19,7 @@ package org.eclipse.sapphire.ui;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.gd;
 import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glayout;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Iterator;
@@ -33,11 +33,11 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.help.IContext;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
@@ -50,6 +50,7 @@ import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
 import org.eclipse.sapphire.modeling.ResourceStoreException;
 import org.eclipse.sapphire.modeling.Status;
 import org.eclipse.sapphire.services.Service;
+import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.def.PartDef;
@@ -69,6 +70,7 @@ import org.eclipse.sapphire.ui.internal.SapphireActionManager;
 import org.eclipse.sapphire.ui.internal.SapphireEditorContentOutline;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
@@ -87,6 +89,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
@@ -104,16 +107,17 @@ public abstract class SapphireEditor
     implements ISapphirePart
     
 {
-    private static final String INITIAL_PAGE = "_INITIAL_PAGE_";
-
-    @Text( "Associated resources are not accessible." )
+    @Text( "Associated resources are not accessible" )
     private static LocalizableText resourceNotAccessible;
     
-    @Text( "Editor {0} failed to instantiate its model." )
+    @Text( "Editor {0} failed to instantiate its model" )
     private static LocalizableText failedToCreateModel;
     
     @Text( "Error" )
     private static LocalizableText errorPageTitle;
+    
+    @Text( "Failed to find a definition '{0}'" )
+    private static LocalizableText failedToFindDefinition;
     
     static
     {
@@ -201,7 +205,7 @@ public abstract class SapphireEditor
     private SapphirePropertySheetPage propertiesViewPage;
     private Listener propertiesViewContributionChangeListener;
     private PartServiceContext serviceContext;
-    private boolean ignorePageChange = false;
+    private boolean ignorePageChange;
 
     public SapphireEditor()
     {
@@ -332,7 +336,7 @@ public abstract class SapphireEditor
         return null;
     }
 
-    protected final int getLastActivePage()
+    private final int getLastActivePage()
     {
         int lastActivePage = 0;
         
@@ -455,52 +459,87 @@ public abstract class SapphireEditor
     }
 
     /**
-     * Adds a initial blank page that will be lazily swapped with the real page when the user first switches
-     * to this page. Clients that call this method need to be prepared to override the following two methods
-     * to help load the "real" page:
+     * Adds a page that will be loaded from its definition when the user first opens it. When this method
+     * is used, the editor will load the page definition by calling {@link #getDefinition(String)}. By default,
+     * the definitions are loaded from an sdef file with the same name as the editor class. If the default
+     * behavior is inadequate, either {@link #getDefinitionLoader()} or {@link #getDefinition(String)} should be
+     * overridden.
      *
-     * getDefinition( pageName ) to the real definition to be loaded when user clicks on this page
-     *
-     * @param index
-     * @param pageName
+     * @since 8.1
+     * @param index the position of the page in the editor's page list
+     * @param pageName the localizable name of the page
+     * @param pageDefinitionId the id of the page definition
+     * @throws IllegalArgumentException if index is less than -1 or more than current page count
+     * @throws IllegalArgumentException if pageName is null
      */
-    protected final void addInitialPage( final int index, String pageName )
+    
+    protected final void addDeferredPage( final int index, final String pageName, final String pageDefinitionId )
     {
-        final Composite initialPage = new Composite( getContainer(), SWT.NONE );
-        initialPage.setData( INITIAL_PAGE );
-
-        super.addPage( index, initialPage );
-        setPageText( index, pageName );
+        if( index < -1 )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        if( pageName == null )
+        {
+            throw new IllegalArgumentException();
+        }
+        
+        final DeferredPage page = new DeferredPage( getContainer(), pageDefinitionId );
+        
+        if( index == -1 )
+        {
+            addPage( page );
+            setPageText( this.pages.size() - 1, pageName );
+        }
+        else
+        {
+            addPage( index, page );
+            setPageText( index, pageName );
+        }
+    }
+    
+    /**
+     * Adds a page that will be loaded from its definition when the user first opens it. When this method
+     * is used, the editor will load the page definition by calling {@link #getDefinition(String)}. By default,
+     * the definitions are loaded from an sdef file with the same name as the editor class. If the default
+     * behavior is inadequate, either {@link #getDefinitionLoader()} or {@link #getDefinition(String)} should be
+     * overridden.
+     *
+     * @since 8.1
+     * @param pageName the localizable name of the page
+     * @param pageDefinitionId the id of the page definition
+     * @throws IllegalArgumentException if pageName is null
+     */
+    
+    protected final void addDeferredPage( final String pageName, final String pageDefinitionId )
+    {
+        addDeferredPage( -1, pageName, pageDefinitionId );
+    }
+    
+    /**
+     * Called when the editor should create its pages. The default implementation calls {@link #createSourcePages()},
+     * {@link #createFormPages()} and {@link #createDiagramPages()} methods, in that order.
+     * 
+     * @since 8.1
+     * @throws PartInitException if a page could not be created
+     */
+    
+    protected void createEditorPages() throws PartInitException
+    {
+        createSourcePages();
+        createFormPages();
+        createDiagramPages();
     }
 
-    protected abstract void createSourcePages() throws PartInitException;
+    protected void createSourcePages() throws PartInitException
+    {
+    }
 
-    /**
-     * In order to lazy load editors pages clients should only add the initial pages for their forms using
-     * the addInitialPage( index, pageName ) API
-     * For example, if I have a [ Details ][ Diagram ][ Source ] layout for my editor, then
-     * the client must implement it like this:
-     *
-     * createFormPages()
-     * {
-     *     addInitialPage( 0, "Details" );
-     * }
-     *
-     * createDiagramPages()
-     * {
-     *     addInitialPage( 1, "Diagram" );
-     * }
-     *
-     * Then the client must also implement the following to load the real definition:
-     * getDefinition( pageName );
-     */
-    protected abstract void createFormPages() throws PartInitException;
-
-    /**
-     * See {@link #createFormPages()}
-     *
-     * @throws PartInitException
-     */
+    protected void createFormPages() throws PartInitException
+    {
+    }
+    
     protected void createDiagramPages() throws PartInitException
     {
     }
@@ -527,22 +566,11 @@ public abstract class SapphireEditor
             error = resourceNotAccessible.text();
         }
 
-        try
-        {
-            createSourcePages();
-        }
-        catch( PartInitException e )
-        {
-            Sapphire.service( LoggingService.class ).log( e );
-        }
-
         if( error == null )
         {
             try
             {
-                createFormPages();
-
-                createDiagramPages();
+                createEditorPages();
             }
             catch( PartInitException e )
             {
@@ -553,8 +581,7 @@ public abstract class SapphireEditor
 
             setActivePage( getLastActivePage() );
         }
-        
-        if( error != null )
+        else
         {
             final Composite page = new Composite( getContainer(), SWT.NONE );
             page.setLayout( glayout( 1 ) );
@@ -569,56 +596,107 @@ public abstract class SapphireEditor
             setPageText( 0, errorPageTitle.text() );
         }
     }
-
-    //protected abstract void createInitialPages();
-
+    
     /**
-     * Gets the real definition of the page by name
-     *
-     * @param pageName
-     * @return
+     * Returns the definition loader to be used with this editor. The default implementation calls
+     * <code>DefinitionLoader.sdef( getClass() )</code> and returns the result. This will load the definition
+     * from an sdef file with the same name as the editor class.
+     * 
+     * @since 8.1
      */
-    protected abstract Reference<EditorPageDef> getDefinition( String pageName );
-
-    /**
-     * Create the real form page that is called when the page first becomes active
-     *
-     * @param pageName
-     * @return
-     */
-    protected IFormPage createFormPage( String pageName )
+    
+    protected DefinitionLoader getDefinitionLoader()
     {
-        IFormPage retval = null;
-
-        final Reference<EditorPageDef> definition = getDefinition( pageName );
-
-        if( definition != null )
-        {
-            final EditorPageDef pageDef = definition.resolve();
-
-            if( pageDef instanceof MasterDetailsEditorPageDef )
-            {
-                retval = new MasterDetailsEditorPage( this, getModelElement(), definition );
-            }
-            else if( pageDef instanceof FormEditorPageDef )
-            {
-                retval = new FormEditorPage( this, getModelElement(), definition );
-            }
-        }
-
-        return retval;
+        return DefinitionLoader.sdef( getClass() );
     }
 
     /**
-    * Create the real diagram page that is called when the page first becomes active
-    *
-    * @param pageName
-    * @return
-    */
-   protected IEditorPart createDiagramPage( String pageName )
-   {
-       return null;
-   }
+     * Returns the page definition corresponding to the specified id. The default implementation relies on
+     * the {@link #getDefinitionLoader()} method.
+     * 
+     * @since 8.1
+     * @param pageDefinitionId the page definition id or null to load the first page definition that's found
+     */
+    
+    protected Reference<EditorPageDef> getDefinition( final String pageDefinitionId )
+    {
+        return getDefinitionLoader().page( pageDefinitionId );
+    }
+
+    /**
+     * Creates an editor page based on the page definition.
+     *
+     * @since 8.1
+     * @param pageDefinitionId the page definition id
+     * @return the created page
+     * @throws IllegalArgumentException if the definition is not found
+     */
+    
+    protected IEditorPart createPage( final String pageDefinitionId )
+    {
+        IEditorPart page = null;
+
+        final Reference<EditorPageDef> definition = getDefinition( pageDefinitionId );
+
+        if( definition != null )
+        {
+            page = createPage( definition );
+        }
+        else
+        {
+            throw new IllegalArgumentException( failedToFindDefinition.format( pageDefinitionId ) );
+        }
+
+        return page;
+    }
+
+    /**
+     * Creates an editor page based on the page definition.
+     *
+     * @since 8.1
+     * @param definition the page definition
+     * @return the created page
+     */
+    
+    protected IEditorPart createPage( final Reference<EditorPageDef> definition )
+    {
+        IEditorPart page = null;
+
+        final EditorPageDef def = definition.resolve();
+
+        if( def instanceof MasterDetailsEditorPageDef )
+        {
+            page = new MasterDetailsEditorPage( this, getModelElement(), definition );
+        }
+        else if( def instanceof FormEditorPageDef )
+        {
+            page = new FormEditorPage( this, getModelElement(), definition );
+        }
+        else if( def instanceof DiagramEditorPageDef )
+        {
+            final Bundle bundle = Platform.getBundle( "org.eclipse.sapphire.ui.swt.gef" );
+            
+            if( bundle != null )
+            {
+                try
+                {
+                    final Class<?> cl = bundle.loadClass( "org.eclipse.sapphire.ui.swt.gef.SapphireDiagramEditor" );
+                    final Constructor<?> constructor = cl.getConstructors()[ 0 ];
+                    page = (IEditorPart) constructor.newInstance( this, getModelElement(), definition );
+                }
+                catch( final Exception e )
+                {
+                    Sapphire.service( LoggingService.class ).log( e );
+                }
+            }
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
+
+        return page;
+    }
 
     public final Object getPage()
     {
@@ -657,61 +735,61 @@ public abstract class SapphireEditor
     @Override
     protected void pageChange( final int pageIndex )
     {
-        if( ignorePageChange )
+        if( this.ignorePageChange )
         {
             return;
         }
 
-        Object newPage = this.pages.get( pageIndex );
+        final Object newPage = this.pages.get( pageIndex );
 
-        if( newPage instanceof Composite )
+        if( newPage instanceof DeferredPage )
         {
-            final Composite comp = (Composite) newPage;
-
-            if( INITIAL_PAGE.equals( comp.getData() ) )
-            {
-                try
+            BusyIndicator.showWhile
+            (
+                getContainer().getDisplay(),
+                new Runnable()
                 {
-                    final IRunnableWithProgress op = new IRunnableWithProgress()
+                    @Override
+                    public void run()
                     {
-                        @Override
-                        public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+                        final IEditorPart page = createPage( ( (DeferredPage) newPage ).getDefinitionId() );
+                        
+                        if( page != null )
                         {
-                            monitor.beginTask( "Loading page please wait...", IProgressMonitor.UNKNOWN );
-
                             try
                             {
-                                createRealPage( pageIndex, getPageText( pageIndex ) );
-
-                                for( int i = 0; i < pages.size(); i++ )
+                                if( page instanceof IFormPage )
                                 {
-                                    Object page = pages.get( i );
-
-                                    if( comp.equals( page ) )
+                                    addPage( pageIndex, (IFormPage) page );
+                                }
+                                else
+                                {
+                                    addPage( pageIndex, page, getEditorInput() );
+                                }
+    
+                                for( int i = 0; i < SapphireEditor.this.pages.size(); i++ )
+                                {
+                                    final Object p = SapphireEditor.this.pages.get( i );
+    
+                                    if( p == newPage )
                                     {
-                                        ignorePageChange = true;
+                                        SapphireEditor.this.ignorePageChange = true;
                                         removePage( i );
-                                        ignorePageChange = false;
+                                        SapphireEditor.this.ignorePageChange = false;
                                         break;
                                     }
                                 }
-
+    
                                 setActivePage( pageIndex );
                             }
-                            catch( PartInitException e )
+                            catch( final PartInitException e )
                             {
                                 Sapphire.service( LoggingService.class ).log( e );
                             }
                         }
-                    };
-
-                    new ProgressMonitorDialog( comp.getShell() ).run( false, false, op );
+                    }
                 }
-                catch( Exception e )
-                {
-                    Sapphire.service( LoggingService.class ).log( e );
-                }
-            }
+            );
         }
 
         super.pageChange( pageIndex );
@@ -733,29 +811,6 @@ public abstract class SapphireEditor
         }
     }
 
-
-    private void createRealPage( int pageIndex, String pageName  ) throws PartInitException
-    {
-        final Reference<EditorPageDef> newDefinition = getDefinition( getPageText( pageIndex ) );
-
-        if( newDefinition == null )
-        {
-            throw new PartInitException( "Unable to create real page for " + pageName +
-                " because definition is null" );
-        }
-
-        final EditorPageDef def = newDefinition.resolve();
-
-        if( def instanceof DiagramEditorPageDef )
-        {
-            addEditorPage( pageIndex, createDiagramPage( pageName ) );
-        }
-        else if( def instanceof EditorPageDef )
-        {
-            addPage( pageIndex, createFormPage( pageName ) );
-        }
-    }
-
     public void doSave( final IProgressMonitor monitor )
     {
         if( this.model != null )
@@ -769,20 +824,16 @@ public abstract class SapphireEditor
                 Sapphire.service( LoggingService.class ).log( e );
             }
         }
-        else
+        
+        final Iterator<?> pages = this.pages.iterator();
+
+        while( pages.hasNext() )
         {
-            // get source editor
-            final Iterator<?> pages = this.pages.iterator();
+            final Object page = pages.next();
 
-            while( pages.hasNext() )
+            if( page instanceof IEditorPart )
             {
-                Object page = pages.next();
-
-                if( page instanceof ITextEditor )
-                {
-                    final ITextEditor editor = (ITextEditor) page;
-                    editor.doSave( monitor );;
-                }
+                ( (IEditorPart) page ).doSave( new NullProgressMonitor() );;
             }
         }
     }
@@ -1100,6 +1151,23 @@ public abstract class SapphireEditor
         }
         
         return this.serviceContext.services( serviceType );
+    }
+    
+    private static final class DeferredPage extends Composite
+    {
+        private final String definitionId;
+        
+        public DeferredPage( final Composite parent, final String definitionId )
+        {
+            super( parent, SWT.NONE );
+            
+            this.definitionId = definitionId;
+        }
+        
+        public String getDefinitionId()
+        {
+            return this.definitionId;
+        }
     }
     
 }
