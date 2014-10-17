@@ -145,6 +145,40 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
     }
     
     @Override
+    protected void createEditorPages() throws PartInitException
+    {
+        createSourcePages();
+        
+        // For backwards compatibility, if createModel() is overridden, we need to ensure that the method is
+        // called before createFormPages() and createDiagramPages(). A concrete example of why a subclass may
+        // depend on this order is to store the model in a field as part of createModel() and then later use
+        // it when creating pages. Since this approach does not invoke getModelElement(), the lazy creation of
+        // the model is not triggered.
+        
+        if( isCreateModelOverridden() )
+        {
+            getModelElement();
+        }
+        
+        createFormPages();
+        createDiagramPages();
+    }
+    
+    private boolean isCreateModelOverridden()
+    {
+        try
+        {
+            if( getClass().getDeclaredMethod( "createModel" ).getDeclaringClass() != SapphireEditorForXml.class )
+            {
+                return true;
+            }
+        }
+        catch( final ReflectiveOperationException e ) {}
+        
+        return false;
+    }
+
+    @Override
     protected final void createSourcePages() throws PartInitException
     {
         this.sourcePage = new StructuredTextEditor();
