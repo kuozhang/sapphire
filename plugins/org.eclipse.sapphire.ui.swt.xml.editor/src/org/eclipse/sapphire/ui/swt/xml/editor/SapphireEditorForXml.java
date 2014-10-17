@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2014 Oracle and Other Contributors
+ * Copyright (c) 2014 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Gregory Amerson - [363258] Allow dynamic model types for SapphireEditorForXml
- *                      [444202] lazy loading of editor pages
+ *    Gregory Amerson - [444202] Lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.swt.xml.editor;
@@ -29,7 +29,9 @@ import org.eclipse.sapphire.ui.SapphireEditor;
 import org.eclipse.sapphire.ui.def.DefinitionLoader;
 import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
@@ -53,7 +55,8 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
     private StructuredTextEditor sourcePage;
     private Context context;
     private String sdef;
-    private String formPageName;
+    private String pageName;
+    private String pageDefinitionId;
 
     public SapphireEditorForXml( final ElementType type,
                                  final DefinitionLoader.Reference<EditorPageDef> definition )
@@ -69,11 +72,6 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
         this.definition = definition;
     }
 
-    public SapphireEditorForXml( final ElementType type )
-    {
-        this( type, null );
-    }
-
     public SapphireEditorForXml()
     {
     }
@@ -87,31 +85,32 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
         
         if( this.definition == null )
         {
-            final String bundleId = config.getContributor().getName();
-            this.context = BundleBasedContext.adapt( bundleId );
             final Map<?,?> properties = (Map<?,?>) data;
+            
+            this.context = BundleBasedContext.adapt( config.getContributor().getName() );
             this.sdef = (String) properties.get( "sdef" );
-            this.formPageName = (String) properties.get( "formPageName" );
+            this.pageName = (String) properties.get( "pageName" );
+            this.pageDefinitionId = (String) properties.get( "pageDefinitionId" );
         }
+    }
+    
+    @Override
+    protected DefinitionLoader getDefinitionLoader()
+    {
+        return DefinitionLoader.context( this.context ).sdef( this.sdef );
     }
 
     @Override
-    protected Reference<EditorPageDef> getDefinition( String pageName )
+    protected Reference<EditorPageDef> getDefinition( String id )
     {
-        if( this.formPageName.equals( pageName ) )
+        if( this.definition != null )
         {
-            if( this.definition == null && sdef != null )
-            {
-                this.definition = DefinitionLoader.context( this.context ).sdef( sdef ).page();
-
-                final JavaType elementJavaType = this.definition.resolve().getElementType().target();
-                this.type = ElementType.read( (Class<?>) elementJavaType.artifact(), true );
-            }
-
             return this.definition;
         }
-
-        return null;
+        else
+        {
+            return super.getDefinition( id );
+        }
     }
 
     public final StructuredTextEditor getXmlEditor()
@@ -121,8 +120,23 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
     
     protected Element createModel()
     {
+        ElementType type = this.type;
+        
+        if( type == null )
+        {
+            final EditorPageDef def = getDefinition( this.pageDefinitionId ).resolve();
+            
+            if( def == null )
+            {
+                throw new IllegalStateException();
+            }
+            
+            final JavaType elementJavaType = def.getElementType().target();
+            type = ElementType.read( (Class<?>) elementJavaType.artifact(), true );
+        }
+        
         final XmlEditorResourceStore store = createResourceStore( this.sourcePage );
-        return this.type.instantiate( new RootXmlResource( store ) );
+        return type.instantiate( new RootXmlResource( store ) );
     }
     
     protected XmlEditorResourceStore createResourceStore( final StructuredTextEditor sourceEditor )
@@ -143,7 +157,23 @@ public class SapphireEditorForXml extends SapphireEditor implements IExecutableE
     @Override
     protected void createFormPages() throws PartInitException
     {
-        addInitialPage( 0, this.formPageName );
+        if( this.pageName == null )
+        {
+            final IEditorPart page = createPage( getDefinition( null ) );
+            
+            if( page instanceof IFormPage )
+            {
+                addPage( 0, (IFormPage) page );
+            }
+            else
+            {
+                addPage( 0, page, getEditorInput() );
+            }
+        }
+        else
+        {
+            addDeferredPage( 0, this.pageName, this.pageDefinitionId );
+        }
     }
 
     @Override

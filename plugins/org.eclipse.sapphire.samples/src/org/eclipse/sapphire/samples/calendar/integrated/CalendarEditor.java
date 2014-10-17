@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Gregory Amerson - [444202] lazy loading of editor pages
+ *    Gregory Amerson - [444202] Lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.samples.calendar.integrated;
@@ -29,8 +29,8 @@ import org.eclipse.sapphire.ui.def.DefinitionLoader.Reference;
 import org.eclipse.sapphire.ui.def.EditorPageDef;
 import org.eclipse.sapphire.ui.forms.swt.MasterDetailsEditorPage;
 import org.eclipse.sapphire.ui.swt.xml.editor.XmlEditorResourceStore;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -62,15 +62,13 @@ public final class CalendarEditor extends SapphireEditor
     
     private MasterDetailsEditorPage calendarDesignPage;
     private MasterDetailsEditorPage contactsDesignPage;
-    private Reference<EditorPageDef> calendarDef;
-    private Reference<EditorPageDef> contactsDef;
 
     @Override
-    protected void createSourcePages()
-
-        throws PartInitException
-        
+    protected void createEditorPages() throws PartInitException
     {
+        addDeferredPage( PAGE_CALENDAR, PAGE_CALENDAR );
+        addDeferredPage( PAGE_CONTACTS, PAGE_CONTACTS );
+        
         this.calendarSourceEditor = new StructuredTextEditor();
         this.calendarSourceEditor.setEditorPart(this);
         
@@ -86,13 +84,6 @@ public final class CalendarEditor extends SapphireEditor
         
         index = addPage( this.contactsSourceEditor, new FileEditorInput( contactsFile ) );
         setPageText( index, "contacts.xml" );
-    }
-
-    @Override
-    protected void createFormPages() throws PartInitException
-    {
-        addInitialPage( 0, PAGE_CALENDAR );
-        addInitialPage( 1, PAGE_CONTACTS );
     }
 
     @Override
@@ -116,42 +107,32 @@ public final class CalendarEditor extends SapphireEditor
     }
     
     @Override
-    protected Reference<EditorPageDef> getDefinition( String pageName )
+    protected Reference<EditorPageDef> getDefinition( final String pageDefinitionId )
     {
-        if( PAGE_CALENDAR.equals( pageName ) )
+        if( PAGE_CALENDAR.equals( pageDefinitionId ) )
         {
-            if( this.calendarDef == null )
-            {
-                this.calendarDef = DefinitionLoader.sdef( getClass() ).page();
-            }
-
-            return this.calendarDef;
+            return DefinitionLoader.sdef( getClass() ).page();
         }
-        else if ( PAGE_CONTACTS.equals( pageName ) )
+        else if ( PAGE_CONTACTS.equals( pageDefinitionId ) )
         {
-            if( this.contactsDef == null )
-            {
-                this.contactsDef = DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).page();
-            }
-
-            return this.contactsDef;
+            return DefinitionLoader.context( ContactRepository.class ).sdef( "ContactRepositoryEditor" ).page();
         }
 
         return null;
     }
 
     @Override
-    protected IFormPage createFormPage( String pageName )
+    protected IEditorPart createPage( final String pageDefinitionId )
     {
-        if( PAGE_CALENDAR.equals( pageName ) )
+        if( PAGE_CALENDAR.equals( pageDefinitionId ) )
         {
-            this.calendarDesignPage = new MasterDetailsEditorPage( this, getModelElement(), getDefinition( pageName ) );
+            this.calendarDesignPage = new MasterDetailsEditorPage( this, getModelElement(), getDefinition( pageDefinitionId ) );
             return this.calendarDesignPage;
         }
-        else if ( PAGE_CONTACTS.equals( pageName ) )
+        else if ( PAGE_CONTACTS.equals( pageDefinitionId ) )
         {
             getModelElement(); // make sure createModel() has been called
-            this.contactsDesignPage = new MasterDetailsEditorPage( this, this.modelContacts, getDefinition( pageName ) );
+            this.contactsDesignPage = new MasterDetailsEditorPage( this, this.modelContacts, getDefinition( pageDefinitionId ) );
             return this.contactsDesignPage;
         }
 

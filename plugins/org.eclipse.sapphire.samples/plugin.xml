@@ -10,7 +10,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Gregory Amerson - [444202] lazy loading of editor pages
+ *    Gregory Amerson - [444202] Lazy loading of editor pages
  ******************************************************************************
 -->
 
@@ -43,7 +43,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.samples.catalog.CatalogEditor"/>
-        <parameter name="formPageName" value="Catalog"/>
+        <parameter name="pageName" value="Catalog"/>
       </class>
     </editor>
   </extension>
@@ -88,7 +88,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.samples.contacts.ContactRepositoryEditor"/>
-        <parameter name="formPageName" value="Contacts"/>
+        <parameter name="pageName" value="Contacts"/>
       </class>
     </editor>
   </extension>
@@ -160,7 +160,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.samples.journal.JournalEditor"/>
-        <parameter name="formPageName" value="Journal"/>
+        <parameter name="pageName" value="Journal"/>
       </class>
     </editor>
   </extension>
@@ -180,7 +180,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.samples.reading.ReadingJournalEditor"/>
-        <parameter name="formPageName" value="Reading Journal"/>
+        <parameter name="pageName" value="Reading Journal"/>
       </class>
     </editor>
   </extension>
@@ -200,7 +200,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.samples.gallery.GalleryEditor"/>
-        <parameter name="formPageName" value="Gallery"/>
+        <parameter name="pageName" value="Gallery"/>
       </class>
     </editor>
   </extension>
@@ -285,7 +285,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.samples.ezbug.EzBug"/>
-        <parameter name="formPageName" value="Bug Repository"/>
+        <parameter name="pageName" value="Bug Repository"/>
       </class>
     </editor>
   </extension>
@@ -437,7 +437,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.samples.recursion.RecursiveTreeEditor"/>
-        <parameter name="formPageName" value="Design"/>
+        <parameter name="pageName" value="Design"/>
       </class>
     </editor>
   </extension>

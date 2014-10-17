@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Gregory Amerson - [444202] lazy loading of editor pages
+ *    Gregory Amerson - [444202] Lazy loading of editor pages
  ******************************************************************************/
 
 package org.eclipse.sapphire.sdk.internal;
@@ -43,7 +43,7 @@ public final class ExtensionManifestEditor extends SapphireEditorForXml
     
     public ExtensionManifestEditor()
     {
-        super( SapphireExtensionDef.TYPE );
+        super( SapphireExtensionDef.TYPE, null );
     }
 
     @Override

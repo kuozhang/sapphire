@@ -51,8 +51,146 @@
 <h1>Enhancements in Sapphire 8.1</h1>
 
 <ol>
+  <li><a href="#LazyEditorPageLoading">Lazy Loading of Editor Pages</a></li>
   <li><a href="#ElementData">ElementData</a></li>
 </ol>
+
+
+<h2><a name="LazyEditorPageLoading">Lazy Loading of Editor Pages</a></h2>
+
+<p>For improved responsiveness, the loading of the model and an editor page should be deferred until the user accesses that page.
+Since the system needs to know the page name without loading the page definition, this is an opt-in enhancement. Existing editor
+implementations will continue to load all pages on editor startup until they are updated.</p>
+
+<p>If SapphireEditorForXml class is used directly, the pageName attribute needs to be added to enable lazy loading.</p>
+
+<pre class="source-code"><code><span class="unaffected">&lt;extension point="org.eclipse.ui.editors">
+  &lt;editor
+    id="org.eclipse.sapphire.samples.catalog.CatalogEditor"
+    name="Catalog Editor (Sapphire Sample)"
+    icon="org/eclipse/sapphire/samples/SapphireFile.png"
+    filenames="catalog.xml"
+    default="true">
+    &lt;class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
+      &lt;parameter name="sdef" value="org.eclipse.sapphire.samples.catalog.CatalogEditor"/></span>
+      &lt;parameter name="pageName" value="Catalog"/>
+      &lt;parameter name="pageDefinitionId" value="CatalogEditorPage"/> <span class="comment">&lt;!-- Can be omitted if only one page definition exists in the sdef --></span>
+    <span class="unaffected">&lt;/class>
+  &lt;/editor>
+&lt;/extension></span></code></pre>
+
+<p>If SapphireEditor class is extended, the subclass needs to use addDeferredPage() and possibly override
+getDefinition() or getDefinitionLoader().</p>
+
+<pre class="source-code"><code>public final class PurchaseOrderEditor extends SapphireEditor
+{
+    private StructuredTextEditor sourcePage;
+
+    @Override
+    protected void createEditorPages() throws PartInitException 
+    {
+        addDeferredPage( "General", "GeneralPage" );
+        addDeferredPage( "Entries", "EntriesPage" );
+        
+        this.sourcePage = new StructuredTextEditor();
+        this.sourcePage.setEditorPart( this );
+        
+        int index = addPage( this.sourcePage, getEditorInput() );
+        setPageText( index, "Source" );
+    }
+
+    @Override
+    protected Element createModel()
+    {
+        return PurchaseOrder.TYPE.instantiate( new RootXmlResource( new XmlEditorResourceStore( this, this.sourcePage ) ) );
+    }
+}</code></pre>
+
+<pre class="source-code"><code><span class="unaffected">public abstract class SapphireEditor
+{</span>
+    <span class="javadoc">/**
+     * Adds a page that will be loaded from its definition when the user first opens it. When this method
+     * is used, the editor will load the page definition by calling {@link #getDefinition(String)}. By default,
+     * the definitions are loaded from an sdef file with the same name as the editor class. If the default
+     * behavior is inadequate, either {@link #getDefinitionLoader()} or {@link #getDefinition(String)} should be
+     * overridden.
+     *
+     * @since 8.1
+     * @param index the position of the page in the editor's page list
+     * @param pageName the localizable name of the page
+     * @param pageDefinitionId the id of the page definition
+     * @throws IllegalArgumentException if index is less than -1 or more than current page count
+     * @throws IllegalArgumentException if pageName is null
+     */</span>
+    
+    protected final void addDeferredPage( int index, String pageName, String pageDefinitionId )
+
+    <span class="javadoc">/**
+     * Adds a page that will be loaded from its definition when the user first opens it. When this method
+     * is used, the editor will load the page definition by calling {@link #getDefinition(String)}. By default,
+     * the definitions are loaded from an sdef file with the same name as the editor class. If the default
+     * behavior is inadequate, either {@link #getDefinitionLoader()} or {@link #getDefinition(String)} should be
+     * overridden.
+     *
+     * @since 8.1
+     * @param pageName the localizable name of the page
+     * @param pageDefinitionId the id of the page definition
+     * @throws IllegalArgumentException if pageName is null
+     */</span>
+    
+    protected final void addDeferredPage( String pageName, String pageDefinitionId )
+
+    <span class="javadoc">/**
+     * Called when the editor should create its pages. The default implementation calls {@link #createSourcePages()},
+     * {@link #createFormPages()} and {@link #createDiagramPages()} methods, in that order.
+     * 
+     * @since 8.1
+     * @throws PartInitException if a page could not be created
+     */</span>
+    
+    protected void createEditorPages() throws PartInitException
+
+    <span class="javadoc">/**
+     * Returns the definition loader to be used with this editor. The default implementation calls
+     * <code>DefinitionLoader.sdef( getClass() )</code> and returns the result. This will load the definition
+     * from an sdef file with the same name as the editor class.
+     * 
+     * @since 8.1
+     */</span>
+    
+    protected DefinitionLoader getDefinitionLoader()
+
+    <span class="javadoc">/**
+     * Returns the page definition corresponding to the specified id. The default implementation relies on
+     * the {@link #getDefinitionLoader()} method.
+     * 
+     * @since 8.1
+     * @param pageDefinitionId the page definition id or null to load the first page definition that's found
+     */</span>
+    
+    protected Reference&lt;EditorPageDef> getDefinition( String pageDefinitionId )
+
+    <span class="javadoc">/**
+     * Creates an editor page based on the page definition.
+     *
+     * @since 8.1
+     * @param pageDefinitionId the page definition id
+     * @return the created page
+     * @throws IllegalArgumentException if the definition is not found
+     */</span>
+    
+    protected IEditorPart createPage( String pageDefinitionId )
+
+    <span class="javadoc">/**
+     * Creates an editor page based on the page definition.
+     *
+     * @since 8.1
+     * @param definition the page definition
+     * @return the created page
+     */</span>
+    
+    protected IEditorPart createPage( Reference<EditorPageDef> definition )
+<span class="unaffected">}</span></code></pre>
 
 
 <h2><a name="ElementData">ElementData</a></h2>

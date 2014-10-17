@@ -3,7 +3,7 @@
 
 <!-- 
  ******************************************************************************
- * Copyright (c) 2014 Oracle
+ * Copyright (c) 2014 Oracle and Liferay
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
- *    Gregory Amerson - [444202] lazy loading of editor pages
+ *    Gregory Amerson - [444202] Lazy loading of editor pages
  ******************************************************************************
 -->
 
@@ -26,7 +26,7 @@
       default="true">
       <class class="org.eclipse.sapphire.ui.swt.xml.editor.SapphireEditorForXml">
         <parameter name="sdef" value="org.eclipse.sapphire.sdk.DefinitionEditor"/>
-        <parameter name="formPageName" value="Design"/>
+        <parameter name="pageName" value="Design"/>
       </class>
     </editor>
   </extension>
@@ -58,7 +58,7 @@
       default="true">
       <class class="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor">
         <parameter name="sdef" value="org.eclipse.sapphire.sdk.internal.ExtensionManifestEditor"/>
-        <parameter name="formPageName" value="Design"/>
+        <parameter name="pageName" value="Design"/>
       </class>
     </editor>
   </extension>
