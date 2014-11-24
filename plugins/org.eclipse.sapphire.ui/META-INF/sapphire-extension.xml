@@ -668,4 +668,8 @@
         <id>Sapphire.PropertyEditor.RadioButtonGroup.Vertical</id>
         <part-type>Sapphire.PropertyEditor</part-type>
     </presentation-style>
+    <presentation-style>
+        <id>Sapphire.PropertyEditor.Scale</id>
+        <part-type>Sapphire.PropertyEditor</part-type>
+    </presentation-style>
 </extension>

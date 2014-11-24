@@ -108,6 +108,10 @@
                                 <property-editor>Simple</property-editor>
                                 <property-editor>Positive</property-editor>
                                 <property-editor>RangeConstrainedWithDefault</property-editor>
+                                <property-editor>
+                                    <style>Sapphire.PropertyEditor.Scale</style>
+                                    <property>RangeConstrainedWithDefault</property>
+                                </property-editor>
                             </content>
                         </section>
                     </node>

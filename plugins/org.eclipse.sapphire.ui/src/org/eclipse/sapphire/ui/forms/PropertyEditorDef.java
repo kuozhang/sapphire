@@ -264,7 +264,8 @@ public interface PropertyEditorDef extends FormComponentDef
              "Sapphire.PropertyEditor.RadioButtonGroup.Vertical",
              "Sapphire.PropertyEditor.CheckBoxGroup",
              "Sapphire.PropertyEditor.CheckBoxGroup.Horizontal",
-             "Sapphire.PropertyEditor.CheckBoxGroup.Vertical"
+             "Sapphire.PropertyEditor.CheckBoxGroup.Vertical",
+             "Sapphire.PropertyEditor.Scale"
         }
     )
     
