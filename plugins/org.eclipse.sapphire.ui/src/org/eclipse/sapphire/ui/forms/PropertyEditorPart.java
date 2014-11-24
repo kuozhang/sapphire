@@ -68,6 +68,7 @@ import org.eclipse.sapphire.ui.forms.swt.internal.EnumPropertyEditorPresentation
 import org.eclipse.sapphire.ui.forms.swt.internal.NamedValuesPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.PopUpListFieldPropertyEditorPresentation;
 import org.eclipse.sapphire.ui.forms.swt.internal.RadioButtonGroupPropertyEditorPresentation;
+import org.eclipse.sapphire.ui.forms.swt.internal.ScalePropertyEditorPresentation;
 import org.eclipse.sapphire.util.ListFactory;
 import org.eclipse.swt.widgets.Composite;
 
@@ -90,6 +91,7 @@ public final class PropertyEditorPart extends FormComponentPart
         FACTORIES.add( new PopUpListFieldPropertyEditorPresentation.Factory() );
         FACTORIES.add( new EnumPropertyEditorPresentationFactory() );
         FACTORIES.add( new NamedValuesPropertyEditorPresentation.Factory() );
+        FACTORIES.add( new ScalePropertyEditorPresentation.Factory() );
         FACTORIES.add( new TextFieldPropertyEditorPresentation.Factory() );
         FACTORIES.add( new CheckBoxGroupPropertyEditorPresentation.HorizontalFactory() );
         FACTORIES.add( new CheckBoxGroupPropertyEditorPresentation.VerticalFactory() );

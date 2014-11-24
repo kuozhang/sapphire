@@ -197,20 +197,25 @@ public final class ScalePropertyEditorPresentation extends ValuePropertyEditorPr
         @Override
         public PropertyEditorPresentation create( final PropertyEditorPart part, final SwtPresentation parent, final Composite composite )
         {
-            final PropertyDef property = part.property().definition();
+            final String style = part.definition().getStyle().content();
             
-            if( property.isOfType( Integer.class ) )
+            if( style != null && style.startsWith( "Sapphire.PropertyEditor.Scale" ) )
             {
-                final NumericRange rangeAnnotation = property.getAnnotation( NumericRange.class );
+                final PropertyDef property = part.property().definition();
                 
-                if( rangeAnnotation != null )
+                if( property.isOfType( Integer.class ) )
                 {
-                    final String minStr = rangeAnnotation.min();
-                    final String maxStr = rangeAnnotation.max();
+                    final NumericRange rangeAnnotation = property.getAnnotation( NumericRange.class );
                     
-                    if( minStr.length() > 0 && maxStr.length() > 0 )
+                    if( rangeAnnotation != null )
                     {
-                        return new ScalePropertyEditorPresentation( part, parent, composite );
+                        final String minStr = rangeAnnotation.min();
+                        final String maxStr = rangeAnnotation.max();
+                        
+                        if( minStr.length() > 0 && maxStr.length() > 0 )
+                        {
+                            return new ScalePropertyEditorPresentation( part, parent, composite );
+                        }
                     }
                 }
             }

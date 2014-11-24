@@ -59,8 +59,8 @@ public interface IIntegerValueGallery extends Element
     
     @Type( base = Integer.class )
     @Label( standard = "range constrained with default" )
-    @NumericRange( min = "5", max = "7000" )
-    @DefaultValue( text = "1000" )
+    @NumericRange( min = "5", max = "40" )
+    @DefaultValue( text = "10" )
     @XmlBinding( path = "range-constrained-with-default" )
     @Documentation( content = "test" )
 
