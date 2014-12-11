@@ -792,11 +792,23 @@
             <node>
                 <label>list properties</label>
                 <node>
+                    <node-factory>
+                        <case>
+                            <label>${ StringValue == null ? &quot;&lt;item&gt;&quot; : StringValue }</label>
+                            <section>
+                                <content>
+                                    <property-editor>StringValue</property-editor>
+                                </content>
+                                <label>child element</label>
+                            </section>
+                        </case>
+                        <property>Homogeneous</property>
+                    </node-factory>
                     <label>homogeneous</label>
                     <section>
                         <content>
                             <label>A list with one possible element type.</label>
-                            <spacer />
+                            <spacer></spacer>
                             <actuator>
                                 <action-id>Sapphire.Add</action-id>
                                 <label>add a child element</label>
@@ -808,51 +820,78 @@
                         </content>
                     </section>
                     <section>
-                        <label>list</label>
                         <content>
                             <property-editor>
-                                <property>Homogeneous</property>
                                 <show-label>false</show-label>
+                                <property>Homogeneous</property>
                                 <span>true</span>
                             </property-editor>
                         </content>
+                        <label>list</label>
                     </section>
                     <section>
-                        <label>compact presentation</label>
                         <content>
                             <property-editor>
+                                <hint>
+                                    <name>factory</name>
+                                    <value>CompactListPropertyEditorPresentation$Factory</value>
+                                </hint>
                                 <property>Homogeneous</property>
-                                <hint>
-                                    <name>factory</name>
-                                    <value>CompactListPropertyEditorPresentation$Factory</value>
-                                </hint>
                             </property-editor>
                         </content>
+                        <label>compact presentation</label>
                     </section>
-                    <section>
-                        <label>compact presentation for a list of java types</label>
-                        <content>
-                            <property-editor>
-                                <property>HomogeneousWithJavaType</property>
-                                <hint>
-                                    <name>factory</name>
-                                    <value>CompactListPropertyEditorPresentation$Factory</value>
-                                </hint>
-                            </property-editor>
-                        </content>
-                    </section>
+                </node>
+                <node>
                     <node-factory>
-                        <property>Homogeneous</property>
                         <case>
-                            <label>${ StringValue == null ? "&lt;item&gt;" : StringValue }</label>
+                            <label>${ JavaType == null ? &quot;&lt;item&gt;&quot; : JavaType }</label>
                             <section>
-                                <label>child element</label>
                                 <content>
-                                    <property-editor>StringValue</property-editor>
+                                    <property-editor>JavaType</property-editor>
                                 </content>
+                                <label>child element</label>
                             </section>
                         </case>
+                        <property>HomogeneousWithJavaType</property>
                     </node-factory>
+                    <label>homogeneous with Java types</label>
+                    <section>
+                        <content>
+                            <label>A list with one possible element type.</label>
+                            <spacer></spacer>
+                            <actuator>
+                                <action-id>Sapphire.Add</action-id>
+                                <label>add a child element</label>
+                            </actuator>
+                            <spacer></spacer>
+                            <label>Use the following property to experiment with enabling and disabling the lists.</label>
+                            <spacer></spacer>
+                            <property-editor>Enabled</property-editor>
+                        </content>
+                    </section>
+                    <section>
+                        <content>
+                            <property-editor>
+                                <show-label>false</show-label>
+                                <property>HomogeneousWithJavaType</property>
+                                <span>true</span>
+                            </property-editor>
+                        </content>
+                        <label>list</label>
+                    </section>
+                    <section>
+                        <content>
+                            <property-editor>
+                                <hint>
+                                    <name>factory</name>
+                                    <value>CompactListPropertyEditorPresentation$Factory</value>
+                                </hint>
+                                <property>HomogeneousWithJavaType</property>
+                            </property-editor>
+                        </content>
+                        <label>compact presentation</label>
+                    </section>
                 </node>
                 <node>
                     <label>heterogeneous</label>
