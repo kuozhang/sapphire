@@ -65,7 +65,7 @@ public interface ListPropertiesGallery extends Element
     // *** HomogeneousWithJavaType ***
     
     @Type( base = IListItemWithJavaType.class )
-    @Label( standard = "homogeneous list of java types")
+    @Label( standard = "homogeneous list of Java types")
     @Enablement( expr = "${ Enabled }" )
     @XmlListBinding( path = "homogeneous-java-types", mappings = @XmlListBinding.Mapping( element = "child", type = IListItemWithJavaType.class ) )
     

@@ -32,7 +32,7 @@ public interface IListItemWithJavaType extends Element
 {
     ElementType TYPE = new ElementType( IListItemWithJavaType.class );
     
-    // *** StringValue ***
+    // *** JavaType ***
     
     @Type( base = JavaTypeName.class )
     @Reference( target = JavaType.class )

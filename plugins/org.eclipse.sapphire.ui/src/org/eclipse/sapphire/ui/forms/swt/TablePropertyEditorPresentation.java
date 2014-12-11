@@ -795,6 +795,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                         public void run()
                         {
                             deleteAction.removeHandler( deleteActionHandler );
+                            deleteActionHandler.dispose();
                         }
                     }
                 );
@@ -814,6 +815,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                         public void run()
                         {
                             moveUpAction.removeHandler( moveUpActionHandler );
+                            moveUpActionHandler.dispose();
                         }
                     }
                 );
@@ -830,6 +832,7 @@ public class TablePropertyEditorPresentation extends ListPropertyEditorPresentat
                         public void run()
                         {
                             moveDownAction.removeHandler( moveDownActionHandler );
+                            moveDownActionHandler.dispose();
                         }
                     }
                 );
