@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2014 Oracle
+ * Copyright (c) 2014 Oracle and OnPositive
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  *    Ling Hao - [329114] rewrite context help binding feature
+ *    Dmitry Karpenko - [455493] expand outline nodes with a double-click
  ******************************************************************************/
 
 package org.eclipse.sapphire.ui.forms.swt;
@@ -47,6 +48,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -172,6 +175,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="mailto:ling.hao@oracle.com">Ling Hao</a>
+ * @author <a href="mailto:dmitry.karpenko@onpositive.com">Dmitry Karpenko</a>
  */
 
 public final class MasterDetailsEditorPage extends SapphireEditorFormPage implements ISapphireEditorActionContributor
@@ -1038,6 +1043,16 @@ public final class MasterDetailsEditorPage extends SapphireEditorFormPage implem
                 }
             }
         );
+        
+        treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+            public void doubleClick(DoubleClickEvent event) {
+                IStructuredSelection thisSelection = (IStructuredSelection) event.getSelection();
+                if (thisSelection.size() == 1) {
+                    MasterDetailsContentNodePart selectedNode = (MasterDetailsContentNodePart) thisSelection.getFirstElement();
+                    selectedNode.setExpanded(!selectedNode.isExpanded());
+                }
+            }
+        });
         
         treeViewer.addTreeListener
         (
