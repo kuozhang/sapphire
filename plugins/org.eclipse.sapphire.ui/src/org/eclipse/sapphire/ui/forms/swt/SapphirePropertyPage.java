@@ -75,7 +75,7 @@ public class SapphirePropertyPage extends PropertyPage
         
         this.elementInstantiatedLocally = true;
         
-        init( type.instantiate(), definition );
+        init( (Element) type.instantiate(), definition );
     }
     
     protected void init( final Element element,

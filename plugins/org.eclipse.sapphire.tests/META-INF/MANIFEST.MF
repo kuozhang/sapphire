@@ -17,5 +17,5 @@ Require-Bundle: org.eclipse.sapphire.modeling,
  org.junit,
  org.eclipse.sapphire.osgi
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %providerName

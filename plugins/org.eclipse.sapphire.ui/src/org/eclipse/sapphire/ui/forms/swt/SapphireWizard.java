@@ -103,7 +103,7 @@ public class SapphireWizard<M extends Element> implements IWizard, Disposable
         
         this.elementInstantiatedLocally = true;
         
-        init( type.instantiate(), definition );
+        init( (Element) type.instantiate(), definition );
     }
     
     protected void init( final Element element, final DefinitionLoader.Reference<WizardDef> definition )

@@ -6,7 +6,7 @@ Bundle-Version: 9.0.0.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: bundle
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.sapphire.java,
  org.eclipse.sapphire.modeling,
  org.eclipse.sapphire.modeling.xml,
