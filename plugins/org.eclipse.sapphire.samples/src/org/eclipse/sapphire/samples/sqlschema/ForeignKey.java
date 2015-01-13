@@ -23,7 +23,6 @@ import org.eclipse.sapphire.modeling.annotations.MustExist;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
@@ -74,7 +73,8 @@ public interface ForeignKey extends Element
         @Reference( target = Column.class )
         @Required
         @MustExist
-        @Services( { @Service( impl = ForeignKeyColumnReferenceService.class ), @Service( impl = FKColumnAssociationValidator.class ) } )
+        @Service( impl = ForeignKeyColumnReferenceService.class )
+        @Service( impl = FKColumnAssociationValidator.class )
         
         ValueProperty PROP_REFERENCED_COLUMN = new ValueProperty( TYPE, "ReferencedColumn" );
         

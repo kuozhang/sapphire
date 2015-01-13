@@ -16,7 +16,6 @@ import org.eclipse.sapphire.PreferDefaultValue;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.sdk.extensibility.SapphireExtensionDef;
 import org.eclipse.sapphire.sdk.internal.CreateExtensionManifestOpServices.FolderInitialValueService;
 import org.eclipse.sapphire.sdk.internal.CreateExtensionManifestOpServices.FolderValidationService;
@@ -35,13 +34,8 @@ public interface CreateExtensionManifestOp extends CreateWorkspaceFileOp
     
     // *** Folder ***
     
-    @Services
-    (
-        {
-            @Service( impl = FolderValidationService.class ),
-            @Service( impl = FolderInitialValueService.class )
-        }
-    )
+    @Service( impl = FolderValidationService.class )
+    @Service( impl = FolderInitialValueService.class )
     
     ValueProperty PROP_FOLDER = new ValueProperty( TYPE, CreateWorkspaceFileOp.PROP_FOLDER );
     

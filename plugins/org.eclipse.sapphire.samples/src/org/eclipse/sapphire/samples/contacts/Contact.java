@@ -28,7 +28,6 @@ import org.eclipse.sapphire.modeling.annotations.Image;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.CustomXmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
@@ -45,14 +44,8 @@ import org.eclipse.sapphire.samples.contacts.internal.ContactMethods;
  */
 
 @Image( path = "Contact.png" )
-
-@Services
-(
-    { 
-        @Service( impl = ContactImageService.class ), 
-        @Service( impl = ContactEqualityService.class )
-    }
-)
+@Service( impl = ContactImageService.class )
+@Service( impl = ContactEqualityService.class )
 
 public interface Contact extends Element
 {

@@ -17,7 +17,6 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.gallery.internal.RectangleToStringConversionService;
@@ -35,15 +34,9 @@ public interface ICustomValueGallery extends Element
     
     @Type( base = Rectangle.class )
     @Label( standard = "rectangle" )
+    @Service( impl = StringToRectangleConversionService.class )
+    @Service( impl = RectangleToStringConversionService.class )
     @XmlBinding( path = "rectangle" )
-
-    @Services
-    (
-        {
-            @Service( impl = StringToRectangleConversionService.class ),
-            @Service( impl = RectangleToStringConversionService.class )
-        }
-    )
     
     ValueProperty PROP_RECTANGLE = new ValueProperty( TYPE, "Rectangle" );
     

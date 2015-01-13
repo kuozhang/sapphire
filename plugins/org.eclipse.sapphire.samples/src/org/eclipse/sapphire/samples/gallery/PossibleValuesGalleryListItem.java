@@ -21,7 +21,6 @@ import org.eclipse.sapphire.modeling.Status.Severity;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.samples.gallery.internal.ColorPossibleValuesService;
 import org.eclipse.sapphire.samples.gallery.internal.ColorValueImageService;
@@ -41,15 +40,9 @@ public interface PossibleValuesGalleryListItem extends Element
     @XmlBinding( path = "color" )
     @DefaultValue( text = "Green" )
     @Collation( ignoreCaseDifferences = "true" )
-
-    @Services
-    ( 
-        {
-            @Service( impl = ColorPossibleValuesService.class ),
-            @Service( impl = ColorValueLabelService.class, context = Service.Context.METAMODEL ),
-            @Service( impl = ColorValueImageService.class, context = Service.Context.METAMODEL )
-        }
-    )
+    @Service( impl = ColorPossibleValuesService.class )
+    @Service( impl = ColorValueLabelService.class, context = Service.Context.METAMODEL )
+    @Service( impl = ColorValueImageService.class, context = Service.Context.METAMODEL )
     
     ValueProperty PROP_COLOR = new ValueProperty( TYPE, "Color" );
     

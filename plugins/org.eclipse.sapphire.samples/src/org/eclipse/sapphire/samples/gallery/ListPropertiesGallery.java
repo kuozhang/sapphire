@@ -24,7 +24,6 @@ import org.eclipse.sapphire.modeling.annotations.DefaultValue;
 import org.eclipse.sapphire.modeling.annotations.Enablement;
 import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
@@ -111,15 +110,9 @@ public interface ListPropertiesGallery extends Element
         // *** Item ***
         
         @Label( standard = "color" )
+        @Service( impl = ColorValueLabelService.class, context = Service.Context.METAMODEL )
+        @Service( impl = ColorValueImageService.class, context = Service.Context.METAMODEL )
         @Unique
-        
-        @Services
-        (
-            {
-                @Service( impl = ColorValueLabelService.class, context = Service.Context.METAMODEL ),
-                @Service( impl = ColorValueImageService.class, context = Service.Context.METAMODEL )
-            }
-        )
 
         ValueProperty PROP_ITEM = new ValueProperty( TYPE, "Item" );
         

@@ -32,7 +32,6 @@ import org.eclipse.sapphire.modeling.annotations.Label;
 import org.eclipse.sapphire.modeling.annotations.Reference;
 import org.eclipse.sapphire.modeling.annotations.Required;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.modeling.annotations.ValidFileSystemResourceType;
 import org.eclipse.sapphire.workspace.internal.CreateWorkspaceFileOpServices.FileReferenceService;
@@ -83,15 +82,9 @@ public interface CreateWorkspaceFileOp extends ExecutableElement
     @Reference( target = IContainer.class )
     @Label( standard = "fol&der" )
     @ValidFileSystemResourceType( FileSystemResourceType.FOLDER )
-    
-    @Services
-    (
-        {
-            @Service( impl = FolderReferenceService.class ),
-            @Service( impl = FolderValidationService.class ),
-            @Service( impl = FolderInitialValueService.class )
-        }
-    )
+    @Service( impl = FolderReferenceService.class )
+    @Service( impl = FolderValidationService.class )
+    @Service( impl = FolderInitialValueService.class )
     
     ValueProperty PROP_FOLDER = new ValueProperty( TYPE, "Folder" );
     
@@ -105,15 +98,9 @@ public interface CreateWorkspaceFileOp extends ExecutableElement
     @Type( base = FileName.class )
     @Reference( target = IFile.class )
     @Label( standard = "file na&me" )
+    @Service( impl = FileReferenceService.class )
+    @Service( impl = FileValidationService.class )
     @Required
-    
-    @Services
-    (
-        {
-            @Service( impl = FileReferenceService.class ),
-            @Service( impl = FileValidationService.class )
-        }
-    )
     
     ValueProperty PROP_FILE = new ValueProperty( TYPE, "File" );
     

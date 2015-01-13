@@ -54,8 +54,9 @@
   <li><a href="#Core">Core</a></li>
   <ol type="A">
     <li><a href="#Core-TransparentReferenceSetting">Transparent Reference Setting</a></li>
+    <li><a href="#Core-RepeatableService">Repeatable @Service</a></li>
   </ol>
-  <li><a href="#Diagram">Core</a></li>
+  <li><a href="#Diagram">Diagram</a></li>
   <ol type="A">
     <li><a href="#DiagramPaletteImage">Diagram Editor Palette Icons</a></li>
   </ol>  
@@ -111,6 +112,27 @@ void setTable( Table value );</code></pre>
 
 <pre class="source-code"><code><span class="unaffected">Table table = ...</span>
 element.setTable( table );</code></pre>
+
+
+<h2><a name="Core-RepeatableService">Repeatable @Service</a></h2>
+
+<p>Taking advantage of Java 8, @Service annotation is now repeatable, saving user the trouble of manually wrapping @Services
+container annotation around multiple @Service annotations present at a single site.</p>
+
+<pre class="source-code"><code><span class="unaffected">@Type( base = Path.class )
+@Reference( target = IContainer.class )
+@ValidFileSystemResourceType( FileSystemResourceType.FOLDER )</span>
+@Service( impl = FolderReferenceService.class )
+@Service( impl = FolderValidationService.class )
+@Service( impl = FolderInitialValueService.class )
+
+<span class="unaffected">ValueProperty PROP_FOLDER = new ValueProperty( TYPE, "Folder" );
+    
+ReferenceValue&lt;Path,IContainer> getFolder();
+void setFolder( String value );
+void setFolder( Path value );
+void setFolder( IContainer value );</span></code></pre>
+
 
 <h2><a name="Diagram"><a name="DiagramPaletteImage">Diagram Editor Palette Icons</a></a></h2>
 

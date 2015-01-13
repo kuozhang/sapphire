@@ -16,7 +16,6 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.Service;
-import org.eclipse.sapphire.modeling.annotations.Services;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -28,7 +27,8 @@ public interface TestElement extends Element
     
     // *** Value ***
     
-    @Services( { @Service( impl = TestValidationService.class ), @Service( impl = TestEnablementService.class ) } )
+    @Service( impl = TestValidationService.class )
+    @Service( impl = TestEnablementService.class )
     
     ValueProperty PROP_VALUE = new ValueProperty( TYPE, "Value" );
     
