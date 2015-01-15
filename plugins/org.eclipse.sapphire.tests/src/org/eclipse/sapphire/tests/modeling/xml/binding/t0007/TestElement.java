@@ -18,21 +18,14 @@ import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  * @author <a href="mailto:kamesh.sampath@accenture.com">Kamesh Sampath</a> 
  */
 
-@XmlNamespaces
-(
-    {
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0007/x", prefix = "y" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0007/y", prefix = "y1" )
-    }
-)
-
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0007/x", prefix = "y" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0007/y", prefix = "y1" )
 @XmlBinding( path = "y:root" )
 
 public interface TestElement extends Element

@@ -57,6 +57,7 @@
     <li><a href="#Core-RepeatableFact">Repeatable @Fact</a></li>
     <li><a href="#Core-RepeatableService">Repeatable @Service</a></li>
     <li><a href="#Core-RepeatableValidation">Repeatable @Validation</a></li>
+    <li><a href="#Core-RepeatableXmlNamespace">Repeatable @XmlNamespace</a></li>
   </ol>
   <li><a href="#Diagram">Diagram</a></li>
   <ol type="A">
@@ -167,6 +168,22 @@ container annotation around multiple @Validation annotations present at a single
 Value&lt;Integer> getMax();
 void setMax( String value );
 void setMax( Integer value );</span></code></pre>
+
+
+<h2><a name="Core-RepeatableXmlNamespace">Repeatable @XmlNamespace</a></h2>
+
+<p>Taking advantage of Java 8, @XmlNamespace annotation is now repeatable, saving user the trouble of manually wrapping @XmlNamespaces
+container annotation around multiple @XmlNamespace annotations present at a single site.</p>
+
+<pre class="source-code"><code>@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/x", prefix = "x" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/y", prefix = "y" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/z", prefix = "" )
+<span class="unaffected">@XmlBinding( path = "example" )
+
+public interface ExampleElement extends Element
+{
+    ...
+}</span></code></pre>
 
 
 <h2><a name="Diagram"><a name="DiagramPaletteImage">Diagram Editor Palette Icons</a></a></h2>

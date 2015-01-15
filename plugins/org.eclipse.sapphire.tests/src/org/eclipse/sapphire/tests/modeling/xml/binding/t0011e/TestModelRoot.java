@@ -22,21 +22,14 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespace;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlNamespaces;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-@XmlNamespaces
-(
-    {
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/1", prefix = "" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/2", prefix = "ns2" ),
-        @XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/3", prefix = "ns3" )
-    }
-)
-
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/1", prefix = "" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/2", prefix = "ns2" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/tests/xml/binding/0011e/3", prefix = "ns3" )
 @XmlBinding( path = "root" )
 
 public interface TestModelRoot extends Element
