@@ -239,7 +239,7 @@
         <implementation>org.eclipse.sapphire.services.FactsAggregationService</implementation>
     </service>
     <service>
-        <description>Creates fact statements about property by using static content specified in @Fact and @Facts annotations.</description>
+        <description>Creates fact statements about property by using static content specified in @Fact annotations.</description>
         <context>Sapphire.Property.Instance</context>
         <id>Sapphire.FactsService.Static</id>
         <implementation>org.eclipse.sapphire.services.internal.StaticFactsService</implementation>

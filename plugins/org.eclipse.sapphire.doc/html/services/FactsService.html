@@ -92,9 +92,8 @@ at the property level using @Service annotation.</p>
     &lt;/service>
 <font color="#888888">&lt;/extension></font></code></pre>
 
-<p>Facts can also be statically specified for a given property by using @Fact annotation. Use @Facts
-annotation to specify multiple facts. The facts contained in these annotations are surfaced by an
-included FactsService implementation (id:Sapphire.FactsService.Static).</p>
+<p>Facts can also be statically specified for a given property by using @Fact annotation. The facts
+contained in these annotations are surfaced by an included FactsService implementation (id:Sapphire.FactsService.Static).</p>
 
 <p style="margin-left: 20px;"><b>Example</b></p>
 
@@ -109,7 +108,8 @@ void setExampleOne( String value );
 
 // *** ExampleMultiple ***</font>
 
-@Facts( { @Fact( statement = "First important fact." ), @Fact( statement = "Second important fact." ) } )
+@Fact( statement = "First important fact." )
+@Fact( statement = "Second important fact." )
 
 <font color="#888888">ValueProperty PROP_EXAMPLE_MULTIPLE = new ValueProperty( TYPE, "ExampleMultiple" );
 
