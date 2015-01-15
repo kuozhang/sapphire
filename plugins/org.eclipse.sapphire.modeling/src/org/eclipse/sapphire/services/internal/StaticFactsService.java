@@ -23,7 +23,7 @@ import org.eclipse.sapphire.services.ServiceCondition;
 import org.eclipse.sapphire.services.ServiceContext;
 
 /**
- * Creates fact statements about property by using static content specified in @Fact and @Facts annotations.
+ * Creates fact statements about property by using static content specified in @Fact annotations.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

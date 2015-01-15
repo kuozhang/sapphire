@@ -303,8 +303,9 @@ public interface TestRootElement extends Element
     
     // *** StaticFact ***
     
-    @Fact( statement = "First static fact.")
-    @Facts( { @Fact( statement = "Second static fact." ), @Fact( statement = "Third static fact." ) } )
+    @Fact( statement = "First static fact." )
+    @Fact( statement = "Second static fact." )
+    @Fact( statement = "Third static fact." )
     
     ValueProperty PROP_STATIC_FACT = new ValueProperty( TYPE, "StaticFact" );
     
