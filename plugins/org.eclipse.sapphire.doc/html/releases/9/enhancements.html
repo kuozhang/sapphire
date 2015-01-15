@@ -58,6 +58,7 @@
     <li><a href="#Core-RepeatableService">Repeatable @Service</a></li>
     <li><a href="#Core-RepeatableValidation">Repeatable @Validation</a></li>
     <li><a href="#Core-RepeatableXmlNamespace">Repeatable @XmlNamespace</a></li>
+    <li><a href="#Core-RepeatableXmlSchema">Repeatable @XmlSchema</a></li>
   </ol>
   <li><a href="#Diagram">Diagram</a></li>
   <ol type="A">
@@ -178,6 +179,28 @@ container annotation around multiple @XmlNamespace annotations present at a sing
 <pre class="source-code"><code>@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/x", prefix = "x" )
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/y", prefix = "y" )
 @XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/z", prefix = "" )
+<span class="unaffected">@XmlSchema( namespace="http://www.eclipse.org/sapphire/example/x", location="http://www.eclipse.org/sapphire/example/x/1.0" )
+@XmlSchema( namespace="http://www.eclipse.org/sapphire/example/y", location="http://www.eclipse.org/sapphire/example/y/1.0" )
+@XmlSchema( namespace="http://www.eclipse.org/sapphire/example/z", location="http://www.eclipse.org/sapphire/example/z/1.0" )
+@XmlBinding( path = "example" )
+
+public interface ExampleElement extends Element
+{
+    ...
+}</span></code></pre>
+
+
+<h2><a name="Core-RepeatableXmlSchema">Repeatable @XmlSchema</a></h2>
+
+<p>Taking advantage of Java 8, @XmlSchema annotation is now repeatable, saving user the trouble of manually wrapping @XmlSchemas
+container annotation around multiple @XmlSchema annotations present at a single site.</p>
+
+<pre class="source-code"><code><span class="unaffected">@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/x", prefix = "x" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/y", prefix = "y" )
+@XmlNamespace( uri = "http://www.eclipse.org/sapphire/example/z", prefix = "" )</span>
+@XmlSchema( namespace="http://www.eclipse.org/sapphire/example/x", location="http://www.eclipse.org/sapphire/example/x/1.0" )
+@XmlSchema( namespace="http://www.eclipse.org/sapphire/example/y", location="http://www.eclipse.org/sapphire/example/y/1.0" )
+@XmlSchema( namespace="http://www.eclipse.org/sapphire/example/z", location="http://www.eclipse.org/sapphire/example/z/1.0" )
 <span class="unaffected">@XmlBinding( path = "example" )
 
 public interface ExampleElement extends Element
