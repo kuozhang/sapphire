@@ -14,7 +14,6 @@ package org.eclipse.sapphire.tests.services.t0014;
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Validation;
-import org.eclipse.sapphire.Validations;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Status;
@@ -45,14 +44,8 @@ public interface TestElement extends Element
     
     @Type( base = Integer.class )
     @DefaultValue( text = "0" )
-    
-    @Validations
-    (
-        {
-            @Validation( rule = "${ Max >= Min }", message = "Must not be smaller than min" ),
-            @Validation( rule = "${ Max <= 100 }", message = "Must be less than or equal to 100", severity = Status.Severity.WARNING )
-        }
-    )
+    @Validation( rule = "${ Max >= Min }", message = "Must not be smaller than min" )
+    @Validation( rule = "${ Max <= 100 }", message = "Must be less than or equal to 100", severity = Status.Severity.WARNING )
     
     ValueProperty PROP_MAX = new ValueProperty( TYPE, "Max" );
     

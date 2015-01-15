@@ -15,7 +15,7 @@ import org.eclipse.sapphire.tests.SapphireTestCase;
 import org.junit.Test;
 
 /**
- * Tests for @Validation, @Validations and DeclarativeValidationService.
+ * Tests for @Validation and DeclarativeValidationService.
  * 
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */

@@ -55,6 +55,7 @@
   <ol type="A">
     <li><a href="#Core-TransparentReferenceSetting">Transparent Reference Setting</a></li>
     <li><a href="#Core-RepeatableService">Repeatable @Service</a></li>
+    <li><a href="#Core-RepeatableValidation">Repeatable @Validation</a></li>
   </ol>
   <li><a href="#Diagram">Diagram</a></li>
   <ol type="A">
@@ -132,6 +133,23 @@ ReferenceValue&lt;Path,IContainer> getFolder();
 void setFolder( String value );
 void setFolder( Path value );
 void setFolder( IContainer value );</span></code></pre>
+
+
+<h2><a name="Core-RepeatableValidation">Repeatable @Validation</a></h2>
+
+<p>Taking advantage of Java 8, @Validation annotation is now repeatable, saving user the trouble of manually wrapping @Validations
+container annotation around multiple @Validation annotations present at a single site.</p>
+
+<pre class="source-code"><code><span class="unaffected">@Type( base = Integer.class )
+@DefaultValue( text = "0" )</span>
+@Validation( rule = "${ Max >= Min }", message = "Must not be smaller than min" )
+@Validation( rule = "${ Max &lt;= 100 }", message = "Must be less than or equal to 100", severity = Status.Severity.WARNING )
+    
+<span class="unaffected">ValueProperty PROP_MAX = new ValueProperty( TYPE, "Max" );
+    
+Value&lt;Integer> getMax();
+void setMax( String value );
+void setMax( Integer value );</span></code></pre>
 
 
 <h2><a name="Diagram"><a name="DiagramPaletteImage">Diagram Editor Palette Icons</a></a></h2>

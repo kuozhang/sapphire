@@ -12,6 +12,7 @@
 package org.eclipse.sapphire;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -27,6 +28,7 @@ import org.eclipse.sapphire.modeling.Status;
 
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.FIELD )
+@Repeatable( Validations.class )
 
 public @interface Validation
 {
