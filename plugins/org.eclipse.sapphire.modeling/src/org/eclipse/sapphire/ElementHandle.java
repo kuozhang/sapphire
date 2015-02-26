@@ -20,7 +20,6 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
-import org.eclipse.sapphire.services.PossibleTypesService;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>

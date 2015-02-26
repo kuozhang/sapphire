@@ -59,6 +59,7 @@
     <li><a href="#Core-RepeatableValidation">Repeatable @Validation</a></li>
     <li><a href="#Core-RepeatableXmlNamespace">Repeatable @XmlNamespace</a></li>
     <li><a href="#Core-RepeatableXmlSchema">Repeatable @XmlSchema</a></li>
+    <li><a href="#Core-OrderedPossibleTypes">Ordered Possible Types</a></li>
   </ol>
   <li><a href="#Diagram">Diagram</a></li>
   <ol type="A">
@@ -207,6 +208,26 @@ public interface ExampleElement extends Element
 {
     ...
 }</span></code></pre>
+
+
+<h2><a name="Core-OrderedPossibleTypes">Ordered Possible Types</a></h2>
+
+<p>Typically, possible types have no particular order and it is desirable to present them sorted by the type name. In some cases,
+the order is significant. New API allows these cases to be differentiated.</p>
+
+<pre class="source-code"><code><font color="#888888">@Type
+{</font>
+    boolean ordered() default false
+<font color="#888888">}
+
+PossibleTypesService
+{</font>
+    public boolean ordered()
+    {
+        return false;
+    }
+<font color="#888888">}</font></code></pre>
+
 
 
 <h2><a name="Diagram"><a name="DiagramPaletteImage">Diagram Editor Palette Icons</a></a></h2>

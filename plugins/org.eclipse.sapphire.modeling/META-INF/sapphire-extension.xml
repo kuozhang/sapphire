@@ -708,7 +708,7 @@
         <id>Sapphire.PossibleTypesService.Standard</id>
         <context>Sapphire.Property.MetaModel</context>
         <description>Implementation of PossibleTypesService using information specified by @Type annotation.</description>
-        <implementation>org.eclipse.sapphire.services.internal.StandardPossibleTypesService</implementation>
+        <implementation>org.eclipse.sapphire.internal.StandardPossibleTypesService</implementation>
     </service>
     <service>
         <context>Sapphire.Property.Instance</context>

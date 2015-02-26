@@ -13,11 +13,11 @@ package org.eclipse.sapphire.tests.workspace.t0001;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementType;
+import org.eclipse.sapphire.Type;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.Path;
 import org.eclipse.sapphire.modeling.annotations.MustExist;
-import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.workspace.ProjectRelativePath;
 import org.eclipse.sapphire.workspace.WorkspaceRelativePath;
 

@@ -29,12 +29,12 @@ import org.eclipse.sapphire.LayeredListPropertyBinding;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LocalizableText;
 import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.PossibleTypesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.Resource;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.Text;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
-import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.util.ListFactory;
 
 /**

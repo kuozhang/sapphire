@@ -9,7 +9,7 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.modeling.annotations;
+package org.eclipse.sapphire;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -27,4 +27,13 @@ public @interface Type
 {
     Class<?> base();
     Class<?>[] possible() default {};
+
+    /**
+     * Specifies if the possible types are already ordered as intended. By default, the order
+     * is not treated as significant and the possible types are sorted alphabetically by the type
+     * name when presented.
+     */
+    
+    boolean ordered() default false;
+    
 }

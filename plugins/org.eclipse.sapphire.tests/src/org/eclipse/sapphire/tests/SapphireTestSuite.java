@@ -23,6 +23,8 @@ import org.eclipse.sapphire.tests.modeling.SapphireModelingFrameworkTests;
 import org.eclipse.sapphire.tests.observable.ObservableTests;
 import org.eclipse.sapphire.tests.path.relative.RelativePathTests;
 import org.eclipse.sapphire.tests.possible.PossibleValuesTest;
+import org.eclipse.sapphire.tests.property.ElementPropertyTests;
+import org.eclipse.sapphire.tests.property.ListPropertyTests;
 import org.eclipse.sapphire.tests.property.PropertyTests;
 import org.eclipse.sapphire.tests.reference.element.ElementReferenceTests;
 import org.eclipse.sapphire.tests.services.ServicesTestSuite;
@@ -53,6 +55,8 @@ import org.junit.runners.Suite.SuiteClasses;
         ObservableTests.class,
         PossibleValuesTest.class,
         PropertyTests.class,
+        ElementPropertyTests.class,
+        ListPropertyTests.class,
         RelativePathTests.class,
         SapphireModelingFrameworkTests.class,
         ServicesTestSuite.class,

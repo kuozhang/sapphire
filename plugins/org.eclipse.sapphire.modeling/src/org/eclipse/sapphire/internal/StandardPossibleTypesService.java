@@ -9,17 +9,16 @@
  *    Konstantin Komissarchik - initial implementation and ongoing maintenance
  ******************************************************************************/
 
-package org.eclipse.sapphire.services.internal;
+package org.eclipse.sapphire.internal;
 
 import java.util.Set;
 
 import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
+import org.eclipse.sapphire.PossibleTypesService;
 import org.eclipse.sapphire.PropertyDef;
-import org.eclipse.sapphire.modeling.annotations.Type;
-import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.util.SetFactory;
+import org.eclipse.sapphire.Type;
 
 /**
  * Implementation of PossibleTypesService using information specified by @Type annotation.
@@ -29,29 +28,46 @@ import org.eclipse.sapphire.util.SetFactory;
 
 public final class StandardPossibleTypesService extends PossibleTypesService
 {
+    private boolean ordered;
+    
     @Override
-    protected Set<ElementType> compute()
+    protected void initPossibleTypesService()
     {
         final PropertyDef property = context( PropertyDef.class );
         final Type typeAnnotation = property.getAnnotation( Type.class );
-        final SetFactory<ElementType> possibleTypesSetFactory = SetFactory.start();
+        
+        if( typeAnnotation != null )
+        {
+            this.ordered = typeAnnotation.ordered();
+        }
+    }
+
+    @Override
+    protected void compute( final Set<ElementType> types )
+    {
+        final PropertyDef property = context( PropertyDef.class );
+        final Type typeAnnotation = property.getAnnotation( Type.class );
         
         if( ( property instanceof ElementProperty || property instanceof ListProperty ) && typeAnnotation != null )
         {
             if( typeAnnotation.possible().length == 0 )
             {
-                possibleTypesSetFactory.add( ElementType.read( typeAnnotation.base() ) );
+                types.add( ElementType.read( typeAnnotation.base() ) );
             }
             else
             {
                 for( final Class<?> cl : typeAnnotation.possible() )
                 {
-                    possibleTypesSetFactory.add( ElementType.read( cl ) );
+                    types.add( ElementType.read( cl ) );
                 }
             }
         }
-        
-        return possibleTypesSetFactory.result();
+    }
+
+    @Override
+    public boolean ordered()
+    {
+        return this.ordered;
     }
 
 }

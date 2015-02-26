@@ -51,17 +51,19 @@ of PossibleTypesService can be provided.</p>
     }
 
     @Override
-    protected PossibleTypesServiceData compute()
+    protected void compute( final Set&lt;ElementType> types )
     {
-        // Compute the list of possible types.
-
-        List&lt;ElementType> types = new ArrayList&lt;ElementType>();
-
-        ...
-
-        return new PossibleTypesServiceData( types );
+        // Compute the set of possible types.
     }
 
+    @Override
+    public boolean ordered()
+    {
+        // Return true if the types supplied in the compute method are already in the intended
+        // order. By default, the order is not treated as significant and the possible types are
+        // sorted alphabetically by the type name when presented.
+    }
+    
     @Override
     public void dispose()
     {

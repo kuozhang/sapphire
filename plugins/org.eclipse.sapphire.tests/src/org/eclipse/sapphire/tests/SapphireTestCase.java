@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests;
 
+import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
 import static org.eclipse.sapphire.util.StringUtil.UTF8;
 
 import java.io.BufferedReader;
@@ -334,6 +335,26 @@ public abstract class SapphireTestCase extends Assert
         if( ! type.isInstance( object ) )
         {
             fail( "Expected " + type.getSimpleName() + ". Found " + object.getClass().getSimpleName() + "." );
+        }
+    }
+    
+    protected static void assertSetOrder( final Set<?> set, final Object... entries )
+    {
+        if( set.size() != entries.length )
+        {
+            fail( "The set size does not contain the expected number of entries." );
+        }
+        
+        assertEquals( set, set( entries ) );
+        
+        final Iterator<?> itr = set.iterator();
+        
+        for( int i = 0; i < entries.length; i++ )
+        {
+            if( ! equal( itr.next(), entries[ i ] ) )
+            {
+                fail( "The set does not have the expected order." );
+            }
         }
     }
     

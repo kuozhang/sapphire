@@ -14,12 +14,12 @@ package org.eclipse.sapphire.ui.forms.swt.internal;
 import java.util.SortedSet;
 
 import org.eclipse.sapphire.ElementList;
+import org.eclipse.sapphire.PossibleTypesService;
 import org.eclipse.sapphire.PossibleValuesService;
 import org.eclipse.sapphire.Property;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Unique;
 import org.eclipse.sapphire.ValueProperty;
-import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.sapphire.ui.forms.swt.PropertyEditorPresentationFactory;
 

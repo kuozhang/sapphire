@@ -16,13 +16,12 @@ import java.util.Set;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
 import org.eclipse.sapphire.Listener;
+import org.eclipse.sapphire.PossibleTypesService;
 import org.eclipse.sapphire.PropertyContentEvent;
 import org.eclipse.sapphire.samples.gallery.ElementPropertyCustomGallery;
 import org.eclipse.sapphire.samples.gallery.IChildElement;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithEnum;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithInteger;
-import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -52,10 +51,9 @@ public final class ElementPropertyCustomGalleryServices
         }
         
         @Override
-        protected Set<ElementType> compute()
+        protected void compute( final Set<ElementType> types )
         {
             final ElementPropertyCustomGallery gallery = context( ElementPropertyCustomGallery.class );
-            final SetFactory<ElementType> types = SetFactory.start();
             
             types.add( IChildElement.TYPE );
             
@@ -68,8 +66,6 @@ public final class ElementPropertyCustomGalleryServices
             {
                 types.add( IChildElementWithEnum.TYPE );
             }
-            
-            return types.result();
         }
     }
     

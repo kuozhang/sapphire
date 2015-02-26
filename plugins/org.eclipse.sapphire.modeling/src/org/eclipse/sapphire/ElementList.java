@@ -26,7 +26,6 @@ import org.eclipse.sapphire.modeling.ModelPath;
 import org.eclipse.sapphire.modeling.ModelPath.AllDescendentsSegment;
 import org.eclipse.sapphire.modeling.ModelPath.PropertySegment;
 import org.eclipse.sapphire.modeling.ModelPath.TypeFilterSegment;
-import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.util.EqualsFactory;
 import org.eclipse.sapphire.util.HashCodeFactory;
 

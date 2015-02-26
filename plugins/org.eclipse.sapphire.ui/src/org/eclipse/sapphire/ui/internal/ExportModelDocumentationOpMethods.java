@@ -30,6 +30,7 @@ import org.eclipse.sapphire.ElementProperty;
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.LoggingService;
+import org.eclipse.sapphire.PossibleTypesService;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.Sapphire;
 import org.eclipse.sapphire.ValueProperty;
@@ -41,7 +42,6 @@ import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlElementBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlListBinding;
 import org.eclipse.sapphire.modeling.xml.annotations.XmlValueBinding;
-import org.eclipse.sapphire.services.PossibleTypesService;
 import org.eclipse.sapphire.ui.IExportModelDocumentationOp;
 import org.osgi.framework.Bundle;
 
