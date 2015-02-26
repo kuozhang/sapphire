@@ -217,10 +217,14 @@ public class MiscUtil
         return result.toString();
     }
     
+    @SafeVarargs
+    
     public static <T> List<T> list( final T... items )
     {
         return Arrays.asList( items );
     }
+    
+    @SafeVarargs
     
     public static <T> Set<T> set( final T... items )
     {

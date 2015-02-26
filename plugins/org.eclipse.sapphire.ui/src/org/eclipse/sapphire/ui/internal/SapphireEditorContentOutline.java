@@ -436,7 +436,7 @@ public final class SapphireEditorContentOutline
             return selectionProvider;
         }
 
-        @SuppressWarnings( "rawtypes" )
+        @SuppressWarnings( { "rawtypes", "unchecked" } )
         public final Object getService(final Class key) {
             return serviceLocator.getService(key);
         }
