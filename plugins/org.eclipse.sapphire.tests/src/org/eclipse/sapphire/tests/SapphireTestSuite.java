@@ -11,6 +11,7 @@
 
 package org.eclipse.sapphire.tests;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.sapphire.tests.binding.list.LayeredListPropertyBindingTests;
 import org.eclipse.sapphire.tests.collation.CollationTests;
 import org.eclipse.sapphire.tests.concurrency.ConcurrencyTests;
@@ -31,6 +32,7 @@ import org.eclipse.sapphire.tests.services.ServicesTestSuite;
 import org.eclipse.sapphire.tests.ui.UiTestSuite;
 import org.eclipse.sapphire.tests.unique.UniqueValueTests;
 import org.eclipse.sapphire.tests.workspace.WorkspaceTestSuite;
+import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -69,4 +71,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 public final class SapphireTestSuite
 {
+    @AfterClass
+    
+    public static void cleanup() throws Exception
+    {
+        ResourcesPlugin.getWorkspace().save( true, null );
+    }
+    
 }
