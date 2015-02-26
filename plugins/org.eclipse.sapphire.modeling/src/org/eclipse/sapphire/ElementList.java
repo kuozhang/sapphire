@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.internal.NonSuspendableListener;
 import org.eclipse.sapphire.modeling.ModelPath;
@@ -366,7 +366,7 @@ public final class ElementList<T extends Element> extends Property implements Li
     
     private T insert$( final ElementType type, final int position )
     {
-        final SortedSet<ElementType> possible = service( PossibleTypesService.class ).types();
+        final Set<ElementType> possible = service( PossibleTypesService.class ).types();
         
         ElementType t = type;
         
@@ -377,7 +377,7 @@ public final class ElementList<T extends Element> extends Property implements Li
                 throw new IllegalArgumentException();
             }
             
-            t = possible.first();
+            t = possible.iterator().next();
         }
         else if( ! possible.contains( t ) )
         {
@@ -459,7 +459,7 @@ public final class ElementList<T extends Element> extends Property implements Li
             {
                 clear$();
                 
-                final SortedSet<ElementType> possibleTypes = service( PossibleTypesService.class ).types();
+                final Set<ElementType> possibleTypes = service( PossibleTypesService.class ).types();
                 
                 for( Element sourceChildElement : (ElementList<?>) p )
                 {
@@ -495,7 +495,7 @@ public final class ElementList<T extends Element> extends Property implements Li
             
             if( content instanceof List )
             {
-                final SortedSet<ElementType> possibleTypes = service( PossibleTypesService.class ).types();
+                final Set<ElementType> possibleTypes = service( PossibleTypesService.class ).types();
                 
                 for( final Object item : (List<?>) content )
                 {

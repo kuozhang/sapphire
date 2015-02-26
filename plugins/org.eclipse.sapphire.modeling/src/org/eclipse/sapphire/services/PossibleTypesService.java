@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.services;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.ElementType;
 
@@ -22,7 +22,7 @@ import org.eclipse.sapphire.ElementType;
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
-public abstract class PossibleTypesService extends DataService<PossibleTypesServiceData>
+public abstract class PossibleTypesService extends DataService<Set<ElementType>>
 {
     @Override
     protected final void initDataService()
@@ -34,9 +34,9 @@ public abstract class PossibleTypesService extends DataService<PossibleTypesServ
     {
     }
     
-    public final SortedSet<ElementType> types()
+    public final Set<ElementType> types()
     {
-        return data().types();
+        return data();
     }
     
 }

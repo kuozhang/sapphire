@@ -11,8 +11,7 @@
 
 package org.eclipse.sapphire.samples.gallery.internal;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.FilteredListener;
@@ -23,7 +22,7 @@ import org.eclipse.sapphire.samples.gallery.IChildElementWithEnum;
 import org.eclipse.sapphire.samples.gallery.IChildElementWithInteger;
 import org.eclipse.sapphire.samples.gallery.ListPropertyCustomGallery;
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.services.PossibleTypesServiceData;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -53,10 +52,10 @@ public final class ListPropertyCustomGalleryServices
         }
         
         @Override
-        protected PossibleTypesServiceData compute()
+        protected Set<ElementType> compute()
         {
             final ListPropertyCustomGallery gallery = context( ListPropertyCustomGallery.class );
-            final List<ElementType> types = new ArrayList<ElementType>();
+            final SetFactory<ElementType> types = SetFactory.start();
             
             types.add( IChildElement.TYPE );
             
@@ -70,7 +69,7 @@ public final class ListPropertyCustomGalleryServices
                 types.add( IChildElementWithEnum.TYPE );
             }
             
-            return new PossibleTypesServiceData( types );
+            return types.result();
         }
     }
     

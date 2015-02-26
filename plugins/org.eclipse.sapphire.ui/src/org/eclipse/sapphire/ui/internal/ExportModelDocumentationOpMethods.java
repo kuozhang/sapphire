@@ -236,7 +236,7 @@ public final class ExportModelDocumentationOpMethods
             {
                 boolean skip = false;
                 
-                final ElementType childType = property.service( PossibleTypesService.class ).types().first();
+                final ElementType childType = property.service( PossibleTypesService.class ).types().iterator().next();
                 final SortedSet<PropertyDef> childTypeProperties = childType.properties();
                 
                 if( childTypeProperties.size() == 1 )

@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.internal.NonSuspendableListener;
 import org.eclipse.sapphire.modeling.ElementPropertyBinding;
@@ -282,7 +282,7 @@ public final class ElementHandle<T extends Element> extends Property
         
         refreshContent( true );
         
-        final SortedSet<ElementType> possible = service( PossibleTypesService.class ).types();
+        final Set<ElementType> possible = service( PossibleTypesService.class ).types();
         
         if( type != null && ! possible.contains( type ) )
         {
@@ -300,7 +300,7 @@ public final class ElementHandle<T extends Element> extends Property
                     throw new IllegalArgumentException();
                 }
                 
-                t = possible.first();
+                t = possible.iterator().next();
             }
             
             final boolean create;

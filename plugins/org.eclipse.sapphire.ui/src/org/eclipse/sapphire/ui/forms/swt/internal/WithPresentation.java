@@ -22,7 +22,7 @@ import static org.eclipse.sapphire.ui.forms.swt.GridLayoutUtil.glspacing;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.Set;
 
 import org.eclipse.sapphire.Element;
 import org.eclipse.sapphire.ElementHandle;
@@ -116,7 +116,7 @@ public final class WithPresentation extends PageBookPresentation
                     control.dispose();
                 }
                 
-                final SortedSet<ElementType> allPossibleTypes = possibleTypesService.types();
+                final Set<ElementType> allPossibleTypes = possibleTypesService.types();
                 final int allPossibleTypesCount = allPossibleTypes.size();
                 final Runnable updateUserInterfaceOp;
                 

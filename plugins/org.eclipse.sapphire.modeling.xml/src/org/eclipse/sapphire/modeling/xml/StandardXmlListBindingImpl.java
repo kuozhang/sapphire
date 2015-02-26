@@ -19,7 +19,7 @@ import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -103,7 +103,7 @@ public class StandardXmlListBindingImpl extends LayeredListPropertyBinding
         final XmlListBinding annotation = property().definition().getAnnotation( XmlListBinding.class );
         final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) property().element().resource() ).getXmlNamespaceResolver();
         
-        final SortedSet<ElementType> possible = this.possibleTypesService.types();
+        final Set<ElementType> possible = this.possibleTypesService.types();
         this.modelElementTypes = possible.toArray( new ElementType[ possible.size() ] );
 
         if( annotation == null )

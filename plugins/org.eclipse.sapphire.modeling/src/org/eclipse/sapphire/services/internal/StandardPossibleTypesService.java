@@ -11,10 +11,6 @@
 
 package org.eclipse.sapphire.services.internal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.sapphire.ElementProperty;
@@ -23,7 +19,7 @@ import org.eclipse.sapphire.ListProperty;
 import org.eclipse.sapphire.PropertyDef;
 import org.eclipse.sapphire.modeling.annotations.Type;
 import org.eclipse.sapphire.services.PossibleTypesService;
-import org.eclipse.sapphire.services.PossibleTypesServiceData;
+import org.eclipse.sapphire.util.SetFactory;
 
 /**
  * Implementation of PossibleTypesService using information specified by @Type annotation.
@@ -33,53 +29,29 @@ import org.eclipse.sapphire.services.PossibleTypesServiceData;
 
 public final class StandardPossibleTypesService extends PossibleTypesService
 {
-    private Set<ElementType> possible;
-    
     @Override
-    protected void initPossibleTypesService()
+    protected Set<ElementType> compute()
     {
         final PropertyDef property = context( PropertyDef.class );
-        final List<Class<?>> possible = new ArrayList<Class<?>>();
-        
         final Type typeAnnotation = property.getAnnotation( Type.class );
+        final SetFactory<ElementType> possibleTypesSetFactory = SetFactory.start();
         
-        if( property instanceof ElementProperty || property instanceof ListProperty )
+        if( ( property instanceof ElementProperty || property instanceof ListProperty ) && typeAnnotation != null )
         {
-            if( typeAnnotation != null )
+            if( typeAnnotation.possible().length == 0 )
             {
-                if( typeAnnotation.possible().length == 0 )
-                {
-                    possible.add( typeAnnotation.base() );
-                }
-                else
-                {
-                    for( Class<?> cl : typeAnnotation.possible() )
-                    {
-                        possible.add( cl );
-                    }
-                }
-            }
-        
-            if( possible.size() == 1 )
-            {
-                this.possible = Collections.singleton( ElementType.read( possible.get( 0 ) ) );
+                possibleTypesSetFactory.add( ElementType.read( typeAnnotation.base() ) );
             }
             else
             {
-                this.possible = new HashSet<ElementType>();
-                
-                for( Class<?> cl : possible )
+                for( final Class<?> cl : typeAnnotation.possible() )
                 {
-                    this.possible.add( ElementType.read( cl ) );
+                    possibleTypesSetFactory.add( ElementType.read( cl ) );
                 }
             }
         }
-    }
-
-    @Override
-    protected PossibleTypesServiceData compute()
-    {
-        return new PossibleTypesServiceData( this.possible );
+        
+        return possibleTypesSetFactory.result();
     }
 
 }

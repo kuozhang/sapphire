@@ -17,7 +17,7 @@ import static org.eclipse.sapphire.modeling.xml.XmlUtil.contains;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.createQualifiedName;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.equal;
 
-import java.util.SortedSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -89,7 +89,7 @@ public class StandardXmlElementBindingImpl extends LayeredElementBindingImpl
             final XmlElementBinding xmlElementBindingAnnotation = property.getAnnotation( XmlElementBinding.class );
             final XmlNamespaceResolver xmlNamespaceResolver = ( (XmlResource) element.resource() ).getXmlNamespaceResolver();
             
-            final SortedSet<ElementType> possible = this.possibleTypesService.types();
+            final Set<ElementType> possible = this.possibleTypesService.types();
             this.modelElementTypes = possible.toArray( new ElementType[ possible.size() ] );
 
             if( xmlElementBindingAnnotation == null )
