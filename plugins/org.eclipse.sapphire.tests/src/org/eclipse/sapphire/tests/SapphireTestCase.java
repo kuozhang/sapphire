@@ -337,14 +337,10 @@ public abstract class SapphireTestCase extends Assert
         }
     }
     
-    @SafeVarargs
-    
     protected static <T> List<T> list( final T... items )
     {
         return MiscUtil.list( items );
     }
-    
-    @SafeVarargs
     
     protected static <T> Set<T> set( final T... items )
     {

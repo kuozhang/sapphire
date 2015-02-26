@@ -42,8 +42,6 @@ public final class ListFactory<E>
         return Collections.singletonList( element );
     }
     
-    @SafeVarargs
-    
     public static <E> List<E> unmodifiable( final E... elements )
     {
         return ListFactory.<E>start().add( elements ).result();
@@ -132,8 +130,6 @@ public final class ListFactory<E>
         
         return this;
     }
-    
-    @SafeVarargs
     
     public final ListFactory<E> add( final E... elements )
     {
