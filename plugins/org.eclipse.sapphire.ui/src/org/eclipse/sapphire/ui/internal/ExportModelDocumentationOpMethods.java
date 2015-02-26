@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.ui.internal;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -314,7 +314,7 @@ public final class ExportModelDocumentationOpMethods
                         
                         try
                         {
-                            final Reader reader = new InputStreamReader( in, UTF8 );
+                            final Reader reader = new InputStreamReader( in, UTF_8 );
                             final char[] chars = new char[ 1024 ];
                             
                             for( int count = reader.read( chars ); count != -1; count = reader.read( chars ) )

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.binding.t0009;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import org.eclipse.sapphire.modeling.ByteArrayResourceStore;
 import org.eclipse.sapphire.modeling.CorruptedResourceExceptionInterceptor;
@@ -66,7 +66,7 @@ public final class TestXmlBinding0009 extends SapphireTestCase
         
         model.resource().save();
         
-        final String result = new String( resourceStore.getContents(), UTF8 );
+        final String result = new String( resourceStore.getContents(), UTF_8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "TestData.txt" ), result );
     }
@@ -108,7 +108,7 @@ public final class TestXmlBinding0009 extends SapphireTestCase
         
         model.resource().save();
         
-        final String result = new String( resourceStore.getContents(), UTF8 );
+        final String result = new String( resourceStore.getContents(), UTF_8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "TestData.txt" ), result );
     }

@@ -54,6 +54,7 @@ to Sapphire 9 from a prior release. Only changes from the previous major release
 <ol>
   <li><a href="#PossibleTypesService">PossibleTypesService</a></li>
   <li><a href="#PossibleTypesServiceData">PossibleTypesServiceData</a></li>
+  <li><a href="#StringUtil">StringUtil</a></li>
   <li><a href="#Type">Type</a></li>
 </ol>
 
@@ -101,6 +102,24 @@ to Sapphire 9 from a prior release. Only changes from the previous major release
 <h2><a name="PossibleTypesServiceData">PossibleTypesServiceData</a></h2>
 
 <p>This class has been removed. See <a href="#PossibleTypesService">PossibleTypesService</a> migration.
+
+
+<h2><a name="StringUtil">StringUtil</a></h2>
+
+<table>
+  <tr>
+    <th>Before</th>
+    <th>After</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="source-code"><code>org.eclipse.sapphire.util.StringUtil.UTF8</code></pre>
+    </td>
+    <td>
+<pre class="source-code"><code>java.nio.charset.StandardCharsets.UTF_8</code></pre>
+    </td>
+  </tr>
+</table>
 
 
 <h2><a name="Type">Type</a></h2>

@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.sdk.extensibility.internal;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -702,7 +702,7 @@ public final class ExtensionSummaryExportOpMethods
                         
                         try
                         {
-                            final Reader reader = new InputStreamReader( in, UTF8 );
+                            final Reader reader = new InputStreamReader( in, UTF_8 );
                             
                             try
                             {

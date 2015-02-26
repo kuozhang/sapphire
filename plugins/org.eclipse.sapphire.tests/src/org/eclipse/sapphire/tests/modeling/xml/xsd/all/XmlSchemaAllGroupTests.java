@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.tests.modeling.xml.xsd.all;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.util.List;
 
@@ -95,7 +95,7 @@ public final class XmlSchemaAllGroupTests extends SapphireTestCase
         
         root.resource().save();
         
-        final String result = new String( resourceStore.getContents(), UTF8 );
+        final String result = new String( resourceStore.getContents(), UTF_8 );
         
         assertEqualsIgnoreNewLineDiffs( loadResource( "InsertOrderExpectedResult.txt" ), result );
     }

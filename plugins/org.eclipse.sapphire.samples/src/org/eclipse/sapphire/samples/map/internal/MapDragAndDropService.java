@@ -12,7 +12,7 @@
 
 package org.eclipse.sapphire.samples.map.internal;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class MapDragAndDropService extends DragAndDropService
         try
         {
             in = file.getContents();
-            final BufferedReader br = new BufferedReader( new InputStreamReader( in, UTF8 ) );
+            final BufferedReader br = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
             
             for( String line = br.readLine(); line != null; line = br.readLine() )
             {

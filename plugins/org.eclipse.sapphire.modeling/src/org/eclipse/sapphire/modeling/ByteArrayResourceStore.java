@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.modeling;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ public class ByteArrayResourceStore extends ResourceStore
     
     public ByteArrayResourceStore( final String contents )
     {
-        this.contents = contents.getBytes( UTF8 );
+        this.contents = contents.getBytes( UTF_8 );
     }
     
     public ByteArrayResourceStore( final InputStream in ) throws ResourceStoreException

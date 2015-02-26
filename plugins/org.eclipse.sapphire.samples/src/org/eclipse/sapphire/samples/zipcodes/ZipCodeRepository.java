@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.samples.zipcodes;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -118,7 +118,7 @@ public final class ZipCodeRepository
             
             try
             {
-                final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF8 ) );
+                final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
                 
                 for( String line = r.readLine(); line != null; line = r.readLine() )
                 {

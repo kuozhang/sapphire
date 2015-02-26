@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.tests;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.eclipse.sapphire.modeling.util.MiscUtil.equal;
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -102,7 +102,7 @@ public abstract class SapphireTestCase extends Assert
         
         try
         {
-            final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF8 ) );
+            final BufferedReader r = new BufferedReader( new InputStreamReader( in, UTF_8 ) );
             final char[] chars = new char[ 1024 ];
             final StringBuilder buf = new StringBuilder();
             

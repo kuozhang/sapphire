@@ -11,8 +11,8 @@
 
 package org.eclipse.sapphire.modeling.xml;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.eclipse.sapphire.modeling.xml.XmlUtil.XML_DECLARATION;
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -75,7 +75,7 @@ public class XmlResourceStore extends ResourceStore
     
                     try
                     {
-                        final Reader reader = new InputStreamReader( in, UTF8 );
+                        final Reader reader = new InputStreamReader( in, UTF_8 );
                         this.document = doc( reader );
                     }
                     finally
@@ -191,7 +191,7 @@ public class XmlResourceStore extends ResourceStore
                 
                 transformer.transform( source, result );
                 
-                this.base.setContents( sw.toString().getBytes( UTF8 ) );
+                this.base.setContents( sw.toString().getBytes( UTF_8 ) );
             }
             else
             {

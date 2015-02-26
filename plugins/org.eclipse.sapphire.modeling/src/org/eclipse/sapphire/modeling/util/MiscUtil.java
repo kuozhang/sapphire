@@ -11,7 +11,7 @@
 
 package org.eclipse.sapphire.modeling.util;
 
-import static org.eclipse.sapphire.util.StringUtil.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -114,7 +114,7 @@ public class MiscUtil
         throws IOException
         
     {
-        return readTextContent( new InputStreamReader( in, UTF8 ) );
+        return readTextContent( new InputStreamReader( in, UTF_8 ) );
     }
     
     public static String readTextResource( final ClassLoader cl,
@@ -155,7 +155,7 @@ public class MiscUtil
         try
         {
             final MessageDigest md = MessageDigest.getInstance( "SHA-256" );
-            final byte[] input = str.getBytes( UTF8 );
+            final byte[] input = str.getBytes( UTF_8 );
             final byte[] digest = md.digest( input );
             
             final StringBuilder buf = new StringBuilder();
