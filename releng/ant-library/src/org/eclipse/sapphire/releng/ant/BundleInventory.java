@@ -76,12 +76,10 @@ public final class BundleInventory
         throws IOException 
         
     {
-        final FileWriter out = new FileWriter( f );
+        final BufferedWriter w = new BufferedWriter( new FileWriter( f ) );
         
         try
         {
-            final BufferedWriter w = new BufferedWriter( out );
-            
             for( BundleInfo bundle : this.bundles )
             {
                 w.write( bundle.getId() );
@@ -96,7 +94,7 @@ public final class BundleInventory
         {
             try
             {
-                out.close();
+                w.close();
             }
             catch( IOException e ) {}
         }
@@ -109,12 +107,10 @@ public final class BundleInventory
     {
         this.bundles.clear();
         
-        final FileReader in = new FileReader( f );
+        final BufferedReader r = new BufferedReader( new FileReader( f ) );
         
         try
         {
-            final BufferedReader r = new BufferedReader( in );
-            
             for( String line = r.readLine(); line != null; line = r.readLine() )
             {
                 final String[] segments = line.split( ":" );
@@ -128,7 +124,7 @@ public final class BundleInventory
         {
             try
             {
-                in.close();
+                r.close();
             }
             catch( IOException e ) {}
         }

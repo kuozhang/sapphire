@@ -57,6 +57,8 @@ public final class SortedSetFactory<E>
         return new SingletonSortedSet<E>( null, element );
     }
 
+    @SafeVarargs
+    
     public static <E> SortedSet<E> unmodifiable( final E... elements )
     {
         return SortedSetFactory.<E>start().add( elements ).result();
@@ -151,7 +153,9 @@ public final class SortedSetFactory<E>
         return this;
     }
     
-    public SortedSetFactory<E> add( final E... elements )
+    @SafeVarargs
+    
+    public final SortedSetFactory<E> add( final E... elements )
     {
     	if( elements != null )
     	{

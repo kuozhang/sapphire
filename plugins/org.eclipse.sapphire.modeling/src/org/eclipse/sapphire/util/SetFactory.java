@@ -42,6 +42,8 @@ public final class SetFactory<E>
         return Collections.singleton( element );
     }
     
+    @SafeVarargs
+    
     public static <E> Set<E> unmodifiable( final E... elements )
     {
         return SetFactory.<E>start().add( elements ).result();
@@ -131,7 +133,9 @@ public final class SetFactory<E>
         return this;
     }
     
-    public SetFactory<E> add( final E... elements )
+    @SafeVarargs
+    
+    public final SetFactory<E> add( final E... elements )
     {
     	if( elements != null )
     	{

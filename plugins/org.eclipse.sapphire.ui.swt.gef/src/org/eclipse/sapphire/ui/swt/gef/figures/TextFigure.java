@@ -196,7 +196,7 @@ public class TextFigure extends Label implements IShapeFigure
 			return textLocation;
 		
 		textLocation = new org.eclipse.draw2d.geometry.Point();
-		Dimension offset = getSize().getDifference(getTextSize());
+		Dimension offset = getSize().getShrinked(getTextSize());
 		offset.width += getTextSize().width - getSubStringTextSize().width;
 		switch (getLabelAlignment()) {
 		case CENTER:
