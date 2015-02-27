@@ -89,9 +89,9 @@ to Sapphire 9 from a prior release. Only changes from the previous major release
 <pre class="source-code"><code><span class="unaffected">public class ExamplePossibleTypesService extends PossibleTypesService
 {
     @Override
-    protected</span> Set&lt;ElementType> <span class="unaffected">compute()
+    protected</span> void <span class="unaffected">compute(</span> Set&lt;ElementType> types <span class="unaffected">)
     {
-        return ...;
+        ...
     }
 }</span></code></pre>
     </td>
@@ -131,7 +131,7 @@ to Sapphire 9 from a prior release. Only changes from the previous major release
   </tr>
   <tr>
     <td>
-<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.annotations.<span class="unaffected">PossibleTypesService</span></code></pre>
+<pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.</span>modeling.annotations.<span class="unaffected">Type</span></code></pre>
     </td>
     <td>
 <pre class="source-code"><code><span class="unaffected">org.eclipse.sapphire.Type</span></code></pre>
