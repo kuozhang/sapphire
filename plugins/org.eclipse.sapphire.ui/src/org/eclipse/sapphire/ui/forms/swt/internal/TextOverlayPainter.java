@@ -13,6 +13,14 @@ package org.eclipse.sapphire.ui.forms.swt.internal;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.sapphire.FilteredListener;
+import org.eclipse.sapphire.PropertyDefaultEvent;
+import org.eclipse.sapphire.Serialization;
+import org.eclipse.sapphire.Value;
+import org.eclipse.sapphire.ValueProperty;
+import org.eclipse.sapphire.modeling.annotations.SensitiveData;
+import org.eclipse.sapphire.ui.Presentation;
+import org.eclipse.sapphire.ui.forms.JumpActionHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.DisposeEvent;
@@ -30,31 +38,13 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Implements Ctrl+Click navigation in a standard SWT Text widget. 
+ * Implements default value overlay and Ctrl+Click navigation in a standard SWT Text widget. 
  * 
  * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
  */
 
 public final class TextOverlayPainter
 {
-    public static abstract class Controller
-    {
-        public boolean isHyperlinkEnabled()
-        {
-            return false;
-        }
-        
-        public void handleHyperlinkEvent()
-        {
-            throw new UnsupportedOperationException();
-        }
-        
-        public String overlay()
-        {
-            return null;
-        }
-    }
-    
     private static final Point TEXT_OFFSET;
     
     static
@@ -76,18 +66,27 @@ public final class TextOverlayPainter
     
     private final Display display;
     private final Text textControl;
-    private final Controller controller;
+    private final Value<?> property;
+    private final boolean isSensitiveData;
+    private final Serialization serialization;
+    private final JumpActionHandler jumpActionHandler;
+    private final Presentation presentation;
     private boolean controlKeyActive;
     private Point textExtent;
     private boolean hyperlinkActive;
     private boolean mouseOverText;
     
-    private TextOverlayPainter( final Text textControl,
-                                final Controller controller )
+    private TextOverlayPainter( final Text textControl, final Value<?> property, final JumpActionHandler jumpActionHandler, final Presentation presentation )
     {
+        final ValueProperty pdef = property.definition();
+        
         this.display = textControl.getDisplay();
         this.textControl = textControl;
-        this.controller = controller;
+        this.property = property;
+        this.isSensitiveData = pdef.hasAnnotation( SensitiveData.class );
+        this.serialization = pdef.getAnnotation( Serialization.class );
+        this.jumpActionHandler = jumpActionHandler;
+        this.presentation = presentation;
         this.controlKeyActive = false;
         this.hyperlinkActive = false;
         this.mouseOverText = false;
@@ -167,7 +166,7 @@ public final class TextOverlayPainter
         this.textControl.addListener
         (
             SWT.MouseDown,
-            new Listener() 
+            new Listener()
             {
                 public void handleEvent( final Event event ) 
                 {
@@ -175,12 +174,39 @@ public final class TextOverlayPainter
                 }
             }
         );
+        
+        final FilteredListener<PropertyDefaultEvent> propertyListener = new FilteredListener<PropertyDefaultEvent>()
+        {
+            @Override
+            protected void handleTypedEvent( PropertyDefaultEvent event )
+            {
+                TextOverlayPainter.this.textControl.redraw();
+            }
+        };
+        
+        this.property.attach( propertyListener );
+        
+        this.textControl.addDisposeListener
+        (
+            new DisposeListener()
+            {
+                @Override
+                public void widgetDisposed( final DisposeEvent event )
+                {
+                    TextOverlayPainter.this.property.detach( propertyListener );
+                }
+            }
+        );
     }
     
-    public static void install( final Text textControl,
-                                final Controller controller )
+    public static void install( final Text textControl, final Value<?> property )
     {
-        new TextOverlayPainter( textControl, controller );
+        install( textControl, property, null, null );
+    }
+    
+    public static void install( final Text textControl, final Value<?> property, final JumpActionHandler jumpActionHandler, final Presentation presentation )
+    {
+        new TextOverlayPainter( textControl, property, jumpActionHandler, presentation );
     }
     
     private void handleKeyEvent( final Event event )
@@ -229,22 +255,51 @@ public final class TextOverlayPainter
         }
     }
     
+    private boolean isJumpEnabled()
+    {
+        return ( this.jumpActionHandler == null ? false : this.jumpActionHandler.isEnabled() );        
+    }
+    
     private void handleJumpCommand()
     {
         final Runnable op = new Runnable()
         {
             public void run()
             {
-                TextOverlayPainter.this.controller.handleHyperlinkEvent();
+                TextOverlayPainter.this.jumpActionHandler.execute( TextOverlayPainter.this.presentation );
             }
         };
         
         BusyIndicator.showWhile( this.display, op );
     }
     
+    private String overlay()
+    {
+        String def = this.property.disposed() ? null : this.property.getDefaultText();
+        
+        if( def != null && this.isSensitiveData )
+        {
+            final StringBuilder buf = new StringBuilder();
+            
+            for( int i = 0, n = def.length(); i < n; i++ )
+            {
+                buf.append( "\u25CF" );
+            }
+            
+            def = buf.toString();
+        }
+        
+        if( def == null && this.serialization != null )
+        {
+            def = this.serialization.primary();
+        }
+        
+        return def;
+    }
+
     private void update()
     {
-        final boolean shouldHyperlinkBeActive = ( this.controlKeyActive && this.mouseOverText && this.controller.isHyperlinkEnabled() );
+        final boolean shouldHyperlinkBeActive = ( this.controlKeyActive && this.mouseOverText && isJumpEnabled() );
         
         if( this.hyperlinkActive != shouldHyperlinkBeActive )
         {
@@ -276,7 +331,7 @@ public final class TextOverlayPainter
             }
             else if( ! this.textControl.isFocusControl() && this.textControl.getText().length() == 0 )
             {
-                final String overlay = this.controller.overlay();
+                final String overlay = overlay();
                 
                 if( overlay != null && overlay.length() > 0 )
                 {
@@ -310,7 +365,7 @@ public final class TextOverlayPainter
         
         if( text.length() == 0 )
         {
-            text = this.controller.overlay();
+            text = overlay();
             
             if( text == null )
             {

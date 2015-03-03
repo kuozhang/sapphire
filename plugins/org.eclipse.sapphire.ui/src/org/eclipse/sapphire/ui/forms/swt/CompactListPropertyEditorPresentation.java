@@ -55,7 +55,6 @@ import org.eclipse.sapphire.ui.SapphireActionSystem;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
-import org.eclipse.sapphire.ui.forms.swt.internal.TextOverlayPainter;
 import org.eclipse.sapphire.ui.forms.swt.internal.text.SapphireFormText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -259,9 +258,6 @@ public final class CompactListPropertyEditorPresentation extends ListPropertyEdi
         final SapphireActionGroup actions = editor.getActions();
         actions.addAction(deleteAction);
         
-        final SapphireActionHandler jumpActionHandler = actions.getAction( ACTION_JUMP ).getFirstActiveHandler();
-        addJumpOverlay(jumpActionHandler, binding);
-
         final SapphireActionHandlerFilter assistFilter = SapphireActionSystem.createFilterByActionId( ACTION_ASSIST );
         final SapphireActionHandlerFilter jumpFilter = SapphireActionSystem.createFilterByActionId( ACTION_JUMP );
         actions.addFilter(assistFilter);
@@ -291,51 +287,6 @@ public final class CompactListPropertyEditorPresentation extends ListPropertyEdi
         
         actions.removeFilter(assistFilter);
         actions.removeFilter(jumpFilter);
-    }
-    
-    private void addJumpOverlay(final SapphireActionHandler jumpActionHandler, final TextBinding binding) {
-        final TextOverlayPainter.Controller textOverlayPainterController;
-        
-        if( jumpActionHandler != null )
-        {
-            textOverlayPainterController = new TextOverlayPainter.Controller()
-            {
-                @Override
-                public boolean isHyperlinkEnabled()
-                {
-                    return jumpActionHandler.isEnabled();
-                }
-
-                @Override
-                public void handleHyperlinkEvent()
-                {
-                    jumpActionHandler.execute( CompactListPropertyEditorPresentation.this );
-                }
-
-                @Override
-                public String overlay()
-                {
-                    ProxyResource resource = binding.getResource();
-                    Element element = resource.getModelElement();
-                    return element == null ? null : element.property( resource.getValueProperty() ).getDefaultText();
-                }
-            };
-        }
-        else
-        {
-            textOverlayPainterController = new TextOverlayPainter.Controller()
-            {
-                @Override
-                public String overlay()
-                {
-                    ProxyResource resource = binding.getResource();
-                    Element element = resource.getModelElement();
-                    return element == null ? null : element.property( resource.getValueProperty() ).getDefaultText();
-                }
-            };
-        }
-        
-        TextOverlayPainter.install( binding.getText(), textOverlayPainterController );
     }
     
     private PropertyEditorAssistDecorator addDecorator(final PropertyEditorPart editor) {

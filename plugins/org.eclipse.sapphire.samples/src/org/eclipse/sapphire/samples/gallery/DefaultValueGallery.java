@@ -16,8 +16,6 @@ import org.eclipse.sapphire.ElementType;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.DefaultValue;
-import org.eclipse.sapphire.modeling.annotations.Label;
-import org.eclipse.sapphire.modeling.xml.annotations.XmlBinding;
 
 /**
  * @author <a href="mailto:konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
@@ -27,15 +25,29 @@ public interface DefaultValueGallery extends Element
 {
     ElementType TYPE = new ElementType( DefaultValueGallery.class );
     
-    // *** String ***
+    // *** StaticDefaultValue ***
     
-    @Label( standard = "string" )
     @DefaultValue( text = "abc" )
-    @XmlBinding( path = "string" )
     
-    ValueProperty PROP_STRING = new ValueProperty( TYPE, "String" );
+    ValueProperty PROP_STATIC_DEFAULT_VALUE = new ValueProperty( TYPE, "StaticDefaultValue" );
     
-    Value<String> getString();
-    void setString( String value );
+    Value<String> getStaticDefaultValue();
+    void setStaticDefaultValue( String value );
     
+    // *** DefaultValue ***
+
+    ValueProperty PROP_DEFAULT_VALUE = new ValueProperty( TYPE, "DefaultValue" );
+
+    Value<String> getDefaultValue();
+    void setDefaultValue(String value);
+    
+    // *** DynamicDefaultValue ***
+    
+    @DefaultValue( text = "${ DefaultValue }" )
+
+    ValueProperty PROP_DYNAMIC_DEFAULT_VALUE = new ValueProperty( TYPE, "DynamicDefaultValue" );
+
+    Value<String> getDynamicDefaultValue();
+    void setDynamicDefaultValue(String value);
+
 }

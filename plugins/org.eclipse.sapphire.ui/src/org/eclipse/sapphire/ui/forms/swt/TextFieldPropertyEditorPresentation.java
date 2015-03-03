@@ -42,7 +42,6 @@ import org.eclipse.sapphire.Event;
 import org.eclipse.sapphire.Listener;
 import org.eclipse.sapphire.LoggingService;
 import org.eclipse.sapphire.Sapphire;
-import org.eclipse.sapphire.Serialization;
 import org.eclipse.sapphire.Value;
 import org.eclipse.sapphire.ValueProperty;
 import org.eclipse.sapphire.modeling.annotations.LongString;
@@ -57,6 +56,7 @@ import org.eclipse.sapphire.ui.SapphireActionHandlerFilter;
 import org.eclipse.sapphire.ui.SapphirePart;
 import org.eclipse.sapphire.ui.assist.internal.PropertyEditorAssistDecorator;
 import org.eclipse.sapphire.ui.forms.FormComponentPart;
+import org.eclipse.sapphire.ui.forms.JumpActionHandler;
 import org.eclipse.sapphire.ui.forms.PropertyEditorDef;
 import org.eclipse.sapphire.ui.forms.PropertyEditorPart;
 import org.eclipse.sapphire.ui.forms.swt.internal.TextFieldBinding;
@@ -196,52 +196,7 @@ public class TextFieldPropertyEditorPresentation extends ValuePropertyEditorPres
         this.textField.setLayoutData( gdfill() );
         decorator.addEditorControl( this.textField, true );
         
-        final Serialization serialization = property.definition().getAnnotation( Serialization.class );
-
-        final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
-        {
-            @Override
-            public boolean isHyperlinkEnabled()
-            {
-                return ( jumpActionHandler == null ? false : jumpActionHandler.isEnabled() );
-            }
-
-            @Override
-            public void handleHyperlinkEvent()
-            {
-                if( jumpActionHandler != null )
-                {
-                    jumpActionHandler.execute( TextFieldPropertyEditorPresentation.this );
-                }
-            }
-
-            @Override
-            public String overlay()
-            {
-                String def = property.disposed() ? null : property.getDefaultText();
-                
-                if( def != null && isSensitiveData )
-                {
-                    final StringBuilder buf = new StringBuilder();
-                    
-                    for( int i = 0, n = def.length(); i < n; i++ )
-                    {
-                        buf.append( "\u25CF" );
-                    }
-                    
-                    def = buf.toString();
-                }
-                
-                if( def == null && serialization != null )
-                {
-                    def = serialization.primary();
-                }
-                
-                return def;
-            }
-        };
-            
-        TextOverlayPainter.install( this.textField, textOverlayPainterController );
+        TextOverlayPainter.install( this.textField, property, (JumpActionHandler) jumpActionHandler, this );
         
         if( isBrowseOnly || isReadOnly )
         {

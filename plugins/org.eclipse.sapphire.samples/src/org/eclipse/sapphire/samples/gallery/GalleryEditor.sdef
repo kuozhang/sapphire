@@ -479,7 +479,12 @@
                                     <content>
                                         <label>The default value is used when null is read from the backing resource, such as an XML document.</label>
                                         <spacer></spacer>
-                                        <property-editor>String</property-editor>
+                                        <property-editor>StaticDefaultValue</property-editor>
+                                        <spacer></spacer>
+                                        <label>The default value can be made dynamic by either using a Sapphire EL expression in the @DefaultValue annotation or by implementing a custom DefaultValueService.</label>
+                                        <spacer></spacer>
+                                        <property-editor>DefaultValue</property-editor>
+                                        <property-editor>DynamicDefaultValue</property-editor>
                                     </content>
                                 </case>
                             </with>
