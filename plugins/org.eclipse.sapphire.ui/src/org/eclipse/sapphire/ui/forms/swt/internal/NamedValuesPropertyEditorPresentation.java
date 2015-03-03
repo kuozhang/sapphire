@@ -180,16 +180,7 @@ public final class NamedValuesPropertyEditorPresentation extends ValuePropertyEd
             }
         );
         
-        final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
-        {
-            @Override
-            public String overlay()
-            {
-                return ( (Value<?>) property() ).getDefaultText();
-            }
-        };
-    
-        TextOverlayPainter.install( this.arbitraryValueTextField, textOverlayPainterController );
+        TextOverlayPainter.install( this.arbitraryValueTextField, property() );
         
         final StringBuilder arbitraryValueAccessibleName = new StringBuilder();
         

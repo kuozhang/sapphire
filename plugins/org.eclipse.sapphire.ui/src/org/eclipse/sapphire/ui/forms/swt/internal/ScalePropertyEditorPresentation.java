@@ -107,16 +107,7 @@ public final class ScalePropertyEditorPresentation extends ValuePropertyEditorPr
             }
         );
         
-        final TextOverlayPainter.Controller textOverlayPainterController = new TextOverlayPainter.Controller()
-        {
-            @Override
-            public String overlay()
-            {
-                return property().getDefaultText();
-            }
-        };
-        
-        TextOverlayPainter.install( this.textField, textOverlayPainterController );
+        TextOverlayPainter.install( this.textField, property() );
         
         this.scale = new Scale( composite, SWT.HORIZONTAL );
         this.scale.setLayoutData( gdhfill() );
